@@ -1,132 +1,63 @@
-import type { Mapper as VolarMapper } from "@volar/language-core";
-import { NodeTypes, parse as vueParse, type RootNode } from "@vue/compiler-dom";
 import {
-	createVueLanguagePlugin,
-	createParsedCommandLine as createVueParsedCommandLine,
-	createParsedCommandLineByJson as createVueParsedCommandLineByJson,
-	tsCodegen,
-	VueVirtualCode,
-} from "@vue/language-core";
+	NodeTypes,
+	parse as vueParse,
+	type CompilerError,
+	type RootNode,
+} from "@vue/compiler-dom";
 
-import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
-import { assert, nullThrows } from "@flint.fyi/utils";
 import {
-	createVolarBasedLanguage,
-	type VolarLanguage,
-} from "@flint.fyi/volar-language";
+	DirectivesCollector,
+	type DirectiveCollection,
+	type Language,
+	type LanguageReports,
+} from "@flint.fyi/core";
+import {
+	typescriptLanguage,
+	type TypeScriptFileServices,
+	type TypeScriptNodeVisitors,
+} from "@flint.fyi/typescript-language";
 
 import { extractTemplateDirectives } from "./extractTemplateDirectives.ts";
 import { vueParsingErrorsToLanguageReports } from "./vueParsingErrorsToLanguageReports.ts";
 
-setTSExtraSupportedExtensions([".vue"]);
-
-export interface VueServices {
+export interface VueServices extends TypeScriptFileServices {
 	vue: {
-		codegen: VueCodegen;
-		map: VolarMapper;
 		sfc: RootNode;
-		virtualCode: VueVirtualCode;
 	};
 }
 
-type VueCodegen =
-	typeof tsCodegen extends WeakMap<WeakKey, infer V> ? V : never;
+export const vueLanguage = typescriptLanguage as Language<
+	TypeScriptNodeVisitors,
+	VueServices
+>;
 
-export const vueLanguage: VolarLanguage<VueServices> = createVolarBasedLanguage(
-	(ts, options) => {
-		const { configFilePath } = options.options;
-		const host = options.host
-			? {
-					...options.host,
-					useCaseSensitiveFileNames: options.host.useCaseSensitiveFileNames(),
-				}
-			: ts.sys;
-		const vueCompilerOptions = (
-			typeof configFilePath === "string"
-				? createVueParsedCommandLine(
-						ts,
-						host,
-						configFilePath.replaceAll("\\", "/"),
-					)
-				: createVueParsedCommandLineByJson(
-						ts,
-						host,
-						host.getCurrentDirectory(),
-						{},
-					)
-		).vueOptions;
-
-		return {
-			createFile({
-				data,
-				serviceScript,
-				sourceFile,
-				sourceScript,
-				volarLanguage,
-			}) {
-				const sourceText = sourceScript.snapshot.getText(
-					0,
-					sourceScript.snapshot.getLength(),
-				);
-				const virtualCode = sourceScript.generated.root;
-				assert(
-					virtualCode instanceof VueVirtualCode,
-					"Expected sourceScript.generated.root to be VueServiceCode",
-				);
-
-				const codegen = nullThrows(
-					tsCodegen.get(virtualCode.ir),
-					`tsCodegen for ${data.filePathAbsolute} is undefined`,
-				);
-
-				const map = volarLanguage.maps.get(serviceScript.code, sourceScript);
-
-				const sfcAst = vueParse(sourceText, {
-					comments: true,
-					expressionPlugins: ["typescript"],
-					onError: () => {
-						// We ignore errors because virtual code already provides them,
-						// and it also provides them with sourceText-based locations,
-						// so we don't have to remap them. Oh, and it also contains errors from
-						// other blocks rather than only <template> as well.
-						// If we don't provide this callback, @vue/compiler-core will throw.
-					},
-					parseMode: "html",
-				});
-
-				return {
-					// TODO: extract directives from other blocks too
-					directives: extractTemplateDirectives(sfcAst),
-					extraContext: {
-						vue: {
-							codegen,
-							map,
-							sfc: sfcAst,
-							virtualCode,
-						},
-					},
-					firstStatementPosition:
-						sfcAst.children.find((c) => c.type !== NodeTypes.COMMENT)?.loc.start
-							.offset ?? sourceText.length,
-					getLanguageReports() {
-						return vueParsingErrorsToLanguageReports(
-							sourceFile.fileName.startsWith("./")
-								? sourceFile.fileName.slice(2)
-								: // TODO: use LinterHost.getCurrentDirectory()
-									sourceFile.fileName.slice(process.cwd().length + 1),
-							virtualCode.vueSfc?.errors ?? [],
-						);
-					},
-				};
-			},
-			languagePlugins: [
-				createVueLanguagePlugin<string>(
-					ts,
-					options.options,
-					vueCompilerOptions,
-					(id) => id,
-				),
-			],
-		};
-	},
-);
+export function createVueFileContext(
+	fileName: string,
+	sourceText: string,
+): {
+	directives: DirectiveCollection["directives"];
+	languageReports: LanguageReports;
+	reports: DirectiveCollection["reports"];
+	services: Pick<VueServices, "vue">;
+} {
+	const errors: CompilerError[] = [];
+	const sfc = vueParse(sourceText, {
+		comments: true,
+		expressionPlugins: ["typescript"],
+		onError: (error) => errors.push(error),
+		parseMode: "html",
+	});
+	const collector = new DirectivesCollector(
+		sfc.children.find((child) => child.type !== NodeTypes.COMMENT)?.loc.start
+			.offset ?? sourceText.length,
+	);
+	for (const directive of extractTemplateDirectives(sfc)) {
+		collector.add(directive.range, directive.selection, directive.type);
+	}
+	const collection = collector.collect();
+	return {
+		...collection,
+		languageReports: vueParsingErrorsToLanguageReports(fileName, errors),
+		services: { vue: { sfc } },
+	};
+}

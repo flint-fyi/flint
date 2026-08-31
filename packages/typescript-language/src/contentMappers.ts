@@ -2,6 +2,7 @@ import type {
 	CommentDirective,
 	FileAboutData,
 	FileReport,
+	LanguageReports,
 } from "@flint.fyi/core";
 import { assert } from "@flint.fyi/utils";
 
@@ -17,6 +18,7 @@ export interface TypeScriptContentMapperRegistration {
 		sourceText: string;
 	}) => {
 		directives?: CommentDirective[];
+		languageReports?: LanguageReports;
 		reports?: FileReport[];
 		services?: object;
 	};

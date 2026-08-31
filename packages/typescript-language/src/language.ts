@@ -59,11 +59,15 @@ const log = debugForFile(import.meta.filename);
 export const NodeSyntaxKinds: typeof SyntaxKind =
 	getFirstEnumValues(SyntaxKind);
 
+type ContentMappedLanguageFileDefinition =
+	LanguageFileDefinition<TypeScriptFileServices> & {
+		__contentMapperLanguageReports: LanguageReports;
+	};
+
 interface GlobalLanguageState {
 	packageVersion: string;
 	volarCreateFile: null | VolarCreateFile;
 }
-
 type VolarCreateFile = (
 	data: FileAboutData,
 	unsupportedLegacyProgram: never,
@@ -419,6 +423,9 @@ export const typescriptLanguage: Language<
 					const file = {
 						...(mapperRegistration
 							? {
+									...(mapped?.languageReports && {
+										__contentMapperLanguageReports: mapped.languageReports,
+									}),
 									...(mapped?.directives && { directives: mapped.directives }),
 									...(mapped?.reports && { reports: mapped.reports }),
 								}
@@ -506,7 +513,13 @@ export const typescriptLanguage: Language<
 				}
 			}
 		}
-		return reports;
+		return "__contentMapperLanguageReports" in file
+			? [
+					...reports,
+					...(file as ContentMappedLanguageFileDefinition)
+						.__contentMapperLanguageReports,
+				]
+			: reports;
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
 	runFileVisitors(file, options, runtime) {
