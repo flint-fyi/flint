@@ -1,12 +1,10 @@
-import * as tsutils from "ts-api-utils";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import {
-	SignatureKind,
 	SymbolFlags,
-	SyntaxKind,
 	TypeFlags,
 	type Program,
 	type Type,
-} from "typescript";
+} from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -72,26 +70,21 @@ function isBind(node: AST.AnyNode) {
 	}
 }
 
-function isDefinitelyString(type: Type) {
-	if (
-		tsutils.isTypeFlagSet(
-			type,
-			TypeFlags.Any | TypeFlags.Unknown | TypeFlags.Never,
-		)
-	) {
+function isDefinitelyString(type: Type): boolean {
+	if (type.flags & (TypeFlags.Any | TypeFlags.Unknown | TypeFlags.Never)) {
 		return false;
 	}
 
-	if (type.isUnion()) {
-		return type.types.every(isDefinitelyString);
+	if (type.isUnionType()) {
+		return type.getTypes().every(isDefinitelyString);
 	}
 
-	return tsutils.isTypeFlagSet(type, TypeFlags.StringLike);
+	return (type.flags & TypeFlags.StringLike) !== 0;
 }
 
 function isFunction(
 	node: AST.AnyNode,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ): boolean {
 	switch (node.kind) {
@@ -105,8 +98,8 @@ function isFunction(
 				return true;
 			}
 			return (
-				!isDefinitelyString(typeChecker.getTypeAtLocation(node)) &&
-				isFunctionType(node, typeChecker, program)
+				!isDefinitelyString(checker.getTypeAtLocation(node)) &&
+				isFunctionType(node, checker, program)
 			);
 
 		case SyntaxKind.NoSubstitutionTemplateLiteral:
@@ -115,9 +108,9 @@ function isFunction(
 			return false;
 
 		default: {
-			const type = typeChecker.getTypeAtLocation(node);
+			const type = checker.getTypeAtLocation(node);
 			return (
-				!isDefinitelyString(type) && isFunctionType(node, typeChecker, program)
+				!isDefinitelyString(type) && isFunctionType(node, checker, program)
 			);
 		}
 	}
@@ -125,13 +118,13 @@ function isFunction(
 
 function isFunctionType(
 	node: AST.AnyNode,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ): boolean {
-	const type = typeChecker.getTypeAtLocation(node);
+	const type = checker.getTypeAtLocation(node);
 
 	if (
-		tsutils.isTypeFlagSet(type, TypeFlags.Any | TypeFlags.Unknown) ||
+		(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||
 		isBuiltinSymbolLike(program, type, "Function")
 	) {
 		return true;
@@ -141,19 +134,17 @@ function isFunctionType(
 
 	if (
 		symbol &&
-		tsutils.isSymbolFlagSet(symbol, SymbolFlags.Function | SymbolFlags.Method)
+		(symbol.flags & (SymbolFlags.Function | SymbolFlags.Method)) !== 0
 	) {
 		return true;
 	}
 
-	const signatures = typeChecker.getSignaturesOfType(type, SignatureKind.Call);
-
-	return !!signatures.length;
+	return !!type.getCallSignatures().length;
 }
 
 function isReferenceToGlobalFunction(
 	node: AST.CallExpression | AST.NewExpression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ): boolean {
 	if (
@@ -163,12 +154,16 @@ function isReferenceToGlobalFunction(
 		return true;
 	}
 
-	const symbol = typeChecker.getSymbolAtLocation(node.expression);
+	const symbol = checker.getSymbolAtLocation(node.expression);
 	if (!symbol) {
 		return true;
 	}
 
-	return !!symbol.getDeclarations()?.some((declaration) => {
+	return symbol.declarations.some((declarationHandle) => {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return false;
+		}
 		const sourceFile = declaration.getSourceFile();
 		return (
 			program.isSourceFileDefaultLibrary(sourceFile) ||
@@ -210,13 +205,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkCalleeFunction(
 			node: AST.CallExpression | AST.NewExpression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			if (!node.arguments?.length) {
 				return;
 			}
 
-			const type = typeChecker.getTypeAtLocation(node.expression);
+			const type = checker.getTypeAtLocation(node.expression);
 			if (!isBuiltinSymbolLike(program, type, "FunctionConstructor")) {
 				return;
 			}
@@ -230,7 +225,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkCalleeEval(
 			node: AST.CallExpression | AST.NewExpression,
 			calleeName: string,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			const args = node.arguments;
 			if (!args?.length) {
@@ -242,8 +237,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (
 				!evalLikeFunctions.has(calleeName) ||
-				isFunction(handler, typeChecker, program) ||
-				!isReferenceToGlobalFunction(node, typeChecker, program)
+				isFunction(handler, checker, program) ||
+				!isReferenceToGlobalFunction(node, checker, program)
 			) {
 				return;
 			}

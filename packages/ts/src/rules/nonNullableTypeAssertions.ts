@@ -1,6 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -12,29 +11,29 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function couldBeNullish(type: ts.Type): boolean {
-	if (type.flags & ts.TypeFlags.TypeParameter) {
+function couldBeNullish(type: Type): boolean {
+	if (type.flags & TypeFlags.TypeParameter) {
 		const constraint = type.getConstraint();
 		return constraint === undefined || couldBeNullish(constraint);
 	}
 
-	if (tsutils.isUnionType(type)) {
-		return type.types.some(couldBeNullish);
+	if (type.isUnionType()) {
+		return type.getTypes().some(couldBeNullish);
 	}
 
-	return (type.flags & (ts.TypeFlags.Null | ts.TypeFlags.Undefined)) !== 0;
+	return (type.flags & (TypeFlags.Null | TypeFlags.Undefined)) !== 0;
 }
 
 function getTypesIfNotLoose(
 	node: AST.Expression | AST.TypeNode,
-	typeChecker: Checker,
+	checker: Checker,
 ) {
-	const type = typeChecker.getTypeAtLocation(node);
-	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown)) {
+	const type = checker.getTypeAtLocation(node);
+	if ((type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0) {
 		return undefined;
 	}
 
-	return tsutils.unionConstituents(type);
+	return type.isUnionType() ? type.getTypes() : [type];
 }
 
 function isConstAssertion(
@@ -63,11 +62,11 @@ function needsParentheses(expression: AST.Expression) {
 }
 
 function sameTypeWithoutNullish(
-	assertedTypes: ts.Type[],
-	originalTypes: ts.Type[],
+	assertedTypes: readonly Type[],
+	originalTypes: readonly Type[],
 ) {
 	const nonNullishOriginalTypes = originalTypes.filter(
-		(type) => (type.flags & (ts.TypeFlags.Null | ts.TypeFlags.Undefined)) === 0,
+		(type) => (type.flags & (TypeFlags.Null | TypeFlags.Undefined)) === 0,
 	);
 
 	if (nonNullishOriginalTypes.length === originalTypes.length) {
@@ -77,14 +76,14 @@ function sameTypeWithoutNullish(
 	for (const assertedType of assertedTypes) {
 		if (
 			couldBeNullish(assertedType) ||
-			!nonNullishOriginalTypes.includes(assertedType)
+			!nonNullishOriginalTypes.some((type) => type.id === assertedType.id)
 		) {
 			return false;
 		}
 	}
 
 	for (const originalType of nonNullishOriginalTypes) {
-		if (!assertedTypes.includes(originalType)) {
+		if (!assertedTypes.some((type) => type.id === originalType.id)) {
 			return false;
 		}
 	}
@@ -113,18 +112,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.AsExpression | AST.TypeAssertion,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, sourceFile }: TypeScriptFileServices,
 		) {
 			if (isConstAssertion(node, sourceFile)) {
 				return;
 			}
 
-			const originalTypes = getTypesIfNotLoose(node.expression, typeChecker);
+			const originalTypes = getTypesIfNotLoose(node.expression, checker);
 			if (!originalTypes) {
 				return;
 			}
 
-			const assertedTypes = getTypesIfNotLoose(node.type, typeChecker);
+			const assertedTypes = getTypesIfNotLoose(node.type, checker);
 			if (
 				!assertedTypes ||
 				!sameTypeWithoutNullish(assertedTypes, originalTypes)

@@ -1,5 +1,5 @@
-import { TypeFlags } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -125,30 +125,27 @@ function isPositiveNumericLiteral(node: AST.Expression) {
 
 function isSupportedType(
 	node: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 	supportedTypes: Set<string>,
 ): boolean {
-	const type = getConstrainedTypeAtLocation(node, typeChecker);
+	const type = getConstrainedTypeAtLocation(node, checker);
 
 	return isTypeRecursive(type, (constituent) => {
 		if ((constituent.flags & TypeFlags.Any) !== 0) {
 			return true;
 		}
 
-		if (
-			typeChecker.isArrayType(constituent) ||
-			typeChecker.isTupleType(constituent)
-		) {
+		if (checker.isArrayType(constituent) || checker.isTupleType(constituent)) {
 			return supportedTypes.has("Array");
 		}
 
-		const typeName = constituent.getSymbol()?.getName();
+		const typeName = constituent.getSymbol()?.name;
 		if (typeName) {
 			return supportedTypes.has(typeName);
 		}
 
 		if (
-			constituent.isStringLiteral() ||
+			(constituent.flags & TypeFlags.StringLiteral) !== 0 ||
 			(constituent.flags & TypeFlags.String) !== 0
 		) {
 			return supportedTypes.has("String");
@@ -289,7 +286,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { checker, sourceFile }) => {
 					const parsed = parseCallExpression(node);
 					if (!parsed) {
 						return;
@@ -304,7 +301,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!isSupportedType(
 							target,
-							typeChecker,
+							checker,
 							methodConfiguration.supportedTypes,
 						)
 					) {

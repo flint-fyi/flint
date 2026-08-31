@@ -28,7 +28,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node, { program, sourceFile, typeChecker }) => {
+				NewExpression: (node, { checker, program, sourceFile }) => {
 					if (node.expression.kind !== SyntaxKind.Identifier) {
 						return;
 					}
@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const name = node.expression.text;
 					if (
 						!["BigInt", "Symbol"].includes(name) ||
-						!isGlobalDeclaration(node.expression, typeChecker, program)
+						!isGlobalDeclaration(node.expression, checker, program)
 					) {
 						return;
 					}
@@ -51,7 +51,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							text: "",
 						},
 						message: "noNewNonConstructor",
-						range: getTSNodeRange(node.getChildAt(0, sourceFile), sourceFile),
+						range: {
+							begin: node.getStart(sourceFile),
+							end: node.getStart(sourceFile) + 3,
+						},
 					});
 				},
 			},

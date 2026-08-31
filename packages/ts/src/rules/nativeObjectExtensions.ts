@@ -104,7 +104,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			if (!isPrototypeAccess(node)) {
 				return;
@@ -118,7 +118,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const name = objectIdentifier.text;
 			if (
 				!nativeConstructors.has(name) ||
-				!isGlobalDeclarationOfName(objectIdentifier, name, typeChecker, program)
+				!isGlobalDeclarationOfName(objectIdentifier, name, checker, program)
 			) {
 				return;
 			}
@@ -143,7 +143,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						!isGlobalDeclarationOfName(
 							callee.expression,
 							"Object",
-							typeChecker,
+							checker,
 							program,
 						)
 					) {

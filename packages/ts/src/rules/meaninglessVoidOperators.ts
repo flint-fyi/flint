@@ -1,16 +1,12 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-function isVoidOrUndefinedType(type: ts.Type) {
-	return tsutils.isTypeFlagSet(
-		type,
-		ts.TypeFlags.Void | ts.TypeFlags.Undefined,
-	);
+function isVoidOrUndefinedType(type: Type): boolean {
+	return (type.flags & (TypeFlags.Void | TypeFlags.Undefined)) !== 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -37,13 +33,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				VoidExpression: (node, { sourceFile, typeChecker }) => {
+				VoidExpression: (node, { checker, sourceFile }) => {
 					const argumentType = getConstrainedTypeAtLocation(
 						node.expression,
-						typeChecker,
+						checker,
 					);
 
-					const unionParts = tsutils.unionConstituents(argumentType);
+					const unionParts = argumentType.isUnionType()
+						? argumentType.getTypes()
+						: [argumentType];
 
 					if (!unionParts.every(isVoidOrUndefinedType)) {
 						return;
@@ -51,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					context.report({
 						data: {
-							type: typeChecker.typeToString(argumentType),
+							type: checker.typeToString(argumentType),
 						},
 						message: "meaninglessVoid",
 						range: {

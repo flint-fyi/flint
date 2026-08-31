@@ -1,5 +1,4 @@
 import {
-	forEachChild,
 	isAssignmentOperator,
 	isBinaryExpression,
 	isIdentifier,
@@ -12,6 +11,7 @@ import {
 } from "typescript-native/unstable/ast";
 
 import {
+	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -24,21 +24,25 @@ function hasNoAssignmentBeforeNode(
 	identifier: AST.Identifier,
 	node: AST.NonNullExpression,
 	sourceFile: AST.SourceFile,
-	typeChecker: Checker,
+	checker: Checker,
 ): boolean {
-	const symbol = typeChecker.getSymbolAtLocation(identifier);
+	const symbol = checker.getSymbolAtLocation(identifier);
 	if (!symbol) {
 		return false;
 	}
 
-	const declarations = symbol.getDeclarations();
-	if (!declarations?.length) {
+	const declarations = symbol.declarations;
+	if (!declarations.length) {
 		return false;
 	}
 
 	const nodeEnd = node.getEnd();
 
-	for (const declaration of declarations) {
+	for (const declarationHandle of declarations) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			continue;
+		}
 		if (declaration.getEnd() >= nodeEnd) {
 			continue;
 		}
@@ -52,15 +56,15 @@ function hasNoAssignmentBeforeNode(
 		}
 	}
 
-	const valueDeclaration = symbol.valueDeclaration;
+	const valueDeclaration = symbol.valueDeclaration?.resolve();
 	if (!valueDeclaration) {
 		return true;
 	}
 
 	function findModifyingReference(current: Node): boolean {
 		if (isIdentifier(current)) {
-			const currentSymbol = typeChecker.getSymbolAtLocation(current);
-			if (currentSymbol?.valueDeclaration === valueDeclaration) {
+			const currentSymbol = checker.getSymbolAtLocation(current);
+			if (currentSymbol?.valueDeclaration?.resolve() === valueDeclaration) {
 				const parent = current.parent;
 
 				if (
@@ -110,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NonNullExpression: (node, { sourceFile, typeChecker }) => {
+				NonNullExpression: (node, { checker, sourceFile }) => {
 					if (
 						node.parent.kind !== SyntaxKind.BinaryExpression ||
 						node.parent.operatorToken.kind !==
@@ -126,7 +130,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.expression,
 							node,
 							sourceFile,
-							typeChecker,
+							checker,
 						)
 					) {
 						return;

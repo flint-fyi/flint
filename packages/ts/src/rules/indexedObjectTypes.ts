@@ -152,15 +152,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						checkForRecord(node, node.members, sourceFile);
 					}
 				},
-				TypeReference: (
-					node,
-					{ options, program, sourceFile, typeChecker },
-				) => {
+				TypeReference: (node, { checker, options, program, sourceFile }) => {
 					if (
 						options.style === "index-signature" &&
 						node.typeName.kind === SyntaxKind.Identifier &&
 						node.typeName.text === "Record" &&
-						isGlobalDeclaration(node.typeName, typeChecker, program) &&
+						isGlobalDeclaration(node.typeName, checker, program) &&
 						node.typeArguments?.length === 2
 					) {
 						context.report({

@@ -1,5 +1,5 @@
-import type { Program } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -42,14 +42,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { program, sourceFile, typeChecker }) => {
+				BinaryExpression: (node, { checker, program, sourceFile }) => {
 					if (!comparisonOperators.has(node.operatorToken.kind)) {
 						return;
 					}
 
 					if (
-						isNaNIdentifier(node.left, typeChecker, program) ||
-						isNaNIdentifier(node.right, typeChecker, program)
+						isNaNIdentifier(node.left, checker, program) ||
+						isNaNIdentifier(node.right, checker, program)
 					) {
 						context.report({
 							message: "useIsNaN",
@@ -62,14 +62,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isNaNIdentifier(
 			node: AST.Expression,
-			typeChecker: Checker,
+			checker: Checker,
 			program: Program,
 		) {
 			const unwrapped = unwrapParenthesizedNode(node);
 			return (
 				unwrapped.kind === SyntaxKind.Identifier &&
 				unwrapped.text === "NaN" &&
-				isGlobalDeclarationOfName(unwrapped, "NaN", typeChecker, program)
+				isGlobalDeclarationOfName(unwrapped, "NaN", checker, program)
 			);
 		}
 	},

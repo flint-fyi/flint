@@ -1,6 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import { TypeFlags, type Type } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -87,8 +86,8 @@ function isInValidPosition(
 	return { invalidAncestor: node, valid: false };
 }
 
-function isVoidLike(type: Type) {
-	return tsutils.isTypeFlagSet(type, TypeFlags.VoidLike);
+function isVoidLike(type: Type): boolean {
+	return (type.flags & TypeFlags.VoidLike) !== 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -139,9 +138,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.AwaitExpression
 				| AST.CallExpression
 				| AST.TaggedTemplateExpression,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, sourceFile }: TypeScriptFileServices,
 		) {
-			const type = getConstrainedTypeAtLocation(node, typeChecker);
+			const type = getConstrainedTypeAtLocation(node, checker);
 
 			if (!isVoidLike(type)) {
 				return;
