@@ -32,6 +32,7 @@
 		"cli-cursor": "^5.0.0",
 		"debounce": "^3.0.0",
 		"debug-for-file": "^0.4.0",
+		"ignore": "^7.0.5",
 		"text-table-fast": "^0.1.0",
 		"typescript": "^6.0.0",
 		"wrap-ansi": "^10.0.0"

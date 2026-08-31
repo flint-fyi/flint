@@ -675,6 +675,9 @@ importers:
       debug-for-file:
         specifier: ^0.4.0
         version: 0.4.0
+      ignore:
+        specifier: ^7.0.5
+        version: 7.0.5
       text-table-fast:
         specifier: ^0.1.0
         version: 0.1.0
