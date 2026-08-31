@@ -75,6 +75,7 @@ export type {
 } from "./types/directives.ts";
 export type { FormattingResults } from "./types/formatting.ts";
 export type {
+	FileSystemWatcher,
 	LinterHost,
 	LinterHostDirectoryEntry,
 	LinterHostDirectoryWatcher,
