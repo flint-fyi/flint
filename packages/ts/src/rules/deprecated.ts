@@ -1,9 +1,19 @@
-import ts, { SyntaxKind } from "typescript";
+import * as ts from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	SymbolFlags,
+	TypeFlags,
+	type JSDocTagInfo,
+	type Signature,
+	type Symbol,
+	type Type,
+} from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -26,16 +36,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function getJsDocDeprecation(
-			symbol: ts.Signature | ts.Symbol | undefined,
-			typeChecker: ts.TypeChecker,
-		) {
+			symbol: Signature | Symbol | undefined,
+			checker: Checker,
+		): boolean {
 			if (!symbol) {
 				return false;
 			}
 
-			let jsDocTags: ts.JSDocTagInfo[] | undefined;
+			if ("declaration" in symbol) {
+				const declaration = symbol.declaration?.resolve();
+				return !!declaration && hasDeprecationTag(declaration);
+			}
+
+			let jsDocTags: readonly JSDocTagInfo[];
 			try {
-				jsDocTags = symbol.getJsDocTags(typeChecker);
+				jsDocTags = symbol.getJsDocTags(checker);
 			} catch {
 				return false;
 			}
@@ -43,50 +58,59 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			return jsDocTags.some((tag) => tag.name === "deprecated");
 		}
 
-		function isDeprecatedFromDeclarations(symbol: ts.Symbol | undefined) {
-			return symbol?.getDeclarations()?.some((declaration) => {
-				const tags = ts.getJSDocTags(declaration);
-				return tags.some(
+		function hasDeprecationTag(declaration: AST.Declaration): boolean {
+			return ts
+				.getJSDocTags(declaration)
+				.some(
 					(tag) =>
 						tag.tagName.text === "deprecated" ||
 						tag.tagName.text === "Deprecated",
 				);
+		}
+
+		function isDeprecatedFromDeclarations(symbol: Symbol | undefined) {
+			return symbol?.declarations.some((declarationHandle) => {
+				const declaration = declarationHandle.resolve();
+				if (!declaration) {
+					return false;
+				}
+				return hasDeprecationTag(declaration);
 			});
 		}
 
 		function searchForDeprecationInAliasesChain(
-			symbol: ts.Symbol | undefined,
-			typeChecker: ts.TypeChecker,
+			symbol: Symbol | undefined,
+			checker: Checker,
 			checkAliasedSymbol: boolean,
 		) {
 			if (!symbol) {
 				return false;
 			}
 
-			if (!(symbol.flags & ts.SymbolFlags.Alias)) {
+			if (!(symbol.flags & SymbolFlags.Alias)) {
 				return !!(
 					checkAliasedSymbol &&
-					(getJsDocDeprecation(symbol, typeChecker) ||
+					(getJsDocDeprecation(symbol, checker) ||
 						isDeprecatedFromDeclarations(symbol))
 				);
 			}
 
-			const targetSymbol = typeChecker.getAliasedSymbol(symbol);
-			let current: ts.Symbol | undefined = symbol;
+			const targetSymbol = checker.getAliasedSymbol(symbol);
+			let current: Symbol | undefined = symbol;
 
-			while (current.flags & ts.SymbolFlags.Alias) {
+			while (current.flags & SymbolFlags.Alias) {
 				if (
-					getJsDocDeprecation(current, typeChecker) ||
+					getJsDocDeprecation(current, checker) ||
 					isDeprecatedFromDeclarations(current)
 				) {
 					return true;
 				}
 
-				if (!current.getDeclarations()) {
+				if (!current.declarations.length) {
 					break;
 				}
 
-				const immediateAliased = typeChecker.getImmediateAliasedSymbol(current);
+				const immediateAliased = checker.getImmediateAliasedSymbol(current);
 				if (!immediateAliased) {
 					break;
 				}
@@ -95,7 +119,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				if (checkAliasedSymbol && current === targetSymbol) {
 					return !!(
-						getJsDocDeprecation(current, typeChecker) ||
+						getJsDocDeprecation(current, checker) ||
 						isDeprecatedFromDeclarations(current)
 					);
 				}
@@ -104,11 +128,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			return false;
 		}
 
-		function isDeprecated(
-			symbol: ts.Symbol | undefined,
-			typeChecker: ts.TypeChecker,
-		) {
-			return searchForDeprecationInAliasesChain(symbol, typeChecker, true);
+		function isDeprecated(symbol: Symbol | undefined, checker: Checker) {
+			return searchForDeprecationInAliasesChain(symbol, checker, true);
 		}
 
 		function isDeclarationSite(node: AST.AnyNode) {
@@ -188,19 +209,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.Decorator
 				| AST.NewExpression
 				| AST.TaggedTemplateExpression,
-			typeChecker: ts.TypeChecker,
+			checker: Checker,
 		) {
-			const signature = typeChecker.getResolvedSignature(
+			const signature = checker.getResolvedSignature(
 				callLike as ts.CallLikeExpression,
 			);
-			const symbol = typeChecker.getSymbolAtLocation(node);
+			const symbol = checker.getSymbolAtLocation(node);
 
 			const aliasedSymbol =
-				symbol && symbol.flags & ts.SymbolFlags.Alias
-					? typeChecker.getAliasedSymbol(symbol)
+				symbol && symbol.flags & SymbolFlags.Alias
+					? checker.getAliasedSymbol(symbol)
 					: symbol;
 
-			const symbolDeclarationKind = aliasedSymbol?.declarations?.[0]?.kind;
+			const symbolDeclarationKind =
+				aliasedSymbol?.declarations[0]?.resolve()?.kind;
 
 			if (
 				symbolDeclarationKind !== SyntaxKind.MethodDeclaration &&
@@ -208,22 +230,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				symbolDeclarationKind !== SyntaxKind.MethodSignature
 			) {
 				return (
-					searchForDeprecationInAliasesChain(symbol, typeChecker, true) ||
-					getJsDocDeprecation(signature, typeChecker) ||
+					searchForDeprecationInAliasesChain(symbol, checker, true) ||
+					getJsDocDeprecation(signature, checker) ||
 					isDeprecatedFromDeclarations(aliasedSymbol)
 				);
 			}
 
 			return (
-				searchForDeprecationInAliasesChain(symbol, typeChecker, false) ||
-				getJsDocDeprecation(signature, typeChecker)
+				searchForDeprecationInAliasesChain(symbol, checker, false) ||
+				getJsDocDeprecation(signature, checker)
 			);
 		}
 
 		function checkNode(
 			node: AST.AnyNode,
 			sourceFile: AST.SourceFile,
-			typeChecker: ts.TypeChecker,
+			checker: Checker,
 		) {
 			if (isDeclarationSite(node) || isInsideImport(node)) {
 				return;
@@ -231,7 +253,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const callLike = getCallLikeExpression(node);
 			if (callLike) {
-				if (getCallLikeDeprecation(node, callLike, typeChecker)) {
+				if (getCallLikeDeprecation(node, callLike, checker)) {
 					context.report({
 						message: "deprecated",
 						range: getTSNodeRange(node, sourceFile),
@@ -244,15 +266,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.parent.kind === SyntaxKind.ShorthandPropertyAssignment &&
 				node.parent.name === node
 			) {
-				const symbol = typeChecker.getSymbolAtLocation(node);
+				const symbol = checker.getSymbolAtLocation(node);
 				const valueSymbol =
 					symbol &&
-					typeChecker.getShorthandAssignmentValueSymbol(
-						symbol.valueDeclaration,
+					checker.getShorthandAssignmentValueSymbol(
+						symbol.valueDeclaration?.resolve(),
 					);
 				if (
 					valueSymbol &&
-					(getJsDocDeprecation(valueSymbol, typeChecker) ||
+					(getJsDocDeprecation(valueSymbol, checker) ||
 						isDeprecatedFromDeclarations(valueSymbol))
 				) {
 					context.report({
@@ -263,8 +285,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const symbol = typeChecker.getSymbolAtLocation(node);
-			if (isDeprecated(symbol, typeChecker)) {
+			const symbol = checker.getSymbolAtLocation(node);
+			if (isDeprecated(symbol, checker)) {
 				context.report({
 					message: "deprecated",
 					range: getTSNodeRange(node, sourceFile),
@@ -277,20 +299,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkComputedPropertyAccess(
 			node: AST.ElementAccessExpression,
 			sourceFile: AST.SourceFile,
-			typeChecker: ts.TypeChecker,
+			checker: Checker,
 		) {
 			const argumentExpression = node.argumentExpression;
-			const argumentType = typeChecker.getTypeAtLocation(argumentExpression);
+			const argumentType = checker.getTypeAtLocation(argumentExpression);
 
-			if (!argumentType.isLiteral()) {
+			if (
+				!(
+					argumentType.flags &
+					(TypeFlags.StringLiteral | TypeFlags.NumberLiteral)
+				)
+			) {
 				return;
 			}
 
-			const objectType = typeChecker.getTypeAtLocation(node.expression);
+			const objectType = checker.getTypeAtLocation(node.expression);
 			let propertyName: string;
-			if (argumentType.isStringLiteral()) {
+			if (argumentType.flags & TypeFlags.StringLiteral) {
 				propertyName = argumentType.value;
-			} else if (argumentType.isNumberLiteral()) {
+			} else if (argumentType.flags & TypeFlags.NumberLiteral) {
 				propertyName = String(argumentType.value);
 			} else {
 				return;
@@ -299,7 +326,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const property = objectType.getProperty(propertyName);
 			if (
 				property &&
-				(getJsDocDeprecation(property, typeChecker) ||
+				(getJsDocDeprecation(property, checker) ||
 					isDeprecatedFromDeclarations(property))
 			) {
 				context.report({
@@ -312,7 +339,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkBindingElement(
 			node: AST.BindingElement,
 			sourceFile: AST.SourceFile,
-			typeChecker: ts.TypeChecker,
+			checker: Checker,
 		) {
 			const bindingPattern = node.parent;
 			if (bindingPattern.kind !== SyntaxKind.ObjectBindingPattern) {
@@ -325,25 +352,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const declarationOrPattern = bindingPattern.parent;
-			let objectType: ts.Type | undefined;
+			let objectType: Type | undefined;
 
 			if (declarationOrPattern.kind === SyntaxKind.VariableDeclaration) {
 				const initializer = declarationOrPattern.initializer;
 				if (initializer) {
-					objectType = typeChecker.getTypeAtLocation(initializer);
+					objectType = checker.getTypeAtLocation(initializer);
 				}
 			} else if (declarationOrPattern.kind === SyntaxKind.BindingElement) {
 				const parentInitializer = declarationOrPattern.parent.parent;
 				if (parentInitializer.kind === SyntaxKind.VariableDeclaration) {
 					const init = parentInitializer.initializer;
 					if (init) {
-						const parentType = typeChecker.getTypeAtLocation(init);
+						const parentType = checker.getTypeAtLocation(init);
 						const parentPropertyName =
 							declarationOrPattern.propertyName ?? declarationOrPattern.name;
 						if (parentPropertyName.kind === SyntaxKind.Identifier) {
 							const prop = parentType.getProperty(parentPropertyName.text);
 							if (prop) {
-								objectType = typeChecker.getTypeOfSymbolAtLocation(
+								objectType = checker.getTypeOfSymbolAtLocation(
 									prop,
 									parentInitializer,
 								);
@@ -357,7 +384,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const property = objectType.getProperty(propertyName.text);
 				if (
 					property &&
-					(getJsDocDeprecation(property, typeChecker) ||
+					(getJsDocDeprecation(property, checker) ||
 						isDeprecatedFromDeclarations(property))
 				) {
 					const reportNode = node.propertyName ?? node.name;
@@ -371,28 +398,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 		}
 
-		function checkHeritageClause(
-			node: AST.HeritageClause,
-			sourceFile: AST.SourceFile,
-			typeChecker: ts.TypeChecker,
-		) {
-			for (const type of node.types) {
-				if (type.expression.kind === SyntaxKind.Identifier) {
-					const symbol = typeChecker.getSymbolAtLocation(type.expression);
-					if (isDeprecated(symbol, typeChecker)) {
-						context.report({
-							message: "deprecated",
-							range: getTSNodeRange(type.expression, sourceFile),
-						});
-					}
-				}
-			}
-		}
-
 		function checkSuperCall(
 			node: AST.SuperExpression,
 			sourceFile: AST.SourceFile,
-			typeChecker: ts.TypeChecker,
+			checker: Checker,
 		) {
 			const callExpr = node.parent;
 			if (
@@ -402,8 +411,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const signature = typeChecker.getResolvedSignature(callExpr);
-			if (signature && getJsDocDeprecation(signature, typeChecker)) {
+			const signature = checker.getResolvedSignature(callExpr);
+			if (signature && getJsDocDeprecation(signature, checker)) {
 				context.report({
 					message: "deprecated",
 					range: getTSNodeRange(node, sourceFile),
@@ -413,20 +422,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				BindingElement: (node, { sourceFile, typeChecker }) => {
-					checkBindingElement(node, sourceFile, typeChecker);
+				BindingElement: (node, { sourceFile, checker }) => {
+					checkBindingElement(node, sourceFile, checker);
 				},
 
-				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
-					checkComputedPropertyAccess(node, sourceFile, typeChecker);
+				ElementAccessExpression: (node, { sourceFile, checker }) => {
+					checkComputedPropertyAccess(node, sourceFile, checker);
 				},
 
-				HeritageClause: (node, { sourceFile, typeChecker }) => {
-					checkHeritageClause(node, sourceFile, typeChecker);
-				},
-
-				Identifier: (node, { sourceFile, typeChecker }) => {
+				Identifier: (node, { sourceFile, checker }) => {
 					if (isInsideHeritageClause(node)) {
+						if (
+							(node.parent.kind === SyntaxKind.ExpressionWithTypeArguments &&
+								node.parent.expression === node &&
+								node.parent.parent.kind === SyntaxKind.HeritageClause) ||
+							(node.parent.kind === SyntaxKind.TypeReference &&
+								node.parent.typeName === node &&
+								node.parent.parent.kind === SyntaxKind.HeritageClause)
+						) {
+							checkNode(node, sourceFile, checker);
+						}
 						return;
 					}
 
@@ -434,7 +449,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.parent.kind === SyntaxKind.PropertyAccessExpression &&
 						node === node.parent.name
 					) {
-						checkNode(node, sourceFile, typeChecker);
+						checkNode(node, sourceFile, checker);
 						return;
 					}
 
@@ -442,7 +457,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.parent.kind === SyntaxKind.QualifiedName &&
 						node === node.parent.right
 					) {
-						checkNode(node, sourceFile, typeChecker);
+						checkNode(node, sourceFile, checker);
 						return;
 					}
 
@@ -453,20 +468,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					checkNode(node, sourceFile, typeChecker);
+					checkNode(node, sourceFile, checker);
 				},
 
-				PrivateIdentifier: (node, { sourceFile, typeChecker }) => {
+				PrivateIdentifier: (node, { sourceFile, checker }) => {
 					if (
 						node.parent.kind === SyntaxKind.PropertyAccessExpression &&
 						node === node.parent.name
 					) {
-						checkNode(node, sourceFile, typeChecker);
+						checkNode(node, sourceFile, checker);
 					}
 				},
 
-				SuperKeyword: (node, { sourceFile, typeChecker }) => {
-					checkSuperCall(node, sourceFile, typeChecker);
+				SuperKeyword: (node, { sourceFile, checker }) => {
+					checkSuperCall(node, sourceFile, checker);
 				},
 			},
 		};

@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -30,20 +31,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isNewDateWithNoArguments(
 			node: AST.NewExpression,
-			typeChecker: Checker,
+			checker: Checker,
 			program: Program,
 		) {
 			return (
 				node.expression.kind === SyntaxKind.Identifier &&
 				node.expression.text === "Date" &&
 				!node.arguments?.length &&
-				isGlobalDeclarationOfName(node.expression, "Date", typeChecker, program)
+				isGlobalDeclarationOfName(node.expression, "Date", checker, program)
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+				CallExpression: (node, { program, sourceFile, checker }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier ||
@@ -61,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.expression.expression.kind !== SyntaxKind.NewExpression ||
 						!isNewDateWithNoArguments(
 							node.expression.expression,
-							typeChecker,
+							checker,
 							program,
 						)
 					) {
@@ -76,8 +77,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				NewExpression: (node, { program, sourceFile, typeChecker }) => {
-					if (!isNewDateWithNoArguments(node, typeChecker, program)) {
+				NewExpression: (node, { program, sourceFile, checker }) => {
+					if (!isNewDateWithNoArguments(node, checker, program)) {
 						return;
 					}
 
@@ -91,7 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								isGlobalDeclarationOfName(
 									node.parent.expression,
 									node.parent.expression.text,
-									typeChecker,
+									checker,
 									program,
 								)
 							) {

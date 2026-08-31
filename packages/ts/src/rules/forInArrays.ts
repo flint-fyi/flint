@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	typescriptLanguage,
@@ -31,36 +30,34 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function hasNumberLikeLength(type: ts.Type, typeChecker: Checker): boolean {
+		function hasNumberLikeLength(type: Type, checker: Checker): boolean {
 			const lengthProperty = type.getProperty("length");
 
 			if (lengthProperty == null) {
 				return false;
 			}
 
-			return tsutils.isTypeFlagSet(
-				typeChecker.getTypeOfSymbol(lengthProperty),
-				ts.TypeFlags.NumberLike,
+			return (
+				(checker.getTypeOfSymbol(lengthProperty).flags &
+					TypeFlags.NumberLike) !==
+				0
 			);
 		}
 
-		function isArrayLike(type: ts.Type, typeChecker: Checker): boolean {
+		function isArrayLike(type: Type, checker: Checker): boolean {
 			return isTypeRecursive(
 				type,
 				(t) =>
-					t.getNumberIndexType() != null && hasNumberLikeLength(t, typeChecker),
+					t.getNumberIndexType() != null && hasNumberLikeLength(t, checker),
 			);
 		}
 
 		return {
 			visitors: {
-				ForInStatement: (node, { sourceFile, typeChecker }) => {
-					const type = getConstrainedTypeAtLocation(
-						node.expression,
-						typeChecker,
-					);
+				ForInStatement: (node, { sourceFile, checker }) => {
+					const type = getConstrainedTypeAtLocation(node.expression, checker);
 
-					if (isArrayLike(type, typeChecker)) {
+					if (isArrayLike(type, checker)) {
 						context.report({
 							message: "forIn",
 							range: {

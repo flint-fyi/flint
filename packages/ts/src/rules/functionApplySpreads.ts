@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -91,7 +91,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { sourceFile, checker }) => {
 					const argumentsNode = getVariadicArgumentsNode(node);
 					if (!argumentsNode) {
 						return;
@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
-						!isFunction(node.expression.expression, typeChecker)
+						!isFunction(node.expression.expression, checker)
 					) {
 						return;
 					}

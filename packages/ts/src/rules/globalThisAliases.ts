@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	declarationIncludesGlobal,
@@ -14,16 +15,24 @@ const globalAliases = new Set(["global", "self", "window"]);
 
 function isOnlyGlobalDeclaration(
 	node: AST.Identifier,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
-	const symbol = typeChecker.getSymbolAtLocation(node);
+	const symbol = checker.getSymbolAtLocation(node);
 	if (!symbol) {
 		return false;
 	}
 
-	const declarations = symbol.getDeclarations();
-	if (!declarations?.length) {
+	const declarations: AST.Declaration[] = [];
+	for (const declarationHandle of symbol.declarations) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return false;
+		}
+		declarations.push(declaration);
+	}
+
+	if (!declarations.length) {
 		return false;
 	}
 
@@ -66,12 +75,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { program, sourceFile, typeChecker }) => {
+				Identifier: (node, { program, sourceFile, checker }) => {
 					if (
 						globalAliases.has(node.text) &&
 						!isPropertyAccess(node) &&
 						!isPropertyShorthand(node) &&
-						isOnlyGlobalDeclaration(node, typeChecker, program)
+						isOnlyGlobalDeclaration(node, checker, program)
 					) {
 						context.report({
 							data: { name: node.text },

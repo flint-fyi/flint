@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -34,10 +33,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { program, sourceFile, typeChecker }) => {
+				BinaryExpression: (node, { program, sourceFile, checker }) => {
 					if (
-						tsutils.isAssignmentKind(node.operatorToken.kind) &&
-						isGlobalVariable(node.left, typeChecker, program)
+						node.operatorToken.kind >= SyntaxKind.FirstAssignment &&
+						node.operatorToken.kind <= SyntaxKind.LastAssignment &&
+						isGlobalVariable(node.left, checker, program)
 					) {
 						context.report({
 							message: "noGlobalAssign",
@@ -45,22 +45,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				PostfixUnaryExpression: (
-					node,
-					{ program, sourceFile, typeChecker },
-				) => {
-					if (isGlobalVariable(node.operand, typeChecker, program)) {
+				PostfixUnaryExpression: (node, { program, sourceFile, checker }) => {
+					if (isGlobalVariable(node.operand, checker, program)) {
 						context.report({
 							message: "noGlobalAssign",
 							range: getTSNodeRange(node.operand, sourceFile),
 						});
 					}
 				},
-				PrefixUnaryExpression: (node, { program, sourceFile, typeChecker }) => {
+				PrefixUnaryExpression: (node, { program, sourceFile, checker }) => {
 					if (
 						(node.operator === SyntaxKind.PlusPlusToken ||
 							node.operator === SyntaxKind.MinusMinusToken) &&
-						isGlobalVariable(node.operand, typeChecker, program)
+						isGlobalVariable(node.operand, checker, program)
 					) {
 						context.report({
 							message: "noGlobalAssign",

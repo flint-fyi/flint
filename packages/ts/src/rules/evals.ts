@@ -30,14 +30,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+				CallExpression: (node, { program, sourceFile, checker }) => {
 					if (
-						isGlobalDeclarationOfName(
-							node.expression,
-							"eval",
-							typeChecker,
-							program,
-						)
+						isGlobalDeclarationOfName(node.expression, "eval", checker, program)
 					) {
 						context.report({
 							message: "noEval",

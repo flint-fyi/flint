@@ -1,4 +1,5 @@
-import { isIdentifier, SyntaxKind, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	isGlobalDeclaration,
@@ -18,7 +19,7 @@ const builtinErrorNames = new Set([
 
 export function isErrorSubclass(
 	node: AST.ClassDeclaration,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ): boolean {
 	if (!node.heritageClauses) {
@@ -33,9 +34,9 @@ export function isErrorSubclass(
 		for (const type of clause.types) {
 			const typeName = type.expression;
 			if (
-				isIdentifier(typeName) &&
+				typeName.kind === SyntaxKind.Identifier &&
 				builtinErrorNames.has(typeName.text) &&
-				isGlobalDeclaration(typeName, typeChecker, program)
+				isGlobalDeclaration(typeName, checker, program)
 			) {
 				return true;
 			}

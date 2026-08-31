@@ -1121,6 +1121,12 @@ export type D = A.C | A.D;
 `,
 		`function fn(/** @deprecated */ foo = 4) {}`,
 		`
+/** @deprecated */
+interface Foo {}
+interface Wrapper<T> {}
+class Bar implements Wrapper<Foo> {}
+`,
+		`
 class Foo implements Foo {
     get bar(): number {
         return 42;

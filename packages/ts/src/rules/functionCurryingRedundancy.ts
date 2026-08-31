@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	isFunction,
@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { sourceFile, checker }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -41,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						(method !== "call" && method !== "apply") ||
 						!node.arguments.length ||
-						!isFunction(node.expression.expression, typeChecker)
+						!isFunction(node.expression.expression, checker)
 					) {
 						return;
 					}

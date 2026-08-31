@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -166,8 +166,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ClassDeclaration: (node, { program, sourceFile, typeChecker }) => {
-					if (!isErrorSubclass(node, typeChecker, program)) {
+				ClassDeclaration: (node, { program, sourceFile, checker }) => {
+					if (!isErrorSubclass(node, checker, program)) {
 						return;
 					}
 

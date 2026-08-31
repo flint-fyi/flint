@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	isGlobalDeclarationOfName,
@@ -9,8 +9,8 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isDateType(node: AST.Expression, typeChecker: Checker) {
-	return typeChecker.getTypeAtLocation(node).getSymbol()?.getName() === "Date";
+function isDateType(node: AST.Expression, checker: Checker) {
+	return checker.getTypeAtLocation(node).getSymbol()?.name === "Date";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node, { program, sourceFile, typeChecker }) => {
+				NewExpression: (node, { program, sourceFile, checker }) => {
 					if (
 						node.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.text !== "Date" ||
@@ -41,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						!isGlobalDeclarationOfName(
 							node.expression,
 							"Date",
-							typeChecker,
+							checker,
 							program,
 						)
 					) {
@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						argument.expression.name.kind !== SyntaxKind.Identifier ||
 						argument.expression.name.text !== "getTime" ||
 						!!argument.arguments.length ||
-						!isDateType(argument.expression.expression, typeChecker)
+						!isDateType(argument.expression.expression, checker)
 					) {
 						return;
 					}

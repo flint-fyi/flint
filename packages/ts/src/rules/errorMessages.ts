@@ -1,4 +1,5 @@
-import { SyntaxKind, type NodeArray, type Program } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getStaticStringValue,
@@ -25,7 +26,7 @@ const errorConstructors = [
 
 function getErrorConstructorWithoutMessage(
 	node: AST.CallExpression | AST.NewExpression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	if (
@@ -39,7 +40,7 @@ function getErrorConstructorWithoutMessage(
 		isGlobalDeclarationOfName(
 			node.expression,
 			errorConstructor,
-			typeChecker,
+			checker,
 			program,
 		),
 	);
@@ -85,11 +86,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ program, sourceFile, checker }: TypeScriptFileServices,
 		) {
 			const errorConstructor = getErrorConstructorWithoutMessage(
 				node,
-				typeChecker,
+				checker,
 				program,
 			);
 
