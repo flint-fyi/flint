@@ -39,7 +39,6 @@ describe("typescriptLanguage file lifecycle", () => {
 		expect(first.services.project).toBeDefined();
 		expect(first.services.program).toBeDefined();
 		expect(first.services.checker).toBeDefined();
-		expect(first.services.typeChecker).toBe(first.services.checker);
 
 		second[Symbol.dispose]();
 		expect(first.services.sourceFile.fileName).toBe("/repo/first.ts");

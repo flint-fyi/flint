@@ -48,7 +48,6 @@ export interface TypeScriptFileServices {
 	snapshot: Snapshot;
 	sourceFile: AST.SourceFile;
 	spanMap: SpanMap | undefined;
-	typeChecker: Checker;
 }
 
 const log = debugForFile(import.meta.filename);
@@ -292,9 +291,6 @@ export const typescriptLanguage: Language<
 				},
 				get spanMap() {
 					return getSourceFile().spanMap;
-				},
-				get typeChecker() {
-					return getProject().checker;
 				},
 			};
 			const dispose = (): void => {

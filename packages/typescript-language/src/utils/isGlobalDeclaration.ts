@@ -6,8 +6,8 @@ import { getDeclarationsIfGlobal } from "./getDeclarationsIfGlobal.ts";
 
 export function isGlobalDeclaration(
 	node: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ): boolean {
-	return !!getDeclarationsIfGlobal(node, typeChecker, program);
+	return !!getDeclarationsIfGlobal(node, checker, program);
 }

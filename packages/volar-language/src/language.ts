@@ -410,9 +410,9 @@ setVolarCreateFile((data, program, sourceFile) => {
 
 		reports: [...collected.reports, ...(reports ?? [])],
 		services: {
+			checker: program.getTypeChecker() as Checker,
 			program,
 			sourceFile,
-			typeChecker: program.getTypeChecker() as Checker,
 			...extraContext,
 		},
 	};

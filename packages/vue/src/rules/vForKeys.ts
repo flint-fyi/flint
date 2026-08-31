@@ -197,8 +197,7 @@ export default ruleCreator.createRule(vueLanguage, {
 								currentEnd <= valueRange.end &&
 								ts.isIdentifier(current)
 							) {
-								const symbol =
-									services.typeChecker.getSymbolAtLocation(current);
+								const symbol = services.checker.getSymbolAtLocation(current);
 								if (symbol?.valueDeclaration == null) {
 									return false;
 								}
