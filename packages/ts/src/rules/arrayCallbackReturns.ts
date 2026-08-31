@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -8,6 +7,7 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { isFunctionScopeBoundary } from "./utils/syntaxKinds.ts";
 
 const arrayMethodsRequiringReturn = new Set([
 	"every",
@@ -109,7 +109,7 @@ function hasReturnWithValue(block: AST.Block): boolean {
 			return;
 		}
 
-		if (tsutils.isFunctionScopeBoundary(node)) {
+		if (isFunctionScopeBoundary(node)) {
 			return;
 		}
 

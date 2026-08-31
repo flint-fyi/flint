@@ -1,8 +1,6 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -31,26 +29,36 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function getLexicalDeclaration(
-			statements: ts.NodeArray<AST.Statement>,
+		function getLexicalDeclarationRange(
+			statements: readonly AST.Statement[],
 			sourceFile: AST.SourceFile,
-		): ts.Node | undefined {
+		): undefined | { begin: number; end: number } {
 			for (const statement of statements) {
 				if (
 					statement.kind === SyntaxKind.VariableStatement &&
-					tsutils.isNodeFlagSet(
-						statement.declarationList,
-						ts.NodeFlags.Let | ts.NodeFlags.Const,
-					)
+					(statement.declarationList.flags &
+						(NodeFlags.Let | NodeFlags.Const)) !==
+						0
 				) {
-					return statement.declarationList.getChildAt(0, sourceFile);
+					const begin = statement.getStart(sourceFile);
+					return {
+						begin,
+						end:
+							begin +
+							(statement.declarationList.flags & NodeFlags.Const ? 5 : 3),
+					};
 				}
 
 				if (
 					statement.kind === SyntaxKind.ClassDeclaration ||
 					statement.kind === SyntaxKind.FunctionDeclaration
 				) {
-					return statement.getChildAt(0, sourceFile);
+					const begin = statement.getStart(sourceFile);
+					return {
+						begin,
+						end:
+							begin + (statement.kind === SyntaxKind.ClassDeclaration ? 5 : 8),
+					};
 				}
 			}
 
@@ -61,14 +69,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CaseClause | AST.DefaultClause,
 			{ sourceFile }: TypeScriptFileServices,
 		): void {
-			const declarationNode = getLexicalDeclaration(
+			const declarationRange = getLexicalDeclarationRange(
 				node.statements,
 				sourceFile,
 			);
-			if (declarationNode) {
+			if (declarationRange) {
 				context.report({
 					message: "unexpectedLexicalDeclaration",
-					range: getTSNodeRange(declarationNode, sourceFile),
+					range: declarationRange,
 				});
 			}
 		}

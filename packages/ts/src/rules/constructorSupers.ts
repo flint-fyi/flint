@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -8,6 +7,7 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { isFunctionScopeBoundary } from "./utils/syntaxKinds.ts";
 
 function classHasExtendsClause(
 	node: AST.ClassDeclaration | AST.ClassExpression,
@@ -25,7 +25,7 @@ function containsSuperCall(node: AST.AnyNode): boolean {
 		return true;
 	}
 
-	if (tsutils.isFunctionScopeBoundary(node)) {
+	if (isFunctionScopeBoundary(node)) {
 		return false;
 	}
 
@@ -78,19 +78,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const hasSuperCall = containsSuperCall(constructor.body);
 
 			if (isDerivedClass && !hasSuperCall) {
-				const constructorKeyword = constructor
-					.getChildren(sourceFile)
-					.find((child) => child.kind === SyntaxKind.Constructor);
+				const constructorStart = constructor.getStart(sourceFile);
 
 				context.report({
 					message: "missingSuperCall",
 					range: {
-						begin:
-							constructorKeyword?.getStart(sourceFile) ??
-							constructor.getStart(sourceFile),
-						end:
-							constructorKeyword?.getEnd() ??
-							constructor.getStart(sourceFile) + 11,
+						begin: constructorStart,
+						end: constructorStart + 11,
 					},
 				});
 			}
@@ -118,7 +112,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (tsutils.isFunctionScopeBoundary(node)) {
+			if (isFunctionScopeBoundary(node)) {
 				return;
 			}
 

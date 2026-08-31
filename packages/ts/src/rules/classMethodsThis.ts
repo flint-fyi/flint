@@ -1,4 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	isClassDeclaration,
+	isClassExpression,
+	isComputedPropertyName,
+	isPropertyDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
@@ -26,15 +32,18 @@ function classImplementsSomething(
 	);
 }
 
-function containsThis(node: ts.Node): boolean {
+function containsThis(node: AST.AnyNode): boolean {
 	switch (node.kind) {
 		case SyntaxKind.ClassDeclaration:
 		case SyntaxKind.ClassExpression: {
-			const classNode = node as ts.ClassDeclaration | ts.ClassExpression;
-			for (const member of classNode.members) {
+			if (!isClassDeclaration(node) && !isClassExpression(node)) {
+				return false;
+			}
+
+			for (const member of node.members) {
 				if (
-					ts.isPropertyDeclaration(member) &&
-					ts.isComputedPropertyName(member.name) &&
+					isPropertyDeclaration(member) &&
+					isComputedPropertyName(member.name) &&
 					containsThis(member.name.expression)
 				) {
 					return true;
@@ -53,7 +62,7 @@ function containsThis(node: ts.Node): boolean {
 			return true;
 
 		default:
-			return ts.forEachChild(node, containsThis) ?? false;
+			return node.forEachChild(containsThis) ?? false;
 	}
 }
 
@@ -94,7 +103,7 @@ function getMemberDisplayName(
 }
 
 function hasModifier(
-	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
+	modifiers: readonly AST.ModifierLike[] | undefined,
 	kind: SyntaxKind,
 ): boolean {
 	return modifiers?.some((modifier) => modifier.kind === kind) ?? false;

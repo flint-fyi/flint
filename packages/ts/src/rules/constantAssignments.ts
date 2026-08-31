@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getModifyingReferences,
@@ -38,9 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const identifiers: AST.Identifier[] = [];
 
 			for (const element of name.elements) {
-				if (element.kind === SyntaxKind.BindingElement) {
-					identifiers.push(...collectBindingElements(element.name));
-				}
+				identifiers.push(...collectBindingElements(element.name));
 			}
 
 			return identifiers;
@@ -49,7 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				VariableDeclarationList: (node, { sourceFile }) => {
-					if (!(node.flags & ts.NodeFlags.Const) || !node.declarations.length) {
+					if (!(node.flags & NodeFlags.Const) || !node.declarations.length) {
 						return;
 					}
 

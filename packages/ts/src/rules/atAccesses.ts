@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -10,6 +9,7 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { isAssignmentKind } from "./utils/syntaxKinds.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -52,14 +52,14 @@ function isLeftHandSide(node: AST.ElementAccessExpression) {
 		case SyntaxKind.ArrayLiteralExpression: {
 			return (
 				node.parent.parent.kind === SyntaxKind.BinaryExpression &&
-				tsutils.isAssignmentKind(node.parent.parent.operatorToken.kind) &&
+				isAssignmentKind(node.parent.parent.operatorToken.kind) &&
 				node.parent.parent.left === node.parent
 			);
 		}
 
 		case SyntaxKind.BinaryExpression:
 			return (
-				tsutils.isAssignmentKind(node.parent.operatorToken.kind) &&
+				isAssignmentKind(node.parent.operatorToken.kind) &&
 				node.parent.left === node
 			);
 
@@ -74,9 +74,7 @@ function isLeftHandSide(node: AST.ElementAccessExpression) {
 		case SyntaxKind.ShorthandPropertyAssignment: {
 			return (
 				node.parent.parent.parent.kind === SyntaxKind.BinaryExpression &&
-				tsutils.isAssignmentKind(
-					node.parent.parent.parent.operatorToken.kind,
-				) &&
+				isAssignmentKind(node.parent.parent.parent.operatorToken.kind) &&
 				node.parent.parent.parent.left === node.parent.parent
 			);
 		}

@@ -1,4 +1,9 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	isTypeReferenceNode,
+	SyntaxKind,
+	type NodeArray,
+	type TypeNode,
+} from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
@@ -21,32 +26,15 @@ const builtInTypedArrays = new Set<string>([
 	"Uint32Array",
 ]);
 
-function getTypeArgumentsRange(
-	parent: AST.AnyNode,
-	typeArguments: ts.NodeArray<ts.TypeNode>,
-	sourceFile: AST.SourceFile,
-) {
-	const children = parent.getChildren(sourceFile);
-	let begin = typeArguments.pos;
-	let end = typeArguments.end;
-
-	for (const child of children) {
-		if (child.kind === SyntaxKind.LessThanToken) {
-			begin = child.getStart(sourceFile);
-		} else if (child.kind === SyntaxKind.GreaterThanToken) {
-			end = child.getEnd();
-		}
-	}
-
-	return { begin, end };
+function getTypeArgumentsRange(typeArguments: NodeArray<TypeNode>) {
+	return { begin: typeArguments.pos - 1, end: typeArguments.end + 1 };
 }
 
 function getTypeArgumentsText(
-	parent: AST.AnyNode,
-	typeArguments: ts.NodeArray<ts.TypeNode>,
+	typeArguments: NodeArray<TypeNode>,
 	sourceFile: AST.SourceFile,
 ) {
-	const range = getTypeArgumentsRange(parent, typeArguments, sourceFile);
+	const range = getTypeArgumentsRange(typeArguments);
 	return sourceFile.text.slice(range.begin, range.end);
 }
 
@@ -119,16 +107,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (!typeAnnotation) {
 				if (style === "type-annotation" && initializer.typeArguments) {
 					const typeArgsText = getTypeArgumentsText(
-						initializer,
 						initializer.typeArguments,
 						sourceFile,
 					);
 					const identifierEnd = identifier.getEnd();
 					const typeAnnotationText = `${constructorName}${typeArgsText}`;
 					const typeArgumentsRange = getTypeArgumentsRange(
-						initializer,
 						initializer.typeArguments,
-						sourceFile,
 					);
 
 					context.report({
@@ -153,7 +138,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				!ts.isTypeReferenceNode(typeAnnotation) ||
+				!isTypeReferenceNode(typeAnnotation) ||
 				typeAnnotation.typeName.kind !== SyntaxKind.Identifier ||
 				typeAnnotation.typeName.text !== constructorName ||
 				isBuiltInTypedArray(typeAnnotation.typeName.text) ||
@@ -168,14 +153,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				!initializer.typeArguments
 			) {
 				const typeArgsText = getTypeArgumentsText(
-					typeAnnotation,
 					typeAnnotation.typeArguments,
 					sourceFile,
 				);
 				const typeArgsRange = getTypeArgumentsRange(
-					typeAnnotation,
 					typeAnnotation.typeArguments,
-					sourceFile,
 				);
 
 				const constructorEnd = initializer.expression.getEnd();
@@ -207,14 +189,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				initializer.typeArguments
 			) {
 				const typeArgumentsText = getTypeArgumentsText(
-					initializer,
 					initializer.typeArguments,
 					sourceFile,
 				);
 				const typeArgumentsRange = getTypeArgumentsRange(
-					initializer,
 					initializer.typeArguments,
-					sourceFile,
 				);
 				const newTypeAnnotation = `${typeAnnotation.typeName.text}${typeArgumentsText}`;
 

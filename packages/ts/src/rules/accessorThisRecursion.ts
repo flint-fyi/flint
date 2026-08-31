@@ -1,13 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
+	forEachChild,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { isFunctionScopeBoundary } from "./utils/syntaxKinds.ts";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
@@ -66,20 +67,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const propertyName = getPropertyName(accessor, sourceFile);
 			const isGetter = accessor.kind === SyntaxKind.GetAccessor;
 
-			function checkNode(node: ts.Node): void {
-				if (tsutils.isFunctionScopeBoundary(node)) {
+			function checkNode(node: AST.AnyNode): void {
+				if (isFunctionScopeBoundary(node)) {
 					return;
 				}
 
-				if (ts.isPropertyAccessExpression(node)) {
+				if (node.kind === SyntaxKind.PropertyAccessExpression) {
 					checkPropertyAccessExpression(node);
 				}
 
-				ts.forEachChild(node, checkNode);
+				forEachChild(node, checkNode);
 			}
 
 			function checkPropertyAccessExpression(
-				node: ts.PropertyAccessExpression,
+				node: AST.PropertyAccessExpression,
 			) {
 				if (
 					node.name.text !== propertyName ||
@@ -97,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				} else if (
-					ts.isBinaryExpression(node.parent) &&
+					node.parent.kind === SyntaxKind.BinaryExpression &&
 					node.parent.left === node &&
 					node.parent.operatorToken.kind === SyntaxKind.EqualsToken
 				) {
@@ -113,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			// TODO: This will be more clean when there is a scope manager
 			// https://github.com/flint-fyi/flint/issues/400
-			ts.forEachChild(accessor.body, checkNode);
+			forEachChild(accessor.body, checkNode);
 		}
 
 		return {

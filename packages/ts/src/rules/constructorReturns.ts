@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -8,6 +7,7 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { isFunctionScopeBoundary } from "./utils/syntaxKinds.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -50,7 +50,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							return;
 						}
 
-						if (tsutils.isFunctionScopeBoundary(node)) {
+						if (isFunctionScopeBoundary(node)) {
 							return;
 						}
 
