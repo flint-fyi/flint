@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -10,18 +10,20 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isJsonMethod(
-	node: ts.Node,
+	node: AST.AnyNode,
 	methodName: string,
 	typeChecker: Checker,
-): node is ts.CallExpression {
+	program: Program,
+): node is AST.CallExpression {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
-		ts.isIdentifier(node.expression.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.expression.kind === SyntaxKind.Identifier &&
 		isGlobalDeclarationOfName(
 			node.expression.expression,
 			"JSON",
 			typeChecker,
+			program,
 		) &&
 		node.expression.expression.text === "JSON" &&
 		node.expression.name.text === methodName
@@ -49,9 +51,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: AST.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(
+					node: AST.CallExpression,
+					{ program, sourceFile, typeChecker },
+				) {
 					if (
-						!isJsonMethod(node, "parse", typeChecker) ||
+						!isJsonMethod(node, "parse", typeChecker, program) ||
 						node.arguments.length !== 1
 					) {
 						return;
@@ -61,8 +66,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const argument = node.arguments[0]!;
 
 					if (
-						ts.isSpreadElement(argument) ||
-						!isJsonMethod(argument, "stringify", typeChecker) ||
+						argument.kind === SyntaxKind.SpreadElement ||
+						!isJsonMethod(argument, "stringify", typeChecker, program) ||
 						argument.arguments.length !== 1
 					) {
 						return;
@@ -71,7 +76,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const stringifyArgument = argument.arguments[0]!;
 
-					if (ts.isSpreadElement(stringifyArgument)) {
+					if (stringifyArgument.kind === SyntaxKind.SpreadElement) {
 						return;
 					}
 

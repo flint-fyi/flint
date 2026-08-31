@@ -240,6 +240,6 @@ new RegExp("(?<year>[0-9]{4})-(?:\\w{5})");
 		String.raw`new RegExp("(?:[0-9]{4})")`,
 		String.raw`new RegExp("(?<year>[0-9]{4})")`,
 		String.raw`RegExp("(?<a>x)(?<b>y)")`,
-		String.raw`new RegExp(variable)`,
+		String.raw`declare const variable: string; new RegExp(variable)`,
 	],
 });

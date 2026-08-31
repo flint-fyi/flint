@@ -1,46 +1,17 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
+	getScopeManager,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type ScopeManager,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getFunctionName } from "./utils/getFunctionName.ts";
-
-// TODO: This will be more clean when there is a scope manager
-// https://github.com/flint-fyi/flint/issues/400
-function collectParameterReferences(
-	parameterName: string,
-	parameterNode: ts.Identifier,
-	functionNode: ts.Node,
-	functionBody: ts.Node,
-) {
-	const references: ts.Identifier[] = [];
-
-	function collectNode(node: ts.Node): void {
-		if (tsutils.isFunctionScopeBoundary(node) && node !== functionNode) {
-			return;
-		}
-
-		if (
-			ts.isIdentifier(node) &&
-			node.text === parameterName &&
-			node !== parameterNode
-		) {
-			references.push(node);
-		}
-
-		ts.forEachChild(node, collectNode);
-	}
-
-	ts.forEachChild(functionBody, collectNode);
-
-	return references;
-}
 
 function isParameterOnlyUsedInRecursion(
 	parameter: AST.ParameterDeclaration,
@@ -51,23 +22,24 @@ function isParameterOnlyUsedInRecursion(
 		| AST.FunctionDeclaration
 		| AST.FunctionExpression
 		| AST.MethodDeclaration,
+	scopeManager: ScopeManager,
 ) {
-	if (!ts.isIdentifier(parameter.name) || !functionNode.body) {
+	if (parameter.name.kind !== SyntaxKind.Identifier || !functionNode.body) {
 		return false;
 	}
 
-	const references = collectParameterReferences(
-		parameter.name.text,
-		parameter.name,
-		functionNode,
-		functionNode.body,
-	);
+	const [variable] = scopeManager.getDeclaredVariables(parameter);
+	if (!variable) {
+		return false;
+	}
+
+	const { references } = variable;
 
 	return (
 		references.length &&
 		references.every((reference) =>
 			isReferenceOnlyUsedInRecursion(
-				reference,
+				reference.identifier,
 				parameterIndex,
 				functionName,
 				functionNode,
@@ -77,20 +49,20 @@ function isParameterOnlyUsedInRecursion(
 }
 
 function isRecursiveCall(
-	callExpression: ts.CallExpression,
+	callExpression: AST.CallExpression,
 	functionName: string,
-	functionNode: ts.Node,
+	functionNode: AST.AnyNode,
 ): boolean {
 	const callee = callExpression.expression;
 
 	let calleeMatchesFunctionName = false;
 
-	if (ts.isIdentifier(callee)) {
+	if (callee.kind === SyntaxKind.Identifier) {
 		calleeMatchesFunctionName = callee.text === functionName;
 	} else if (
-		ts.isPropertyAccessExpression(callee) &&
-		callee.expression.kind === ts.SyntaxKind.ThisKeyword &&
-		ts.isIdentifier(callee.name)
+		callee.kind === SyntaxKind.PropertyAccessExpression &&
+		callee.expression.kind === SyntaxKind.ThisKeyword &&
+		callee.name.kind === SyntaxKind.Identifier
 	) {
 		calleeMatchesFunctionName = callee.name.text === functionName;
 	}
@@ -100,9 +72,9 @@ function isRecursiveCall(
 	}
 
 	for (
-		let current: ts.Node | undefined = callExpression.parent;
+		let current: AST.AnyNode | undefined = callExpression.parent;
 		current;
-		current = current.parent as ts.Node | undefined
+		current = current.parent as AST.AnyNode | undefined
 	) {
 		if (current === functionNode) {
 			return true;
@@ -116,14 +88,14 @@ function isRecursiveCall(
 }
 
 function isReferenceOnlyUsedInRecursion(
-	reference: ts.Identifier,
+	reference: AST.Identifier,
 	parameterIndex: number,
 	functionName: string,
-	functionNode: ts.Node,
+	functionNode: AST.AnyNode,
 ): boolean {
 	const parent = reference.parent;
 
-	if (!ts.isCallExpression(parent)) {
+	if (parent.kind !== SyntaxKind.CallExpression) {
 		return false;
 	}
 
@@ -172,6 +144,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
+			const scopeManager = getScopeManager(sourceFile);
+
 			for (const [parameterIndex, parameter] of node.parameters.entries()) {
 				if (
 					isParameterOnlyUsedInRecursion(
@@ -179,6 +153,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						parameterIndex,
 						functionName,
 						node,
+						scopeManager,
 					)
 				) {
 					context.report({

@@ -6,10 +6,12 @@ ruleTester.describe(rule, {
 		{
 			code: `
 declare const element: HTMLElement;
+declare const handler: EventListener;
 element.onclick = handler;
 `,
 			snapshot: `
 declare const element: HTMLElement;
+declare const handler: EventListener;
 element.onclick = handler;
         ~~~~~~~
         Prefer the multi-use \`addEventListener\` over assigning to the single-use \`onclick\` property.
@@ -33,13 +35,11 @@ button.onmousedown = function () {
 		},
 		{
 			code: `
-declare const window: HTMLElement;
 window.onload = () => {
     console.log("loaded");
 };
 `,
 			snapshot: `
-declare const window: HTMLElement;
 window.onload = () => {
        ~~~~~~
        Prefer the multi-use \`addEventListener\` over assigning to the single-use \`onload\` property.
@@ -49,11 +49,11 @@ window.onload = () => {
 		},
 		{
 			code: `
-declare const document: HTMLElement;
+declare function handleKeypress(event: KeyboardEvent): void;
 document.body.onkeypress = handleKeypress;
 `,
 			snapshot: `
-declare const document: HTMLElement;
+declare function handleKeypress(event: KeyboardEvent): void;
 document.body.onkeypress = handleKeypress;
               ~~~~~~~~~~
               Prefer the multi-use \`addEventListener\` over assigning to the single-use \`onkeypress\` property.
@@ -90,26 +90,30 @@ video.onpause = () => console.log("paused");
 		{
 			code: `
 declare const input: HTMLElement;
+declare function validate(value: unknown): void;
 input.oninput = function (event) {
-    validate(event.target.value);
+    validate((event.target as HTMLInputElement | null)?.value);
 };
 `,
 			snapshot: `
 declare const input: HTMLElement;
+declare function validate(value: unknown): void;
 input.oninput = function (event) {
       ~~~~~~~
       Prefer the multi-use \`addEventListener\` over assigning to the single-use \`oninput\` property.
-    validate(event.target.value);
+    validate((event.target as HTMLInputElement | null)?.value);
 };
 `,
 		},
 		{
 			code: `
 declare const element: HTMLElement;
+declare const handler: EventListener;
 element.onmouseover = handler;
 `,
 			snapshot: `
 declare const element: HTMLElement;
+declare const handler: EventListener;
 element.onmouseover = handler;
         ~~~~~~~~~~~
         Prefer the multi-use \`addEventListener\` over assigning to the single-use \`onmouseover\` property.
@@ -117,15 +121,41 @@ element.onmouseover = handler;
 		},
 	],
 	valid: [
-		`element.addEventListener("click", handler);`,
-		`button.addEventListener("mousedown", function () { console.log("clicked"); });`,
+		`
+			declare const element: HTMLElement;
+			declare const handler: EventListener;
+			element.addEventListener("click", handler);
+		`,
+		`
+			declare const button: HTMLButtonElement;
+			button.addEventListener("mousedown", function () { console.log("clicked"); });
+		`,
 		`window.addEventListener("load", () => { console.log("loaded"); });`,
-		`document.body.addEventListener("keypress", handleKeypress);`,
-		`form.addEventListener("submit", (event) => { event.preventDefault(); });`,
-		`element.setAttribute("onclick", "handler()");`,
-		`const onclick = element.onclick;`,
+		`
+			declare function handleKeypress(event: KeyboardEvent): void;
+			document.body.addEventListener("keypress", handleKeypress);
+		`,
+		`
+			declare const form: HTMLFormElement;
+			form.addEventListener("submit", (event) => { event.preventDefault(); });
+		`,
+		`
+			declare const element: HTMLElement;
+			element.setAttribute("onclick", "handler()");
+		`,
+		`
+			declare const element: HTMLElement;
+			const elementOnclick = element.onclick;
+		`,
 		`const handler = { onclick: () => {} };`,
-		`obj.customProperty = value;`,
-		`element.className = "active";`,
+		`
+			declare const obj: { customProperty: unknown };
+			declare const value: unknown;
+			obj.customProperty = value;
+		`,
+		`
+			declare const element: HTMLElement;
+			element.className = "active";
+		`,
 	],
 });

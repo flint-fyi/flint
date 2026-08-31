@@ -46,9 +46,13 @@ const value = self.postMessage;
 
 		{
 			code: `
+function handler() {}
+
 window.addEventListener("load", handler);
 `,
 			snapshot: `
+function handler() {}
+
 window.addEventListener("load", handler);
 ~~~~~~
 Prefer the standard \`globalThis\` over the platform-specific \`window\` for accessing the global object.
@@ -77,13 +81,18 @@ if (typeof window !== "undefined") {}
 	],
 	valid: [
 		`const value = globalThis.localStorage;`,
-		`globalThis.addEventListener("load", handler);`,
+		`function handler() {}
+globalThis.addEventListener("load", handler);`,
 		`function example(window: { inner: boolean }) { console.log(window); }`,
 		`function example(window: Window) { return window.innerWidth; }`,
 		`const object = { window: true };`,
-		`const { window } = config;`,
+		`function example(config: { window: boolean }) {
+    const { window } = config;
+    return window;
+}`,
 		`class Example { window = true; }`,
 		`interface Config { window: boolean; }`,
-		`const value = object.window;`,
+		`const object = { window: true };
+const value = object.window;`,
 	],
 });

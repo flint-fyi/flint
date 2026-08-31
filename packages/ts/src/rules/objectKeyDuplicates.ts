@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type Node } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -35,9 +35,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ObjectLiteralExpression(node, { sourceFile }) {
 					const seenKeys = {
-						getters: new Map<string, ts.Node>(),
-						setters: new Map<string, ts.Node>(),
-						values: new Map<string, ts.Node>(),
+						getters: new Map<string, Node>(),
+						setters: new Map<string, Node>(),
+						values: new Map<string, Node>(),
 					};
 
 					for (const property of node.properties.toReversed()) {

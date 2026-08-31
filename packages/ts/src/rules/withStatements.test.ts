@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import { ruleTester } from "./ruleTester.ts";
 import rule from "./withStatements.ts";
 
@@ -9,6 +11,13 @@ with (container.property) {
   property.value = true;
 }
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+				noUnusedLocals: false,
+			}),
 			snapshot: `
 with (container.property) {
 ~~~~
@@ -20,6 +29,8 @@ with (container.property) {
 	],
 	valid: [
 		`
+const container = { property: { value: false } };
+
 let property = container.property;
 property.value = true;
 `,

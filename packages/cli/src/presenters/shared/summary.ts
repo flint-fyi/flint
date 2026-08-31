@@ -12,7 +12,7 @@ export interface SummaryCounts {
 export function* presentSummary(
 	counts: SummaryCounts,
 	{ duration, formattingResults, lintResults }: PresenterSummarizeContext,
-) {
+): Generator<string, void, void> {
 	if (lintResults.changed?.size) {
 		yield chalk.green(
 			[
@@ -41,7 +41,7 @@ export function* presentSummary(
 		);
 	}
 
-	if (formattingResults.dirty.size) {
+	if (formattingResults?.dirty.size) {
 		yield "\n";
 
 		if (formattingResults.written) {

@@ -1,2 +1,6 @@
 /.husky
+packages/*/.astro
+packages/*/dist
+packages/*/lib
+packages/performance-testing/cases
 /pnpm-lock.yaml

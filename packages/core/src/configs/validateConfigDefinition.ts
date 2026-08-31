@@ -9,7 +9,7 @@ import type {
 export function validateConfigDefinition(
 	definition: ConfigDefinition,
 	configFilePath: string,
-) {
+): string | undefined {
 	const checkRules = (
 		rulesValue: AnyLevelDeep<ConfigRuleDefinition> | undefined,
 		useIndex: number,

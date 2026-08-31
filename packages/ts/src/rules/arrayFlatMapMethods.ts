@@ -1,6 +1,7 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -15,8 +16,8 @@ function isArrayMapCall(
 	typeChecker: Checker,
 ): node is AST.CallExpression {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "map" &&
 		node.arguments.length >= 1 &&
 		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
@@ -32,9 +33,7 @@ function isFlatCallWithDepthOne(node: AST.CallExpression) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const firstArgument = node.arguments[0]!;
 
-			// TODO: Use a util like getStaticValue
-			// https://github.com/flint-fyi/flint/issues/1298
-			return ts.isNumericLiteral(firstArgument) && firstArgument.text === "1";
+			return getStaticNumberValue(firstArgument) === 1;
 		}
 
 		default:
@@ -64,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 

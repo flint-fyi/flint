@@ -5,6 +5,8 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const value: number;
+
 switch (value) {
     default:
         break;
@@ -13,6 +15,8 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
+
 switch (value) {
     default:
     ~~~~~~~
@@ -25,6 +29,8 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
+
 switch (value) {
     case 1:
         break;
@@ -35,6 +41,8 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
+
 switch (value) {
     case 1:
         break;
@@ -49,6 +57,8 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
+
 switch (value) {
     case 1:
     case 2:
@@ -60,6 +70,8 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
+
 switch (value) {
     case 1:
     case 2:
@@ -75,24 +87,28 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
+
 switch (value) {
     default:
-        console.log("default");
+        void "default";
         break;
     case 1:
-        console.log("one");
+        void "one";
         break;
 }
 `,
 			snapshot: `
+declare const value: number;
+
 switch (value) {
     default:
     ~~~~~~~
     Default clauses in switch statements should be last.
-        console.log("default");
+        void "default";
         break;
     case 1:
-        console.log("one");
+        void "one";
         break;
 }
 `,
@@ -109,6 +125,7 @@ const result = (value: number) => {
             return "two";
     }
 };
+result(1);
 `,
 			snapshot: `
 const result = (value: number) => {
@@ -123,10 +140,13 @@ const result = (value: number) => {
             return "two";
     }
 };
+result(1);
 `,
 		},
 		{
 			code: `
+declare const value: number;
+
 switch (value) {
     default:
     case 1:
@@ -134,6 +154,8 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
+
 switch (value) {
     default:
     ~~~~~~~
@@ -145,12 +167,34 @@ switch (value) {
 		},
 	],
 	valid: [
-		`switch (value) { case 1: break; default: break; }`,
-		`switch (value) { case 1: break; case 2: break; default: break; }`,
-		`switch (value) { case 1: break; case 2: break; }`,
-		`switch (value) { default: break; }`,
-		`switch (value) { case 1: case 2: break; default: break; }`,
 		`
+declare const value: number;
+
+switch (value) { case 1: break; default: break; }
+`,
+		`
+declare const value: number;
+
+switch (value) { case 1: break; case 2: break; default: break; }
+`,
+		`
+declare const value: number;
+
+switch (value) { case 1: break; case 2: break; }
+`,
+		`
+declare const value: number;
+
+switch (value) { default: break; }
+`,
+		`
+declare const value: number;
+
+switch (value) { case 1: case 2: break; default: break; }
+`,
+		`
+declare const value: number;
+
 switch (value) {
     case 1:
         break;
@@ -159,15 +203,17 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
+
 switch (value) {
     case 1:
-        console.log("one");
+        void "one";
         break;
     case 2:
-        console.log("two");
+        void "two";
         break;
     default:
-        console.log("default");
+        void "default";
         break;
 }
 `,
@@ -182,8 +228,11 @@ const result = (value: number) => {
             return "default";
     }
 };
+result(1);
 `,
 		`
+declare const value: number;
+
 switch (value) {
     case 1:
     case 2:

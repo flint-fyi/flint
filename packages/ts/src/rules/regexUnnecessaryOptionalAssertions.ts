@@ -114,6 +114,7 @@ function isOptionalAssertion(
 				break;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type errors above. TSESLint bug?
 		current = parent as RegExpAST.Node;
 	}
 

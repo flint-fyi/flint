@@ -1,60 +1,48 @@
 ---
 banner:
   content: |
-    Flint is still very early stage and experimental.
-    Not all features have been implemented.
+    🪵 Flint is early and experimental. Pull up a log, things are still being whittled.
 description: Flint is a fast, friendly linter.
 template: splash
 hero:
   actions:
-    - icon: open-book
-      link: /about
-      text: Learn More
-      variant: "primary"
     - icon: right-arrow
+      link: /about
+      text: Learn more
+      variant: primary
+    - icon: open-book
       link: /rules
-      text: Explore Rules
+      text: Explore rules
       variant: secondary
     - attrs:
         rel: me
         target: _blank
       icon: external
       link: https://github.com/flint-fyi/flint
-      text: View on GitHub
-      target: _blank
+      text: Star on GitHub
       variant: minimal
   image:
-    alt: A flaming heart atop a brown linter-style squiggly line
+    alt: "The Flint logo: a flaming heart atop a squiggly underline"
     dark: ~/assets/logo.svg
     light: ~/assets/logo.svg
-  tagline: A fast, friendly linter for JavaScript, TypeScript, and more.
-  title: "Flint"
+  tagline: >-
+    Flint is an experimental new "hybrid" linter that combines the performance of modern dev tooling with best-in-class comprehensive developer experience.
+  title: <div class="hero-first"><span class="hero-first-text">Flint</span>:</div><div class="hero-second">A fast, friendly linter</div><div class="hero-third">for JavaScript, TypeScript, and more.</div>
 title: A fast, friendly linter
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
+import GatherRound from "~/components/home/GatherRound.astro";
+import PackFeatures from "~/components/home/PackFeatures.astro";
+import TrailMap from "~/components/home/TrailMap.astro";
 import Sponsors from "~/components/Sponsors.astro";
 import TryItOut from "~/components/TryItOut.astro";
 
-<CardGrid stagger>
-	<Card title="Approachable and Fun" icon="heart">
-		Fall in love with your linter. Flint's intentional defaults and rich
-		reporting surface only the issues you'll want it to find.
-	</Card>
-	<Card title="Cache-Friendly and Fast" icon="rocket">
-		Flint's intelligent caching and coordination eliminate duplicate CI
-		workflows for tasks such as formatting and type-checking.
-	</Card>
-	<Card title="Powerful Typed Linting" icon="star">
-		Flint builds the most useful class of lint rules that use the full power of
-		TypeScript's type checker to find bugs in your code.
-	</Card>
-	<Card title="Streamlined Configuration" icon="document">
-		Flint configs embrace readability and power. They give you control over your
-		linter without making you learn its internals.
-	</Card>
-</CardGrid>
-
 <TryItOut />
+
+<PackFeatures />
+
+<TrailMap />
+
+<GatherRound />
 
 <Sponsors />

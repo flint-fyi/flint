@@ -8,7 +8,7 @@ import { isTypeRecursive } from "./isTypeRecursive.ts";
 export function isArrayOrTupleTypeAtLocation(
 	node: AST.Expression,
 	typeChecker: Checker,
-) {
+): boolean {
 	return isArrayOrTupleType(
 		getConstrainedTypeAtLocation(node, typeChecker),
 		typeChecker,

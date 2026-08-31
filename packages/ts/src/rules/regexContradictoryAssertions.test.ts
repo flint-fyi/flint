@@ -65,6 +65,6 @@ RegExp("a\\\\ba*-");
 		`new RegExp("a\\\\b");`,
 		`new RegExp("foo");`,
 		`RegExp("\\\\bword\\\\b");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 	],
 });

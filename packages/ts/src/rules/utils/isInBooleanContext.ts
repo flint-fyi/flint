@@ -1,43 +1,42 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
 export function isInBooleanContext(node: AST.AnyNode): boolean {
 	switch (node.parent.kind) {
-		case ts.SyntaxKind.AsExpression:
-		case ts.SyntaxKind.NonNullExpression:
-		case ts.SyntaxKind.ParenthesizedExpression:
+		case SyntaxKind.AsExpression:
+		case SyntaxKind.NonNullExpression:
+		case SyntaxKind.ParenthesizedExpression:
 			return isInBooleanContext(node.parent);
 
-		case ts.SyntaxKind.BinaryExpression: {
+		case SyntaxKind.BinaryExpression: {
 			return (
-				node.parent.operatorToken.kind ===
-					ts.SyntaxKind.AmpersandAmpersandToken ||
-				node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken
+				node.parent.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken ||
+				node.parent.operatorToken.kind === SyntaxKind.BarBarToken
 			);
 		}
 
 		// TODO: This should make sure the Boolean is the global one...
-		case ts.SyntaxKind.CallExpression: {
+		case SyntaxKind.CallExpression: {
 			return (
-				ts.isIdentifier(node.parent.expression) &&
+				node.parent.expression.kind === SyntaxKind.Identifier &&
 				node.parent.expression.text === "Boolean" &&
 				node.parent.arguments.length === 1 &&
 				node.parent.arguments[0] === node
 			);
 		}
 
-		case ts.SyntaxKind.ConditionalExpression:
-		case ts.SyntaxKind.ForStatement:
+		case SyntaxKind.ConditionalExpression:
+		case SyntaxKind.ForStatement:
 			return node.parent.condition === node;
 
-		case ts.SyntaxKind.DoStatement:
-		case ts.SyntaxKind.IfStatement:
-		case ts.SyntaxKind.WhileStatement:
+		case SyntaxKind.DoStatement:
+		case SyntaxKind.IfStatement:
+		case SyntaxKind.WhileStatement:
 			return node.parent.expression === node;
 
-		case ts.SyntaxKind.PrefixUnaryExpression:
-			return node.parent.operator === ts.SyntaxKind.ExclamationToken;
+		case SyntaxKind.PrefixUnaryExpression:
+			return node.parent.operator === SyntaxKind.ExclamationToken;
 
 		default:
 			return false;

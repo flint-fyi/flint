@@ -66,7 +66,7 @@ class Example {
 		`const object = { value: function value() {} };`,
 		`const object = { value: function() {} };`,
 		`const object = { "value": function value() {} };`,
-		`const object = { [computed]: function value() {} };`,
+		`declare const computed: string; const object = { [computed]: function value() {} };`,
 		`const object = { "foo//bar": function value() {} };`,
 		`const [value] = [function other() {}];`,
 		`

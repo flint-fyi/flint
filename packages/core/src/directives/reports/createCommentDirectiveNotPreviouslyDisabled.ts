@@ -1,9 +1,12 @@
-import type { NormalizedReportRangeObject } from "../../types/reports.ts";
+import type {
+	FileReport,
+	NormalizedReportRangeObject,
+} from "../../types/reports.ts";
 
 export function createCommentDirectiveNotPreviouslyDisabled(
 	range: NormalizedReportRangeObject,
 	selection: string,
-) {
+): FileReport {
 	return {
 		about: {
 			id: "commentDirectiveNotPreviouslyDisabled",

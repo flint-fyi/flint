@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -13,10 +13,10 @@ import { isInBooleanContext } from "./utils/isInBooleanContext.ts";
 
 function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 	switch (node.kind) {
-		case ts.SyntaxKind.CallExpression:
-		case ts.SyntaxKind.NewExpression:
+		case SyntaxKind.CallExpression:
+		case SyntaxKind.NewExpression:
 			if (
-				ts.isIdentifier(node.expression) &&
+				node.expression.kind === SyntaxKind.Identifier &&
 				node.expression.text === "RegExp" &&
 				node.arguments
 			) {
@@ -26,14 +26,14 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 
 				const flagsArg = node.arguments[1];
 
-				if (flagsArg && ts.isStringLiteral(flagsArg)) {
+				if (flagsArg?.kind === SyntaxKind.StringLiteral) {
 					return flagsArg.text;
 				}
 			}
 
 			return undefined;
 
-		case ts.SyntaxKind.RegularExpressionLiteral: {
+		case SyntaxKind.RegularExpressionLiteral: {
 			const text = node.getText(sourceFile);
 			const lastSlash = text.lastIndexOf("/");
 			return lastSlash >= 0 ? text.slice(lastSlash + 1) : "";
@@ -46,11 +46,11 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 
 function needsParentheses(node: AST.AnyNode) {
 	return !(
-		ts.isIdentifier(node) ||
-		ts.isRegularExpressionLiteral(node) ||
-		ts.isParenthesizedExpression(node) ||
-		ts.isCallExpression(node) ||
-		ts.isNewExpression(node)
+		node.kind === SyntaxKind.Identifier ||
+		node.kind === SyntaxKind.RegularExpressionLiteral ||
+		node.kind === SyntaxKind.ParenthesizedExpression ||
+		node.kind === SyntaxKind.CallExpression ||
+		node.kind === SyntaxKind.NewExpression
 	);
 }
 
@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.arguments.length !== 1
 					) {
 						return;

@@ -1,19 +1,19 @@
 {
+	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.src.json",
 		"rootDir": "src/",
 		"outDir": "lib/",
 		"types": []
 	},
-	"extends": "../../tsconfig.base.json",
 	"include": ["src"],
 	"references": [
-		{ "path": "../core" },
-		{ "path": "../css" },
-		{ "path": "../json" },
-		{ "path": "../md" },
-		{ "path": "../package-json" },
-		{ "path": "../ts" },
-		{ "path": "../yaml" }
+		{ "path": "../core/tsconfig.src.json" },
+		{ "path": "../css/tsconfig.src.json" },
+		{ "path": "../json/tsconfig.src.json" },
+		{ "path": "../md/tsconfig.src.json" },
+		{ "path": "../package-json/tsconfig.src.json" },
+		{ "path": "../ts/tsconfig.src.json" },
+		{ "path": "../yaml/tsconfig.src.json" }
 	]
 }

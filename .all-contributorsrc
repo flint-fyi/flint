@@ -91,7 +91,8 @@
         "test",
         "doc",
         "code",
-        "blog"
+        "blog",
+        "tool"
       ]
     },
     {
@@ -144,7 +145,8 @@
         "maintenance",
         "bug",
         "infra",
-        "ideas"
+        "ideas",
+        "tool"
       ]
     },
     {
@@ -159,7 +161,8 @@
         "maintenance",
         "tool",
         "code",
-        "infra"
+        "infra",
+        "test"
       ]
     },
     {
@@ -196,7 +199,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/54253392?v=4",
       "profile": "https://github.com/cylewaitforit",
       "contributions": [
-        "doc"
+        "doc",
+        "tool"
       ]
     },
     {
@@ -226,7 +230,8 @@
       "profile": "https://github.com/Yonava",
       "contributions": [
         "code",
-        "doc"
+        "doc",
+        "bug"
       ]
     },
     {
@@ -272,6 +277,15 @@
       "profile": "https://github.com/StyleShit",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "sophalter",
+      "name": "sophalter",
+      "avatar_url": "https://avatars.githubusercontent.com/u/322165076?v=4",
+      "profile": "https://github.com/sophalter",
+      "contributions": [
+        "bug"
       ]
     }
   ],

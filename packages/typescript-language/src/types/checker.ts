@@ -1,4 +1,5 @@
 import type {
+	CallLikeExpression,
 	Node,
 	Signature,
 	TupleTypeReference,
@@ -6,9 +7,8 @@ import type {
 	TypeChecker,
 	TypeReference,
 } from "typescript";
-import type ts from "typescript";
 
-import * as AST from "./ast.ts";
+import type * as AST from "./ast.ts";
 
 export type Checker = CheckerOverrides &
 	Omit<TypeChecker, keyof CheckerOverrides>;
@@ -22,7 +22,7 @@ interface CheckerOverrides {
 			| AST.JsxSelfClosingElement
 			| AST.NewExpression
 			| AST.TaggedTemplateExpression
-			| ts.CallLikeExpression,
+			| CallLikeExpression,
 	): Signature | undefined;
 	/** Improve narrowing, borrow from typescript-eslint */
 	isArrayType(type: Type): type is TypeReference;

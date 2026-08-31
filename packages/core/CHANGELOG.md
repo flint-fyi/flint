@@ -1,5 +1,45 @@
 # @flint/core
 
+## 0.25.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34)]:
+  - @flint.fyi/utils@0.16.0
+
+## 0.24.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/utils@0.15.0
+
+## 0.23.3
+
+### Patch Changes
+
+- [#2854](https://github.com/flint-fyi/flint/pull/2854) [`cbacb2b`](https://github.com/flint-fyi/flint/commit/cbacb2b3b73a8091fff37ebe56e373e89a309311) - Resolve nested `.gitignore` files with one matcher per directory.
+
+## 0.23.2
+
+### Patch Changes
+
+- [#2993](https://github.com/flint-fyi/flint/pull/2993) [`08eaf06`](https://github.com/flint-fyi/flint/commit/08eaf06ea683b575afee056a76142823f0f5ff27) - Avoid writing stale cache data during fix loops.
+
+## 0.23.1
+
+### Patch Changes
+
+- [#2840](https://github.com/flint-fyi/flint/pull/2840) [`56a5127`](https://github.com/flint-fyi/flint/commit/56a512773f6cae75f9f91135c9ac4a29291661c7) - Route file discovery and cache I/O through the linter host.
+
 ## 0.23.0
 
 ### Minor Changes
@@ -31,7 +71,7 @@
 - 4fc0eef: Pass host to rules.
 - 57fa268: Add optional character range to language reports.
 - cb7e8a8: Change "diagnostics" nomenclature to "language reports".
-All external references to the term diagnostic or diagnostics are now using the term language report instead.
+  All external references to the term diagnostic or diagnostics are now using the term language report instead.
 
 ### Patch Changes
 

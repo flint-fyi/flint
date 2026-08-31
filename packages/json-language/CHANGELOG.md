@@ -1,5 +1,33 @@
 # @flint.fyi/json-language
 
+## 0.20.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34)]:
+  - @flint.fyi/core@0.25.0
+
+## 0.19.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/core@0.24.0
+
+## 0.18.0
+
+### Minor Changes
+
+- [#2934](https://github.com/flint-fyi/flint/pull/2934) [`7d1bf0a`](https://github.com/flint-fyi/flint/commit/7d1bf0aef3a6eb2f553e36c5018b36ad4d17f022) - Replaced the TypeScript-based AST language with one based on `@humanwhocodes/momoa`, a parser and AST geared specifically for JSON.
+
 ## 0.17.0
 
 ### Minor Changes
@@ -11,10 +39,10 @@
 - [#2851](https://github.com/flint-fyi/flint/pull/2851) [`2ffc7eb`](https://github.com/flint-fyi/flint/commit/2ffc7eb1d0d885fe9b9e758d8bff649a97553380) - Add `JsonExpression` and `PropertyAssignment` to the `JsonNode` union.
 
 - [#2901](https://github.com/flint-fyi/flint/pull/2901) [`91f1cc2`](https://github.com/flint-fyi/flint/commit/91f1cc2d211f49f2cde6349cbab28548484b42d8) - Deprecate the legacy TS-based `jsonLanguage`.
-Use the language exported from `./new` instead.
+  Use the language exported from `./new` instead.
 
 - [#2871](https://github.com/flint-fyi/flint/pull/2871) [`0e8c8ab`](https://github.com/flint-fyi/flint/commit/0e8c8ab4926792ebe7b5b881e78e2b6e8ae4cd96) - Add `./new` entry point with new version of the language based on the AST provided by `momoa`.
-This will utlimately replace the current TS-based implementation.
+  This will utlimately replace the current TS-based implementation.
 - Updated dependencies [[`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f)]:
   - @flint.fyi/core@0.23.0
 

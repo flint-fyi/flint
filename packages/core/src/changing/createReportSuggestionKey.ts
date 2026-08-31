@@ -4,6 +4,6 @@ import type { FileReport } from "../types/reports.ts";
 export function createReportSuggestionKey(
 	report: FileReport,
 	suggestion: Suggestion,
-) {
+): string {
 	return [report.about.id, suggestion.id].join(":");
 }

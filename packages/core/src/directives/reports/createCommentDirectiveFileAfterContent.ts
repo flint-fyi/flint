@@ -1,8 +1,11 @@
-import type { NormalizedReportRangeObject } from "../../types/reports.ts";
+import type {
+	FileReport,
+	NormalizedReportRangeObject,
+} from "../../types/reports.ts";
 
 export function createCommentDirectiveFileAfterContent(
 	range: NormalizedReportRangeObject,
-) {
+): FileReport {
 	return {
 		about: {
 			id: "commentDirectiveFileAfterContent",

@@ -55,21 +55,21 @@ const url = "JAVASCRIPT:doSomething()";
 		},
 		{
 			code: `
-window.location = "javascript:void(0)";
-			
+window.location.href = "javascript:void(0)";
 `,
 			snapshot: `
-window.location = "javascript:void(0)";
-                  ~~~~~~~~~~~~~~~~~~~~
-                  This \`javascript:\` URL is a form of eval.
-			
+window.location.href = "javascript:void(0)";
+                       ~~~~~~~~~~~~~~~~~~~~
+                       This \`javascript:\` URL is a form of eval.
 `,
 		},
 		{
 			code: `
+declare const code: string;
 const evil = \`javascript:\${code}\`;
 `,
 			snapshot: `
+declare const code: string;
 const evil = \`javascript:\${code}\`;
              ~~~~~~~~~~~~~~~~~~~~
              This \`javascript:\` URL is a form of eval.
@@ -83,8 +83,14 @@ const evil = \`javascript:\${code}\`;
 		`const url = "xjavascript:";`,
 		`const url = "not-javascript:";`,
 		`const url = \`https://example.com\`;`,
-		`const url = \`\${protocol}javascript:\`;`,
-		`const url = html\`javascript:void(0)\`;`,
+		`
+			declare const protocol: string;
+			const url = \`\${protocol}javascript:\`;
+		`,
+		`
+			declare function html(strings: TemplateStringsArray): string;
+			const url = html\`javascript:void(0)\`;
+		`,
 		`const text = "This is about JavaScript: the language";`,
 		`const href = "/page";`,
 		`const data = "data:text/plain;base64,SGVsbG8=";`,

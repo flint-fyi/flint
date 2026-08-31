@@ -87,18 +87,41 @@ const converted = new String(123);
 	valid: [
 		"String(0);",
 		"String('');",
-		"const text = String(value);",
-		"const count = Number(value);",
-		"const flag = Boolean(value);",
+		`
+const value = 0;
+const text = String(value);
+`,
+		`
+const value = 0;
+const count = Number(value);
+`,
+		`
+const value = 0;
+const flag = Boolean(value);
+`,
 		"const text = 'hello';",
 		"const count = 42;",
 		"const flag = true;",
 		"class CustomString { constructor(value: string) {} } new CustomString('test');",
-		"function String(value: string) { return value; } String('test');",
-		"const String = (value: string) => value; String('test');",
+		`
+function test() {
+    function String(value: string) {
+        return value;
+    }
+
+    return String("test");
+}
+`,
+		`
+{
+    const String = (value: string) => value;
+
+    String("test");
+}
+`,
 		"const obj = new Object();",
 		"const list = new Array(10);",
-		"new (String as unknown)('test');",
+		`new (String as new (value: string) => String)("test");`,
 		"const constructor = String; new constructor('test');",
 	],
 });

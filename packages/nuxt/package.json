@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/nuxt",
-	"version": "0.1.7",
+	"version": "0.4.0",
 	"description": "[Experimental] A Flint plugin for Nuxt code.",
 	"homepage": "https://flint.fyi/rules/nuxt",
 	"repository": {
@@ -19,25 +19,26 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project nuxt"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"typescript": "^5.9.3 || ^6.0.0"
+		"typescript": "^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

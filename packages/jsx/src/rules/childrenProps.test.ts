@@ -15,9 +15,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <Component children={<span>Test</span>} />
 `,
 			snapshot: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <Component children={<span>Test</span>} />
            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
            Prefer providing children as content between opening and closing tags, not as a \`children\` prop.
@@ -35,9 +37,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const value: unknown;
 <div children={value} />
 `,
 			snapshot: `
+declare const value: unknown;
 <div children={value} />
      ~~~~~~~~~~~~~~~~
      Prefer providing children as content between opening and closing tags, not as a \`children\` prop.
@@ -47,8 +51,12 @@ ruleTester.describe(rule, {
 	valid: [
 		`<div />`,
 		`<div>Hello</div>`,
-		`<Component><span>Test</span></Component>`,
+		`
+declare const Component: (props: Record<string, unknown>) => unknown;
+<Component><span>Test</span></Component>`,
 		`<button>Click me</button>`,
-		`<div>{value}</div>`,
+		`
+declare const value: unknown;
+<div>{value}</div>`,
 	],
 });

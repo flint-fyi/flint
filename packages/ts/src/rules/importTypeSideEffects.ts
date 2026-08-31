@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -41,8 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const namedBindings = node.importClause.namedBindings;
 					if (
-						!namedBindings ||
-						!ts.isNamedImports(namedBindings) ||
+						namedBindings?.kind !== SyntaxKind.NamedImports ||
 						!namedBindings.elements.length ||
 						namedBindings.elements.some((element) => !element.isTypeOnly)
 					) {

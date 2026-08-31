@@ -80,10 +80,17 @@ function secondFunction() {}
 			    return true;
 			}
 		`,
-		`
-			import { something } from "module";
-			var afterImport = 42;
-		`,
+		{
+			code: `
+				import { something } from "module";
+				var afterImport = 42;
+			`,
+			files: {
+				"node_modules/module/index.ts": `
+					export const something = 42;
+				`,
+			},
+		},
 		`
 			const value = 42;
 			export { value };

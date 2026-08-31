@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { Fix } from "@flint.fyi/core";
 import {
@@ -80,7 +80,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const secondArgument = construction.args[1];
 			const hasSecondArgument = secondArgument !== undefined;
 			const secondIsStringLiteral =
-				secondArgument?.kind === ts.SyntaxKind.StringLiteral;
+				secondArgument?.kind === SyntaxKind.StringLiteral;
 
 			if (hasUnicodeFlag(construction.flags)) {
 				return;

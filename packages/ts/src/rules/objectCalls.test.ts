@@ -43,9 +43,13 @@ function createObject() {
 		},
 		{
 			code: `
+declare const condition: boolean;
+
 const config = condition ? new Object() : { default: true };
 `,
 			snapshot: `
+declare const condition: boolean;
+
 const config = condition ? new Object() : { default: true };
                            ~~~
                            Prefer directly using \`{}\` instead of calling or constructing \`Object\`.
@@ -75,9 +79,13 @@ const nested = { inner: new Object() };
 		},
 		{
 			code: `
+declare function processData(value: object): void;
+
 processData(new Object());
 `,
 			snapshot: `
+declare function processData(value: object): void;
+
 processData(new Object());
             ~~~
             Prefer directly using \`{}\` instead of calling or constructing \`Object\`.
@@ -119,9 +127,13 @@ function createObject() {
 		},
 		{
 			code: `
+declare const condition: boolean;
+
 const config = condition ? Object() : { default: true };
 `,
 			snapshot: `
+declare const condition: boolean;
+
 const config = condition ? Object() : { default: true };
                            ~~~~~~
                            Prefer directly using \`{}\` instead of calling or constructing \`Object\`.
@@ -141,9 +153,13 @@ const array = [Object(), Object()];
 		},
 		{
 			code: `
+declare function processData(value: object): void;
+
 processData(Object());
 `,
 			snapshot: `
+declare function processData(value: object): void;
+
 processData(Object());
             ~~~~~~
             Prefer directly using \`{}\` instead of calling or constructing \`Object\`.
@@ -154,15 +170,36 @@ processData(Object());
 		`const value = {};`,
 		`const filled = { key: "value" };`,
 		`const proto = Object.create(null);`,
-		`const inherited = Object.create(prototype);`,
-		`const assigned = Object.assign({}, source);`,
-		`const entries = Object.entries(data);`,
-		`const keys = Object.keys(data);`,
-		`const values = Object.values(data);`,
+		`
+declare const prototype: object;
+
+const inherited = Object.create(prototype);
+`,
+		`
+declare const source: { key: string };
+
+const assigned = Object.assign({}, source);
+`,
+		`
+const data = { key: "value" };
+const entries = Object.entries(data);
+`,
+		`
+const data = { key: "value" };
+const keys = Object.keys(data);
+`,
+		`
+const data = { key: "value" };
+const values = Object.values(data);
+`,
 		`function createEmpty() { return {}; }`,
 		`const array = [{}, { key: "value" }];`,
 		`const nested = { inner: {} };`,
-		`processData({});`,
+		`
+declare function processData(value: object): void;
+
+processData({});
+`,
 		`
 			class Object {}
 			new Object();

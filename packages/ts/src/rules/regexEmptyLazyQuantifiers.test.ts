@@ -131,7 +131,7 @@ new RegExp("a*?");
 		`/a?/;`,
 		`/a{3}?/;`,
 		`new RegExp("a+?b");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 		String.raw`/[\q{ab}]?/v;`,
 	],
 });

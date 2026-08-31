@@ -1,7 +1,8 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind, type TypeChecker } from "typescript";
 
 import {
+	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -40,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			const asyncModifier = node.modifiers?.find(
-				(modifier) => modifier.kind === ts.SyntaxKind.AsyncKeyword,
+				(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
 			);
 
 			if (
@@ -72,16 +73,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function bodyReturnsThenable(
-	body: ts.Block | ts.Expression,
-	typeChecker: ts.TypeChecker,
+	body: AST.Block | AST.Expression,
+	typeChecker: TypeChecker,
 ) {
-	if (!ts.isBlock(body)) {
+	if (body.kind !== SyntaxKind.Block) {
 		return tsutils.isThenableType(typeChecker, body);
 	}
 
-	function checkReturnStatements(node: ts.Node): boolean | undefined {
+	function checkReturnStatements(node: AST.AnyNode): boolean | undefined {
 		if (
-			ts.isReturnStatement(node) &&
+			node.kind === SyntaxKind.ReturnStatement &&
 			node.expression &&
 			tsutils.isThenableType(typeChecker, node.expression)
 		) {
@@ -92,19 +93,19 @@ function bodyReturnsThenable(
 			return false;
 		}
 
-		return ts.forEachChild(node, checkReturnStatements);
+		return forEachChild(node, checkReturnStatements);
 	}
 
-	return ts.forEachChild(body, checkReturnStatements);
+	return forEachChild(body, checkReturnStatements);
 }
 
 // TODO: Use a scope analyzer (#400)?
-function checkForAwait(node: ts.Node): boolean | undefined {
-	if (ts.isAwaitExpression(node)) {
+function checkForAwait(node: AST.AnyNode): boolean | undefined {
+	if (node.kind === SyntaxKind.AwaitExpression) {
 		return true;
 	}
 
-	if (ts.isForOfStatement(node) && node.awaitModifier) {
+	if (node.kind === SyntaxKind.ForOfStatement && node.awaitModifier) {
 		return true;
 	}
 
@@ -112,9 +113,9 @@ function checkForAwait(node: ts.Node): boolean | undefined {
 		return false;
 	}
 
-	return ts.forEachChild(node, checkForAwait);
+	return forEachChild(node, checkForAwait);
 }
 
-function isEmptyBody(body: ts.Block | ts.Expression) {
-	return ts.isBlock(body) && !body.statements.length;
+function isEmptyBody(body: AST.Block | AST.Expression) {
+	return body.kind === SyntaxKind.Block && !body.statements.length;
 }

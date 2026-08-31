@@ -33,7 +33,6 @@ import mouseEventKeyEvents from "./rules/mouseEventKeyEvents.ts";
 import nonInteractiveElementInteractions from "./rules/nonInteractiveElementInteractions.ts";
 import nonInteractiveElementRoles from "./rules/nonInteractiveElementRoles.ts";
 import nonInteractiveElementTabIndexes from "./rules/nonInteractiveElementTabIndexes.ts";
-import propDuplicates from "./rules/propDuplicates.ts";
 import roleRedundancies from "./rules/roleRedundancies.ts";
 import roleRequiredAriaProps from "./rules/roleRequiredAriaProps.ts";
 import roleSupportedAriaProps from "./rules/roleSupportedAriaProps.ts";
@@ -89,7 +88,6 @@ export const jsx = createPlugin({
 		nonInteractiveElementInteractions,
 		nonInteractiveElementRoles,
 		nonInteractiveElementTabIndexes,
-		propDuplicates,
 		roleRedundancies,
 		roleRequiredAriaProps,
 		roleSupportedAriaProps,

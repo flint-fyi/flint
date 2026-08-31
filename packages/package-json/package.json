@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/package-json",
-	"version": "0.19.1",
+	"version": "0.21.0",
 	"description": "[Experimental] package.json plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/package-json",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project package-json"
@@ -27,6 +27,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
 		"change-case": "^5.4.4",
 		"detect-indent": "^7.0.2",
 		"detect-newline": "^4.0.1",
@@ -36,19 +37,20 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@humanwhocodes/momoa": "3.3.10",
+		"@humanwhocodes/momoa": "3.3.12",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

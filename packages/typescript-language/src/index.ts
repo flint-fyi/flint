@@ -16,7 +16,6 @@ export {
 } from "./language.ts";
 export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 export {
-	createScopeManager,
 	type FunctionWithParameters,
 	getScopeManager,
 	type Scope,
@@ -33,6 +32,12 @@ export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts"
 export { forEachChild } from "./utils/forEachChild.ts";
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
 export { getModifyingReferences } from "./utils/getModifyingReferences.ts";
+export {
+	getStaticNumberValue,
+	getStaticStringValue,
+	getStaticValue,
+	type StaticValue,
+} from "./utils/getStaticValue.ts";
 export { hasSameTokens } from "./utils/hasSameTokens.ts";
 export {
 	type BuiltInArrayMethodNode,
@@ -43,7 +48,10 @@ export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";
 export { isGlobalVariable } from "./utils/isGlobalVariable.ts";
 export { isInlineArrayCreation } from "./utils/isInlineArrayCreation.ts";
-export { isStaticString } from "./utils/isStaticString.ts";
-export { isStringRawNoSubstitution } from "./utils/isStringRawNoSubstitution.ts";
+export { isStaticString, type StaticString } from "./utils/isStaticString.ts";
+export {
+	isStringRawNoSubstitution,
+	type StringRawNoSubstitution,
+} from "./utils/isStringRawNoSubstitution.ts";
 export { unwrapParenthesizedNode } from "./utils/unwrapParenthesizedNode.ts";
 export { unwrapParentParenthesizedExpressions } from "./utils/unwrapParentParenthesizedExpressions.ts";

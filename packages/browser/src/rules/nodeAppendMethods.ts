@@ -48,11 +48,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier ||
-						!isGlobalDeclaration(node.expression.name, typeChecker)
+						!isGlobalDeclaration(node.expression.name, typeChecker, program)
 					) {
 						return;
 					}

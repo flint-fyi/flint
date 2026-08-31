@@ -1,0 +1,60 @@
+---
+description: "Enforce that repository.directory matches the package.json file directory."
+title: "repositoryDirectoryValidity"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="repositoryDirectoryValidity" />
+
+The `repository.directory` property should point to the location of the package's root within its repository (the directory containing its `package.json`).
+This rule reports `repository.directory` string values that do not match the package's current directory, relative to the repo root.
+
+## Examples
+
+For a `package.json` file in `packages/example`:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/flint-fyi/flint",
+		"directory": "something-else"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/flint-fyi/flint",
+		"directory": "packages/example"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If package manifests are generated into a different directory from their source package metadata, `repository.directory` might intentionally point somewhere other than the generated `package.json` file.
+In that case this rule may not be for you.
+
+## Further Reading
+
+- [npm: `package.json` > `repository`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#repository)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="repositoryDirectoryValidity" />

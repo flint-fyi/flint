@@ -8,7 +8,7 @@ import type * as AST from "../types/ast.ts";
 export function getModifyingReferences(
 	identifier: AST.Identifier,
 	sourceFile: AST.SourceFile,
-) {
+): AST.Identifier[] {
 	const variable = getScopeManager(sourceFile).findVariable(identifier);
 	if (!variable || variable.declarations.length > 1) {
 		return [];

@@ -33,7 +33,7 @@ export interface PresenterInitializeContext {
 
 export interface PresenterSummarizeContext {
 	duration: number;
-	formattingResults: FormattingResults;
+	formattingResults: FormattingResults | undefined;
 	lintResults: LintResultsMaybeWithChanges;
 }
 
@@ -45,5 +45,5 @@ export interface PresenterVirtualFile {
 }
 
 export type RenderGenerator =
-	| AsyncGenerator<string, void, unknown>
-	| Generator<string, void, unknown>;
+	| AsyncGenerator<string, void, void>
+	| Generator<string, void, void>;

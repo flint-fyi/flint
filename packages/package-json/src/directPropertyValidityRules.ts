@@ -39,11 +39,34 @@ import {
 	validateWorkspaces,
 } from "package-json-validator";
 
-import type { AnyRule } from "@flint.fyi/core";
+import {
+	createDirectPropertyValidityRule,
+	type PropertyValidator,
+	type ValidityRule,
+	type ValidityRuleName,
+} from "./createDirectPropertyValidityRule.ts";
 
-import { createDirectPropertyValidityRule } from "./createDirectPropertyValidityRule.ts";
+interface LocalValidPropertyOptions {
+	aliases: readonly string[];
+	validator: PropertyValidator;
+}
 
-const properties = [
+type PropertyConfig = readonly [
+	string,
+	LocalValidPropertyOptions | PropertyValidator,
+];
+
+function defineProperties<const T extends readonly PropertyConfig[]>(
+	properties: T,
+) {
+	return properties as {
+		[K in keyof T]: T[K] extends readonly [infer Name extends string, unknown]
+			? readonly [Name, PropertyConfig[1]]
+			: T[K];
+	};
+}
+
+const properties = defineProperties([
 	["author", validateAuthor],
 	["bin", validateBin],
 	["browser", validateBrowser],
@@ -89,11 +112,9 @@ const properties = [
 	["type", validateType],
 	["version", validateVersion],
 	["workspaces", validateWorkspaces],
-] as const;
+]);
 
 type ValidityProperty = (typeof properties)[number][0];
-
-type ValidityRuleName = `${ValidityProperty}Validity`;
 
 export const directPropertyValidityRules = Object.fromEntries(
 	properties.map(([propertyName, propertySettings]) => {
@@ -109,4 +130,6 @@ export const directPropertyValidityRules = Object.fromEntries(
 		);
 		return [id, rule] as const;
 	}),
-) as Record<ValidityRuleName, AnyRule>;
+) as {
+	[PropertyName in ValidityProperty as ValidityRuleName<PropertyName>]: ValidityRule<PropertyName>;
+};

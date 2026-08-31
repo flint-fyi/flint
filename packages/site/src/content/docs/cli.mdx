@@ -219,57 +219,15 @@ The `detailed` presenter shows a rich formatted output containing full report me
 
 {/* spellchecker: enable */}
 
-## `--skip-diagnostics`
+## `--skip-formatting`
 
-{/* spellchecker: disable */}
+Whether to skip formatting after linting.
 
-<div class="only-dark">
+<PackageManagers args="--skip-formatting" pkg="flint" type="dlx" />
 
-```ansi
-[90mLinting with [36m[1mflint.config.ts[22m[39m[90m...[39m
-[90m╭[39m[38;2;255;119;119m./[39m[1m[38;2;255;73;73mpackages/cli/src/presenters/getPresenterFactory.ts[39m[22m
-[90m│ [39m
-[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mforInArrays[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;238;170;119m For-in loops over arrays have surprising behavior that often leads to bugs.[39m
-[90m│ [39m
-[90m│ [39m[38;2;187;187;187m 6:1 [39m[90m│ [39m[37mfor[39m[97m ([39m[37mconst[39m[97m [39m[97mi[39m[97m [39m[37min[39m[97m [[39m[97m"[39m[37ma[39m[97m"[39m[97m,[39m[97m [39m[97m"[39m[37mb[39m[97m"[39m[97m,[39m[97m [39m[97m"[39m[37mc[39m[97m"[39m[97m]) [39m[97m{[39m
-[90m│ [39m[90m     │ [39m[38;2;255;204;204m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[39m
-[90m│ [39m
-[90m│ [39m [38;2;204;187;170m[3mA for-in loop (`for (const i in o)`) iterates over all enumerable properties of an object, including those that are not array indices.[23m[39m
-[90m│ [39m [38;2;204;187;170m[3mThis can lead to unexpected behavior when used with arrays, as it may include properties that are not part of the array's numeric indices.[23m[39m
-[90m│ [39m [38;2;204;187;170m[3mIt also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.[23m[39m
-[90m│ [39m
-[90m│ [39m [38;2;187;238;255mSuggestion: [38;2;187;204;221m[38;2;187;204;221mUse a construct more suited for arrays, such as a for-of loop ([39m[38;2;187;238;255m[38;2;187;204;221m`[38;2;187;238;255mfor (const i of o)[39m[38;2;187;238;255m[38;2;187;204;221m`[38;2;187;204;221m).[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
-[90m│ [39m [38;2;170;204;170m[3m→ flint.fyi/rules/ts/forInArrays
-[90m╰[39m
-
-[31m✖ Found [1m1 report[22m across [1m1 file[22m.[39m
-```
-
-</div>
-<div class="only-light">
-```ansi
-[38;2;120;120;120mLinting with [39m[38;2;0;122;204m[1mflint.config.ts[22m[39m[38;2;120;120;120m...[39m
-[38;2;120;120;120m╭[39m[38;2;200;40;40m./[39m[1m[38;2;170;0;0mpackages/cli/src/presenters/getPresenterFactory.ts[39m[22m
-[38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m[38;2;190;120;60m[38;2;198;79;79m[[39m[38;2;190;120;60m[38;2;170;0;0m[1mforInArrays[22m[39m[38;2;190;120;60m[38;2;198;79;79m][39m[38;2;190;120;60m For-in loops over arrays have surprising behavior that often leads to bugs.[39m
-[38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m[38;2;120;120;120m 6:1 [39m[38;2;120;120;120m│ [39m[38;2;0;0;0mfor[39m[38;2;60;60;60m ([39m[38;2;0;0;0mconst[39m[38;2;60;60;60m [39m[38;2;0;0;0mi[39m[38;2;60;60;60m [39m[38;2;0;0;0min[39m[38;2;60;60;60m [[39m[38;2;60;60;60m"[39m[38;2;0;0;0ma[39m[38;2;60;60;60m"[39m[38;2;60;60;60m,[39m[38;2;60;60;60m [39m[38;2;60;60;60m"[39m[38;2;0;0;0mb[39m[38;2;60;60;60m"[39m[38;2;60;60;60m,[39m[38;2;60;60;60m [39m[38;2;60;60;60m"[39m[38;2;0;0;0mc[39m[38;2;60;60;60m"[39m[38;2;60;60;60m]) [39m[38;2;60;60;60m{[39m
-[38;2;120;120;120m│ [39m[38;2;120;120;120m     │ [39m[38;2;235;140;140m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[39m
-[38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mA for-in loop (`for (const i in o)`) iterates over all enumerable properties of an object, including those that are not array indices.[23m[39m
-[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mThis can lead to unexpected behavior when used with arrays, as it may include properties that are not part of the array's numeric indices.[23m[39m
-[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mIt also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.[23m[39m
-[38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m [38;2;0;92;184mSuggestion: [39m[38;2;60;60;60mUse a construct more suited for arrays, such as a for-of loop ([39m[38;2;0;122;204m`for (const i of o)`[39m[38;2;60;60;60m).[39m
-[38;2;120;120;120m│ [39m [38;2;0;128;90m[3m→ flint.fyi/rules/ts/forInArrays[23m[39m
-[38;2;120;120;120m╰[39m
-
-[3m[38;2;170;0;0m✖ Found [1m1 report[22m across [1m1 file[22m.[39m[23m
-
-```
-</div>
-
-{/* spellchecker: enable */}
+By default, Flint executes Prettier following the run of the linter, to ensure the output from linting still conforms to your formatting standards.
+By passing in `--skip-formatting`, you can disable that execution of the formatter.
+You may wish to do this for performance and/or if you run tools like `prettier` separately from Flint.
 
 ## `--skip-language-reports`
 
@@ -297,4 +255,3 @@ Whether to keep the linting process running, re-linting files as they change.
 
 Flint's `--watch` mode is similar to the watch mode in other developer tools CLIs such as [`tsc --watch`](https://www.typescriptlang.org/docs/handbook/compiler-options.html#:~:text=Watch%20Options,-Flag), [`tsdown --watch`](https://tsdown.dev/options/watch-mode), and [`vitest --watch`](https://vitest.dev/guide/cli.html#watch).
 It will lint files once on startup, then again whenever any linted files are changed on disk.
-```

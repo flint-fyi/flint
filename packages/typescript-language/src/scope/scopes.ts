@@ -4,13 +4,14 @@ import type * as AST from "../types/ast.ts";
 import type {
 	FunctionWithParameters,
 	ScopeInternal,
+	ScopeReference,
 	ScopeVariable,
 } from "./types.ts";
 
 export function createScope(
 	block: AST.AnyNode,
 	upper: ScopeInternal | undefined,
-) {
+): ScopeInternal {
 	const variablesByName = new Map<string, ScopeVariable>();
 	const scope: ScopeInternal = {
 		block,
@@ -34,7 +35,7 @@ export function createScope(
 // TODO: Consider a generator/iterator design to avoid allocating a full array
 // when callers bail out early, once we can measure the tradeoff.
 // https://github.com/flint-fyi/flint/issues/2627
-export function getReferencesInScope(scope: ScopeInternal) {
+export function getReferencesInScope(scope: ScopeInternal): ScopeReference[] {
 	const references = [...scope.references];
 
 	for (const childScope of scope.childScopes) {
@@ -49,7 +50,7 @@ export function getReferencesInScope(scope: ScopeInternal) {
 export function getVariableDeclarationScope(
 	node: AST.VariableDeclaration,
 	scope: ScopeInternal,
-) {
+): ScopeInternal {
 	if (
 		node.parent.kind === SyntaxKind.VariableDeclarationList &&
 		!(node.parent.flags & ts.NodeFlags.BlockScoped)
@@ -60,7 +61,7 @@ export function getVariableDeclarationScope(
 	return scope;
 }
 
-export function isScopeBoundary(node: AST.AnyNode) {
+export function isScopeBoundary(node: AST.AnyNode): boolean {
 	return (
 		isFunctionLike(node) ||
 		node.kind === SyntaxKind.CatchClause ||
@@ -72,7 +73,10 @@ export function isScopeBoundary(node: AST.AnyNode) {
 	);
 }
 
-export function resolveVariable(scope: ScopeInternal, name: string) {
+export function resolveVariable(
+	scope: ScopeInternal,
+	name: string,
+): ScopeVariable | undefined {
 	let current: ScopeInternal | undefined = scope;
 
 	while (current) {

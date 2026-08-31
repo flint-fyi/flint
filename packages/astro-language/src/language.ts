@@ -5,7 +5,10 @@ import type ts from "typescript";
 
 import type { SourceFileWithLineMap } from "@flint.fyi/core";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
-import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
+import {
+	createVolarBasedLanguage,
+	type VolarLanguage,
+} from "@flint.fyi/volar-language";
 
 import { astroCompilerDiagnosticToLanguageReport } from "./astroCompilerDiagnosticToLanguageReport.ts";
 import { extractDirectives } from "./extractDirectives.ts";
@@ -77,8 +80,8 @@ function resolveModuleFileName(
 	}
 }
 
-export const astroLanguage = createVolarBasedLanguage<AstroServices>(
-	(typescript, options) => {
+export const astroLanguage: VolarLanguage<AstroServices> =
+	createVolarBasedLanguage((typescript, options) => {
 		addAstroTypes(typescript, options);
 
 		return {
@@ -111,5 +114,4 @@ export const astroLanguage = createVolarBasedLanguage<AstroServices>(
 			},
 			languagePlugins: [getLanguagePlugin()],
 		};
-	},
-);
+	});

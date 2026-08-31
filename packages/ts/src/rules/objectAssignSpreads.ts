@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -39,13 +39,19 @@ function hasArraySpread(node: AST.CallExpression) {
 function isObjectAssignCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
+	program: Program,
 ): boolean {
 	return (
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.kind === SyntaxKind.Identifier &&
 		node.expression.name.text === "assign" &&
 		node.expression.expression.kind === SyntaxKind.Identifier &&
-		isGlobalDeclarationOfName(node.expression.expression, "Object", typeChecker)
+		isGlobalDeclarationOfName(
+			node.expression.expression,
+			"Object",
+			typeChecker,
+			program,
+		)
 	);
 }
 
@@ -85,9 +91,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
-						!isObjectAssignCall(node, typeChecker) ||
+						!isObjectAssignCall(node, typeChecker, program) ||
 						node.arguments.length < 1
 					) {
 						return;

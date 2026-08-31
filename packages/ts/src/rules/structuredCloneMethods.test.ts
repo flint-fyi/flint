@@ -5,12 +5,18 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const obj: { value: number };
+
 const clone = JSON.parse(JSON.stringify(obj));
+void clone;
 `,
 			snapshot: `
+declare const obj: { value: number };
+
 const clone = JSON.parse(JSON.stringify(obj));
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
               Prefer \`structuredClone()\` over \`JSON.parse(JSON.stringify())\`.
+void clone;
 `,
 		},
 		{
@@ -18,6 +24,7 @@ const clone = JSON.parse(JSON.stringify(obj));
 function deepCopy<T>(value: T): T {
     return JSON.parse(JSON.stringify(value));
 }
+deepCopy({ value: 1 });
 `,
 			snapshot: `
 function deepCopy<T>(value: T): T {
@@ -25,16 +32,23 @@ function deepCopy<T>(value: T): T {
            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
            Prefer \`structuredClone()\` over \`JSON.parse(JSON.stringify())\`.
 }
+deepCopy({ value: 1 });
 `,
 		},
 		{
 			code: `
+declare const state: { items: string[] };
+
 const data = JSON.parse(JSON.stringify(state.items));
+void data;
 `,
 			snapshot: `
+declare const state: { items: string[] };
+
 const data = JSON.parse(JSON.stringify(state.items));
              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
              Prefer \`structuredClone()\` over \`JSON.parse(JSON.stringify())\`.
+void data;
 `,
 		},
 		{
@@ -49,22 +63,64 @@ export const copy = JSON.parse(JSON.stringify({ a: 1 }));
 		},
 	],
 	valid: [
-		`const clone = structuredClone(obj);`,
-		`const parsed = JSON.parse(jsonString);`,
-		`const str = JSON.stringify(obj);`,
-		`const result = JSON.parse(JSON.stringify(obj, replacer));`,
-		`const result = JSON.parse(JSON.stringify(obj, null, 2));`,
-		`const result = JSON.parse(JSON.stringify(obj), reviver);`,
-		`const result = JSON.parse(getData());`,
-		`const result = JSON.parse(JSON.stringify());`,
-		`const result = JSON.parse(JSON.stringify(...items));`,
+		`
+declare const obj: { value: number };
+declare function structuredClone<T>(value: T): T;
+
+const clone = structuredClone(obj);
+void clone;
+`,
+		`
+declare const jsonString: string;
+
+const parsed = JSON.parse(jsonString);
+void parsed;
+`,
+		`
+declare const obj: { value: number };
+
+const stringified = JSON.stringify(obj);
+void stringified;
+`,
+		`
+declare const obj: { value: number };
+declare const replacer: (key: string, value: unknown) => unknown;
+
+const result = JSON.parse(JSON.stringify(obj, replacer));
+void result;
+`,
+		`
+declare const obj: { value: number };
+
+const result = JSON.parse(JSON.stringify(obj, undefined, 2));
+void result;
+`,
+		`
+declare const obj: { value: number };
+declare const reviver: (key: string, value: unknown) => unknown;
+
+const result = JSON.parse(JSON.stringify(obj), reviver);
+void result;
+`,
+		`
+declare function getData(): string;
+
+const result = JSON.parse(getData());
+void result;
+`,
+		`
+declare const items: [unknown];
+
+const result = JSON.parse(JSON.stringify(...items));
+void result;
+`,
 		`
 declare const JSON: {
    parse(value: string): unknown;
    stringify(value: unknown): string;
 }
 const result = JSON.parse(JSON.stringify({}));
-export {};
+void result;
 `,
 	],
 });

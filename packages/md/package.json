@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/md",
-	"version": "0.15.4",
+	"version": "0.17.0",
 	"description": "[Experimental] Markdown plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/md",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project md"
@@ -31,18 +31,19 @@
 		"github-slugger": "^2.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@types/mdast": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	declarationIncludesGlobal,
@@ -12,7 +12,11 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 const globalAliases = new Set(["global", "self", "window"]);
 
-function isOnlyGlobalDeclaration(node: AST.Identifier, typeChecker: Checker) {
+function isOnlyGlobalDeclaration(
+	node: AST.Identifier,
+	typeChecker: Checker,
+	program: Program,
+) {
 	const symbol = typeChecker.getSymbolAtLocation(node);
 	if (!symbol) {
 		return false;
@@ -23,18 +27,22 @@ function isOnlyGlobalDeclaration(node: AST.Identifier, typeChecker: Checker) {
 		return false;
 	}
 
-	return declarations.every(declarationIncludesGlobal);
-}
-
-function isPropertyAccess(node: ts.Identifier) {
-	return (
-		ts.isPropertyAccessExpression(node.parent) && node.parent.name === node
+	return declarations.every((declaration) =>
+		declarationIncludesGlobal(declaration, program),
 	);
 }
 
-function isPropertyShorthand(node: ts.Identifier) {
+function isPropertyAccess(node: AST.Identifier) {
 	return (
-		ts.isShorthandPropertyAssignment(node.parent) && node.parent.name === node
+		node.parent.kind === SyntaxKind.PropertyAccessExpression &&
+		node.parent.name === node
+	);
+}
+
+function isPropertyShorthand(node: AST.Identifier) {
+	return (
+		node.parent.kind === SyntaxKind.ShorthandPropertyAssignment &&
+		node.parent.name === node
 	);
 }
 
@@ -58,12 +66,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { sourceFile, typeChecker }) => {
+				Identifier: (node, { program, sourceFile, typeChecker }) => {
 					if (
 						globalAliases.has(node.text) &&
 						!isPropertyAccess(node) &&
 						!isPropertyShorthand(node) &&
-						isOnlyGlobalDeclaration(node, typeChecker)
+						isOnlyGlobalDeclaration(node, typeChecker, program)
 					) {
 						context.report({
 							data: { name: node.text },

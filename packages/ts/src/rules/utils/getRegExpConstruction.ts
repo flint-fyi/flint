@@ -1,19 +1,28 @@
-import ts from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
 import {
+	getStaticStringValue,
 	isGlobalDeclarationOfName,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
+export interface RegExpConstruction {
+	args: NodeArray<AST.Expression>;
+	flags: string;
+	pattern: string;
+	raw: string;
+	start: number;
+}
+
 export function getRegExpConstruction(
 	node: AST.CallExpression | AST.NewExpression,
-	{ sourceFile, typeChecker }: TypeScriptFileServices,
-) {
+	{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+): RegExpConstruction | undefined {
 	if (
-		node.expression.kind !== ts.SyntaxKind.Identifier ||
+		node.expression.kind !== SyntaxKind.Identifier ||
 		node.expression.text !== "RegExp" ||
-		!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker)
+		!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker, program)
 	) {
 		return;
 	}
@@ -26,11 +35,9 @@ export function getRegExpConstruction(
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const firstArgument = args[0]!;
 
-	// TODO: Use a util like getStaticValue
-	// https://github.com/flint-fyi/flint/issues/1298
 	if (
-		firstArgument.kind !== ts.SyntaxKind.StringLiteral &&
-		firstArgument.kind !== ts.SyntaxKind.NoSubstitutionTemplateLiteral
+		firstArgument.kind !== SyntaxKind.StringLiteral &&
+		firstArgument.kind !== SyntaxKind.NoSubstitutionTemplateLiteral
 	) {
 		return;
 	}
@@ -38,12 +45,10 @@ export function getRegExpConstruction(
 	let flags = "";
 	if (args.length >= 2) {
 		const flagsArg = args[1];
-		if (
-			flagsArg?.kind === ts.SyntaxKind.StringLiteral ||
-			flagsArg?.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
-		) {
-			const flagsText = flagsArg.getText(sourceFile);
-			flags = flagsText.slice(1, -1);
+		const flagsValue =
+			flagsArg === undefined ? undefined : getStaticStringValue(flagsArg);
+		if (flagsValue !== undefined) {
+			flags = flagsValue;
 		}
 	}
 

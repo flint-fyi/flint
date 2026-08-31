@@ -91,6 +91,6 @@ new RegExp("a{2}?");
 		`/a{1,3}?/;`,
 		`/a{2,}?/;`,
 		`new RegExp("a{1,3}?");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

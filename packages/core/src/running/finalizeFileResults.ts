@@ -24,8 +24,7 @@ export interface FinalizedFileResults {
  * For a single file path, collects its:
  *   - Cache dependencies: from each language file
  *   - LanguageReport: from each language file (if not skipped)
- *   - Reports: from rules reports by file path
- * ...and then disposes of each language file.
+ *   - Reports: from rules reports by file path.
  */
 export function finalizeFileResults(
 	filePath: string,

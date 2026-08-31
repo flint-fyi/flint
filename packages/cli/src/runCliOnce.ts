@@ -8,7 +8,9 @@ import {
 	runConfig,
 	runConfigFixing,
 	validateConfigDefinition,
+	type FormattingResults,
 	type LinterHost,
+	type LintResults,
 } from "@flint.fyi/core";
 
 import { runPrettier } from "./formatting/runPrettier.ts";
@@ -17,12 +19,17 @@ import type { Renderer } from "./renderers/types.ts";
 
 const log = debugForFile(import.meta.filename);
 
+export interface CliResult {
+	exitCode: number;
+	lintResults: LintResults | undefined;
+}
+
 export async function runCliOnce(
 	host: LinterHost,
 	configFileName: string,
 	renderer: Renderer,
 	values: OptionsValues,
-) {
+): Promise<CliResult> {
 	const { default: config } = (await import(
 		pathToFileURL(path.join(host.getCurrentDirectory(), configFileName)).href
 	)) as {
@@ -72,7 +79,12 @@ export async function runCliOnce(
 				skipLanguageReports,
 			}));
 
-	const formattingResults = await runPrettier(host, lintResults, values.fix);
+	const skipFormatting = values["skip-formatting"] ?? false;
+
+	let formattingResults: FormattingResults | undefined;
+	if (!skipFormatting) {
+		formattingResults = await runPrettier(host, lintResults, values.fix);
+	}
 
 	const duration = performance.now() - startTime;
 
@@ -83,11 +95,11 @@ export async function runCliOnce(
 		lintResults,
 	});
 
-	if (formattingResults.dirty.size && !formattingResults.written) {
+	if (formattingResults?.dirty.size && !formattingResults.written) {
 		return { exitCode: 1, lintResults };
 	}
 
-	for (const fileResults of lintResults.filesResults.values()) {
+	for (const fileResults of lintResults.allFileResults.values()) {
 		if (fileResults.languageReports.length || fileResults.reports.length) {
 			return { exitCode: 1, lintResults };
 		}

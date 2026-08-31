@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { FileChange } from "@flint.fyi/core";
 import {
@@ -38,14 +38,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const testCase of describedCases.valid) {
 						const caseNode = testCase.nodes.case;
 						if (
-							ts.isObjectLiteralExpression(caseNode) &&
+							caseNode.kind === SyntaxKind.ObjectLiteralExpression &&
 							caseNode.properties.length === 1 &&
-							caseNode.properties[0]?.name &&
-							ts.isIdentifier(caseNode.properties[0].name) &&
+							caseNode.properties[0]?.name?.kind === SyntaxKind.Identifier &&
 							caseNode.properties[0].name.text === "code"
 						) {
 							let fix: FileChange | undefined;
-							if (ts.isPropertyAssignment(caseNode.properties[0])) {
+							if (
+								caseNode.properties[0].kind === SyntaxKind.PropertyAssignment
+							) {
 								fix = {
 									range: getTSNodeRange(caseNode, sourceFile),
 									text: caseNode.properties[0].initializer.getText(sourceFile),

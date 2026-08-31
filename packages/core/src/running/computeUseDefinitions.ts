@@ -1,5 +1,8 @@
+import path from "node:path/posix";
+
 import { debugForFile } from "debug-for-file";
 
+import { commonlyIgnoredGlobs } from "../host/watcher.ts";
 import type {
 	ConfigRuleDefinition,
 	ConfigUseDefinition,
@@ -29,7 +32,7 @@ export async function computeUseDefinitions(
 	log("Collecting files from %d use pattern(s)", configDefinition.use.length);
 
 	const cwd = host.getCurrentDirectory();
-	const gitignoreFilter = createGitignoreFilter(cwd, host);
+	const isNotIgnored = createGitignoreFilter(host);
 
 	const allFilePaths = new Set<string>();
 
@@ -38,12 +41,14 @@ export async function computeUseDefinitions(
 			const globs = resolveUseFilesGlobs(use.files, configDefinition);
 			const matches = await host.glob([globs.include].flat(), {
 				cwd,
-				exclude: globs.exclude,
+				exclude: [...globs.exclude, ...commonlyIgnoredGlobs],
 			});
 
 			const found = new Set<string>();
-			for (const filePathAbsolute of matches) {
-				if (gitignoreFilter(filePathAbsolute)) {
+			for (const filePath of matches) {
+				const filePathAbsolute = path.join(cwd, filePath);
+
+				if (isNotIgnored(filePathAbsolute)) {
 					found.add(filePathAbsolute);
 					allFilePaths.add(filePathAbsolute);
 				}

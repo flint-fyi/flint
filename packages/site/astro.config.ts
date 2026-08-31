@@ -1,3 +1,4 @@
+import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
@@ -13,13 +14,14 @@ export default defineConfig({
 		konamiEmojiBlast(),
 		starlight({
 			components: {
-				Head: "src/components/Head.astro",
-				Pagination: "src/components/Pagination.astro",
+				Head: "./src/components/Head.astro",
+				Hero: "./src/components/Hero.astro",
+				Pagination: "./src/components/Pagination.astro",
 			},
-			customCss: ["src/styles.css"],
+			customCss: ["./src/styles.css"],
 			favicon: "/logo.png",
 			logo: {
-				src: "src/assets/logo.png",
+				src: "./src/assets/logo.png",
 			},
 			plugins: [
 				starlightBlog({
@@ -143,12 +145,14 @@ export default defineConfig({
 		react(),
 	],
 	markdown: {
-		remarkPlugins: [
-			remarkAddTwoslash({
-				excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
-			}),
-			remarkHeadingId,
-		],
+		processor: unified({
+			remarkPlugins: [
+				remarkAddTwoslash({
+					excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
+				}),
+				remarkHeadingId,
+			],
+		}),
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",

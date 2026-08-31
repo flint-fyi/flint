@@ -38,14 +38,17 @@ const hasMatch = items.filter((item) => item === "b").length !== 0;
 		{
 			code: `
 const data: number[] = [1, 2, 3];
+const isValid = (value: number) => value > 0;
 const exists = data.filter(isValid).length >= 1;
 `,
 			output: `
 const data: number[] = [1, 2, 3];
+const isValid = (value: number) => value > 0;
 const exists = data.some(isValid);
 `,
 			snapshot: `
 const data: number[] = [1, 2, 3];
+const isValid = (value: number) => value > 0;
 const exists = data.filter(isValid).length >= 1;
                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                Prefer \`.some()\` to more cleanly check if an array contains a matching element.
@@ -91,6 +94,13 @@ const exists = items.findLastIndex((item) => item === "a") !== -1;
 		`const values: number[] = [1, 2, 3]; const hasTwo = values.filter((value) => value > 0).length > 2;`,
 		`const values: number[] = [1, 2, 3]; const index = values.findIndex((value) => value > 2);`,
 		`const values: number[] = [1, 2, 3]; const found = values.find((value) => value > 2);`,
-		`const obj = { filter: () => ({ length: 1 }) }; const result = obj.filter(() => true).length > 0;`,
+		`
+const collection = {
+    filter: (predicate: () => boolean) => ({
+        length: predicate() ? 1 : 0,
+    }),
+};
+const result = collection.filter(() => true).length > 0;
+`,
 	],
 });

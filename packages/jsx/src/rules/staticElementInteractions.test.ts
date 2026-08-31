@@ -15,9 +15,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const handler: (...args: unknown[]) => unknown;
 <span onKeyDown={handler} />
 `,
 			snapshot: `
+declare const handler: (...args: unknown[]) => unknown;
 <span onKeyDown={handler} />
  ~~~~
  This static element that handles events is missing a role attribute.
@@ -36,11 +38,15 @@ ruleTester.describe(rule, {
 	],
 	valid: [
 		`<div onClick={() => {}} role="button" />`,
-		`<span onKeyDown={handler} role="link" />`,
+		`
+declare const handler: (...args: unknown[]) => unknown;
+<span onKeyDown={handler} role="link" />`,
 		`<button onClick={() => {}} />`,
 		`<input onClick={() => {}} />`,
 		`<div />`,
 		`<a onClick={() => {}} />`,
-		`<CustomElement onClick={() => {}} />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement onClick={() => {}} />`,
 	],
 });

@@ -15,7 +15,7 @@
 	},
 	"dependencies": {
 		"@astrojs/starlight": "catalog:site",
-		"@flint.fyi/comparisons": "workspace:^",
+		"@flint.fyi/rule-data": "workspace:^",
 		"@types/react": "catalog:site",
 		"astro": "catalog:site",
 		"astro-og-canvas": "catalog:site",
@@ -29,11 +29,11 @@
 	},
 	"devDependencies": {
 		"@astrojs/check": "catalog:site",
+		"@astrojs/markdown-remark": "catalog:site",
 		"@astrojs/react": "catalog:site",
 		"@expressive-code/core": "catalog:site",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@konami-emoji-blast/astro": "catalog:site",
-		"@types/markdown-it": "catalog:site",
 		"@types/node": "catalog:dev",
 		"@types/react-dom": "catalog:site",
 		"expressive-code": "catalog:site",
@@ -48,6 +48,6 @@
 		"zod": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	}
 }

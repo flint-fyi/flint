@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -24,11 +24,10 @@ function isDeclarationName(node: ts.Identifier) {
 
 function isLeftHandSide(node: AST.Identifier) {
 	return (
-		node.parent.kind === ts.SyntaxKind.BinaryExpression &&
-		ts.isBinaryExpression(node.parent) &&
+		node.parent.kind === SyntaxKind.BinaryExpression &&
 		node.parent.left === node &&
-		node.parent.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
-		node.parent.operatorToken.kind <= ts.SyntaxKind.LastAssignment
+		node.parent.operatorToken.kind >= SyntaxKind.FirstAssignment &&
+		node.parent.operatorToken.kind <= SyntaxKind.LastAssignment
 	);
 }
 
@@ -65,14 +64,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { sourceFile, typeChecker }) => {
+				Identifier: (node, { program, sourceFile, typeChecker }) => {
 					const replacement = globalReplacements.get(node.text);
 					if (
 						!replacement ||
 						isPropertyAccessOfNode(node) ||
 						isPropertyShorthandOfNode(node) ||
 						isDeclarationName(node) ||
-						!isGlobalVariable(node, typeChecker) ||
+						!isGlobalVariable(node, typeChecker, program) ||
 						isLeftHandSide(node)
 					) {
 						return;

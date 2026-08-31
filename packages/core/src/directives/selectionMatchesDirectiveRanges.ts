@@ -5,7 +5,7 @@ import { selectionMatchesReport } from "./selectionMatchesReport.ts";
 export function selectionMatchesDirectiveRanges(
 	directiveRanges: RangedSelection[],
 	report: FileReport,
-) {
+): boolean {
 	// TODO: It'd be faster to use a tracking cursor, binary search tree, or etc.
 	// But there should be a small enough number of directives that this is fine.
 	// Someone should at least investigate to confirm there's no real perf difference.

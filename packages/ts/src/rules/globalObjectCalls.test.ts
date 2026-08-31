@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./globalObjectCalls.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -7,6 +9,12 @@ ruleTester.describe(rule, {
 			code: `
 const result = Math();
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 const result = Math();
                ~~~~
@@ -17,6 +25,12 @@ const result = Math();
 			code: `
 const data = JSON();
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 const data = JSON();
              ~~~~
@@ -27,6 +41,12 @@ const data = JSON();
 			code: `
 const reflected = Reflect();
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 const reflected = Reflect();
                   ~~~~~~~
@@ -37,6 +57,12 @@ const reflected = Reflect();
 			code: `
 const atomic = Atomics();
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 const atomic = Atomics();
                ~~~~~~~
@@ -47,6 +73,12 @@ const atomic = Atomics();
 			code: `
 const instance = new Math();
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 const instance = new Math();
                      ~~~~
@@ -57,6 +89,12 @@ const instance = new Math();
 			code: `
 const instance = new JSON();
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 const instance = new JSON();
                      ~~~~
@@ -67,6 +105,12 @@ const instance = new JSON();
 			code: `
 const instance = new Reflect();
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 const instance = new Reflect();
                      ~~~~~~~
@@ -77,6 +121,12 @@ const instance = new Reflect();
 			code: `
 const instance = new Atomics();
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 const instance = new Atomics();
                      ~~~~~~~
@@ -85,10 +135,10 @@ const instance = new Atomics();
 		},
 	],
 	valid: [
-		`const value = Math.abs(-5);`,
-		`const parsed = JSON.parse("{}");`,
-		`const stringified = JSON.stringify({});`,
-		`const keys = Reflect.ownKeys({});`,
-		`const result = Atomics.add(buffer, 0, 1);`,
+		`const value = Math.abs(-5); void value;`,
+		`const parsed = JSON.parse("{}"); void parsed;`,
+		`const stringified = JSON.stringify({}); void stringified;`,
+		`const keys = Reflect.ownKeys({}); void keys;`,
+		`const buffer = new Int32Array(1); const result = Atomics.add(buffer, 0, 1); void result;`,
 	],
 });

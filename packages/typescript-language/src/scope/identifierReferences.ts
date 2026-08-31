@@ -3,7 +3,7 @@ import { SyntaxKind } from "typescript";
 
 import type * as AST from "../types/ast.ts";
 
-export function isNonReferenceIdentifier(identifier: AST.Identifier) {
+export function isNonReferenceIdentifier(identifier: AST.Identifier): boolean {
 	if (
 		isIdentifierDeclaration(identifier) ||
 		isTypeReferenceIdentifier(identifier)
@@ -34,7 +34,7 @@ export function isNonReferenceIdentifier(identifier: AST.Identifier) {
 	return false;
 }
 
-export function isWriteReference(identifier: AST.Identifier) {
+export function isWriteReference(identifier: AST.Identifier): boolean {
 	const { parent } = identifier;
 
 	if (isAssignmentTarget(identifier)) {
@@ -138,11 +138,11 @@ function isIdentifierWithinParent(
 function isTypeReferenceIdentifier(identifier: AST.Identifier) {
 	let current: AST.AnyNode = identifier;
 
-	while ((current.parent as AST.AnyNode).kind === SyntaxKind.QualifiedName) {
-		current = current.parent as AST.AnyNode;
+	while (current.parent.kind === SyntaxKind.QualifiedName) {
+		current = current.parent;
 	}
 
-	const parent = current.parent as AST.AnyNode;
+	const parent = current.parent;
 	if (parent.kind !== SyntaxKind.TypeReference) {
 		return false;
 	}

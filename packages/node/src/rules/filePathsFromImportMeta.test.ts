@@ -5,9 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare function fileURLToPath(url: string | URL): string;
 const filename = fileURLToPath(import.meta.url);
 `,
 			snapshot: `
+declare function fileURLToPath(url: string | URL): string;
 const filename = fileURLToPath(import.meta.url);
                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                  Prefer \`import.meta.filename\` over \`fileURLToPath(import.meta.url)\`.
@@ -15,9 +17,13 @@ const filename = fileURLToPath(import.meta.url);
 		},
 		{
 			code: `
+declare const path: { dirname(p: string): string; };
+declare function fileURLToPath(url: string | URL): string;
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 `,
 			snapshot: `
+declare const path: { dirname(p: string): string; };
+declare function fileURLToPath(url: string | URL): string;
 const dirname = path.dirname(fileURLToPath(import.meta.url));
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 Prefer \`import.meta.dirname\` over legacy directory path techniques.
@@ -25,9 +31,11 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 		},
 		{
 			code: `
+declare const path: { dirname(p: string): string; };
 const dirname = path.dirname(import.meta.filename);
 `,
 			snapshot: `
+declare const path: { dirname(p: string): string; };
 const dirname = path.dirname(import.meta.filename);
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 Prefer \`import.meta.dirname\` over legacy directory path techniques.
@@ -35,9 +43,11 @@ const dirname = path.dirname(import.meta.filename);
 		},
 		{
 			code: `
+declare function fileURLToPath(url: string | URL): string;
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 `,
 			snapshot: `
+declare function fileURLToPath(url: string | URL): string;
 const dirname = fileURLToPath(new URL('.', import.meta.url));
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 Prefer \`import.meta.dirname\` over legacy directory path techniques.
@@ -68,8 +78,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 		`const filename = import.meta.filename;`,
 		`const dirname = import.meta.dirname;`,
 		`const url = import.meta.url;`,
-		`const other = fileURLToPath(someOtherUrl);`,
-		`const other = path.dirname(someOtherPath);`,
-		`const custom = new URL('.', customUrl);`,
+		`declare function fileURLToPath(url: string | URL): string; declare const someOtherUrl: string; const other = fileURLToPath(someOtherUrl);`,
+		`declare const path: { dirname(p: string): string; }; declare const someOtherPath: string; const other = path.dirname(someOtherPath);`,
+		`declare const customUrl: string; const custom = new URL('.', customUrl);`,
 	],
 });

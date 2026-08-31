@@ -1,6 +1,6 @@
 name: PR Quality
 
-on:
+on: # zizmor: ignore[dangerous-triggers] This workflow does not check out or execute pull request code.
   pull_request_target:
     types: [opened, reopened]
 
@@ -23,7 +23,14 @@ jobs:
 
           # PR Failure Actions
           failure-add-pr-labels: suspected ai slop
-          failure-pr-message: "Our PR Quality workflow has detected this PR as not conforming to our [AI Contribution guidelines](https://flint.fyi/project/contributing-with-ai). Please review our guidelines, and if you believe the PR *did* conform to the guidelines and was incorrectly detected, feel free to tag a member of our team for re-consideration."
+          failure-pr-message: "Our PR Quality workflow has detected this PR as not conforming to our [AI Contribution guidelines](https://flint.fyi/project/contributing-with-ai). Please review our guidelines, and if you believe the PR *did* conform to the guidelines and was incorrectly detected, feel free to tag a member of our team for re-consideration. This pr will automatically close in 7 days, otherwise."
+          close-pr: false
 
           # Honeypot Trap
           blocked-terms: SASSAFRAS
+
+          # Exemptions
+          exempt-bots: |
+            renovate[bot]
+            github-actions[bot]
+            flint-tokens-bot[bot]

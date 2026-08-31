@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -13,8 +13,8 @@ function isTypeAssertion(
 	node: AST.Expression,
 ): node is AST.AsExpression | AST.TypeAssertion {
 	return (
-		node.kind === ts.SyntaxKind.AsExpression ||
-		node.kind === ts.SyntaxKind.TypeAssertionExpression
+		node.kind === SyntaxKind.AsExpression ||
+		node.kind === SyntaxKind.TypeAssertionExpression
 	);
 }
 
@@ -43,17 +43,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) &&
-						!ts.isElementAccessExpression(node.expression)
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression &&
+						node.expression.kind !== SyntaxKind.ElementAccessExpression
 					) {
 						return;
 					}
 
-					const methodName = ts.isPropertyAccessExpression(node.expression)
-						? node.expression.name.text
-						: ts.isStringLiteral(node.expression.argumentExpression)
-							? node.expression.argumentExpression.text
-							: undefined;
+					const methodName =
+						node.expression.kind === SyntaxKind.PropertyAccessExpression
+							? node.expression.name.text
+							: node.expression.argumentExpression.kind ===
+								  SyntaxKind.StringLiteral
+								? node.expression.argumentExpression.text
+								: undefined;
 
 					if (methodName !== "reduce" || node.arguments.length < 2) {
 						return;
@@ -97,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 
-					if (secondArg.kind === ts.SyntaxKind.AsExpression) {
+					if (secondArg.kind === SyntaxKind.AsExpression) {
 						fixes.push({
 							range: {
 								begin: secondArg.expression.getEnd(),

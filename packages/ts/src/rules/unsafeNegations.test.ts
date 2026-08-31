@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import { ruleTester } from "./ruleTester.ts";
 import rule from "./unsafeNegations.ts";
 
@@ -5,60 +7,98 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+const key = "property";
+const object = {};
+
 !key in object;
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
+const key = "property";
+const object = {};
+
 !key in object;
 ~
 This negation applies before the \`in\` operator.
 `,
 		},
-		{
-			code: `
-!object instanceof Constructor;
-`,
-			snapshot: `
-!object instanceof Constructor;
-~
-This negation applies before the \`instanceof\` operator.
-`,
-		},
-		{
-			code: `
-(!key) in object;
-`,
-			snapshot: `
-(!key) in object;
- ~
- This negation applies before the \`in\` operator.
-`,
-		},
-		{
-			code: `
-(!object) instanceof Constructor;
-`,
-			snapshot: `
-(!object) instanceof Constructor;
- ~
- This negation applies before the \`instanceof\` operator.
-`,
-		},
-		{
-			code: `
-const exists = !key in object;
-`,
-			snapshot: `
-const exists = !key in object;
-               ~
-               This negation applies before the \`in\` operator.
-`,
-		},
 	],
 	valid: [
-		`!(key in object);`,
-		`!(object instanceof Constructor);`,
-		`key in object;`,
-		`object instanceof Constructor;`,
-		`!flag && key in object;`,
+		{
+			code: `
+const key = "property";
+const object = {};
+
+!(key in object);
+`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `
+const object = new Date();
+const Constructor = Date;
+
+!(object instanceof Constructor);
+`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `
+const key = "property";
+const object = {};
+
+key in object;
+`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `
+const object = new Date();
+const Constructor = Date;
+
+object instanceof Constructor;
+`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `
+const flag = false;
+const key = "property";
+const object = {};
+
+!flag && key in object;
+`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
 	],
 });

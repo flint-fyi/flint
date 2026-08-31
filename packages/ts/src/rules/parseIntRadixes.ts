@@ -1,6 +1,7 @@
-import * as ts from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -11,25 +12,31 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
+function isParseIntCall(
+	node: AST.CallExpression,
+	typeChecker: Checker,
+	program: Program,
+) {
 	switch (node.expression.kind) {
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return isGlobalDeclarationOfName(
 				node.expression,
 				"parseInt",
 				typeChecker,
+				program,
 			);
 
-		case ts.SyntaxKind.PropertyAccessExpression:
+		case SyntaxKind.PropertyAccessExpression:
 			return (
-				ts.isIdentifier(node.expression.name) &&
+				node.expression.name.kind === SyntaxKind.Identifier &&
 				node.expression.name.text === "parseInt" &&
-				ts.isIdentifier(node.expression.expression) &&
+				node.expression.expression.kind === SyntaxKind.Identifier &&
 				node.expression.expression.text === "Number" &&
 				isGlobalDeclarationOfName(
 					node.expression.expression,
 					"Number",
 					typeChecker,
+					program,
 				)
 			);
 
@@ -38,26 +45,16 @@ function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
 	}
 }
 
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
 function isValidRadix(argument: AST.Expression) {
-	switch (argument.kind) {
-		case ts.SyntaxKind.Identifier:
-			return argument.text !== "undefined";
-
-		case ts.SyntaxKind.NumericLiteral:
-			return isValidRadixValue(Number(argument.text));
-
-		case ts.SyntaxKind.PrefixUnaryExpression:
-			return (
-				argument.operator === ts.SyntaxKind.MinusToken &&
-				ts.isNumericLiteral(argument.operand) &&
-				isValidRadixValue(-Number(argument.operand.text))
-			);
-
-		default:
-			return true;
+	if (
+		argument.kind === SyntaxKind.Identifier &&
+		argument.text === "undefined"
+	) {
+		return false;
 	}
+
+	const value = getStaticNumberValue(argument);
+	return value === undefined ? true : isValidRadixValue(value);
 }
 
 function isValidRadixValue(value: number) {
@@ -97,9 +94,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ sourceFile, typeChecker }: TypeScriptFileServices,
+					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) => {
-					if (!isParseIntCall(node, typeChecker)) {
+					if (!isParseIntCall(node, typeChecker, program)) {
 						return;
 					}
 

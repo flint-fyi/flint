@@ -1,7 +1,7 @@
-import { ruleTester } from "./ruleTester.ts";
+import { scriptRuleTester } from "./ruleTester.ts";
 import rule from "./unnecessaryUseStricts.ts";
 
-ruleTester.describe(rule, {
+scriptRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -49,6 +49,11 @@ export const value = 10;
 
 import { something } from "./module";
 `,
+			files: {
+				"module.ts": `
+export const something = 1;
+`,
+			},
 			output: `
 import { something } from "./module";
 `,
@@ -130,7 +135,8 @@ function foo() {
 "use strict";
 
 // Some comment
-console.log("hello");
+const message = "hello";
+void message;
 `,
 	],
 });

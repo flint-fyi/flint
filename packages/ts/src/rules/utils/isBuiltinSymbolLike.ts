@@ -1,11 +1,11 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts from "typescript";
 
 export function isBuiltinSymbolLike(
 	program: ts.Program,
 	type: ts.Type,
 	symbolName: string,
-) {
+): boolean {
 	return isBuiltinSymbolLikeRecurser(program, type, (subType) => {
 		const symbol = subType.getSymbol();
 		if (!symbol) {
@@ -67,9 +67,6 @@ function isSymbolFromDefaultLibrary(program: ts.Program, symbol: ts.Symbol) {
 
 	return declarations.some((declaration) => {
 		const sourceFile = declaration.getSourceFile();
-		return (
-			sourceFile.hasNoDefaultLib ||
-			program.isSourceFileDefaultLibrary(sourceFile)
-		);
+		return program.isSourceFileDefaultLibrary(sourceFile);
 	});
 }

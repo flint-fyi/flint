@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { isIdentifier, SyntaxKind, type Program } from "typescript";
 
 import {
 	isGlobalDeclaration,
@@ -19,22 +19,23 @@ const builtinErrorNames = new Set([
 export function isErrorSubclass(
 	node: AST.ClassDeclaration,
 	typeChecker: Checker,
+	program: Program,
 ): boolean {
 	if (!node.heritageClauses) {
 		return false;
 	}
 
 	for (const clause of node.heritageClauses) {
-		if (clause.token !== ts.SyntaxKind.ExtendsKeyword) {
+		if (clause.token !== SyntaxKind.ExtendsKeyword) {
 			continue;
 		}
 
 		for (const type of clause.types) {
 			const typeName = type.expression;
 			if (
-				ts.isIdentifier(typeName) &&
+				isIdentifier(typeName) &&
 				builtinErrorNames.has(typeName.text) &&
-				isGlobalDeclaration(typeName, typeChecker)
+				isGlobalDeclaration(typeName, typeChecker, program)
 			) {
 				return true;
 			}

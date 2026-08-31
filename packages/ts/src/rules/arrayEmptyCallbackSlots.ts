@@ -1,6 +1,7 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -18,28 +19,11 @@ function hasCallbackArgument(callExpression: AST.CallExpression) {
 	const firstArgument = callExpression.arguments[0]!;
 
 	return (
-		ts.isArrowFunction(firstArgument) ||
-		ts.isFunctionExpression(firstArgument) ||
-		(ts.isIdentifier(firstArgument) && firstArgument.text !== "undefined")
+		firstArgument.kind === SyntaxKind.ArrowFunction ||
+		firstArgument.kind === SyntaxKind.FunctionExpression ||
+		(firstArgument.kind === SyntaxKind.Identifier &&
+			firstArgument.text !== "undefined")
 	);
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isNumericLiteral(node: ts.Expression) {
-	if (ts.isNumericLiteral(node)) {
-		return true;
-	}
-
-	if (ts.isPrefixUnaryExpression(node)) {
-		return (
-			(node.operator === ts.SyntaxKind.MinusToken ||
-				node.operator === ts.SyntaxKind.PlusToken) &&
-			ts.isNumericLiteral(node.operand)
-		);
-	}
-
-	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -65,20 +49,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 
 					const objectExpression = node.expression.expression;
 
 					if (
-						!ts.isNewExpression(objectExpression) ||
-						!ts.isIdentifier(objectExpression.expression) ||
+						objectExpression.kind !== SyntaxKind.NewExpression ||
+						objectExpression.expression.kind !== SyntaxKind.Identifier ||
 						!isGlobalDeclarationOfName(
 							objectExpression.expression,
 							"Array",
 							typeChecker,
+							program,
 						)
 					) {
 						return;
@@ -91,7 +76,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const firstArgument = args[0]!;
-					if (!isNumericLiteral(firstArgument) || !hasCallbackArgument(node)) {
+					if (
+						getStaticNumberValue(firstArgument) === undefined ||
+						!hasCallbackArgument(node)
+					) {
 						return;
 					}
 

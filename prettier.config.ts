@@ -3,7 +3,7 @@ import type { Config } from "prettier";
 /**
  * @see https://prettier.io/docs/configuration
  */
-export default {
+const config: Config = {
 	importOrder: [
 		"<BUILTIN_MODULES>",
 		"",
@@ -32,4 +32,6 @@ export default {
 	],
 	useTabs: true,
 	vueIndentScriptAndStyle: true,
-} satisfies Config;
+};
+
+export default config;
