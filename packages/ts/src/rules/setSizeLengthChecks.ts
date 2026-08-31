@@ -1,4 +1,3 @@
-import type { Program } from "typescript";
 import {
 	isArrayLiteralExpression,
 	isIdentifier,
@@ -9,6 +8,7 @@ import {
 	NodeFlags,
 	SyntaxKind,
 } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -22,30 +22,25 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isNewSetExpression(
 	expression: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	return (
 		isNewExpression(expression) &&
 		isIdentifier(expression.expression) &&
 		expression.expression.text === "Set" &&
-		isGlobalDeclarationOfName(
-			expression.expression,
-			"Set",
-			typeChecker,
-			program,
-		)
+		isGlobalDeclarationOfName(expression.expression, "Set", checker, program)
 	);
 }
 
 function isSetExpression(
 	expression: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	const unwrapped = unwrapParentheses(expression);
 
-	if (isNewSetExpression(unwrapped, typeChecker, program)) {
+	if (isNewSetExpression(unwrapped, checker, program)) {
 		return true;
 	}
 
@@ -53,15 +48,14 @@ function isSetExpression(
 		return false;
 	}
 
-	const symbol = typeChecker.getSymbolAtLocation(unwrapped);
-	if (
-		!symbol?.valueDeclaration ||
-		!isVariableDeclaration(symbol.valueDeclaration)
-	) {
+	const valueDeclaration = checker
+		.getSymbolAtLocation(unwrapped)
+		?.valueDeclaration?.resolve();
+	if (!valueDeclaration || !isVariableDeclaration(valueDeclaration)) {
 		return false;
 	}
 
-	const declaration = symbol.valueDeclaration as AST.VariableDeclaration;
+	const declaration = valueDeclaration;
 
 	if (
 		declaration.parent.kind !== SyntaxKind.VariableDeclarationList ||
@@ -73,7 +67,7 @@ function isSetExpression(
 
 	return isNewSetExpression(
 		unwrapParentheses(declaration.initializer),
-		typeChecker,
+		checker,
 		program,
 	);
 }
@@ -106,10 +100,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression: (
-					node,
-					{ program, sourceFile, typeChecker },
-				) => {
+				PropertyAccessExpression: (node, { checker, program, sourceFile }) => {
 					if (
 						node.questionDotToken ||
 						node.name.text !== "length" ||
@@ -124,7 +115,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						!isSpreadElement(element) ||
-						!isSetExpression(element.expression, typeChecker, program)
+						!isSetExpression(element.expression, checker, program)
 					) {
 						return;
 					}

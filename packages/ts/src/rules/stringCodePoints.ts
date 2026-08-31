@@ -1,6 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import { TypeFlags } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	isGlobalDeclarationOfName,
@@ -39,14 +38,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { checker, sourceFile }) {
 					if (
 						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 						node.expression.name.text === "charCodeAt" &&
-						tsutils.isTypeFlagSet(
-							typeChecker.getTypeAtLocation(node.expression.expression),
-							TypeFlags.StringLike,
-						)
+						(checker.getTypeAtLocation(node.expression.expression).flags &
+							TypeFlags.StringLike) !==
+							0
 					) {
 						context.report({
 							message: "preferCodePointAt",
@@ -57,14 +55,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				PropertyAccessExpression(node, { program, sourceFile, typeChecker }) {
+				PropertyAccessExpression(node, { checker, program, sourceFile }) {
 					if (
 						node.name.text === "fromCharCode" &&
 						node.expression.kind === SyntaxKind.Identifier &&
 						isGlobalDeclarationOfName(
 							node.expression,
 							"String",
-							typeChecker,
+							checker,
 							program,
 						)
 					) {

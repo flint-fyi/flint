@@ -88,11 +88,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+				CallExpression: (node, { checker, program, sourceFile }) => {
 					if (node.expression.kind === SyntaxKind.Identifier) {
 						if (
 							node.expression.text === "parseInt" &&
-							isGlobalDeclaration(node.expression, typeChecker, program)
+							isGlobalDeclaration(node.expression, checker, program)
 						) {
 							checkParseIntCall(node, sourceFile);
 						}
@@ -102,11 +102,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.expression.expression.text === "Number" &&
 						node.expression.name.kind === SyntaxKind.Identifier &&
 						node.expression.name.text === "parseInt" &&
-						isGlobalDeclaration(
-							node.expression.expression,
-							typeChecker,
-							program,
-						)
+						isGlobalDeclaration(node.expression.expression, checker, program)
 					) {
 						checkParseIntCall(node, sourceFile);
 					}
