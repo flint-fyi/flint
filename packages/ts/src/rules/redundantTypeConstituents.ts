@@ -1,6 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -10,75 +9,75 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const literalToPrimitiveTypeFlags: Record<number, ts.TypeFlags> = {
-	[ts.TypeFlags.BigIntLiteral]: ts.TypeFlags.BigInt,
-	[ts.TypeFlags.BooleanLiteral]: ts.TypeFlags.Boolean,
-	[ts.TypeFlags.NumberLiteral]: ts.TypeFlags.Number,
-	[ts.TypeFlags.StringLiteral]: ts.TypeFlags.String,
-	[ts.TypeFlags.TemplateLiteral]: ts.TypeFlags.String,
+const literalToPrimitiveTypeFlags: Record<number, TypeFlags> = {
+	[TypeFlags.BigIntLiteral]: TypeFlags.BigInt,
+	[TypeFlags.BooleanLiteral]: TypeFlags.Boolean,
+	[TypeFlags.NumberLiteral]: TypeFlags.Number,
+	[TypeFlags.StringLiteral]: TypeFlags.String,
+	[TypeFlags.TemplateLiteral]: TypeFlags.String,
 };
 
 const literalTypeFlags = [
-	ts.TypeFlags.BigIntLiteral,
-	ts.TypeFlags.BooleanLiteral,
-	ts.TypeFlags.NumberLiteral,
-	ts.TypeFlags.StringLiteral,
-	ts.TypeFlags.TemplateLiteral,
+	TypeFlags.BigIntLiteral,
+	TypeFlags.BooleanLiteral,
+	TypeFlags.NumberLiteral,
+	TypeFlags.StringLiteral,
+	TypeFlags.TemplateLiteral,
 ];
 
 const primitiveTypeFlags = [
-	ts.TypeFlags.BigInt,
-	ts.TypeFlags.Boolean,
-	ts.TypeFlags.Number,
-	ts.TypeFlags.String,
+	TypeFlags.BigInt,
+	TypeFlags.Boolean,
+	TypeFlags.Number,
+	TypeFlags.String,
 ];
 
 const primitiveTypeFlagNames: Record<number, string> = {
-	[ts.TypeFlags.BigInt]: "bigint",
-	[ts.TypeFlags.Boolean]: "boolean",
-	[ts.TypeFlags.Number]: "number",
-	[ts.TypeFlags.String]: "string",
+	[TypeFlags.BigInt]: "bigint",
+	[TypeFlags.Boolean]: "boolean",
+	[TypeFlags.Number]: "number",
+	[TypeFlags.String]: "string",
 };
 
-function describeLiteralType(type: ts.Type): string {
-	if (type.isStringLiteral()) {
+function describeLiteralType(type: Type): string {
+	if (type.isStringLiteralType()) {
 		return JSON.stringify(type.value);
 	}
 
-	if (tsutils.isBigIntLiteralType(type)) {
-		return `${type.value.negative ? "-" : ""}${type.value.base10Value}n`;
+	if (type.flags & TypeFlags.BigIntLiteral) {
+		return `${type.value}n`;
 	}
 
-	if (type.isLiteral()) {
+	if (type.isLiteralType()) {
 		// eslint-disable-next-line @typescript-eslint/no-base-to-string
 		return String(type.value);
 	}
 
-	if (tsutils.isIntrinsicErrorType(type) && type.aliasSymbol) {
-		return String(type.aliasSymbol.escapedName);
+	if (type.intrinsicName === "error" && type.aliasSymbol) {
+		return type.getAliasSymbol()?.name ?? "error";
 	}
 
-	if (type.flags & ts.TypeFlags.Any) {
+	if (type.flags & TypeFlags.Any) {
 		return "any";
 	}
 
-	if (type.flags & ts.TypeFlags.Never) {
+	if (type.flags & TypeFlags.Never) {
 		return "never";
 	}
 
-	if (type.flags & ts.TypeFlags.Unknown) {
+	if (type.flags & TypeFlags.Unknown) {
 		return "unknown";
 	}
 
-	if (tsutils.isTemplateLiteralType(type)) {
+	if (type.flags & TypeFlags.TemplateLiteral) {
 		return "template literal type";
 	}
 
-	if (tsutils.isTrueLiteralType(type)) {
+	if (type.intrinsicName === "true") {
 		return "true";
 	}
 
-	if (tsutils.isFalseLiteralType(type)) {
+	if (type.intrinsicName === "false") {
 		return "false";
 	}
 
@@ -87,8 +86,8 @@ function describeLiteralType(type: ts.Type): string {
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
-function isDescendantOf(node: AST.AnyNode, potentialAncestor: ts.Node) {
-	let current: ts.Node | undefined = node;
+function isDescendantOf(node: AST.AnyNode, potentialAncestor: Node) {
+	let current: Node | undefined = node;
 
 	while (current) {
 		if (current === potentialAncestor) {
@@ -96,7 +95,7 @@ function isDescendantOf(node: AST.AnyNode, potentialAncestor: ts.Node) {
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as ts.Node | undefined;
+		current = current.parent as Node | undefined;
 	}
 
 	return false;
@@ -129,18 +128,23 @@ function isNodeInsideReturnType(node: AST.AnyNode) {
 	return false;
 }
 
-function unionTypePartsUnlessBoolean(type: ts.Type) {
+function unionTypePartsUnlessBoolean(type: Type) {
+	const types = type.isUnionType() ? type.getTypes() : undefined;
 	if (
-		type.isUnion() &&
-		type.types.length === 2 &&
-		type.types[0] &&
-		type.types[1] &&
-		tsutils.isFalseLiteralType(type.types[0]) &&
-		tsutils.isTrueLiteralType(type.types[1])
+		types?.length === 2 &&
+		types.every((typePart) => typePart.flags & TypeFlags.BooleanLiteral)
 	) {
 		return [type];
 	}
-	return tsutils.unionConstituents(type);
+	return types ?? [type];
+}
+
+function getTypeFlags(type: Type): TypeFlags {
+	const types = type.isUnionType() ? type.getTypes() : undefined;
+	return types?.length === 2 &&
+		types.every((typePart) => typePart.flags & TypeFlags.BooleanLiteral)
+		? TypeFlags.Boolean
+		: type.flags;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -200,22 +204,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				IntersectionType: (node, { sourceFile, typeChecker }) => {
-					const seenLiteralTypes = new Map<ts.TypeFlags, string[]>();
-					const seenPrimitiveTypes = new Map<ts.TypeFlags, AST.TypeNode[]>();
+				IntersectionType: (node, { checker, sourceFile }) => {
+					const seenLiteralTypes = new Map<TypeFlags, string[]>();
+					const seenPrimitiveTypes = new Map<TypeFlags, AST.TypeNode[]>();
 					const seenUnionTypes = new Map<
 						AST.TypeNode,
-						{ typeFlags: ts.TypeFlags; typeName: string }[]
+						{ typeFlags: TypeFlags; typeName: string }[]
 					>();
 
 					for (const typeNode of node.types) {
-						const nodeType = typeChecker.getTypeAtLocation(typeNode);
+						const nodeType = checker.getTypeAtLocation(typeNode);
 						const typeParts = unionTypePartsUnlessBoolean(nodeType);
 
 						for (const typePart of typeParts) {
 							const typeName = describeLiteralType(typePart);
+							const typeFlags = getTypeFlags(typePart);
 
-							if (typePart.flags === ts.TypeFlags.Any) {
+							if (typeFlags === TypeFlags.Any) {
 								context.report({
 									data: { container: "intersection", typeName },
 									message:
@@ -225,7 +230,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								continue;
 							}
 
-							if (typePart.flags === ts.TypeFlags.Never) {
+							if (typeFlags === TypeFlags.Never) {
 								context.report({
 									data: { container: "intersection", typeName },
 									message: "overrides",
@@ -234,7 +239,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								continue;
 							}
 
-							if (typePart.flags === ts.TypeFlags.Unknown) {
+							if (typeFlags === TypeFlags.Unknown) {
 								context.report({
 									data: { container: "intersection", typeName },
 									message: "overridden",
@@ -244,7 +249,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							for (const literalTypeFlag of literalTypeFlags) {
-								if (typePart.flags === literalTypeFlag) {
+								if (typeFlags === literalTypeFlag) {
 									const primitiveFlag =
 										literalToPrimitiveTypeFlags[literalTypeFlag];
 									if (primitiveFlag) {
@@ -260,7 +265,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							for (const primitiveTypeFlag of primitiveTypeFlags) {
-								if (typePart.flags === primitiveTypeFlag) {
+								if (typeFlags === primitiveTypeFlag) {
 									const existing = seenPrimitiveTypes.get(primitiveTypeFlag);
 									if (existing) {
 										existing.push(typeNode);
@@ -275,7 +280,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							seenUnionTypes.set(
 								typeNode,
 								typeParts.map((typePart) => ({
-									typeFlags: typePart.flags,
+									typeFlags: getTypeFlags(typePart),
 									typeName: describeLiteralType(typePart),
 								})),
 							);
@@ -284,7 +289,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (seenUnionTypes.size) {
 						for (const [typeRef, typeValues] of seenUnionTypes) {
-							let primitiveFlag: ts.TypeFlags | undefined;
+							let primitiveFlag: TypeFlags | undefined;
 							for (const { typeFlags } of typeValues) {
 								const mapped = literalToPrimitiveTypeFlags[typeFlags];
 								if (mapped && seenPrimitiveTypes.has(mapped)) {
@@ -324,28 +329,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 				},
-				UnionType: (node, { sourceFile, typeChecker }) => {
+				UnionType: (node, { checker, sourceFile }) => {
 					const seenLiteralTypes = new Map<
-						ts.TypeFlags,
+						TypeFlags,
 						{ literalValue: string; typeNode: AST.TypeNode }[]
 					>();
-					const seenPrimitiveTypes = new Set<ts.TypeFlags>();
+					const seenPrimitiveTypes = new Set<TypeFlags>();
 
 					for (const typeNode of node.types) {
-						const nodeType = typeChecker.getTypeAtLocation(typeNode);
+						const nodeType = checker.getTypeAtLocation(typeNode);
 						const typeParts = unionTypePartsUnlessBoolean(nodeType);
 
 						for (const typePart of typeParts) {
 							const typeName = describeLiteralType(typePart);
+							const typeFlags = getTypeFlags(typePart);
 
 							if (
-								typePart.flags === ts.TypeFlags.Any ||
-								typePart.flags === ts.TypeFlags.Unknown
+								typeFlags === TypeFlags.Any ||
+								typeFlags === TypeFlags.Unknown
 							) {
 								context.report({
 									data: { container: "union", typeName },
 									message:
-										typePart.flags === ts.TypeFlags.Any && typeName !== "any"
+										typeFlags === TypeFlags.Any && typeName !== "any"
 											? "errorTypeOverrides"
 											: "overrides",
 									range: getTSNodeRange(typeNode, sourceFile),
@@ -354,7 +360,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							if (
-								typePart.flags === ts.TypeFlags.Never &&
+								typeFlags === TypeFlags.Never &&
 								!isNodeInsideReturnType(node)
 							) {
 								context.report({
@@ -366,7 +372,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							for (const literalTypeFlag of literalTypeFlags) {
-								if (typePart.flags === literalTypeFlag) {
+								if (typeFlags === literalTypeFlag) {
 									const primitiveFlag =
 										literalToPrimitiveTypeFlags[literalTypeFlag];
 									if (primitiveFlag) {
@@ -384,7 +390,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							for (const primitiveTypeFlag of primitiveTypeFlags) {
-								if ((typePart.flags & primitiveTypeFlag) !== 0) {
+								if ((typeFlags & primitiveTypeFlag) !== 0) {
 									seenPrimitiveTypes.add(primitiveTypeFlag);
 								}
 							}
@@ -393,7 +399,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const overriddenTypeNodes = new Map<
 						AST.TypeNode,
-						{ literalValue: string; primitiveTypeFlag: ts.TypeFlags }[]
+						{ literalValue: string; primitiveTypeFlag: TypeFlags }[]
 					>();
 
 					for (const [
@@ -415,7 +421,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					for (const [typeNode, typeFlagsWithText] of overriddenTypeNodes) {
-						const grouped = new Map<ts.TypeFlags, string[]>();
+						const grouped = new Map<TypeFlags, string[]>();
 						for (const {
 							literalValue,
 							primitiveTypeFlag,

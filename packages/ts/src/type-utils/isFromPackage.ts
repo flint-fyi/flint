@@ -1,10 +1,22 @@
-import type { Declaration, Program } from "typescript";
+import path from "node:path";
+
+import type { Program } from "typescript-native/unstable/sync";
+
+import type { AST } from "@flint.fyi/typescript-language";
 
 import { isDeclaredInModuleBlock } from "./isDeclaredInModuleBlock.ts";
 
+function getPackageNameFromDirectory(directory: string): string {
+	const packageName = path.basename(directory);
+	const scopeName = path.basename(path.dirname(directory));
+	return scopeName.startsWith("@")
+		? `${scopeName}/${packageName}`
+		: packageName;
+}
+
 // TODO: Investigate unifying this with / contributing upstream to typescript-eslint.
 export function isFromPackage(
-	declaration: Declaration,
+	declaration: AST.Declaration,
 	packageName: string,
 	program: Program,
 ): boolean {
@@ -18,19 +30,24 @@ export function isFromPackage(
 		return false;
 	}
 
-	const resolvedName = program.sourceFileToPackageName.get(sourceFile.path);
-
-	if (
-		resolvedName === packageName ||
-		sourceFile.fileName.includes(`/node_modules/${packageName}/`)
-	) {
+	if (sourceFile.fileName.includes(`/node_modules/${packageName}/`)) {
 		return true;
 	}
 
 	const typesPackageName = packageName.replace(/^@([^/]+)\//, "$1__");
 
-	return (
-		resolvedName === typesPackageName ||
+	if (
 		sourceFile.fileName.includes(`/node_modules/@types/${typesPackageName}/`)
+	) {
+		return true;
+	}
+
+	const packageJsonDirectory =
+		program.getSourceFileMetadata(sourceFile)?.packageJsonDirectory;
+	return (
+		packageJsonDirectory !== undefined &&
+		(getPackageNameFromDirectory(packageJsonDirectory) === packageName ||
+			getPackageNameFromDirectory(packageJsonDirectory) ===
+				`@types/${typesPackageName}`)
 	);
 }

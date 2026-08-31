@@ -1,6 +1,9 @@
-import type { Declaration, Program } from "typescript";
+import type { Program } from "typescript-native/unstable/sync";
 
-import { declarationIncludesGlobal } from "@flint.fyi/typescript-language";
+import {
+	declarationIncludesGlobal,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 import { getSpecifierNames } from "./getSpecifierNames.ts";
 import { isFromFile } from "./isFromFile.ts";
@@ -10,7 +13,7 @@ import type { TypeOrValueSpecifier } from "./schemas.ts";
 // TODO: Investigate unifying this with / contributing upstream to typescript-eslint
 export function matchesSpecifier(
 	importedName: string | undefined,
-	declarations: Declaration[],
+	declarations: AST.Declaration[],
 	specifier: TypeOrValueSpecifier,
 	program: Program,
 ): boolean {

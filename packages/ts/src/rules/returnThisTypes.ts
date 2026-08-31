@@ -1,11 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import type { InterfaceType, TypeChecker } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Type } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
@@ -43,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkFunction(
 			functionNode: FunctionLike,
 			originalClassNode: AST.AnyNode,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, sourceFile }: TypeScriptFileServices,
 		) {
 			if (
 				originalClassNode.kind !== SyntaxKind.ClassDeclaration &&
@@ -60,7 +60,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const nameNode = tryGetNameInType(className, functionNode.type);
 			if (
 				!nameNode ||
-				!isFunctionReturningThis(functionNode, originalClassNode, typeChecker)
+				!isFunctionReturningThis(functionNode, originalClassNode, checker)
 			) {
 				return;
 			}
@@ -80,21 +80,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isFunctionReturningThis(
 			functionNode: FunctionLike,
 			originalClassNode: ClassLikeDeclaration,
-			typeChecker: TypeChecker,
+			checker: Checker,
 		) {
 			if (!functionNode.body || isThisSpecifiedInParameters(functionNode)) {
 				return false;
 			}
 
-			const classType = typeChecker.getTypeAtLocation(
-				originalClassNode,
-			) as InterfaceType;
+			const classType = checker.getTypeAtLocation(originalClassNode);
 
 			if (functionNode.body.kind !== SyntaxKind.Block) {
-				return (
-					classType.thisType ===
-					typeChecker.getTypeAtLocation(functionNode.body)
-				);
+				return checker.getTypeAtLocation(functionNode.body).isThisType;
 			}
 
 			let hasReturnThis = false;
@@ -110,18 +105,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				const type = typeChecker.getTypeAtLocation(statement.expression);
-				if (classType === type) {
+				const type = checker.getTypeAtLocation(statement.expression);
+				if (classType.id === type.id) {
 					hasReturnClassType = true;
 					return true;
 				}
 
-				if (classType.thisType === type) {
+				if (type.isThisType) {
 					hasReturnThis = true;
 					return;
 				}
 
-				if (tsutils.isUnionType(type) && type.types.includes(classType)) {
+				if (
+					type.isUnionType() &&
+					type.getTypes().some((part: Type) => part.id === classType.id)
+				) {
 					hasReturnClassType = true;
 					return true;
 				}

@@ -1,16 +1,22 @@
-import ts from "typescript";
+import {
+	NodeFlags,
+	SyntaxKind,
+	type Node,
+} from "typescript-native/unstable/ast";
+
+import type { AST } from "@flint.fyi/typescript-language";
 
 // TODO (#400): Switch to scope analysis
 export function isDeclaredInModuleBlock(
-	declaration: ts.Declaration,
+	declaration: AST.Declaration,
 	packageName: string,
 ): boolean {
-	let current: ts.Node = declaration;
-	while (!ts.isSourceFile(current)) {
+	let current: Node = declaration;
+	while (current.kind !== SyntaxKind.SourceFile) {
 		if (
-			ts.isModuleDeclaration(current) &&
-			!(current.flags & ts.NodeFlags.Namespace) &&
-			ts.isStringLiteral(current.name) &&
+			current.kind === SyntaxKind.ModuleDeclaration &&
+			!(current.flags & NodeFlags.Namespace) &&
+			current.name.kind === SyntaxKind.StringLiteral &&
 			current.name.text === packageName
 		) {
 			return true;

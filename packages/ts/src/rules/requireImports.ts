@@ -1,35 +1,35 @@
-import type { TypeChecker } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
-function isGlobalRequire(node: AST.Expression, typeChecker: TypeChecker) {
+function isGlobalRequire(node: AST.Expression, checker: Checker) {
 	// TODO: Use a util like getStaticValue
 	// https://github.com/flint-fyi/flint/issues/1298
 	if (node.kind !== SyntaxKind.Identifier || node.text !== "require") {
 		return false;
 	}
 
-	const symbol = typeChecker.getSymbolAtLocation(node);
+	const symbol = checker.getSymbolAtLocation(node);
 	if (!symbol) {
 		return true;
 	}
 
-	const declarations = symbol.getDeclarations();
+	const declarations = symbol.declarations;
 	if (!declarations?.length) {
 		return true;
 	}
 
 	return declarations.every(
-		(declaration) => declaration.getSourceFile().isDeclarationFile,
+		(declaration) => declaration.resolve()?.getSourceFile().isDeclarationFile,
 	);
 }
 
@@ -57,8 +57,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (isGlobalRequire(node.expression, typeChecker)) {
+				CallExpression: (node, { checker, sourceFile }) => {
+					if (isGlobalRequire(node.expression, checker)) {
 						context.report({
 							message: "noRequireImports",
 							range: getTSNodeRange(node.expression, sourceFile),
