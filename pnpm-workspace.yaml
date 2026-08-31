@@ -26,7 +26,7 @@ catalogs:
     eslint-plugin-jsdoc: 64.2.1
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-n: 18.3.0
-    eslint-plugin-package-json: 1.7.1
+    eslint-plugin-package-json: 1.8.0
     eslint-plugin-perfectionist: 5.10.1
     eslint-plugin-regexp: 3.2.0
     eslint-plugin-yml: 3.8.1
@@ -41,6 +41,7 @@ catalogs:
     prettier-plugin-packagejson: 3.0.2
     prettier-plugin-sentences-per-line: 0.2.4
     prettier-plugin-sh: 0.19.0
+    pkg-pr-new: 0.0.88
     tsdown: 0.22.14
     typescript: 6.0.3
     typescript-eslint: 8.68.0
@@ -66,7 +67,7 @@ catalogs:
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.3.0
-    eslint-plugin-package-json: 1.7.1
+    eslint-plugin-package-json: 1.8.0
     eslint-plugin-perfectionist: 5.10.1
     eslint-plugin-promise: 7.3.0
     eslint-plugin-react: 7.37.5
@@ -85,7 +86,7 @@ catalogs:
     "@astrojs/check": 0.9.10
     "@astrojs/markdown-remark": 7.2.4
     "@astrojs/react": 6.0.4
-    "@astrojs/starlight": 0.41.9
+    "@astrojs/starlight": 0.41.10
     "@expressive-code/core": 0.44.1
     "@konami-emoji-blast/astro": 0.3.0
     "@types/react": 19.2.18

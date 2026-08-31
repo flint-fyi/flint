@@ -5067,7 +5067,7 @@
 		"flint": {
 			"name": "automaticJsoncRules",
 			"plugin": "json",
-			"preset": "config"
+			"status": "skipped"
 		},
 		"eslint": [
 			{
@@ -12344,7 +12344,7 @@
 		"flint": {
 			"name": "compilerOptions",
 			"plugin": "react",
-			"preset": "config"
+			"preset": "logical"
 		},
 		"eslint": [
 			{
@@ -13053,7 +13053,7 @@
 		"flint": {
 			"name": "gating",
 			"plugin": "react",
-			"preset": "config"
+			"preset": "logical"
 		},
 		"eslint": [
 			{
@@ -16051,7 +16051,7 @@
 		"flint": {
 			"name": "arrayFillWithReferenceTypes",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
@@ -17734,7 +17734,7 @@
 		"flint": {
 			"name": "confusingArrayWithCalls",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "stylistic"
 		},
 		"oxlint": [
 			{
@@ -19460,7 +19460,8 @@
 		"flint": {
 			"name": "explicitTimerDelays",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "stylistic",
+			"strictness": "strict"
 		},
 		"oxlint": [
 			{
@@ -20654,7 +20655,7 @@
 		"flint": {
 			"name": "importExtraneousDependencies",
 			"plugin": "ts",
-			"preset": "none"
+			"status": "skipped"
 		},
 		"biome": [
 			{
@@ -22715,7 +22716,8 @@
 				"name": "unicorn/max-nested-calls",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/max-nested-calls.html"
 			}
-		]
+		],
+		"notes": "Overly opinionated."
 	},
 	{
 		"flint": {
@@ -23752,7 +23754,7 @@
 		"flint": {
 			"name": "numberCoercions",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
