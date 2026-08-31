@@ -8,6 +8,7 @@ import {
 } from "typescript-native/unstable/ast";
 import type {
 	Checker,
+	Diagnostic,
 	Program,
 	Project,
 	Snapshot,
@@ -15,7 +16,9 @@ import type {
 
 import {
 	createLanguage,
+	getColumnAndLineOfPosition,
 	type AnyOptionalSchema,
+	type CharacterReportRange,
 	type FileAboutData,
 	type InferredOutputObject,
 	type Language,
@@ -78,6 +81,22 @@ type VolarLanguageFileDefinition =
 		};
 	};
 
+export function getMappedSourceFiles(
+	program: Program,
+	sourceFile: AST.SourceFile,
+): AST.SourceFile[] {
+	const sourceFiles = [sourceFile];
+	for (const fileName of new Set(
+		sourceFile.supplementalSourceFileNames ?? [],
+	)) {
+		const supplementalSourceFile = program.getSourceFile(fileName);
+		if (supplementalSourceFile && supplementalSourceFile !== sourceFile) {
+			sourceFiles.push(supplementalSourceFile);
+		}
+	}
+	return sourceFiles;
+}
+
 export function visitTypeScriptNodes<Services extends object>(
 	sourceFile: AST.SourceFile,
 	visitors: RuleVisitors<TypeScriptNodeVisitors, Services>,
@@ -99,6 +118,80 @@ export function visitTypeScriptNodes<Services extends object>(
 	};
 
 	visit(sourceFile);
+}
+
+function adjustMappedRange(
+	range: CharacterReportRange,
+	spanMap: SpanMap | undefined,
+	requireExact = false,
+): CharacterReportRange | null {
+	if (range.begin < 0) {
+		return { begin: -range.begin, end: range.end };
+	}
+	if (!spanMap) {
+		return null;
+	}
+	const mapped = spanMap.virtualToOriginalSpan({
+		end: range.end,
+		pos: range.begin,
+	});
+	if (
+		SpanMap.isNone(mapped.fidelity) ||
+		(requireExact && !SpanMap.isExact(mapped.fidelity))
+	) {
+		return null;
+	}
+	return { begin: mapped.range.pos, end: mapped.range.end };
+}
+
+function mapDiagnosticToAuthoredSource(
+	diagnostic: Diagnostic,
+	sourceFiles: AST.SourceFile[],
+	about: FileAboutData,
+): Diagnostic | undefined {
+	const relatedInformation = diagnostic.relatedInformation?.flatMap(
+		(related) => {
+			const mapped = mapDiagnosticToAuthoredSource(related, sourceFiles, about);
+			return mapped ? [mapped] : [];
+		},
+	);
+	const sourceFile = sourceFiles.find(
+		(candidate) => candidate.fileName === diagnostic.fileName,
+	);
+	if (!sourceFile?.spanMap) {
+		return {
+			...diagnostic,
+			...(relatedInformation && { relatedInformation }),
+		};
+	}
+	const range = adjustMappedRange(
+		{ begin: diagnostic.pos, end: diagnostic.end },
+		sourceFile.spanMap,
+	);
+	if (!range) {
+		return undefined;
+	}
+	const startPosition = getColumnAndLineOfPosition(
+		about.sourceText,
+		range.begin,
+	);
+	const endPosition = getColumnAndLineOfPosition(about.sourceText, range.end);
+	return {
+		...diagnostic,
+		end: range.end,
+		endPosition: {
+			character: endPosition.column,
+			line: endPosition.line,
+		},
+		fileName: about.filePathAbsolute,
+		pos: range.begin,
+		...(relatedInformation && { relatedInformation }),
+		sourceLines: undefined,
+		startPosition: {
+			character: startPosition.column,
+			line: startPosition.line,
+		},
+	};
 }
 
 const stateSymbol = Symbol.for("@flint.fyi/typescript-language/state");
@@ -332,22 +425,10 @@ export const typescriptLanguage: Language<
 							: parseDirectivesFromTypeScriptFile(sourceFile)),
 						about: data,
 						...(mapperRegistration && {
-							adjustReportRange(range: { begin: number; end: number }) {
-								if (range.begin < 0) {
-									return { begin: -range.begin, end: range.end };
-								}
-								const spanMap = sourceFile.spanMap;
-								if (!spanMap) {
-									return null;
-								}
-								const mapped = spanMap.virtualToOriginalSpan({
-									end: range.end,
-									pos: range.begin,
-								});
-								return SpanMap.isNone(mapped.fidelity)
-									? null
-									: { begin: mapped.range.pos, end: mapped.range.end };
-							},
+							adjustFixRange: (range: CharacterReportRange) =>
+								adjustMappedRange(range, sourceFile.spanMap, true),
+							adjustReportRange: (range: CharacterReportRange) =>
+								adjustMappedRange(range, sourceFile.spanMap),
 						}),
 						language: typescriptLanguage,
 						services,
@@ -390,10 +471,42 @@ export const typescriptLanguage: Language<
 				file as VolarLanguageFileDefinition
 			).__volarServices.getLanguageReports();
 		}
-		return getTypeScriptDiagnostics(
+		const reports: LanguageReports = [];
+		const reportKeys = new Set<string>();
+		const sourceFiles = getMappedSourceFiles(
 			file.services.program,
-			file.services.sourceFile.fileName,
-		).map(convertTypeScriptDiagnosticToLanguageReport);
+			file.services.sourceFile,
+		);
+		for (const sourceFile of sourceFiles) {
+			for (const diagnostic of getTypeScriptDiagnostics(
+				file.services.program,
+				sourceFile.fileName,
+			)) {
+				const mappedDiagnostic = mapDiagnosticToAuthoredSource(
+					diagnostic,
+					sourceFiles,
+					file.about,
+				);
+				if (!mappedDiagnostic) {
+					continue;
+				}
+				const report =
+					convertTypeScriptDiagnosticToLanguageReport(mappedDiagnostic);
+				const key = JSON.stringify([
+					mappedDiagnostic.category,
+					mappedDiagnostic.code,
+					mappedDiagnostic.text,
+					mappedDiagnostic.messageChain,
+					mappedDiagnostic.relatedInformation,
+					report.range,
+				]);
+				if (!reportKeys.has(key)) {
+					reportKeys.add(key);
+					reports.push(report);
+				}
+			}
+		}
+		return reports;
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
 	runFileVisitors(file, options, runtime) {
@@ -411,9 +524,32 @@ export const typescriptLanguage: Language<
 		}
 
 		const { visitors } = runtime;
-		const visitorServices = { options, ...file.services };
-
-		visitTypeScriptNodes(file.services.sourceFile, visitors, visitorServices);
+		for (const sourceFile of getMappedSourceFiles(
+			file.services.program,
+			file.services.sourceFile,
+		)) {
+			const adjustFixRange = file.adjustFixRange;
+			const adjustReportRange = file.adjustReportRange;
+			if (adjustFixRange) {
+				file.adjustFixRange = (range) =>
+					adjustMappedRange(range, sourceFile.spanMap, true);
+			}
+			if (adjustReportRange) {
+				file.adjustReportRange = (range) =>
+					adjustMappedRange(range, sourceFile.spanMap);
+			}
+			try {
+				visitTypeScriptNodes(sourceFile, visitors, {
+					options,
+					...file.services,
+					sourceFile,
+					spanMap: sourceFile.spanMap,
+				});
+			} finally {
+				file.adjustFixRange = adjustFixRange;
+				file.adjustReportRange = adjustReportRange;
+			}
+		}
 	},
 });
 

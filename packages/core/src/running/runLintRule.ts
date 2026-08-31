@@ -27,6 +27,9 @@ export async function runLintRule(
 	// 1. Set up the rule's runtime, which receives and processes reports
 
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
+	const reportKeysByFilePath = new CachedFactory<string, Set<string>>(
+		() => new Set(),
+	);
 	const fileByPath = new Map<string, AnyLanguageFile>();
 
 	const ruleRuntime = await rule.setup({
@@ -47,6 +50,12 @@ export async function runLintRule(
 			if (processedReport == null) {
 				return;
 			}
+			const reportKey = JSON.stringify(processedReport);
+			const reportKeys = reportKeysByFilePath.get(targetFile.about.filePath);
+			if (reportKeys.has(reportKey)) {
+				return;
+			}
+			reportKeys.add(reportKey);
 
 			log(
 				"Adding %s report for file path %s",

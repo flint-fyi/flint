@@ -16,7 +16,11 @@
 	"sideEffects": true,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./content-mapper": "./src/content-mapper.ts"
+	},
+	"bin": {
+		"astro-language": "./src/content-mapper.ts"
 	},
 	"files": [
 		"dist/"
@@ -28,11 +32,9 @@
 		"@astrojs/compiler": "^4.0.0",
 		"@astrojs/ts-plugin": "^1.10.7",
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@flint.fyi/volar-language": "workspace:^",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"@flint.fyi/volar-language": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -44,8 +46,25 @@
 	},
 	"publishConfig": {
 		"access": "public",
+		"bin": {
+			"astro-language": "./dist/content-mapper.mjs"
+		},
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./content-mapper": "./dist/content-mapper.mjs"
+		}
+	},
+	"typescript": {
+		"contentMapper": {
+			"exec": [
+				"node",
+				"./dist/content-mapper.mjs"
+			],
+			"compilerOptions": [
+				"jsx",
+				"module",
+				"moduleResolution"
+			]
 		}
 	}
 }

@@ -152,6 +152,10 @@ function diagnosticsEqual(left: Diagnostic, right: Diagnostic): boolean {
 		left.end === right.end &&
 		left.code === right.code &&
 		left.text === right.text &&
-		compareMessageChains(left.messageChain, right.messageChain) === 0
+		compareMessageChains(left.messageChain, right.messageChain) === 0 &&
+		compareRelatedInformation(
+			left.relatedInformation,
+			right.relatedInformation,
+		) === 0
 	);
 }

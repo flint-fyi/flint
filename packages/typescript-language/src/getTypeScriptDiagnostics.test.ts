@@ -181,6 +181,21 @@ describe("getTypeScriptDiagnostics", () => {
 		).toEqual([first, second]);
 	});
 
+	it("preserves diagnostics with different related information", () => {
+		const first = {
+			...createDiagnostic("Head", "Detail"),
+			relatedInformation: [createDiagnostic("First related", "Detail")],
+		};
+		const second = {
+			...createDiagnostic("Head", "Detail"),
+			relatedInformation: [createDiagnostic("Second related", "Detail")],
+		};
+
+		expect(
+			getTypeScriptDiagnostics(createProgram([second, first]), fileName),
+		).toEqual([first, second]);
+	});
+
 	it.each([false, true])(
 		"matches source-file-scoped TypeScript 6 getPreEmitDiagnostics with declaration=%s",
 		(declaration) => {
