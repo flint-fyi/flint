@@ -1,7 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
+	forEachChild,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		const loopVariableNames = new Map<ts.Node, Set<string>>();
+		const loopVariableNames = new Map<AST.AnyNode, Set<string>>();
 
 		function getLoopVariables(
 			loopNode:
@@ -107,28 +107,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function referencesLoopVariable(
-			node: ts.Node,
+			node: AST.AnyNode,
 			loopVariables: Set<string>,
 		): boolean | undefined {
-			if (ts.isIdentifier(node) && loopVariables.has(node.text)) {
+			if (node.kind === SyntaxKind.Identifier && loopVariables.has(node.text)) {
 				return true;
 			}
 
-			return ts.forEachChild(node, (child) => {
+			return forEachChild(node, (child) => {
 				return (
-					!tsutils.isFunctionScopeBoundary(child) &&
-					!ts.isDoStatement(child) &&
-					!ts.isForInStatement(child) &&
-					!ts.isForOfStatement(child) &&
-					!ts.isForStatement(child) &&
-					!ts.isWhileStatement(child) &&
+					!isFunctionScopeBoundary(child) &&
+					child.kind !== SyntaxKind.DoStatement &&
+					child.kind !== SyntaxKind.ForInStatement &&
+					child.kind !== SyntaxKind.ForOfStatement &&
+					child.kind !== SyntaxKind.ForStatement &&
+					child.kind !== SyntaxKind.WhileStatement &&
 					referencesLoopVariable(child, loopVariables)
 				);
 			});
 		}
 
 		function checkFunctionInLoop(
-			node: ts.Node,
+			node: AST.AnyNode,
 			loopNode:
 				| AST.DoStatement
 				| AST.ForInStatement
@@ -138,17 +138,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			loopVariables: Set<string>,
 			sourceFile: AST.SourceFile,
 		): void {
-			if (tsutils.isFunctionScopeBoundary(node)) {
+			if (isFunctionScopeBoundary(node)) {
 				if (referencesLoopVariable(node, loopVariables)) {
 					const start = node.getStart(sourceFile);
 					let keyword = "function";
 
-					if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node)) {
+					if (
+						node.kind === SyntaxKind.FunctionDeclaration ||
+						node.kind === SyntaxKind.FunctionExpression
+					) {
 						keyword = "function";
-					} else if (ts.isArrowFunction(node)) {
-						const firstToken = node.getFirstToken(sourceFile);
-						if (firstToken && ts.isIdentifier(firstToken)) {
-							keyword = firstToken.text;
+					} else if (node.kind === SyntaxKind.ArrowFunction) {
+						const firstParameter = node.parameters[0];
+						if (
+							firstParameter?.name.kind === SyntaxKind.Identifier &&
+							firstParameter.name.getStart(sourceFile) === start
+						) {
+							keyword = firstParameter.name.text;
 						} else {
 							keyword = "(";
 						}
@@ -166,16 +172,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				ts.isDoStatement(node) ||
-				ts.isForInStatement(node) ||
-				ts.isForOfStatement(node) ||
-				ts.isForStatement(node) ||
-				ts.isWhileStatement(node)
+				node.kind === SyntaxKind.DoStatement ||
+				node.kind === SyntaxKind.ForInStatement ||
+				node.kind === SyntaxKind.ForOfStatement ||
+				node.kind === SyntaxKind.ForStatement ||
+				node.kind === SyntaxKind.WhileStatement
 			) {
 				return;
 			}
 
-			ts.forEachChild(node, (child) => {
+			forEachChild(node, (child) => {
 				checkFunctionInLoop(child, loopNode, loopVariables, sourceFile);
 			});
 		}
@@ -206,3 +212,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
+
+function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.CallSignature:
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression:
+		case SyntaxKind.Constructor:
+		case SyntaxKind.ConstructorType:
+		case SyntaxKind.ConstructSignature:
+		case SyntaxKind.EnumDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionType:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.MethodSignature:
+		case SyntaxKind.ModuleDeclaration:
+		case SyntaxKind.SetAccessor:
+			return true;
+		case SyntaxKind.SourceFile:
+			return !!node.externalModuleIndicator;
+		default:
+			return false;
+	}
+}

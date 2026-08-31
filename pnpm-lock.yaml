@@ -652,9 +652,9 @@ importers:
       '@flint.fyi/volar-language':
         specifier: workspace:^
         version: link:../volar-language
-      typescript:
-        specifier: ^6.0.0
-        version: 6.0.3
+      typescript-native:
+        specifier: catalog:dev
+        version: typescript@7.1.0-dev.20260830.1
     devDependencies:
       '@astrojs/compiler':
         specifier: 4.0.0
@@ -1221,12 +1221,9 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
-      ts-api-utils:
-        specifier: ^2.4.0
-        version: 2.5.0(typescript@6.0.3)
-      typescript:
-        specifier: ^6.0.0
-        version: 6.0.3
+      typescript-native:
+        specifier: catalog:dev
+        version: typescript@7.1.0-dev.20260830.1
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^

@@ -1,10 +1,11 @@
-import { SyntaxKind, type Declaration } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type Checker,
+	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "../ruleCreator.ts";
@@ -31,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isNamespaceImportDeclaration(declaration: Declaration) {
+		function isNamespaceImportDeclaration(declaration: AST.AnyNode): boolean {
 			return (
 				declaration.kind === SyntaxKind.NamespaceImport &&
 				declaration.parent.kind === SyntaxKind.ImportClause &&
@@ -41,20 +42,36 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isIdentifierNamespaceImport(
 			identifier: AST.Identifier,
-			typeChecker: Checker,
-		) {
-			return typeChecker
-				.getSymbolAtLocation(identifier)
-				?.getDeclarations()
-				?.some(isNamespaceImportDeclaration);
+			checker: Checker,
+		): boolean | undefined {
+			const declarations =
+				checker.getSymbolAtLocation(identifier)?.declarations;
+			if (!declarations) {
+				return undefined;
+			}
+
+			const resolvedDeclarations = declarations.map((declaration) =>
+				declaration.resolve(),
+			);
+			if (resolvedDeclarations.some((declaration) => !declaration)) {
+				return false;
+			}
+
+			return resolvedDeclarations.some(
+				(declaration) =>
+					!!declaration && isNamespaceImportDeclaration(declaration),
+			);
 		}
 
 		return {
 			visitors: {
-				ElementAccessExpression(node, { sourceFile, typeChecker }) {
+				ElementAccessExpression(
+					node,
+					{ checker, sourceFile }: TypeScriptFileServices,
+				) {
 					if (
 						node.expression.kind === SyntaxKind.Identifier &&
-						isIdentifierNamespaceImport(node.expression, typeChecker)
+						isIdentifierNamespaceImport(node.expression, checker)
 					) {
 						context.report({
 							message: "noDynamicAccess",

@@ -1,35 +1,30 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import { astroLanguage } from "@flint.fyi/astro-language";
-import { getTSNodeRange } from "@flint.fyi/typescript-language";
+import { getTSNodeRange, type Checker } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function typeCanBeClientOnlyValue(
-	type: ts.Type,
-	typeChecker: ts.TypeChecker,
-): boolean {
-	if (
-		type.flags &
-		(ts.TypeFlags.Any | ts.TypeFlags.StringLike | ts.TypeFlags.Unknown)
-	) {
+function typeCanBeClientOnlyValue(type: Type, checker: Checker): boolean {
+	if (type.flags & (TypeFlags.Any | TypeFlags.StringLike | TypeFlags.Unknown)) {
 		return true;
 	}
 
-	if (type.isUnionOrIntersection()) {
-		return type.types.some((childType) =>
-			typeCanBeClientOnlyValue(childType, typeChecker),
-		);
+	if (type.isUnionType() || type.isIntersectionType()) {
+		return type
+			.getTypes()
+			.some((childType) => typeCanBeClientOnlyValue(childType, checker));
 	}
 
-	const constraint = typeChecker.getBaseConstraintOfType(type);
+	const constraint = checker.getBaseConstraintOfType(type);
 	if (constraint && constraint !== type) {
-		return typeCanBeClientOnlyValue(constraint, typeChecker);
+		return typeCanBeClientOnlyValue(constraint, checker);
 	}
 
-	const apparentType = typeChecker.getApparentType(type);
+	const apparentType = checker.getApparentType(type);
 	if (apparentType !== type) {
-		return typeCanBeClientOnlyValue(apparentType, typeChecker);
+		return typeCanBeClientOnlyValue(apparentType, checker);
 	}
 
 	return false;
@@ -70,7 +65,7 @@ export default ruleCreator.createRule(astroLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsxAttribute(node, { sourceFile, typeChecker }) {
+				JsxAttribute(node, { checker, sourceFile }) {
 					if (
 						node.name.kind !== SyntaxKind.JsxNamespacedName ||
 						node.name.namespace.text !== "client" ||
@@ -95,8 +90,8 @@ export default ruleCreator.createRule(astroLanguage, {
 						node.initializer.kind === SyntaxKind.JsxExpression &&
 						node.initializer.expression &&
 						typeCanBeClientOnlyValue(
-							typeChecker.getTypeAtLocation(node.initializer.expression),
-							typeChecker,
+							checker.getTypeAtLocation(node.initializer.expression),
+							checker,
 						)
 					) {
 						return;

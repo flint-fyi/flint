@@ -1,7 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
+	forEachChild,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -31,42 +31,46 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function getIdentifierName(node: ts.Node) {
-			return ts.isIdentifier(node) ? node.text : undefined;
+		function getIdentifierName(node: AST.AnyNode): string | undefined {
+			return node.kind === SyntaxKind.Identifier ? node.text : undefined;
 		}
 
 		function hasSpreadOfIdentifier(
-			node: ts.Node,
+			node: AST.AnyNode,
 			identifierName: string,
 		): boolean | undefined {
 			if (
-				(ts.isSpreadElement(node) || ts.isSpreadAssignment(node)) &&
+				(node.kind === SyntaxKind.SpreadElement ||
+					node.kind === SyntaxKind.SpreadAssignment) &&
 				identifierName === getIdentifierName(node.expression)
 			) {
 				return true;
 			}
 
-			return ts.forEachChild(node, (child) => {
+			return forEachChild(node, (child) => {
 				return hasSpreadOfIdentifier(child, identifierName);
 			});
 		}
 
-		function checkAssignmentInLoop(node: ts.Node, sourceFile: AST.SourceFile) {
+		function checkAssignmentInLoop(
+			node: AST.AnyNode,
+			sourceFile: AST.SourceFile,
+		): void {
 			if (
-				ts.isBinaryExpression(node) &&
+				node.kind === SyntaxKind.BinaryExpression &&
 				node.operatorToken.kind === SyntaxKind.EqualsToken
 			) {
 				checkBinaryEqualsExpression(node, sourceFile);
 			}
 
-			ts.forEachChild(node, (child) => {
+			forEachChild(node, (child) => {
 				if (
-					ts.isDoStatement(child) ||
-					ts.isForInStatement(child) ||
-					ts.isForOfStatement(child) ||
-					ts.isForStatement(child) ||
-					ts.isWhileStatement(child) ||
-					tsutils.isFunctionScopeBoundary(child)
+					child.kind === SyntaxKind.DoStatement ||
+					child.kind === SyntaxKind.ForInStatement ||
+					child.kind === SyntaxKind.ForOfStatement ||
+					child.kind === SyntaxKind.ForStatement ||
+					child.kind === SyntaxKind.WhileStatement ||
+					isFunctionScopeBoundary(child)
 				) {
 					return;
 				}
@@ -75,9 +79,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function checkBinaryEqualsExpression(
-			node: ts.BinaryExpression,
+			node: AST.BinaryExpression,
 			sourceFile: AST.SourceFile,
-		) {
+		): void {
 			const leftName = getIdentifierName(node.left);
 			if (!leftName || !hasSpreadOfIdentifier(node.right, leftName)) {
 				return;
@@ -88,12 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const firstToken = spreadNode.getFirstToken(sourceFile);
-			if (firstToken?.kind !== SyntaxKind.DotDotDotToken) {
-				return;
-			}
-
-			const start = firstToken.getStart(sourceFile);
+			const start = spreadNode.getStart(sourceFile);
 			context.report({
 				message: "noAccumulatingSpread",
 				range: {
@@ -104,18 +103,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function findSpreadElement(
-			node: ts.Node,
+			node: AST.AnyNode,
 			identifierName: string,
-		): ts.Node | undefined {
-			if (ts.isSpreadElement(node) || ts.isSpreadAssignment(node)) {
+		): AST.AnyNode | undefined {
+			if (
+				node.kind === SyntaxKind.SpreadElement ||
+				node.kind === SyntaxKind.SpreadAssignment
+			) {
 				const spreadName = getIdentifierName(node.expression);
 				if (spreadName === identifierName) {
 					return node;
 				}
 			}
 
-			let result: ts.Node | undefined = undefined;
-			ts.forEachChild(node, (child) => {
+			let result: AST.AnyNode | undefined = undefined;
+			forEachChild(node, (child) => {
 				result ??= findSpreadElement(child, identifierName);
 			});
 
@@ -130,7 +132,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.ForStatement
 				| AST.WhileStatement,
 			{ sourceFile }: TypeScriptFileServices,
-		) {
+		): void {
 			checkAssignmentInLoop(node.statement, sourceFile);
 		}
 
@@ -145,3 +147,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
+
+function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.CallSignature:
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression:
+		case SyntaxKind.Constructor:
+		case SyntaxKind.ConstructorType:
+		case SyntaxKind.ConstructSignature:
+		case SyntaxKind.EnumDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionType:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.MethodSignature:
+		case SyntaxKind.ModuleDeclaration:
+		case SyntaxKind.SetAccessor:
+			return true;
+		case SyntaxKind.SourceFile:
+			return !!node.externalModuleIndicator;
+		default:
+			return false;
+	}
+}
