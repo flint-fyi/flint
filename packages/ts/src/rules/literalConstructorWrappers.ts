@@ -5,7 +5,7 @@ import {
 	isNumericLiteral,
 	isStringLiteral,
 	SyntaxKind,
-} from "typescript";
+} from "typescript-native/unstable/ast";
 
 import {
 	isGlobalDeclarationOfName,

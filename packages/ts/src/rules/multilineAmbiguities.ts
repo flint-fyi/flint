@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
@@ -72,7 +72,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					checkMultilineDelimiter(
 						precedingEnd,
-						openParen.getStart(sourceFile),
+						openParen.begin,
 						"parentheses",
 						"function call",
 						sourceFile,
@@ -94,7 +94,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					checkMultilineDelimiter(
 						node.expression.getEnd(),
-						openBracket.getStart(sourceFile),
+						openBracket.begin,
 						"brackets",
 						"property access",
 						sourceFile,
@@ -119,12 +119,26 @@ function findChildToken(
 	kind: SyntaxKind,
 	sourceFile: AST.SourceFile,
 ) {
-	for (const child of node.getChildren(sourceFile)) {
-		if (child.kind === kind) {
-			return child;
+	const begin = node.expression.getEnd();
+	const scanner = createScanner(
+		true,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		begin,
+		node.getEnd() - begin,
+	);
+	let range: undefined | { begin: number; end: number };
+	let tokenKind = scanner.scan();
+	while (tokenKind !== SyntaxKind.EndOfFile) {
+		if (tokenKind === kind) {
+			range = { begin: scanner.getTokenStart(), end: scanner.getTokenEnd() };
+			if (kind !== SyntaxKind.GreaterThanToken) {
+				return range;
+			}
 		}
+		tokenKind = scanner.scan();
 	}
-	return undefined;
+	return range;
 }
 
 function getExpressionEnd(
@@ -135,7 +149,7 @@ function getExpressionEnd(
 		node.typeArguments &&
 		findChildToken(node, SyntaxKind.GreaterThanToken, sourceFile);
 
-	return greaterThan?.getEnd() ?? node.expression.getEnd();
+	return greaterThan?.end ?? node.expression.getEnd();
 }
 
 function getLineEndPosition(lineNumber: number, sourceFile: AST.SourceFile) {

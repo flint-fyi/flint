@@ -1,5 +1,6 @@
 import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags, type Type } from "typescript";
+import { TypeFlags, type Type } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,

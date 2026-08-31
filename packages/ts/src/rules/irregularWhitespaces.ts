@@ -1,8 +1,4 @@
-import {
-	getLeadingCommentRanges,
-	getTrailingCommentRanges,
-	SyntaxKind,
-} from "typescript";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
@@ -138,32 +134,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					collectExcludedRanges(node);
 
 					if (options.skipComments) {
-						const commentRanges = [...(getLeadingCommentRanges(text, 0) ?? [])];
-
-						function collectCommentRanges(astNode: AST.AnyNode) {
-							const leading = getLeadingCommentRanges(
-								text,
-								astNode.getFullStart(),
-							);
-							if (leading) {
-								commentRanges.push(...leading);
+						const scanner = createScanner(
+							false,
+							sourceFile.languageVariant,
+							text,
+						);
+						let kind = scanner.scan();
+						while (kind !== SyntaxKind.EndOfFile) {
+							if (
+								kind === SyntaxKind.SingleLineCommentTrivia ||
+								kind === SyntaxKind.MultiLineCommentTrivia
+							) {
+								excludedRanges.push({
+									end: scanner.getTokenEnd(),
+									start: scanner.getTokenStart(),
+								});
 							}
-
-							const trailing = getTrailingCommentRanges(text, astNode.getEnd());
-							if (trailing) {
-								commentRanges.push(...trailing);
-							}
-
-							forEachChild(astNode, collectCommentRanges);
-						}
-
-						collectCommentRanges(node);
-
-						for (const range of commentRanges) {
-							excludedRanges.push({
-								end: range.end,
-								start: range.pos,
-							});
+							kind = scanner.scan();
 						}
 					}
 
