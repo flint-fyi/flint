@@ -1,9 +1,11 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { SymbolFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
 
 import { findProperty } from "../utils/findProperty.ts";
@@ -39,27 +41,36 @@ function hasCommentsInArray(
 // TODO: Maybe we will have a function to check if a symbol is from Flint in the future
 function isCreatePluginCall(
 	node: AST.CallExpression,
-	typeChecker: ts.TypeChecker,
-) {
+	checker: Checker,
+): boolean {
 	if (node.expression.kind !== SyntaxKind.Identifier) {
 		return false;
 	}
 
-	const symbol = typeChecker.getSymbolAtLocation(node.expression);
+	const symbol = checker.getSymbolAtLocation(node.expression);
 	if (!symbol) {
 		return false;
 	}
 
 	const resolvedSymbol =
-		symbol.flags & ts.SymbolFlags.Alias
-			? typeChecker.getAliasedSymbol(symbol)
+		symbol.flags & SymbolFlags.Alias
+			? checker.getAliasedSymbol(symbol)
 			: symbol;
 
-	if (resolvedSymbol.getName() !== "createPlugin") {
+	if (resolvedSymbol.name !== "createPlugin") {
 		return false;
 	}
 
-	return resolvedSymbol.getDeclarations()?.some((declaration) => {
+	const declarations: AST.Declaration[] = [];
+	for (const declarationHandle of resolvedSymbol.declarations) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return false;
+		}
+		declarations.push(declaration);
+	}
+
+	return declarations.some((declaration) => {
 		const fileName = declaration.getSourceFile().fileName.replaceAll("\\", "/");
 
 		return (
@@ -157,8 +168,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
-					if (!isCreatePluginCall(node, typeChecker)) {
+				CallExpression(node, { checker, sourceFile }) {
+					if (!isCreatePluginCall(node, checker)) {
 						return;
 					}
 

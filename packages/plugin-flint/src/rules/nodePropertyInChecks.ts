@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -31,10 +31,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression(node, { sourceFile, typeChecker }) {
+				BinaryExpression(node, { checker, sourceFile }) {
 					if (
 						node.operatorToken.kind === SyntaxKind.InKeyword &&
-						isTypeFromTS(node.right, typeChecker, "Node")
+						isTypeFromTS(node.right, checker, "Node")
 					) {
 						context.report({
 							message: "nodePropertyInChecks",

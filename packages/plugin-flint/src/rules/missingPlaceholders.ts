@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -151,13 +151,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
-					if (isRuleCreatorCreateRule(node, typeChecker)) {
+				CallExpression(node, { checker, sourceFile }) {
+					if (isRuleCreatorCreateRule(node, checker)) {
 						checkMessageInCreateRule(node);
 						return;
 					}
 
-					if (isRuleContextReport(node, typeChecker)) {
+					if (isRuleContextReport(node, checker)) {
 						populateMessageInCreateRule(node, sourceFile);
 						return;
 					}

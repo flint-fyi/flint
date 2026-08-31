@@ -29,8 +29,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
-					if (!isLanguageCreateRule(node, typeChecker)) {
+				CallExpression(node, { checker, sourceFile }) {
+					if (!isLanguageCreateRule(node, checker)) {
 						return;
 					}
 

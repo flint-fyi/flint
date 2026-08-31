@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
@@ -21,24 +21,42 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 const volarLanguagePackageName = "@flint.fyi/volar-language";
 
+function getResolvedDeclarations(
+	checker: Checker,
+	node: AST.Identifier,
+): AST.Declaration[] | undefined {
+	const declarationHandles = checker.getSymbolAtLocation(node)?.declarations;
+	if (!declarationHandles) {
+		return undefined;
+	}
+
+	const declarations: AST.Declaration[] = [];
+	for (const declarationHandle of declarationHandles) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return undefined;
+		}
+		declarations.push(declaration);
+	}
+
+	return declarations;
+}
+
 function isVolarReportSourceCodeCall(
 	node: AST.CallExpression,
-	typeChecker: Checker,
-) {
+	checker: Checker,
+): boolean {
 	// import { reportSourceCode } from "@flint.fyi/volar-language";
 	// reportSourceCode(...)
 	if (node.expression.kind === SyntaxKind.Identifier) {
 		return (
-			typeChecker
-				.getSymbolAtLocation(node.expression)
-				?.getDeclarations()
-				?.some((declaration) =>
-					isImportedSpecifierFromModule(
-						declaration,
-						volarLanguagePackageName,
-						"reportSourceCode",
-					),
-				) ?? false
+			getResolvedDeclarations(checker, node.expression)?.some((declaration) =>
+				isImportedSpecifierFromModule(
+					declaration,
+					volarLanguagePackageName,
+					"reportSourceCode",
+				),
+			) ?? false
 		);
 	}
 
@@ -50,14 +68,11 @@ function isVolarReportSourceCodeCall(
 		node.expression.name.text === "reportSourceCode"
 	) {
 		return (
-			typeChecker
-				.getSymbolAtLocation(node.expression.expression)
-				?.getDeclarations()
-				?.some(
-					(declaration) =>
-						declaration.kind === SyntaxKind.NamespaceImport &&
-						isImportedBindingFromModule(declaration, volarLanguagePackageName),
-				) ?? false
+			getResolvedDeclarations(checker, node.expression.expression)?.some(
+				(declaration) =>
+					declaration.kind === SyntaxKind.NamespaceImport &&
+					isImportedBindingFromModule(declaration, volarLanguagePackageName),
+			) ?? false
 		);
 	}
 
@@ -155,18 +170,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
-					if (isRuleCreatorCreateRule(node, typeChecker)) {
+				CallExpression(node, { checker, sourceFile }) {
+					if (isRuleCreatorCreateRule(node, checker)) {
 						collectMessageIds(node, sourceFile);
 						return;
 					}
 
-					if (isRuleContextReport(node, typeChecker)) {
+					if (isRuleContextReport(node, checker)) {
 						detectMessageIdUsage(node, 0);
 						return;
 					}
 
-					if (isVolarReportSourceCodeCall(node, typeChecker)) {
+					if (isVolarReportSourceCodeCall(node, checker)) {
 						detectMessageIdUsage(node, 1);
 						return;
 					}
