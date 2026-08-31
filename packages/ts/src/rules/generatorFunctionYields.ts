@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	typescriptLanguage,
@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function blockContainsYield(block: AST.Block) {
-	function checkForYield(node: ts.Node): boolean | undefined {
+	function checkForYield(node: AST.AnyNode): boolean | undefined {
 		if (node.kind === SyntaxKind.YieldExpression) {
 			return true;
 		}
@@ -71,8 +71,8 @@ function blockContainsYield(block: AST.Block) {
 			return false;
 		}
 
-		return ts.forEachChild(node, checkForYield);
+		return node.forEachChild(checkForYield);
 	}
 
-	return ts.forEachChild(block, checkForYield);
+	return block.forEachChild(checkForYield);
 }

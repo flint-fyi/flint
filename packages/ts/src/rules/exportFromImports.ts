@@ -1,4 +1,5 @@
-import ts, { SyntaxKind } from "typescript";
+import * as ts from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticStringValue,

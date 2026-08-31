@@ -5,7 +5,7 @@ import {
 	isStringLiteral,
 	SyntaxKind,
 	type Expression,
-} from "typescript";
+} from "typescript-native/unstable/ast";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
