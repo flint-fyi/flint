@@ -1,5 +1,5 @@
-import type { Program } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -39,7 +39,7 @@ function hasArraySpread(node: AST.CallExpression) {
 
 function isObjectAssignCall(
 	node: AST.CallExpression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ): boolean {
 	return (
@@ -50,7 +50,7 @@ function isObjectAssignCall(
 		isGlobalDeclarationOfName(
 			node.expression.expression,
 			"Object",
-			typeChecker,
+			checker,
 			program,
 		)
 	);
@@ -92,9 +92,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+				CallExpression: (node, { checker, program, sourceFile }) => {
 					if (
-						!isObjectAssignCall(node, typeChecker, program) ||
+						!isObjectAssignCall(node, checker, program) ||
 						node.arguments.length < 1
 					) {
 						return;

@@ -1,10 +1,5 @@
-import { TypeFlags } from "typescript";
-import {
-	canHaveModifiers,
-	getModifiers as getNodeModifiers,
-	SyntaxKind,
-	type Node,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
 import {
@@ -65,8 +60,18 @@ const javascriptReservedWords = new Set([
 	"yield",
 ]);
 
-function getModifiers(node: null | Node | undefined) {
-	return node && canHaveModifiers(node) ? getNodeModifiers(node) : undefined;
+function getFirstModifierKind(node: AST.Declaration | undefined) {
+	switch (node?.kind) {
+		case SyntaxKind.Constructor:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.Parameter:
+		case SyntaxKind.PropertyDeclaration:
+		case SyntaxKind.SetAccessor:
+			return node.modifiers?.[0]?.kind;
+		default:
+			return undefined;
+	}
 }
 
 // TODO: Use a util like getStaticValue
@@ -121,11 +126,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function getKeyTypeInformation(
 			node: AST.ElementAccessExpression,
-			typeChecker: Checker,
+			checker: Checker,
 		) {
 			const propertySymbol =
-				typeChecker.getSymbolAtLocation(node.argumentExpression) ??
-				typeChecker
+				checker.getSymbolAtLocation(node.argumentExpression) ??
+				checker
 					.getTypeAtLocation(node.expression)
 					.getNonNullableType()
 					.getProperties()
@@ -136,9 +141,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								node.argumentExpression.text,
 					);
 
-			const modifierKind = getModifiers(
-				propertySymbol?.getDeclarations()?.[0],
-			)?.[0]?.kind;
+			const modifierKind = getFirstModifierKind(
+				propertySymbol?.declarations[0]?.resolve(),
+			);
 
 			return {
 				inaccessible:
@@ -149,10 +154,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 		return {
 			visitors: {
-				ElementAccessExpression: (
-					node,
-					{ options, sourceFile, typeChecker },
-				) => {
+				ElementAccessExpression: (node, { checker, options, sourceFile }) => {
 					const key = getPropertyKeyText(node);
 					if (!key || keyCannotBeUsedWithDotNotation(key)) {
 						return;
@@ -160,18 +162,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const { inaccessible, propertySymbol } = getKeyTypeInformation(
 						node,
-						typeChecker,
+						checker,
 					);
 					if (inaccessible) {
 						return;
 					}
 
 					if (options.allowIndexSignaturePropertyAccess && !propertySymbol) {
-						const objectType = typeChecker
+						const objectType = checker
 							.getTypeAtLocation(node.expression)
 							.getNonNullableType();
 						if (
-							typeChecker
+							checker
 								.getIndexInfosOfType(objectType)
 								.some((info) => info.keyType.flags & TypeFlags.StringLike)
 						) {

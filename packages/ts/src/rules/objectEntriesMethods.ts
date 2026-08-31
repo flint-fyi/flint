@@ -1,5 +1,5 @@
-import type { Program } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -21,13 +21,13 @@ function isArrowFunctionWithParams(
 
 function isEmptyObject(
 	node: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	const unwrapped = skipParentheses(node);
 	return (
 		isEmptyObjectLiteral(unwrapped) ||
-		isObjectCreateNull(unwrapped, typeChecker, program)
+		isObjectCreateNull(unwrapped, checker, program)
 	);
 }
 
@@ -41,7 +41,7 @@ function isEmptyObjectLiteral(node: AST.Expression) {
 // https://github.com/flint-fyi/flint/issues/1298
 function isObjectAssignPattern(
 	callback: AST.ArrowFunction,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	if (callback.parameters.length < 1) {
@@ -59,12 +59,12 @@ function isObjectAssignPattern(
 	const body = skipParentheses(callback.body);
 
 	if (
-		!isObjectMethodCall(body, "assign", typeChecker, program) ||
+		!isObjectMethodCall(body, "assign", checker, program) ||
 		body.arguments.length !== 2 ||
 		!isGlobalDeclarationOfName(
 			body.expression.expression,
 			"Object",
-			typeChecker,
+			checker,
 			program,
 		)
 	) {
@@ -102,15 +102,15 @@ function isObjectAssignPattern(
 
 function isObjectCreateNull(
 	node: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	if (
-		!isObjectMethodCall(node, "create", typeChecker, program) ||
+		!isObjectMethodCall(node, "create", checker, program) ||
 		!isGlobalDeclarationOfName(
 			node.expression.expression,
 			"Object",
-			typeChecker,
+			checker,
 			program,
 		) ||
 		node.arguments.length !== 1
@@ -127,7 +127,7 @@ function isObjectCreateNull(
 function isObjectMethodCall(
 	node: AST.AnyNode,
 	text: string,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ): node is AST.CallExpression & { expression: AST.PropertyAccessExpression } {
 	return (
@@ -138,7 +138,7 @@ function isObjectMethodCall(
 		isGlobalDeclarationOfName(
 			node.expression.expression,
 			"Object",
-			typeChecker,
+			checker,
 			program,
 		)
 	);
@@ -146,7 +146,7 @@ function isObjectMethodCall(
 
 function isReduceCallWithEmptyObject(
 	node: AST.CallExpression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	if (
@@ -163,8 +163,8 @@ function isReduceCallWithEmptyObject(
 	const initialValue = node.arguments[1]!;
 
 	return (
-		isEmptyObject(initialValue, typeChecker, program) &&
-		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
+		isEmptyObject(initialValue, checker, program) &&
+		isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 	);
 }
 
@@ -231,8 +231,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
-					if (!isReduceCallWithEmptyObject(node, typeChecker, program)) {
+				CallExpression: (node, { checker, program, sourceFile }) => {
+					if (!isReduceCallWithEmptyObject(node, checker, program)) {
 						return;
 					}
 
@@ -247,7 +247,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						!isObjectAssignPattern(callback, typeChecker, program) &&
+						!isObjectAssignPattern(callback, checker, program) &&
 						!isSpreadAccumulatorPattern(callback)
 					) {
 						return;

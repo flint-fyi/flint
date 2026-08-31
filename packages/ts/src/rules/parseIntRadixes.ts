@@ -1,5 +1,5 @@
-import type { Program } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getStaticNumberValue,
@@ -15,7 +15,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isParseIntCall(
 	node: AST.CallExpression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	switch (node.expression.kind) {
@@ -23,7 +23,7 @@ function isParseIntCall(
 			return isGlobalDeclarationOfName(
 				node.expression,
 				"parseInt",
-				typeChecker,
+				checker,
 				program,
 			);
 
@@ -36,7 +36,7 @@ function isParseIntCall(
 				isGlobalDeclarationOfName(
 					node.expression.expression,
 					"Number",
-					typeChecker,
+					checker,
 					program,
 				)
 			);
@@ -95,9 +95,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+					{ checker, program, sourceFile }: TypeScriptFileServices,
 				) => {
-					if (!isParseIntCall(node, typeChecker, program)) {
+					if (!isParseIntCall(node, checker, program)) {
 						return;
 					}
 

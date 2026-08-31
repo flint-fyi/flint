@@ -1,5 +1,5 @@
-import type { Program } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isObjectPrototypeHasOwnProperty(
 			node: AST.Expression,
-			typeChecker: Checker,
+			checker: Checker,
 			program: Program,
 		) {
 			return (
@@ -44,12 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.name.kind === SyntaxKind.Identifier &&
 				node.name.text === "prototype" &&
 				node.expression.kind === SyntaxKind.Identifier &&
-				isGlobalDeclarationOfName(
-					node.expression,
-					"Object",
-					typeChecker,
-					program,
-				)
+				isGlobalDeclarationOfName(node.expression, "Object", checker, program)
 			);
 		}
 
@@ -62,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isHasOwnProperty(
 			node: AST.Expression,
-			typeChecker: Checker,
+			checker: Checker,
 			program: Program,
 		): boolean {
 			if (
@@ -74,17 +69,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			return (
-				isObjectPrototypeHasOwnProperty(
-					node.expression,
-					typeChecker,
-					program,
-				) || isObjectLiteralHasOwnProperty(node.expression)
+				isObjectPrototypeHasOwnProperty(node.expression, checker, program) ||
+				isObjectLiteralHasOwnProperty(node.expression)
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+				CallExpression: (node, { checker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier
@@ -95,7 +87,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.name.text === "call" &&
 						node.arguments.length >= 2 &&
-						isHasOwnProperty(node.expression.expression, typeChecker, program)
+						isHasOwnProperty(node.expression.expression, checker, program)
 					) {
 						context.report({
 							message: "preferHasOwn",
@@ -107,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.name.text === "hasOwnProperty" &&
 						node.arguments.length >= 1 &&
-						!isHasOwnProperty(node.expression, typeChecker, program)
+						!isHasOwnProperty(node.expression, checker, program)
 					) {
 						context.report({
 							message: "preferHasOwn",

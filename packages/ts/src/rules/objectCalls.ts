@@ -35,28 +35,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 		): void {
 			if (
 				node.expression.kind !== SyntaxKind.Identifier ||
-				!isGlobalDeclarationOfName(
-					node.expression,
-					"Object",
-					typeChecker,
-					program,
-				)
+				!isGlobalDeclarationOfName(node.expression, "Object", checker, program)
 			) {
 				return;
 			}
 
-			const reportNode =
-				node.kind === SyntaxKind.NewExpression
-					? node.getChildAt(0, sourceFile)
-					: node.expression;
+			const range = getTSNodeRange(node.expression, sourceFile);
+			if (node.kind === SyntaxKind.NewExpression) {
+				range.begin = node.getStart(sourceFile);
+				range.end = range.begin + "new".length;
+			}
 
 			context.report({
 				message: "preferObjectLiteral",
-				range: getTSNodeRange(reportNode, sourceFile),
+				range,
 			});
 		}
 
