@@ -1,4 +1,4 @@
-import type ts from "typescript";
+import type { Type } from "typescript-native/unstable/sync";
 
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 
@@ -7,19 +7,18 @@ import { isTypeRecursive } from "./isTypeRecursive.ts";
 
 export function isArrayOrTupleTypeAtLocation(
 	node: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 ): boolean {
 	return isArrayOrTupleType(
-		getConstrainedTypeAtLocation(node, typeChecker),
-		typeChecker,
+		getConstrainedTypeAtLocation(node, checker),
+		checker,
 	);
 }
 
-function isArrayOrTupleType(type: ts.Type, typeChecker: Checker): boolean {
+function isArrayOrTupleType(type: Type, checker: Checker): boolean {
 	return isTypeRecursive(
 		type,
 		(constituent) =>
-			typeChecker.isArrayType(constituent) ||
-			typeChecker.isTupleType(constituent),
+			checker.isArrayType(constituent) || checker.isTupleType(constituent),
 	);
 }

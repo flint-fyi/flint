@@ -1,4 +1,3 @@
-import { SymbolFlags, type Symbol } from "typescript";
 import {
 	createScanner,
 	isExpressionWithTypeArguments,
@@ -7,6 +6,7 @@ import {
 	isTypeParameterDeclaration,
 	SyntaxKind,
 } from "typescript-native/unstable/ast";
+import { SymbolFlags, type Symbol } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
 import {
@@ -92,18 +92,18 @@ function getImportSpecifiers(node: AST.ImportDeclaration) {
 	return specifiers;
 }
 
-function getReferencedSymbol(typeChecker: Checker, node: AST.Identifier) {
+function getReferencedSymbol(checker: Checker, node: AST.Identifier) {
 	let symbol: Symbol | undefined;
 	const parent = node.parent;
 
 	if (isShorthandPropertyAssignment(parent)) {
-		symbol = typeChecker.getShorthandAssignmentValueSymbol(parent);
+		symbol = checker.getShorthandAssignmentValueSymbol(parent);
 	} else {
-		symbol = typeChecker.getSymbolAtLocation(node);
+		symbol = checker.getSymbolAtLocation(node);
 	}
 
 	return symbol?.flags && (symbol.flags & SymbolFlags.Alias) !== 0
-		? typeChecker.getAliasedSymbol(symbol)
+		? checker.getAliasedSymbol(symbol)
 		: symbol;
 }
 
@@ -376,7 +376,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				SourceFile(node, { options, program, sourceFile, typeChecker }) {
+				SourceFile(node, { checker, options, program, sourceFile }) {
 					if (options.prefer === "no-type-imports") {
 						for (const statement of node.statements) {
 							if (
@@ -462,7 +462,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							const importedSpecifier = {
 								local,
 								specifier,
-								symbol: getReferencedSymbol(typeChecker, local),
+								symbol: getReferencedSymbol(checker, local),
 							};
 
 							importedSpecifiers.push(importedSpecifier);
@@ -475,11 +475,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.kind === SyntaxKind.Identifier &&
 							!isInImportDeclaration(node)
 						) {
-							const symbol = getReferencedSymbol(typeChecker, node);
+							const symbol = getReferencedSymbol(checker, node);
 							const importedSpecifier = importedSpecifiers.find(
 								(specifier) =>
 									specifier.local.text === node.text &&
-									(!specifier.symbol || specifier.symbol === symbol),
+									(!specifier.symbol || specifier.symbol.id === symbol?.id),
 							);
 
 							if (importedSpecifier) {

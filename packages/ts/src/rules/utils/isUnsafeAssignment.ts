@@ -20,13 +20,13 @@ export function isUnsafeAssignment(
 	type: Type,
 	receiver: Type,
 	senderNode: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 ): false | { receiver: Type; sender: Type } {
 	return isUnsafeAssignmentWorker(
 		type,
 		receiver,
 		senderNode,
-		typeChecker,
+		checker,
 		new Map(),
 	);
 }
@@ -35,7 +35,7 @@ function isUnsafeAssignmentWorker(
 	type: Type,
 	receiver: Type,
 	senderNode: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 	visited: Map<number, Set<number>>,
 ): false | { receiver: Type; sender: Type } {
 	if (type.flags & TypeFlags.Any) {
@@ -93,8 +93,8 @@ function isUnsafeAssignmentWorker(
 			return false;
 		}
 
-		const typeArguments = typeChecker.getTypeArguments(type);
-		const receiverTypeArguments = typeChecker.getTypeArguments(receiver);
+		const typeArguments = checker.getTypeArguments(type);
+		const receiverTypeArguments = checker.getTypeArguments(receiver);
 
 		for (let i = 0; i < typeArguments.length; i += 1) {
 			const arg = nullThrows(
@@ -110,7 +110,7 @@ function isUnsafeAssignmentWorker(
 				arg,
 				receiverArg,
 				senderNode,
-				typeChecker,
+				checker,
 				visited,
 			);
 			if (unsafe) {

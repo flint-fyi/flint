@@ -1,5 +1,5 @@
-import type { Program } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getStaticNumberValue,
@@ -15,7 +15,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function getMathMethodInfo(
 	node: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	const unwrapped = unwrapParenthesizedNode(node);
@@ -29,7 +29,7 @@ function getMathMethodInfo(
 		return undefined;
 	}
 
-	if (isMathMethod(unwrapped.expression, "min", typeChecker, program)) {
+	if (isMathMethod(unwrapped.expression, "min", checker, program)) {
 		return {
 			arguments: Array.from(unwrapped.arguments),
 			method: "min",
@@ -37,7 +37,7 @@ function getMathMethodInfo(
 		};
 	}
 
-	if (isMathMethod(unwrapped.expression, "max", typeChecker, program)) {
+	if (isMathMethod(unwrapped.expression, "max", checker, program)) {
 		return {
 			arguments: Array.from(unwrapped.arguments),
 			method: "max",
@@ -51,7 +51,7 @@ function getMathMethodInfo(
 function isMathMethod(
 	node: AST.Expression,
 	methodName: string,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ) {
 	return (
@@ -60,7 +60,7 @@ function isMathMethod(
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === methodName &&
 		node.expression.kind === SyntaxKind.Identifier &&
-		isGlobalDeclarationOfName(node.expression, "Math", typeChecker, program)
+		isGlobalDeclarationOfName(node.expression, "Math", checker, program)
 	);
 }
 
@@ -96,8 +96,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
-					const outerInfo = getMathMethodInfo(node, typeChecker, program);
+				CallExpression: (node, { checker, program, sourceFile }) => {
+					const outerInfo = getMathMethodInfo(node, checker, program);
 					if (!outerInfo) {
 						return;
 					}
@@ -143,7 +143,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						const innerInfo = getMathMethodInfo(
 							secondArgument,
-							typeChecker,
+							checker,
 							program,
 						);
 
