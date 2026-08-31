@@ -1,6 +1,6 @@
 import {
 	isFunctionDeclaration,
-	isParameter,
+	isParameterDeclaration,
 	isPropertyAccessExpression,
 	isShorthandPropertyAssignment,
 	isVariableDeclaration,
@@ -26,7 +26,7 @@ function isDeclarationName(node: Identifier) {
 	return (
 		(isFunctionDeclaration(node.parent) && node.parent.name === node) ||
 		(isVariableDeclaration(node.parent) && node.parent.name === node) ||
-		(isParameter(node.parent) && node.parent.name === node)
+		(isParameterDeclaration(node.parent) && node.parent.name === node)
 	);
 }
 

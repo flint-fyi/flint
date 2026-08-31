@@ -1,7 +1,9 @@
 import {
+	isArrowFunction,
 	isClassLikeDeclaration,
 	isEnumDeclaration,
 	isFunctionLikeDeclaration,
+	isMethodDeclaration,
 	isModuleDeclaration,
 	SyntaxKind,
 } from "typescript-native/unstable/ast";
@@ -86,9 +88,16 @@ function isRecursiveCall(
 		}
 		if (
 			isFunctionLikeDeclaration(current) ||
+			isArrowFunction(current) ||
+			isMethodDeclaration(current) ||
 			isClassLikeDeclaration(current) ||
 			isEnumDeclaration(current) ||
 			isModuleDeclaration(current) ||
+			current.kind === SyntaxKind.CallSignature ||
+			current.kind === SyntaxKind.ConstructorType ||
+			current.kind === SyntaxKind.ConstructSignature ||
+			current.kind === SyntaxKind.FunctionType ||
+			current.kind === SyntaxKind.MethodSignature ||
 			(current.kind === SyntaxKind.SourceFile &&
 				current.externalModuleIndicator !== undefined)
 		) {

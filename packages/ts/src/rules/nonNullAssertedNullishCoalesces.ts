@@ -3,7 +3,7 @@ import {
 	isAssignmentOperator,
 	isBinaryExpression,
 	isIdentifier,
-	isParameter,
+	isParameterDeclaration,
 	isPostfixUnaryExpression,
 	isPrefixUnaryExpression,
 	isVariableDeclaration,
@@ -47,7 +47,7 @@ function hasNoAssignmentBeforeNode(
 			if (declaration.exclamationToken || declaration.initializer) {
 				return false;
 			}
-		} else if (isParameter(declaration) && declaration.initializer) {
+		} else if (isParameterDeclaration(declaration) && declaration.initializer) {
 			return false;
 		}
 	}

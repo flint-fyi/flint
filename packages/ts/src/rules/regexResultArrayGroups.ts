@@ -8,7 +8,7 @@ import {
 	forEachChild,
 	isBinaryExpression,
 	isIdentifier,
-	isParameter,
+	isParameterDeclaration,
 	isVariableDeclaration,
 	SyntaxKind,
 	type BinaryExpression,
@@ -306,7 +306,7 @@ function getRegexInfoFromSymbol(
 				}
 			}
 
-			if (isParameter(declaration)) {
+			if (isParameterDeclaration(declaration)) {
 				continue;
 			}
 		}
