@@ -4,14 +4,24 @@
 // Changing from the switch to manual ifs is due to:
 // https://github.com/Microsoft/TypeScript/issues/56275
 
-import ts, { SyntaxKind } from "typescript";
+import {
+	isArrayLiteralExpression,
+	isIdentifier,
+	isNumericLiteral,
+	isObjectLiteralExpression,
+	isPropertyAssignment,
+	isSpreadElement,
+	isStringLiteral,
+	SyntaxKind,
+	type Node,
+} from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
 export function tsAstToLiteral(node: AST.ArrayLiteralExpression): unknown[];
 export function tsAstToLiteral(node: AST.ObjectLiteralExpression): object;
-export function tsAstToLiteral(node: ts.Node): unknown;
-export function tsAstToLiteral(node: ts.Node): unknown {
+export function tsAstToLiteral(node: Node): unknown;
+export function tsAstToLiteral(node: Node): unknown {
 	switch (node.kind) {
 		case SyntaxKind.FalseKeyword:
 			return false;
@@ -21,35 +31,32 @@ export function tsAstToLiteral(node: ts.Node): unknown {
 			return true;
 	}
 
-	if (ts.isArrayLiteralExpression(node)) {
+	if (isArrayLiteralExpression(node)) {
 		return node.elements
-			.filter((element) => element.kind !== SyntaxKind.SpreadElement)
+			.filter((element) => !isSpreadElement(element))
 			.map((element) => tsAstToLiteral(element));
 	}
 
-	if (ts.isNumericLiteral(node)) {
+	if (isNumericLiteral(node)) {
 		return parseFloat(node.text);
 	}
 
-	if (ts.isObjectLiteralExpression(node)) {
+	if (isObjectLiteralExpression(node)) {
 		return Object.fromEntries(
 			node.properties
+				.filter(isPropertyAssignment)
 				.filter(
-					(
-						property,
-					): property is ts.PropertyAssignment & { name: ts.Identifier } =>
-						ts.isPropertyAssignment(property) &&
-						(property.name.kind === SyntaxKind.Identifier ||
-							property.name.kind === SyntaxKind.StringLiteral),
+					(property) =>
+						isIdentifier(property.name) || isStringLiteral(property.name),
 				)
 				.map((property) => [
-					property.name.escapedText || property.name.text,
+					property.name.text,
 					tsAstToLiteral(property.initializer),
 				]),
 		);
 	}
 
-	if (ts.isStringLiteral(node)) {
+	if (isStringLiteral(node)) {
 		return node.text;
 	}
 

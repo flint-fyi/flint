@@ -1,17 +1,20 @@
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
+import {
+	isIdentifier,
+	isPropertyAssignment,
+	type NodeArray,
+} from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
 export function findProperty<Node extends AST.Expression>(
-	properties: ts.NodeArray<AST.ObjectLiteralElementLike>,
+	properties: NodeArray<AST.ObjectLiteralElementLike>,
 	name: string,
 	predicate: (node: AST.Expression) => node is Node,
 ): Node | undefined {
 	return properties.find(
 		(property): property is AST.PropertyAssignment & { initializer: Node } =>
-			property.kind === SyntaxKind.PropertyAssignment &&
-			property.name.kind === SyntaxKind.Identifier &&
+			isPropertyAssignment(property) &&
+			isIdentifier(property.name) &&
 			property.name.text === name &&
 			predicate(property.initializer),
 	)?.initializer;

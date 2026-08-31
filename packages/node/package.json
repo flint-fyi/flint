@@ -28,7 +28,8 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"typescript": "^6.0.0"
+		"typescript": "^6.0.0",
+		"typescript-native": "catalog:dev"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

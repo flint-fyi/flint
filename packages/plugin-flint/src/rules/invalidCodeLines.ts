@@ -1,4 +1,7 @@
-import { SyntaxKind } from "typescript";
+import {
+	isStringLiteral,
+	isTaggedTemplateExpression,
+} from "typescript-native/unstable/ast";
 
 import type { FileChange } from "@flint.fyi/core";
 import {
@@ -63,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: ParsedTestCaseCodeNode,
 			sourceFile: AST.SourceFile,
 		) {
-			if (node.kind === SyntaxKind.StringLiteral) {
+			if (isStringLiteral(node)) {
 				return [
 					{
 						range: getTSNodeRange(node, sourceFile),
@@ -72,10 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				];
 			}
 
-			const template =
-				node.kind === SyntaxKind.TaggedTemplateExpression
-					? node.template
-					: node;
+			const template = isTaggedTemplateExpression(node) ? node.template : node;
 			const changes: FileChange[] = [];
 
 			if (!code.startsWith("\n")) {

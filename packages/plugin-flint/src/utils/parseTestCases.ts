@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { isObjectLiteralExpression } from "typescript-native/unstable/ast";
 
 import {
 	isStaticString,
@@ -29,7 +29,7 @@ export function parseTestCase(
 		};
 	}
 
-	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
+	if (!isObjectLiteralExpression(node)) {
 		return;
 	}
 
@@ -39,16 +39,12 @@ export function parseTestCase(
 	}
 
 	const fileName = findProperty(node.properties, "fileName", isStaticString);
-	const files = findProperty(
-		node.properties,
-		"files",
-		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
+	const files = findProperty(node.properties, "files", (node) =>
+		isObjectLiteralExpression(node),
 	);
 	const name = findProperty(node.properties, "name", isStaticString);
-	const options = findProperty(
-		node.properties,
-		"options",
-		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
+	const options = findProperty(node.properties, "options", (node) =>
+		isObjectLiteralExpression(node),
 	);
 
 	return {
@@ -71,7 +67,7 @@ export function parseTestCase(
 export function parseTestCaseInvalid(
 	node: AST.Expression,
 ): ParsedTestCaseInvalid | undefined {
-	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
+	if (!isObjectLiteralExpression(node)) {
 		return;
 	}
 
@@ -81,16 +77,12 @@ export function parseTestCaseInvalid(
 	}
 
 	const fileName = findProperty(node.properties, "fileName", isStaticString);
-	const files = findProperty(
-		node.properties,
-		"files",
-		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
+	const files = findProperty(node.properties, "files", (node) =>
+		isObjectLiteralExpression(node),
 	);
 	const name = findProperty(node.properties, "name", isStaticString);
-	const options = findProperty(
-		node.properties,
-		"options",
-		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
+	const options = findProperty(node.properties, "options", (node) =>
+		isObjectLiteralExpression(node),
 	);
 	const snapshot = findProperty(node.properties, "snapshot", isStaticString);
 	if (!snapshot) {
@@ -118,7 +110,7 @@ export function parseTestCaseInvalid(
 
 function getTestCaseCode(node: ParsedTestCaseCodeNode) {
 	if (isStringRawNoSubstitution(node)) {
-		return node.template.rawText ?? node.template.text;
+		return node.template.getText().slice(1, -1);
 	}
 
 	return node.text;

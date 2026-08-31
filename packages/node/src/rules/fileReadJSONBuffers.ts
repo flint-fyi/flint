@@ -1,4 +1,13 @@
-import { SyntaxKind } from "typescript";
+import {
+	isAwaitExpression,
+	isCallExpression,
+	isIdentifier,
+	isObjectLiteralExpression,
+	isPropertyAccessExpression,
+	isPropertyAssignment,
+	isSpreadElement,
+	isStringLiteral,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -32,10 +41,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { sourceFile }) {
 					if (
-						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
-						node.expression.expression.kind !== SyntaxKind.Identifier ||
+						!isPropertyAccessExpression(node.expression) ||
+						!isIdentifier(node.expression.expression) ||
 						node.expression.expression.text !== "JSON" ||
-						node.expression.name.kind !== SyntaxKind.Identifier ||
+						!isIdentifier(node.expression.name) ||
 						node.expression.name.text !== "parse" ||
 						node.arguments.length !== 1
 					) {
@@ -49,7 +58,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						),
 					);
 					if (
-						argument.kind === SyntaxKind.SpreadElement ||
+						isSpreadElement(argument) ||
 						!isReadFileCall(argument) ||
 						argument.arguments.length !== 2
 					) {
@@ -60,10 +69,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						argument.arguments[1],
 						"Second argument is expected to be present by prior length check",
 					);
-					if (
-						encoding.kind === SyntaxKind.SpreadElement ||
-						!isUtf8Encoding(encoding)
-					) {
+					if (isSpreadElement(encoding) || !isUtf8Encoding(encoding)) {
 						return;
 					}
 
@@ -79,21 +85,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function isReadFileCall(node: AST.Expression): node is AST.CallExpression {
 	return (
-		node.kind === SyntaxKind.CallExpression &&
-		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-		node.expression.expression.kind === SyntaxKind.Identifier &&
+		isCallExpression(node) &&
+		isPropertyAccessExpression(node.expression) &&
+		isIdentifier(node.expression.expression) &&
 		node.expression.expression.text === "fs" &&
-		node.expression.name.kind === SyntaxKind.Identifier &&
+		isIdentifier(node.expression.name) &&
 		/^readFile(?:Sync)?$/.test(node.expression.name.text)
 	);
 }
 
 function isUtf8Encoding(node: AST.Expression): boolean {
-	if (node.kind === SyntaxKind.StringLiteral) {
+	if (isStringLiteral(node)) {
 		return isUtf8EncodingString(node.text);
 	}
 
-	if (node.kind === SyntaxKind.ObjectLiteralExpression) {
+	if (isObjectLiteralExpression(node)) {
 		if (node.properties.length !== 1) {
 			return false;
 		}
@@ -103,14 +109,14 @@ function isUtf8Encoding(node: AST.Expression): boolean {
 			"First property is expected to be present by prior length check",
 		);
 		if (
-			property.kind !== SyntaxKind.PropertyAssignment ||
-			property.name.kind !== SyntaxKind.Identifier ||
+			!isPropertyAssignment(property) ||
+			!isIdentifier(property.name) ||
 			property.name.text !== "encoding"
 		) {
 			return false;
 		}
 
-		if (property.initializer.kind === SyntaxKind.StringLiteral) {
+		if (isStringLiteral(property.initializer)) {
 			return isUtf8EncodingString(property.initializer.text);
 		}
 	}
@@ -123,7 +129,7 @@ function isUtf8EncodingString(value: unknown): boolean {
 }
 
 function unwrapAwaitExpression(node: AST.Expression): AST.Expression {
-	while (node.kind === SyntaxKind.AwaitExpression) {
+	while (isAwaitExpression(node)) {
 		node = node.expression;
 	}
 	return node;

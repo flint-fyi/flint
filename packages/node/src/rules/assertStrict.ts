@@ -1,4 +1,8 @@
-import { SyntaxKind } from "typescript";
+import {
+	isExternalModuleReference,
+	isStringLiteral,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -10,14 +14,14 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isImportFromNodeAssert(expression: AST.Expression) {
 	return (
-		expression.kind === SyntaxKind.StringLiteral &&
+		isStringLiteral(expression) &&
 		(expression.text === "assert" || expression.text === "node:assert")
 	);
 }
 
 function isStrictAssertImport(expression: AST.Expression) {
 	return (
-		expression.kind === SyntaxKind.StringLiteral &&
+		isStringLiteral(expression) &&
 		(expression.text === "assert/strict" ||
 			expression.text === "node:assert/strict")
 	);
@@ -76,7 +80,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				ImportEqualsDeclaration(node, { sourceFile }) {
 					if (
-						node.moduleReference.kind === SyntaxKind.ExternalModuleReference &&
+						isExternalModuleReference(node.moduleReference) &&
 						isImportFromNodeAssert(node.moduleReference.expression)
 					) {
 						context.report({

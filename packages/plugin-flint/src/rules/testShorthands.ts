@@ -1,4 +1,8 @@
-import { SyntaxKind } from "typescript";
+import {
+	isIdentifier,
+	isObjectLiteralExpression,
+	isPropertyAssignment,
+} from "typescript-native/unstable/ast";
 
 import type { FileChange } from "@flint.fyi/core";
 import {
@@ -38,20 +42,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const testCase of describedCases.valid) {
 						const caseNode = testCase.nodes.case;
 						if (
-							caseNode.kind === SyntaxKind.ObjectLiteralExpression &&
+							isObjectLiteralExpression(caseNode) &&
 							caseNode.properties.length === 1 &&
-							caseNode.properties[0]?.name?.kind === SyntaxKind.Identifier &&
+							isPropertyAssignment(caseNode.properties[0]) &&
+							isIdentifier(caseNode.properties[0].name) &&
 							caseNode.properties[0].name.text === "code"
 						) {
-							let fix: FileChange | undefined;
-							if (
-								caseNode.properties[0].kind === SyntaxKind.PropertyAssignment
-							) {
-								fix = {
-									range: getTSNodeRange(caseNode, sourceFile),
-									text: caseNode.properties[0].initializer.getText(sourceFile),
-								};
-							}
+							const fix: FileChange = {
+								range: getTSNodeRange(caseNode, sourceFile),
+								text: caseNode.properties[0].initializer.getText(sourceFile),
+							};
 							context.report({
 								fix,
 								message: "testShorthands",

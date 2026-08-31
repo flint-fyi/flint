@@ -1,8 +1,19 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	getLeadingCommentRanges,
+	getTokenAtPosition,
+	getTrailingCommentRanges,
+	isAwaitExpression,
+	isCallExpression,
+	isExpressionStatement,
+	isIdentifier,
+	isLabeledStatement,
+	isNonNullExpression,
+	isParenthesizedExpression,
+	isPropertyAccessExpression,
+} from "typescript-native/unstable/ast";
 
 import type { Rule } from "@flint.fyi/core";
 import {
-	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -49,7 +60,7 @@ export function createStatementPaddingRule(
 				node: AST.AnyNode,
 				sourceFile: AST.SourceFile,
 			) {
-				const leadingComments = ts.getLeadingCommentRanges(
+				const leadingComments = getLeadingCommentRanges(
 					sourceFile.text,
 					node.getFullStart(),
 				);
@@ -61,21 +72,22 @@ export function createStatementPaddingRule(
 				node: AST.AnyNode,
 				sourceFile: AST.SourceFile,
 			) {
-				const firstToken = node.getFirstToken(sourceFile);
+				const firstToken = getTokenAtPosition(
+					sourceFile,
+					node.getStart(sourceFile),
+				);
 
-				return firstToken
-					? {
-							begin: firstToken.getStart(sourceFile),
-							end: firstToken.getEnd(),
-						}
-					: getTSNodeRange(node, sourceFile);
+				return {
+					begin: firstToken.getStart(sourceFile),
+					end: firstToken.getEnd(),
+				};
 			}
 
 			function getNodeTrailingContentEnd(
 				node: AST.AnyNode,
 				sourceFile: AST.SourceFile,
 			) {
-				const trailingComments = ts.getTrailingCommentRanges(
+				const trailingComments = getTrailingCommentRanges(
 					sourceFile.text,
 					node.getEnd(),
 				);
@@ -177,7 +189,7 @@ export function getStatementRootName(
 		return undefined;
 	}
 
-	if (expression.kind === SyntaxKind.AwaitExpression) {
+	if (isAwaitExpression(expression)) {
 		return getRootIdentifierName(expression.expression);
 	}
 
@@ -185,15 +197,15 @@ export function getStatementRootName(
 }
 
 function getRootIdentifierName(node: AST.AnyNode): string | undefined {
-	if (node.kind === SyntaxKind.Identifier) {
+	if (isIdentifier(node)) {
 		return node.text;
 	}
 
 	if (
-		node.kind === SyntaxKind.CallExpression ||
-		node.kind === SyntaxKind.NonNullExpression ||
-		node.kind === SyntaxKind.ParenthesizedExpression ||
-		node.kind === SyntaxKind.PropertyAccessExpression
+		isCallExpression(node) ||
+		isNonNullExpression(node) ||
+		isParenthesizedExpression(node) ||
+		isPropertyAccessExpression(node)
 	) {
 		return getRootIdentifierName(node.expression);
 	}
@@ -204,11 +216,11 @@ function getRootIdentifierName(node: AST.AnyNode): string | undefined {
 function getStatementExpression(
 	statement: AST.AnyNode,
 ): AST.AnyNode | undefined {
-	if (statement.kind === SyntaxKind.ExpressionStatement) {
+	if (isExpressionStatement(statement)) {
 		return statement.expression;
 	}
 
-	if (statement.kind === SyntaxKind.LabeledStatement) {
+	if (isLabeledStatement(statement)) {
 		return getStatementExpression(statement.statement);
 	}
 

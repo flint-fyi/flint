@@ -1,4 +1,11 @@
-import ts from "typescript";
+import {
+	isElementAccessExpression,
+	isIdentifier,
+	isNumericLiteral,
+	isPropertyAccessExpression,
+	isStringLiteral,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 import z from "zod/v4";
 
 import {
@@ -143,18 +150,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 function getExpectAssertionsCount(
 	node: AST.CallExpression,
 ): number | undefined {
-	if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
+	if (!isPropertyAccessExpression(node.expression)) {
 		return undefined;
 	}
 	const { expression: object, name: property } = node.expression;
 
-	if (object.kind !== ts.SyntaxKind.Identifier || object.text !== "expect") {
+	if (!isIdentifier(object) || object.text !== "expect") {
 		return undefined;
 	}
-	if (
-		property.kind !== ts.SyntaxKind.Identifier ||
-		property.text !== "assertions"
-	) {
+	if (!isIdentifier(property) || property.text !== "assertions") {
 		return undefined;
 	}
 	if (node.arguments.length !== 1) {
@@ -166,7 +170,7 @@ function getExpectAssertionsCount(
 		"argument count is exactly 1, so the first argument is present",
 	);
 
-	if (assertions.kind !== ts.SyntaxKind.NumericLiteral) {
+	if (!isNumericLiteral(assertions)) {
 		return undefined;
 	}
 
@@ -174,12 +178,12 @@ function getExpectAssertionsCount(
 }
 
 function isCatchCall({ expression }: AST.CallExpression): boolean {
-	if (expression.kind === ts.SyntaxKind.PropertyAccessExpression) {
+	if (isPropertyAccessExpression(expression)) {
 		return expression.name.text === "catch";
 	}
-	if (expression.kind === ts.SyntaxKind.ElementAccessExpression) {
+	if (isElementAccessExpression(expression)) {
 		return (
-			ts.isStringLiteral(expression.argumentExpression) &&
+			isStringLiteral(expression.argumentExpression) &&
 			expression.argumentExpression.text === "catch"
 		);
 	}
@@ -187,18 +191,16 @@ function isCatchCall({ expression }: AST.CallExpression): boolean {
 }
 
 function isExpectCall({ expression }: AST.CallExpression): boolean {
-	return (
-		expression.kind === ts.SyntaxKind.Identifier && expression.text === "expect"
-	);
+	return isIdentifier(expression) && expression.text === "expect";
 }
 
 function isLogicalBinaryExpression({
 	operatorToken,
 }: AST.BinaryExpression): boolean {
 	return (
-		operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken ||
-		operatorToken.kind === ts.SyntaxKind.BarBarToken ||
-		operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
+		operatorToken.kind === SyntaxKind.AmpersandAmpersandToken ||
+		operatorToken.kind === SyntaxKind.BarBarToken ||
+		operatorToken.kind === SyntaxKind.QuestionQuestionToken
 	);
 }
 

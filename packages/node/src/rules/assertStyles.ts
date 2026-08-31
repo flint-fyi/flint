@@ -1,4 +1,9 @@
-import { SyntaxKind } from "typescript";
+import {
+	isExternalModuleReference,
+	isIdentifier,
+	isStringLiteral,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -43,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { sourceFile }) {
 					if (
-						node.expression.kind === SyntaxKind.Identifier &&
+						isIdentifier(node.expression) &&
 						assertIdentifierNames.has(node.expression.text)
 					) {
 						context.report({
@@ -54,7 +59,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				ImportDeclaration(node) {
 					if (
-						node.moduleSpecifier.kind !== SyntaxKind.StringLiteral ||
+						!isStringLiteral(node.moduleSpecifier) ||
 						!isAssertImport(node.moduleSpecifier.text) ||
 						!node.importClause
 					) {
@@ -85,8 +90,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				ImportEqualsDeclaration(node) {
 					if (
-						node.moduleReference.kind === SyntaxKind.ExternalModuleReference &&
-						node.moduleReference.expression.kind === SyntaxKind.StringLiteral &&
+						isExternalModuleReference(node.moduleReference) &&
+						isStringLiteral(node.moduleReference.expression) &&
 						isAssertImport(node.moduleReference.expression.text)
 					) {
 						assertIdentifierNames.add(node.name.text);
