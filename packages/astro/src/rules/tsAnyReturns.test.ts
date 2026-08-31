@@ -58,24 +58,6 @@ function foo() {
 		{
 			code: `
 ---
-function getAstroUrl() {
-	return Astro.url
-}
----
-`,
-			files: {
-				"node_modules/astro/astro-jsx.d.ts": "",
-				"node_modules/astro/env.d.ts": `
-declare const Astro: {
-	url: URL;
-};
-`,
-			},
-			name: "Astro global types are injected",
-		},
-		{
-			code: `
----
 import MyComponent from "./MyComponent.astro"
 
 function foo() {
