@@ -330,6 +330,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				initializerType,
 				declaredType,
 				initializer,
+				typeChecker,
 			);
 			if (!result) {
 				return false;

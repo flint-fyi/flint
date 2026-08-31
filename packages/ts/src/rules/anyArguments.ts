@@ -170,6 +170,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							argumentType,
 							paramInfo.type,
 							argument,
+							typeChecker,
 						);
 						if (unsafeResult) {
 							context.report({
@@ -268,6 +269,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									expressionType,
 									parameterType,
 									expression,
+									typeChecker,
 								);
 								if (unsafeResult) {
 									context.report({

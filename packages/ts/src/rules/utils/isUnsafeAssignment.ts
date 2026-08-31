@@ -1,5 +1,9 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	TypeFlags,
+	type Checker,
+	type Type,
+} from "typescript-native/unstable/sync";
 
 import type { AST } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
@@ -13,42 +17,50 @@ import { nullThrows } from "@flint.fyi/utils";
  * @returns false if it's safe, or an object with the two types if it's unsafe
  */
 export function isUnsafeAssignment(
-	type: ts.Type,
-	receiver: ts.Type,
+	type: Type,
+	receiver: Type,
 	senderNode: AST.Expression,
-): false | { receiver: ts.Type; sender: ts.Type } {
-	return isUnsafeAssignmentWorker(type, receiver, senderNode, new Map());
+	typeChecker: Checker,
+): false | { receiver: Type; sender: Type } {
+	return isUnsafeAssignmentWorker(
+		type,
+		receiver,
+		senderNode,
+		typeChecker,
+		new Map(),
+	);
 }
 
 function isUnsafeAssignmentWorker(
-	type: ts.Type,
-	receiver: ts.Type,
+	type: Type,
+	receiver: Type,
 	senderNode: AST.Expression,
-	visited: Map<ts.Type, Set<ts.Type>>,
-): false | { receiver: ts.Type; sender: ts.Type } {
-	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any)) {
+	typeChecker: Checker,
+	visited: Map<number, Set<number>>,
+): false | { receiver: Type; sender: Type } {
+	if (type.flags & TypeFlags.Any) {
 		// Allow assignment of any ==> unknown.
-		if (tsutils.isTypeFlagSet(receiver, ts.TypeFlags.Unknown)) {
+		if (receiver.flags & TypeFlags.Unknown) {
 			return false;
 		}
 
-		if (!tsutils.isTypeFlagSet(receiver, ts.TypeFlags.Any)) {
+		if (!(receiver.flags & TypeFlags.Any)) {
 			return { receiver, sender: type };
 		}
 	}
 
-	const typeAlreadyVisited = visited.get(type);
+	const typeAlreadyVisited = visited.get(type.id);
 
 	if (typeAlreadyVisited) {
-		if (typeAlreadyVisited.has(receiver)) {
+		if (typeAlreadyVisited.has(receiver.id)) {
 			return false;
 		}
-		typeAlreadyVisited.add(receiver);
+		typeAlreadyVisited.add(receiver.id);
 	} else {
-		visited.set(type, new Set([receiver]));
+		visited.set(type.id, new Set([receiver.id]));
 	}
 
-	if (tsutils.isTypeReference(type) && tsutils.isTypeReference(receiver)) {
+	if (type.isTypeReference() && receiver.isTypeReference()) {
 		// TODO - figure out how to handle cases like this,
 		// where the types are assignable, but not the same type
 		/*
@@ -62,7 +74,7 @@ function isUnsafeAssignmentWorker(
     const b: Test2 = a;
     */
 
-		if (type.target !== receiver.target) {
+		if (type.getTarget().id !== receiver.getTarget().id) {
 			// if the type references are different, assume safe, as we won't know how to compare the two types
 			// the generic positions might not be equivalent for both types
 			return false;
@@ -81,8 +93,8 @@ function isUnsafeAssignmentWorker(
 			return false;
 		}
 
-		const typeArguments = type.typeArguments ?? [];
-		const receiverTypeArguments = receiver.typeArguments ?? [];
+		const typeArguments = typeChecker.getTypeArguments(type);
+		const receiverTypeArguments = typeChecker.getTypeArguments(receiver);
 
 		for (let i = 0; i < typeArguments.length; i += 1) {
 			const arg = nullThrows(
@@ -98,6 +110,7 @@ function isUnsafeAssignmentWorker(
 				arg,
 				receiverArg,
 				senderNode,
+				typeChecker,
 				visited,
 			);
 			if (unsafe) {

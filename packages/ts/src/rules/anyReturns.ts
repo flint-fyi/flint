@@ -1,5 +1,7 @@
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import ts from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Signature, Type } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -10,10 +12,24 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
+import {
+	AnyType,
+	discriminateAnyType,
+	getAwaitedTypes,
+} from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { getThisExpression } from "./utils/getThisExpression.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
+
+function getCallSignatures(type: Type): readonly Signature[] {
+	if (type.isUnionType() || type.isIntersectionType()) {
+		return type
+			.getTypes()
+			.flatMap((constituent) => getCallSignatures(constituent));
+	}
+
+	return type.getCallSignatures();
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -100,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					? typeChecker.getContextualType(functionNode)
 					: typeChecker.getTypeAtLocation(functionNode);
 			functionType ??= typeChecker.getTypeAtLocation(functionNode);
-			const callSignatures = tsutils.getCallSignaturesOfType(functionType);
+			const callSignatures = getCallSignatures(functionType);
 			// If there is an explicit type annotation *and* that type matches the actual
 			// function return type, we shouldn't complain (it's intentional, even if unsafe)
 			if (functionNode.type) {
@@ -108,7 +124,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const signatureReturnType = signature.getReturnType();
 
 					if (
-						returnNodeType === signatureReturnType ||
+						returnNodeType.id === signatureReturnType.id ||
 						tsutils.isTypeFlagSet(
 							signatureReturnType,
 							ts.TypeFlags.Any | ts.TypeFlags.Unknown,
@@ -117,22 +133,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 					if (
-						tsutils.includesModifier(
-							functionNode.modifiers,
-							SyntaxKind.AsyncKeyword,
-						)
+						functionNode.modifiers?.some(
+							(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
+						) === true
 					) {
-						const awaitedSignatureReturnType =
-							typeChecker.getAwaitedType(signatureReturnType);
-
-						const awaitedReturnNodeType =
-							typeChecker.getAwaitedType(returnNodeType);
+						const awaitedSignatureReturnTypes = getAwaitedTypes(
+							signatureReturnType,
+							typeChecker,
+							returnNode,
+						);
+						const awaitedReturnNodeTypes = getAwaitedTypes(
+							returnNodeType,
+							typeChecker,
+							returnNode,
+						);
 						if (
-							awaitedReturnNodeType === awaitedSignatureReturnType ||
-							(awaitedSignatureReturnType &&
-								tsutils.isTypeFlagSet(
-									awaitedSignatureReturnType,
-									ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+							awaitedSignatureReturnTypes.some((awaitedType) =>
+								tsutils.isTypeFlagSet(awaitedType, ts.TypeFlags.Unknown),
+							) ||
+							(awaitedReturnNodeTypes.length > 0 &&
+								awaitedReturnNodeTypes.length ===
+									awaitedSignatureReturnTypes.length &&
+								awaitedReturnNodeTypes.every((awaitedType) =>
+									awaitedSignatureReturnTypes.some(
+										(signatureType) => signatureType.id === awaitedType.id,
+									),
 								))
 						) {
 							return;
@@ -165,21 +190,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					) {
 						return;
 					}
-					const awaitedType = typeChecker.getAwaitedType(functionReturnType);
-					if (
-						awaitedType &&
-						anyType === AnyType.PromiseAny &&
-						tsutils.isTypeFlagSet(awaitedType, ts.TypeFlags.Unknown)
-					) {
-						return;
-					}
 				}
 
 				if (
 					anyType === AnyType.PromiseAny &&
-					!tsutils.includesModifier(
-						functionNode.modifiers,
-						SyntaxKind.AsyncKeyword,
+					!functionNode.modifiers?.some(
+						(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
 					)
 				) {
 					return;
@@ -224,6 +240,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					returnNodeType,
 					functionReturnType,
 					returnNode,
+					typeChecker,
 				);
 				if (!result) {
 					return;

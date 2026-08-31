@@ -559,6 +559,34 @@ void foo;
       
 `,
 		},
+		{
+			code: `
+interface Thenable {
+  then(onfulfilled: (value: any) => unknown): unknown;
+}
+
+declare const value: Thenable;
+async function foo() {
+  return value;
+}
+void foo;
+
+`,
+			snapshot: `
+interface Thenable {
+  then(onfulfilled: (value: any) => unknown): unknown;
+}
+
+declare const value: Thenable;
+async function foo() {
+  return value;
+  ~~~~~~~~~~~~~
+  Unsafe return of a value of type \`Promise<any>\`.
+}
+void foo;
+
+`,
+		},
 	],
 	valid: [
 		`
