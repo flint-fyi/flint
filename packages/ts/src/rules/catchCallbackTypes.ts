@@ -1,19 +1,15 @@
-import * as tsutils from "ts-api-utils";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import {
-	isFunctionLike,
-	isInterfaceDeclaration,
-	isPropertyAccessExpression,
 	TypeFlags,
+	type Checker,
 	type Program,
 	type Type,
-	type TypeChecker,
-} from "typescript";
+} from "typescript-native/unstable/sync";
 
 import {
 	declarationIncludesGlobal,
 	typescriptLanguage,
 	type AST,
-	type Checker,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -43,18 +39,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isGlobalPromiseType(type: Type, program: Program): boolean {
 			const symbol = type.getSymbol();
-			if (symbol?.getName() !== "Promise") {
+			if (symbol?.name !== "Promise") {
 				return false;
 			}
 
-			const declarations = symbol.getDeclarations();
-			if (!declarations) {
+			const declarations = symbol.declarations
+				.map((declaration) => declaration.resolve())
+				.filter((declaration): declaration is AST.Declaration => !!declaration);
+			if (!declarations.length) {
 				return false;
 			}
 
 			return declarations.some(
 				(declaration) =>
-					isInterfaceDeclaration(declaration) &&
+					declaration.kind === SyntaxKind.InterfaceDeclaration &&
 					declaration.name.text === "Promise" &&
 					declarationIncludesGlobal(declaration, program),
 			);
@@ -62,10 +60,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isCatchOrThenCallback(
 			node: AST.CallExpression,
-			typeChecker: Checker,
+			checker: Checker,
 			program: Program,
 		): "catch" | "then" | undefined {
-			if (!isPropertyAccessExpression(node.expression)) {
+			if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 				return undefined;
 			}
 
@@ -76,7 +74,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const objectType = getConstrainedTypeAtLocation(
 				node.expression.expression,
-				typeChecker,
+				checker,
 			);
 
 			if (!isGlobalPromiseType(objectType, program)) {
@@ -89,9 +87,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkCallbackParameter(
 			callback: AST.Expression,
 			sourceFile: AST.SourceFile,
-			typeChecker: TypeChecker,
-		) {
-			if (!isFunctionLike(callback) || !callback.parameters.length) {
+			checker: Checker,
+		): void {
+			if (
+				(callback.kind !== SyntaxKind.ArrowFunction &&
+					callback.kind !== SyntaxKind.FunctionExpression) ||
+				!callback.parameters.length
+			) {
 				return;
 			}
 
@@ -99,11 +101,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const firstParameter = callback.parameters[0]!;
 
 			if (firstParameter.type) {
-				const paramType = typeChecker.getTypeFromTypeNode(firstParameter.type);
+				const parameterType = checker.getTypeFromTypeNode(firstParameter.type);
 
 				if (
-					tsutils.isTypeFlagSet(paramType, TypeFlags.Unknown) ||
-					!tsutils.isTypeFlagSet(paramType, TypeFlags.Any)
+					(parameterType.flags & TypeFlags.Unknown) !== 0 ||
+					(parameterType.flags & TypeFlags.Any) === 0
 				) {
 					return;
 				}
@@ -122,12 +124,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
-					const callbackType = isCatchOrThenCallback(
-						node,
-						typeChecker,
-						program,
-					);
+				CallExpression: (node, { checker, program, sourceFile }) => {
+					const callbackType = isCatchOrThenCallback(node, checker, program);
 
 					switch (callbackType) {
 						case "catch":
@@ -136,7 +134,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 									node.arguments[0]!,
 									sourceFile,
-									typeChecker,
+									checker,
 								);
 							}
 							break;
@@ -146,7 +144,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 									node.arguments[1]!,
 									sourceFile,
-									typeChecker,
+									checker,
 								);
 							}
 							break;

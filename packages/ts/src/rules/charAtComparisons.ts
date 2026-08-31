@@ -1,4 +1,5 @@
-import { SyntaxKind, TypeFlags, type Type } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	getStaticStringValue,
@@ -16,16 +17,16 @@ const comparisonOperators = new Set([
 	SyntaxKind.ExclamationEqualsToken,
 ]);
 
-function isStringCharAtCall(node: AST.Expression, typeChecker: Checker) {
+function isStringCharAtCall(node: AST.Expression, checker: Checker): boolean {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "charAt" &&
-		isStringType(typeChecker.getTypeAtLocation(node.expression.expression))
+		isStringType(checker.getTypeAtLocation(node.expression.expression))
 	);
 }
 
-function isStringType(type: Type) {
+function isStringType(type: Type): boolean {
 	return (type.flags & TypeFlags.StringLike) !== 0;
 }
 
@@ -53,16 +54,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { sourceFile, typeChecker }) => {
+				BinaryExpression: (node, { checker, sourceFile }) => {
 					if (!comparisonOperators.has(node.operatorToken.kind)) {
 						return;
 					}
 
 					let literal: AST.Expression;
 
-					if (isStringCharAtCall(node.left, typeChecker)) {
+					if (isStringCharAtCall(node.left, checker)) {
 						literal = node.right;
-					} else if (isStringCharAtCall(node.right, typeChecker)) {
+					} else if (isStringCharAtCall(node.right, checker)) {
 						literal = node.left;
 					} else {
 						return;

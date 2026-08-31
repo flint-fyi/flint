@@ -1,5 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, type TypeChecker } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Checker, Symbol, Type } from "typescript-native/unstable/sync";
 
 import {
 	forEachChild,
@@ -38,8 +38,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.FunctionDeclaration
 				| AST.FunctionExpression
 				| AST.MethodDeclaration,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
-		) {
+			{ checker, sourceFile }: TypeScriptFileServices,
+		): void {
 			const asyncModifier = node.modifiers?.find(
 				(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
 			);
@@ -50,7 +50,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				!node.body ||
 				isEmptyBody(node.body) ||
 				checkForAwait(node.body) ||
-				bodyReturnsThenable(node.body, typeChecker)
+				bodyReturnsThenable(node.body, checker)
 			) {
 				return;
 			}
@@ -74,22 +74,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function bodyReturnsThenable(
 	body: AST.Block | AST.Expression,
-	typeChecker: TypeChecker,
-) {
+	checker: Checker,
+): boolean | undefined {
 	if (body.kind !== SyntaxKind.Block) {
-		return tsutils.isThenableType(typeChecker, body);
+		return isThenableType(checker, body);
 	}
 
 	function checkReturnStatements(node: AST.AnyNode): boolean | undefined {
 		if (
 			node.kind === SyntaxKind.ReturnStatement &&
 			node.expression &&
-			tsutils.isThenableType(typeChecker, node.expression)
+			isThenableType(checker, node.expression)
 		) {
 			return true;
 		}
 
-		if (tsutils.isFunctionScopeBoundary(node)) {
+		if (isFunctionScopeBoundary(node)) {
 			return false;
 		}
 
@@ -109,13 +109,93 @@ function checkForAwait(node: AST.AnyNode): boolean | undefined {
 		return true;
 	}
 
-	if (tsutils.isFunctionScopeBoundary(node)) {
+	if (isFunctionScopeBoundary(node)) {
 		return false;
 	}
 
 	return forEachChild(node, checkForAwait);
 }
 
-function isEmptyBody(body: AST.Block | AST.Expression) {
+function getUnionConstituents(type: Type): readonly Type[] {
+	return type.isUnionType() ? type.getTypes() : [type];
+}
+
+function isCallback(
+	checker: Checker,
+	parameter: Symbol,
+	node: AST.AnyNode,
+): boolean {
+	let type = checker.getApparentType(
+		checker.getTypeOfSymbolAtLocation(parameter, node),
+	);
+	const declaration = parameter.valueDeclaration?.resolve();
+	if (
+		declaration?.kind === SyntaxKind.Parameter &&
+		declaration.dotDotDotToken
+	) {
+		if (typeof type.getNumberIndexType !== "function") {
+			return false;
+		}
+		const elementType = type.getNumberIndexType();
+		if (!elementType) {
+			return false;
+		}
+		type = elementType;
+	}
+
+	return getUnionConstituents(type).some(
+		(constituent) => constituent.getCallSignatures().length !== 0,
+	);
+}
+
+function isEmptyBody(body: AST.Block | AST.Expression): boolean {
 	return body.kind === SyntaxKind.Block && !body.statements.length;
+}
+
+function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.CallSignature:
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression:
+		case SyntaxKind.Constructor:
+		case SyntaxKind.ConstructorType:
+		case SyntaxKind.ConstructSignature:
+		case SyntaxKind.EnumDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionType:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.MethodSignature:
+		case SyntaxKind.ModuleDeclaration:
+		case SyntaxKind.SetAccessor:
+			return true;
+	}
+
+	return false;
+}
+
+function isThenableType(checker: Checker, node: AST.AnyNode): boolean {
+	for (const constituent of getUnionConstituents(
+		checker.getApparentType(checker.getTypeAtLocation(node)),
+	)) {
+		const then = constituent.getProperty("then");
+		if (!then) {
+			continue;
+		}
+
+		for (const thenType of getUnionConstituents(
+			checker.getTypeOfSymbolAtLocation(then, node),
+		)) {
+			for (const signature of thenType.getCallSignatures()) {
+				const parameter = signature.getParameters()[0];
+				if (parameter && isCallback(checker, parameter, node)) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }

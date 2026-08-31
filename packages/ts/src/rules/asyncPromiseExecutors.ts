@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	isGlobalDeclaration,
@@ -32,9 +32,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node, { program, sourceFile, typeChecker }) => {
+				NewExpression: (node, { checker, program, sourceFile }) => {
 					if (
-						!isGlobalDeclaration(node.expression, typeChecker, program) ||
+						!isGlobalDeclaration(node.expression, checker, program) ||
 						!node.arguments?.length
 					) {
 						return;

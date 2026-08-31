@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	isGlobalDeclarationOfName,
@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			namesToReport: Set<string>,
 			message: "disallowedNew" | "missingNew",
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			if (node.expression.kind !== SyntaxKind.Identifier) {
 				return;
@@ -90,9 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (
-				!isGlobalDeclarationOfName(node.expression, name, typeChecker, program)
-			) {
+			if (!isGlobalDeclarationOfName(node.expression, name, checker, program)) {
 				return;
 			}
 

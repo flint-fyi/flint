@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	typescriptLanguage,
@@ -28,12 +28,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isArrayPushCall(node: AST.CallExpression, typeChecker: Checker) {
+		function isArrayPushCall(
+			node: AST.CallExpression,
+			checker: Checker,
+		): boolean {
 			return (
 				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 				node.expression.name.text === "push" &&
-				typeChecker.isArrayType(
-					typeChecker.getTypeAtLocation(node.expression.expression),
+				checker.isArrayType(
+					checker.getTypeAtLocation(node.expression.expression),
 				)
 			);
 		}
@@ -41,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function getArrayName(
 			node: AST.CallExpression,
 			sourceFile: AST.SourceFile,
-		) {
+		): false | string {
 			return (
 				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 				node.expression.expression.getText(sourceFile)
@@ -51,12 +54,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isPushCallStatement(
 			statement: AST.Statement,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
-		) {
+			checker: Checker,
+		): undefined | { arrayName: string; callExpression: AST.CallExpression } {
 			if (
 				statement.kind !== SyntaxKind.ExpressionStatement ||
 				statement.expression.kind !== SyntaxKind.CallExpression ||
-				!isArrayPushCall(statement.expression, typeChecker)
+				!isArrayPushCall(statement.expression, checker)
 			) {
 				return undefined;
 			}
@@ -74,15 +77,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkNode(
 			{ statements }: AST.Block | AST.SourceFile,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
-		) {
+			{ checker, sourceFile }: TypeScriptFileServices,
+		): void {
 			for (let i = 0; i < statements.length - 1; i += 1) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const currentStatement = statements[i]!;
 				const currentPush = isPushCallStatement(
 					currentStatement,
 					sourceFile,
-					typeChecker,
+					checker,
 				);
 				if (!currentPush) {
 					continue;
@@ -93,7 +96,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const nextPush = isPushCallStatement(
 					nextStatement,
 					sourceFile,
-					typeChecker,
+					checker,
 				);
 
 				if (nextPush?.arrayName === currentPush.arrayName) {
