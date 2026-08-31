@@ -110,21 +110,17 @@ function createTestProject({
 	});
 	const matchedRule = ruleCreator.createRule(language, {
 		about: { description: "Matched test rule.", id: "matched" },
-		messages: {
-			found: { primary: "Found.", secondary: [], suggestions: [] },
-		},
+		messages: {},
 		...(requiresAllFiles && { requiresAllFiles }),
 		setup() {
-			return { visitors: { Root: vi.fn() } };
+			return;
 		},
 	});
 	const unmatchedRule = ruleCreator.createRule(language, {
 		about: { description: "Unmatched test rule.", id: "unmatched" },
-		messages: {
-			found: { primary: "Found.", secondary: [], suggestions: [] },
-		},
+		messages: {},
 		setup() {
-			return { visitors: { Root: vi.fn() } };
+			return;
 		},
 	});
 	const configDefinition: ProcessedConfigDefinition = {
