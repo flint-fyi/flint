@@ -1,7 +1,15 @@
 export {
+	registerTypeScriptContentMapper,
+	type TypeScriptContentMapperRegistration,
+} from "./contentMappers.ts";
+export {
 	convertTypeScriptDiagnosticToLanguageReport,
 	type TSDiagnostic,
 } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+export {
+	createTypeScriptOverlayConfig,
+	type TypeScriptOverlayConfig,
+} from "./createTypeScriptOverlayConfig.ts";
 export {
 	createTypeScriptProjectSession,
 	type TypeScriptProjectChanges,

@@ -1,8 +1,19 @@
-import { API, type Snapshot } from "typescript-native/unstable/sync";
+import path from "node:path";
+
+import {
+	API,
+	type Project,
+	type Snapshot,
+} from "typescript-native/unstable/sync";
 
 import type { LinterHost } from "@flint.fyi/core";
 
+import {
+	getTypeScriptContentMapperRegistrations,
+	type TypeScriptContentMapperRegistration,
+} from "./contentMappers.ts";
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
+import { createTypeScriptOverlayConfig } from "./createTypeScriptOverlayConfig.ts";
 
 export interface TypeScriptProjectChanges {
 	changed?: string[];
@@ -14,19 +25,42 @@ export interface TypeScriptProjectChanges {
 }
 
 export interface TypeScriptProjectSession extends Disposable {
+	getProjectForFile(filePath: string): Project | undefined;
 	getSnapshot(): Snapshot;
 	update(changes: TypeScriptProjectChanges): Snapshot;
+}
+
+interface SnapshotChanges extends TypeScriptProjectChanges {
+	closeProjects?: string[];
+	fileChanges?: {
+		changed?: string[];
+		created?: string[];
+		deleted?: string[];
+	};
 }
 
 export function createTypeScriptProjectSession(
 	host: LinterHost,
 ): TypeScriptProjectSession {
 	const observedSourceTextByFilePath = new Map<string, string | undefined>();
+	const authoredConfigPaths = new Set<string>();
+	const authoredConfigPathsToOpen = new Set<string>();
+	let mappedExtensions = new Set<string>();
+	const openedOverlayPaths = new Set<string>();
+	const overlayPathByAuthoredConfigPath = new Map<string, string>();
+	const virtualFiles = new Map<string, string>();
 	const api = new API({
 		cwd: host.getCurrentDirectory(),
-		fs: createTypeScriptFileSystem(host, (fileName) => {
-			observedSourceTextByFilePath.set(fileName, host.readFileSync(fileName));
-		}),
+		fs: createTypeScriptFileSystem(
+			host,
+			(fileName) => {
+				observedSourceTextByFilePath.set(
+					fileName,
+					virtualFiles.get(fileName) ?? host.readFileSync(fileName),
+				);
+			},
+			virtualFiles,
+		),
 		runExternalCode: true,
 	});
 	let snapshot: Snapshot;
@@ -93,8 +127,92 @@ export function createTypeScriptProjectSession(
 			return { error };
 		}
 	};
+	const replaceSnapshot = (changes: SnapshotChanges): Snapshot => {
+		const previousSnapshot = snapshot;
+		snapshot = api.updateSnapshot(changes);
+		try {
+			previousSnapshot.dispose();
+		} catch (error) {
+			const disposalFailure = disposeForFailure();
+			if (disposalFailure) {
+				throw aggregateCleanupFailures(
+					error,
+					disposalFailure.error,
+					"TypeScript project session failed to dispose replaced snapshots.",
+				);
+			}
+			throw error;
+		}
+		return snapshot;
+	};
+	const updateOverlay = (
+		authoredConfigFilePath: string,
+		registrations: TypeScriptContentMapperRegistration[],
+	): string => {
+		const authoredSourceText = host.readFileSync(authoredConfigFilePath);
+		if (authoredSourceText === undefined) {
+			throw new Error(
+				`Could not read TypeScript config: ${authoredConfigFilePath}`,
+			);
+		}
+		const parseFilePath = `${authoredConfigFilePath}.flint-parse.json`;
+		virtualFiles.set(parseFilePath, authoredSourceText);
+		let config: unknown;
+		let error: unknown;
+		try {
+			({ config, error } = api.readConfigFile(parseFilePath));
+		} finally {
+			virtualFiles.delete(parseFilePath);
+			observedSourceTextByFilePath.delete(parseFilePath);
+		}
+		if (error) {
+			throw new Error(
+				`Could not parse TypeScript config: ${authoredConfigFilePath}`,
+			);
+		}
+		const overlay = createTypeScriptOverlayConfig(
+			host.getCurrentDirectory(),
+			authoredConfigFilePath,
+			config,
+			registrations,
+		);
+		virtualFiles.set(overlay.filePath, overlay.sourceText);
+		overlayPathByAuthoredConfigPath.set(
+			authoredConfigFilePath,
+			overlay.filePath,
+		);
+		return overlay.filePath;
+	};
+	const findConfigFile = (filePath: string): string | undefined => {
+		let directory = path.dirname(filePath);
+		while (true) {
+			for (const configName of ["tsconfig.json", "jsconfig.json"]) {
+				const configFilePath = path.join(directory, configName);
+				if (host.fileTypeSync(configFilePath) === "file") {
+					return configFilePath;
+				}
+			}
+			const parent = path.dirname(directory);
+			if (parent === directory) {
+				return undefined;
+			}
+			directory = parent;
+		}
+	};
 
 	return {
+		getProjectForFile(filePath) {
+			assertActive();
+			if (!mappedExtensions.has(path.extname(filePath))) {
+				return snapshot.getDefaultProjectForFile(filePath);
+			}
+			const configFilePath = findConfigFile(filePath);
+			if (!configFilePath) {
+				return undefined;
+			}
+			const overlayPath = overlayPathByAuthoredConfigPath.get(configFilePath);
+			return overlayPath ? snapshot.getProject(overlayPath) : undefined;
+		},
 		getSnapshot() {
 			assertActive();
 			return snapshot;
@@ -109,7 +227,8 @@ export function createTypeScriptProjectSession(
 				filePath,
 				previousSourceText,
 			] of observedSourceTextByFilePath) {
-				const sourceText = host.readFileSync(filePath);
+				const sourceText =
+					virtualFiles.get(filePath) ?? host.readFileSync(filePath);
 				if (sourceText === previousSourceText) {
 					continue;
 				}
@@ -121,37 +240,137 @@ export function createTypeScriptProjectSession(
 					detectedChanged.push(filePath);
 				}
 			}
-			const previousSnapshot = snapshot;
-			snapshot = api.updateSnapshot({
+			const changedFilePaths = new Set([
+				...(changed ?? []),
+				...detectedChanged,
+			]);
+			const registrations = getTypeScriptContentMapperRegistrations();
+			mappedExtensions = new Set(
+				registrations.flatMap((registration) => registration.extensions),
+			);
+			const mappedConfigFilePaths = (openFiles ?? [])
+				.filter((filePath) => mappedExtensions.has(path.extname(filePath)))
+				.map(findConfigFile)
+				.filter((configFilePath): configFilePath is string => !!configFilePath);
+			const closeProjects: string[] = [];
+			const overlaysToMarkOpened = new Set<string>();
+			const previousOverlaySourceTextByPath = new Map<
+				string,
+				string | undefined
+			>();
+			const rollbackOverlaySourceTexts = (): void => {
+				for (const [
+					overlayPath,
+					previousSourceText,
+				] of previousOverlaySourceTextByPath) {
+					if (previousSourceText !== undefined) {
+						virtualFiles.set(overlayPath, previousSourceText);
+					} else {
+						virtualFiles.delete(overlayPath);
+					}
+				}
+			};
+			let projectsToOpen = openProjects;
+			if (registrations.length) {
+				projectsToOpen = [];
+				try {
+					for (const configFilePath of new Set([
+						...(openProjects ?? []),
+						...mappedConfigFilePaths,
+						...overlayPathByAuthoredConfigPath.keys(),
+					])) {
+						const previousOverlayPath =
+							overlayPathByAuthoredConfigPath.get(configFilePath);
+						const previousSourceText = previousOverlayPath
+							? virtualFiles.get(previousOverlayPath)
+							: undefined;
+						const overlayPath = updateOverlay(configFilePath, registrations);
+						if (!previousOverlaySourceTextByPath.has(overlayPath)) {
+							previousOverlaySourceTextByPath.set(
+								overlayPath,
+								previousSourceText,
+							);
+						}
+						const overlayChanged =
+							previousSourceText !== undefined &&
+							previousSourceText !== virtualFiles.get(overlayPath);
+						if (!openedOverlayPaths.has(overlayPath) || overlayChanged) {
+							projectsToOpen.push(overlayPath);
+							overlaysToMarkOpened.add(overlayPath);
+						}
+						if (overlayChanged) {
+							changedFilePaths.add(overlayPath);
+							closeProjects.push(overlayPath);
+						}
+					}
+				} catch (error) {
+					rollbackOverlaySourceTexts();
+					throw error;
+				}
+			} else if (openedOverlayPaths.size || authoredConfigPathsToOpen.size) {
+				closeProjects.push(...openedOverlayPaths);
+				projectsToOpen = [
+					...(openProjects ?? []),
+					...authoredConfigPaths,
+					...authoredConfigPathsToOpen,
+				];
+			}
+			if (closeProjects.length) {
+				try {
+					replaceSnapshot({
+						closeProjects,
+						fileChanges: {
+							...(changedFilePaths.size && {
+								changed: [...changedFilePaths],
+							}),
+						},
+					});
+				} catch (error) {
+					rollbackOverlaySourceTexts();
+					throw error;
+				}
+				for (const closedOverlayPath of closeProjects) {
+					openedOverlayPaths.delete(closedOverlayPath);
+				}
+				if (!registrations.length) {
+					authoredConfigPathsToOpen.clear();
+					for (const authoredConfigPath of authoredConfigPaths) {
+						authoredConfigPathsToOpen.add(authoredConfigPath);
+					}
+				}
+			}
+			const replacement = replaceSnapshot({
 				fileChanges: {
-					...((changed || detectedChanged.length) && {
-						changed: [...new Set([...(changed ?? []), ...detectedChanged])],
+					...(changedFilePaths.size && {
+						changed: [...changedFilePaths],
 					}),
-					...((created || detectedCreated.length) && {
+					...((created ?? detectedCreated.length) && {
 						created: [...new Set([...(created ?? []), ...detectedCreated])],
 					}),
-					...((deleted || detectedDeleted.length) && {
+					...((deleted ?? detectedDeleted.length) && {
 						deleted: [...new Set([...(deleted ?? []), ...detectedDeleted])],
 					}),
 				},
 				...(closeFiles && { closeFiles }),
 				...(openFiles && { openFiles }),
-				...(openProjects && { openProjects }),
+				...(projectsToOpen?.length && {
+					openProjects: [...new Set(projectsToOpen)],
+				}),
 			});
-			try {
-				previousSnapshot.dispose();
-			} catch (error) {
-				const disposalFailure = disposeForFailure();
-				if (disposalFailure) {
-					throw aggregateCleanupFailures(
-						error,
-						disposalFailure.error,
-						"TypeScript project session failed to dispose replaced snapshots.",
-					);
-				}
-				throw error;
+			for (const authoredConfigPath of openProjects ?? []) {
+				authoredConfigPaths.add(authoredConfigPath);
+				authoredConfigPathsToOpen.delete(authoredConfigPath);
 			}
-			return snapshot;
+			if (!registrations.length) {
+				authoredConfigPathsToOpen.clear();
+			}
+			for (const authoredConfigPath of mappedConfigFilePaths) {
+				authoredConfigPaths.add(authoredConfigPath);
+			}
+			for (const overlayPath of overlaysToMarkOpened) {
+				openedOverlayPaths.add(overlayPath);
+			}
+			return replacement;
 		},
 	};
 }

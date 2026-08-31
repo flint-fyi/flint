@@ -70,4 +70,21 @@ describe(createTypeScriptFileSystem, () => {
 
 		expect(createTypeScriptFileSystem(host)).not.toHaveProperty("realpath");
 	});
+
+	it("serves host-only virtual files without mutating the host", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		const virtualFilePath = "/repo/.cache/overlay.json";
+		const fileSystem = createTypeScriptFileSystem(
+			host,
+			undefined,
+			new Map([[virtualFilePath, '{"extends":"/repo/tsconfig.json"}']]),
+		);
+
+		expect(fileSystem.fileExists?.(virtualFilePath)).toBe(true);
+		expect(fileSystem.readFile?.(virtualFilePath)).toBe(
+			'{"extends":"/repo/tsconfig.json"}',
+		);
+		expect(host.fileTypeSync(virtualFilePath)).toBeUndefined();
+		expect(host.readFileSync(virtualFilePath)).toBeUndefined();
+	});
 });

@@ -2,14 +2,20 @@ import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
 
+import { registerTypeScriptContentMapper } from "./contentMappers.ts";
 import { createTypeScriptProjectSession } from "./createTypeScriptProjectSession.ts";
 
 const mocks = vi.hoisted(() => ({
 	apis: [] as { close: Mock }[],
 	closeError: undefined as Error | undefined,
 	dispose: vi.fn(),
+	fileSystems: [] as { fileExists?: (fileName: string) => boolean }[],
+	openedProjectSourceTexts: [] as (string | undefined)[],
+	parsedConfigPaths: [] as string[],
 	snapshotDisposes: [] as Mock[],
+	updateSnapshotCalls: [] as unknown[],
 	updateSnapshotError: undefined as Error | undefined,
+	updateSnapshotErrors: [] as (Error | undefined)[],
 }));
 
 vi.mock("typescript-native/unstable/sync", () => ({
@@ -19,12 +25,40 @@ vi.mock("typescript-native/unstable/sync", () => ({
 				throw mocks.closeError;
 			}
 		});
+		fs: {
+			fileExists?: (fileName: string) => boolean;
+			readFile?: (fileName: string) => unknown;
+		};
 
-		constructor() {
+		constructor(options: {
+			fs: {
+				fileExists?: (fileName: string) => boolean;
+				readFile?: (fileName: string) => unknown;
+			};
+		}) {
+			this.fs = options.fs;
 			mocks.apis.push(this);
+			mocks.fileSystems.push(options.fs);
 		}
 
-		updateSnapshot() {
+		readConfigFile(fileName: string) {
+			mocks.parsedConfigPaths.push(fileName);
+			return { config: JSON.parse(this.fs.readFile?.(fileName) as string) };
+		}
+
+		updateSnapshot(changes?: unknown) {
+			mocks.updateSnapshotCalls.push(changes);
+			for (const projectPath of (
+				changes as undefined | { openProjects?: string[] }
+			)?.openProjects ?? []) {
+				mocks.openedProjectSourceTexts.push(
+					this.fs.readFile?.(projectPath) as string | undefined,
+				);
+			}
+			const queuedError = mocks.updateSnapshotErrors.shift();
+			if (queuedError) {
+				throw queuedError;
+			}
 			if (mocks.updateSnapshotError) {
 				throw mocks.updateSnapshotError;
 			}
@@ -39,7 +73,12 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		mocks.apis.length = 0;
 		mocks.closeError = undefined;
 		mocks.dispose.mockReset();
+		mocks.fileSystems.length = 0;
+		mocks.openedProjectSourceTexts.length = 0;
+		mocks.parsedConfigPaths.length = 0;
 		mocks.snapshotDisposes.length = 0;
+		mocks.updateSnapshotCalls.length = 0;
+		mocks.updateSnapshotErrors.length = 0;
 		mocks.updateSnapshotError = undefined;
 	});
 
@@ -205,5 +244,128 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		}).not.toThrow();
 		expect(disposeReplacement).toHaveBeenCalledOnce();
 		expect(mocks.apis[0]?.close).toHaveBeenCalledOnce();
+	});
+
+	it("retries opening authored projects after the reopen snapshot fails", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile("/repo/tsconfig.json", "{}");
+		const unregister = registerTypeScriptContentMapper({
+			extensions: [".vue"],
+			packageName: "unused-mapper",
+		});
+		using session = createTypeScriptProjectSession(host);
+		session.update({ openProjects: ["/repo/tsconfig.json"] });
+		expect(unregister()).toBe(true);
+		mocks.updateSnapshotErrors.push(undefined, new Error("reopen failed"));
+
+		expect(() => session.update({})).toThrow("reopen failed");
+		expect(() => session.update({})).not.toThrow();
+		expect(mocks.updateSnapshotCalls.at(-1)).toMatchObject({
+			openProjects: ["/repo/tsconfig.json"],
+		});
+	});
+
+	it("restores changed overlays when the close snapshot fails so a retry reopens the project", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile("/repo/tsconfig.json", "{}");
+		using firstRegistration = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				extensions: [".vue"],
+				packageName: "first-mapper",
+			}),
+		};
+		using session = createTypeScriptProjectSession(host);
+		session.update({ openProjects: ["/repo/tsconfig.json"] });
+		using secondRegistration = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				extensions: [".svelte"],
+				packageName: "second-mapper",
+			}),
+		};
+		host.vfsUpsertFile(
+			"/repo/tsconfig.json",
+			'{ "references": [{ "path": "./shared" }] }',
+		);
+		mocks.updateSnapshotErrors.push(new Error("close failed"));
+
+		expect(() => session.update({})).toThrow("close failed");
+		expect(() => session.update({})).not.toThrow();
+
+		const retryCalls = mocks.updateSnapshotCalls.slice(-2);
+		expect(retryCalls[0]).toMatchObject({
+			closeProjects: [expect.stringContaining("typescript-overlays")],
+		});
+		expect(retryCalls[1]).toMatchObject({
+			openProjects: [expect.stringContaining("typescript-overlays")],
+		});
+		expect(
+			JSON.parse(mocks.openedProjectSourceTexts.at(-1) ?? ""),
+		).toMatchObject({
+			contentMappers: [
+				{ package: "first-mapper" },
+				{ package: "second-mapper" },
+			],
+			references: [{ path: "/repo/shared" }],
+		});
+	});
+
+	it("restores earlier overlays when a later config parse fails so a retry reopens them", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		const firstConfigFilePath = "/repo/first/tsconfig.json";
+		const secondConfigFilePath = "/repo/second/tsconfig.json";
+		host.vfsUpsertFile(firstConfigFilePath, "{}");
+		host.vfsUpsertFile(secondConfigFilePath, "{}");
+		using unregister = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				extensions: [".vue"],
+				packageName: "unused-mapper",
+			}),
+		};
+		using session = createTypeScriptProjectSession(host);
+		session.update({
+			openProjects: [firstConfigFilePath, secondConfigFilePath],
+		});
+		host.vfsUpsertFile(
+			firstConfigFilePath,
+			'{ "references": [{ "path": "./shared" }] }',
+		);
+		host.vfsUpsertFile(secondConfigFilePath, "{");
+
+		expect(() => session.update({})).toThrow();
+		host.vfsUpsertFile(secondConfigFilePath, "{}");
+		expect(() => session.update({})).not.toThrow();
+
+		expect(mocks.updateSnapshotCalls.at(-1)).toMatchObject({
+			openProjects: [expect.stringContaining("typescript-overlays")],
+		});
+		expect(
+			JSON.parse(mocks.openedProjectSourceTexts.at(-1) ?? ""),
+		).toMatchObject({ references: [{ path: "/repo/first/shared" }] });
+	});
+
+	it("removes the stable parse virtual file after every config parse", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile("/repo/tsconfig.json", "{}");
+		using unregister = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				extensions: [".vue"],
+				packageName: "unused-mapper",
+			}),
+		};
+		using session = createTypeScriptProjectSession(host);
+
+		for (let revision = 0; revision < 10; revision += 1) {
+			host.vfsUpsertFile("/repo/tsconfig.json", `{ "revision": ${revision} }`);
+			session.update({ openProjects: ["/repo/tsconfig.json"] });
+		}
+
+		expect(new Set(mocks.parsedConfigPaths)).toEqual(
+			new Set(["/repo/tsconfig.json.flint-parse.json"]),
+		);
+		expect(
+			mocks.fileSystems[0]?.fileExists?.(
+				"/repo/tsconfig.json.flint-parse.json",
+			),
+		).toBe(false);
 	});
 });

@@ -5,13 +5,16 @@ import type { LinterHost } from "@flint.fyi/core";
 export function createTypeScriptFileSystem(
 	host: LinterHost,
 	onFileAccess?: (fileName: string) => void,
+	virtualFiles: ReadonlyMap<string, string> = new Map(),
 ): FileSystem {
 	return {
 		directoryExists: (directoryName) =>
 			host.fileTypeSync(directoryName) === "directory",
 		fileExists: (fileName) => {
 			onFileAccess?.(fileName);
-			return host.fileTypeSync(fileName) === "file";
+			return (
+				virtualFiles.has(fileName) || host.fileTypeSync(fileName) === "file"
+			);
 		},
 		getAccessibleEntries(directoryName) {
 			const entries = host.readDirectorySync(directoryName);
@@ -26,7 +29,7 @@ export function createTypeScriptFileSystem(
 		},
 		readFile: (fileName) => {
 			onFileAccess?.(fileName);
-			return host.readFileSync(fileName) ?? null;
+			return virtualFiles.get(fileName) ?? host.readFileSync(fileName) ?? null;
 		},
 	};
 }

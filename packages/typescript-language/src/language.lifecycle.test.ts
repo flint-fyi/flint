@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
 	createTypeScriptProjectSession: vi.fn(),
 	parseDirectives: vi.fn(() => ({})),
 	session: {
+		getProjectForFile: vi.fn(),
 		getSnapshot: vi.fn(),
 		[Symbol.dispose]: vi.fn(),
 		update: vi.fn(),
@@ -37,11 +38,14 @@ function createFactory() {
 function mockSnapshot(sourceFiles: Record<string, object>) {
 	const program = {
 		getSourceFile: vi.fn((filePath: string) => sourceFiles[filePath]),
+		getSourceFileNames: vi.fn(() => Object.keys(sourceFiles)),
 	};
 	const project = { checker: {}, program };
 	const snapshot = {
 		getDefaultProjectForFile: vi.fn<() => object | undefined>(() => project),
+		getProjects: vi.fn(() => [project]),
 	};
+	mocks.session.getProjectForFile.mockReturnValue(project);
 	mocks.session.getSnapshot.mockReturnValue(snapshot);
 	mocks.session.update.mockReturnValue(snapshot);
 	return { program, snapshot };
@@ -141,12 +145,12 @@ describe("typescriptLanguage failed file lifecycle", () => {
 	});
 
 	it("closes the session when first-file project lookup fails", () => {
-		const { snapshot } = mockSnapshot({});
-		snapshot.getDefaultProjectForFile.mockReturnValue(undefined);
+		mockSnapshot({});
+		mocks.session.getProjectForFile.mockReturnValue(undefined);
 
 		expect(() =>
 			createFactory().createFile(fileData("/repo/first.ts")),
-		).toThrow("Could not find default project");
+		).toThrow("Could not find project");
 		expect(mocks.session.update).toHaveBeenCalledOnce();
 		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
 	});

@@ -140,8 +140,8 @@ export const typescriptLanguage: Language<
 					activeFiles: number;
 					disposed: boolean;
 					openFiles: string[];
-					sourceTextByFilePath: Map<string, string | undefined>;
 					session: TypeScriptProjectSession;
+					sourceTextByFilePath: Map<string, string | undefined>;
 			  };
 		let disposed = false;
 		let failed = false;
@@ -184,7 +184,7 @@ export const typescriptLanguage: Language<
 		): void => {
 			const snapshot = currentSessionState.session.getSnapshot();
 			const sourceFileNames = new Set<string>();
-			for (const project of snapshot.getProjects?.() ?? []) {
+			for (const project of snapshot.getProjects()) {
 				for (const fileName of project.program.getSourceFileNames()) {
 					sourceFileNames.add(fileName);
 				}
@@ -205,8 +205,8 @@ export const typescriptLanguage: Language<
 				activeFiles: 0,
 				disposed: false,
 				openFiles: [] as string[],
-				sourceTextByFilePath: new Map<string, string | undefined>(),
 				session: createTypeScriptProjectSession(host),
+				sourceTextByFilePath: new Map<string, string | undefined>(),
 			});
 
 			log("Opening native file:", data.filePathAbsolute);
@@ -263,11 +263,13 @@ export const typescriptLanguage: Language<
 				}
 				return currentSessionState.session.getSnapshot();
 			};
-			const getProject = (): Project =>
-				nullThrows(
-					getSnapshot().getDefaultProjectForFile(data.filePathAbsolute),
-					`Could not find default project for file: ${data.filePathAbsolute}`,
+			const getProject = (): Project => {
+				getSnapshot();
+				return nullThrows(
+					currentSessionState.session.getProjectForFile(data.filePathAbsolute),
+					`Could not find project for file: ${data.filePathAbsolute}`,
 				);
+			};
 			const getSourceFile = (): AST.SourceFile =>
 				nullThrows(
 					getProject().program.getSourceFile(data.filePathAbsolute),
