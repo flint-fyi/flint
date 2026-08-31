@@ -44,6 +44,7 @@ const config: ConfigObject[] = defineConfig(
 		"packages/*/dist",
 		"packages/*/lib",
 		"packages/fixtures",
+		"packages/performance-testing/cases",
 		"packages/e2e/tests/**/fixtures/**",
 		"pnpm-lock.yaml",
 		"coverage",

@@ -5,7 +5,7 @@ import { isDeepStrictEqual, parseArgs } from "node:util";
 
 import { ruleData as dataOriginal } from "@flint.fyi/rule-data" with { type: "json" };
 
-const dataFilePath = path.join(import.meta.dirname, "data.json");
+const dataFilePath = path.join(import.meta.dirname, "../src/data.json");
 
 const {
 	values: { check },

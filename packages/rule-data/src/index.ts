@@ -5,5 +5,6 @@ export {
 	type FlintRuleReference,
 	type LinterName,
 	linterNames,
+	type LinterRuleReference,
 	type RuleDetails,
 } from "./schemas.ts";

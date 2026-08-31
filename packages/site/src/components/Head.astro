@@ -17,6 +17,13 @@ const ogImage = new URL(ogImageUrl, Astro.site).toString();
 
 <Default {...Astro.props}><slot /></Default>
 
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+/>
+
 <meta property="og:image" content={ogImage} />
 <meta property="twitter:domain" content={Astro.site} />
 <meta property="twitter:url" content={Astro.site} />

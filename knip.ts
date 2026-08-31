@@ -40,6 +40,16 @@ const config: KnipConfig = {
 		"packages/performance": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
+		"packages/performance-testing": {
+			entry: ["src/{generate,measure}.ts!"],
+			ignoreDependencies: [
+				"eslint-plugin-import",
+				"eslint-plugin-regexp",
+				"eslint-plugin-unicorn",
+				"typescript-eslint",
+			],
+			project: ["src/**/*.ts!"],
+		},
 		"packages/plugin-flint": {
 			ignoreDependencies: [
 				// It's bugging IDK.
@@ -52,6 +62,7 @@ const config: KnipConfig = {
 		},
 		"packages/rule-data": {
 			entry: ["scripts/*.ts"],
+			ignoreDependencies: ["@emnapi/core", "@emnapi/runtime"],
 			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
 		},
 		"packages/site": {

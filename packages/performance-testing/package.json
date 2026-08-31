@@ -1,0 +1,44 @@
+{
+	"name": "@flint.fyi/performance-testing",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Runs performance measurements for Flint and other linters.",
+	"homepage": "https://flint.fyi",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/performance-testing"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"scripts": {
+		"generate": "node src/generate.ts",
+		"measure": "DEBUG=\"*runInHyperfine\" node src/measure.ts",
+		"test": "vitest --project performance-testing"
+	},
+	"dependencies": {
+		"@flint.fyi/rule-data": "workspace:^",
+		"console-table-without-index": "^0.1.1",
+		"debug-for-file": "^0.4.0",
+		"eslint": "catalog:dev",
+		"execa": "catalog:dev",
+		"prettier": "catalog:dev"
+	},
+	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
+		"eslint-plugin-import": "catalog:comparisons",
+		"eslint-plugin-regexp": "catalog:comparisons",
+		"eslint-plugin-unicorn": "catalog:comparisons",
+		"typescript": "catalog:dev",
+		"typescript-eslint": "catalog:dev",
+		"vitest": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=26.1.0"
+	}
+}
