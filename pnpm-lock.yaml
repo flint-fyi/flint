@@ -378,6 +378,9 @@ catalogs:
     lint-staged:
       specifier: 17.4.1
       version: 17.4.1
+    pkg-pr-new:
+      specifier: 0.0.88
+      version: 0.0.88
     prettier:
       specifier: 3.8.1
       version: 3.8.1
@@ -595,6 +598,9 @@ importers:
       lint-staged:
         specifier: catalog:dev
         version: 17.4.1
+      pkg-pr-new:
+        specifier: catalog:dev
+        version: 0.0.88
       prettier:
         specifier: catalog:dev
         version: 3.8.1
@@ -6784,6 +6790,10 @@ packages:
   picomatch@4.0.7:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
+
+  pkg-pr-new@0.0.88:
+    resolution: {integrity: sha512-Xc6PMJ2gher0WZP+rtjefFk26hIb7V1PTLL30bmy1Z2vsRmSvqiss7Ag1XUdyplTGYzIlFNJp4L3vMNmK44N6g==}
+    hasBin: true
 
   pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
@@ -13606,6 +13616,8 @@ snapshots:
   picomatch@2.3.2: {}
 
   picomatch@4.0.7: {}
+
+  pkg-pr-new@0.0.88: {}
 
   pluralize@8.0.0: {}
 
