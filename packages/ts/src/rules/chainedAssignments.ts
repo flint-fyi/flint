@@ -1,4 +1,7 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -8,7 +11,6 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isAssignmentKind } from "./utils/syntaxKinds.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -34,14 +36,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					if (!isAssignmentKind(node.operatorToken.kind)) {
+					if (!isAssignmentOperator(node.operatorToken.kind)) {
 						return;
 					}
 
 					const rightSide = unwrapParenthesizedNode(node.right);
 					if (
 						rightSide.kind !== SyntaxKind.BinaryExpression ||
-						!isAssignmentKind(rightSide.operatorToken.kind)
+						!isAssignmentOperator(rightSide.operatorToken.kind)
 					) {
 						return;
 					}

@@ -1,4 +1,5 @@
 import {
+	createScanner,
 	isTypeReferenceNode,
 	SyntaxKind,
 	type NodeArray,
@@ -26,15 +27,45 @@ const builtInTypedArrays = new Set<string>([
 	"Uint32Array",
 ]);
 
-function getTypeArgumentsRange(typeArguments: NodeArray<TypeNode>) {
-	return { begin: typeArguments.pos - 1, end: typeArguments.end + 1 };
+function getTypeArgumentsRange(
+	typeArguments: NodeArray<TypeNode>,
+	precedingNode: AST.Node,
+	sourceFile: AST.SourceFile,
+) {
+	const openingScanner = createScanner(
+		true,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		precedingNode.getEnd(),
+		typeArguments.pos - precedingNode.getEnd(),
+	);
+	let tokenKind: SyntaxKind;
+	do {
+		tokenKind = openingScanner.scan();
+	} while (tokenKind !== SyntaxKind.LessThanToken);
+
+	const closingScanner = createScanner(
+		false,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		typeArguments.end,
+	);
+	do {
+		tokenKind = closingScanner.scan();
+	} while (tokenKind !== SyntaxKind.GreaterThanToken);
+
+	return {
+		begin: openingScanner.getTokenStart(),
+		end: closingScanner.getTokenEnd(),
+	};
 }
 
 function getTypeArgumentsText(
 	typeArguments: NodeArray<TypeNode>,
+	precedingNode: AST.Node,
 	sourceFile: AST.SourceFile,
 ) {
-	const range = getTypeArgumentsRange(typeArguments);
+	const range = getTypeArgumentsRange(typeArguments, precedingNode, sourceFile);
 	return sourceFile.text.slice(range.begin, range.end);
 }
 
@@ -108,12 +139,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (style === "type-annotation" && initializer.typeArguments) {
 					const typeArgsText = getTypeArgumentsText(
 						initializer.typeArguments,
+						initializer.expression,
 						sourceFile,
 					);
 					const identifierEnd = identifier.getEnd();
 					const typeAnnotationText = `${constructorName}${typeArgsText}`;
 					const typeArgumentsRange = getTypeArgumentsRange(
 						initializer.typeArguments,
+						initializer.expression,
+						sourceFile,
 					);
 
 					context.report({
@@ -154,10 +188,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			) {
 				const typeArgsText = getTypeArgumentsText(
 					typeAnnotation.typeArguments,
+					typeAnnotation.typeName,
 					sourceFile,
 				);
 				const typeArgsRange = getTypeArgumentsRange(
 					typeAnnotation.typeArguments,
+					typeAnnotation.typeName,
+					sourceFile,
 				);
 
 				const constructorEnd = initializer.expression.getEnd();
@@ -190,10 +227,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			) {
 				const typeArgumentsText = getTypeArgumentsText(
 					initializer.typeArguments,
+					initializer.expression,
 					sourceFile,
 				);
 				const typeArgumentsRange = getTypeArgumentsRange(
 					initializer.typeArguments,
+					initializer.expression,
+					sourceFile,
 				);
 				const newTypeAnnotation = `${typeAnnotation.typeName.text}${typeArgumentsText}`;
 

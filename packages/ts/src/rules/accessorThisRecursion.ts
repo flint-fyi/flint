@@ -1,4 +1,7 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -8,7 +11,6 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isFunctionScopeBoundary } from "./utils/syntaxKinds.ts";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
@@ -68,7 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const isGetter = accessor.kind === SyntaxKind.GetAccessor;
 
 			function checkNode(node: AST.AnyNode): void {
-				if (isFunctionScopeBoundary(node)) {
+				if (isFunctionLikeDeclaration(node)) {
 					return;
 				}
 

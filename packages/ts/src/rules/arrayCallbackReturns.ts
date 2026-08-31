@@ -1,4 +1,7 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -7,7 +10,6 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isFunctionScopeBoundary } from "./utils/syntaxKinds.ts";
 
 const arrayMethodsRequiringReturn = new Set([
 	"every",
@@ -109,7 +111,7 @@ function hasReturnWithValue(block: AST.Block): boolean {
 			return;
 		}
 
-		if (isFunctionScopeBoundary(node)) {
+		if (isFunctionLikeDeclaration(node)) {
 			return;
 		}
 

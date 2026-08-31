@@ -1,4 +1,8 @@
-import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	createScanner,
+	NodeFlags,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	typescriptLanguage,
@@ -34,32 +38,49 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 		): undefined | { begin: number; end: number } {
 			for (const statement of statements) {
+				let declarationKind: SyntaxKind | undefined;
 				if (
 					statement.kind === SyntaxKind.VariableStatement &&
 					(statement.declarationList.flags &
 						(NodeFlags.Let | NodeFlags.Const)) !==
 						0
 				) {
-					const begin = statement.getStart(sourceFile);
-					return {
-						begin,
-						end:
-							begin +
-							(statement.declarationList.flags & NodeFlags.Const ? 5 : 3),
-					};
+					declarationKind =
+						statement.declarationList.flags & NodeFlags.Const
+							? SyntaxKind.ConstKeyword
+							: SyntaxKind.LetKeyword;
 				}
 
 				if (
 					statement.kind === SyntaxKind.ClassDeclaration ||
 					statement.kind === SyntaxKind.FunctionDeclaration
 				) {
-					const begin = statement.getStart(sourceFile);
-					return {
-						begin,
-						end:
-							begin + (statement.kind === SyntaxKind.ClassDeclaration ? 5 : 8),
-					};
+					declarationKind =
+						statement.kind === SyntaxKind.ClassDeclaration
+							? SyntaxKind.ClassKeyword
+							: SyntaxKind.FunctionKeyword;
 				}
+
+				if (declarationKind === undefined) {
+					continue;
+				}
+
+				const statementStart = statement.getStart(sourceFile);
+				const scanner = createScanner(
+					true,
+					sourceFile.languageVariant,
+					sourceFile.text,
+					statementStart,
+					statement.getEnd() - statementStart,
+				);
+				let tokenKind: SyntaxKind;
+				do {
+					tokenKind = scanner.scan();
+				} while (tokenKind !== declarationKind);
+				return {
+					begin: scanner.getTokenStart(),
+					end: scanner.getTokenEnd(),
+				};
 			}
 
 			return undefined;

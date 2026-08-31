@@ -28,6 +28,46 @@ switch (value) {
 declare const value: number;
 switch (value) {
     case 1:
+        async function load() {}
+        break;
+}
+`,
+			snapshot: `
+declare const value: number;
+switch (value) {
+    case 1:
+        async function load() {}
+              ~~~~~~~~
+              Variables declared in case clauses without braces leak into the surrounding scope.
+        break;
+}
+`,
+		},
+		{
+			code: `
+declare const value: number;
+switch (value) {
+    case 1:
+        abstract class Model {}
+        break;
+}
+`,
+			snapshot: `
+declare const value: number;
+switch (value) {
+    case 1:
+        abstract class Model {}
+                 ~~~~~
+                 Variables declared in case clauses without braces leak into the surrounding scope.
+        break;
+}
+`,
+		},
+		{
+			code: `
+declare const value: number;
+switch (value) {
+    case 1:
         const x = 1;
         break;
 }
