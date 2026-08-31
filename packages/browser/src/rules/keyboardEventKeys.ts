@@ -1,5 +1,5 @@
-import { isInterfaceDeclaration, type Program } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getDeclarationsIfGlobal,
@@ -59,7 +59,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			return (
-				isInterfaceDeclaration(declaration.parent) &&
+				declaration.parent.kind === SyntaxKind.InterfaceDeclaration &&
 				["KeyboardEvent", "UIEvent"].includes(declaration.parent.name.text)
 			);
 		}
