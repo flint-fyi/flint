@@ -7,8 +7,8 @@ import {
 	type FileVisitorSubscription,
 } from "@flint.fyi/core";
 
-import type { TypeScriptFileServices } from "./language.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
+import type { TypeScriptFileServices } from "./types/services.ts";
 
 /**
  * All visitor subscriptions for a file, along with the callback to run on them.
@@ -34,6 +34,9 @@ type NodeVisitorSubscriptionsByKind = Partial<
 	Record<SyntaxKind, NodeVisitorSubscriptions>
 >;
 
+/**
+ * Given all rule visitors for a file, collects them into a single {@link NodeVisitorsForFile}.
+ */
 export function createNodeVisitorsForFile(
 	fileVisitors: readonly FileVisitors<object, TypeScriptFileServices>[],
 ): NodeVisitorsForFile | undefined {

@@ -24,12 +24,7 @@ import type { TypeScriptNodeVisitors } from "./nodes.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
-
-export interface TypeScriptFileServices {
-	program: Program;
-	sourceFile: AST.SourceFile;
-	typeChecker: Checker;
-}
+import type { TypeScriptFileServices } from "./types/services.ts";
 
 const log = debugForFile(import.meta.filename);
 

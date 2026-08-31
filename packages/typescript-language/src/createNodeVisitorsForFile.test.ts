@@ -2,7 +2,7 @@ import ts, { type Node } from "typescript";
 import { describe, expect, it } from "vitest";
 
 import { createNodeVisitorsForFile } from "./createNodeVisitorsForFile.ts";
-import type { TypeScriptFileServices } from "./language.ts";
+import type { TypeScriptFileServices } from "./types/services.ts";
 
 function createSourceFile(): ts.SourceFile {
 	return ts.createSourceFile(

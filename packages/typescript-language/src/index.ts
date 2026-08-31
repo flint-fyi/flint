@@ -15,7 +15,6 @@ export { getTSNodeRange } from "./getTSNodeRange.ts";
 export {
 	setVolarCreateFile,
 	throwUnknownLanguageExtension,
-	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "./language.ts";
 export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
@@ -32,6 +31,7 @@ export {
 } from "./scope/scopeManager.ts";
 export type * as AST from "./types/ast.ts";
 export type { Checker } from "./types/checker.ts";
+export type { TypeScriptFileServices } from "./types/services.ts";
 export { createRuleTesterTSConfig } from "./utils/createRuleTesterTSConfig.ts";
 export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts";
 export { forEachChild } from "./utils/forEachChild.ts";
