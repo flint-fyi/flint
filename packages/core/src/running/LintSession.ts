@@ -37,6 +37,12 @@ export class LintSession implements Disposable {
 	}
 
 	readonly #caseSensitiveFS: boolean;
+
+	/**
+	 * Reverse index: dependency key -> file paths that depend on it.
+	 * Maintained as results are stored so getTransitiveDependentsOf avoids
+	 * rescanning every stored result on each call.
+	 */
 	readonly #dependentsByDependencyKey = new Map<string, Set<string>>();
 	#disposed = false;
 	readonly #filePathByKey = new Map<string, string>();
