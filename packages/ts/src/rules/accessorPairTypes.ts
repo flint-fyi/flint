@@ -1,4 +1,4 @@
-import { SyntaxKind, type NodeArray } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
 
 import {
 	typescriptLanguage,
@@ -84,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkPairs(
 			pairs: Map<string, AccessorPair>,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ sourceFile, checker }: TypeScriptFileServices,
 		) {
 			for (const [, pair] of pairs) {
 				if (!pair.getter || pair.setter?.parameters.length !== 1) {
@@ -94,13 +94,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const setterParameter = pair.setter.parameters[0]!;
 
-				const getterReturnType = typeChecker.getTypeAtLocation(pair.getter);
+				const getterReturnType = checker.getTypeAtLocation(pair.getter);
 
-				const setterParameterType =
-					typeChecker.getTypeAtLocation(setterParameter);
+				const setterParameterType = checker.getTypeAtLocation(setterParameter);
 
 				if (
-					!typeChecker.isTypeAssignableTo(getterReturnType, setterParameterType)
+					!checker.isTypeAssignableTo(getterReturnType, setterParameterType)
 				) {
 					context.report({
 						message: "mismatchedTypes",

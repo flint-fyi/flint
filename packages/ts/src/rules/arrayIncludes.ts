@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticNumberValue,
@@ -11,13 +11,13 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
-	const receiverType = getConstrainedTypeAtLocation(node, typeChecker);
+function hasIncludesMethod(node: AST.Expression, checker: Checker) {
+	const receiverType = getConstrainedTypeAtLocation(node, checker);
 	const includesProperty = receiverType.getProperty("includes");
 
 	return (
 		includesProperty &&
-		!!typeChecker.getTypeOfSymbol(includesProperty).getCallSignatures().length
+		!!checker.getTypeOfSymbol(includesProperty).getCallSignatures().length
 	);
 }
 
@@ -30,7 +30,7 @@ function isIndexOfCall(node: AST.CallExpression) {
 	);
 }
 
-function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
+function isIndexOfComparison(node: AST.BinaryExpression, checker: Checker) {
 	const { left, operatorToken, right } = node;
 
 	let indexOfAndValue: [AST.CallExpression, AST.Expression] | undefined;
@@ -49,7 +49,7 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 
 	if (
 		indexOfCall.expression.kind !== SyntaxKind.PropertyAccessExpression ||
-		!hasIncludesMethod(indexOfCall.expression.expression, typeChecker)
+		!hasIncludesMethod(indexOfCall.expression.expression, checker)
 	) {
 		return undefined;
 	}
@@ -94,8 +94,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { sourceFile, typeChecker }) => {
-					const result = isIndexOfComparison(node, typeChecker);
+				BinaryExpression: (node, { sourceFile, checker }) => {
+					const result = isIndexOfComparison(node, checker);
 					if (result) {
 						context.report({
 							message: "preferIncludes",

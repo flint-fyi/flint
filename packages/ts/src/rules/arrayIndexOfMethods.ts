@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -13,7 +13,7 @@ import { isDirectEqualityCheck } from "./utils/isDirectEqualityCheck.ts";
 
 function isFindIndexWithDirectEquality(
 	node: AST.CallExpression,
-	typeChecker: Checker,
+	checker: Checker,
 ) {
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 		return undefined;
@@ -48,7 +48,7 @@ function isFindIndexWithDirectEquality(
 			[SyntaxKind.EqualsEqualsEqualsToken],
 			firstParameter.name.text,
 		) ||
-		!isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
+		!isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 	) {
 		return undefined;
 	}
@@ -90,8 +90,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					const result = isFindIndexWithDirectEquality(node, typeChecker);
+				CallExpression: (node, { sourceFile, checker }) => {
+					const result = isFindIndexWithDirectEquality(node, checker);
 					if (result) {
 						context.report({
 							message:

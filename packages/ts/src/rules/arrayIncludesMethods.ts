@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -11,10 +11,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 import { isDirectEqualityCheck } from "./utils/isDirectEqualityCheck.ts";
 
-function isSomeWithDirectEquality(
-	node: AST.CallExpression,
-	typeChecker: Checker,
-) {
+function isSomeWithDirectEquality(node: AST.CallExpression, checker: Checker) {
 	// TODO: Use a util like getStaticValue
 	// https://github.com/flint-fyi/flint/issues/1298
 	if (
@@ -46,7 +43,7 @@ function isSomeWithDirectEquality(
 			[SyntaxKind.EqualsEqualsToken, SyntaxKind.EqualsEqualsEqualsToken],
 			firstParameter.name.text,
 		) &&
-		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
+		isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 	);
 }
 
@@ -73,8 +70,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (isSomeWithDirectEquality(node, typeChecker)) {
+				CallExpression: (node, { sourceFile, checker }) => {
+					if (isSomeWithDirectEquality(node, checker)) {
 						context.report({
 							message: "preferIncludes",
 							range: getTSNodeRange(node, sourceFile),

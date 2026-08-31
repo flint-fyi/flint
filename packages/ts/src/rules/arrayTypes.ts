@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
@@ -136,13 +136,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						range: getTSNodeRange(node, sourceFile),
 					});
 				},
-				TypeReference: (
-					node,
-					{ options, program, sourceFile, typeChecker },
-				) => {
+				TypeReference: (node, { options, program, sourceFile, checker }) => {
 					if (
 						node.typeName.kind !== SyntaxKind.Identifier ||
-						!isGlobalDeclaration(node.typeName, typeChecker, program)
+						!isGlobalDeclaration(node.typeName, checker, program)
 					) {
 						return;
 					}

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -30,11 +30,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
+				ElementAccessExpression: (node, { sourceFile, checker }) => {
 					if (
 						node.argumentExpression.kind !== SyntaxKind.NumericLiteral ||
 						node.argumentExpression.text !== "0" ||
-						!isFilterCall(node.expression, typeChecker)
+						!isFilterCall(node.expression, checker)
 					) {
 						return;
 					}
@@ -64,15 +64,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function isFilterCall(
 	node: AST.AnyNode,
-	typeChecker: Checker,
+	checker: Checker,
 ): node is AST.CallExpression & { expression: AST.PropertyAccessExpression } {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		!!node.arguments.length &&
 		node.expression.name.text === "filter" &&
-		typeChecker.isArrayType(
-			typeChecker.getTypeAtLocation(node.expression.expression),
-		)
+		checker.isArrayType(checker.getTypeAtLocation(node.expression.expression))
 	);
 }

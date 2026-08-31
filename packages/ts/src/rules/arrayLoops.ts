@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -41,13 +41,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { sourceFile, checker }) => {
 					if (
 						isForEachCall(node) &&
-						isArrayOrTupleTypeAtLocation(
-							node.expression.expression,
-							typeChecker,
-						)
+						isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 					) {
 						context.report({
 							message: "preferForOf",

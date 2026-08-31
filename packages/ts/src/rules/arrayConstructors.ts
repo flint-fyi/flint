@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -30,18 +30,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ program, sourceFile, checker }: TypeScriptFileServices,
 		) {
 			if (
 				node.expression.kind !== SyntaxKind.Identifier ||
 				node.expression.text !== "Array" ||
 				shouldAllowCallOrNew(node) ||
-				!isGlobalDeclarationOfName(
-					node.expression,
-					"Array",
-					typeChecker,
-					program,
-				)
+				!isGlobalDeclarationOfName(node.expression, "Array", checker, program)
 			) {
 				return;
 			}

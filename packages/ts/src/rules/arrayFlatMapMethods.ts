@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticNumberValue,
@@ -13,14 +13,14 @@ import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocati
 
 function isArrayMapCall(
 	node: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 ): node is AST.CallExpression {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "map" &&
 		node.arguments.length >= 1 &&
-		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
+		isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 	);
 }
 
@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { sourceFile, checker }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const objectExpression = node.expression.expression;
-					if (!isArrayMapCall(objectExpression, typeChecker)) {
+					if (!isArrayMapCall(objectExpression, checker)) {
 						return;
 					}
 

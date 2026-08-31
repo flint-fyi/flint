@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticNumberValue,
@@ -13,7 +13,7 @@ import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocati
 
 function isArrayFilterCall(
 	node: AST.Expression,
-	typeChecker: Checker,
+	checker: Checker,
 ): node is AST.CallExpression {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
@@ -21,7 +21,7 @@ function isArrayFilterCall(
 		node.expression.name.text === "filter" &&
 		!!node.arguments.length &&
 		node.arguments.length <= 2 &&
-		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
+		isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 	);
 }
 
@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { sourceFile, checker }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -68,7 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						case "pop":
 							if (
 								!node.arguments.length &&
-								isArrayFilterCall(objectExpression, typeChecker)
+								isArrayFilterCall(objectExpression, checker)
 							) {
 								context.report({
 									message: "preferFindLast",
@@ -80,7 +80,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						case "shift":
 							if (
 								!node.arguments.length &&
-								isArrayFilterCall(objectExpression, typeChecker)
+								isArrayFilterCall(objectExpression, checker)
 							) {
 								context.report({
 									message: "preferFind",
@@ -96,7 +96,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 								if (
 									getStaticNumberValue(arg) === 0 &&
-									isArrayFilterCall(objectExpression, typeChecker)
+									isArrayFilterCall(objectExpression, checker)
 								) {
 									context.report({
 										message: "preferFind",
@@ -107,7 +107,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 								if (
 									getStaticNumberValue(arg) === -1 &&
-									isArrayFilterCall(objectExpression, typeChecker)
+									isArrayFilterCall(objectExpression, checker)
 								) {
 									context.report({
 										message: "preferFindLast",
@@ -117,10 +117,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 					}
 				},
-				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
+				ElementAccessExpression: (node, { sourceFile, checker }) => {
 					if (
 						getStaticNumberValue(node.argumentExpression) === 0 &&
-						isArrayFilterCall(node.expression, typeChecker)
+						isArrayFilterCall(node.expression, checker)
 					) {
 						context.report({
 							message: "preferFind",

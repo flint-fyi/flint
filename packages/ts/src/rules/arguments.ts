@@ -1,4 +1,18 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	isArrowFunction,
+	isBindingElement,
+	isConstructorDeclaration,
+	isFunctionDeclaration,
+	isFunctionExpression,
+	isGetAccessorDeclaration,
+	isMethodDeclaration,
+	isParameterDeclaration,
+	isPropertyDeclaration,
+	isSetAccessorDeclaration,
+	isVariableDeclaration,
+	SyntaxKind,
+	type Node,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -7,17 +21,17 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
-	if (ts.isArrowFunction(node)) {
+function isNonArrowFunctionBoundary(node: Node): "quit" | boolean {
+	if (isArrowFunction(node)) {
 		return "quit";
 	}
 	return (
-		ts.isFunctionDeclaration(node) ||
-		ts.isFunctionExpression(node) ||
-		ts.isMethodDeclaration(node) ||
-		ts.isGetAccessorDeclaration(node) ||
-		ts.isSetAccessorDeclaration(node) ||
-		ts.isConstructorDeclaration(node)
+		isFunctionDeclaration(node) ||
+		isFunctionExpression(node) ||
+		isMethodDeclaration(node) ||
+		isGetAccessorDeclaration(node) ||
+		isSetAccessorDeclaration(node) ||
+		isConstructorDeclaration(node)
 	);
 }
 
@@ -43,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { sourceFile, typeChecker }) => {
+				Identifier: (node, { checker, sourceFile }) => {
 					if (node.text !== "arguments") {
 						return;
 					}
@@ -66,23 +80,32 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// TODO: This might get simpler when we have scope analysis.
 					// https://github.com/JoshuaKGoldberg/flint/issues/400
-					if (!ts.findAncestor(node, isNonArrowFunctionBoundary)) {
+					let current = node.parent;
+					let boundary: "quit" | boolean;
+					while (!(boundary = isNonArrowFunctionBoundary(current))) {
+						if (current.kind === SyntaxKind.SourceFile) {
+							return;
+						}
+						current = current.parent;
+					}
+					if (boundary === "quit") {
 						return;
 					}
 
-					const symbol = typeChecker.getSymbolAtLocation(node);
+					const symbol = checker.getSymbolAtLocation(node);
 
 					if (
 						!symbol ||
-						symbol
-							.getDeclarations()
-							?.some(
-								(declaration) =>
-									ts.isParameter(declaration) ||
-									ts.isVariableDeclaration(declaration) ||
-									ts.isPropertyDeclaration(declaration) ||
-									ts.isBindingElement(declaration),
-							)
+						symbol.declarations.some((declarationHandle) => {
+							const declaration = declarationHandle.resolve();
+							return (
+								!!declaration &&
+								(isParameterDeclaration(declaration) ||
+									isVariableDeclaration(declaration) ||
+									isPropertyDeclaration(declaration) ||
+									isBindingElement(declaration))
+							);
+						})
 					) {
 						return;
 					}

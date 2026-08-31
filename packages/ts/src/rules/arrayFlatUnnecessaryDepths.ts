@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticNumberValue,
@@ -28,7 +28,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { sourceFile, checker }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "flat" ||
@@ -45,10 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						!isArrayOrTupleTypeAtLocation(
-							node.expression.expression,
-							typeChecker,
-						)
+						!isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 					) {
 						return;
 					}

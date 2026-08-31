@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -41,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { sourceFile, checker }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression &&
 						node.expression.kind !== SyntaxKind.ElementAccessExpression
@@ -69,20 +69,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						!isArrayOrTupleTypeAtLocation(
-							node.expression.expression,
-							typeChecker,
-						)
+						!isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 					) {
 						return;
 					}
 
-					const initializerType = typeChecker.getTypeAtLocation(
+					const initializerType = checker.getTypeAtLocation(
 						secondArg.expression,
 					);
-					const assertedType = typeChecker.getTypeAtLocation(secondArg.type);
+					const assertedType = checker.getTypeAtLocation(secondArg.type);
 
-					if (!typeChecker.isTypeAssignableTo(initializerType, assertedType)) {
+					if (!checker.isTypeAssignableTo(initializerType, assertedType)) {
 						return;
 					}
 

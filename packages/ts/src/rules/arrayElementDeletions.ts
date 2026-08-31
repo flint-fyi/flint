@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -14,25 +14,47 @@ function buildSpliceReplacement(
 	elementAccess: AST.ElementAccessExpression,
 	sourceFile: AST.SourceFile,
 ): string {
-	const children = elementAccess.getChildren(sourceFile);
-	const openBracket = children.find(
-		(child) => child.kind === SyntaxKind.OpenBracketToken,
+	const openingScanner = createScanner(
+		true,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		elementAccess.expression.getEnd(),
 	);
-	const closeBracket = children.find(
-		(child) => child.kind === SyntaxKind.CloseBracketToken,
+	let tokenKind: SyntaxKind;
+	do {
+		tokenKind = openingScanner.scan();
+	} while (
+		tokenKind !== SyntaxKind.OpenBracketToken &&
+		tokenKind !== SyntaxKind.EndOfFileToken
 	);
+	const openBracket =
+		tokenKind === SyntaxKind.OpenBracketToken
+			? openingScanner.getTokenStart()
+			: elementAccess.expression.getEnd();
+
+	const closingScanner = createScanner(
+		true,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		elementAccess.argumentExpression.getEnd(),
+	);
+	do {
+		tokenKind = closingScanner.scan();
+	} while (
+		tokenKind !== SyntaxKind.CloseBracketToken &&
+		tokenKind !== SyntaxKind.EndOfFileToken
+	);
+	const closeBracket =
+		tokenKind === SyntaxKind.CloseBracketToken
+			? closingScanner.getTokenStart()
+			: elementAccess.argumentExpression.getEnd();
 
 	const before = sourceFile.text.slice(
 		node.getStart(sourceFile) + "delete".length,
-		openBracket?.getStart(sourceFile) ?? elementAccess.expression.getEnd(),
+		openBracket,
 	);
 
-	const keyText = sourceFile.text.slice(
-		openBracket?.getEnd() ??
-			elementAccess.argumentExpression.getStart(sourceFile),
-		closeBracket?.getStart(sourceFile) ??
-			elementAccess.argumentExpression.getEnd(),
-	);
+	const keyText = sourceFile.text.slice(openBracket + 1, closeBracket);
 
 	return `${before}.splice(${keyText}, 1)`;
 }
@@ -56,13 +78,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				DeleteExpression: (node, { sourceFile, typeChecker }) => {
+				DeleteExpression: (node, { checker, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.ElementAccessExpression ||
-						!isArrayOrTupleTypeAtLocation(
-							node.expression.expression,
-							typeChecker,
-						)
+						!isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
 					) {
 						return;
 					}
