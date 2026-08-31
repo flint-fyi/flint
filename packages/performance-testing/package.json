@@ -34,7 +34,6 @@
 		"eslint-plugin-import": "catalog:comparisons",
 		"eslint-plugin-regexp": "catalog:comparisons",
 		"eslint-plugin-unicorn": "catalog:comparisons",
-		"typescript": "catalog:dev",
 		"typescript-eslint": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

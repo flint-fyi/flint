@@ -41,7 +41,6 @@
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@humanwhocodes/momoa": "3.3.12",
 		"tsdown": "catalog:dev",
-		"typescript": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {

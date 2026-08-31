@@ -3,6 +3,7 @@ import { stdin, stdout } from "node:process";
 import type {
 	ContentMapperProject,
 	JsonRpcResponse,
+	MappedDiagnosticDirective,
 	MappedOutput,
 	OpenProjectParams,
 	OptionDiagnostic,
@@ -33,7 +34,7 @@ export async function runContentMapper({
 	const projects = new Map<string, ContentMapperProject>();
 	let positionEncoding: PositionEncoding = "utf-16";
 	let initialized = false;
-	let pending = Buffer.alloc(0);
+	let pending: Buffer = Buffer.alloc(0);
 	const write = async (response: JsonRpcResponse): Promise<void> => {
 		const body = Buffer.from(JSON.stringify(response));
 		const frame = Buffer.concat([
@@ -338,27 +339,62 @@ function encodeOutput(
 	result: MappedOutput,
 	originalText: string,
 ): MappedOutput {
-	const mappings = result.mappings?.map(
-		(mapping): SpanMapping => [
-			...utf8Range(result.text, mapping[0], mapping[1]),
-			...utf8Range(originalText, mapping[2], mapping[3]),
-			mapping[4],
-			...(mapping[5] === undefined ? [] : [mapping[5]]),
-		],
-	);
+	const mappings = result.mappings?.map((mapping): SpanMapping => {
+		const [virtualStart, virtualLength] = utf8Range(
+			result.text,
+			mapping[0],
+			mapping[1],
+		);
+		const [originalStart, originalLength] = utf8Range(
+			originalText,
+			mapping[2],
+			mapping[3],
+		);
+		return mapping[5] === undefined
+			? [virtualStart, virtualLength, originalStart, originalLength, mapping[4]]
+			: [
+					virtualStart,
+					virtualLength,
+					originalStart,
+					originalLength,
+					mapping[4],
+					mapping[5],
+				];
+	});
+	const diagnosticDirectives = result.diagnosticDirectives && {
+		...result.diagnosticDirectives,
+		directives: result.diagnosticDirectives.directives.map(
+			(directive): MappedDiagnosticDirective => {
+				const [originalStart, originalLength] = utf8Range(
+					originalText,
+					directive[0],
+					directive[1],
+				);
+				const virtualStart = utf8Offset(result.text, directive[2]);
+				const virtualEnd = utf8Offset(result.text, directive[3]);
+				return directive[5] === undefined
+					? [
+							originalStart,
+							originalLength,
+							virtualStart,
+							virtualEnd,
+							directive[4],
+						]
+					: [
+							originalStart,
+							originalLength,
+							virtualStart,
+							virtualEnd,
+							directive[4],
+							directive[5],
+						];
+			},
+		),
+	};
 	return {
 		...result,
-		diagnosticDirectives: result.diagnosticDirectives && {
-			...result.diagnosticDirectives,
-			directives: result.diagnosticDirectives.directives.map((directive) => [
-				...utf8Range(originalText, directive[0], directive[1]),
-				utf8Offset(result.text, directive[2]),
-				utf8Offset(result.text, directive[3]),
-				directive[4],
-				...(directive[5] === undefined ? [] : [directive[5]]),
-			]),
-		},
-		mappings,
+		...(diagnosticDirectives && { diagnosticDirectives }),
+		...(mappings && { mappings }),
 	};
 }
 
@@ -373,10 +409,12 @@ function encodeResult(
 	}));
 	return {
 		...encodeOutput(result, originalText),
-		diagnostics,
-		supplemental: result.supplemental?.map((supplemental) =>
-			encodeOutput(supplemental, originalText),
-		),
+		...(diagnostics && { diagnostics }),
+		...(result.supplemental && {
+			supplemental: result.supplemental.map((supplemental) =>
+				encodeOutput(supplemental, originalText),
+			),
+		}),
 	};
 }
 

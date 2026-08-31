@@ -22,7 +22,6 @@ export {
 export { getTSNodeRange } from "./getTSNodeRange.ts";
 export {
 	NodeSyntaxKinds,
-	setVolarCreateFile,
 	throwUnknownLanguageExtension,
 	type TypeScriptFileServices,
 	typescriptLanguage,

@@ -25,8 +25,7 @@
 		"test": "vitest --project nuxt"
 	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:^",
-		"typescript": "^6.0.0"
+		"@flint.fyi/core": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

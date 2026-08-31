@@ -18,8 +18,4 @@ export type {
 	TransformResult,
 } from "./content-mapper/protocol.ts";
 export { runContentMapper } from "./content-mapper/runContentMapper.ts";
-export {
-	createVolarBasedLanguage,
-	reportSourceCode,
-	type VolarLanguage,
-} from "./language.ts";
+export { reportSourceCode } from "./language.ts";

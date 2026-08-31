@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
 
-import { setVolarCreateFile, typescriptLanguage } from "./language.ts";
+import { typescriptLanguage } from "./language.ts";
 
 const mocks = vi.hoisted(() => ({
 	createTypeScriptProjectSession: vi.fn(),
@@ -249,24 +249,6 @@ describe("typescriptLanguage failed file lifecycle", () => {
 			createFactory().createFile(fileData("/repo/first.unknown")),
 		).toThrow("Unknown extension");
 		expect(mocks.session.update).toHaveBeenCalledOnce();
-		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
-	});
-
-	it("closes the session for a registered-but-blocked Volar path", () => {
-		mockSnapshot({
-			"/repo/first.ts": { fileName: "/repo/first.ts" },
-			"/repo/second.vue": { fileName: "/repo/second.vue" },
-		});
-		setVolarCreateFile(vi.fn());
-		const factory = createFactory();
-		const first = factory.createFile(fileData("/repo/first.ts"));
-
-		expect(() => factory.createFile(fileData("/repo/second.vue"))).toThrow(
-			"until Volar supports",
-		);
-		expect(() => first.services.sourceFile).toThrow(
-			/session has been disposed/i,
-		);
 		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
 	});
 });

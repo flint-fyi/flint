@@ -1,4 +1,3 @@
-import ts from "typescript";
 import {
 	API,
 	type Diagnostic,
@@ -63,29 +62,6 @@ function flattenNativeMessage(diagnostic: Diagnostic): string[] {
 	];
 }
 
-function getLegacyDiagnostics(declaration: boolean): unknown[] {
-	const options: ts.CompilerOptions = {
-		declaration,
-		isolatedDeclarations: declaration,
-		noLib: true,
-		strict: true,
-	};
-	const host = ts.createCompilerHost(options);
-	host.fileExists = (requestedFileName) => requestedFileName === fileName;
-	host.getSourceFile = (requestedFileName, languageVersion) =>
-		requestedFileName === fileName
-			? ts.createSourceFile(fileName, sourceText, languageVersion)
-			: undefined;
-	host.readFile = (requestedFileName) =>
-		requestedFileName === fileName ? sourceText : undefined;
-
-	const program = ts.createProgram([fileName], options, host);
-
-	return ts
-		.getPreEmitDiagnostics(program, program.getSourceFile(fileName))
-		.map(normalizeLegacyDiagnostic);
-}
-
 function getNativeDiagnostics(declaration: boolean): {
 	diagnostics: unknown[];
 	directCategories: {
@@ -126,22 +102,6 @@ function getNativeDiagnostics(declaration: boolean): {
 		program.dispose();
 		api.close();
 	}
-}
-
-function normalizeLegacyDiagnostic(diagnostic: ts.Diagnostic): unknown {
-	return {
-		category: diagnostic.category,
-		code: diagnostic.code,
-		end:
-			diagnostic.start === undefined
-				? 0
-				: diagnostic.start + (diagnostic.length ?? 0),
-		fileName: diagnostic.file?.fileName,
-		message: ts
-			.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
-			.split("\n"),
-		pos: diagnostic.start ?? 0,
-	};
 }
 
 function normalizeNativeDiagnostic(diagnostic: Diagnostic): unknown {
@@ -195,18 +155,6 @@ describe("getTypeScriptDiagnostics", () => {
 			getTypeScriptDiagnostics(createProgram([second, first]), fileName),
 		).toEqual([first, second]);
 	});
-
-	it.each([false, true])(
-		"matches source-file-scoped TypeScript 6 getPreEmitDiagnostics with declaration=%s",
-		(declaration) => {
-			const native = getNativeDiagnostics(declaration);
-
-			expect(native.directCategories.bind).toBeGreaterThan(0);
-			expect(native.directCategories.suggestion).toBeGreaterThan(0);
-			expect(native.directCategories.declaration > 0).toBe(declaration);
-			expect(native.diagnostics).toEqual(getLegacyDiagnostics(declaration));
-		},
-	);
 
 	it("returns diagnostics sorted and deduplicated", () => {
 		const diagnostics = getNativeDiagnostics(true).diagnostics as {

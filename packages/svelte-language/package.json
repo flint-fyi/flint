@@ -35,7 +35,8 @@
 		"@flint.fyi/volar-language": "workspace:^",
 		"@jridgewell/sourcemap-codec": "^1.5.5",
 		"svelte": "^5.0.0",
-		"svelte2tsx": "^0.7.55"
+		"svelte2tsx": "^0.7.55",
+		"typescript": "catalog:dev"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

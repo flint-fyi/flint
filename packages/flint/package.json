@@ -35,9 +35,7 @@
 		"@flint.fyi/md": "workspace:",
 		"@flint.fyi/package-json": "workspace:",
 		"@flint.fyi/ts": "workspace:",
-		"@flint.fyi/ts-patch": "workspace:",
-		"@flint.fyi/yaml": "workspace:",
-		"typescript": "^6.0.0"
+		"@flint.fyi/yaml": "workspace:"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

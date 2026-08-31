@@ -25,7 +25,7 @@ export function isGlobalDeclarationOfName(
 		if (!declaration) {
 			return false;
 		}
-		declarations.push(declaration);
+		declarations.push(declaration as AST.Declaration);
 	}
 
 	return declarations.every((declaration) => {

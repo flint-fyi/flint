@@ -20,12 +20,9 @@ import {
 	type AnyOptionalSchema,
 	type CharacterReportRange,
 	type FileAboutData,
-	type InferredOutputObject,
 	type Language,
-	type LanguageFile,
 	type LanguageFileDefinition,
 	type LanguageReports,
-	type RuleRuntime,
 	type RuleVisitors,
 } from "@flint.fyi/core";
 import { assert, nullThrows } from "@flint.fyi/utils";
@@ -66,24 +63,7 @@ type ContentMappedLanguageFileDefinition =
 
 interface GlobalLanguageState {
 	packageVersion: string;
-	volarCreateFile: null | VolarCreateFile;
 }
-type VolarCreateFile = (
-	data: FileAboutData,
-	unsupportedLegacyProgram: never,
-	sourceFile: AST.SourceFile,
-) => VolarLanguageFileDefinition;
-type VolarLanguageFileDefinition =
-	LanguageFileDefinition<TypeScriptFileServices> & {
-		__volarServices: {
-			getLanguageReports(): LanguageReports;
-			runVisitors(
-				file: LanguageFile<TypeScriptFileServices>,
-				options: InferredOutputObject<AnyOptionalSchema | undefined>,
-				runtime: RuleRuntime<TypeScriptNodeVisitors, TypeScriptFileServices>,
-			): void;
-		};
-	};
 
 export function getMappedSourceFiles(
 	program: Program,
@@ -190,7 +170,6 @@ function mapDiagnosticToAuthoredSource(
 		fileName: about.filePathAbsolute,
 		pos: range.begin,
 		...(relatedInformation && { relatedInformation }),
-		sourceLines: undefined,
 		startPosition: {
 			character: startPosition.column,
 			line: startPosition.line,
@@ -211,16 +190,7 @@ assert(
 
 const languageState: GlobalLanguageState = (globalTyped[stateSymbol] = {
 	packageVersion: packageJson.version,
-	volarCreateFile: null,
 });
-
-export function setVolarCreateFile(create: VolarCreateFile): void {
-	assert(
-		languageState.volarCreateFile == null,
-		"setVolarCreateFile is expected to be called only once",
-	);
-	languageState.volarCreateFile = create;
-}
 
 export const typescriptLanguage: Language<
 	TypeScriptNodeVisitors,
@@ -445,13 +415,7 @@ export const typescriptLanguage: Language<
 					return file;
 				}
 
-				if (languageState.volarCreateFile == null) {
-					throwUnknownLanguageExtension(data.filePathAbsolute);
-				}
-
-				throw new Error(
-					`Cannot process ${data.filePathAbsolute} until Volar supports the native TypeScript project session.`,
-				);
+				throwUnknownLanguageExtension(data.filePathAbsolute);
 			} catch (error) {
 				return failSession(currentSessionState, error);
 			}
@@ -473,11 +437,6 @@ export const typescriptLanguage: Language<
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
 	getLanguageReports(file) {
-		if ("__volarServices" in file) {
-			return (
-				file as VolarLanguageFileDefinition
-			).__volarServices.getLanguageReports();
-		}
 		const reports: LanguageReports = [];
 		const reportKeys = new Set<string>();
 		const sourceFiles = getMappedSourceFiles(
@@ -527,15 +486,6 @@ export const typescriptLanguage: Language<
 			return;
 		}
 
-		if ("__volarServices" in file) {
-			(file as VolarLanguageFileDefinition).__volarServices.runVisitors(
-				file,
-				options,
-				runtime,
-			);
-			return;
-		}
-
 		const { visitors } = runtime;
 		for (const sourceFile of getMappedSourceFiles(
 			file.services.program,
@@ -559,8 +509,16 @@ export const typescriptLanguage: Language<
 					spanMap: sourceFile.spanMap,
 				});
 			} finally {
-				file.adjustFixRange = adjustFixRange;
-				file.adjustReportRange = adjustReportRange;
+				if (adjustFixRange) {
+					file.adjustFixRange = adjustFixRange;
+				} else {
+					delete file.adjustFixRange;
+				}
+				if (adjustReportRange) {
+					file.adjustReportRange = adjustReportRange;
+				} else {
+					delete file.adjustReportRange;
+				}
 			}
 		}
 	},

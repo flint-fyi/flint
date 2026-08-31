@@ -8,7 +8,7 @@ export function getFunctionName(
 		| AST.FunctionDeclaration
 		| AST.FunctionExpression
 		| AST.MethodDeclaration
-		| AST.MethodSignature,
+		| AST.MethodSignatureDeclaration,
 ): string | undefined {
 	switch (node.kind) {
 		case SyntaxKind.ArrowFunction: {

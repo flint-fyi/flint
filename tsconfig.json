@@ -41,7 +41,6 @@
 		{ "path": "./packages/svelte-language" },
 		{ "path": "./packages/text-language" },
 		{ "path": "./packages/ts" },
-		{ "path": "./packages/ts-patch" },
 		{ "path": "./packages/typescript-language" },
 		{ "path": "./packages/utils" },
 		{ "path": "./packages/vitest" },

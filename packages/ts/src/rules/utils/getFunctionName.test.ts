@@ -1,34 +1,22 @@
-import {
-	createSourceFile,
-	forEachChild,
-	ScriptKind,
-	ScriptTarget,
-	SyntaxKind,
-	type Node,
-} from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { describe, expect, it } from "vitest";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
+import { createNativeSourceFile } from "../../../../typescript-language/src/test/createNativeSourceFile.testUtils.ts";
 import { getFunctionName } from "./getFunctionName.ts";
 
-function findFirstNode(sourceText: string, kind: SyntaxKind): Node {
-	const sourceFile = createSourceFile(
-		"getFunctionName.test.ts",
-		sourceText,
-		ScriptTarget.Latest,
-		true,
-		ScriptKind.TS,
-	);
+function findFirstNode(sourceText: string, kind: SyntaxKind): AST.Node {
+	const sourceFile = createNativeSourceFile(sourceText);
 
-	let foundNode: Node | undefined;
-	const visit = (node: Node) => {
+	let foundNode: AST.Node | undefined;
+	const visit = (node: AST.Node): void => {
 		if (node.kind === kind) {
 			foundNode = node;
 			return;
 		}
 
-		forEachChild(node, visit);
+		node.forEachChild(visit);
 	};
 
 	visit(sourceFile);
