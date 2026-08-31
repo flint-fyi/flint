@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, type Mock } from "vitest";
 
 import {
 	createLanguage,
@@ -31,6 +31,15 @@ describe(RuleTester, () => {
 
 		expect(createFileFactory).toHaveBeenCalledOnce();
 		expect(dispose).toHaveBeenCalledOnce();
+	});
+
+	it("does not own cached language factories without afterAll", async () => {
+		const dispose = vi.fn();
+		const { run } = createTestSetup({ factoryDispose: dispose });
+
+		await run();
+
+		expect(dispose).not.toHaveBeenCalled();
 	});
 
 	it("asserts that test cases contain no language reports by default", async () => {
@@ -77,7 +86,7 @@ function createTestSetup({
 	factoryDispose?: () => void;
 	getLanguageReports?: () => LanguageReports;
 }): {
-	createFileFactory: ReturnType<typeof vi.fn>;
+	createFileFactory: Mock;
 	run: () => Promise<void>;
 } {
 	const testSetups: (() => Promise<void>)[] = [];

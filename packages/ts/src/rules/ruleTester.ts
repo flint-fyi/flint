@@ -15,6 +15,7 @@ export const ruleTester = new RuleTester({
 });
 
 export const scriptRuleTester = new RuleTester({
+	afterAll,
 	defaults: {
 		fileName: "file.ts",
 		files: createRuleTesterTSConfig({
@@ -27,6 +28,7 @@ export const scriptRuleTester = new RuleTester({
 });
 
 export const domLibRuleTester = new RuleTester({
+	afterAll,
 	defaults: {
 		fileName: "file.ts",
 		files: createRuleTesterTSConfig({
