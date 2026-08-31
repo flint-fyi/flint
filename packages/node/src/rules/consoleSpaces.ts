@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	typescriptLanguage,
@@ -30,14 +30,14 @@ const consoleMethods = new Set([
 	"warn",
 ]);
 
-function isConsoleMethodCall(node: AST.Expression, typeChecker: Checker) {
+function isConsoleMethodCall(node: AST.Expression, checker: Checker) {
 	return (
 		node.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.kind === SyntaxKind.Identifier &&
 		node.expression.text === "console" &&
 		node.name.kind === SyntaxKind.Identifier &&
 		consoleMethods.has(node.name.text) &&
-		isDeclaredInNodeTypes(node.expression, typeChecker)
+		isDeclaredInNodeTypes(node.expression, checker)
 	);
 }
 
@@ -71,8 +71,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
-					if (!isConsoleMethodCall(node.expression, typeChecker)) {
+				CallExpression(node, { checker, sourceFile }) {
+					if (!isConsoleMethodCall(node.expression, checker)) {
 						return;
 					}
 

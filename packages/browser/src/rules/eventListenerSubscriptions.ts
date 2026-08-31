@@ -130,12 +130,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression(node, { program, sourceFile, typeChecker }) {
+				BinaryExpression(node, { checker, program, sourceFile }) {
 					if (
 						node.operatorToken.kind !== SyntaxKind.EqualsToken ||
 						!isPropertyAccessExpression(node.left) ||
 						!eventHandlerProperties.has(node.left.name.text.toLowerCase()) ||
-						!isGlobalDeclaration(node.left, typeChecker, program)
+						!isGlobalDeclaration(node.left, checker, program)
 					) {
 						return;
 					}

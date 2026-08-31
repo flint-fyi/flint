@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -102,12 +102,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { checker, sourceFile }) {
 					if (
 						node.expression.kind === SyntaxKind.Identifier &&
 						node.expression.text === "require" &&
 						!!node.arguments.length &&
-						isDeclaredInNodeTypes(node.expression, typeChecker)
+						isDeclaredInNodeTypes(node.expression, checker)
 					) {
 						checkNode(
 							nullThrows(

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -33,14 +33,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { checker, sourceFile }) {
 					if (
 						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 						node.expression.expression.kind === SyntaxKind.Identifier &&
 						node.expression.expression.text === "process" &&
 						node.expression.name.kind === SyntaxKind.Identifier &&
 						node.expression.name.text === "exit" &&
-						isDeclaredInNodeTypes(node.expression, typeChecker)
+						isDeclaredInNodeTypes(node.expression, checker)
 					) {
 						context.report({
 							message: "noProcessExit",

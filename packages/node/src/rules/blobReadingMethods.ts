@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { program, sourceFile, typeChecker }) {
+				CallExpression(node, { checker, program, sourceFile }) {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier
@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const methodName = node.expression.name.text;
 					if (
 						!blobReadingMethods.has(methodName) ||
-						!isGlobalDeclaration(node.expression.name, typeChecker, program)
+						!isGlobalDeclaration(node.expression.name, checker, program)
 					) {
 						return;
 					}

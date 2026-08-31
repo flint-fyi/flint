@@ -46,30 +46,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isWindowLikeIdentifier(
 			node: AST.Node,
-			typeChecker: Checker,
+			checker: Checker,
 			program: Program,
 		): boolean {
 			return (
 				isIdentifier(node) &&
 				windowLikeNames.has(node.text) &&
-				isGlobalVariable(node, typeChecker, program)
+				isGlobalVariable(node, checker, program)
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression(node, { program, sourceFile, typeChecker }) {
+				CallExpression(node, { checker, program, sourceFile }) {
 					if (
 						node.arguments.length < 2 &&
 						isPropertyAccessExpression(node.expression) &&
 						isIdentifier(node.expression.name) &&
 						node.expression.name.text === "postMessage" &&
 						isASTExpression(node.expression.expression) &&
-						isWindowLikeIdentifier(
-							node.expression.expression,
-							typeChecker,
-							program,
-						)
+						isWindowLikeIdentifier(node.expression.expression, checker, program)
 					) {
 						context.report({
 							message: "missingTargetOrigin",

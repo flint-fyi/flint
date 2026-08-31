@@ -31,13 +31,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression(node, { program, sourceFile, typeChecker }) {
+				PropertyAccessExpression(node, { checker, program, sourceFile }) {
 					if (
 						isIdentifier(node.name) &&
 						node.name.text === "cookie" &&
 						isIdentifier(node.expression) &&
 						node.expression.text === "document" &&
-						isGlobalDeclaration(node.expression, typeChecker, program)
+						isGlobalDeclaration(node.expression, checker, program)
 					) {
 						context.report({
 							message: "noCookie",

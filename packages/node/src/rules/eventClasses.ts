@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -71,23 +71,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isIdentifierEventEmitter(
 			identifier: AST.Identifier,
-			typeChecker: Checker,
+			checker: Checker,
 		) {
-			return (
-				typeChecker.getSymbolAtLocation(identifier)?.getDeclarations() as
-					| AST.AnyNode[]
-					| undefined
-			)?.some(isDeclarationEventEmitter);
+			return checker
+				.getSymbolAtLocation(identifier)
+				?.declarations.some((declaration) => {
+					const resolved = declaration.resolve();
+					return !!resolved && isDeclarationEventEmitter(resolved);
+				});
 		}
 
 		function checkExpression(
 			expression: AST.Expression,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			checker: Checker,
 		) {
 			if (
 				expression.kind === SyntaxKind.Identifier &&
-				isIdentifierEventEmitter(expression, typeChecker)
+				isIdentifierEventEmitter(expression, checker)
 			) {
 				context.report({
 					message: "preferEventTarget",
@@ -100,7 +101,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ClassDeclaration(
 					node,
-					{ sourceFile, typeChecker }: TypeScriptFileServices,
+					{ checker, sourceFile }: TypeScriptFileServices,
 				) {
 					if (!node.heritageClauses) {
 						return;
@@ -112,15 +113,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						for (const type of heritageClause.types) {
-							checkExpression(type.expression, sourceFile, typeChecker);
+							checkExpression(type.expression, sourceFile, checker);
 						}
 					}
 				},
-				NewExpression(
-					node,
-					{ sourceFile, typeChecker }: TypeScriptFileServices,
-				) {
-					checkExpression(node.expression, sourceFile, typeChecker);
+				NewExpression(node, { checker, sourceFile }: TypeScriptFileServices) {
+					checkExpression(node.expression, sourceFile, checker);
 				},
 			},
 		};

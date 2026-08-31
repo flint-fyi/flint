@@ -14,13 +14,12 @@ import {
 // https://github.com/flint-fyi/flint/issues/1298
 export function isGlobalDocumentReference(
 	node: AST.Node,
-	typeChecker: Checker,
+	checker: Checker,
 	program: Program,
 ): boolean {
 	if (isIdentifier(node)) {
 		return (
-			node.text === "document" &&
-			isGlobalDeclaration(node, typeChecker, program)
+			node.text === "document" && isGlobalDeclaration(node, checker, program)
 		);
 	}
 
@@ -29,6 +28,6 @@ export function isGlobalDocumentReference(
 		isIdentifier(node.expression) &&
 		isIdentifier(node.name) &&
 		node.name.text === "document" &&
-		isGlobalDeclaration(node.name, typeChecker, program)
+		isGlobalDeclaration(node.name, checker, program)
 	);
 }

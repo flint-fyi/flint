@@ -85,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { program, sourceFile, typeChecker }) {
+				CallExpression(node, { checker, program, sourceFile }) {
 					const details = getMethodDetails(node);
 					if (!details) {
 						return;
@@ -111,7 +111,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						!isASTExpression(node.expression) ||
-						!isGlobalDeclaration(node.expression, typeChecker, program)
+						!isGlobalDeclaration(node.expression, checker, program)
 					) {
 						return;
 					}

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -12,12 +12,13 @@ import { ruleCreator } from "./ruleCreator.ts";
 function isLocalExportsVariable(
 	node: AST.Identifier,
 	sourceFile: AST.SourceFile,
-	typeChecker: Checker,
+	checker: Checker,
 ) {
-	return typeChecker
+	return checker
 		.getSymbolAtLocation(node)
-		?.getDeclarations()
-		?.some((declaration) => declaration.getSourceFile() === sourceFile);
+		?.declarations.some(
+			(declaration) => declaration.resolve()?.getSourceFile() === sourceFile,
+		);
 }
 
 function isModuleExportsAccess(node: AST.Expression) {
@@ -61,12 +62,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { sourceFile, typeChecker }) => {
+				BinaryExpression: (node, { checker, sourceFile }) => {
 					if (
 						node.operatorToken.kind === SyntaxKind.EqualsToken &&
 						node.left.kind === SyntaxKind.Identifier &&
 						node.left.text === "exports" &&
-						!isLocalExportsVariable(node.left, sourceFile, typeChecker) &&
+						!isLocalExportsVariable(node.left, sourceFile, checker) &&
 						!isModuleExportsAccessAssignment(node.right) &&
 						!isModuleExportsAccessAssignment(node.parent)
 					) {
