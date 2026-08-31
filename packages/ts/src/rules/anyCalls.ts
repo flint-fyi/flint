@@ -1,5 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -53,14 +53,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.Expression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 			message: "unsafeCall" | "unsafeNew" | "unsafeTemplateTag",
 			allowVoid?: boolean,
 		) {
-			const type = getConstrainedTypeAtLocation(node, typeChecker);
+			const type = getConstrainedTypeAtLocation(node, checker);
 
-			if (tsutils.isTypeFlagSet(type, TypeFlags.Any)) {
-				if (tsutils.isIntrinsicErrorType(type)) {
+			if (type.flags & TypeFlags.Any) {
+				if (isIntrinsicErrorType(type)) {
 					return;
 				}
 				context.report({
@@ -83,8 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				callSignatures.length &&
 				(!allowVoid ||
 					callSignatures.some(
-						(signature) =>
-							!tsutils.isIntrinsicVoidType(signature.getReturnType()),
+						(signature) => !(signature.getReturnType().flags & TypeFlags.Void),
 					))
 			) {
 				return;
@@ -114,3 +113,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
+
+function isIntrinsicErrorType(type: Type): boolean {
+	return type.isIntrinsicType() && type.intrinsicName === "error";
+}

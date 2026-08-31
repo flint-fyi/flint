@@ -1,5 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import * as ts from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	TypeFlags,
+	type Program,
+	type Symbol,
+	type Type,
+} from "typescript-native/unstable/sync";
 
 import {
 	typescriptLanguage,
@@ -12,14 +18,11 @@ import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
-function isTypeAny(type: ts.Type): boolean {
-	return (
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any) &&
-		!tsutils.isIntrinsicErrorType(type)
-	);
+function isTypeAny(type: Type): boolean {
+	return isTypeFlagSet(type, TypeFlags.Any) && !isIntrinsicErrorType(type);
 }
 
-function isTypeAnyArray(type: ts.Type, checker: Checker): boolean {
+function isTypeAnyArray(type: Type, checker: Checker): boolean {
 	if (!checker.isArrayType(type)) {
 		return false;
 	}
@@ -28,8 +31,16 @@ function isTypeAnyArray(type: ts.Type, checker: Checker): boolean {
 	return elementType !== undefined && isTypeAny(elementType);
 }
 
-function isTypeAnyOrUnknown(type: ts.Type): boolean {
-	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown);
+function isTypeAnyOrUnknown(type: Type): boolean {
+	return isTypeFlagSet(type, TypeFlags.Any | TypeFlags.Unknown);
+}
+
+function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
+	return (type.flags & flags) !== 0;
+}
+
+function isIntrinsicErrorType(type: Type): boolean {
+	return type.isIntrinsicType() && type.intrinsicName === "error";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -107,11 +118,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkArrayDestructureWorker(
 			pattern: ts.ArrayBindingPattern,
-			senderType: ts.Type,
+			senderType: Type,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			checker: Checker,
 		): boolean {
-			if (isTypeAnyArray(senderType, typeChecker)) {
+			if (isTypeAnyArray(senderType, checker)) {
 				context.report({
 					data: { type: "`any[]`" },
 					message: "unsafeArrayDestructure",
@@ -123,11 +134,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return true;
 			}
 
-			if (!typeChecker.isTupleType(senderType)) {
+			if (!checker.isTupleType(senderType)) {
 				return false;
 			}
 
-			const tupleElements = typeChecker.getTypeArguments(senderType);
+			const tupleElements = checker.getTypeArguments(senderType);
 			let didReport = false;
 
 			for (let i = 0; i < pattern.elements.length; i++) {
@@ -163,7 +174,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							name,
 							elementType,
 							sourceFile,
-							typeChecker,
+							checker,
 						) || didReport;
 				} else if (ts.isObjectBindingPattern(name)) {
 					didReport =
@@ -171,7 +182,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							name,
 							elementType,
 							sourceFile,
-							typeChecker,
+							checker,
 						) || didReport;
 				}
 			}
@@ -181,9 +192,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkObjectDestructureWorker(
 			pattern: ts.ObjectBindingPattern,
-			senderType: ts.Type,
+			senderType: Type,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			checker: Checker,
 		): boolean {
 			let didReport = false;
 
@@ -220,7 +231,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const propertyType = typeChecker.getTypeOfSymbolAtLocation(
+				const propertyType = checker.getTypeOfSymbolAtLocation(
 					propertySymbol,
 					pattern,
 				);
@@ -243,7 +254,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							name,
 							propertyType,
 							sourceFile,
-							typeChecker,
+							checker,
 						) || didReport;
 				} else if (ts.isObjectBindingPattern(name)) {
 					didReport =
@@ -251,7 +262,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							name,
 							propertyType,
 							sourceFile,
-							typeChecker,
+							checker,
 						) || didReport;
 				}
 			}
@@ -261,47 +272,47 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkArrayDestructure(
 			pattern: AST.ArrayBindingPattern,
-			senderType: ts.Type,
+			senderType: Type,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			checker: Checker,
 		): boolean {
 			return checkArrayDestructureWorker(
 				pattern as ts.ArrayBindingPattern,
 				senderType,
 				sourceFile,
-				typeChecker,
+				checker,
 			);
 		}
 
 		function checkObjectDestructure(
 			pattern: AST.ObjectBindingPattern,
-			senderType: ts.Type,
+			senderType: Type,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			checker: Checker,
 		): boolean {
 			return checkObjectDestructureWorker(
 				pattern as ts.ObjectBindingPattern,
 				senderType,
 				sourceFile,
-				typeChecker,
+				checker,
 			);
 		}
 
 		function checkAssignment(
-			initializerType: ts.Type,
-			declaredType: ts.Type | undefined,
+			initializerType: Type,
+			declaredType: Type | undefined,
 			initializer: AST.Expression,
-			reportNode: ts.Node,
+			reportNode: AST.AnyNode,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			checker: Checker,
 		): boolean {
-			if (tsutils.isIntrinsicErrorType(initializerType)) {
+			if (isIntrinsicErrorType(initializerType)) {
 				return false;
 			}
 
 			const anyType = discriminateAnyType(
 				initializerType,
-				typeChecker,
+				checker,
 				initializer,
 			);
 
@@ -330,7 +341,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				initializerType,
 				declaredType,
 				initializer,
-				typeChecker,
+				checker,
 			);
 			if (!result) {
 				return false;
@@ -338,8 +349,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: {
-					receiver: formatReportedType(result.receiver, typeChecker),
-					sender: formatReportedType(result.sender, typeChecker),
+					receiver: formatReportedType(result.receiver, checker),
+					sender: formatReportedType(result.sender, checker),
 				},
 				message: "unsafeAssignmentToVariable",
 				range: {
@@ -352,31 +363,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ArrayLiteralExpression: (node, { sourceFile, typeChecker }) => {
+				ArrayLiteralExpression: (node, { sourceFile, checker }) => {
 					for (const element of node.elements) {
 						if (element.kind !== SyntaxKind.SpreadElement) {
 							continue;
 						}
 
-						const spreadType = typeChecker.getTypeAtLocation(
-							element.expression,
-						);
-						if (!typeChecker.isArrayType(spreadType)) {
+						const spreadType = checker.getTypeAtLocation(element.expression);
+						if (!checker.isArrayType(spreadType)) {
 							continue;
 						}
 
-						const spreadTypeArgs = typeChecker.getTypeArguments(spreadType);
+						const spreadTypeArgs = checker.getTypeArguments(spreadType);
 						const spreadElementType = spreadTypeArgs[0];
 						if (!spreadElementType || !isTypeAny(spreadElementType)) {
 							continue;
 						}
 
-						const parentType = typeChecker.getContextualType(node);
-						if (!parentType || !typeChecker.isArrayType(parentType)) {
+						const parentType = checker.getContextualType(node);
+						if (!parentType || !checker.isArrayType(parentType)) {
 							continue;
 						}
 
-						const parentTypeArgs = typeChecker.getTypeArguments(parentType);
+						const parentTypeArgs = checker.getTypeArguments(parentType);
 						const parentElementType = parentTypeArgs[0];
 						if (!parentElementType || isTypeAnyOrUnknown(parentElementType)) {
 							continue;
@@ -384,8 +393,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						context.report({
 							data: {
-								receiver: typeChecker.typeToString(parentType),
-								sender: typeChecker.typeToString(spreadType),
+								receiver: checker.typeToString(parentType),
+								sender: checker.typeToString(spreadType),
 							},
 							message: "unsafeArraySpread",
 							range: {
@@ -395,21 +404,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				Parameter: (node, { sourceFile, typeChecker }) => {
+				Parameter: (node, { sourceFile, checker }) => {
 					if (!node.initializer) {
 						return;
 					}
 
-					const initializerType = typeChecker.getTypeAtLocation(
-						node.initializer,
-					);
+					const initializerType = checker.getTypeAtLocation(node.initializer);
 
 					if (node.name.kind === SyntaxKind.ArrayBindingPattern) {
 						checkArrayDestructure(
 							node.name,
 							initializerType,
 							sourceFile,
-							typeChecker,
+							checker,
 						);
 						return;
 					}
@@ -419,13 +426,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.name,
 							initializerType,
 							sourceFile,
-							typeChecker,
+							checker,
 						);
 						return;
 					}
 
 					const declaredType = node.type
-						? typeChecker.getTypeAtLocation(node.name)
+						? checker.getTypeAtLocation(node.name)
 						: undefined;
 					checkAssignment(
 						initializerType,
@@ -433,20 +440,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.initializer,
 						node,
 						sourceFile,
-						typeChecker,
+						checker,
 					);
 				},
 
-				PropertyAssignment: (node, { sourceFile, typeChecker }) => {
-					const initializerType = typeChecker.getTypeAtLocation(
-						node.initializer,
-					);
+				PropertyAssignment: (node, { sourceFile, checker }) => {
+					const initializerType = checker.getTypeAtLocation(node.initializer);
 
 					if (!isTypeAny(initializerType)) {
 						return;
 					}
 
-					const contextualType = typeChecker.getContextualType(node.parent);
+					const contextualType = checker.getContextualType(node.parent);
 					if (!contextualType) {
 						return;
 					}
@@ -472,7 +477,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const expectedType = typeChecker.getTypeOfSymbolAtLocation(
+					const expectedType = checker.getTypeOfSymbolAtLocation(
 						propertySymbol,
 						node,
 					);
@@ -490,16 +495,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				PropertyDeclaration: (node, { sourceFile, typeChecker }) => {
+				PropertyDeclaration: (node, { sourceFile, checker }) => {
 					if (!node.initializer) {
 						return;
 					}
 
-					const initializerType = typeChecker.getTypeAtLocation(
-						node.initializer,
-					);
+					const initializerType = checker.getTypeAtLocation(node.initializer);
 					const declaredType = node.type
-						? typeChecker.getTypeAtLocation(node.name)
+						? checker.getTypeAtLocation(node.name)
 						: undefined;
 
 					checkAssignment(
@@ -508,17 +511,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.initializer,
 						node,
 						sourceFile,
-						typeChecker,
+						checker,
 					);
 				},
-				ShorthandPropertyAssignment: (node, { sourceFile, typeChecker }) => {
-					const initializerType = typeChecker.getTypeAtLocation(node.name);
+				ShorthandPropertyAssignment: (node, { sourceFile, checker }) => {
+					const initializerType = checker.getTypeAtLocation(node.name);
 
 					if (!isTypeAny(initializerType)) {
 						return;
 					}
 
-					const contextualType = typeChecker.getContextualType(node.parent);
+					const contextualType = checker.getContextualType(node.parent);
 					if (!contextualType) {
 						return;
 					}
@@ -528,7 +531,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const expectedType = typeChecker.getTypeOfSymbolAtLocation(
+					const expectedType = checker.getTypeOfSymbolAtLocation(
 						propertySymbol,
 						node,
 					);
@@ -546,21 +549,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				VariableDeclaration: (node, { sourceFile, typeChecker }) => {
+				VariableDeclaration: (node, { sourceFile, checker }) => {
 					if (!node.initializer) {
 						return;
 					}
 
-					const initializerType = typeChecker.getTypeAtLocation(
-						node.initializer,
-					);
+					const initializerType = checker.getTypeAtLocation(node.initializer);
 
 					if (node.name.kind === SyntaxKind.ArrayBindingPattern) {
 						checkArrayDestructure(
 							node.name,
 							initializerType,
 							sourceFile,
-							typeChecker,
+							checker,
 						);
 						return;
 					}
@@ -570,13 +571,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.name,
 							initializerType,
 							sourceFile,
-							typeChecker,
+							checker,
 						);
 						return;
 					}
 
 					const declaredType = node.type
-						? typeChecker.getTypeAtLocation(node.name)
+						? checker.getTypeAtLocation(node.name)
 						: undefined;
 
 					checkAssignment(
@@ -585,7 +586,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.initializer,
 						node,
 						sourceFile,
-						typeChecker,
+						checker,
 					);
 				},
 			},

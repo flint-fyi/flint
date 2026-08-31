@@ -297,6 +297,23 @@ function bar() {
 		},
 		{
 			code: `
+function foo(this: any) {
+  return this;
+}
+void foo;
+`,
+			files: createRuleTesterTSConfig({ strict: undefined }),
+			snapshot: `
+function foo(this: any) {
+  return this;
+  ~~~~~~~~~~~~
+  Unsafe return of a value of type \`any\`.
+}
+void foo;
+`,
+		},
+		{
+			code: `
 declare function foo(arg: null | (() => any)): void;
 foo(() => 'foo' as any);
       

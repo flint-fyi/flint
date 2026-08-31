@@ -1,7 +1,9 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
-import type { Signature, Type } from "typescript-native/unstable/sync";
+import {
+	TypeFlags,
+	type Signature,
+	type Type,
+} from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -18,7 +20,6 @@ import {
 	getAwaitedTypes,
 } from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { getThisExpression } from "./utils/getThisExpression.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
 function getCallSignatures(type: Type): readonly Signature[] {
@@ -29,6 +30,55 @@ function getCallSignatures(type: Type): readonly Signature[] {
 	}
 
 	return type.getCallSignatures();
+}
+
+function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
+	return (type.flags & flags) !== 0;
+}
+
+function isIntrinsicErrorType(type: Type): boolean {
+	return type.isIntrinsicType() && type.intrinsicName === "error";
+}
+
+function findFunctionAncestor(
+	node: AST.AnyNode,
+): AST.FunctionLikeDeclaration | undefined {
+	let current = node.parent;
+
+	while (current) {
+		switch (current.kind) {
+			case SyntaxKind.ArrowFunction:
+			case SyntaxKind.Constructor:
+			case SyntaxKind.FunctionDeclaration:
+			case SyntaxKind.FunctionExpression:
+			case SyntaxKind.GetAccessor:
+			case SyntaxKind.MethodDeclaration:
+			case SyntaxKind.SetAccessor:
+				return current as AST.FunctionLikeDeclaration;
+		}
+
+		current = current.parent;
+	}
+
+	return undefined;
+}
+
+function getThisExpression(
+	node: AST.Expression,
+): AST.ThisExpression | undefined {
+	while (true) {
+		if (node.kind === SyntaxKind.ParenthesizedExpression) {
+			node = node.expression;
+		} else if (
+			node.kind === SyntaxKind.CallExpression ||
+			node.kind === SyntaxKind.PropertyAccessExpression ||
+			node.kind === SyntaxKind.ElementAccessExpression
+		) {
+			node = node.expression;
+		} else {
+			return node.kind === SyntaxKind.ThisKeyword ? node : undefined;
+		}
+	}
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -76,35 +126,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkReturn(
 			returnNode: AST.Expression,
-			reportingNode: ts.Node,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			reportingNode: AST.AnyNode,
+			{ program, sourceFile, checker }: TypeScriptFileServices,
 		): void {
-			const type = typeChecker.getTypeAtLocation(returnNode);
-			const functionNode = ts.findAncestor(
-				returnNode,
-				// TODO: I believe isFunctionLikeDeclaration was incorrectly marked
-				// as deprecated in https://github.com/JoshuaKGoldberg/ts-api-utils/pull/124
-				// It says "With TypeScript v5, in favor of typescript's `isFunctionLike`."
-				// However, isFunctionLike also checks for signature-like nodes,
-				// whereas isFunctionLikeDeclaration checks only for function-like nodes.
-				/* eslint-disable @typescript-eslint/no-deprecated */
-				// flint-disable-lines-begin ts/deprecated
-				tsutils.isFunctionLikeDeclaration,
-				/* eslint-enable @typescript-eslint/no-deprecated */
-				// flint-disable-lines-end ts/deprecated
-			);
+			const type = checker.getTypeAtLocation(returnNode);
+			const functionNode = findFunctionAncestor(returnNode);
 			if (!functionNode) {
 				return;
 			}
 
 			// function has an explicit return type, so ensure it's a safe return
-			const returnNodeType = getConstrainedTypeAtLocation(
-				returnNode,
-				typeChecker,
-			);
-			const anyType = tsutils.isIntrinsicErrorType(returnNodeType)
+			const returnNodeType = getConstrainedTypeAtLocation(returnNode, checker);
+			const anyType = isIntrinsicErrorType(returnNodeType)
 				? AnyType.Error
-				: discriminateAnyType(type, typeChecker, returnNode);
+				: discriminateAnyType(type, checker, returnNode);
 
 			// function expressions will not have their return type modified based on receiver typing
 			// so we have to use the contextual typing in these cases, i.e.
@@ -113,9 +148,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let functionType =
 				functionNode.kind === SyntaxKind.FunctionExpression ||
 				functionNode.kind === SyntaxKind.ArrowFunction
-					? typeChecker.getContextualType(functionNode)
-					: typeChecker.getTypeAtLocation(functionNode);
-			functionType ??= typeChecker.getTypeAtLocation(functionNode);
+					? checker.getContextualType(functionNode)
+					: checker.getTypeAtLocation(functionNode);
+			functionType ??= checker.getTypeAtLocation(functionNode);
 			const callSignatures = getCallSignatures(functionType);
 			// If there is an explicit type annotation *and* that type matches the actual
 			// function return type, we shouldn't complain (it's intentional, even if unsafe)
@@ -125,9 +160,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						returnNodeType.id === signatureReturnType.id ||
-						tsutils.isTypeFlagSet(
+						isTypeFlagSet(
 							signatureReturnType,
-							ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+							TypeFlags.Any | TypeFlags.Unknown,
 						)
 					) {
 						return;
@@ -139,17 +174,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					) {
 						const awaitedSignatureReturnTypes = getAwaitedTypes(
 							signatureReturnType,
-							typeChecker,
+							checker,
 							returnNode,
 						);
 						const awaitedReturnNodeTypes = getAwaitedTypes(
 							returnNodeType,
-							typeChecker,
+							checker,
 							returnNode,
 						);
 						if (
 							awaitedSignatureReturnTypes.some((awaitedType) =>
-								tsutils.isTypeFlagSet(awaitedType, ts.TypeFlags.Unknown),
+								isTypeFlagSet(awaitedType, TypeFlags.Unknown),
 							) ||
 							(awaitedReturnNodeTypes.length > 0 &&
 								awaitedReturnNodeTypes.length ===
@@ -173,19 +208,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const functionReturnType = signature.getReturnType();
 					if (
 						(anyType === AnyType.Any || anyType === AnyType.Error) &&
-						tsutils.isTypeFlagSet(functionReturnType, ts.TypeFlags.Unknown)
+						isTypeFlagSet(functionReturnType, TypeFlags.Unknown)
 					) {
 						return;
 					}
 					if (
 						anyType === AnyType.AnyArray &&
-						typeChecker.isArrayType(functionReturnType) &&
-						tsutils.isTypeFlagSet(
+						checker.isArrayType(functionReturnType) &&
+						isTypeFlagSet(
 							nullThrows(
-								typeChecker.getTypeArguments(functionReturnType)[0],
+								checker.getTypeArguments(functionReturnType)[0],
 								"Array type should have at least one type argument",
 							),
-							ts.TypeFlags.Unknown,
+							TypeFlags.Unknown,
 						)
 					) {
 						return;
@@ -203,19 +238,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				let message: "unsafeReturn" | "unsafeReturnThis" = "unsafeReturn";
 
+				const compilerOptions = program.getCompilerOptions();
 				if (
-					!tsutils.isStrictCompilerOptionEnabled(
-						program.getCompilerOptions(),
-						"noImplicitThis",
-					)
+					!(compilerOptions.noImplicitThis ?? compilerOptions.strict ?? true)
 				) {
 					// `return this`
 					const thisExpression = getThisExpression(returnNode);
 					if (
 						thisExpression &&
-						tsutils.isTypeFlagSet(
-							getConstrainedTypeAtLocation(thisExpression, typeChecker),
-							ts.TypeFlags.Any,
+						isTypeFlagSet(
+							getConstrainedTypeAtLocation(thisExpression, checker),
+							TypeFlags.Any,
 						)
 					) {
 						message = "unsafeReturnThis";
@@ -240,7 +273,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					returnNodeType,
 					functionReturnType,
 					returnNode,
-					typeChecker,
+					checker,
 				);
 				if (!result) {
 					return;
@@ -249,8 +282,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const { receiver, sender } = result;
 				context.report({
 					data: {
-						receiver: typeChecker.typeToString(receiver),
-						sender: typeChecker.typeToString(sender),
+						receiver: checker.typeToString(receiver),
+						sender: checker.typeToString(sender),
 					},
 					message: "unsafeReturnAssignment",
 					range: getTSNodeRange(reportingNode, sourceFile),

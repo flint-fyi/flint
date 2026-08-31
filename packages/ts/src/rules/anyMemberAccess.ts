@@ -1,5 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -58,14 +58,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function findRootAnyAccess(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
-			typeChecker: Checker,
+			checker: Checker,
 		): AST.ElementAccessExpression | AST.PropertyAccessExpression | undefined {
-			const objectType = getConstrainedTypeAtLocation(
-				node.expression,
-				typeChecker,
-			);
+			const objectType = getConstrainedTypeAtLocation(node.expression, checker);
 
-			if (!tsutils.isTypeFlagSet(objectType, TypeFlags.Any)) {
+			if (!(objectType.flags & TypeFlags.Any)) {
 				return undefined;
 			}
 
@@ -73,7 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.expression.kind === SyntaxKind.PropertyAccessExpression ||
 				node.expression.kind === SyntaxKind.ElementAccessExpression
 			) {
-				const deeper = findRootAnyAccess(node.expression, typeChecker);
+				const deeper = findRootAnyAccess(node.expression, checker);
 				if (deeper) {
 					return deeper;
 				}
@@ -98,13 +95,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkMemberExpression(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			checker: Checker,
 		) {
 			if (reportedChains.has(node) || isInHeritageClause(node)) {
 				return;
 			}
 
-			const rootAccess = findRootAnyAccess(node, typeChecker);
+			const rootAccess = findRootAnyAccess(node, checker);
 			if (!rootAccess) {
 				return;
 			}
@@ -113,7 +110,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const objectType = getConstrainedTypeAtLocation(
 				rootAccess.expression,
-				typeChecker,
+				checker,
 			);
 			const reportNode =
 				rootAccess.kind === SyntaxKind.PropertyAccessExpression
@@ -122,7 +119,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: {
-					type: tsutils.isIntrinsicErrorType(objectType) ? "`error`" : "`any`",
+					type: isIntrinsicErrorType(objectType) ? "`error`" : "`any`",
 				},
 				message: "unsafeMemberAccess",
 				range: getTSNodeRange(reportNode, sourceFile),
@@ -132,7 +129,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkComputedKey(
 			node: AST.ElementAccessExpression,
 			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			checker: Checker,
 		) {
 			const keyNode = node.argumentExpression;
 
@@ -144,12 +141,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const keyType = getConstrainedTypeAtLocation(keyNode, typeChecker);
+			const keyType = getConstrainedTypeAtLocation(keyNode, checker);
 
-			if (tsutils.isTypeFlagSet(keyType, TypeFlags.Any)) {
+			if (keyType.flags & TypeFlags.Any) {
 				context.report({
 					data: {
-						type: tsutils.isIntrinsicErrorType(keyType) ? "`error`" : "`any`",
+						type: isIntrinsicErrorType(keyType) ? "`error`" : "`any`",
 					},
 					message: "unsafeComputedMemberAccess",
 					range: getTSNodeRange(keyNode, sourceFile),
@@ -159,14 +156,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
-					checkMemberExpression(node, sourceFile, typeChecker);
-					checkComputedKey(node, sourceFile, typeChecker);
+				ElementAccessExpression: (node, { sourceFile, checker }) => {
+					checkMemberExpression(node, sourceFile, checker);
+					checkComputedKey(node, sourceFile, checker);
 				},
-				PropertyAccessExpression: (node, { sourceFile, typeChecker }) => {
-					checkMemberExpression(node, sourceFile, typeChecker);
+				PropertyAccessExpression: (node, { sourceFile, checker }) => {
+					checkMemberExpression(node, sourceFile, checker);
 				},
 			},
 		};
 	},
 });
+
+function isIntrinsicErrorType(type: Type): boolean {
+	return type.isIntrinsicType() && type.intrinsicName === "error";
+}
