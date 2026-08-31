@@ -1,4 +1,5 @@
-import { isInterfaceDeclaration, SyntaxKind, type Program } from "typescript";
+import { isInterfaceDeclaration, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getDeclarationsIfGlobal,
