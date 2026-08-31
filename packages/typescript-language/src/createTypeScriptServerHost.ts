@@ -53,9 +53,6 @@ export function createTypeScriptServerHost(
 				"file"
 			);
 		},
-		getCurrentDirectory() {
-			return host.getCurrentDirectory();
-		},
 		readDirectory(directoryPath, extensions, exclude, include, depth) {
 			const originalCwd = process.cwd.bind(process);
 			process.cwd = () => host.getCurrentDirectory();
