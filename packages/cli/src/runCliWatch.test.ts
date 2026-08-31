@@ -1,17 +1,14 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-	createDiskBackedLinterHost,
 	createLanguage,
+	createVFSLinterHost,
 	RuleCreator,
 	type FileAboutData,
-	type LintSession,
+	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
-import { normalizePath } from "@flint.fyi/utils";
 
 import { loadConfigDefinition } from "./loadConfigDefinition.ts";
 import type { OptionsValues } from "./options.ts";
@@ -22,30 +19,22 @@ vi.mock("./loadConfigDefinition.ts", () => ({
 	loadConfigDefinition: vi.fn(),
 }));
 
-type ProcessedConfigDefinition = Parameters<typeof LintSession.create>[0];
-
 interface TestNodes {
 	file: FileAboutData;
 }
 
-const tempDirectories: string[] = [];
 const values = {
 	"skip-formatting": true,
 	watch: true,
 } as OptionsValues;
 
 describe(runCliWatch, () => {
-	afterEach(async () => {
+	afterEach(() => {
 		vi.mocked(loadConfigDefinition).mockReset();
-		await Promise.all(
-			tempDirectories
-				.splice(0)
-				.map((directory) => rm(directory, { force: true, recursive: true })),
-		);
 	});
 
 	it("reuses a lint session for ordinary file changes", async () => {
-		const project = await createTestProject();
+		const project = createTestProject();
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
 		const renderContexts: RendererContext[] = [];
 		let quit: (() => void) | undefined;
@@ -59,11 +48,11 @@ describe(runCliWatch, () => {
 					onQuit(callback) {
 						quit = callback;
 					},
-					async render(context) {
+					render(context) {
 						renderContexts.push(context);
 
 						if (renderContexts.length === 1) {
-							await writeFile(project.aPath, "a2");
+							project.host.vfsUpsertFile(project.aPath, "a2");
 						} else {
 							quit?.();
 						}
@@ -83,7 +72,7 @@ describe(runCliWatch, () => {
 	});
 
 	it("rebuilds the lint session after a file is added", async () => {
-		const project = await createTestProject();
+		const project = createTestProject();
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
 		let quit: (() => void) | undefined;
 		let renderCount = 0;
@@ -98,12 +87,15 @@ describe(runCliWatch, () => {
 					onQuit(callback) {
 						quit = callback;
 					},
-					async render(context) {
+					render(context) {
 						renderCount += 1;
 						finalFileCount = context.lintResults.allFileResults.size;
 
 						if (renderCount === 1) {
-							await writeFile(path.join(project.root, "c.txt"), "c1");
+							project.host.vfsUpsertFile(
+								path.join(project.root, "c.txt"),
+								"c1",
+							);
 						} else {
 							quit?.();
 						}
@@ -118,7 +110,7 @@ describe(runCliWatch, () => {
 	});
 
 	it("rebuilds the lint session after a structural file changes", async () => {
-		const project = await createTestProject();
+		const project = createTestProject();
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
 		let quit: (() => void) | undefined;
 		let renderCount = 0;
@@ -132,11 +124,14 @@ describe(runCliWatch, () => {
 					onQuit(callback) {
 						quit = callback;
 					},
-					async render() {
+					render() {
 						renderCount += 1;
 
 						if (renderCount === 1) {
-							await writeFile(path.join(project.root, "package.json"), "{}");
+							project.host.vfsUpsertFile(
+								path.join(project.root, "package.json"),
+								"{}",
+							);
 						} else {
 							quit?.();
 						}
@@ -150,7 +145,7 @@ describe(runCliWatch, () => {
 	});
 
 	it("applies fixes and re-lints changed files", async () => {
-		const project = await createTestProject({ fixText: "fixed" });
+		const project = createTestProject({ fixText: "fixed" });
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
 		let quit: (() => void) | undefined;
 
@@ -171,7 +166,7 @@ describe(runCliWatch, () => {
 			{ ...values, fix: true },
 		);
 
-		expect(await readFile(project.aPath, "utf8")).toBe("fixed");
+		expect(project.host.readFileSync(project.aPath)).toBe("fixed");
 		expect(project.visitedFilePaths).toEqual([
 			project.aPath,
 			project.bPath,
@@ -180,18 +175,13 @@ describe(runCliWatch, () => {
 	});
 });
 
-async function createTestProject({ fixText }: { fixText?: string } = {}) {
-	const root = normalizePath(
-		await mkdtemp(path.join(os.tmpdir(), "flint-cli-watch-")),
-	);
-	tempDirectories.push(root);
-
+function createTestProject({ fixText }: { fixText?: string } = {}) {
+	const root = "/root";
 	const aPath = path.posix.join(root, "a.txt");
 	const bPath = path.posix.join(root, "b.txt");
-	await writeFile(aPath, "a1");
-	await writeFile(bPath, "b1");
-
-	const host = createDiskBackedLinterHost(root);
+	const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
+	host.vfsUpsertFile(aPath, "a1");
+	host.vfsUpsertFile(bPath, "b1");
 	const visitedFilePaths: string[] = [];
 	const createFileFactory = vi.fn(() => ({
 		createFile(data: FileAboutData) {

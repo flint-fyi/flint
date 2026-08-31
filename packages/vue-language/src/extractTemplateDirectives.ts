@@ -7,7 +7,7 @@ import {
 import type { ExtractedDirective } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 
-export function extractTemplateDirectives(ast: RootNode) {
+export function extractTemplateDirectives(ast: RootNode): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
 
 	function visitTemplate(elem: TemplateChildNode) {

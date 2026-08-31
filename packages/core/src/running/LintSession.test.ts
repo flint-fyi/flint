@@ -22,12 +22,12 @@ interface TestServices {
 	sourceText: string;
 }
 
-const tempDirs: string[] = [];
+const tempDirectories: string[] = [];
 
 describe(LintSession, () => {
 	afterEach(async () => {
 		await Promise.all(
-			tempDirs
+			tempDirectories
 				.splice(0)
 				.map((dir) => rm(dir, { force: true, recursive: true })),
 		);
@@ -230,7 +230,7 @@ async function createTestProject({
 	const root = normalizePath(
 		await mkdtemp(path.join(os.tmpdir(), "flint-lint-session-")),
 	);
-	tempDirs.push(root);
+	tempDirectories.push(root);
 
 	await writeFile(path.posix.join(root, "a.txt"), "a1");
 	await writeFile(path.posix.join(root, "b.txt"), "b1");

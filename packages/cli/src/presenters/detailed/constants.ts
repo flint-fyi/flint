@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-export const indenter = chalk.gray("│ ");
+export const indenter: string = chalk.gray("│ ");
 
 export const ColorCodes = {
 	codeLineNumbers: "#bbb",

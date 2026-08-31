@@ -1,87 +1,131 @@
 ---
-import FlankedLinkButton from "./FlankedLinkButton.astro";
 import PackageManagers from "./PackageManagers.astro";
 ---
 
-<div class="try-it-out" id="try-it-out">
-	<h2>Try out Flint on any web project:</h2>
+<section class="try-it-out not-content" id="try-it-out">
+	<div aria-hidden="true" class="sky"></div>
+	<div aria-hidden="true" class="stars"></div>
 
-	<PackageManagers type="dlx" pkg="flint" />
+	<div class="content">
+		<p class="eyebrow">🏕️ Get started in 10 seconds</p>
 
-	<div class="ad-area">
-		<p>
-			Frustrated with slow linting that doesn't catch what you actually care
-			about?
+		<h2 class="flint-display">Try Flint on any project</h2>
+
+		<p class="lede">Pick your favorite fire-starter:</p>
+
+		<div class="command">
+			<PackageManagers type="dlx" pkg="flint" />
+		</div>
+
+		<p class="aside">
+			Frustrated with slow linting that doesn't catch what you care about? Or
+			maybe your linter is fast, but doesn't lint everything you think it
+			should? Give Flint a shot.
 		</p>
-		<p>
-			Or maybe your linter is fast, but doesn't include powerful lint rules?
-		</p>
-		<p class="ad-last-line">Let Flint help you out.</p>
+
+		<a class="button" href="/about">Get started →</a>
 	</div>
-	<FlankedLinkButton href="/about">
-		Get started linting with Flint
-	</FlankedLinkButton>
-</div>
+</section>
 
 <style>
 	.try-it-out {
-		display: flex;
-		flex-direction: column;
-		margin: auto;
-		max-width: 49rem;
-		padding: 6rem 0 4rem;
+		border: 2px solid var(--flint-paper-border);
+		border-radius: 1.5rem;
+		isolation: isolate;
+		margin-block: clamp(2.5rem, 8vw, 4rem);
+		overflow: hidden;
+		padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 4vw, 3rem);
+		position: relative;
 	}
 
-	h2,
-	p {
+	.sky {
+		background: linear-gradient(
+			180deg,
+			var(--flint-band-top) 0%,
+			var(--flint-band-bottom) 100%
+		);
+		inset: 0;
+		position: absolute;
+		z-index: -2;
+	}
+
+	.stars {
+		background-image:
+			radial-gradient(2px 2px at 20% 30%, white, transparent),
+			radial-gradient(1px 1px at 60% 70%, white, transparent),
+			radial-gradient(1.5px 1.5px at 80% 20%, white, transparent),
+			radial-gradient(1px 1px at 30% 80%, white, transparent),
+			radial-gradient(2px 2px at 90% 50%, white, transparent);
+		inset: 0;
+		opacity: var(--flint-band-stars);
+		position: absolute;
+		z-index: -1;
+	}
+
+	.content {
+		margin-inline: auto;
+		max-width: 42rem;
 		text-align: center;
 	}
 
+	.eyebrow {
+		color: var(--flint-band-eyebrow);
+		font-size: var(--sl-text-xs);
+		font-weight: 800;
+		letter-spacing: 0.12em;
+		margin: 0;
+		text-transform: uppercase;
+	}
+
 	h2 {
-		margin-bottom: 2rem;
+		color: var(--flint-band-text);
+		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
+		line-height: 1.15;
+		margin: 0.75rem 0 0;
 	}
 
-	p {
-		font-size: var(--sl-text-xl);
-		line-height: 1.25;
-		margin: 0;
+	.lede {
+		color: var(--flint-band-muted);
+		font-size: var(--sl-text-lg);
+		margin: 0.75rem 0 0;
 	}
 
-	.ad-area {
-		padding: 2rem 0;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
+	.command {
+		margin-block-start: 2rem;
+		text-align: start;
 	}
 
-	.ad-last-line {
-		margin-top: 1rem;
+	@media (width >= 30rem) {
+		.eyebrow {
+			font-size: var(--sl-text-sm);
+			letter-spacing: 0.2em;
+		}
 	}
 
-	.get-started-area {
-		align-items: center;
-		display: flex;
-		flex-direction: row;
-		gap: 2rem;
-		margin-top: 4rem;
+	.aside {
+		color: var(--flint-band-muted);
+		font-size: var(--sl-text-lg);
+		line-height: 1.6;
+		margin: 2rem 0 0;
 	}
 
-	a {
-		margin: 0;
-		margin-inline-end: 0;
+	.button {
+		background: var(--flint-ember-fill);
+		border: 2px solid var(--flint-ember-fill);
+		border-radius: 999px;
+		color: var(--flint-ember-fill-text);
+		display: inline-block;
+		font-weight: 800;
+		margin-block-start: 2rem;
+		padding: 0.8rem 1.6rem;
+		text-decoration: none;
+		transition:
+			box-shadow 150ms,
+			transform 150ms;
 	}
 
-	.hr {
-		background: var(--sl-color-gray-5);
-		display: block;
-		height: 2px;
-		width: 100%;
-	}
-
-	.get-started-button-text {
-		display: block;
-		font-size: var(--sl-text-xl);
-		margin: 0 1rem;
-		text-wrap: nowrap;
+	.button:hover {
+		box-shadow: var(--flint-glow);
+		transform: translateY(-2px);
 	}
 </style>

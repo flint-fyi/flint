@@ -10,7 +10,7 @@ import type * as AST from "./types/ast.ts";
 export function collectReferencedFilePaths(
 	program: ts.Program,
 	sourceFile: AST.SourceFile,
-) {
+): string[] {
 	const modulePaths = new Set<string>();
 
 	function resolveModulePath(moduleSpecifier: string): string | undefined {

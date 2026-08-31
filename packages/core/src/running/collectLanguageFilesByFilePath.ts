@@ -29,13 +29,19 @@ export function collectLanguageFilesByFilePath(
 			language.createFileFactory(host),
 		),
 	}: CollectLanguageFilesOptions = {},
-) {
+): Map<
+	string,
+	{
+		file: AnyLanguageFile;
+		language: AnyLanguage;
+	}[]
+> {
 	const filePathsByLanguage = new CachedFactory<AnyLanguage, Set<string>>(
 		() => new Set(),
 	);
 	const languageFilesByFilePath = new CachedFactory<
 		string,
-		Map<AnyLanguage, AnyLanguageFile | undefined>
+		Map<AnyLanguage, AnyLanguageFile>
 	>(() => new Map());
 
 	for (const [rule, optionsByFile] of rulesOptionsByFile) {
@@ -46,7 +52,6 @@ export function collectLanguageFilesByFilePath(
 			}
 
 			filePathsByLanguage.get(rule.language).add(filePath);
-			languageFilesByFilePath.get(filePath).set(rule.language, undefined);
 		}
 	}
 
@@ -77,10 +82,7 @@ export function collectLanguageFilesByFilePath(
 			([filePath, filesByLanguage]) => [
 				filePath,
 				Array.from(filesByLanguage.entries()).map(([language, file]) => ({
-					file: nullThrows(
-						file,
-						"Language file is expected to be present by the map",
-					),
+					file,
 					language,
 				})),
 			],

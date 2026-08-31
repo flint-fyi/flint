@@ -6,11 +6,13 @@ import { debugForFile } from "debug-for-file";
 import {
 	applyChangesToFiles,
 	LintSession,
+	maximumFixIterations,
 	nodeModulesCache,
 	vcsDirectories,
 	writeToCache,
 	type LinterHost,
 	type LintResultsWithChanges,
+	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
 import { pathKey } from "@flint.fyi/utils";
 
@@ -21,23 +23,19 @@ import type { Renderer } from "./renderers/types.ts";
 
 const log = debugForFile(import.meta.filename);
 
-const maximumFixIterations = 10;
-
 export async function runCliWatch(
 	host: LinterHost,
 	configFileName: string,
 	getRenderer: () => Renderer,
 	values: OptionsValues,
-) {
+): Promise<void> {
 	const cwd = host.getCurrentDirectory();
 	const isCaseSensitiveFS = host.isCaseSensitiveFS();
 
 	return new Promise<void>((resolve) => {
-		let configDefinition:
-			| Awaited<ReturnType<typeof loadConfigDefinition>>
-			| undefined;
+		let configDefinition: ProcessedConfigDefinition | undefined;
 		let currentRenderer: Renderer | undefined;
-		let currentTask: Promise<unknown> = Promise.resolve();
+		let currentTask = Promise.resolve(undefined);
 		let importVersion = 0;
 		let lintSession: LintSession | undefined;
 		let quitting = false;
@@ -71,10 +69,14 @@ export async function runCliWatch(
 			return renderer;
 		}
 
-		function queueTask(task: () => Promise<unknown>) {
-			currentTask = currentTask.then(task, task).catch((error: unknown) => {
-				log("Error during lint run: %o", error);
-			});
+		function queueTask<Result>(task: () => Promise<Result>) {
+			currentTask = currentTask
+				.then(task, task)
+				.then(() => undefined)
+				.catch((error: unknown) => {
+					log("Error during lint run: %o", error);
+					return undefined;
+				});
 		}
 
 		async function rebuildSession() {
@@ -89,7 +91,7 @@ export async function runCliWatch(
 				configFileName,
 				importVersion++,
 			);
-			if (configDefinition == null) {
+			if (configDefinition === undefined) {
 				return;
 			}
 

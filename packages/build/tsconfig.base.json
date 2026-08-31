@@ -1,14 +1,13 @@
 {
 	"compilerOptions": {
 		"allowImportingTsExtensions": true,
-		"allowJs": true,
 		"allowUnreachableCode": false,
-		"checkJs": true,
 		"composite": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,
 		"erasableSyntaxOnly": true,
 		"exactOptionalPropertyTypes": true,
+		"isolatedDeclarations": true,
 		"lib": ["ESNext"],
 		"module": "NodeNext",
 		"moduleDetection": "force",

@@ -9,7 +9,10 @@ export {
 } from "./configs/findConfigFileName.ts";
 export { isConfig } from "./configs/isConfig.ts";
 export { validateConfigDefinition } from "./configs/validateConfigDefinition.ts";
-export { DirectivesCollector } from "./directives/DirectivesCollector.ts";
+export {
+	type DirectiveCollection,
+	DirectivesCollector,
+} from "./directives/DirectivesCollector.ts";
 export { directiveReports } from "./directives/reports/directiveReports.ts";
 export { globs } from "./globs/index.ts";
 export { createDiskBackedLinterHost } from "./host/createDiskBackedLinterHost.ts";
@@ -38,7 +41,10 @@ export {
 export { parseOptions } from "./running/parseOptions.ts";
 export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";
-export { runConfigFixing } from "./running/runConfigFixing.ts";
+export {
+	maximumFixIterations,
+	runConfigFixing,
+} from "./running/runConfigFixing.ts";
 export { runLintRule } from "./running/runLintRule.ts";
 export type { BaseAbout } from "./types/about.ts";
 export type {
@@ -62,6 +68,7 @@ export type {
 	ConfigRuleDefinition,
 	ConfigRuleDefinitionObject,
 	ConfigUseDefinition,
+	ProcessedConfigDefinition,
 } from "./types/configs.ts";
 export type {
 	MessageForContext,

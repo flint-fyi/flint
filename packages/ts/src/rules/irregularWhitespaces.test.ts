@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./irregularWhitespaces.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -109,16 +111,6 @@ const value\u0085= 1;
 `,
 			snapshot: `
 const value\u0085= 1;
-           ~
-           Irregular whitespace characters can cause unexpected behavior and display issues.
-`,
-		},
-		{
-			code: `
-const value\u180E= 1;
-`,
-			snapshot: `
-const value\u180E= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
@@ -250,9 +242,35 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+const value = \`\u180E\`;
+`,
+			snapshot: `
+const value = \`\u180E\`;
+               ~
+               Irregular whitespace characters can cause unexpected behavior and display issues.
+`,
+		},
+	],
+	valid: [`const value = 1;`],
+});
+
+ruleTester.describe(rule, {
+	invalid: [
+		{
+			code: `
 const element = <div>\u00A0</div>;
 `,
 			fileName: "file.tsx",
+			files: {
+				"global.d.ts": `
+declare namespace JSX {
+    interface IntrinsicElements {
+        div: {};
+    }
+}
+`,
+				...createRuleTesterTSConfig({ jsx: "preserve" }),
+			},
 			snapshot: `
 const element = <div>\u00A0</div>;
                      ~
@@ -264,6 +282,16 @@ const element = <div>\u00A0</div>;
 		{
 			code: `const element = <div>\u00A0</div>;`,
 			fileName: "file.tsx",
+			files: {
+				"global.d.ts": `
+declare namespace JSX {
+    interface IntrinsicElements {
+        div: {};
+    }
+}
+`,
+				...createRuleTesterTSConfig({ jsx: "preserve" }),
+			},
 			options: { skipJSXText: true },
 		},
 	],

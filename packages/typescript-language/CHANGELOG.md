@@ -1,5 +1,31 @@
 # @flint.fyi/typescript-language
 
+## 0.20.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- [#3144](https://github.com/flint-fyi/flint/pull/3144) [`3f8e15d`](https://github.com/flint-fyi/flint/commit/3f8e15d092d0177bcbf0de75718a075bf5fb4c21) - Exported `StaticString` and `StringRawNoSubstitution` types.
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34)]:
+  - @flint.fyi/utils@0.16.0
+  - @flint.fyi/core@0.25.0
+
+## 0.19.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+
 ## 0.18.4
 
 ### Patch Changes
@@ -38,7 +64,7 @@
 
 - 57fa268: Add optional character range to language reports.
 - cb7e8a8: Change "diagnostics" nomenclature to "language reports".
-All external references to the term diagnostic or diagnostics are now using the term language report instead.
+  All external references to the term diagnostic or diagnostics are now using the term language report instead.
 
 ### Patch Changes
 

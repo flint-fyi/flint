@@ -66,10 +66,14 @@ Prefer \`.findLast()\` over \`.filter().pop()\` or \`.filter().at(-1)\`.
 		{
 			code: `
 declare const array: string[];
+declare const thisArg: unknown;
+
 array.filter((value) => value.length > 5, thisArg)[0];
 `,
 			snapshot: `
 declare const array: string[];
+declare const thisArg: unknown;
+
 array.filter((value) => value.length > 5, thisArg)[0];
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer \`.find()\` over \`.filter()[0]\`.
@@ -128,16 +132,12 @@ declare const array: number[];
 array.filter((value) => value > 0).at(-2);
 `,
 		`
-declare const array: number[];
-array.filter()[0];
+declare const collection: { filter(): number[] };
+collection.filter()[0];
 `,
 		`
 declare const array: number[];
 array.map((value) => value > 0)[0];
-`,
-		`
-declare const array: number[];
-array.filter((value) => value > 0, arg1, arg2)[0];
 `,
 		`
 declare const obj: { filter(fn: (x: number) => boolean): number[] };

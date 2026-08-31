@@ -1,7 +1,7 @@
 import rule from "./nullishCoalescingOperators.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -437,6 +437,8 @@ const result = obj.value || "default";
 `,
 		`
 declare const baseHost: string[] | null;
+declare const process: { cwd(): string };
+
 console.log(baseHost == null ? { cwd: process.cwd() } : { baseHost });
 `,
 		`

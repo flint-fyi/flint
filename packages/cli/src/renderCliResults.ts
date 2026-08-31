@@ -16,7 +16,7 @@ export async function renderCliResults(
 	renderer: Renderer,
 	values: OptionsValues,
 	{ formatFilePaths, ignoreCache, startTime }: RenderCliResultsOptions,
-) {
+): Promise<0 | 1> {
 	const skipFormatting = values["skip-formatting"] ?? false;
 
 	const formattingResults = skipFormatting

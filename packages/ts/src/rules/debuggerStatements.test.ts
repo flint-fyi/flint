@@ -1,7 +1,7 @@
 import rule from "./debuggerStatements.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -47,11 +47,15 @@ function test() {
 		},
 		{
 			code: `
+declare const condition: boolean;
+
 if (condition) {
 	debugger;
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+
 if (condition) {
 	debugger;
 	~~~~~~~~~
@@ -62,6 +66,8 @@ if (condition) {
 				{
 					id: "removeDebugger",
 					updated: `
+declare const condition: boolean;
+
 if (condition) {
 	
 }

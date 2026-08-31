@@ -36,7 +36,7 @@ export function getFirstEnumValues<
 	Keys extends string,
 	Values extends number,
 	Original extends Record<Keys | Values, Keys | Values>,
->(original: Original) {
+>(original: Original): Original {
 	const result = {} as Original;
 
 	for (const key in original) {

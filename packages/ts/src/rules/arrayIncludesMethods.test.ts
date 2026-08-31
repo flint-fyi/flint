@@ -97,7 +97,7 @@ function check<T extends string[]>(arr: T) {
 		`declare const array: string[]; array.some((item) => item.startsWith("v"));`,
 		`declare const array: number[]; array.some((item) => item > 0);`,
 		`declare const array: string[]; array.some((item, index) => item === "value");`,
-		`declare const array: object[]; array.some((item) => item.id === 1);`,
+		`declare const array: { id: number }[]; array.some((item) => item.id === 1);`,
 		`declare const array: string[]; array.some((item) => item === item);`,
 		`declare const obj: { some(fn: (x: string) => boolean): boolean }; obj.some((x) => x === "value");`,
 	],

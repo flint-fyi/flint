@@ -27,7 +27,10 @@ export interface LintSessionLintOptions {
 
 export class LintSession implements Disposable {
 	readonly allFilePaths: Set<string>;
-	readonly storedResults = new Map<string, FinalizedFileResults>();
+	readonly storedResults: Map<string, FinalizedFileResults> = new Map<
+		string,
+		FinalizedFileResults
+	>();
 
 	get ruleCount(): number {
 		return this.#rulesOptionsByFile.size;

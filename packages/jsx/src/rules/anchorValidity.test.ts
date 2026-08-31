@@ -60,7 +60,11 @@ Anchor with onClick handler should be a button.
 		`<a href="#section" />`,
 		`<a href="page.html" />`,
 		`<a href="https://example.com" onClick={() => {}} />`,
-		`<a href={someVariable} />`,
-		`<CustomElement href={false} />`,
+		`
+declare const someVariable: unknown;
+<a href={someVariable} />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement href={false} />`,
 	],
 });

@@ -83,8 +83,14 @@ search.exec(text);
 		`/thin[[g]]/v.exec("something");`,
 		`"something".match(/thing/gi);`,
 		`"something".match(new RegExp("thing", "g"));`,
-		`(123).toString().match(variable);`,
-		`someArray.match(/pattern/);`,
+		`
+declare const variable: RegExp | string;
+(123).toString().match(variable);
+`,
+		`
+const collection = { match(pattern: RegExp) {} };
+collection.match(/pattern/);
+`,
 		`
 const text = "something";
 const search = /thing/;
@@ -96,7 +102,7 @@ hasExec.exec("test");
 `,
 		`
 declare const hasMatch: { match(...args: unknown[]): unknown };
-hasExec.match(/test/
+hasMatch.match(/test/);
 `,
 	],
 });

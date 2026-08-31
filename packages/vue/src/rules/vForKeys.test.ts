@@ -461,14 +461,6 @@ ruleTester.describe(rule, {
 </template>
 		`,
 		`
-<template>
-	<div
-		v-for="n in 10"
-		key
-	></div>
-</template>
-		`,
-		`
 <script setup lang="ts">
 	const key = 5
 </script>

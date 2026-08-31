@@ -23,7 +23,7 @@ export async function runLintRule(
 	rule: AnyRule,
 	filesAndOptions: LanguageFilesWithOptions[],
 	host: LinterHost,
-) {
+): Promise<Map<string, FileReport[]>> {
 	// 1. Set up the rule's runtime, which receives and processes reports
 
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);

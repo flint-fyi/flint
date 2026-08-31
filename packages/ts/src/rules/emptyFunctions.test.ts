@@ -55,21 +55,11 @@ class Foo { constructor() {} }
 		},
 		{
 			code: `
-class Foo { get bar() {} }
+class Foo { set bar(value: number) {} }
 `,
 			snapshot: `
-class Foo { get bar() {} }
-            ~~~~~~~~~~~~
-            Empty functions should contain code or a comment explaining why they are empty.
-`,
-		},
-		{
-			code: `
-class Foo { set bar(value) {} }
-`,
-			snapshot: `
-class Foo { set bar(value) {} }
-            ~~~~~~~~~~~~~~~~~
+class Foo { set bar(value: number) {} }
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
             Empty functions should contain code or a comment explaining why they are empty.
 `,
 		},
@@ -105,16 +95,38 @@ const obj = { foo() {} };
 		},
 	],
 	valid: [
-		`function foo() { doSomething(); }`,
-		`const foo = function() { doSomething(); };`,
-		`const foo = () => { doSomething(); };`,
-		`const foo = () => doSomething();`,
-		`class Foo { bar() { doSomething(); } }`,
-		`class Foo { constructor() { doSomething(); } }`,
-		`class Foo { get bar() { return this._bar; } }`,
-		`class Foo { set bar(value) { this._bar = value; } }`,
+		`
+declare function doSomething(): void;
+function foo() { doSomething(); }
+`,
+		`
+declare function doSomething(): void;
+const foo = function() { doSomething(); };
+`,
+		`
+declare function doSomething(): void;
+const foo = () => { doSomething(); };
+`,
+		`
+declare function doSomething(): void;
+const foo = () => doSomething();
+`,
+		`
+declare function doSomething(): void;
+class Foo { bar() { doSomething(); } }
+`,
+		`
+declare function doSomething(): void;
+class Foo { constructor() { doSomething(); } }
+`,
+		`class Foo { private _bar = 0; get bar() { return this._bar; } }`,
+		`class Foo { private _bar = 0; set bar(value: number) { this._bar = value; } }`,
 		`function foo() { /* intentionally empty */ }`,
-		`const foo = function() { // noop };`,
+		`
+const foo = function() {
+    // noop
+};
+`,
 		`const foo = () => { /* empty */ };`,
 		`class Foo { bar() { /* empty */ } }`,
 		`class Foo { constructor() { /* empty */ } }`,

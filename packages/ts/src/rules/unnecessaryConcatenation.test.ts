@@ -77,12 +77,31 @@ const longString = "This is a very long string that " +
 		},
 	],
 	valid: [
-		`const message = "Hello" + variable;`,
-		`const message = variable + "World";`,
-		`const result = variable1 + variable2;`,
-		`const template = \`Hello\${name}World\`;`,
+		`
+declare const variable: string;
+const message = "Hello" + variable;
+`,
+		`
+declare const variable: string;
+const message = variable + "World";
+`,
+		`
+declare const firstVariable: string;
+declare const secondVariable: string;
+const result = firstVariable + secondVariable;
+`,
+		`
+declare const name: string;
+const template = \`Hello\${name}World\`;
+`,
 		`const number = 1 + 2;`,
-		`const mixed = "Hello" + getName() + "World";`,
-		`const value = "prefix" + getValue();`,
+		`
+declare function getName(): string;
+const mixed = "Hello" + getName() + "World";
+`,
+		`
+declare function getValue(): string;
+const value = "prefix" + getValue();
+`,
 	],
 });

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/vue-language",
-	"version": "0.1.2",
+	"version": "0.3.0",
 	"description": "[Experimental] Vue.js language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -31,7 +31,7 @@
 		"@flint.fyi/volar-language": "workspace:^",
 		"@volar/language-core": "2.4.28",
 		"@vue/compiler-dom": "^3.5.0",
-		"@vue/language-core": "3.2.1",
+		"@vue/language-core": "3.3.11",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
@@ -41,7 +41,7 @@
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",

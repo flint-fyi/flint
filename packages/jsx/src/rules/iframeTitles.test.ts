@@ -66,7 +66,9 @@ ruleTester.describe(rule, {
 	],
 	valid: [
 		`<iframe title="This is a unique title" />`,
-		`<iframe title={uniqueTitle} />`,
+		`
+declare const uniqueTitle: string;
+<iframe title={uniqueTitle} />`,
 		`<iframe title="Video player" src="video.mp4" />`,
 		`<div>Not an iframe</div>`,
 	],

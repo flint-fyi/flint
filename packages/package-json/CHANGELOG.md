@@ -1,5 +1,33 @@
 # @flint.fyi/package-json
 
+## 0.21.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34)]:
+  - @flint.fyi/json-language@0.20.0
+  - @flint.fyi/utils@0.16.0
+  - @flint.fyi/core@0.25.0
+
+## 0.20.0
+
+### Minor Changes
+
+- [#2795](https://github.com/flint-fyi/flint/pull/2795) [`712d902`](https://github.com/flint-fyi/flint/commit/712d9023e236719fb3ff128bb6c6a9b3ee3ade9c) - Add the `repositoryDirectoryValidity` rule.
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/json-language@0.19.0
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+
 ## 0.19.2
 
 ### Patch Changes
@@ -14,7 +42,7 @@
 - [#2788](https://github.com/flint-fyi/flint/pull/2788) [`0f40630`](https://github.com/flint-fyi/flint/commit/0f40630eed7974f6753459c2ff3504ef4bed2267) - Add `filesRedundancy` rule.
 
 - [#2903](https://github.com/flint-fyi/flint/pull/2903) [`74e4581`](https://github.com/flint-fyi/flint/commit/74e45817750088a1092df3d95e75c013335fce86) - Add `propertyOrder` rule, and add `sorting` preset.
-This rule ensures that top-level properties are kept in a consistent order.
+  This rule ensures that top-level properties are kept in a consistent order.
 - Updated dependencies [[`2ffc7eb`](https://github.com/flint-fyi/flint/commit/2ffc7eb1d0d885fe9b9e758d8bff649a97553380), [`91f1cc2`](https://github.com/flint-fyi/flint/commit/91f1cc2d211f49f2cde6349cbab28548484b42d8), [`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f), [`9386e9a`](https://github.com/flint-fyi/flint/commit/9386e9ae62269aaf659aad31ee459f6ecf45ca72), [`0e8c8ab`](https://github.com/flint-fyi/flint/commit/0e8c8ab4926792ebe7b5b881e78e2b6e8ae4cd96)]:
   - @flint.fyi/json-language@0.17.0
   - @flint.fyi/core@0.23.0

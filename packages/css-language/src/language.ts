@@ -10,7 +10,7 @@ export interface CssFileServices {
 }
 
 export const cssLanguage: Language<CssNodeVisitors, CssFileServices> =
-	createLanguage<CssNodeVisitors, CssFileServices>({
+	createLanguage({
 		about: {
 			name: "CSS",
 		},

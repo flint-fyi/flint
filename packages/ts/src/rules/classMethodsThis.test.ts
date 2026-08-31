@@ -1,7 +1,7 @@
 import rule from "./classMethodsThis.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -259,10 +259,10 @@ const Example = class {
 			code: `
 class Example {
     method() {
-        const inner = function() {
+        const inner = function(this: { value: number }) {
             return this.value;
         };
-        return inner();
+        return inner.call({ value: 1 });
     }
 }
 `,
@@ -271,10 +271,10 @@ class Example {
     method() {
     ~~~~~~
     Expected 'this' to be used by class method 'method'.
-        const inner = function() {
+        const inner = function(this: { value: number }) {
             return this.value;
         };
-        return inner();
+        return inner.call({ value: 1 });
     }
 }
 `,
@@ -284,6 +284,7 @@ class Example {
 class Example {
     method() {
         class Inner {
+            value = 1;
             getValue() {
                 return this.value;
             }
@@ -298,6 +299,7 @@ class Example {
     ~~~~~~
     Expected 'this' to be used by class method 'method'.
         class Inner {
+            value = 1;
             getValue() {
                 return this.value;
             }
@@ -369,7 +371,7 @@ class Example {
     foo() {}
     'bar'() {}
     123() {}
-    get quux() {}
+    get quux() { return 0; }
     set baz(v: number) {}
     *gen() {}
 }
@@ -385,7 +387,7 @@ class Example {
     123() {}
     ~~~
     Expected 'this' to be used by class method '123'.
-    get quux() {}
+    get quux() { return 0; }
     ~~~~~~~~
     Expected 'this' to be used by class getter 'quux'.
     set baz(v: number) {}
@@ -437,6 +439,10 @@ class Example {
 		},
 		{
 			code: `
+class Base {
+    value = 0;
+    method() { return this.value; }
+}
 class Derived extends Base {
     override method() {
         return 42;
@@ -444,6 +450,10 @@ class Derived extends Base {
 }
 `,
 			snapshot: `
+class Base {
+    value = 0;
+    method() { return this.value; }
+}
 class Derived extends Base {
     override method() {
              ~~~~~~
@@ -455,6 +465,10 @@ class Derived extends Base {
 		},
 		{
 			code: `
+class Base {
+    backingValue = 0;
+    get value() { return this.backingValue; }
+}
 class Derived extends Base {
     override get value() {
         return 42;
@@ -462,6 +476,10 @@ class Derived extends Base {
 }
 `,
 			snapshot: `
+class Base {
+    backingValue = 0;
+    get value() { return this.backingValue; }
+}
 class Derived extends Base {
     override get value() {
     ~~~~~~~~~~~~~~~~~~
@@ -473,6 +491,10 @@ class Derived extends Base {
 		},
 		{
 			code: `
+class Base {
+    backingValue = 0;
+    set value(v: number) { this.backingValue = v; }
+}
 class Derived extends Base {
     override set value(v: number) {
         console.log(v);
@@ -480,6 +502,10 @@ class Derived extends Base {
 }
 `,
 			snapshot: `
+class Base {
+    backingValue = 0;
+    set value(v: number) { this.backingValue = v; }
+}
 class Derived extends Base {
     override set value(v: number) {
     ~~~~~~~~~~~~~~~~~~
@@ -491,11 +517,19 @@ class Derived extends Base {
 		},
 		{
 			code: `
+class Base {
+    value = 0;
+    handler = () => { void this.value; };
+}
 class Derived extends Base {
     override handler = () => {};
 }
 `,
 			snapshot: `
+class Base {
+    value = 0;
+    handler = () => { void this.value; };
+}
 class Derived extends Base {
     override handler = () => {};
              ~~~~~~~
@@ -639,14 +673,18 @@ class Example {
 		},
 		{
 			code: `
+const container = { this: "" };
+const that = { this: "" };
 class Example {
-    foo() { window.this; }
+    foo() { container.this; }
     bar() { that.this = 'this'; }
 }
 `,
 			snapshot: `
+const container = { this: "" };
+const that = { this: "" };
 class Example {
-    foo() { window.this; }
+    foo() { container.this; }
     ~~~
     Expected 'this' to be used by class method 'foo'.
     bar() { that.this = 'this'; }
@@ -657,15 +695,15 @@ class Example {
 		},
 	],
 	valid: [
-		`class Example { method() { return this.value; } }`,
-		`class Example { method() { this.doSomething(); } }`,
-		`class Example { method() { bar(this); } }`,
+		`class Example { value = 0; method() { return this.value; } }`,
+		`class Example { declare doSomething: () => void; method() { this.doSomething(); } }`,
+		`declare function bar(value: unknown): void; class Example { method() { bar(this); } }`,
 		`class Example { method() { if(true) { return this; } } }`,
-		`class Example { get value() { return this._value; } }`,
-		`class Example { set value(v: number) { this._value = v; } }`,
-		`class Example { handler = () => { return this.value; }; }`,
-		`class Example { handler = () => { super.toString; }; }`,
-		`class Example { handler = function() { this; }; }`,
+		`class Example { _value = 0; get value() { return this._value; } }`,
+		`class Example { _value = 0; set value(v: number) { this._value = v; } }`,
+		`class Example { value = 0; handler = () => { return this.value; }; }`,
+		`class Base { value = 0; } class Example extends Base { handler = () => { super.toString; }; }`,
+		`class Example { handler = function(this: Example) { this; }; }`,
 		`class Example { static method() { return 42; } }`,
 		`class Example { static get value() { return 42; } }`,
 		`class Example { static set value(v: number) { console.log(v); } }`,
@@ -676,36 +714,91 @@ class Example {
 		`abstract class Example { abstract method(): void; }`,
 		`class Example { declare method: () => void; }`,
 		`class Example { private _value = 0; readonly count = 5; }`,
-		`class Example { method() { return this?.value; } }`,
-		`class Example { method() { return super.method(); } }`,
-		`class Example { method() { const arrow = () => this.value; return arrow(); } }`,
+		`class Example { value = 0; method() { return this?.value; } }`,
+		`class Base { value = 0; method() { return this.value; } } class Example extends Base { method() { return super.method(); } }`,
+		`class Example { value = 0; method() { const arrow = () => this.value; return arrow(); } }`,
 		`class Example { method() { return () => this; } }`,
 		`({ a(){} });`,
 		`({ a: function () {} });`,
-		`class A { foo() { return class { [this.foo] = 1 }; } }`,
+		{
+			code: `
+class Base {
+    value = 0;
+    method() {
+        void this.value;
+    }
+}
 
-		{
-			code: `class Derived extends Base { override method() { return 42; } }`,
+class Derived extends Base {
+    override method() {
+        return 42;
+    }
+}
+`,
 			options: { ignoreOverrideMethods: true },
 		},
 		{
-			code: `class Derived extends Base { override get value() { return 42; } }`,
+			code: `
+class Base {
+    backingValue = 0;
+    get value() {
+        return this.backingValue;
+    }
+}
+
+class Derived extends Base {
+    override get value() {
+        return 42;
+    }
+}
+`,
 			options: { ignoreOverrideMethods: true },
 		},
 		{
-			code: `class Derived extends Base { override set value(v: number) { console.log(v); } }`,
+			code: `
+class Base {
+    backingValue = 0;
+    set value(v: number) {
+        this.backingValue = v;
+    }
+}
+
+class Derived extends Base {
+    override set value(v: number) {
+        console.log(v);
+    }
+}
+`,
 			options: { ignoreOverrideMethods: true },
 		},
 		{
-			code: `class Derived extends Base { override handler = () => {}; }`,
+			code: `
+class Base {
+    value = 0;
+    handler = () => {
+        void this.value;
+    };
+}
+
+class Derived extends Base {
+    override handler = () => {};
+}
+`,
 			options: { ignoreOverrideMethods: true },
 		},
 		{
-			code: `class Derived extends Base { private override method() {} }`,
-			options: { ignoreOverrideMethods: true },
-		},
-		{
-			code: `class Derived extends Base { protected override method() {} }`,
+			code: `
+class Base {
+    value = 0;
+    protected method() {
+        void this.value;
+    }
+}
+
+class Derived extends Base {
+    protected override method() {}
+}
+`,
 			options: { ignoreOverrideMethods: true },
 		},
 		{
@@ -713,19 +806,19 @@ class Example {
 			options: { ignoreClassesThatImplementAnInterface: true },
 		},
 		{
-			code: `interface Handler { handle(): void; } class Example implements Handler { get value() { return 42; } }`,
+			code: `interface Handler { handle(): void; } class Example implements Handler { handle() {} get value() { return 42; } }`,
 			options: { ignoreClassesThatImplementAnInterface: true },
 		},
 		{
-			code: `interface Handler { handle(): void; } class Example implements Handler { set value(v: number) {} }`,
+			code: `interface Handler { handle(): void; } class Example implements Handler { handle() {} set value(v: number) {} }`,
 			options: { ignoreClassesThatImplementAnInterface: true },
 		},
 		{
-			code: `interface Handler { handle(): void; } class Example implements Handler { handler = () => {}; }`,
+			code: `interface Handler { handle(): void; } class Example implements Handler { handle() {} handler = () => {}; }`,
 			options: { ignoreClassesThatImplementAnInterface: true },
 		},
 		{
-			code: `interface Handler { handle(): void; } class Example implements Handler { private method() {} }`,
+			code: `interface Handler { handle(): void; } class Example implements Handler { handle() {} private method() {} }`,
 			options: { ignoreClassesThatImplementAnInterface: true },
 		},
 		{
@@ -733,28 +826,37 @@ class Example {
 			options: { ignoreClassesThatImplementAnInterface: "public-fields" },
 		},
 		{
-			code: `interface Handler { handle(): void; } class Example implements Handler { get value() { return 42; } }`,
+			code: `interface Handler { handle(): void; } class Example implements Handler { handle() {} get value() { return 42; } }`,
 			options: { ignoreClassesThatImplementAnInterface: "public-fields" },
 		},
 		{
-			code: `interface Handler { handle(): void; } class Example implements Handler { public method() {} }`,
+			code: `interface Handler { handle(): void; } class Example implements Handler { handle() {} public method() {} }`,
 			options: { ignoreClassesThatImplementAnInterface: "public-fields" },
 		},
 		{
-			code: `interface Handler { handle(): void; } class Example implements Handler { override method() {} }`,
+			code: `
+class Base {
+    value = 0;
+    method() {
+        void this.value;
+    }
+}
+
+interface Handler {
+    handle(): void;
+}
+
+class Example extends Base implements Handler {
+    handle() {}
+    override method() {}
+}
+`,
 			options: {
 				ignoreClassesThatImplementAnInterface: true,
 				ignoreOverrideMethods: true,
 			},
 		},
-		{
-			code: `interface Handler { handle(): void; } class Example implements Handler { private override method() {} }`,
-			options: {
-				ignoreClassesThatImplementAnInterface: "public-fields",
-				ignoreOverrideMethods: true,
-			},
-		},
-		`class Example { *generator() { yield this.value; } }`,
-		`class Example { async fetch() { return await this.getData(); } }`,
+		`class Example { value = 0; *generator() { yield this.value; } }`,
+		`class Example { declare getData: () => Promise<number>; async fetch() { return await this.getData(); } }`,
 	],
 });

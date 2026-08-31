@@ -53,14 +53,17 @@ const item = items.filter((item) => item.id === 1)[0];
 		},
 		{
 			code: `
+declare function isPositive(value: number): boolean;
 const values: number[] = [1, 2, 3];
 const first = values.filter(isPositive)[0];
 `,
 			output: `
+declare function isPositive(value: number): boolean;
 const values: number[] = [1, 2, 3];
 const first = values.find(isPositive);
 `,
 			snapshot: `
+declare function isPositive(value: number): boolean;
 const values: number[] = [1, 2, 3];
 const first = values.filter(isPositive)[0];
                      ~~~~~~~~~~~~~~~~~~~~~

@@ -69,10 +69,16 @@ ruleTester.describe(rule, {
 		`<input type="text" autocomplete="shipping postal-code" />`,
 		`<input type="text" autocomplete="billing country" />`,
 		`<input type="text" autocomplete />`,
-		`<input type="text" autocomplete={otherValue} />`,
-		`<input type="text" autocomplete={otherValue || "name"} />`,
+		`
+declare const otherValue: unknown;
+<input type="text" autocomplete={otherValue} />`,
+		`
+declare const otherValue: unknown;
+<input type="text" autocomplete={otherValue || "name"} />`,
 		`<div autocomplete="invalid" />`,
-		`<Foo autocomplete="bar" />`,
+		`
+declare const Foo: (props: Record<string, unknown>) => unknown;
+<Foo autocomplete="bar" />`,
 		`<button type="submit" />`,
 	],
 });

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/css-language",
-	"version": "0.0.2",
+	"version": "0.2.0",
 	"description": "[Experimental] CSS language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -26,17 +26,17 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@types/css-tree": "3.2.0",
 		"css-tree": "^3.2.1",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
-		"@types/css-tree": "2.3.11",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",

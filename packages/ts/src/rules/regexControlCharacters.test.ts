@@ -46,10 +46,10 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/\\u{1f}/;
+/\\u{1f}/u;
 `,
 			snapshot: `
-/\\u{1f}/;
+/\\u{1f}/u;
  ~~~~~~
  Unexpected control character '\\u{1f}' (U+001F) in regular expression.
 `,
@@ -95,6 +95,6 @@ RegExp("\\\\u001f");
 		`/\\u0020/;`,
 		`new RegExp("foo");`,
 		`new RegExp("\\\\n");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 	],
 });

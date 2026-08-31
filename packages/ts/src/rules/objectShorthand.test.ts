@@ -49,6 +49,8 @@ const config = {
 		},
 		{
 			code: `
+declare function fetch(url: string): Promise<unknown>;
+
 const api = {
     fetchData: function(url: string) {
         return fetch(url);
@@ -56,6 +58,8 @@ const api = {
 };
 `,
 			snapshot: `
+declare function fetch(url: string): Promise<unknown>;
+
 const api = {
     fetchData: function(url: string) {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -115,6 +119,8 @@ const service = {
 		},
 		{
 			code: `
+declare const console: { log(value: string): void };
+
 const handlers = {
     onClick: () => {
         console.log("clicked");
@@ -122,6 +128,8 @@ const handlers = {
 };
 `,
 			snapshot: `
+declare const console: { log(value: string): void };
+
 const handlers = {
     onClick: () => {
     ~~~~~~~~~~~~~~~~
@@ -203,6 +211,7 @@ const obj = { [key]: key };
 		},
 		{
 			code: `
+const key = "answer";
 const computed = {
 	[key]: function() {
 		return 42;
@@ -210,6 +219,7 @@ const computed = {
 };
 `,
 			snapshot: `
+const key = "answer";
 const computed = {
 	[key]: function() {
 	~~~~~~~~~~~~~~~~~~~
@@ -254,35 +264,119 @@ const obj = { "name": name };
 		`const name = "Alice"; const user = { name };`,
 		`const value = 42; const settings = { value, other: true };`,
 		`const config = { handler() { return "result"; } };`,
-		`const api = { async fetchData(url: string) { return fetch(url); } };`,
+		`
+declare function fetch(url: string): Promise<unknown>;
+
+const api = { async fetchData(url: string) { return fetch(url); } };`,
 		`const calculator = { *add(numbers: number[]) { for (const num of numbers) { yield num; } } };`,
 		`const firstName = "Alice"; const user = { name: firstName };`,
 		`const count = 10; const other = 5; const data = { count: other };`,
 		`const key = "dynamic"; const obj = { [key]: "static" };`,
-		`const onClick = () => console.log("clicked"); const handlers = { onClick };`,
+		`
+declare const console: { log(value: string): void };
+
+const onClick = () => console.log("clicked");
+const handlers = { onClick };`,
 		`const handler = function namedHandler() { return true; }; const obj = { run: handler };`,
 		`const obj = { process: function processor() { return "result"; } };`,
-		`const events = { click: (event) => event.target };`,
-		`const events = { click: async () => { await fetch("/api"); } };`,
-		`const obj = { method: () => { return this.value; } };`,
-		`const obj = { method: () => { return arguments[0]; } };`,
-		`const obj = { method: () => { console.log(super.method()); } };`,
-		`const obj = { method: () => { return new.target; } };`,
-		`const obj = { "invalid-identifier": value };`,
-		`const obj = { "123": value };`,
+		`const events = { click: (event: { target: string }) => event.target };`,
+		`
+declare function fetch(url: string): Promise<unknown>;
+
+const events = { click: async () => { await fetch("/api"); } };`,
+		`
+function createObject(this: { value: number }) {
+	return {
+		method: () => {
+			return this.value;
+		},
+	};
+}`,
+		`
+function createObject() {
+	return {
+		method: () => {
+			return arguments[0];
+		},
+	};
+}`,
+		`
+class Base {
+	method() {
+		return 0;
+	}
+}
+
+class Derived extends Base {
+	obj = {
+		method: () => {
+			return super.method();
+		},
+	};
+}`,
+		`
+function createObject() {
+	return {
+		method: () => {
+			return new.target;
+		},
+	};
+}`,
+		`
+const value = 1;
+const obj = { "invalid-identifier": value };`,
+		`
+const value = 1;
+const obj = { "123": value };`,
 		`const x = 1; const obj = { "x y": x };`,
-		`const obj = { get name() { return this._name; } };`,
-		`const obj = { set name(value: string) { this._name = value; } };`,
-		`const obj = { get x() {}, set x(val) {} };`,
-		`const obj = { fn: (x) => x };`,
+		`
+const obj = {
+	_name: "Alice",
+	get name() {
+		return this._name;
+	},
+};`,
+		`
+const obj = {
+	_name: "",
+	set name(value: string) {
+		this._name = value;
+	},
+};`,
+		`
+const obj = {
+	get x() {
+		return 1;
+	},
+	set x(value: number) {},
+};`,
+		`const obj = { callback: (value: number) => value };`,
 		`const config = { method: async () => { return "data"; } };`,
-		`const obj = { ...other };`,
-		`const obj = { foo, bar, ...baz };`,
-		`const obj = { a: 1, ...other };`,
-		`const obj = { [key]: value };`,
-		`const obj = { [key]() {} };`,
-		`const obj = { x: () => x };`,
+		`
+const other = { value: 1 };
+const obj = { ...other };`,
+		`
+const first = 1;
+const second = 2;
+const rest = { third: 3 };
+const obj = { first, second, ...rest };`,
+		`
+const other = { value: 1 };
+const obj = { a: 1, ...other };`,
+		`
+const key = "value";
+const value = 1;
+const obj = { [key]: value };`,
+		`
+const key = "value";
+const obj = { [key]() {} };`,
+		`
+const value = 1;
+const obj = { getValue: () => value };`,
 		`const obj = { a: function a(){} };`,
-		`const obj = { x: y, y: z, z: 'z' };`,
+		`
+const y = "y";
+const z = "z";
+const obj = { x: y, y: z, z: "z" };`,
 	],
 });

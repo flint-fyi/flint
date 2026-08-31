@@ -8,7 +8,7 @@ import { nullThrows } from "@flint.fyi/utils";
 export function createReportSnapshot(
 	sourceText: string,
 	reports: NormalizedReport[],
-) {
+): string {
 	let result = sourceText;
 
 	for (const report of reports.toReversed()) {

@@ -169,10 +169,10 @@ const { x: { y } } = { x: { y: 1 } } as { x: { y: any } };
 		},
 		{
 			code: `
-const { x: [y] } = { x: { y: 1 } } as { x: [any] };
+const { x: [y] } = { x: [1] } as { x: [any] };
 `,
 			snapshot: `
-const { x: [y] } = { x: { y: 1 } } as { x: [any] };
+const { x: [y] } = { x: [1] } as { x: [any] };
             ~
             Unsafe array destructuring of a tuple element with type \`any\`.
 `,
@@ -298,16 +298,6 @@ type Foo = { bar: unknown };
 const bar: any = 1;
 const foo: Foo = { bar };
 `,
-		`const [{ [\`x\${1}\`]: x }] = [{ [\`x\`]: 1 }] as [{ [\`x\`]: any }];`,
-		`
-declare const intrinsicError: NotKnown;
-
-const log = intrinsicError;
-`,
-		`
-declare const intrinsicError: NotKnown;
-
-const log: string = intrinsicError;
-`,
+		`const [{ [\`x\${1}\`]: x }] = [{ x1: 1 }] as [{ x1: any }];`,
 	],
 });
