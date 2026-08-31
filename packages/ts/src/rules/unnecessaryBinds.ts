@@ -1,15 +1,17 @@
-import ts, { SyntaxKind } from "typescript";
+import * as ts from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
-function containsThis(node: ts.Node): boolean {
+function containsThis(node: AST.AnyNode): boolean {
 	if (node.kind === SyntaxKind.ThisKeyword) {
 		return true;
 	}
@@ -33,7 +35,7 @@ function containsThis(node: ts.Node): boolean {
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
-function isStaticValue(node: ts.Expression): boolean {
+function isStaticValue(node: AST.Expression): boolean {
 	if (ts.isParenthesizedExpression(node)) {
 		return isStaticValue(node.expression);
 	}
@@ -70,7 +72,7 @@ function isStaticValue(node: ts.Expression): boolean {
 	);
 }
 
-function unwrapParentheses(node: ts.Expression): ts.Expression {
+function unwrapParentheses(node: AST.Expression): AST.Expression {
 	while (ts.isParenthesizedExpression(node)) {
 		node = node.expression;
 	}

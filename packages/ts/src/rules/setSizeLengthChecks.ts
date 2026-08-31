@@ -1,3 +1,4 @@
+import type { Program } from "typescript";
 import {
 	isArrayLiteralExpression,
 	isIdentifier,
@@ -7,8 +8,7 @@ import {
 	isVariableDeclaration,
 	NodeFlags,
 	SyntaxKind,
-	type Program,
-} from "typescript";
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,

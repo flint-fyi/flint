@@ -1,12 +1,12 @@
+import { SymbolFlags, type Symbol } from "typescript";
 import {
+	createScanner,
 	isExpressionWithTypeArguments,
 	isShorthandPropertyAssignment,
 	isTypeNode,
 	isTypeParameterDeclaration,
-	SymbolFlags,
 	SyntaxKind,
-	type Symbol,
-} from "typescript";
+} from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
@@ -180,9 +180,21 @@ function getTypeKeywordFixRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 }
 
 function getTypeKeywordRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
-	for (const child of node.getChildren(sourceFile)) {
-		if (child.kind === SyntaxKind.TypeKeyword) {
-			const range = getTSNodeRange(child, sourceFile);
+	const nodeStart = node.getStart(sourceFile);
+	const scanner = createScanner(
+		true,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		nodeStart,
+		node.getEnd() - nodeStart,
+	);
+
+	while (scanner.scan() !== SyntaxKind.EndOfFileToken) {
+		if (scanner.getToken() === SyntaxKind.TypeKeyword) {
+			const range = {
+				begin: scanner.getTokenStart(),
+				end: scanner.getTokenEnd(),
+			};
 			if (
 				node.kind === SyntaxKind.ImportSpecifier &&
 				sourceFile.text[range.end] === " "
@@ -204,8 +216,7 @@ function isInImportDeclaration(node: AST.AnyNode) {
 			return true;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as AST.AnyNode | undefined;
+		current = current.parent;
 	}
 
 	return false;
@@ -269,7 +280,7 @@ function isPropertySignatureComputedReference(node: AST.Identifier) {
 				continue;
 
 			case SyntaxKind.PropertyAccessExpression:
-				if ((parent as AST.PropertyAccessExpression).expression !== child) {
+				if (parent.expression !== child) {
 					return false;
 				}
 				child = parent;

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getModifyingReferences,
@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						node.parent.kind === SyntaxKind.VariableDeclarationList &&
-						!!(node.parent.flags & ts.NodeFlags.Const)
+						!!(node.parent.flags & NodeFlags.Const)
 					) {
 						return;
 					}

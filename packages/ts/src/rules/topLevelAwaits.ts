@@ -1,34 +1,40 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	isArrowFunction,
+	isConstructorDeclaration,
+	isFunctionDeclaration,
+	isFunctionExpression,
+	isGetAccessorDeclaration,
+	isMethodDeclaration,
+	isSetAccessorDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasExportModifier(node: AST.Statement) {
-	return !!(
-		ts.canHaveModifiers(node) &&
-		ts
-			.getModifiers(node)
-			?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
+	return !!node.modifiers?.some(
+		(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
 	);
 }
 
-function isInsideFunction(node: ts.Node): boolean {
-	let current: ts.Node | undefined = node.parent;
+function isInsideFunction(node: AST.AnyNode): boolean {
+	let current: AST.AnyNode | undefined = node.parent;
 
 	while (current) {
 		if (
-			ts.isFunctionDeclaration(current) ||
-			ts.isFunctionExpression(current) ||
-			ts.isArrowFunction(current) ||
-			ts.isMethodDeclaration(current) ||
-			ts.isConstructorDeclaration(current) ||
-			ts.isGetAccessorDeclaration(current) ||
-			ts.isSetAccessorDeclaration(current)
+			isFunctionDeclaration(current) ||
+			isFunctionExpression(current) ||
+			isArrowFunction(current) ||
+			isMethodDeclaration(current) ||
+			isConstructorDeclaration(current) ||
+			isGetAccessorDeclaration(current) ||
+			isSetAccessorDeclaration(current)
 		) {
 			return true;
-		} // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as ts.Node | undefined;
+		}
+		current = current.parent;
 	}
 
 	return false;
