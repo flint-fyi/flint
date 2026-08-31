@@ -1,6 +1,10 @@
 import type { CodeInformation, CodeMapping } from "@volar/language-core";
 
-import type { ContentMapperTransform, SpanMapping } from "./protocol.ts";
+import type {
+	SpanMapping,
+	TransformParams,
+	TransformResult,
+} from "./protocol.ts";
 
 export interface VolarTransformSource {
 	extension: string;
@@ -19,7 +23,7 @@ export function createVolarTransform({
 	extension,
 	mappings,
 	text,
-}: VolarTransformSource): ContentMapperTransform {
+}: VolarTransformSource): (params: TransformParams) => TransformResult {
 	return ({ content }) => {
 		const flattened = mappings
 			.flatMap((mapping): SpanMapping[] => {
@@ -63,14 +67,22 @@ export function createVolarTransform({
 						text.slice(generatedStart, generatedStart + virtualLength) ===
 							content.slice(originalStart, originalStart + originalLength);
 					const features = featuresFor(mapping.data);
-					return [
-						generatedStart,
-						virtualLength,
-						originalStart,
-						originalLength,
-						isExact ? 0 : 1,
-						...(features === FEATURE_ALL ? [] : [features]),
-					];
+					return features === FEATURE_ALL
+						? [
+								generatedStart,
+								virtualLength,
+								originalStart,
+								originalLength,
+								isExact ? 0 : 1,
+							]
+						: [
+								generatedStart,
+								virtualLength,
+								originalStart,
+								originalLength,
+								isExact ? 0 : 1,
+								features,
+							];
 				});
 			})
 			.sort(
@@ -95,10 +107,10 @@ export function createVolarTransform({
 		const originalSorted = [...nonOverlapping].sort(
 			(left, right) => left[2] - right[2] || left[3] - right[3],
 		);
-		for (let index = 1; index < originalSorted.length; index += 1) {
-			const previous = originalSorted[index - 1];
-			const current = originalSorted[index];
+		let previous = originalSorted[0];
+		for (const current of originalSorted.slice(1)) {
 			if (
+				previous &&
 				current[2] < previous[2] + previous[3] &&
 				(current[2] !== previous[2] || current[3] !== previous[3])
 			) {
@@ -106,6 +118,7 @@ export function createVolarTransform({
 					`Volar mappings partially overlap at original offset ${current[2]}`,
 				);
 			}
+			previous = current;
 		}
 		return { extension, mappings: nonOverlapping, text };
 	};

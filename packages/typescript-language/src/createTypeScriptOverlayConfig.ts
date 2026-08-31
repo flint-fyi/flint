@@ -13,6 +13,7 @@ export function createTypeScriptOverlayConfig(
 	authoredConfigFilePath: string,
 	authoredConfig: unknown,
 	registrations: TypeScriptContentMapperRegistration[],
+	rootFilePaths?: string[],
 ): TypeScriptOverlayConfig {
 	if (
 		typeof authoredConfig !== "object" ||
@@ -65,6 +66,7 @@ export function createTypeScriptOverlayConfig(
 				}),
 			),
 			extends: authoredConfigFilePath,
+			...(rootFilePaths && { files: rootFilePaths }),
 			...(references && { references }),
 		}),
 	};

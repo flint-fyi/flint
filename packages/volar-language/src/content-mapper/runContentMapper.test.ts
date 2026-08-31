@@ -306,6 +306,30 @@ describe("runContentMapper", () => {
 });
 
 describe("content mapper protocol", () => {
+	test("accepts the pinned nightly initialize request without a protocol version", async () => {
+		const server = startServer({
+			diagnosticSource: "flint",
+			openProject: () => ({
+				transform: () => ({ extension: ".ts", text: "" }),
+			}),
+		});
+		server.input.write(
+			frame(
+				request(1, "initialize", {
+					positionEncodings: ["utf-8", "utf-16"],
+				}),
+			),
+		);
+
+		expect((await nextResponse(server.output)).result).toEqual({
+			diagnosticSource: "flint",
+			positionEncoding: "utf-8",
+			protocolVersion: 1,
+		});
+		server.input.end();
+		await server.completion;
+	});
+
 	test("converts all result offsets to UTF-8, including supplemental outputs", async () => {
 		const { completion, input, output, ...server } = startServer({
 			diagnosticSource: "flint",
@@ -1175,8 +1199,8 @@ describe("createVolarTransform mapping validation", () => {
 		});
 	});
 
-	test("omits only the full feature mask and preserves zero and subsets", async () => {
-		const result = await createVolarTransform({
+	test("omits only the full feature mask and preserves zero and subsets", () => {
+		const result = createVolarTransform({
 			extension: ".ts",
 			mappings: [
 				{

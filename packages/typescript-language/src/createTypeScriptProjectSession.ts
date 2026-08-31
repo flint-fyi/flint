@@ -46,6 +46,7 @@ export function createTypeScriptProjectSession(
 	const authoredConfigPaths = new Set<string>();
 	const authoredConfigPathsToOpen = new Set<string>();
 	let mappedExtensions = new Set<string>();
+	const openedMappedFilePaths = new Set<string>();
 	const openedOverlayPaths = new Set<string>();
 	const overlayPathByAuthoredConfigPath = new Map<string, string>();
 	const virtualFiles = new Map<string, string>();
@@ -148,6 +149,7 @@ export function createTypeScriptProjectSession(
 	const updateOverlay = (
 		authoredConfigFilePath: string,
 		registrations: TypeScriptContentMapperRegistration[],
+		mappedFilePaths: string[],
 	): string => {
 		const authoredSourceText = host.readFileSync(authoredConfigFilePath);
 		if (authoredSourceText === undefined) {
@@ -175,6 +177,10 @@ export function createTypeScriptProjectSession(
 			authoredConfigFilePath,
 			config,
 			registrations,
+			[
+				...api.parseConfigFile(authoredConfigFilePath).fileNames,
+				...mappedFilePaths,
+			],
 		);
 		virtualFiles.set(overlay.filePath, overlay.sourceText);
 		overlayPathByAuthoredConfigPath.set(
@@ -248,10 +254,33 @@ export function createTypeScriptProjectSession(
 			mappedExtensions = new Set(
 				registrations.flatMap((registration) => registration.extensions),
 			);
-			const mappedConfigFilePaths = (openFiles ?? [])
+			const nextOpenedMappedFilePaths = new Set(openedMappedFilePaths);
+			for (const filePath of closeFiles ?? []) {
+				nextOpenedMappedFilePaths.delete(filePath);
+			}
+			for (const filePath of openFiles ?? []) {
+				if (mappedExtensions.has(path.extname(filePath))) {
+					nextOpenedMappedFilePaths.add(filePath);
+				}
+			}
+			const mappedConfigFilePaths = [...nextOpenedMappedFilePaths]
 				.filter((filePath) => mappedExtensions.has(path.extname(filePath)))
 				.map(findConfigFile)
 				.filter((configFilePath): configFilePath is string => !!configFilePath);
+			const mappedFilePathsByConfigFilePath = new Map<string, string[]>();
+			for (const filePath of nextOpenedMappedFilePaths) {
+				if (!mappedExtensions.has(path.extname(filePath))) {
+					continue;
+				}
+				const configFilePath = findConfigFile(filePath);
+				if (!configFilePath) {
+					continue;
+				}
+				const mappedFilePaths =
+					mappedFilePathsByConfigFilePath.get(configFilePath) ?? [];
+				mappedFilePaths.push(filePath);
+				mappedFilePathsByConfigFilePath.set(configFilePath, mappedFilePaths);
+			}
 			const closeProjects: string[] = [];
 			const overlaysToMarkOpened = new Set<string>();
 			const previousOverlaySourceTextByPath = new Map<
@@ -284,7 +313,11 @@ export function createTypeScriptProjectSession(
 						const previousSourceText = previousOverlayPath
 							? virtualFiles.get(previousOverlayPath)
 							: undefined;
-						const overlayPath = updateOverlay(configFilePath, registrations);
+						const overlayPath = updateOverlay(
+							configFilePath,
+							registrations,
+							mappedFilePathsByConfigFilePath.get(configFilePath) ?? [],
+						);
 						if (!previousOverlaySourceTextByPath.has(overlayPath)) {
 							previousOverlaySourceTextByPath.set(
 								overlayPath,
@@ -369,6 +402,10 @@ export function createTypeScriptProjectSession(
 			}
 			for (const overlayPath of overlaysToMarkOpened) {
 				openedOverlayPaths.add(overlayPath);
+			}
+			openedMappedFilePaths.clear();
+			for (const filePath of nextOpenedMappedFilePaths) {
+				openedMappedFilePaths.add(filePath);
 			}
 			return replacement;
 		},

@@ -2,9 +2,9 @@ import path from "node:path";
 
 import { debugForFile } from "debug-for-file";
 import {
+	SpanMap,
 	SyntaxKind,
 	type Node as NativeNode,
-	type SpanMap,
 } from "typescript-native/unstable/ast";
 import type {
 	Checker,
@@ -28,6 +28,7 @@ import {
 import { assert, nullThrows } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
+import { getTypeScriptContentMapperRegistrations } from "./contentMappers.ts";
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 import {
 	createTypeScriptProjectSession,
@@ -305,10 +306,49 @@ export const typescriptLanguage: Language<
 			try {
 				const sourceFile = getSourceFile();
 				const fileExtension = path.extname(data.filePathAbsolute);
-				if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
-					const file = {
-						...parseDirectivesFromTypeScriptFile(sourceFile),
+				const mapperRegistration =
+					getTypeScriptContentMapperRegistrations().find((registration) =>
+						registration.extensions.includes(fileExtension),
+					);
+				if (
+					typeScriptCoreSupportedExtensions.has(fileExtension) ||
+					mapperRegistration
+				) {
+					const mapped = mapperRegistration?.createFile?.({
 						about: data,
+						services,
+						sourceFile,
+						sourceText: host.readFileSync(data.filePathAbsolute) ?? "",
+					});
+					if (mapped?.services) {
+						Object.assign(services, mapped.services);
+					}
+					const file = {
+						...(mapperRegistration
+							? {
+									...(mapped?.directives && { directives: mapped.directives }),
+									...(mapped?.reports && { reports: mapped.reports }),
+								}
+							: parseDirectivesFromTypeScriptFile(sourceFile)),
+						about: data,
+						...(mapperRegistration && {
+							adjustReportRange(range: { begin: number; end: number }) {
+								if (range.begin < 0) {
+									return { begin: -range.begin, end: range.end };
+								}
+								const spanMap = sourceFile.spanMap;
+								if (!spanMap) {
+									return null;
+								}
+								const mapped = spanMap.virtualToOriginalSpan({
+									end: range.end,
+									pos: range.begin,
+								});
+								return SpanMap.isNone(mapped.fidelity)
+									? null
+									: { begin: mapped.range.pos, end: mapped.range.end };
+							},
+						}),
 						language: typescriptLanguage,
 						services,
 						[Symbol.dispose]: dispose,

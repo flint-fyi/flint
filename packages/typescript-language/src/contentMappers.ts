@@ -1,8 +1,25 @@
+import type {
+	CommentDirective,
+	FileAboutData,
+	FileReport,
+} from "@flint.fyi/core";
 import { assert } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
+import type { TypeScriptFileServices } from "./language.ts";
+import type * as AST from "./types/ast.ts";
 
 export interface TypeScriptContentMapperRegistration {
+	createFile?: (context: {
+		about: FileAboutData;
+		services: TypeScriptFileServices;
+		sourceFile: AST.SourceFile;
+		sourceText: string;
+	}) => {
+		directives?: CommentDirective[];
+		reports?: FileReport[];
+		services?: object;
+	};
 	extensions: string[];
 	options?: Record<string, unknown>;
 	packageName: string;
@@ -46,6 +63,7 @@ function cloneRegistration(
 	registration: TypeScriptContentMapperRegistration,
 ): TypeScriptContentMapperRegistration {
 	return {
+		...(registration.createFile && { createFile: registration.createFile }),
 		extensions: [...registration.extensions],
 		...(registration.options && {
 			options: structuredClone(registration.options),

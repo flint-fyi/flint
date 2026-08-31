@@ -41,6 +41,10 @@ vi.mock("typescript-native/unstable/sync", () => ({
 			mocks.fileSystems.push(options.fs);
 		}
 
+		parseConfigFile() {
+			return { fileNames: [] };
+		}
+
 		readConfigFile(fileName: string) {
 			mocks.parsedConfigPaths.push(fileName);
 			return { config: JSON.parse(this.fs.readFile?.(fileName) as string) };

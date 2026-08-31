@@ -1712,9 +1712,6 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/ts-patch':
-        specifier: workspace:^
-        version: link:../ts-patch
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
@@ -1727,18 +1724,12 @@ importers:
       '@jridgewell/sourcemap-codec':
         specifier: ^1.5.5
         version: 1.6.0
-      '@volar/language-core':
-        specifier: 2.4.28
-        version: 2.4.28
       svelte:
         specifier: ^5.0.0
         version: 5.56.10(@typescript-eslint/types@8.68.0)
       svelte2tsx:
         specifier: ^0.7.55
         version: 0.7.61(svelte@5.56.10)(typescript@6.0.3)
-      typescript:
-        specifier: ^5.9.0 || ^6.0.0
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^

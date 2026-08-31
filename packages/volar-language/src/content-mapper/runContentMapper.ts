@@ -64,7 +64,11 @@ export async function runContentMapper({
 				);
 				return;
 			}
-			if (!isRecord(request.params) || request.params.protocolVersion !== 1) {
+			if (
+				!isRecord(request.params) ||
+				(request.params.protocolVersion !== undefined &&
+					request.params.protocolVersion !== 1)
+			) {
 				await write(
 					responseError(id, -32602, "initialize requires protocolVersion 1"),
 				);

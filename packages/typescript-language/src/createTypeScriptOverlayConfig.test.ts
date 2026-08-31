@@ -44,6 +44,23 @@ describe(createTypeScriptOverlayConfig, () => {
 		).toBe(overlay.filePath);
 	});
 
+	it("adds mapped files to solution-style configs", () => {
+		const overlay = createTypeScriptOverlayConfig(
+			"/repo",
+			"/repo/tsconfig.json",
+			{ files: [], references: [{ path: "./package" }] },
+			[],
+			["/repo/package/Component.svelte"],
+		);
+
+		expect(JSON.parse(overlay.sourceText)).toEqual({
+			contentMappers: [],
+			extends: "/repo/tsconfig.json",
+			files: ["/repo/package/Component.svelte"],
+			references: [{ path: "/repo/package" }],
+		});
+	});
+
 	it("rejects malformed references with an actionable config error", () => {
 		expect(() =>
 			createTypeScriptOverlayConfig(
