@@ -22,9 +22,9 @@ export interface AstroServices {
 }
 
 // Astro's language server injects these same type files through getScriptFileNames:
-// https://github.com/withastro/astro/blob/main/packages/language-tools/language-server/src/core/index.ts#L31-L74
+// https://github.com/withastro/astro/blob/c0f33eda8adf6f8f2588688f6205b76a96a42466/packages/language-tools/language-server/src/core/index.ts#L31-L81
 function addAstroTypes(
-	ts: typeof import("typescript"),
+	typescript: typeof ts,
 	options: ts.CreateProgramOptions,
 ) {
 	const astroRootNames = options.rootNames.filter((fileName) =>
@@ -34,12 +34,12 @@ function addAstroTypes(
 		return;
 	}
 
-	const host = options.host ?? ts.sys;
+	const host = options.host ?? typescript.sys;
 	const cache = options.host?.getModuleResolutionCache?.();
 	const astroTypeRootNames: string[] = [];
 	for (const moduleName of ["astro/env", "astro/astro-jsx"]) {
 		const fileName = resolveModuleFileName(
-			ts,
+			typescript,
 			options,
 			host,
 			cache,
@@ -59,7 +59,7 @@ function addAstroTypes(
 }
 
 function resolveModuleFileName(
-	ts: typeof import("typescript"),
+	typescript: typeof ts,
 	options: ts.CreateProgramOptions,
 	host: ts.ModuleResolutionHost,
 	cache: ts.ModuleResolutionCache | undefined,
@@ -67,7 +67,7 @@ function resolveModuleFileName(
 	containingFileNames: string[],
 ) {
 	for (const containingFileName of containingFileNames) {
-		const resolved = ts.resolveModuleName(
+		const resolved = typescript.resolveModuleName(
 			moduleName,
 			containingFileName,
 			options.options,
