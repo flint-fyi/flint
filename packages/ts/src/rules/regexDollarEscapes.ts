@@ -1,5 +1,5 @@
-import { TypeFlags } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	typescriptLanguage,
@@ -55,7 +55,7 @@ function findUnescapedDollars(replacementString: string): DollarIssue[] {
 	return issues;
 }
 
-function isRegExpArgument(argument: AST.Expression, typeChecker: Checker) {
+function isRegExpArgument(argument: AST.Expression, checker: Checker) {
 	if (argument.kind === SyntaxKind.RegularExpressionLiteral) {
 		return true;
 	}
@@ -73,13 +73,13 @@ function isRegExpArgument(argument: AST.Expression, typeChecker: Checker) {
 		}
 	}
 
-	const type = typeChecker.getTypeAtLocation(argument);
+	const type = checker.getTypeAtLocation(argument);
 	const symbol = type.getSymbol();
 	return symbol?.getName() === "RegExp";
 }
 
-function isStringType(node: AST.Expression, typeChecker: Checker) {
-	const type = typeChecker.getTypeAtLocation(node);
+function isStringType(node: AST.Expression, checker: Checker) {
+	const type = checker.getTypeAtLocation(node);
 	return (type.flags & TypeFlags.StringLike) !== 0;
 }
 
@@ -107,7 +107,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { checker, sourceFile }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -130,8 +130,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const stringLiteral = args[1]!;
 
 					if (
-						!isRegExpArgument(regexpArgument, typeChecker) ||
-						!isStringType(propertyAccess.expression, typeChecker) ||
+						!isRegExpArgument(regexpArgument, checker) ||
+						!isStringType(propertyAccess.expression, checker) ||
 						stringLiteral.kind !== SyntaxKind.StringLiteral
 					) {
 						return;

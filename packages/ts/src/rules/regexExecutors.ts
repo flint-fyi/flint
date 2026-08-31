@@ -1,5 +1,5 @@
-import { TypeFlags } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getStaticStringValue,
@@ -67,16 +67,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { checker, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "match" ||
 						node.arguments.length < 1 ||
 						!(
-							getConstrainedTypeAtLocation(
-								node.expression.expression,
-								typeChecker,
-							).flags & TypeFlags.StringLike
+							getConstrainedTypeAtLocation(node.expression.expression, checker)
+								.flags & TypeFlags.StringLike
 						)
 					) {
 						return;
@@ -85,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const firstArgument = node.arguments[0]!;
 
-					const objectType = typeChecker.getTypeAtLocation(
+					const objectType = checker.getTypeAtLocation(
 						node.expression.expression,
 					);
 					if (!(objectType.flags & TypeFlags.StringLike)) {

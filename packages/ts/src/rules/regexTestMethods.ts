@@ -1,5 +1,5 @@
-import { TypeFlags } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -78,7 +78,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+				CallExpression: (node, { checker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.arguments.length !== 1
@@ -106,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (methodName === "exec") {
 						const objectType = getConstrainedTypeAtLocation(
 							node.expression.expression,
-							typeChecker,
+							checker,
 						);
 						if (!isBuiltinSymbolLike(program, objectType, "RegExp")) {
 							return;
@@ -132,16 +132,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const objectType = getConstrainedTypeAtLocation(
 						node.expression.expression,
-						typeChecker,
+						checker,
 					);
 					if (!(objectType.flags & TypeFlags.StringLike)) {
 						return;
 					}
 
-					const argumentType = getConstrainedTypeAtLocation(
-						argument,
-						typeChecker,
-					);
+					const argumentType = getConstrainedTypeAtLocation(argument, checker);
 					if (!isBuiltinSymbolLike(program, argumentType, "RegExp")) {
 						return;
 					}

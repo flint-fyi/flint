@@ -2,8 +2,8 @@ import {
 	visitRegExpAST,
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
-import { TypeFlags } from "typescript";
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -206,7 +206,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { checker, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						(node.expression.name.text !== "replace" &&
@@ -218,7 +218,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const objectType = getConstrainedTypeAtLocation(
 						node.expression.expression,
-						typeChecker,
+						checker,
 					);
 					if (!(objectType.flags & TypeFlags.StringLike)) {
 						return;

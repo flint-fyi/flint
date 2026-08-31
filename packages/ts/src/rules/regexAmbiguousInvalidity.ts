@@ -415,7 +415,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkCallOrNewExpression(
 			node: AST.CallExpression | AST.NewExpression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			if (
 				node.expression.kind !== SyntaxKind.Identifier ||
@@ -423,7 +423,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				!isGlobalDeclarationOfName(
 					node.expression,
 					"RegExp",
-					typeChecker,
+					checker,
 					program,
 				) ||
 				!node.arguments?.length
