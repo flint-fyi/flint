@@ -1481,7 +1481,7 @@ importers:
         version: 0.16.1(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-svelte:
         specifier: catalog:comparisons
-        version: 3.23.0(eslint@10.9.1)(svelte@5.56.10)
+        version: 3.23.0(eslint@10.9.1)(svelte@5.57.0)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
         version: 74.0.0(eslint@10.9.1)
@@ -1698,8 +1698,8 @@ importers:
         specifier: workspace:^
         version: link:../typescript-language
       svelte:
-        specifier: 5.56.10
-        version: 5.56.10(@typescript-eslint/types@8.68.0)
+        specifier: 5.57.0
+        version: 5.57.0(@typescript-eslint/types@8.68.0)
       tsdown:
         specifier: catalog:dev
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@6.0.3)
@@ -1732,10 +1732,10 @@ importers:
         version: 2.4.28
       svelte:
         specifier: ^5.0.0
-        version: 5.56.10(@typescript-eslint/types@8.68.0)
+        version: 5.57.0(@typescript-eslint/types@8.68.0)
       svelte2tsx:
         specifier: ^0.7.55
-        version: 0.7.61(svelte@5.56.10)(typescript@6.0.3)
+        version: 0.7.61(svelte@5.57.0)(typescript@6.0.3)
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 6.0.3
@@ -4068,9 +4068,6 @@ packages:
 
   '@types/sax@1.2.7':
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
-
-  '@types/trusted-types@2.0.7':
-    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
@@ -7453,8 +7450,8 @@ packages:
       svelte: ^3.55 || ^4.0.0-next.0 || ^4.0 || ^5.0.0-next.0
       typescript: ^4.9.4 || ^5.0.0 || ^6.0.0
 
-  svelte@5.56.10:
-    resolution: {integrity: sha512-Lcxbj8I/KAbpY+VjtY4ENQBV0dDCipfGAhqb51XQZ67CIQqXgsv/8dPkbILaj4Fb6/b6JAEM/PIVbILXgDQy2g==}
+  svelte@5.57.0:
+    resolution: {integrity: sha512-NdbDn7fl4be1ViUG0oq/lvG6OZy3oENolV2ONjiqqsfVoeAfzaQAKUcEX3MrQod/Bebv1PgwET9rfXhgn9s4Kg==}
     engines: {node: '>=18'}
 
   svgo@4.1.0:
@@ -10037,8 +10034,6 @@ snapshots:
     dependencies:
       '@types/node': 26.4.0
 
-  '@types/trusted-types@2.0.7': {}
-
   '@types/unist@2.0.11': {}
 
   '@types/unist@3.0.3': {}
@@ -11536,7 +11531,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-svelte@3.23.0(eslint@10.9.1)(svelte@5.56.10):
+  eslint-plugin-svelte@3.23.0(eslint@10.9.1)(svelte@5.57.0):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.9.1)
       '@jridgewell/sourcemap-codec': 1.6.0
@@ -11548,9 +11543,9 @@ snapshots:
       postcss-load-config: 3.1.4(postcss@8.5.26)
       postcss-safe-parser: 7.0.1(postcss@8.5.26)
       semver: 7.8.5
-      svelte-eslint-parser: 1.8.1(svelte@5.56.10)
+      svelte-eslint-parser: 1.8.1(svelte@5.57.0)
     optionalDependencies:
-      svelte: 5.56.10(@typescript-eslint/types@8.68.0)
+      svelte: 5.57.0(@typescript-eslint/types@8.68.0)
     transitivePeerDependencies:
       - ts-node
 
@@ -14455,7 +14450,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-eslint-parser@1.8.1(svelte@5.56.10):
+  svelte-eslint-parser@1.8.1(svelte@5.57.0):
     dependencies:
       eslint-scope: 8.4.0
       eslint-visitor-keys: 4.2.1
@@ -14465,22 +14460,21 @@ snapshots:
       postcss-selector-parser: 7.1.5
       semver: 7.8.5
     optionalDependencies:
-      svelte: 5.56.10(@typescript-eslint/types@8.68.0)
+      svelte: 5.57.0(@typescript-eslint/types@8.68.0)
 
-  svelte2tsx@0.7.61(svelte@5.56.10)(typescript@6.0.3):
+  svelte2tsx@0.7.61(svelte@5.57.0)(typescript@6.0.3):
     dependencies:
       dedent-js: 1.0.1
       scule: 1.3.0
-      svelte: 5.56.10(@typescript-eslint/types@8.68.0)
+      svelte: 5.57.0(@typescript-eslint/types@8.68.0)
       typescript: 6.0.3
 
-  svelte@5.56.10(@typescript-eslint/types@8.68.0):
+  svelte@5.57.0(@typescript-eslint/types@8.68.0):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/sourcemap-codec': 1.6.0
       '@sveltejs/acorn-typescript': 1.0.13(acorn@8.18.0)
       '@types/estree': 1.0.9
-      '@types/trusted-types': 2.0.7
       acorn: 8.18.0
       aria-query: 5.3.1
       axobject-query: 4.1.0
