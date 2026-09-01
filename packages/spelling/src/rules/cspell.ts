@@ -1,6 +1,5 @@
-import path from "node:path";
-
 import { suggestionsForWord, type DocumentValidator } from "cspell-lib";
+import { resolve } from "pathe";
 
 import type { Suggestion } from "@flint.fyi/core";
 import { textLanguage } from "@flint.fyi/text-language";
@@ -49,7 +48,7 @@ export default ruleCreator.createRule(textLanguage, {
 		const fileTasks: FileTask[] = [];
 
 		const cwd = context.host.getCurrentDirectory();
-		const cspellJsonPath = path.resolve(cwd, "cspell.json");
+		const cspellJsonPath = resolve(cwd, "cspell.json");
 
 		const configTextPromise = context.host.readFile(cspellJsonPath);
 		const configPromise = configTextPromise.then(

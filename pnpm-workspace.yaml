@@ -49,6 +49,9 @@ catalogs:
     vitest-ansi-serializer: 0.2.1
     zod: 4.5.2
 
+  prod:
+    pathe: 2.0.3
+
   comparisons:
     "@biomejs/biome": 2.5.11
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.2
