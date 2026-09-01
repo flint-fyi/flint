@@ -1,0 +1,175 @@
+---
+description: "Reports exports of types that do not use type-only export syntax."
+title: "typeExports"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="typeExports" />
+
+TypeScript's type-only export syntax documents which exports are erased from emitted JavaScript.
+This rule uses TypeScript's checker to resolve local declarations, imports, renamed and remote re-exports, and alias chains.
+It conservatively skips unresolved or cyclic symbols.
+
+## Examples
+
+### Named exports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+interface Account {
+	name: string;
+}
+
+export { Account };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+interface Account {
+	name: string;
+}
+
+export type { Account };
+```
+
+</TabItem>
+</Tabs>
+
+### Mixed exports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+interface Account {
+	name: string;
+}
+const createAccount = (): Account => ({ name: "" });
+
+export { Account, createAccount };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+interface Account {
+	name: string;
+}
+const createAccount = (): Account => ({ name: "" });
+
+export { type Account, createAccount };
+```
+
+</TabItem>
+</Tabs>
+
+The fixer inserts inline modifiers without reconstructing the declaration, preserving comments and other trivia.
+Symbols produced by merged type and value declarations remain value-capable and are not reported.
+Explicit type exports of value-capable symbols are also accepted.
+
+### Re-exports
+
+The checker follows imported and re-exported aliases, including renamed and default exports.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export { Account as Customer } from "./models";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export type { Account as Customer } from "./models";
+```
+
+</TabItem>
+</Tabs>
+
+### Star exports
+
+Type-only star and namespace-star syntax is required when the resolved module's effective export closure contains only types.
+The checker follows transitive barrels, including type-only star chains, while empty and unresolved modules are skipped.
+Star exports containing any runtime value are not reported because changing them could alter runtime behavior or side effects.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export * from "./models";
+```
+
+```ts
+export * as Models from "./models";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export type * from "./models";
+```
+
+```ts
+export type * as Models from "./models";
+```
+
+</TabItem>
+</Tabs>
+
+### Type and value symbols
+
+Classes, enums, functions, and namespaces with runtime members can also be used as types.
+The rule allows their ordinary exports because those symbols have runtime values.
+
+```ts
+interface Account {
+	name: string;
+}
+
+class Account {
+	name = "";
+}
+
+export { Account };
+```
+
+An explicit type-only export can select the type side of a value-capable symbol.
+
+```ts
+class Account {
+	name = "";
+}
+
+export type { Account };
+```
+
+The rule analyzes declaration files, where ambient classes, functions, enums, and variables still represent value-capable exports.
+It does not analyze JavaScript or JSX files, ordinary default exports, export assignments, or `export as namespace` declarations.
+Named re-exports of a default type remain in scope.
+The rule has no options.
+
+## When Not To Use It
+
+Do not use this rule when generated barrels must retain a fixed output format or while incrementally migrating a project under a different export-style policy.
+You may also avoid it when deliberately preserving runtime star-export loading or side effects, even when the current target exposes only types.
+
+## Further Reading
+
+- [TypeScript 3.8: Type-Only Imports and Exports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
+- [TypeScript Modules Reference](https://www.typescriptlang.org/docs/handbook/modules/reference.html)
+- [TypeScript: Declaration Merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
+- [TypeScript: `verbatimModuleSyntax`](https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax)
+
+<RuleEquivalents pluginId="ts" ruleId="typeExports" />
