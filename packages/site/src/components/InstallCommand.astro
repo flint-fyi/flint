@@ -1,19 +1,54 @@
 ---
-const command = "npm install -D flint";
+import PackageManagers from "./PackageManagers.astro";
+import { packageManagers } from "./packageManagers.ts";
+
+const defaultCommand = "npm i -D flint";
+const defaultPackageManager = "npm";
 ---
 
-<div class="install-command not-content">
-	<span class="package-manager">npm</span>
-	<code>{command}</code>
+<div class="install-command not-content" data-install-command>
+	<label class="package-manager">
+		<select aria-label="Package manager" data-package-manager>
+			{
+				packageManagers.map((packageManager) => (
+					<option
+						selected={packageManager === defaultPackageManager}
+						value={packageManager}
+					>
+						{packageManager}
+					</option>
+				))
+			}
+		</select>
+	</label>
+	<code data-install-output>{defaultCommand}</code>
 	<button
-		aria-label="Copy npm install command"
-		data-command={command}
+		aria-label={`Copy ${defaultPackageManager} install command`}
+		class="copy-button"
+		data-command={defaultCommand}
 		data-copy-install
 		type="button"
 	>
 		<span aria-hidden="true" class="copy-icon"></span>
 		<span aria-hidden="true" class="check-icon"></span>
 	</button>
+
+	<div data-command-sources hidden>
+		{
+			packageManagers.map((packageManager) => (
+				<div data-command-source={packageManager}>
+					<PackageManagers
+						dev
+						frame="none"
+						icons={false}
+						pkg="flint"
+						pkgManagers={[packageManager]}
+						type="add"
+					/>
+				</div>
+			))
+		}
+	</div>
 </div>
 
 <script>
@@ -48,10 +83,67 @@ const command = "npm install -D flint";
 	}
 
 	document
-		.querySelectorAll<HTMLButtonElement>("[data-copy-install]")
-		.forEach((button) => {
-			button.addEventListener("click", async () => {
-				const command = button.dataset.command;
+		.querySelectorAll<HTMLElement>("[data-install-command]")
+		.forEach((container) => {
+			const button = container.querySelector<HTMLButtonElement>(
+				"[data-copy-install]",
+			);
+			const output = container.querySelector<HTMLElement>(
+				"[data-install-output]",
+			);
+			const select = container.querySelector<HTMLSelectElement>(
+				"[data-package-manager]",
+			);
+			if (!button || !output || !select) {
+				return;
+			}
+			const installElements = { button, output, select };
+
+			const commands = new Map<string, string>();
+			container
+				.querySelectorAll<HTMLElement>("[data-command-source]")
+				.forEach((source) => {
+					const packageManager = source.dataset.commandSource;
+					const command = source.querySelector("code")?.textContent?.trim();
+					if (packageManager && command) {
+						commands.set(packageManager, command);
+					}
+				});
+
+			let resetTimer: number | undefined;
+
+			function resetCopyState(): void {
+				delete installElements.button.dataset.copied;
+				installElements.button.setAttribute(
+					"aria-label",
+					`Copy ${installElements.select.value} install command`,
+				);
+			}
+
+			function updateCommand(): void {
+				const command = commands.get(installElements.select.value);
+				if (!command) {
+					return;
+				}
+
+				installElements.output.textContent = command;
+				installElements.button.dataset.command = command;
+			}
+
+			updateCommand();
+
+			installElements.select.addEventListener("change", () => {
+				if (resetTimer !== undefined) {
+					window.clearTimeout(resetTimer);
+					resetTimer = undefined;
+				}
+
+				updateCommand();
+				resetCopyState();
+			});
+
+			installElements.button.addEventListener("click", async () => {
+				const command = installElements.button.dataset.command;
 				if (!command) {
 					return;
 				}
@@ -60,12 +152,15 @@ const command = "npm install -D flint";
 					return;
 				}
 
-				button.dataset.copied = "true";
-				button.setAttribute("aria-label", "Copied npm install command");
+				installElements.button.dataset.copied = "true";
+				installElements.button.setAttribute(
+					"aria-label",
+					`Copied ${installElements.select.value} install command`,
+				);
 
-				window.setTimeout(() => {
-					delete button.dataset.copied;
-					button.setAttribute("aria-label", "Copy npm install command");
+				resetTimer = window.setTimeout(() => {
+					resetCopyState();
+					resetTimer = undefined;
 				}, 2000);
 			});
 		});
@@ -85,7 +180,7 @@ const command = "npm install -D flint";
 
 	.package-manager,
 	code,
-	button {
+	.copy-button {
 		align-items: center;
 		display: flex;
 	}
@@ -94,10 +189,39 @@ const command = "npm install -D flint";
 		background: var(--flint-badge-surface);
 		border-inline-end: 1px solid var(--flint-paper-border);
 		color: var(--flint-badge-text);
+		position: relative;
+	}
+
+	.package-manager::after {
+		block-size: 0.4rem;
+		border-block-end: 1px solid currentColor;
+		border-inline-end: 1px solid currentColor;
+		content: "";
+		inline-size: 0.4rem;
+		pointer-events: none;
+		position: absolute;
+		inset-inline-end: 0.85rem;
+		inset-block-start: calc(50% - 0.3rem);
+		rotate: 45deg;
+	}
+
+	select {
+		appearance: none;
+		background: transparent;
+		block-size: 100%;
+		border: 0;
+		color: inherit;
+		cursor: pointer;
 		font-family: var(--sl-font-mono);
 		font-size: var(--sl-text-xs);
-		font-weight: 600;
-		padding-inline: 1rem;
+		font-weight: 700;
+		inline-size: 6.25rem;
+		padding: 0 2rem 0 1rem;
+	}
+
+	select:focus-visible {
+		outline: 2px solid var(--sl-color-accent-high);
+		outline-offset: -3px;
 	}
 
 	code {
@@ -111,7 +235,7 @@ const command = "npm install -D flint";
 		white-space: nowrap;
 	}
 
-	button {
+	.copy-button {
 		background: transparent;
 		border: 0;
 		border-inline-start: 1px solid var(--flint-paper-border);
@@ -125,13 +249,13 @@ const command = "npm install -D flint";
 			color 150ms;
 	}
 
-	button:hover,
-	button[data-copied="true"] {
+	.copy-button:hover,
+	.copy-button[data-copied="true"] {
 		background: var(--flint-badge-surface);
 		color: var(--flint-badge-text);
 	}
 
-	button:focus-visible {
+	.copy-button:focus-visible {
 		outline: 2px solid var(--sl-color-accent-high);
 		outline-offset: -3px;
 	}
@@ -160,12 +284,12 @@ const command = "npm install -D flint";
 		transform: scale(0.75);
 	}
 
-	button[data-copied="true"] .copy-icon {
+	.copy-button[data-copied="true"] .copy-icon {
 		opacity: 0;
 		transform: scale(0.75);
 	}
 
-	button[data-copied="true"] .check-icon {
+	.copy-button[data-copied="true"] .check-icon {
 		opacity: 1;
 		transform: scale(1);
 	}
@@ -175,9 +299,17 @@ const command = "npm install -D flint";
 			grid-template-columns: auto minmax(0, 1fr) 2.75rem;
 		}
 
-		.package-manager,
 		code {
 			padding-inline: 0.75rem;
+		}
+
+		.package-manager::after {
+			inset-inline-end: 0.65rem;
+		}
+
+		select {
+			inline-size: 5.25rem;
+			padding-inline: 0.65rem 1.6rem;
 		}
 
 		code {
@@ -186,7 +318,7 @@ const command = "npm install -D flint";
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		button,
+		.copy-button,
 		.copy-icon,
 		.check-icon {
 			transition: none;

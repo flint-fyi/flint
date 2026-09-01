@@ -27,6 +27,9 @@ import SponsorsList from "./SponsorsList.astro";
 <style>
 	.sponsors {
 		align-items: center;
+		background: var(--flint-sponsor-surface);
+		box-shadow: 0 0 0 100vmax var(--flint-sponsor-surface);
+		clip-path: inset(0 -100vmax);
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
@@ -36,6 +39,7 @@ import SponsorsList from "./SponsorsList.astro";
 	}
 
 	h2 {
+		color: var(--sl-color-white);
 		font-size: var(--sl-text-h2);
 		line-height: 1.25;
 		margin: 0;
@@ -43,7 +47,7 @@ import SponsorsList from "./SponsorsList.astro";
 	}
 
 	p {
-		color: var(--sl-color-gray-2);
+		color: var(--sl-color-gray-1);
 		margin: 0;
 		text-align: center;
 	}

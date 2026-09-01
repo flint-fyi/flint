@@ -43,16 +43,13 @@ const rules = ruleIds.map((ruleId) => {
 		{
 			rules.map((rule) => (
 				<li class="rule">
-					<a href={`/rules/ts/${rule.id}`}>{rule.id}</a>
-					<p set:html={rule.description} />
-					<span class="badges">
-						<span class="preset" data-preset="plugin">
-							ts
-						</span>
+					<div class="rule-heading">
+						<a href={`/rules/ts/${rule.id}`}>ts/{rule.id}</a>
 						<span class="preset" data-preset={rule.preset}>
 							{rule.preset}
 						</span>
-					</span>
+					</div>
+					<p set:html={rule.description} />
 				</li>
 			))
 		}
@@ -126,7 +123,7 @@ const rules = ruleIds.map((ruleId) => {
 
 	.rules {
 		display: grid;
-		gap: 0.75rem;
+		gap: 0.5rem;
 		grid-template-columns: 100%;
 		list-style: none;
 		margin: 0;
@@ -139,7 +136,14 @@ const rules = ruleIds.map((ruleId) => {
 		border-radius: 0.5rem;
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
+		padding: 0.8rem 0.9rem;
+	}
+
+	.rule-heading {
+		align-items: baseline;
+		display: flex;
+		gap: 0.4rem;
+		white-space: nowrap;
 	}
 
 	.rule a {
@@ -152,10 +156,9 @@ const rules = ruleIds.map((ruleId) => {
 
 	.rule p {
 		color: var(--sl-color-gray-2);
-		flex: 1;
 		font-size: var(--sl-text-xs);
 		line-height: 1.5;
-		margin: 0.35rem 0 0.6rem;
+		margin: 0.35rem 0 0;
 	}
 
 	.rule p :global(code) {
@@ -166,20 +169,13 @@ const rules = ruleIds.map((ruleId) => {
 		padding: 0.05rem 0.25rem;
 	}
 
-	.badges {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35rem;
-	}
-
 	.preset {
-		align-self: start;
 		border-radius: 0.25rem;
 		display: inline-block;
-		font-size: var(--sl-text-xs);
+		font-family: var(--sl-font-mono);
+		font-size: 0.68rem;
 		font-weight: 800;
-		padding: 0.15rem 0.45rem;
-		text-transform: uppercase;
+		padding: 0.1rem 0.35rem;
 	}
 
 	.preset[data-preset="logical"] {
@@ -192,18 +188,13 @@ const rules = ruleIds.map((ruleId) => {
 		color: var(--sl-color-white);
 	}
 
-	.preset[data-preset="plugin"] {
-		background: var(--sl-color-gray-6);
-		color: var(--sl-color-gray-2);
-	}
-
 	@media (width >= 50rem) {
 		.trail-map {
-			grid-template-columns: 1fr 1.4fr;
+			grid-template-columns: 0.85fr 1.55fr;
 		}
 
 		.rules {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
 		}
 	}
 </style>

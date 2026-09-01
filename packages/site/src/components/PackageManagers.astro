@@ -1,10 +1,12 @@
 ---
 import * as StarlightPackageManagers from "starlight-package-managers";
 
+import { packageManagers } from "./packageManagers.ts";
+
 export type Props = StarlightPackageManagers.PackageManagersProps;
 ---
 
 <StarlightPackageManagers.PackageManagers
-	pkgManagers={["npm", "bun", "deno", "pnpm", "yarn"]}
+	pkgManagers={packageManagers}
 	{...Astro.props}
 />

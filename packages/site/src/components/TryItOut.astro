@@ -1,22 +1,44 @@
----
-import PackageManagers from "./PackageManagers.astro";
----
-
 <section class="try-it-out not-content" id="try-it-out">
 	<div class="content">
 		<h2 class="flint-display">Try Flint on any project</h2>
-
-		<p class="lede">Pick your favorite fire-starter:</p>
-
-		<div class="command">
-			<PackageManagers type="dlx" pkg="flint" />
-		</div>
 
 		<p class="aside">
 			Frustrated with slow linting that doesn't catch what you care about? Or
 			maybe your linter is fast, but doesn't lint everything you think it
 			should? Give Flint a shot.
 		</p>
+
+		<div
+			aria-label="Representative Flint CLI output"
+			class="terminal"
+			role="region"
+		>
+			<div aria-hidden="true" class="terminal-bar">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div class="terminal-output">
+				<div class="terminal-line command-line">
+					<span class="prompt">$</span>
+					<span>flint</span>
+				</div>
+				<div class="terminal-line muted">
+					Linting with <span class="config">flint.config.ts</span>...
+				</div>
+				<div class="terminal-line file">fixtures/src/with-issues.ts</div>
+				<div class="report">
+					<span class="location">2:2</span>
+					<span class="message">
+						Debugger statements should not be used in production code.
+					</span>
+					<span class="rule">ts/debuggerStatements</span>
+				</div>
+				<div class="terminal-line summary">
+					✖ Found <strong>1 report</strong> across <strong>1 file</strong>.
+				</div>
+			</div>
+		</div>
 
 		<a class="button" href="/about">Get started →</a>
 	</div>
@@ -33,7 +55,7 @@ import PackageManagers from "./PackageManagers.astro";
 
 	.content {
 		margin-inline: auto;
-		max-width: 42rem;
+		max-width: 48rem;
 		text-align: center;
 	}
 
@@ -44,51 +66,113 @@ import PackageManagers from "./PackageManagers.astro";
 		margin: 0;
 	}
 
-	.lede {
-		color: var(--flint-band-muted);
-		font-size: var(--sl-text-lg);
-		margin: 0.75rem 0 0;
-	}
-
-	.command {
-		margin-block-start: 1.5rem;
-		text-align: start;
-	}
-
-	.command :global(.starlight-package-managers-tabs) {
-		border-radius: 0.5rem;
-	}
-
-	.command :global([role="tab"]) {
-		color: var(--flint-band-muted);
-	}
-
-	.command :global([role="tab"][aria-selected="true"]) {
-		color: var(--flint-band-text);
-	}
-
-	@media (width < 30rem) {
-		.command :global([role="tablist"]) {
-			display: grid;
-			grid-template-columns: repeat(5, minmax(0, 1fr));
-		}
-
-		.command :global([role="tab"]) {
-			justify-content: center;
-			min-inline-size: 0;
-			padding-inline: 0.25rem;
-		}
-
-		.command :global([role="tab"] svg) {
-			display: none;
-		}
-	}
-
 	.aside {
 		color: var(--flint-band-muted);
 		font-size: var(--sl-text-lg);
 		line-height: 1.6;
-		margin: 2rem 0 0;
+		margin: 1rem auto 0;
+		max-width: 42rem;
+	}
+
+	.terminal {
+		background: #071220;
+		border: 1px solid #3b4d68;
+		border-radius: 0.5rem;
+		color: var(--flint-cream);
+		margin-block-start: 1.75rem;
+		overflow: hidden;
+		text-align: start;
+	}
+
+	.terminal-bar {
+		align-items: center;
+		background: #0d1d31;
+		border-block-end: 1px solid #2c3e57;
+		display: flex;
+		gap: 0.4rem;
+		min-block-size: 2rem;
+		padding-inline: 0.85rem;
+	}
+
+	.terminal-bar span {
+		background: #b0a08b;
+		block-size: 0.55rem;
+		border-radius: 50%;
+		inline-size: 0.55rem;
+	}
+
+	.terminal-bar span:first-child {
+		background: #f58a3a;
+	}
+
+	.terminal-bar span:last-child {
+		background: #79ad6c;
+	}
+
+	.terminal-output {
+		font-family: var(--sl-font-mono);
+		font-size: clamp(0.72rem, 1.5vw, var(--sl-text-sm));
+		line-height: 1.6;
+		padding: clamp(1rem, 3vw, 1.5rem);
+	}
+
+	.terminal-line + .terminal-line,
+	.terminal-line + .report,
+	.report + .terminal-line {
+		margin-block-start: 0.75rem;
+	}
+
+	.command-line {
+		display: flex;
+		gap: 0.65rem;
+	}
+
+	.prompt,
+	.config {
+		color: #8bd2ff;
+	}
+
+	.config,
+	.summary strong {
+		font-weight: 800;
+	}
+
+	.muted,
+	.location {
+		color: #b9c4d6;
+	}
+
+	.file {
+		color: #a4dd98;
+		overflow-wrap: anywhere;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.report {
+		display: grid;
+		gap: 0.3rem 0.75rem;
+		grid-template-columns: 2.75rem minmax(0, 1fr);
+	}
+
+	.rule {
+		color: #ffc48a;
+		grid-column: 2;
+		overflow-wrap: anywhere;
+	}
+
+	.summary {
+		color: #ffb48e;
+	}
+
+	@media (width >= 40rem) {
+		.report {
+			grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+		}
+
+		.rule {
+			grid-column: auto;
+		}
 	}
 
 	.button {
