@@ -117,6 +117,7 @@ import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
 import globalThisAliases from "./rules/globalThisAliases.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
+import importCycles from "./rules/importCycles.ts";
 import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
 import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
 import indexedObjectTypes from "./rules/indexedObjectTypes.ts";
@@ -428,6 +429,7 @@ export const ts = createPlugin({
 		globalObjectCalls,
 		globalThisAliases,
 		impliedEvals,
+		importCycles,
 		importEmptyBlocks,
 		importTypeSideEffects,
 		indexedObjectTypes,

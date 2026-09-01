@@ -12,12 +12,15 @@ describe("typescript", () => {
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
 			"<dim>Linting with <cyan><bold>flint.config.ts</bold></fg><dim>...</fg>
 
+			<underline><cwd>/fixtures/src/cycle-a.ts</underline>
+			<dim>  1:8</fg>  Circular module dependency: fixtures/src/cycle-a.ts → fixtures/src/cycle-b.ts → fixtures/src/cycle-a.ts.  <yellow>ts/importCycles</fg>
+
 			<underline><cwd>/fixtures/src/with-issues.ts</underline>
 			<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
-			<red>✖ Found <bold>1 report</bold> across <bold>1 file</bold>.</fg>
+			<red>✖ Found <bold>2 reports</bold> across <bold>2 files</bold>.</fg>
 			<red></fg>
-			<dim>Finished in <time> on 2 files with 138 rules.</fg>
+			<dim>Finished in <time> on 4 files with 139 rules.</fg>
 			<dim></fg>"
 		`);
 	});

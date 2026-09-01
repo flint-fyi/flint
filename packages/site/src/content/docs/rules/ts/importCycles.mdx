@@ -1,0 +1,102 @@
+---
+description: "Reports circular dependencies among TypeScript module imports."
+title: "importCycles"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="importCycles" />
+
+Circular module dependencies can expose partially initialized exports and make runtime behavior depend on module initialization order.
+This rule uses TypeScript's semantic module resolution to find representative cycles across the active project.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// first.ts
+import { second } from "./second";
+
+export const first = second + 1;
+```
+
+```ts
+// second.ts
+import { first } from "./first";
+
+export const second = first + 1;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// shared.ts
+export const base = 1;
+```
+
+```ts
+// first.ts
+import { base } from "./shared";
+
+export const first = base + 1;
+```
+
+```ts
+// second.ts
+import { base } from "./shared";
+
+export const second = base + 2;
+```
+
+</TabItem>
+</Tabs>
+
+Re-exports and literal dynamic imports also form dependency edges.
+
+```ts
+// first.ts
+export { second } from "./second";
+```
+
+```ts
+// second.ts
+export const second = import("./first");
+```
+
+## Options
+
+This rule is not configurable.
+
+## Limitations
+
+CommonJS `require`, import-equals declarations, JSDoc imports, triple-slash references, and computed dynamic imports are unsupported.
+Literal dynamic imports are included conservatively and may report paths that runtime control flow never loads.
+Declarations containing only inline `type` specifiers are included because some compiler configurations preserve their side effects, which can produce false positives.
+Top-level type-only declarations are ignored.
+Ambiguous, ambient, unresolved, and external targets are ignored.
+
+Declaration files from project references and cycles split across distinct TypeScript Programs can produce false negatives, including some monorepo and symlink layouts.
+The rule inherits the selected, uncached Program scope and cache limitations of Flint's TypeScript project service.
+It reports a deterministic polynomial representative cover rather than every elementary route through a cycle.
+Dense strongly connected components require more graph searches, and distinct reported cycles can share the same module-literal range.
+
+## When Not To Use It
+
+Do not use this rule when a bundler or framework generates and validates the module graph.
+An existing codebase may also need to defer this rule while it intentionally relies on runtime-managed cycles that cannot yet be refactored.
+
+## Further Reading
+
+- [MDN: JavaScript modules and cyclic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#cyclic_imports)
+- [TypeScript: Modules Reference](https://www.typescriptlang.org/docs/handbook/modules/reference.html)
+- [ECMAScript Language Specification: Cyclic Module Records](https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-cyclic-module-records)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="importCycles" />

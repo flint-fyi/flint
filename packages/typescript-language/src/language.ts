@@ -34,6 +34,7 @@ import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 
 export interface TypeScriptFileServices {
+	filePath: string;
 	program: Program;
 	sourceFile: AST.SourceFile;
 	typeChecker: Checker;
@@ -134,6 +135,7 @@ export const typescriptLanguage: Language<
 					about: data,
 					language: typescriptLanguage,
 					services: {
+						filePath: data.filePath,
 						program,
 						sourceFile: sourceFile as AST.SourceFile,
 						// ew, I don't like this. the ts -> AST type story is not great
