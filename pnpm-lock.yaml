@@ -417,6 +417,10 @@ catalogs:
     zod:
       specifier: 4.5.2
       version: 4.5.2
+  prod:
+    pathe:
+      specifier: 2.0.3
+      version: 2.0.3
   site:
     '@astrojs/check':
       specifier: 0.9.10
@@ -809,6 +813,9 @@ importers:
       omit-empty:
         specifier: ^1.0.0
         version: 1.0.0
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
       picomatch:
         specifier: ^4.0.4
         version: 4.0.7
@@ -1518,6 +1525,9 @@ importers:
       cached-factory:
         specifier: ^0.3.0
         version: 0.3.0
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1656,6 +1666,9 @@ importers:
       cspell-lib:
         specifier: ^10.0.0
         version: 10.1.1
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1777,6 +1790,9 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
       regexp-ast-analysis:
         specifier: ^0.7.1
         version: 0.7.1
@@ -1836,7 +1852,7 @@ importers:
         specifier: ^0.4.0
         version: 0.4.2(supports-color@10.2.2)
       pathe:
-        specifier: ^2.0.3
+        specifier: catalog:prod
         version: 2.0.3
       ts-api-utils:
         specifier: ^2.4.0
@@ -1856,6 +1872,10 @@ importers:
         version: 4.1.11(@types/node@26.4.0)(@vitest/coverage-v8@4.1.11)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/utils:
+    dependencies:
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -2023,6 +2043,9 @@ importers:
       '@flint.fyi/yaml-language':
         specifier: workspace:^
         version: link:../yaml-language
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^

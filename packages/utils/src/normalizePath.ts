@@ -1,4 +1,4 @@
-import { normalize } from "node:path";
+import { normalize } from "pathe";
 
 declare const PathKeyBrand: unique symbol;
 
@@ -29,7 +29,7 @@ export function normalizeDirname(path: string): string {
 }
 
 export function normalizePath(path: string): string {
-	let result = normalize(path).replaceAll("\\", "/");
+	let result = normalize(path);
 	if (result.indexOf("/") !== result.lastIndexOf("/") && result.endsWith("/")) {
 		result = result.slice(0, -1);
 	}

@@ -1,5 +1,4 @@
-import path from "node:path";
-
+import { resolve } from "pathe";
 import ts from "typescript";
 
 import { pathKey } from "@flint.fyi/utils";
@@ -20,7 +19,7 @@ export function isFromFile(
 	return (
 		pathKey(sourceFile.fileName, caseSensitive) ===
 		pathKey(
-			path.resolve(program.getCurrentDirectory(), specifiedPath),
+			resolve(program.getCurrentDirectory(), specifiedPath),
 			caseSensitive,
 		)
 	);
