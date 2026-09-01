@@ -62,10 +62,11 @@ const rules = ruleIds.map((ruleId) => {
 
 <style>
 	.trail-map {
+		border-block: 1px solid var(--sl-color-gray-5);
 		display: grid;
 		gap: 2rem;
 		grid-template-columns: 100%;
-		padding: clamp(1.25rem, 4vw, 3rem);
+		padding: clamp(2.5rem, 5vw, 4rem) clamp(0rem, 3vw, 2rem);
 	}
 
 	h2 {
@@ -91,8 +92,8 @@ const rules = ruleIds.map((ruleId) => {
 	}
 
 	.button {
-		border: 2px solid var(--flint-paper-border);
-		border-radius: 999px;
+		border: 1px solid var(--flint-paper-border);
+		border-radius: 0.5rem;
 		color: var(--sl-color-white);
 		flex: 1 1 auto;
 		font-weight: 700;
@@ -100,8 +101,9 @@ const rules = ruleIds.map((ruleId) => {
 		text-align: center;
 		text-decoration: none;
 		transition:
-			box-shadow 150ms,
-			transform 150ms;
+			background-color 150ms,
+			border-color 150ms,
+			color 150ms;
 	}
 
 	.button.primary {
@@ -111,8 +113,16 @@ const rules = ruleIds.map((ruleId) => {
 	}
 
 	.button:hover {
-		box-shadow: var(--flint-glow);
-		transform: translateY(-2px);
+		border-color: var(--sl-color-gray-3);
+	}
+
+	.button.primary:hover {
+		background: color-mix(
+			in srgb,
+			var(--flint-ember-fill) 88%,
+			var(--sl-color-white)
+		);
+		border-color: transparent;
 	}
 
 	.rules {
@@ -126,11 +136,11 @@ const rules = ruleIds.map((ruleId) => {
 
 	.rule {
 		background: var(--sl-color-black);
-		border: 2px solid var(--flint-paper-border);
-		border-radius: 0.75rem;
+		border: 1px solid var(--flint-paper-border);
+		border-radius: 0.5rem;
 		display: flex;
 		flex-direction: column;
-		padding: 0.75rem 0.9rem;
+		padding: 1rem;
 	}
 
 	.rule a {
@@ -151,7 +161,7 @@ const rules = ruleIds.map((ruleId) => {
 
 	.rule p :global(code) {
 		background: var(--flint-badge-surface);
-		border-radius: 0.3rem;
+		border-radius: 0.25rem;
 		color: var(--flint-badge-text);
 		font-size: 0.95em;
 		padding: 0.05rem 0.25rem;
@@ -165,11 +175,10 @@ const rules = ruleIds.map((ruleId) => {
 
 	.preset {
 		align-self: start;
-		border-radius: 0.4rem;
+		border-radius: 0.25rem;
 		display: inline-block;
 		font-size: var(--sl-text-xs);
 		font-weight: 800;
-		letter-spacing: 0.12em;
 		padding: 0.15rem 0.45rem;
 		text-transform: uppercase;
 	}

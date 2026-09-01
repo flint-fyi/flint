@@ -63,13 +63,15 @@ import { Image } from "astro:assets";
 
 	.button {
 		background: var(--flint-paper);
-		border: 2px solid var(--flint-paper-border);
-		border-radius: 999px;
+		border: 1px solid var(--flint-paper-border);
+		border-radius: 0.5rem;
 		color: var(--sl-color-white);
 		font-weight: 700;
 		padding: 0.7rem 1.4rem;
 		text-decoration: none;
-		transition: transform 150ms;
+		transition:
+			background-color 150ms,
+			border-color 150ms;
 	}
 
 	.button.pine {
@@ -79,6 +81,6 @@ import { Image } from "astro:assets";
 	}
 
 	.button:hover {
-		transform: translateY(-2px);
+		border-color: var(--sl-color-gray-3);
 	}
 </style>

@@ -3,9 +3,6 @@ import PackageManagers from "./PackageManagers.astro";
 ---
 
 <section class="try-it-out not-content" id="try-it-out">
-	<div aria-hidden="true" class="sky"></div>
-	<div aria-hidden="true" class="stars"></div>
-
 	<div class="content">
 		<p class="eyebrow">🏕️ Get started in 10 seconds</p>
 
@@ -29,37 +26,11 @@ import PackageManagers from "./PackageManagers.astro";
 
 <style>
 	.try-it-out {
-		border: 2px solid var(--flint-paper-border);
-		border-radius: 1.5rem;
-		isolation: isolate;
-		margin-block: clamp(2.5rem, 8vw, 4rem);
-		overflow: hidden;
-		padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 4vw, 3rem);
-		position: relative;
-	}
-
-	.sky {
-		background: linear-gradient(
-			180deg,
-			var(--flint-band-top) 0%,
-			var(--flint-band-bottom) 100%
-		);
-		inset: 0;
-		position: absolute;
-		z-index: -2;
-	}
-
-	.stars {
-		background-image:
-			radial-gradient(2px 2px at 20% 30%, white, transparent),
-			radial-gradient(1px 1px at 60% 70%, white, transparent),
-			radial-gradient(1.5px 1.5px at 80% 20%, white, transparent),
-			radial-gradient(1px 1px at 30% 80%, white, transparent),
-			radial-gradient(2px 2px at 90% 50%, white, transparent);
-		inset: 0;
-		opacity: var(--flint-band-stars);
-		position: absolute;
-		z-index: -1;
+		background: var(--flint-band-surface);
+		border: 1px solid var(--flint-paper-border);
+		border-radius: 0.75rem;
+		margin-block: 1rem 4rem;
+		padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem);
 	}
 
 	.content {
@@ -91,8 +62,37 @@ import PackageManagers from "./PackageManagers.astro";
 	}
 
 	.command {
-		margin-block-start: 2rem;
+		margin-block-start: 1.5rem;
 		text-align: start;
+	}
+
+	.command :global(.starlight-package-managers-tabs) {
+		border-radius: 0.5rem;
+	}
+
+	.command :global([role="tab"]) {
+		color: var(--flint-band-muted);
+	}
+
+	.command :global([role="tab"][aria-selected="true"]) {
+		color: var(--flint-band-text);
+	}
+
+	@media (width < 30rem) {
+		.command :global([role="tablist"]) {
+			display: grid;
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
+
+		.command :global([role="tab"]) {
+			justify-content: center;
+			min-inline-size: 0;
+			padding-inline: 0.25rem;
+		}
+
+		.command :global([role="tab"] svg) {
+			display: none;
+		}
 	}
 
 	@media (width >= 30rem) {
@@ -111,8 +111,8 @@ import PackageManagers from "./PackageManagers.astro";
 
 	.button {
 		background: var(--flint-ember-fill);
-		border: 2px solid var(--flint-ember-fill);
-		border-radius: 999px;
+		border: 1px solid var(--flint-ember-fill);
+		border-radius: 0.5rem;
 		color: var(--flint-ember-fill-text);
 		display: inline-block;
 		font-weight: 800;
@@ -120,12 +120,16 @@ import PackageManagers from "./PackageManagers.astro";
 		padding: 0.8rem 1.6rem;
 		text-decoration: none;
 		transition:
-			box-shadow 150ms,
-			transform 150ms;
+			background-color 150ms,
+			border-color 150ms;
 	}
 
 	.button:hover {
-		box-shadow: var(--flint-glow);
-		transform: translateY(-2px);
+		background: color-mix(
+			in srgb,
+			var(--flint-ember-fill) 88%,
+			var(--flint-band-text)
+		);
+		border-color: transparent;
 	}
 </style>

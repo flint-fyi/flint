@@ -1,0 +1,195 @@
+---
+const command = "npm install -D flint";
+---
+
+<div class="install-command not-content">
+	<span class="package-manager">npm</span>
+	<code>{command}</code>
+	<button
+		aria-label="Copy npm install command"
+		data-command={command}
+		data-copy-install
+		type="button"
+	>
+		<span aria-hidden="true" class="copy-icon"></span>
+		<span aria-hidden="true" class="check-icon"></span>
+	</button>
+</div>
+
+<script>
+	async function copyToClipboard(value: string): Promise<boolean> {
+		const clipboardWrite = navigator.clipboard?.writeText(value);
+		const textarea = document.createElement("textarea");
+		textarea.value = value;
+		textarea.setAttribute("readonly", "");
+		textarea.style.position = "fixed";
+		textarea.style.opacity = "0";
+		document.body.append(textarea);
+		textarea.select();
+
+		const copied = (
+			document as unknown as {
+				execCommand(commandId: "copy"): boolean;
+			}
+		).execCommand("copy");
+		textarea.remove();
+
+		if (copied) {
+			void clipboardWrite?.catch(() => undefined);
+			return true;
+		}
+
+		try {
+			await clipboardWrite;
+			return clipboardWrite !== undefined;
+		} catch {
+			return false;
+		}
+	}
+
+	document
+		.querySelectorAll<HTMLButtonElement>("[data-copy-install]")
+		.forEach((button) => {
+			button.addEventListener("click", async () => {
+				const command = button.dataset.command;
+				if (!command) {
+					return;
+				}
+
+				if (!(await copyToClipboard(command))) {
+					return;
+				}
+
+				button.dataset.copied = "true";
+				button.setAttribute("aria-label", "Copied npm install command");
+
+				window.setTimeout(() => {
+					delete button.dataset.copied;
+					button.setAttribute("aria-label", "Copy npm install command");
+				}, 2000);
+			});
+		});
+</script>
+
+<style>
+	.install-command {
+		align-items: stretch;
+		background: var(--flint-paper);
+		border: 1px solid var(--flint-paper-border);
+		border-radius: 0.5rem;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) 3rem;
+		inline-size: min(100%, 32rem);
+		overflow: hidden;
+	}
+
+	.package-manager,
+	code,
+	button {
+		align-items: center;
+		display: flex;
+	}
+
+	.package-manager {
+		background: var(--flint-badge-surface);
+		border-inline-end: 1px solid var(--flint-paper-border);
+		color: var(--flint-badge-text);
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-xs);
+		font-weight: 600;
+		padding-inline: 1rem;
+	}
+
+	code {
+		background: transparent;
+		color: var(--sl-color-white);
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-sm);
+		min-block-size: 3.25rem;
+		overflow-x: auto;
+		padding-inline: 1rem;
+		white-space: nowrap;
+	}
+
+	button {
+		background: transparent;
+		border: 0;
+		border-inline-start: 1px solid var(--flint-paper-border);
+		color: var(--sl-color-gray-2);
+		cursor: pointer;
+		justify-content: center;
+		padding: 0;
+		position: relative;
+		transition:
+			background-color 150ms,
+			color 150ms;
+	}
+
+	button:hover,
+	button[data-copied="true"] {
+		background: var(--flint-badge-surface);
+		color: var(--flint-badge-text);
+	}
+
+	button:focus-visible {
+		outline: 2px solid var(--sl-color-accent-high);
+		outline-offset: -3px;
+	}
+
+	.copy-icon,
+	.check-icon {
+		background: currentColor;
+		block-size: 1.125rem;
+		inline-size: 1.125rem;
+		mask-position: center;
+		mask-repeat: no-repeat;
+		mask-size: contain;
+		position: absolute;
+		transition:
+			opacity 150ms,
+			transform 150ms;
+	}
+
+	.copy-icon {
+		mask-image: url("/icons/copy.svg");
+	}
+
+	.check-icon {
+		mask-image: url("/icons/check.svg");
+		opacity: 0;
+		transform: scale(0.75);
+	}
+
+	button[data-copied="true"] .copy-icon {
+		opacity: 0;
+		transform: scale(0.75);
+	}
+
+	button[data-copied="true"] .check-icon {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	@media (width < 30rem) {
+		.install-command {
+			grid-template-columns: auto minmax(0, 1fr) 2.75rem;
+		}
+
+		.package-manager,
+		code {
+			padding-inline: 0.75rem;
+		}
+
+		code {
+			font-size: var(--sl-text-xs);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		button,
+		.copy-icon,
+		.check-icon {
+			transition: none;
+		}
+	}
+</style>

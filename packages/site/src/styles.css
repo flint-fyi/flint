@@ -19,12 +19,12 @@
 /* Dark mode colors. */
 :root {
 	--sl-color-accent-low: #562001;
-	--sl-color-accent: #ef7926;
+	--sl-color-accent: #f58a3a;
 	--sl-color-accent-high: #ffc48a;
 	--sl-color-white: #fbf4e6;
 	--sl-color-gray-1: #eee7d9;
 	--sl-color-gray-2: #cec2af;
-	--sl-color-gray-3: #a08f7b;
+	--sl-color-gray-3: #b0a08b;
 	--sl-color-gray-4: #515e75;
 	--sl-color-gray-5: #2c3e57;
 	--sl-color-gray-6: #182941;
@@ -32,14 +32,13 @@
 
 	/* `--flint-ember` is a flame fill, not a text color: at 3:1 against these
 	   backgrounds it is unreadable as body copy. Text uses these instead. */
-	--flint-ember-text: #ef7926;
-	--flint-ember-fill: #ef7926;
-	--flint-ember-fill-text: #2a1204;
+	--flint-ember-text: #f58a3a;
+	--flint-ember-fill: #f58a3a;
+	--flint-ember-fill-text: #0b1628;
 
 	--flint-paper: #16263d;
 	--flint-paper-border: #3b4d68;
 	--flint-paper-shadow: 0 2px 0 0 #060e1c;
-	--flint-glow: 0 0 2.5rem -0.5rem #ef792655;
 	--flint-badge-surface: #2a1a10;
 	--flint-badge-text: #ffc48a;
 	--sl-color-banner-bg: var(--flint-badge-surface);
@@ -55,37 +54,34 @@
 	--flint-tag-berry-bg: #3b1a28;
 	--flint-tag-berry-fg: #ffacce;
 
-	--flint-band-top: var(--flint-night-top);
-	--flint-band-bottom: var(--flint-night);
+	--flint-band-surface: var(--flint-night-top);
 	--flint-band-text: var(--flint-cream);
 	--flint-band-muted: #b9c4d6;
 	--flint-band-eyebrow: var(--flint-ember-soft);
-	--flint-band-stars: 0.3;
 }
 
 /* Light mode colors. */
 :root[data-theme="light"] {
 	--sl-color-accent-low: #fdd7ac;
-	--sl-color-accent: #b33a0a;
+	--sl-color-accent: #962900;
 	--sl-color-accent-high: #6f1200;
 	--sl-color-white: #3b1d13;
 	--sl-color-gray-1: #54301e;
 	--sl-color-gray-2: #664432;
-	--sl-color-gray-3: #876b59;
+	--sl-color-gray-3: #6d4835;
 	--sl-color-gray-4: #bb9f84;
 	--sl-color-gray-5: #e3d2b8;
 	--sl-color-gray-6: #f1e7d2;
 	--sl-color-gray-7: #f7efe0;
 	--sl-color-black: #fbf4e6;
 
-	--flint-ember-text: #b33a0a;
-	--flint-ember-fill: #b33a0a;
+	--flint-ember-text: #962900;
+	--flint-ember-fill: #962900;
 	--flint-ember-fill-text: var(--flint-cream);
 
 	--flint-paper: #fffaf1;
-	--flint-paper-border: #4b2915;
+	--flint-paper-border: #c7a98a;
 	--flint-paper-shadow: 0 3px 0 0 #4b291522;
-	--flint-glow: 0 0 2.5rem -0.75rem #f6722b66;
 	--flint-badge-surface: #f7d19c;
 	--flint-badge-text: #6f1200;
 	--sl-color-banner-bg: var(--flint-badge-surface);
@@ -101,12 +97,10 @@
 	--flint-tag-berry-bg: #fec5da;
 	--flint-tag-berry-fg: #701f46;
 
-	--flint-band-top: #f4ead5;
-	--flint-band-bottom: #efd3ac;
+	--flint-band-surface: #f4ead5;
 	--flint-band-text: #3b1d13;
 	--flint-band-muted: #664432;
 	--flint-band-eyebrow: #6f1200;
-	--flint-band-stars: 0;
 }
 
 html[data-theme="light"] .only-dark {
@@ -166,38 +160,27 @@ a.sl-link-button.primary {
 }
 
 a.sl-link-button.primary:hover {
-	box-shadow: var(--flint-glow);
-	transform: translateY(-2px);
+	background: color-mix(
+		in srgb,
+		var(--flint-ember-fill) 88%,
+		var(--sl-color-white)
+	);
+	border-color: transparent;
 }
 
 a.sl-link-button {
 	border-radius: 999px;
 	transition:
-		box-shadow 150ms,
-		transform 150ms;
-}
-
-/* Homepage (hero) customizations. */
-
-.hero-first-text {
-	font-size: calc(var(--sl-text-5xl) * 2);
-}
-
-.hero-second {
-	color: var(--sl-color-accent);
-	font-size: calc(var(--sl-text-5xl) * 1.1);
-}
-
-.hero-third {
-	color: var(--sl-color-accent-high);
-	font-size: var(--sl-text-5xl);
+		background-color 150ms,
+		border-color 150ms,
+		color 150ms;
 }
 
 /* Starlight chrome customizations. */
 
 header.header {
 	background: var(--sl-color-black);
-	border-block-end: 2px solid var(--sl-color-gray-5);
+	border-block-end: 1px solid var(--sl-color-gray-5);
 }
 
 .site-title {
