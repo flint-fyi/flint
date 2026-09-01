@@ -133,15 +133,6 @@ table code {
 	padding: 0;
 }
 
-.flint-eyebrow {
-	color: var(--flint-ember-text);
-	font-size: var(--sl-text-sm);
-	font-weight: 800;
-	letter-spacing: 0.18em;
-	margin: 0;
-	text-transform: uppercase;
-}
-
 .starlight-aside,
 .card,
 .starlight-package-managers-tabs {

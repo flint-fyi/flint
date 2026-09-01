@@ -4,8 +4,6 @@ import PackageManagers from "./PackageManagers.astro";
 
 <section class="try-it-out not-content" id="try-it-out">
 	<div class="content">
-		<p class="eyebrow">🏕️ Get started in 10 seconds</p>
-
 		<h2 class="flint-display">Try Flint on any project</h2>
 
 		<p class="lede">Pick your favorite fire-starter:</p>
@@ -39,20 +37,11 @@ import PackageManagers from "./PackageManagers.astro";
 		text-align: center;
 	}
 
-	.eyebrow {
-		color: var(--flint-band-eyebrow);
-		font-size: var(--sl-text-xs);
-		font-weight: 800;
-		letter-spacing: 0.12em;
-		margin: 0;
-		text-transform: uppercase;
-	}
-
 	h2 {
 		color: var(--flint-band-text);
 		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
 		line-height: 1.15;
-		margin: 0.75rem 0 0;
+		margin: 0;
 	}
 
 	.lede {
@@ -92,13 +81,6 @@ import PackageManagers from "./PackageManagers.astro";
 
 		.command :global([role="tab"] svg) {
 			display: none;
-		}
-	}
-
-	@media (width >= 30rem) {
-		.eyebrow {
-			font-size: var(--sl-text-sm);
-			letter-spacing: 0.2em;
 		}
 	}
 
