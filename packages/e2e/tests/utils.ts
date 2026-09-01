@@ -1,6 +1,14 @@
-import { execa } from "execa";
+import { execa, type Options } from "execa";
 
 import { normalizePath } from "@flint.fyi/utils";
+
+export interface RunFlintResult {
+	exitCode: number | undefined;
+	stderr: string;
+	stdout: string;
+}
+
+type RunFlintOptions = Exclude<Options, { readonly encoding: string }>;
 
 declare global {
 	// TODO[typescript>=6.0]: Remove this declaration.
@@ -43,12 +51,20 @@ export function normalizeOutput(stdout: string, cwd: string): string {
 export async function runFlint(
 	cwd: string,
 	args: string[] = [],
-): Promise<{ exitCode: number | undefined; stdout: string }> {
-	const { exitCode, stdout } = await execa({
+	options: RunFlintOptions = {},
+): Promise<RunFlintResult> {
+	const { exitCode, stderr, stdout } = await execa({
 		cwd,
 		env: { FORCE_COLOR: "1", GITHUB_ACTIONS: undefined },
+		preferLocal: true,
 		reject: false,
+		...options,
+		buffer: true,
+		encoding: "utf8",
+		lines: false,
+		stderr: "pipe",
+		stdout: "pipe",
 	})`flint ${args}`;
 
-	return { exitCode, stdout };
+	return { exitCode, stderr, stdout };
 }

@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, checker }) => {
+				CallExpression: (node, { checker, program, sourceFile }) => {
 					if (
 						isGlobalDeclarationOfName(node.expression, "eval", checker, program)
 					) {

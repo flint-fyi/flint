@@ -31,9 +31,7 @@ function isModuleExportsAccess(node: AST.Expression) {
 	);
 }
 
-function isModuleExportsAccessAssignment(
-	node: AST.Expression | AST.ExpressionParent,
-) {
+function isModuleExportsAccessAssignment(node: AST.AnyNode) {
 	return (
 		node.kind === SyntaxKind.BinaryExpression &&
 		node.operatorToken.kind === SyntaxKind.EqualsToken &&

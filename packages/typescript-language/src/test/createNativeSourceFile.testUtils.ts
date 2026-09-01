@@ -27,5 +27,5 @@ export function createNativeSourceFile(
 	if (!sourceFile) {
 		throw new Error(`Expected native program to contain ${fileName}.`);
 	}
-	return sourceFile;
+	return sourceFile as unknown as AST.SourceFile;
 }

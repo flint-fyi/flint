@@ -75,7 +75,7 @@ function isRegExpArgument(argument: AST.Expression, checker: Checker) {
 
 	const type = checker.getTypeAtLocation(argument);
 	const symbol = type.getSymbol();
-	return symbol?.getName() === "RegExp";
+	return symbol?.name === "RegExp";
 }
 
 function isStringType(node: AST.Expression, checker: Checker) {

@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { program, sourceFile, checker }) => {
+				BinaryExpression: (node, { checker, program, sourceFile }) => {
 					if (
 						node.operatorToken.kind >= SyntaxKind.FirstAssignment &&
 						node.operatorToken.kind <= SyntaxKind.LastAssignment &&
@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				PostfixUnaryExpression: (node, { program, sourceFile, checker }) => {
+				PostfixUnaryExpression: (node, { checker, program, sourceFile }) => {
 					if (isGlobalVariable(node.operand, checker, program)) {
 						context.report({
 							message: "noGlobalAssign",
@@ -53,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				PrefixUnaryExpression: (node, { program, sourceFile, checker }) => {
+				PrefixUnaryExpression: (node, { checker, program, sourceFile }) => {
 					if (
 						(node.operator === SyntaxKind.PlusPlusToken ||
 							node.operator === SyntaxKind.MinusMinusToken) &&

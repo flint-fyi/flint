@@ -175,7 +175,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const properties = new Map<string, null | string>();
 					for (const element of node.name.elements) {
-						if (!ts.isBindingElement(element)) {
+						if (!ts.isBindingElement(element) || !element.name) {
 							continue;
 						}
 

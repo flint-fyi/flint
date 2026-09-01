@@ -1,31 +1,9 @@
 import { SpanMap, SpanMapKind } from "typescript-native/unstable/ast";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { getMappedSourceFiles, typescriptLanguage } from "./language.ts";
+import { typescriptLanguage } from "./language.ts";
 
-describe(getMappedSourceFiles, () => {
-	it("loads canonical and unique supplemental source files", () => {
-		const supplemental = { fileName: "/project/Component.astro.1.ts" };
-		const canonical = {
-			fileName: "/project/Component.astro",
-			supplementalSourceFileNames: [
-				supplemental.fileName,
-				supplemental.fileName,
-				"/project/missing.ts",
-			],
-		};
-		const getSourceFile = vi.fn((fileName: string) =>
-			fileName === supplemental.fileName ? supplemental : undefined,
-		);
-
-		expect(
-			getMappedSourceFiles({ getSourceFile } as never, canonical as never).map(
-				(sourceFile) => sourceFile.fileName,
-			),
-		).toEqual([canonical.fileName, supplemental.fileName]);
-		expect(getSourceFile).toHaveBeenCalledTimes(2);
-	});
-
+describe("supplemental source files", () => {
 	it("maps and de-duplicates diagnostics from supplemental source files", () => {
 		const spanMap = new SpanMap([
 			{

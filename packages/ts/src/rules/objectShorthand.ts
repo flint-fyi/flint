@@ -71,7 +71,7 @@ function hasAsyncModifier(
 	modifiers: AST.FunctionExpression["modifiers"] | undefined,
 ) {
 	return modifiers?.some(
-		(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
+		(modifier: AST.ModifierLike) => modifier.kind === SyntaxKind.AsyncKeyword,
 	);
 }
 

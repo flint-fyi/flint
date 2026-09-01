@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { sourceFile, checker }) => {
+				BinaryExpression: (node, { checker, sourceFile }) => {
 					const result =
 						checkFilterLengthComparison(node, checker) ??
 						checkFindIndexComparison(node, checker);
@@ -77,7 +77,7 @@ function checkFindIndexComparison(
 	);
 }
 
-function getFilterCall(node: AST.LeftHandSideExpression, checker: Checker) {
+function getFilterCall(node: AST.Expression, checker: Checker) {
 	if (
 		node.kind !== SyntaxKind.CallExpression ||
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||

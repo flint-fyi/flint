@@ -43,9 +43,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
-			if ("declaration" in symbol) {
+			if ("getReturnType" in symbol) {
 				const declaration = symbol.declaration?.resolve();
-				return !!declaration && hasDeprecationTag(declaration);
+				return (
+					!!declaration && hasDeprecationTag(declaration as AST.Declaration)
+				);
 			}
 
 			let jsDocTags: readonly JSDocTagInfo[];
@@ -74,7 +76,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (!declaration) {
 					return false;
 				}
-				return hasDeprecationTag(declaration);
+				return hasDeprecationTag(declaration as AST.Declaration);
 			});
 		}
 
@@ -96,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const targetSymbol = checker.getAliasedSymbol(symbol);
-			let current: Symbol | undefined = symbol;
+			let current = symbol;
 
 			while (current.flags & SymbolFlags.Alias) {
 				if (
@@ -110,7 +112,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					break;
 				}
 
-				const immediateAliased = checker.getImmediateAliasedSymbol(current);
+				const immediateAliased: Symbol | undefined =
+					checker.getImmediateAliasedSymbol(current);
 				if (!immediateAliased) {
 					break;
 				}
@@ -153,7 +156,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				case SyntaxKind.TypeAliasDeclaration:
 				case SyntaxKind.TypeParameter:
 				case SyntaxKind.VariableDeclaration:
-					return node.parent.name === node;
+					return "name" in node.parent && node.parent.name === node;
 
 				case SyntaxKind.ExportSpecifier:
 					return node.parent.propertyName === node;
@@ -211,9 +214,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.TaggedTemplateExpression,
 			checker: Checker,
 		) {
-			const signature = checker.getResolvedSignature(
-				callLike as ts.CallLikeExpression,
-			);
+			const signature = checker.getResolvedSignature(callLike);
 			const symbol = checker.getSymbolAtLocation(node);
 
 			const aliasedSymbol =
@@ -267,11 +268,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.parent.name === node
 			) {
 				const symbol = checker.getSymbolAtLocation(node);
-				const valueSymbol =
-					symbol &&
-					checker.getShorthandAssignmentValueSymbol(
-						symbol.valueDeclaration?.resolve(),
-					);
+				const valueDeclaration = symbol?.valueDeclaration?.resolve();
+				const valueSymbol = valueDeclaration
+					? checker.getShorthandAssignmentValueSymbol(valueDeclaration)
+					: undefined;
 				if (
 					valueSymbol &&
 					(getJsDocDeprecation(valueSymbol, checker) ||
@@ -316,9 +316,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const objectType = checker.getTypeAtLocation(node.expression);
 			let propertyName: string;
 			if (argumentType.flags & TypeFlags.StringLiteral) {
-				propertyName = argumentType.value;
+				propertyName = (argumentType as Type & { value: string }).value;
 			} else if (argumentType.flags & TypeFlags.NumberLiteral) {
-				propertyName = String(argumentType.value);
+				propertyName = String((argumentType as Type & { value: number }).value);
 			} else {
 				return;
 			}
@@ -347,7 +347,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const propertyName = node.propertyName ?? node.name;
-			if (propertyName.kind !== SyntaxKind.Identifier) {
+			if (propertyName?.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -367,7 +367,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const parentType = checker.getTypeAtLocation(init);
 						const parentPropertyName =
 							declarationOrPattern.propertyName ?? declarationOrPattern.name;
-						if (parentPropertyName.kind === SyntaxKind.Identifier) {
+						if (parentPropertyName?.kind === SyntaxKind.Identifier) {
 							const prop = parentType.getProperty(parentPropertyName.text);
 							if (prop) {
 								objectType = checker.getTypeOfSymbolAtLocation(
@@ -388,7 +388,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						isDeprecatedFromDeclarations(property))
 				) {
 					const reportNode = node.propertyName ?? node.name;
-					if (reportNode.kind === SyntaxKind.Identifier) {
+					if (reportNode?.kind === SyntaxKind.Identifier) {
 						context.report({
 							message: "deprecated",
 							range: getTSNodeRange(reportNode, sourceFile),
@@ -412,7 +412,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const signature = checker.getResolvedSignature(callExpr);
-			if (signature && getJsDocDeprecation(signature, checker)) {
+			if (getJsDocDeprecation(signature, checker)) {
 				context.report({
 					message: "deprecated",
 					range: getTSNodeRange(node, sourceFile),
@@ -422,15 +422,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				BindingElement: (node, { sourceFile, checker }) => {
+				BindingElement: (node, { checker, sourceFile }) => {
 					checkBindingElement(node, sourceFile, checker);
 				},
 
-				ElementAccessExpression: (node, { sourceFile, checker }) => {
+				ElementAccessExpression: (node, { checker, sourceFile }) => {
 					checkComputedPropertyAccess(node, sourceFile, checker);
 				},
 
-				Identifier: (node, { sourceFile, checker }) => {
+				Identifier: (node, { checker, sourceFile }) => {
 					if (isInsideHeritageClause(node)) {
 						if (
 							(node.parent.kind === SyntaxKind.ExpressionWithTypeArguments &&
@@ -471,7 +471,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					checkNode(node, sourceFile, checker);
 				},
 
-				PrivateIdentifier: (node, { sourceFile, checker }) => {
+				PrivateIdentifier: (node, { checker, sourceFile }) => {
 					if (
 						node.parent.kind === SyntaxKind.PropertyAccessExpression &&
 						node === node.parent.name
@@ -480,7 +480,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 
-				SuperKeyword: (node, { sourceFile, checker }) => {
+				SuperKeyword: (node, { checker, sourceFile }) => {
 					checkSuperCall(node, sourceFile, checker);
 				},
 			},

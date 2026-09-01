@@ -1,5 +1,9 @@
 import type { Node } from "typescript-native/unstable/ast";
-import { TypeFlags, type Type } from "typescript-native/unstable/sync";
+import {
+	TypeFlags,
+	type Type,
+	type TypeReference,
+} from "typescript-native/unstable/sync";
 
 import type { Checker } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
@@ -31,6 +35,41 @@ export function getAwaitedTypes(
 	tsNode: Node,
 ): readonly Type[] {
 	return getAwaitedTypesWorker(type, checker, tsNode, new Set());
+}
+
+function discriminateAnyTypeWorker(
+	type: Type,
+	checker: Checker,
+	tsNode: Node,
+	visited: Set<number>,
+): AnyType {
+	if (visited.has(type.id)) {
+		return AnyType.Safe;
+	}
+	visited.add(type.id);
+	if (type.flags & TypeFlags.Any) {
+		return type.isErrorType() ? AnyType.Error : AnyType.Any;
+	}
+	if (checker.isArrayType(type)) {
+		const elementType = nullThrows(
+			checker.getTypeArguments(type as TypeReference)[0],
+			"Array type should have at least one type argument",
+		);
+		if (elementType.flags & TypeFlags.Any && !elementType.isErrorType()) {
+			return AnyType.AnyArray;
+		}
+	}
+	for (const awaitedType of getAwaitedTypes(type, checker, tsNode)) {
+		if (
+			awaitedType.id !== type.id &&
+			discriminateAnyTypeWorker(awaitedType, checker, tsNode, visited) ===
+				AnyType.Any &&
+			!awaitedType.isErrorType()
+		) {
+			return AnyType.PromiseAny;
+		}
+	}
+	return AnyType.Safe;
 }
 
 function getAwaitedTypesWorker(
@@ -102,39 +141,4 @@ function getTypeConstituents(type: Type): readonly Type[] {
 	}
 
 	return [type];
-}
-
-function discriminateAnyTypeWorker(
-	type: Type,
-	checker: Checker,
-	tsNode: Node,
-	visited: Set<number>,
-): AnyType {
-	if (visited.has(type.id)) {
-		return AnyType.Safe;
-	}
-	visited.add(type.id);
-	if (type.flags & TypeFlags.Any) {
-		return type.isErrorType() ? AnyType.Error : AnyType.Any;
-	}
-	if (checker.isArrayType(type)) {
-		const elementType = nullThrows(
-			checker.getTypeArguments(type)[0],
-			"Array type should have at least one type argument",
-		);
-		if (elementType.flags & TypeFlags.Any && !elementType.isErrorType()) {
-			return AnyType.AnyArray;
-		}
-	}
-	for (const awaitedType of getAwaitedTypes(type, checker, tsNode)) {
-		if (
-			awaitedType.id !== type.id &&
-			discriminateAnyTypeWorker(awaitedType, checker, tsNode, visited) ===
-				AnyType.Any &&
-			!awaitedType.isErrorType()
-		) {
-			return AnyType.PromiseAny;
-		}
-	}
-	return AnyType.Safe;
 }

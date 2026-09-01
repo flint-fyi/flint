@@ -76,10 +76,6 @@ function getNameText(name: AST.PropertyName) {
 		return name.text;
 	}
 
-	if (name.kind === SyntaxKind.PrivateIdentifier) {
-		return `#${name.text}`;
-	}
-
 	return undefined;
 }
 
@@ -88,7 +84,7 @@ function getPropertyKeyName(property: AST.ObjectLiteralElementLike) {
 		return {
 			group: "values",
 			node: property.name,
-			text: property.name.text,
+			text: (property.name as AST.Identifier).text,
 		} as const;
 	}
 

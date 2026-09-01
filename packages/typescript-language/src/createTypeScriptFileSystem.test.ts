@@ -87,4 +87,24 @@ describe(createTypeScriptFileSystem, () => {
 		expect(host.fileTypeSync(virtualFilePath)).toBeUndefined();
 		expect(host.readFileSync(virtualFilePath)).toBeUndefined();
 	});
+
+	it("serves directories implied by host-only virtual files", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		const fileSystem = createTypeScriptFileSystem(
+			host,
+			undefined,
+			new Map([["/repo/.cache/overlays/tsconfig.json", "{}"]]),
+		);
+
+		expect(fileSystem.directoryExists?.("/repo/.cache")).toBe(true);
+		expect(fileSystem.directoryExists?.("/repo/.cache/overlays")).toBe(true);
+		expect(fileSystem.getAccessibleEntries?.("/repo/.cache")).toEqual({
+			directories: ["overlays"],
+			files: [],
+		});
+		expect(fileSystem.getAccessibleEntries?.("/repo/.cache/overlays")).toEqual({
+			directories: [],
+			files: ["tsconfig.json"],
+		});
+	});
 });

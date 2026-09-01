@@ -24,7 +24,9 @@ function getMathMethodInfo(
 		unwrapped.kind !== SyntaxKind.CallExpression ||
 		unwrapped.questionDotToken ||
 		unwrapped.arguments.length < 1 ||
-		unwrapped.arguments.some((arg) => arg.kind === SyntaxKind.SpreadElement)
+		unwrapped.arguments.some(
+			(argument: AST.Expression) => argument.kind === SyntaxKind.SpreadElement,
+		)
 	) {
 		return undefined;
 	}

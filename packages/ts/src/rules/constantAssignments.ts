@@ -38,6 +38,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const identifiers: AST.Identifier[] = [];
 
 			for (const element of name.elements) {
+				if (!element.name) {
+					continue;
+				}
 				identifiers.push(...collectBindingElements(element.name));
 			}
 

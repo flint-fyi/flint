@@ -194,7 +194,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, checker }) => {
+				CallExpression: (node, { checker, sourceFile }) => {
 					if (
 						isIdentityFlatMapCall(node, checker) ||
 						isConcatSpread(node, checker) ||

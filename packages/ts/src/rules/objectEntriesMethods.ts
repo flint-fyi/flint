@@ -56,6 +56,9 @@ function isObjectAssignPattern(
 	}
 
 	const accumulatorName = firstParameter.name.text;
+	if (callback.body.kind === SyntaxKind.Block) {
+		return false;
+	}
 	const body = skipParentheses(callback.body);
 
 	if (
@@ -179,6 +182,9 @@ function isSpreadAccumulatorPattern(callback: AST.ArrowFunction) {
 	}
 
 	const accumulatorName = firstParam.name.text;
+	if (callback.body.kind === SyntaxKind.Block) {
+		return false;
+	}
 	const body = skipParentheses(callback.body);
 
 	if (

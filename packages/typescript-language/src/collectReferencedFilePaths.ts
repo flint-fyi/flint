@@ -52,7 +52,7 @@ function getModuleSpecifierNode(
 		node.kind === SyntaxKind.ImportDeclaration &&
 		node.moduleSpecifier.kind === SyntaxKind.StringLiteral
 	) {
-		return node.moduleSpecifier as AST.StringLiteral;
+		return node.moduleSpecifier;
 	}
 
 	if (
@@ -60,16 +60,15 @@ function getModuleSpecifierNode(
 		node.expression.kind === SyntaxKind.ImportKeyword &&
 		node.arguments[0]?.kind === SyntaxKind.StringLiteral
 	) {
-		return node.arguments[0] as AST.StringLiteral;
+		return node.arguments[0];
 	}
 
 	if (
 		node.kind === SyntaxKind.ImportType &&
 		node.argument.kind === SyntaxKind.LiteralType &&
-		(node.argument as AST.LiteralTypeNode).literal.kind ===
-			SyntaxKind.StringLiteral
+		node.argument.literal.kind === SyntaxKind.StringLiteral
 	) {
-		return (node.argument as AST.LiteralTypeNode).literal as AST.StringLiteral;
+		return node.argument.literal;
 	}
 
 	return undefined;

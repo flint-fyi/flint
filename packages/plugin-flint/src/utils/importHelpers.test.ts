@@ -7,13 +7,36 @@ import {
 	type NamespaceImport,
 	type Node,
 } from "typescript-native/unstable/ast";
+import { API, JsxEmit } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
-import { createNativeSourceFile } from "../../../typescript-language/src/test/createNativeSourceFile.testUtils.ts";
 import {
 	isImportedBindingFromModule,
 	isImportedSpecifierFromModule,
 } from "./importHelpers.ts";
+
+const files = new Map<string, string>();
+const api = new API({
+	cwd: "/repo",
+	fs: {
+		fileExists: (fileName) => files.has(fileName),
+		readFile: (fileName) => files.get(fileName) ?? null,
+	},
+});
+let fileIndex = 0;
+
+function createNativeSourceFile(sourceText: string) {
+	const fileName = `/repo/test-${String(fileIndex++)}.ts`;
+	files.set(fileName, sourceText);
+	const program = api.createProgram([fileName], {
+		compilerOptions: { jsx: JsxEmit.Preserve, noLib: true },
+	});
+	const sourceFile = program.getSourceFile(fileName);
+	if (!sourceFile) {
+		throw new Error(`Expected native program to contain ${fileName}.`);
+	}
+	return sourceFile;
+}
 
 function parseAndFind<T extends Node>(
 	code: string,

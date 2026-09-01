@@ -17,7 +17,6 @@ import type {
 import {
 	createLanguage,
 	getColumnAndLineOfPosition,
-	type AnyOptionalSchema,
 	type CharacterReportRange,
 	type FileAboutData,
 	type Language,
@@ -65,22 +64,6 @@ interface GlobalLanguageState {
 	packageVersion: string;
 }
 
-export function getMappedSourceFiles(
-	program: Program,
-	sourceFile: AST.SourceFile,
-): AST.SourceFile[] {
-	const sourceFiles = [sourceFile];
-	for (const fileName of new Set(
-		sourceFile.supplementalSourceFileNames ?? [],
-	)) {
-		const supplementalSourceFile = program.getSourceFile(fileName);
-		if (supplementalSourceFile && supplementalSourceFile !== sourceFile) {
-			sourceFiles.push(supplementalSourceFile);
-		}
-	}
-	return sourceFiles;
-}
-
 export function visitTypeScriptNodes<Services extends object>(
 	sourceFile: AST.SourceFile,
 	visitors: RuleVisitors<TypeScriptNodeVisitors, Services>,
@@ -98,6 +81,7 @@ export function visitTypeScriptNodes<Services extends object>(
 		// @ts-expect-error -- A dynamically selected visitor accepts this kind's node.
 		visitors[key]?.(node, services);
 		node.forEachChild(visit);
+		// @ts-expect-error -- A dynamically selected visitor accepts this kind's node.
 		visitors[`${key}:exit`]?.(node, services);
 	};
 
@@ -126,6 +110,22 @@ function adjustMappedRange(
 		return null;
 	}
 	return { begin: mapped.range.pos, end: mapped.range.end };
+}
+
+function getMappedSourceFiles(
+	program: Program,
+	sourceFile: AST.SourceFile,
+): AST.SourceFile[] {
+	const sourceFiles = [sourceFile];
+	for (const fileName of new Set(
+		sourceFile.supplementalSourceFileNames ?? [],
+	)) {
+		const supplementalSourceFile = program.getSourceFile(fileName);
+		if (supplementalSourceFile && supplementalSourceFile !== sourceFile) {
+			sourceFiles.push(supplementalSourceFile as AST.SourceFile);
+		}
+	}
+	return sourceFiles;
 }
 
 function mapDiagnosticToAuthoredSource(
@@ -188,9 +188,9 @@ assert(
 	`Two different versions of ${packageJson.name} are imported: ${packageJson.version} and ${globalTyped[stateSymbol]?.packageVersion}`,
 );
 
-const languageState: GlobalLanguageState = (globalTyped[stateSymbol] = {
+globalTyped[stateSymbol] = {
 	packageVersion: packageJson.version,
-});
+};
 
 export const typescriptLanguage: Language<
 	TypeScriptNodeVisitors,
@@ -342,7 +342,7 @@ export const typescriptLanguage: Language<
 				nullThrows(
 					getProject().program.getSourceFile(data.filePathAbsolute),
 					`Could not retrieve source file for: ${data.filePathAbsolute}`,
-				);
+				) as AST.SourceFile;
 			const services: TypeScriptFileServices = {
 				get checker() {
 					return getProject().checker;

@@ -136,7 +136,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						range: getTSNodeRange(node, sourceFile),
 					});
 				},
-				TypeReference: (node, { options, program, sourceFile, checker }) => {
+				TypeReference: (node, { checker, options, program, sourceFile }) => {
 					if (
 						node.typeName.kind !== SyntaxKind.Identifier ||
 						!isGlobalDeclaration(node.typeName, checker, program)

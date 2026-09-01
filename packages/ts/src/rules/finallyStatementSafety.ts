@@ -67,9 +67,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								checkStatement(statement.elseStatement);
 							}
 						} else if (statement.kind === SyntaxKind.SwitchStatement) {
-							statement.caseBlock.clauses.forEach((clause) => {
-								clause.statements.forEach(checkStatement);
-							});
+							statement.caseBlock.clauses.forEach(
+								(clause: AST.CaseOrDefaultClause) => {
+									clause.statements.forEach(checkStatement);
+								},
+							);
 						} else if (statement.kind === SyntaxKind.LabeledStatement) {
 							checkStatement(statement.statement);
 						}

@@ -50,8 +50,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return undefined;
 			}
 
-			const resolvedDeclarations = declarations.map((declaration) =>
-				declaration.resolve(),
+			const resolvedDeclarations = declarations.map(
+				(declaration) => declaration.resolve() as AST.AnyNode | undefined,
 			);
 			if (resolvedDeclarations.some((declaration) => !declaration)) {
 				return false;

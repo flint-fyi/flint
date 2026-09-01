@@ -7,6 +7,7 @@ import { calculateDelta } from "./calculateDelta.ts";
 import { createTestCaseSlug } from "./createTestCaseSlug.ts";
 import { countCaseFiles } from "./creators/createCaseFiles.ts";
 import { ruleCounts } from "./creators/files/rules.ts";
+import { nativeScenarios } from "./nativeScenarios.ts";
 import { runInHyperfine } from "./runInHyperfine.ts";
 import { testCaseEntries, testCasesPath } from "./testCases.ts";
 
@@ -45,3 +46,23 @@ for (const files of testCaseEntries[0].values) {
 }
 
 console.table(table(results));
+
+const nativeResults: unknown[] = [];
+
+for (const scenario of nativeScenarios) {
+	const command = scenario.useCache
+		? `${flintCommand.replace(" --cache-ignore", "")} --cache-location .flint-benchmark-cache`
+		: flintCommand;
+	const prepare = scenario.prepare?.replaceAll("{{flint}}", command);
+	// flint-disable-next-line performance/loopAwaits
+	const timing = await runInHyperfine(
+		command,
+		"Flint native",
+		`native-${scenario.slug}`,
+		prepare,
+	);
+
+	nativeResults.push({ scenario: scenario.label, timing });
+}
+
+console.table(table(nativeResults));

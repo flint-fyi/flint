@@ -24,7 +24,7 @@ function isGlobalRequire(node: AST.Expression, checker: Checker) {
 	}
 
 	const declarations = symbol.declarations;
-	if (!declarations?.length) {
+	if (!declarations.length) {
 		return true;
 	}
 

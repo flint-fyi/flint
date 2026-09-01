@@ -20,7 +20,7 @@ interface ImportInfo {
 
 function getImportInfo(
 	node: AST.ImportDeclaration,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): ImportInfo | undefined {
 	if (!node.importClause) {
 		return undefined;

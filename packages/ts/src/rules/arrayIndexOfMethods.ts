@@ -90,7 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, checker }) => {
+				CallExpression: (node, { checker, sourceFile }) => {
 					const result = isFindIndexWithDirectEquality(node, checker);
 					if (result) {
 						context.report({

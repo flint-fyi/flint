@@ -41,21 +41,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const testCase of describedCases.valid) {
 						const caseNode = testCase.nodes.case;
+						if (!isObjectLiteralExpression(caseNode)) {
+							continue;
+						}
+
+						const property = caseNode.properties[0];
 						if (
-							isObjectLiteralExpression(caseNode) &&
 							caseNode.properties.length === 1 &&
-							isPropertyAssignment(caseNode.properties[0]) &&
-							isIdentifier(caseNode.properties[0].name) &&
-							caseNode.properties[0].name.text === "code"
+							property &&
+							isPropertyAssignment(property) &&
+							isIdentifier(property.name) &&
+							property.name.text === "code"
 						) {
 							const fix: FileChange = {
 								range: getTSNodeRange(caseNode, sourceFile),
-								text: caseNode.properties[0].initializer.getText(sourceFile),
+								text: property.initializer.getText(sourceFile),
 							};
 							context.report({
 								fix,
 								message: "testShorthands",
-								range: getTSNodeRange(caseNode.properties[0], sourceFile),
+								range: getTSNodeRange(property, sourceFile),
 							});
 						}
 					}

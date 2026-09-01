@@ -14,7 +14,7 @@ export function containsGlobalDeclarations(
 	return sourceFileNode.statements.some((statement) => {
 		// Checks for 'declare global {}'
 		if (statement.kind === SyntaxKind.ModuleDeclaration) {
-			const declaration = statement as AST.ModuleDeclaration;
+			const declaration = statement;
 			if (declaration.name.text === "global") {
 				return true;
 			}

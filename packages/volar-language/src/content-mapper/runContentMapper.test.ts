@@ -484,29 +484,32 @@ describe("content mapper protocol", () => {
 			"out-of-bounds mapping end",
 			{ extension: ".ts", mappings: [[0, 3, 0, 0, 0]], text: "😀" },
 		],
-	] as const)("rejects an invalid UTF-16 %s", async (_name, result) => {
-		const server = startServer({
-			diagnosticSource: "flint",
-			openProject: () => ({ transform: (): TransformResult => result }),
-		});
-		await initialize(server);
-		await open(server);
-		server.input.end(
-			frame(
-				request(3, "transform", {
-					content: "😀",
-					fileName: "a.vue",
-					projectHandle: "project",
-				}),
-			),
-		);
-		expect((await nextResponse(server.output)).result).toMatchObject({
-			diagnostics: [{ code: 1, length: 4, start: 0 }],
-			extension: ".ts",
-			text: "",
-		});
-		await server.completion;
-	});
+	] satisfies [string, TransformResult][])(
+		"rejects an invalid UTF-16 %s",
+		async (_name, result) => {
+			const server = startServer({
+				diagnosticSource: "flint",
+				openProject: () => ({ transform: (): TransformResult => result }),
+			});
+			await initialize(server);
+			await open(server);
+			server.input.end(
+				frame(
+					request(3, "transform", {
+						content: "😀",
+						fileName: "a.vue",
+						projectHandle: "project",
+					}),
+				),
+			);
+			expect((await nextResponse(server.output)).result).toMatchObject({
+				diagnostics: [{ code: 1, length: 4, start: 0 }],
+				extension: ".ts",
+				text: "",
+			});
+			await server.completion;
+		},
+	);
 
 	test("accepts all UTF-16 boundaries around astral characters", async () => {
 		const server = startServer({
@@ -887,7 +890,7 @@ describe("content mapper protocol", () => {
 			expect(chunks).toHaveLength(1);
 		});
 		expect(openProject).not.toHaveBeenCalled();
-		expect(chunks[0].toString()).toMatch(/^Content-Length: \d+\r\n\r\n\{/);
+		expect(chunks[0]?.toString()).toMatch(/^Content-Length: \d+\r\n\r\n\{/);
 		callbacks.shift()?.();
 		await vi.waitFor(() => {
 			expect(chunks).toHaveLength(2);

@@ -31,6 +31,24 @@ const restrictionSchema = z.object({
 
 type Restriction = z.infer<typeof restrictionSchema>;
 
+function resolveDeclarations(
+	declarationHandles: readonly { resolve(): Node | undefined }[] | undefined,
+): AST.Declaration[] | undefined {
+	if (!declarationHandles) {
+		return undefined;
+	}
+
+	const declarations: AST.Declaration[] = [];
+	for (const declarationHandle of declarationHandles) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return undefined;
+		}
+		declarations.push(declaration as AST.Declaration);
+	}
+	return declarations;
+}
+
 function resolveModuleDeclarations(
 	moduleSpecifier: AST.Expression,
 	checker: Checker,
@@ -51,26 +69,6 @@ function resolveSymbolDeclarations(nameNode: Node, checker: Checker) {
 	}
 
 	return resolveDeclarations(symbol.declarations);
-}
-
-function resolveDeclarations(
-	declarationHandles:
-		| readonly { resolve(): AST.Declaration | undefined }[]
-		| undefined,
-): AST.Declaration[] | undefined {
-	if (!declarationHandles) {
-		return undefined;
-	}
-
-	const declarations: AST.Declaration[] = [];
-	for (const declarationHandle of declarationHandles) {
-		const declaration = declarationHandle.resolve();
-		if (!declaration) {
-			return undefined;
-		}
-		declarations.push(declaration);
-	}
-	return declarations;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

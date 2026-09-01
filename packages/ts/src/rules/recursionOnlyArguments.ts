@@ -78,11 +78,7 @@ function isRecursiveCall(
 		return false;
 	}
 
-	for (
-		let current: AST.AnyNode | undefined = callExpression.parent;
-		current;
-		current = current.parent
-	) {
+	for (let current = callExpression.parent; ; current = current.parent) {
 		if (current === functionNode) {
 			return true;
 		}
@@ -103,9 +99,10 @@ function isRecursiveCall(
 		) {
 			return false;
 		}
+		if (current.kind === SyntaxKind.SourceFile) {
+			return false;
+		}
 	}
-
-	return false;
 }
 
 function isReferenceOnlyUsedInRecursion(
@@ -125,7 +122,7 @@ function isReferenceOnlyUsedInRecursion(
 	}
 
 	const argumentIndex = parent.arguments.findIndex(
-		(argument) => argument === reference,
+		(argument: AST.Expression) => argument === reference,
 	);
 
 	return argumentIndex === parameterIndex;

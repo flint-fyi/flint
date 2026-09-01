@@ -88,11 +88,10 @@ function parseExpression(source: string): AST.Expression {
 		throw new Error(`Could not parse expression: ${source}`);
 	}
 
-	const initializer = (statement as AST.VariableStatement).declarationList
-		.declarations[0]?.initializer;
+	const initializer = statement.declarationList.declarations[0]?.initializer;
 	if (!initializer) {
 		throw new Error(`Could not parse expression: ${source}`);
 	}
 
-	return initializer as AST.Expression;
+	return initializer;
 }

@@ -132,7 +132,9 @@ describe("visitTypeScriptNodes", () => {
 		const program = api.createProgram(["/repo/index.ts"], {
 			compilerOptions: { noLib: true },
 		});
-		const sourceFile = program.getSourceFile("/repo/index.ts");
+		const sourceFile = program.getSourceFile("/repo/index.ts") as
+			| AST.SourceFile
+			| undefined;
 
 		try {
 			expect(sourceFile).toBeDefined();

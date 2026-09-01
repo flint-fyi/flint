@@ -1,4 +1,4 @@
-import { isNullKeyword } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
@@ -190,8 +190,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						} else if (
 							options.looseNullishComparisonStyle === "prefer-undefined"
 						) {
-							const leftIsNull = isNullKeyword(node.left);
-							const rightIsNull = isNullKeyword(node.right);
+							const leftIsNull = node.left.kind === SyntaxKind.NullKeyword;
+							const rightIsNull = node.right.kind === SyntaxKind.NullKeyword;
 
 							if (leftIsNull || rightIsNull) {
 								context.report({

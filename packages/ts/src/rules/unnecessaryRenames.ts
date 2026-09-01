@@ -164,6 +164,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					checkObjectLiteralDestructuring(left, sourceFile);
 				},
 				BindingElement: (node, { sourceFile }) => {
+					if (!node.name) {
+						return;
+					}
+
 					if (
 						node.propertyName?.kind !== SyntaxKind.ComputedPropertyName &&
 						node.name.kind === SyntaxKind.Identifier &&

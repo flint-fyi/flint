@@ -1,8 +1,4 @@
-import {
-	SyntaxKind,
-	type Node,
-	type NodeArray,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -41,9 +37,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				SourceFile: (node, { sourceFile }) => {
-					const exportedNames = new Map<string, Node>();
+					const exportedNames = new Map<string, AST.AnyNode>();
 
-					function checkAndReportDuplicate(name: string, node: Node) {
+					function checkAndReportDuplicate(name: string, node: AST.AnyNode) {
 						const existing = exportedNames.get(name);
 						if (existing) {
 							context.report({

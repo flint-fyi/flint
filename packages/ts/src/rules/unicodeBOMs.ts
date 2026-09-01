@@ -23,8 +23,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				SourceFile: (node) => {
-					const text = node.getFullText();
-					if (text.charCodeAt(0) !== 0xfeff) {
+					const text = context.host.readFileSync(node.fileName);
+					if (text?.charCodeAt(0) !== 0xfeff) {
 						return {};
 					}
 

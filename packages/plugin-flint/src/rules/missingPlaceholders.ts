@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { isIdentifier, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -123,10 +123,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			dataProperty.initializer.properties.forEach((prop) => {
 				if (
 					prop.kind === SyntaxKind.PropertyAssignment &&
-					prop.name.kind === SyntaxKind.Identifier
+					isIdentifier(prop.name)
 				) {
 					dataKeys.add(prop.name.text);
-				} else if (prop.kind === SyntaxKind.ShorthandPropertyAssignment) {
+				} else if (
+					prop.kind === SyntaxKind.ShorthandPropertyAssignment &&
+					isIdentifier(prop.name)
+				) {
 					dataKeys.add(prop.name.text);
 				}
 			});

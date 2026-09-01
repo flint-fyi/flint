@@ -25,7 +25,8 @@ function isBuiltinErrorType(type: Type, program: Program): boolean {
 		.map((declaration) => declaration.resolve())
 		.some(
 			(declaration) =>
-				!!declaration && declarationIncludesGlobal(declaration, program),
+				!!declaration &&
+				declarationIncludesGlobal(declaration as AST.Declaration, program),
 		);
 }
 

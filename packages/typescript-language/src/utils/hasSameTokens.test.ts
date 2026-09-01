@@ -116,5 +116,5 @@ function getInitializer(statement: AST.AnyNode): AST.AnyNode {
 	return nullThrows(
 		declaration.initializer,
 		"Expected a variable initializer.",
-	) as AST.AnyNode;
+	);
 }

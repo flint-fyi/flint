@@ -3,6 +3,7 @@ import {
 	TypeFlags,
 	type Signature,
 	type Type,
+	type TypeReference,
 } from "typescript-native/unstable/sync";
 
 import {
@@ -22,30 +23,12 @@ import {
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
-function getCallSignatures(type: Type): readonly Signature[] {
-	if (type.isUnionType() || type.isIntersectionType()) {
-		return type
-			.getTypes()
-			.flatMap((constituent) => getCallSignatures(constituent));
-	}
-
-	return type.getCallSignatures();
-}
-
-function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
-	return (type.flags & flags) !== 0;
-}
-
-function isIntrinsicErrorType(type: Type): boolean {
-	return type.isIntrinsicType() && type.intrinsicName === "error";
-}
-
 function findFunctionAncestor(
 	node: AST.AnyNode,
 ): AST.FunctionLikeDeclaration | undefined {
 	let current = node.parent;
 
-	while (current) {
+	while (current.kind !== SyntaxKind.SourceFile) {
 		switch (current.kind) {
 			case SyntaxKind.ArrowFunction:
 			case SyntaxKind.Constructor:
@@ -54,13 +37,23 @@ function findFunctionAncestor(
 			case SyntaxKind.GetAccessor:
 			case SyntaxKind.MethodDeclaration:
 			case SyntaxKind.SetAccessor:
-				return current as AST.FunctionLikeDeclaration;
+				return current;
 		}
 
 		current = current.parent;
 	}
 
 	return undefined;
+}
+
+function getCallSignatures(type: Type): readonly Signature[] {
+	if (type.isUnionType() || type.isIntersectionType()) {
+		return type
+			.getTypes()
+			.flatMap((constituent) => getCallSignatures(constituent));
+	}
+
+	return type.getCallSignatures();
 }
 
 function getThisExpression(
@@ -79,6 +72,14 @@ function getThisExpression(
 			return node.kind === SyntaxKind.ThisKeyword ? node : undefined;
 		}
 	}
+}
+
+function isIntrinsicErrorType(type: Type): boolean {
+	return type.isIntrinsicType() && type.intrinsicName === "error";
+}
+
+function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
+	return (type.flags & flags) !== 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -127,7 +128,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkReturn(
 			returnNode: AST.Expression,
 			reportingNode: AST.AnyNode,
-			{ program, sourceFile, checker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 		): void {
 			const type = checker.getTypeAtLocation(returnNode);
 			const functionNode = findFunctionAncestor(returnNode);
@@ -217,7 +218,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						checker.isArrayType(functionReturnType) &&
 						isTypeFlagSet(
 							nullThrows(
-								checker.getTypeArguments(functionReturnType)[0],
+								checker.getTypeArguments(
+									functionReturnType as TypeReference,
+								)[0],
 								"Array type should have at least one type argument",
 							),
 							TypeFlags.Unknown,

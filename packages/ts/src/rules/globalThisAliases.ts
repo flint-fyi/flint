@@ -29,7 +29,7 @@ function isOnlyGlobalDeclaration(
 		if (!declaration) {
 			return false;
 		}
-		declarations.push(declaration);
+		declarations.push(declaration as AST.Declaration);
 	}
 
 	if (!declarations.length) {
@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { program, sourceFile, checker }) => {
+				Identifier: (node, { checker, program, sourceFile }) => {
 					if (
 						globalAliases.has(node.text) &&
 						!isPropertyAccess(node) &&

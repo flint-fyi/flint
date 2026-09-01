@@ -103,7 +103,7 @@ function isBlockScopeBoundary(node: AST.AnyNode) {
 	return (
 		node.kind === SyntaxKind.Block &&
 		node.parent.kind !== SyntaxKind.CatchClause &&
-		!isFunctionLike(node.parent as AST.AnyNode)
+		!isFunctionLike(node.parent)
 	);
 }
 

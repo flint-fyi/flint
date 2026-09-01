@@ -47,11 +47,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return false;
 				}
 
-				if (
-					isImportFromNodeEvents(
-						declaration.parent.parent.parent.moduleSpecifier,
-					)
-				) {
+				const importDeclaration = declaration.parent.parent
+					.parent as AST.ImportDeclaration;
+				if (isImportFromNodeEvents(importDeclaration.moduleSpecifier)) {
 					return true;
 				}
 			}
@@ -76,7 +74,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			return checker
 				.getSymbolAtLocation(identifier)
 				?.declarations.some((declaration) => {
-					const resolved = declaration.resolve();
+					const resolved = declaration.resolve() as AST.AnyNode | undefined;
 					return !!resolved && isDeclarationEventEmitter(resolved);
 				});
 		}
@@ -113,6 +111,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						for (const type of heritageClause.types) {
+							if (type.kind !== SyntaxKind.ExpressionWithTypeArguments) {
+								continue;
+							}
+
 							checkExpression(type.expression, sourceFile, checker);
 						}
 					}

@@ -30,7 +30,7 @@ export function isInlineArrayCreation(node: AST.Expression): boolean {
 	}
 
 	if (node.kind === SyntaxKind.ParenthesizedExpression) {
-		return isInlineArrayCreation(node.expression as AST.Expression);
+		return isInlineArrayCreation(node.expression);
 	}
 
 	if (node.kind === SyntaxKind.CallExpression) {
@@ -38,13 +38,12 @@ export function isInlineArrayCreation(node: AST.Expression): boolean {
 		if (
 			callExpression.expression.kind === SyntaxKind.PropertyAccessExpression
 		) {
-			const propertyAccess =
-				callExpression.expression as AST.PropertyAccessExpression;
+			const propertyAccess = callExpression.expression;
 			const methodName = propertyAccess.name.text;
 
 			if (
 				propertyAccess.expression.kind === SyntaxKind.Identifier &&
-				(propertyAccess.expression as AST.Identifier).text === "Object" &&
+				propertyAccess.expression.text === "Object" &&
 				objectStaticMethods.has(methodName)
 			) {
 				return true;
@@ -52,7 +51,7 @@ export function isInlineArrayCreation(node: AST.Expression): boolean {
 
 			if (
 				propertyAccess.expression.kind === SyntaxKind.Identifier &&
-				(propertyAccess.expression as AST.Identifier).text === "Array" &&
+				propertyAccess.expression.text === "Array" &&
 				(methodName === "from" || methodName === "of")
 			) {
 				return true;
@@ -65,7 +64,7 @@ export function isInlineArrayCreation(node: AST.Expression): boolean {
 
 		if (
 			callExpression.expression.kind === SyntaxKind.Identifier &&
-			(callExpression.expression as AST.Identifier).text === "Array" &&
+			callExpression.expression.text === "Array" &&
 			node.parent.kind === SyntaxKind.NewExpression
 		) {
 			return true;
@@ -75,7 +74,7 @@ export function isInlineArrayCreation(node: AST.Expression): boolean {
 	if (
 		node.kind === SyntaxKind.NewExpression &&
 		node.expression.kind === SyntaxKind.Identifier &&
-		(node.expression as AST.Identifier).text === "Array"
+		node.expression.text === "Array"
 	) {
 		return true;
 	}

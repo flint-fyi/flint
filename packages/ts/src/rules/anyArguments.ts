@@ -5,6 +5,7 @@ import {
 	type Program,
 	type Symbol,
 	type Type,
+	type TypeReference,
 } from "typescript-native/unstable/sync";
 
 import {
@@ -21,10 +22,6 @@ import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
 function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
 	return (type.flags & flags) !== 0;
-}
-
-function isIntrinsicErrorType(type: Type): boolean {
-	return type.isIntrinsicType() && type.intrinsicName === "error";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -71,17 +68,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkCallArguments(
 			node: AST.CallExpression | AST.NewExpression,
-			{ program, sourceFile, checker }: TypeScriptFileServices,
+			{ checker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			if (!node.arguments) {
 				return;
 			}
 
 			const signature = checker.getResolvedSignature(node);
-			if (!signature) {
-				return;
-			}
-
 			const parameters = signature.getParameters();
 
 			let parameterIndex = 0;
@@ -105,7 +98,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								continue;
 							}
 							if (checker.isArrayType(restType)) {
-								const elementType = checker.getTypeArguments(restType)[0];
+								const elementType = checker.getTypeArguments(
+									restType as TypeReference,
+								)[0];
 								if (
 									elementType &&
 									isTypeFlagSet(elementType, TypeFlags.Any | TypeFlags.Unknown)
@@ -150,7 +145,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								},
 							});
 						}
-						const tupleTypeArgs = checker.getTypeArguments(spreadType);
+						const tupleTypeArgs = checker.getTypeArguments(
+							spreadType as TypeReference,
+						);
 						parameterIndex += tupleTypeArgs.length;
 					}
 					continue;
@@ -225,12 +222,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: checkCallArguments,
 				NewExpression: checkCallArguments,
-				TaggedTemplateExpression: (node, { sourceFile, checker }) => {
+				TaggedTemplateExpression: (node, { checker, sourceFile }) => {
 					const signature = checker.getResolvedSignature(node);
-					if (!signature) {
-						return;
-					}
-
 					const parameters = signature.getParameters();
 					if (parameters.length <= 1) {
 						return;
@@ -345,7 +338,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const restType = checker.getTypeOfSymbol(lastParam);
 
 				if (checker.isTupleType(restType)) {
-					const tupleArgs = checker.getTypeArguments(restType as Type);
+					const tupleArgs = checker.getTypeArguments(restType as TypeReference);
 					const tupleIndex = index - (parameters.length - 1);
 					const tupleType = tupleArgs[tupleIndex];
 					if (tupleType) {
@@ -380,7 +373,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			program: Program,
 			node: AST.AnyNode,
 		): undefined | { paramType: Type; type: string } {
-			const tupleTypeArgs = checker.getTypeArguments(tupleType);
+			const tupleTypeArgs = checker.getTypeArguments(
+				tupleType as TypeReference,
+			);
 
 			for (const [i, elementType] of tupleTypeArgs.entries()) {
 				const anyType = discriminateAnyType(elementType, checker, node);

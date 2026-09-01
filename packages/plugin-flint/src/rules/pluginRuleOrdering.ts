@@ -61,7 +61,7 @@ function isCreatePluginCall(
 		return false;
 	}
 
-	const declarations: AST.Declaration[] = [];
+	const declarations = [];
 	for (const declarationHandle of resolvedSymbol.declarations) {
 		const declaration = declarationHandle.resolve();
 		if (!declaration) {

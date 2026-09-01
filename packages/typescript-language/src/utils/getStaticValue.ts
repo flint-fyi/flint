@@ -25,7 +25,7 @@ export function getStaticValue(node: AST.Expression): StaticValue | undefined {
 		case SyntaxKind.NonNullExpression:
 		case SyntaxKind.SatisfiesExpression:
 		case SyntaxKind.TypeAssertionExpression:
-			return getStaticValue(unwrapped.expression as AST.Expression);
+			return getStaticValue(unwrapped.expression);
 
 		case SyntaxKind.BigIntLiteral:
 			return { value: BigInt(unwrapped.text.slice(0, -1)) };
@@ -56,7 +56,7 @@ export function getStaticValue(node: AST.Expression): StaticValue | undefined {
 function getPrefixUnaryStaticValue(
 	node: AST.PrefixUnaryExpression,
 ): StaticValue | undefined {
-	const operand = getStaticValue(node.operand as AST.Expression);
+	const operand = getStaticValue(node.operand);
 	if (!operand) {
 		return undefined;
 	}

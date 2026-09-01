@@ -10,9 +10,14 @@ export function createConsumerPackageFile(
 			`file:${path.relative(testCasesPath, artifactPath).split(path.sep).join("/")}`,
 		]),
 	);
+	const dependencies = Object.fromEntries(
+		["@flint.fyi/astro", "@flint.fyi/svelte", "@flint.fyi/vue", "flint"]
+			.filter((packageName) => overrides[packageName] !== undefined)
+			.map((packageName) => [packageName, overrides[packageName]]),
+	);
 
 	return {
-		dependencies: { flint: overrides.flint },
+		dependencies,
 		name: "@flint.fyi/performance-testing-cases",
 		pnpm: { overrides },
 		private: true,

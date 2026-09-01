@@ -75,7 +75,7 @@ function getNegativeIndexLengthNode(
 	target: AST.Expression,
 	sourceFile: AST.SourceFile,
 ): NegativeIndexInfo | undefined {
-	const unwrapped = unwrapParenthesizedNode(node);
+	const unwrapped = unwrapParenthesizedNode(node) as AST.Expression;
 
 	if (
 		unwrapped.kind !== SyntaxKind.BinaryExpression ||
@@ -84,12 +84,12 @@ function getNegativeIndexLengthNode(
 		return;
 	}
 
-	const right = unwrapParenthesizedNode(unwrapped.right);
+	const right = unwrapParenthesizedNode(unwrapped.right) as AST.Expression;
 	if (!isPositiveNumericLiteral(right)) {
 		return;
 	}
 
-	const left = unwrapParenthesizedNode(unwrapped.left);
+	const left = unwrapParenthesizedNode(unwrapped.left) as AST.Expression;
 
 	if (isLengthPropertyAccess(left, target, sourceFile)) {
 		return {

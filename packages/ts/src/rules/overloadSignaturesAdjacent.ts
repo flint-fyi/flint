@@ -1,8 +1,6 @@
 import {
-	canHaveModifiers,
 	isStringLiteral,
 	SyntaxKind,
-	type Node,
 	type PropertyName,
 } from "typescript-native/unstable/ast";
 
@@ -155,10 +153,11 @@ function isSameMethod(method1: Method, method2: Method | undefined) {
 	);
 }
 
-function isStatic(node: Node) {
-	return (
-		canHaveModifiers(node) &&
-		!!node.modifiers?.some((mod) => mod.kind === SyntaxKind.StaticKeyword)
+function isStatic(
+	node: AST.MethodDeclaration | AST.MethodSignatureDeclaration,
+): boolean {
+	return !!(node as AST.MethodDeclaration & AST.ModifiersBase).modifiers?.some(
+		(modifier: AST.ModifierLike) => modifier.kind === SyntaxKind.StaticKeyword,
 	);
 }
 

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -71,7 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const argumentsText = sourceFile.text.slice(
 						openParenthesisToken.getEnd(),
-						closeParenthesisToken.getStart(sourceFile),
+						closeParenthesisToken.getStart(),
 					);
 
 					context.report({
@@ -97,8 +97,26 @@ function findToken(
 	token: SyntaxKind,
 	sourceFile: AST.SourceFile,
 ) {
+	const nodeStart = node.getStart(sourceFile);
+	const scanner = createScanner(
+		true,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		nodeStart,
+		node.getEnd() - nodeStart,
+	);
+
+	while (scanner.scan() !== SyntaxKind.EndOfFile) {
+		if (scanner.getToken() === token) {
+			return {
+				getEnd: () => scanner.getTokenEnd(),
+				getStart: () => scanner.getTokenStart(),
+			};
+		}
+	}
+
 	return nullThrows(
-		node.getChildren(sourceFile).find((child) => child.kind === token),
+		undefined,
 		"Token is expected to be present by the find call",
 	);
 }

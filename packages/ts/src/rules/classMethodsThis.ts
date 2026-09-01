@@ -27,7 +27,8 @@ function classImplementsSomething(
 ): boolean {
 	return (
 		classNode.heritageClauses?.some(
-			(clause) => clause.token === SyntaxKind.ImplementsKeyword,
+			(clause: AST.HeritageClause) =>
+				clause.token === SyntaxKind.ImplementsKeyword,
 		) ?? false
 	);
 }
@@ -121,9 +122,9 @@ function isPublicMember(member: ClassMember): boolean {
 
 	if (
 		modifiers.some(
-			(m) =>
-				m.kind === SyntaxKind.PrivateKeyword ||
-				m.kind === SyntaxKind.ProtectedKeyword,
+			(modifier: AST.ModifierLike) =>
+				modifier.kind === SyntaxKind.PrivateKeyword ||
+				modifier.kind === SyntaxKind.ProtectedKeyword,
 		)
 	) {
 		return false;

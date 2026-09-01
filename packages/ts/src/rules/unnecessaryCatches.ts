@@ -64,11 +64,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						begin: node.getStart(sourceFile),
 						end: node.getStart(sourceFile) + "catch".length,
 					};
+					const parent = node.parent;
+					if (parent.kind !== SyntaxKind.TryStatement) {
+						return;
+					}
 
 					context.report({
 						fix: {
 							range: {
-								begin: node.parent.tryBlock.getEnd(),
+								begin: parent.tryBlock.getEnd(),
 								end: node.getEnd(),
 							},
 							text: "",

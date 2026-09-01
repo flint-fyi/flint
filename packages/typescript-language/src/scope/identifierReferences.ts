@@ -13,7 +13,7 @@ export function isNonReferenceIdentifier(identifier: AST.Identifier): boolean {
 		return true;
 	}
 
-	const parent = identifier.parent as AST.AnyNode;
+	const parent = identifier.parent;
 
 	switch (parent.kind) {
 		case SyntaxKind.BindingElement:
@@ -37,7 +37,7 @@ export function isNonReferenceIdentifier(identifier: AST.Identifier): boolean {
 }
 
 export function isWriteReference(identifier: AST.Identifier): boolean {
-	const parent = identifier.parent as AST.AnyNode;
+	const parent = identifier.parent;
 
 	if (isAssignmentTarget(identifier)) {
 		return true;
@@ -61,7 +61,7 @@ function isAssignmentTarget(identifier: AST.Identifier) {
 	let current: AST.AnyNode = identifier;
 
 	while (true) {
-		const parent = current.parent as AST.AnyNode;
+		const parent: AST.AnyNode = current.parent;
 
 		switch (parent.kind) {
 			case SyntaxKind.ArrayLiteralExpression:
@@ -94,7 +94,7 @@ function isAssignmentTarget(identifier: AST.Identifier) {
 }
 
 function isIdentifierDeclaration(identifier: AST.Identifier) {
-	const parent = identifier.parent as AST.AnyNode;
+	const parent = identifier.parent;
 
 	switch (parent.kind) {
 		case SyntaxKind.BindingElement:
@@ -140,11 +140,11 @@ function isIdentifierWithinParent(
 function isTypeReferenceIdentifier(identifier: AST.Identifier) {
 	let current: AST.AnyNode = identifier;
 
-	while ((current.parent as AST.AnyNode).kind === SyntaxKind.QualifiedName) {
-		current = current.parent as AST.AnyNode;
+	while (current.parent.kind === SyntaxKind.QualifiedName) {
+		current = current.parent;
 	}
 
-	const parent = current.parent as AST.AnyNode;
+	const parent = current.parent;
 	if (parent.kind !== SyntaxKind.TypeReference) {
 		return false;
 	}

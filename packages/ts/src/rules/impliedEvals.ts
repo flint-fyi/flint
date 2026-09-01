@@ -159,18 +159,20 @@ function isReferenceToGlobalFunction(
 		return true;
 	}
 
-	return symbol.declarations.some((declarationHandle) => {
-		const declaration = declarationHandle.resolve();
-		if (!declaration) {
-			return false;
-		}
-		const sourceFile = declaration.getSourceFile();
-		return (
-			program.isSourceFileDefaultLibrary(sourceFile) ||
-			sourceFile.fileName.includes("node_modules/@types/node/") ||
-			/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)
-		);
-	});
+	return symbol.declarations.some(
+		(declarationHandle: (typeof symbol.declarations)[number]) => {
+			const declaration = declarationHandle.resolve();
+			if (!declaration) {
+				return false;
+			}
+			const sourceFile = declaration.getSourceFile();
+			return (
+				program.isSourceFileDefaultLibrary(sourceFile) ||
+				sourceFile.fileName.includes("node_modules/@types/node/") ||
+				/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)
+			);
+		},
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

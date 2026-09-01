@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ attributes }: AST.ExportDeclaration | AST.ImportDeclaration,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (attributes && !attributes.elements.length) {
+			if (attributes && !attributes.attributes.length) {
 				context.report({
 					fix: {
 						range: getTSNodeRange(attributes, sourceFile),

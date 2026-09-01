@@ -12,7 +12,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function couldBeNullish(type: Type): boolean {
-	if (type.flags & TypeFlags.TypeParameter) {
+	if (type.isTypeParameter()) {
 		const constraint = type.getConstraint();
 		return constraint === undefined || couldBeNullish(constraint);
 	}

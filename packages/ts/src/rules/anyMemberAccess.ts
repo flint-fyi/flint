@@ -156,11 +156,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ElementAccessExpression: (node, { sourceFile, checker }) => {
+				ElementAccessExpression: (node, { checker, sourceFile }) => {
 					checkMemberExpression(node, sourceFile, checker);
 					checkComputedKey(node, sourceFile, checker);
 				},
-				PropertyAccessExpression: (node, { sourceFile, checker }) => {
+				PropertyAccessExpression: (node, { checker, sourceFile }) => {
 					checkMemberExpression(node, sourceFile, checker);
 				},
 			},

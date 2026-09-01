@@ -84,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			switch (name.kind) {
 				case SyntaxKind.ArrayBindingPattern: {
 					for (const element of name.elements) {
-						if (element.kind === SyntaxKind.BindingElement) {
+						if (element.name) {
 							addBindingNames(element.name, variables);
 						}
 					}
@@ -98,6 +98,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 				case SyntaxKind.ObjectBindingPattern: {
 					for (const element of name.elements) {
+						if (!element.name) {
+							continue;
+						}
+
 						addBindingNames(element.name, variables);
 					}
 

@@ -112,8 +112,8 @@ function analyzeConditionalForNullish(
 				: false;
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left;
-			const rightComp = condition.right;
+			const leftComp = condition.left as AST.BinaryExpression;
+			const rightComp = condition.right as AST.BinaryExpression;
 
 			const leftValue = extractValueFromComparison(leftComp).value;
 			const rightValue = extractValueFromComparison(rightComp).value;
@@ -148,8 +148,8 @@ function analyzeConditionalForNullish(
 				: false;
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left;
-			const rightComp = condition.right;
+			const leftComp = condition.left as AST.BinaryExpression;
+			const rightComp = condition.right as AST.BinaryExpression;
 
 			const leftValue = extractValueFromComparison(leftComp).value;
 			const rightValue = extractValueFromComparison(rightComp).value;
@@ -271,6 +271,10 @@ function getIfStatementNullishCheckValue(node: AST.IfStatement) {
 	}
 }
 
+function getIntersectionConstituents(type: Type): readonly Type[] {
+	return type.isIntersectionType() ? type.getTypes() : [type];
+}
+
 function getTypeFlags(type: Type): TypeFlags {
 	let flags = 0;
 	for (const constituent of getUnionConstituents(type)) {
@@ -278,11 +282,7 @@ function getTypeFlags(type: Type): TypeFlags {
 			flags |= subConstituent.flags;
 		}
 	}
-	return flags as TypeFlags;
-}
-
-function getIntersectionConstituents(type: Type): readonly Type[] {
-	return type.isIntersectionType() ? type.getTypes() : [type];
+	return flags;
 }
 
 function getUnionConstituents(type: Type): readonly Type[] {

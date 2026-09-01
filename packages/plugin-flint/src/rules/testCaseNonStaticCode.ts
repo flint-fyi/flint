@@ -30,7 +30,9 @@ function getCodeProperty(node: AST.ObjectLiteralExpression) {
 		}
 
 		return (
-			isShorthandPropertyAssignment(property) && property.name.text === "code"
+			isShorthandPropertyAssignment(property) &&
+			isIdentifier(property.name) &&
+			property.name.text === "code"
 		);
 	});
 }

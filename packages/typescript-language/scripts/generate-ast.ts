@@ -7,12 +7,14 @@ import { SyntaxKind } from "typescript-native/unstable/ast";
 import { createScanner } from "typescript-native/unstable/ast/scanner";
 
 interface AliasData {
+	declaration: string;
 	type: string;
 	typeParameters: boolean;
 }
 
 interface InterfaceData {
 	bases: string[];
+	declaration: string;
 	hasKind: boolean;
 	kindType?: string;
 	typeParameterConstraint?: string;
@@ -35,6 +37,54 @@ const aliases = new Map<string, AliasData>();
 const categoryCompatibilityMembers = new Map([
 	["IterationStatement", ["ForInStatement", "ForOfStatement"]],
 ]);
+const compatibilityAliases = new Map([
+	[
+		"ExpressionParent",
+		[
+			"ArrayLiteralExpression",
+			"ArrowFunction",
+			"AsExpression",
+			"BinaryExpression",
+			"BindingElement",
+			"CallExpression",
+			"CaseClause",
+			"ComputedPropertyName",
+			"ConditionalExpression",
+			"ElementAccessExpression",
+			"EnumMember",
+			"ExportAssignment",
+			"ExportDeclaration",
+			"ExpressionStatement",
+			"ExternalModuleReference",
+			"IfStatement",
+			"ImportAttribute",
+			"ImportDeclaration",
+			"IterationStatement",
+			"JsxExpression",
+			"JsxSpreadAttribute",
+			"NewExpression",
+			"NonNullExpression",
+			"ParameterDeclaration",
+			"ParenthesizedExpression",
+			"PartiallyEmittedExpression",
+			"PropertyAssignment",
+			"PropertyDeclaration",
+			"ReturnStatement",
+			"SatisfiesExpression",
+			"ShorthandPropertyAssignment",
+			"SpreadAssignment",
+			"SpreadElement",
+			"SwitchStatement",
+			"TemplateSpan",
+			"ThrowStatement",
+			"TypeParameterDeclaration",
+			"VariableDeclaration",
+			"WithStatement",
+			"YieldExpression",
+		],
+	],
+	["MethodSignature", ["MethodSignatureDeclaration"]],
+]);
 const canonicalSyntaxKindNames = new Map<number, string>();
 for (const [name, value] of Object.entries(SyntaxKind)) {
 	if (typeof value === "number" && !canonicalSyntaxKindNames.has(value)) {
@@ -56,7 +106,7 @@ function findEnd(
 	let parenthesisDepth = 0;
 	let angleDepth = 0;
 	for (let index = start; index < tokens.length; index += 1) {
-		const text = tokens[index].text;
+		const text = tokenAt(tokens, index).text;
 		if (
 			text === terminator &&
 			braceDepth === 0 &&
@@ -78,11 +128,11 @@ function findEnd(
 function parseDeclarations(text: string): void {
 	const tokens = scan(text);
 	for (let index = 0; index < tokens.length - 2; index += 1) {
-		if (tokens[index].text !== "export") {
+		if (tokenAt(tokens, index).text !== "export") {
 			continue;
 		}
-		const declarationKind = tokens[index + 1].text;
-		const name = tokens[index + 2].text;
+		const declarationKind = tokenAt(tokens, index + 1).text;
+		const name = tokenAt(tokens, index + 2).text;
 		if (declarationKind !== "interface" && declarationKind !== "type") {
 			continue;
 		}
@@ -119,6 +169,10 @@ function parseDeclarations(text: string): void {
 			}
 			const end = findEnd(tokens, cursor + 1, ";");
 			aliases.set(name, {
+				declaration: text.slice(
+					tokenAt(tokens, index).start,
+					tokenAt(tokens, end).end,
+				),
 				type: textBetween(text, tokens, cursor + 1, end - 1),
 				typeParameters: hasTypeParameters,
 			});
@@ -134,8 +188,8 @@ function parseDeclarations(text: string): void {
 				while (tokens[cursor]?.text !== "," && tokens[cursor]?.text !== "{") {
 					cursor += 1;
 				}
-				bases.push(tokens[baseStart].text);
-				if (tokens[cursor].text === ",") {
+				bases.push(tokenAt(tokens, baseStart).text);
+				if (tokenAt(tokens, cursor).text === ",") {
 					cursor += 1;
 				}
 			}
@@ -146,7 +200,10 @@ function parseDeclarations(text: string): void {
 		const bodyEnd = findEnd(tokens, cursor + 1, "}");
 		let kindType: string | undefined;
 		for (let member = cursor + 1; member < bodyEnd; member += 1) {
-			if (tokens[member].text !== "kind" || tokens[member + 1]?.text !== ":") {
+			if (
+				tokenAt(tokens, member).text !== "kind" ||
+				tokens[member + 1]?.text !== ":"
+			) {
 				continue;
 			}
 			const kindEnd = findEnd(tokens, member + 2, ";");
@@ -155,9 +212,15 @@ function parseDeclarations(text: string): void {
 		}
 		interfaces.set(name, {
 			bases,
+			declaration: text.slice(
+				tokenAt(tokens, index).start,
+				tokenAt(tokens, bodyEnd).end,
+			),
 			hasKind: kindType !== undefined,
-			kindType,
-			typeParameterConstraint,
+			...(kindType === undefined ? {} : { kindType }),
+			...(typeParameterConstraint === undefined
+				? {}
+				: { typeParameterConstraint }),
 		});
 		index = bodyEnd;
 	}
@@ -182,7 +245,15 @@ function textBetween(
 	start: number,
 	end: number,
 ): string {
-	return text.slice(tokens[start].start, tokens[end].end);
+	return text.slice(tokenAt(tokens, start).start, tokenAt(tokens, end).end);
+}
+
+function tokenAt(tokens: TokenData[], index: number): TokenData {
+	const token = tokens[index];
+	if (!token) {
+		throw new Error("Unexpected end of native AST declarations.");
+	}
+	return token;
 }
 
 for (const fileName of fs.readdirSync(astDirectory).sort()) {
@@ -247,9 +318,9 @@ const coveredSyntaxKinds = new Set(
 	),
 );
 for (const alias of aliases.values()) {
-	const typeArgument = /^\w+<\s*(SyntaxKind\.\w+)\s*>$/.exec(alias.type)?.[1];
-	if (typeArgument) {
-		coveredSyntaxKinds.add(typeArgument);
+	const reference = /^(\w+)<\s*(SyntaxKind\.\w+)\s*>$/.exec(alias.type);
+	if (reference?.[1] !== "Token" && reference?.[2]) {
+		coveredSyntaxKinds.add(reference[2]);
 	}
 }
 for (const [name, data] of interfaces) {
@@ -258,8 +329,42 @@ for (const [name, data] of interfaces) {
 			name,
 			syntaxKindsFor(data.typeParameterConstraint)
 				.filter((kind) => name !== "Token" || !coveredSyntaxKinds.has(kind))
-				.map((kind) => `NativeAST.${name}<NativeAST.${kind}>`),
+				.map((kind) => `${name}Node<NativeAST.${kind}>`),
 		);
+	}
+}
+
+const specializedGenericKinds = new Set(
+	[...genericMembers]
+		.filter(([name]) => name !== "Token")
+		.flatMap(([, members]) =>
+			members.flatMap(
+				(member) => /NativeAST\.(SyntaxKind\.\w+)/.exec(member)?.[1] ?? [],
+			),
+		),
+);
+const tokenMembers = genericMembers.get("Token");
+if (!tokenMembers) {
+	throw new Error("Missing native Token declaration.");
+}
+genericMembers.set(
+	"Token",
+	tokenMembers.filter((member) => {
+		const kind = /NativeAST\.(SyntaxKind\.\w+)/.exec(member)?.[1];
+		return !kind || !specializedGenericKinds.has(kind);
+	}),
+);
+
+const preferredGenericByKind = new Map<string, string>();
+for (const [name, members] of genericMembers) {
+	if (name === "Token") {
+		continue;
+	}
+	for (const member of members) {
+		const kind = /NativeAST\.(SyntaxKind\.\w+)/.exec(member)?.[1];
+		if (kind) {
+			preferredGenericByKind.set(kind, member);
+		}
 	}
 }
 
@@ -270,16 +375,26 @@ for (const [name, declaration] of aliases) {
 	const reference = /^(\w+)<\s*(SyntaxKind\.\w+)\s*>$/.exec(declaration.type);
 	const target = reference?.[1];
 	const typeArgument = reference?.[2];
-	if (genericMembers.has(target) && typeArgument?.startsWith("SyntaxKind.")) {
+	if (
+		target &&
+		genericMembers.has(target) &&
+		typeArgument?.startsWith("SyntaxKind.")
+	) {
+		if (target === "Token" && coveredSyntaxKinds.has(typeArgument)) {
+			continue;
+		}
 		concreteNames.add(name);
 	}
 }
 
-const categoryBases = [...interfaces.keys()]
-	.filter((name) => name.endsWith("Base") && inheritsFrom(name, "Node"))
-	.sort();
-const categoryNames = new Set(categoryBases.map((name) => name.slice(0, -4)));
+const categoryNames = new Set(
+	[...aliases]
+		.filter(([name, declaration]) => declaration.type.trim() === `${name}Base`)
+		.map(([name]) => name),
+);
+categoryNames.add("IterationStatement");
 categoryNames.add("Node");
+categoryNames.add("UnaryExpression");
 
 for (const name of genericMembers.keys()) {
 	if (name !== "Token") {
@@ -302,11 +417,8 @@ function membersFor(base: string): string[] {
 			const data = interfaces.get(name);
 			const kinds = data?.kindType ? syntaxKindsFor(data.kindType) : [];
 			return kinds.length > 1
-				? kinds.map(
-						(kind) =>
-							`NativeAST.${name} & { readonly kind: NativeAST.${kind} }`,
-					)
-				: [`NativeAST.${name}`];
+				? kinds.map((kind) => `${name} & { readonly kind: NativeAST.${kind} }`)
+				: [name];
 		});
 	for (const [name, genericVariants] of genericMembers) {
 		if (inheritsFrom(name, base)) {
@@ -319,30 +431,106 @@ function membersFor(base: string): string[] {
 const exportedNames = new Set([...interfaces.keys(), ...aliases.keys()]);
 const lines = [
 	"// Generated by scripts/generate-ast.ts. Do not edit.",
-	"/* eslint-disable perfectionist/sort-modules, perfectionist/sort-union-types */",
+	"/* eslint-disable @typescript-eslint/no-duplicate-type-constituents, @typescript-eslint/no-explicit-any, @typescript-eslint/no-invalid-void-type, perfectionist/sort-heritage-clauses, perfectionist/sort-interfaces, perfectionist/sort-modules, perfectionist/sort-union-types */",
 	'import type * as NativeAST from "typescript-native/unstable/ast";',
 	"",
 ];
 
+const externalTypeNames = new Set<string>();
+for (const fileName of ["ast.d.ts", "ast.generated.d.ts"]) {
+	const text = fs.readFileSync(path.join(astDirectory, fileName), "utf8");
+	for (const match of text.matchAll(
+		/import(?: type)? \{([^}]+)\} from "(?:#[^"]+|\.\/spanMap\.ts)";/g,
+	)) {
+		const importedNames = match[1];
+		if (!importedNames) {
+			continue;
+		}
+		for (const importedName of importedNames.split(",")) {
+			externalTypeNames.add(importedName.trim());
+		}
+	}
+}
+
+function localDeclaration(name: string, declaration: string): string {
+	const alias = aliases.get(name);
+	const tokenReference =
+		alias && /^Token<\s*(SyntaxKind\.\w+)\s*>$/.exec(alias.type)?.[1];
+	const preferredGeneric =
+		tokenReference && preferredGenericByKind.get(tokenReference);
+	if (preferredGeneric) {
+		return `export type ${name} = ${preferredGeneric};`;
+	}
+
+	let output = declaration;
+	for (const genericName of genericMembers.keys()) {
+		if (genericName === "Token") {
+			if (name === "Token") {
+				output = output.replace("interface Token<", "interface TokenNode<");
+			}
+			continue;
+		}
+		output = output.replaceAll(
+			new RegExp(`\\b${genericName}(?=<)`, "g"),
+			`${genericName}Node`,
+		);
+	}
+	for (const externalTypeName of externalTypeNames) {
+		output = output.replaceAll(
+			new RegExp(`\\b${externalTypeName}\\b`, "g"),
+			`NativeAST.${externalTypeName}`,
+		);
+	}
+	output = output.replace(
+		/^(export interface \w+(?:<[^{}]+>)?) extends Node\b/,
+		"$1 extends NodeBase",
+	);
+	const bodyStart = output.indexOf("{");
+	if (bodyStart !== -1 && name !== "Node") {
+		let body = output.slice(bodyStart);
+		for (const categoryName of categoryNames) {
+			const categoryBase = `${categoryName}Base`;
+			body = body.replaceAll(
+				new RegExp(`\\b${categoryBase}\\b`, "g"),
+				categoryName,
+			);
+		}
+		output = output.slice(0, bodyStart) + body;
+	}
+	if (name === "NodeArray") {
+		output = output.replace(
+			"NodeArray<T extends Node>",
+			"NodeArray<T extends NodeBase>",
+		);
+	}
+	return output;
+}
+
 for (const name of [...exportedNames].sort()) {
 	if (
-		name.endsWith("Base") ||
-		categoryNames.has(name) ||
-		interfaces.get(name)?.typeParameterConstraint ||
-		aliases.get(name)?.typeParameters
+		(categoryNames.has(name) &&
+			!interfaces.get(name)?.typeParameterConstraint) ||
+		name === "NodeBase"
 	) {
 		continue;
 	}
-	const declaration = `export type ${name} = NativeAST.${name};`;
-	lines.push(
-		declaration.length > 80
-			? `export type ${name} =\n\tNativeAST.${name};`
-			: declaration,
-	);
+	const declaration =
+		interfaces.get(name)?.declaration ?? aliases.get(name)?.declaration;
+	if (declaration) {
+		lines.push(localDeclaration(name, declaration));
+	}
 }
 
+const nativeNodeDeclaration = interfaces.get("Node")?.declaration;
+if (!nativeNodeDeclaration) {
+	throw new Error("Missing native Node declaration.");
+}
 lines.push(
-	"export type Token<TKind extends NativeAST.TokenSyntaxKind = NativeAST.TokenSyntaxKind> = NativeAST.Token<TKind>;",
+	localDeclaration(
+		"NodeBase",
+		nativeNodeDeclaration.replace("interface Node ", "interface NodeBase "),
+	),
+	"export type Token<TKind extends TokenSyntaxKind = TokenSyntaxKind> = TKind extends TokenSyntaxKind ? TokenNode<TKind> : never;",
 );
 
 lines.push("", "export interface SyntaxKindNamesByKind {");
@@ -370,7 +558,7 @@ for (const categoryName of [...categoryNames].sort()) {
 	const base = categoryName === "Node" ? "NodeBase" : `${categoryName}Base`;
 	const members = genericMembers.get(categoryName) ?? membersFor(base);
 	if (categoryName === "Node") {
-		members.push("NativeAST.SourceFile");
+		members.push("SourceFile");
 	}
 	lines.push(`export type ${categoryName} =`);
 	const uniqueMembers = [...new Set(members)].sort();
@@ -380,8 +568,20 @@ for (const categoryName of [...categoryNames].sort()) {
 	lines.push("");
 }
 
+for (const [name, members] of compatibilityAliases) {
+	lines.push(
+		`export type ${name} =`,
+		...members
+			.sort()
+			.map(
+				(member, index) =>
+					`\t| ${member}${index === members.length - 1 ? ";" : ""}`,
+			),
+	);
+}
+
 lines.push(
-	"export type LeftHandSideExpressionParent = Expression | NativeAST.Decorator;",
+	"export type LeftHandSideExpressionParent = Expression | Decorator;",
 	"",
 );
 

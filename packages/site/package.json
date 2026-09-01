@@ -44,6 +44,7 @@
 		"starlight-blog": "catalog:site",
 		"starlight-links-validator": "catalog:site",
 		"starlight-sidebar-topics": "catalog:site",
+		"typescript": "6.0.3",
 		"zod": "catalog:dev"
 	},
 	"engines": {

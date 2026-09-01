@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: $/.github/actions/setup
-      - run: pnpm exec tsc -b
+      - run: pnpm exec tsc6 -b
 
   test_e2e:
     name: Test E2E (Node.js ${{ matrix.node-version }}, ${{ matrix.os }})
@@ -78,6 +78,26 @@ jobs:
           path: node_modules/.vite
       - name: Run e2e Tests
         run: pnpm run test --project e2e
+
+  test_e2e_typescript_native:
+    name: Test Packed TypeScript Native (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+    steps:
+      - uses: $/.github/actions/setup
+      - run: pnpm run build
+      - name: Pack Flint packages
+        run: pnpm --recursive --filter='./packages/**' pack --pack-destination '${{ runner.temp }}/flint-packs'
+      - name: Run packed TypeScript native E2E tests
+        run: pnpm run test --project e2e tests/typescript-native
+        env:
+          FLINT_E2E_PACK_DIR: ${{ runner.temp }}/flint-packs
 
   test_node:
     name: Test (Node.js ${{ matrix.node-version }}, ubuntu-latest)

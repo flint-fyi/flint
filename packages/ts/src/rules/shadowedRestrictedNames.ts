@@ -59,7 +59,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				checkIdentifier(name, sourceFile);
 			} else {
 				for (const element of name.elements) {
-					checkBindingName(element.name, sourceFile);
+					if (element.name) {
+						checkBindingName(element.name, sourceFile);
+					}
 				}
 			}
 		}

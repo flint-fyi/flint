@@ -44,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { program, sourceFile, checker }) => {
+				CallExpression: (node, { checker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier ||
@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				NewExpression: (node, { program, sourceFile, checker }) => {
+				NewExpression: (node, { checker, program, sourceFile }) => {
 					if (!isNewDateWithNoArguments(node, checker, program)) {
 						return;
 					}

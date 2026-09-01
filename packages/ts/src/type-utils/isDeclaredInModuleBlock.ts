@@ -1,8 +1,4 @@
-import {
-	NodeFlags,
-	SyntaxKind,
-	type Node,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -11,11 +7,10 @@ export function isDeclaredInModuleBlock(
 	declaration: AST.Declaration,
 	packageName: string,
 ): boolean {
-	let current: Node = declaration;
+	let current: AST.Node = declaration;
 	while (current.kind !== SyntaxKind.SourceFile) {
 		if (
 			current.kind === SyntaxKind.ModuleDeclaration &&
-			!(current.flags & NodeFlags.Namespace) &&
 			current.name.kind === SyntaxKind.StringLiteral &&
 			current.name.text === packageName
 		) {

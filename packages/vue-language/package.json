@@ -16,7 +16,8 @@
 	"sideEffects": true,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./content-mapper": "./src/content-mapper.ts"
 	},
 	"files": [
 		"dist/"
@@ -43,7 +44,19 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./content-mapper": "./dist/content-mapper.mjs"
+		}
+	},
+	"typescript": {
+		"contentMapper": {
+			"exec": [
+				"node",
+				"./dist/content-mapper.mjs"
+			],
+			"compilerOptions": [
+				"noUnusedLocals"
+			]
 		}
 	}
 }

@@ -30,10 +30,6 @@ export default ruleCreator.createRule(astroLanguage, {
 		return {
 			visitors: {
 				SourceFile(node, services) {
-					if (services.astro == null) {
-						return;
-					}
-
 					function visit(node: Node) {
 						if ("attributes" in node) {
 							for (const attr of node.attributes) {

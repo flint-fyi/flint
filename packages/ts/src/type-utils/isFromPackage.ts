@@ -42,8 +42,9 @@ export function isFromPackage(
 		return true;
 	}
 
-	const packageJsonDirectory =
-		program.getSourceFileMetadata(sourceFile)?.packageJsonDirectory;
+	const packageJsonDirectory = program.getSourceFileMetadata(
+		sourceFile.fileName,
+	)?.packageJsonDirectory;
 	return (
 		packageJsonDirectory !== undefined &&
 		(getPackageNameFromDirectory(packageJsonDirectory) === packageName ||

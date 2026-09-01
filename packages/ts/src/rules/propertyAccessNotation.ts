@@ -1,4 +1,7 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	SyntaxKind,
+	type DeclarationBase,
+} from "typescript-native/unstable/ast";
 import { TypeFlags } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
@@ -60,15 +63,16 @@ const javascriptReservedWords = new Set([
 	"yield",
 ]);
 
-function getFirstModifierKind(node: AST.Declaration | undefined) {
-	switch (node?.kind) {
+function getFirstModifierKind(node: DeclarationBase | undefined) {
+	const declaration = node as AST.Declaration | undefined;
+	switch (declaration?.kind) {
 		case SyntaxKind.Constructor:
 		case SyntaxKind.GetAccessor:
 		case SyntaxKind.MethodDeclaration:
 		case SyntaxKind.Parameter:
 		case SyntaxKind.PropertyDeclaration:
 		case SyntaxKind.SetAccessor:
-			return node.modifiers?.[0]?.kind;
+			return declaration.modifiers?.[0]?.kind;
 		default:
 			return undefined;
 	}

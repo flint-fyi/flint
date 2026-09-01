@@ -1,18 +1,15 @@
-import {
-	SyntaxKind,
-	type Expression,
-	type Node,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { isErrorSubclass } from "./utils/isErrorSubclass.ts";
 
-function isCaptureStackTraceCall(node: Node): boolean {
+function isCaptureStackTraceCall(node: AST.Node): boolean {
 	if (node.kind !== SyntaxKind.CallExpression) {
 		return false;
 	}
@@ -26,7 +23,7 @@ function isCaptureStackTraceCall(node: Node): boolean {
 }
 
 function isValidSecondArgument(
-	node: Expression,
+	node: AST.Expression,
 	className: string | undefined,
 ): boolean {
 	if (node.kind === SyntaxKind.Identifier) {
@@ -73,7 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ClassDeclaration: (node, { program, sourceFile, checker }) => {
+				ClassDeclaration: (node, { checker, program, sourceFile }) => {
 					if (!isErrorSubclass(node, checker, program)) {
 						return;
 					}

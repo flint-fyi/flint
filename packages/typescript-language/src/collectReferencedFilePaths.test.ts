@@ -6,6 +6,7 @@ import { expect, it } from "vitest";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
+import type * as AST from "./types/ast.ts";
 
 it("uses checker-resolved declarations for supported module resolution forms", () => {
 	const files = new Map([
@@ -62,7 +63,7 @@ it("uses checker-resolved declarations for supported module resolution forms", (
 	const sourceFile = nullThrows(
 		program.getSourceFile("/repo/src/index.ts"),
 		"Expected the program source file.",
-	);
+	) as unknown as AST.SourceFile;
 
 	expect(
 		collectReferencedFilePaths(

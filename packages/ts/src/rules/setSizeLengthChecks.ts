@@ -66,7 +66,7 @@ function isSetExpression(
 	}
 
 	return isNewSetExpression(
-		unwrapParentheses(declaration.initializer),
+		unwrapParentheses(declaration.initializer as AST.Expression),
 		checker,
 		program,
 	);

@@ -13,16 +13,21 @@ import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function hasExportModifier(node: AST.Statement) {
-	return !!node.modifiers?.some(
-		(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
+function hasExportModifier(node: AST.Statement): boolean {
+	return (
+		"modifiers" in node &&
+		Array.isArray(node.modifiers) &&
+		node.modifiers.some(
+			(modifier: AST.ModifierLike) =>
+				modifier.kind === SyntaxKind.ExportKeyword,
+		)
 	);
 }
 
 function isInsideFunction(node: AST.AnyNode): boolean {
 	let current: AST.AnyNode | undefined = node.parent;
 
-	while (current) {
+	while (current.kind !== SyntaxKind.SourceFile) {
 		if (
 			isFunctionDeclaration(current) ||
 			isFunctionExpression(current) ||
@@ -81,7 +86,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				SourceFile(node) {
 					fileHasExports = node.statements.some(
-						(statement) =>
+						(statement: AST.Statement) =>
 							hasExportModifier(statement) ||
 							statement.kind === SyntaxKind.ExportAssignment ||
 							statement.kind === SyntaxKind.ExportDeclaration,

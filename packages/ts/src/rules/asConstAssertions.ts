@@ -15,7 +15,7 @@ function getTextValue(node: AST.Expression | AST.TypeNode): string | undefined {
 		case SyntaxKind.FalseKeyword:
 			return "false";
 		case SyntaxKind.LiteralType:
-			return getTextValue(node.literal);
+			return getTextValue(node.literal as AST.Expression);
 		case SyntaxKind.NumericLiteral:
 			return node.text;
 		case SyntaxKind.StringLiteral:

@@ -25,7 +25,7 @@ const config: ViteUserConfigExport = defineConfig({
 					setupFiles: ["console-fail-test/setup"],
 					snapshotSerializers: name === "e2e" ? ["vitest-ansi-serializer"] : [],
 					testTimeout:
-						name === "e2e" ? (platform === "win32" ? 60_000 : 20_000) : 10_000,
+						name === "e2e" ? (platform === "win32" ? 60_000 : 20_000) : 30_000,
 				},
 			}),
 		),

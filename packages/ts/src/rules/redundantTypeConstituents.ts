@@ -44,16 +44,15 @@ function describeLiteralType(type: Type): string {
 		return JSON.stringify(type.value);
 	}
 
-	if (type.flags & TypeFlags.BigIntLiteral) {
+	if (type.isLiteralType() && type.flags & TypeFlags.BigIntLiteral) {
 		return `${type.value}n`;
 	}
 
 	if (type.isLiteralType()) {
-		// eslint-disable-next-line @typescript-eslint/no-base-to-string
 		return String(type.value);
 	}
 
-	if (type.intrinsicName === "error" && type.aliasSymbol) {
+	if (type.isErrorType() && type.getAliasSymbol()) {
 		return type.getAliasSymbol()?.name ?? "error";
 	}
 
@@ -73,11 +72,11 @@ function describeLiteralType(type: Type): string {
 		return "template literal type";
 	}
 
-	if (type.intrinsicName === "true") {
+	if (type.isIntrinsicType() && type.intrinsicName === "true") {
 		return "true";
 	}
 
-	if (type.intrinsicName === "false") {
+	if (type.isIntrinsicType() && type.intrinsicName === "false") {
 		return "false";
 	}
 
@@ -103,10 +102,18 @@ function isDescendantOf(node: AST.AnyNode, potentialAncestor: Node) {
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
+function getTypeFlags(type: Type): TypeFlags {
+	const types = type.isUnionType() ? type.getTypes() : undefined;
+	return types?.length === 2 &&
+		types.every((typePart) => typePart.flags & TypeFlags.BooleanLiteral)
+		? TypeFlags.Boolean
+		: type.flags;
+}
+
 function isNodeInsideReturnType(node: AST.AnyNode) {
 	let current = node.parent;
 
-	while (current) {
+	while (current.kind !== SyntaxKind.SourceFile) {
 		if (
 			current.kind === SyntaxKind.FunctionDeclaration ||
 			current.kind === SyntaxKind.FunctionExpression ||
@@ -121,7 +128,6 @@ function isNodeInsideReturnType(node: AST.AnyNode) {
 			return !!current.type && isDescendantOf(node, current.type);
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
 		current = current.parent;
 	}
 
@@ -137,14 +143,6 @@ function unionTypePartsUnlessBoolean(type: Type) {
 		return [type];
 	}
 	return types ?? [type];
-}
-
-function getTypeFlags(type: Type): TypeFlags {
-	const types = type.isUnionType() ? type.getTypes() : undefined;
-	return types?.length === 2 &&
-		types.every((typePart) => typePart.flags & TypeFlags.BooleanLiteral)
-		? TypeFlags.Boolean
-		: type.flags;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

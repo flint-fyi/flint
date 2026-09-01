@@ -89,7 +89,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const classType = checker.getTypeAtLocation(originalClassNode);
 
 			if (functionNode.body.kind !== SyntaxKind.Block) {
-				return checker.getTypeAtLocation(functionNode.body).isThisType;
+				const type = checker.getTypeAtLocation(functionNode.body);
+				return type.isTypeParameter() && type.isThisType === true;
 			}
 
 			let hasReturnThis = false;
@@ -111,7 +112,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return true;
 				}
 
-				if (type.isThisType) {
+				if (type.isTypeParameter() && type.isThisType) {
 					hasReturnThis = true;
 					return;
 				}

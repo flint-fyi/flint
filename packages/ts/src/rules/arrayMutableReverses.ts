@@ -27,7 +27,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, checker }) => {
+				CallExpression: (node, { checker, sourceFile }) => {
 					if (
 						!isBuiltinArrayMethod("reverse", node, checker) ||
 						isInlineArrayCreation(node.expression.expression)

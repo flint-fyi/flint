@@ -36,7 +36,7 @@ export function isGlobalDeclarationOfName(
 			declaration.initializer?.kind === SyntaxKind.Identifier
 		) {
 			return isGlobalDeclarationOfName(
-				declaration.initializer as AST.AnyNode,
+				declaration.initializer,
 				name,
 				checker,
 				program,
@@ -46,7 +46,7 @@ export function isGlobalDeclarationOfName(
 		// Special case: a property of an interface
 		if (declaration.kind === SyntaxKind.PropertySignature) {
 			return isGlobalDeclarationOfName(
-				declaration.parent as AST.AnyNode,
+				declaration.parent,
 				name,
 				checker,
 				program,

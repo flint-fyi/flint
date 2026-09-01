@@ -31,7 +31,9 @@ export function findMessagesProperty(
 		);
 	});
 
-	return messagesProperty;
+	return messagesProperty && isPropertyAssignment(messagesProperty)
+		? messagesProperty
+		: undefined;
 }
 
 export function* forEachMessageString(

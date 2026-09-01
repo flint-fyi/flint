@@ -28,6 +28,7 @@ const config: Config = {
 		"prettier-plugin-packagejson",
 		"prettier-plugin-sentences-per-line",
 		"prettier-plugin-sh",
+		"prettier-plugin-svelte",
 		"@ianvs/prettier-plugin-sort-imports",
 	],
 	useTabs: true,

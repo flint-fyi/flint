@@ -11,22 +11,28 @@ export async function runInHyperfine(
 	command: string,
 	label: string,
 	slug: string,
+	prepare?: string,
 ): Promise<string> {
 	const cwd = path.join(testCasesPath, slug);
 
 	log("Measuring %s in %s...", label, cwd);
 	log("\t%s", command);
 
-	const result = await execa({
-		cwd,
-		reject: false,
-	})("hyperfine", [
+	const arguments_ = [
 		command,
 		"--ignore-failure",
 		"--show-output",
 		"--warmup",
 		"1",
-	]);
+	];
+	if (prepare) {
+		arguments_.push("--prepare", prepare);
+	}
+
+	const result = await execa({
+		cwd,
+		reject: false,
+	})("hyperfine", arguments_);
 
 	if (result.exitCode) {
 		log(result.stderr);

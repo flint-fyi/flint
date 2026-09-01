@@ -91,7 +91,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, checker }) => {
+				CallExpression: (node, { checker, sourceFile }) => {
 					const argumentsNode = getVariadicArgumentsNode(node);
 					if (!argumentsNode) {
 						return;

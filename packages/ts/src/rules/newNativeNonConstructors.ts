@@ -1,7 +1,6 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";

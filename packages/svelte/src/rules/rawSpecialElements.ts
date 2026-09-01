@@ -31,9 +31,6 @@ export default ruleCreator.createRule(svelteLanguage, {
 		return {
 			visitors: {
 				SourceFile(node, services) {
-					if (services.svelte == null) {
-						return;
-					}
 					const sourceText: SourceFileWithLineMap = {
 						text: services.svelte.sourceText,
 					};

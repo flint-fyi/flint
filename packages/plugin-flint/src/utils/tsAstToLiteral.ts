@@ -43,16 +43,13 @@ export function tsAstToLiteral(node: Node): unknown {
 
 	if (isObjectLiteralExpression(node)) {
 		return Object.fromEntries(
-			node.properties
-				.filter(isPropertyAssignment)
-				.filter(
-					(property) =>
-						isIdentifier(property.name) || isStringLiteral(property.name),
-				)
-				.map((property) => [
-					property.name.text,
-					tsAstToLiteral(property.initializer),
-				]),
+			node.properties.filter(isPropertyAssignment).flatMap((property) => {
+				if (!isIdentifier(property.name) && !isStringLiteral(property.name)) {
+					return [];
+				}
+
+				return [[property.name.text, tsAstToLiteral(property.initializer)]];
+			}),
 		);
 	}
 

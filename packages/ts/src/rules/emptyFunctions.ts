@@ -1,4 +1,4 @@
-import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -44,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkFunctionBody(
-			node: Node,
+			node: AST.AnyNode,
 			body: AST.Block | undefined,
 			sourceFile: AST.SourceFile,
 		) {

@@ -189,7 +189,7 @@ function getTypeKeywordRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 		node.getEnd() - nodeStart,
 	);
 
-	while (scanner.scan() !== SyntaxKind.EndOfFileToken) {
+	while (scanner.scan() !== SyntaxKind.EndOfFile) {
 		if (scanner.getToken() === SyntaxKind.TypeKeyword) {
 			const range = {
 				begin: scanner.getTokenStart(),
@@ -210,8 +210,8 @@ function getTypeKeywordRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 }
 
 function isInImportDeclaration(node: AST.AnyNode) {
-	let current: AST.AnyNode | undefined = node;
-	while (current) {
+	let current = node;
+	while (current.kind !== SyntaxKind.SourceFile) {
 		if (current.kind === SyntaxKind.ImportDeclaration) {
 			return true;
 		}
@@ -306,7 +306,11 @@ function isTypeOnlyExportReference(node: AST.Identifier) {
 	}
 
 	const exportDeclaration = parent.parent.parent;
-	return parent.name === node && exportDeclaration.isTypeOnly;
+	return (
+		parent.name === node &&
+		exportDeclaration.kind === SyntaxKind.ExportDeclaration &&
+		exportDeclaration.isTypeOnly
+	);
 }
 
 function isTypeQueryReference(node: AST.Identifier) {
@@ -557,7 +561,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							if (
 								!report.valueSpecifiers.length &&
 								!report.unusedSpecifiers.length &&
-								!report.node.attributes?.elements.length
+								!report.node.attributes?.attributes.length
 							) {
 								context.report({
 									fix,

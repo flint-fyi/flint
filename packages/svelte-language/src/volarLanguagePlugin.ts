@@ -37,32 +37,6 @@ export function createSvelteTransform(
 		transformSvelte(params, options);
 }
 
-export function errorToLanguageReport(
-	fileName: string,
-	error: unknown,
-): LanguageReport {
-	if (typeof error !== "object" || error == null) {
-		return { source: "svelte", text: `${fileName} - Unknown error` };
-	}
-	const svelteError = isSvelteCompileError(error) ? error : undefined;
-	const location = svelteError?.start
-		? `:${svelteError.start.line}:${svelteError.start.column}`
-		: "";
-	return {
-		...(typeof svelteError?.code === "string"
-			? { code: svelteError.code }
-			: {}),
-		...(svelteError?.start && {
-			range: {
-				begin: svelteError.start.character,
-				end: svelteError.end?.character ?? svelteError.start.character,
-			},
-		}),
-		source: "svelte",
-		text: `${fileName}${location} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
-	};
-}
-
 export function transformSvelte(
 	{ content, fileName }: TransformParams,
 	options: SvelteTransformOptions = {},
@@ -97,6 +71,32 @@ export function transformSvelte(
 			text: "",
 		};
 	}
+}
+
+function errorToLanguageReport(
+	fileName: string,
+	error: unknown,
+): LanguageReport {
+	if (typeof error !== "object" || error == null) {
+		return { source: "svelte", text: `${fileName} - Unknown error` };
+	}
+	const svelteError = isSvelteCompileError(error) ? error : undefined;
+	const location = svelteError?.start
+		? `:${svelteError.start.line}:${svelteError.start.column}`
+		: "";
+	return {
+		...(typeof svelteError?.code === "string"
+			? { code: svelteError.code }
+			: {}),
+		...(svelteError?.start && {
+			range: {
+				begin: svelteError.start.character,
+				end: svelteError.end?.character ?? svelteError.start.character,
+			},
+		}),
+		source: "svelte",
+		text: `${fileName}${location} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
+	};
 }
 
 function errorToMapperDiagnostic(

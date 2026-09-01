@@ -25,7 +25,7 @@ function buildSpliceReplacement(
 		tokenKind = openingScanner.scan();
 	} while (
 		tokenKind !== SyntaxKind.OpenBracketToken &&
-		tokenKind !== SyntaxKind.EndOfFileToken
+		tokenKind !== SyntaxKind.EndOfFile
 	);
 	const openBracket =
 		tokenKind === SyntaxKind.OpenBracketToken
@@ -42,7 +42,7 @@ function buildSpliceReplacement(
 		tokenKind = closingScanner.scan();
 	} while (
 		tokenKind !== SyntaxKind.CloseBracketToken &&
-		tokenKind !== SyntaxKind.EndOfFileToken
+		tokenKind !== SyntaxKind.EndOfFile
 	);
 	const closeBracket =
 		tokenKind === SyntaxKind.CloseBracketToken

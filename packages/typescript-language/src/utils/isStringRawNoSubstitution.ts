@@ -14,11 +14,11 @@ export function isStringRawNoSubstitution(
 	}
 
 	// TODO: Name-based only; not type-aware about a shadowed `String`.
-	const tag = node.tag as AST.Expression;
+	const tag = node.tag;
 	return (
 		tag.kind === SyntaxKind.PropertyAccessExpression &&
 		tag.expression.kind === SyntaxKind.Identifier &&
-		(tag.expression as AST.Identifier).text === "String" &&
+		tag.expression.text === "String" &&
 		tag.name.text === "raw" &&
 		node.template.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 	);

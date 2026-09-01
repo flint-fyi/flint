@@ -75,7 +75,7 @@ function findAssignmentsToSymbol(
 				assignments.push(node);
 			}
 		}
-		forEachChild(node, visit);
+		forEachChild(node as AST.AnyNode, visit);
 	}
 
 	visit(sourceFile);
@@ -291,7 +291,7 @@ function getRegexInfoFromExpression(
 					}
 					if (isVariableDeclaration(declaration) && declaration.initializer) {
 						return getRegexInfoFromExpression(
-							declaration.initializer,
+							declaration.initializer as AST.Expression,
 							checker,
 							program,
 							sourceFile,
@@ -318,7 +318,9 @@ function getRegexInfoFromSymbol(
 				continue;
 			}
 			if (isVariableDeclaration(declaration) && declaration.initializer) {
-				const callExpression = extractCallExpression(declaration.initializer);
+				const callExpression = extractCallExpression(
+					declaration.initializer as AST.Expression,
+				);
 				if (callExpression) {
 					const regexInfo = getRegexFromCall(
 						callExpression,
@@ -346,7 +348,9 @@ function getRegexInfoFromSymbol(
 
 	const assignments = findAssignmentsToSymbol(symbol, sourceFile, checker);
 	for (const assignment of assignments) {
-		const callExpression = extractCallExpression(assignment.right);
+		const callExpression = extractCallExpression(
+			assignment.right as AST.Expression,
+		);
 		if (callExpression) {
 			const regexInfo = getRegexFromCall(
 				callExpression,

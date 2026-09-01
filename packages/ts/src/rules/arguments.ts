@@ -96,16 +96,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						!symbol ||
-						symbol.declarations.some((declarationHandle) => {
-							const declaration = declarationHandle.resolve();
-							return (
-								!!declaration &&
-								(isParameterDeclaration(declaration) ||
-									isVariableDeclaration(declaration) ||
-									isPropertyDeclaration(declaration) ||
-									isBindingElement(declaration))
-							);
-						})
+						symbol.declarations.some(
+							(declarationHandle: (typeof symbol.declarations)[number]) => {
+								const declaration = declarationHandle.resolve();
+								return (
+									!!declaration &&
+									(isParameterDeclaration(declaration) ||
+										isVariableDeclaration(declaration) ||
+										isPropertyDeclaration(declaration) ||
+										isBindingElement(declaration))
+								);
+							},
+						)
 					) {
 						return;
 					}

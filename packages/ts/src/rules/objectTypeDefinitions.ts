@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -36,15 +36,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const typeKeyword = node
-						.getChildren(sourceFile)
-						.find((child) => child.kind === SyntaxKind.TypeKeyword);
+					const nodeStart = node.getStart(sourceFile);
+					const scanner = createScanner(
+						true,
+						sourceFile.languageVariant,
+						sourceFile.text,
+						nodeStart,
+						node.type.getStart(sourceFile) - nodeStart,
+					);
+					let typeKeywordRange;
+					while (scanner.scan() !== SyntaxKind.EndOfFile) {
+						if (scanner.getToken() === SyntaxKind.TypeKeyword) {
+							typeKeywordRange = {
+								begin: scanner.getTokenStart(),
+								end: scanner.getTokenEnd(),
+							};
+							break;
+						}
+					}
 
 					context.report({
 						message: "preferInterface",
-						range: typeKeyword
-							? getTSNodeRange(typeKeyword, sourceFile)
-							: getTSNodeRange(node, sourceFile),
+						range: typeKeywordRange ?? getTSNodeRange(node, sourceFile),
 					});
 				},
 			},

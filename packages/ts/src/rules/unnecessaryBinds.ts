@@ -25,7 +25,7 @@ function containsThis(node: AST.AnyNode): boolean {
 	}
 
 	let found = false;
-	node.forEachChild((child) => {
+	node.forEachChild((child: AST.Node) => {
 		if (containsThis(child)) {
 			found = true;
 		}

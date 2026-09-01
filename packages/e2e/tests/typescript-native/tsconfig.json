@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"composite": true,
+		"strict": true
+	},
+	"include": [
+		"fixtures/**/*.astro",
+		"fixtures/**/*.svelte",
+		"fixtures/**/*.ts",
+		"fixtures/**/*.vue"
+	],
+	"references": [{ "path": "fixtures/reference" }]
+}

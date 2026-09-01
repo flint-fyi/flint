@@ -6,8 +6,6 @@ export function unwrapParentParenthesizedExpressions(
 	node: AST.BinaryExpression | AST.ParenthesizedExpression,
 ): AST.LeftHandSideExpressionParent {
 	return node.parent.kind === SyntaxKind.ParenthesizedExpression
-		? unwrapParentParenthesizedExpressions(
-				node.parent as AST.ParenthesizedExpression,
-			)
+		? unwrapParentParenthesizedExpressions(node.parent)
 		: (node.parent as AST.LeftHandSideExpressionParent);
 }

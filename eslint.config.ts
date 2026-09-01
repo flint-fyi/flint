@@ -46,6 +46,7 @@ const config: ConfigObject[] = defineConfig(
 		"packages/fixtures",
 		"packages/performance-testing/cases",
 		"packages/e2e/tests/**/fixtures/**",
+		"packages/e2e/tests/typescript-native/svelte.config.js",
 		"pnpm-lock.yaml",
 		"coverage",
 	]),

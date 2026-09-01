@@ -25,7 +25,7 @@ export function isTypeFromTS(
 		const symbol = type.getSymbol();
 
 		if (symbol?.name === typeName) {
-			const declarations: AST.Declaration[] = [];
+			const declarations = [];
 			for (const declarationHandle of symbol.declarations) {
 				const declaration = declarationHandle.resolve();
 				if (!declaration) {

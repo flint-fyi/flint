@@ -20,7 +20,8 @@ type NamespaceMember =
 function hasExportModifier(node: NamespaceMember) {
 	return (
 		node.modifiers?.some(
-			(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
+			(modifier: AST.ModifierLike) =>
+				modifier.kind === SyntaxKind.ExportKeyword,
 		) ?? false
 	);
 }
@@ -77,7 +78,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				ModuleDeclaration: (node, { sourceFile }) => {
 					if (
 						!node.modifiers?.some(
-							(modifier) => modifier.kind === SyntaxKind.DeclareKeyword,
+							(modifier: AST.ModifierLike) =>
+								modifier.kind === SyntaxKind.DeclareKeyword,
 						) ||
 						node.name.kind !== SyntaxKind.Identifier ||
 						node.body?.kind !== SyntaxKind.ModuleBlock

@@ -9,9 +9,10 @@ import { getFlintArtifacts } from "./getFlintArtifacts.ts";
 export async function prepareConsumer(
 	rootPath: string,
 	testCasesPath: string,
+	packageNames: readonly string[] = ["flint"],
 ): Promise<void> {
 	const packageFile = createConsumerPackageFile(
-		await getFlintArtifacts(rootPath),
+		await getFlintArtifacts(rootPath, packageNames),
 		testCasesPath,
 	);
 

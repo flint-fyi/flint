@@ -7,7 +7,6 @@ import {
 	isPrefixUnaryExpression,
 	isVariableDeclaration,
 	SyntaxKind,
-	type Node,
 } from "typescript-native/unstable/ast";
 
 import {
@@ -61,7 +60,7 @@ function hasNoAssignmentBeforeNode(
 		return true;
 	}
 
-	function findModifyingReference(current: Node): boolean {
+	function findModifyingReference(current: AST.AnyNode): boolean {
 		if (isIdentifier(current)) {
 			const currentSymbol = checker.getSymbolAtLocation(current);
 			if (currentSymbol?.valueDeclaration?.resolve() === valueDeclaration) {

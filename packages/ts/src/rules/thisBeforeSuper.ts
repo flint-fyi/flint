@@ -126,12 +126,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				Constructor(node: AST.ConstructorDeclaration, { sourceFile }) {
-					if (!node.parent.heritageClauses) {
+					const parent = node.parent;
+					if (
+						(parent.kind !== SyntaxKind.ClassDeclaration &&
+							parent.kind !== SyntaxKind.ClassExpression) ||
+						!parent.heritageClauses
+					) {
 						return;
 					}
 
-					const hasExtends = node.parent.heritageClauses.some(
-						(clause) => clause.token === SyntaxKind.ExtendsKeyword,
+					const hasExtends = parent.heritageClauses.some(
+						(clause: AST.HeritageClause) =>
+							clause.token === SyntaxKind.ExtendsKeyword,
 					);
 
 					if (!hasExtends || !node.body) {
