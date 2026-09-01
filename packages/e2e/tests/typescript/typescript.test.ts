@@ -14,10 +14,11 @@ describe("typescript", () => {
 
 			<underline><cwd>/fixtures/src/with-issues.ts</underline>
 			<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+			<dim>  7:2</fg>  Global variable 'Array' is restricted.                      <yellow>ts/restrictedGlobals</fg>
 
-			<red>✖ Found <bold>1 report</bold> across <bold>1 file</bold>.</fg>
+			<red>✖ Found <bold>2 reports</bold> across <bold>1 file</bold>.</fg>
 			<red></fg>
-			<dim>Finished in <time> on 2 files with 138 rules.</fg>
+			<dim>Finished in <time> on 2 files with 139 rules.</fg>
 			<dim></fg>"
 		`);
 	});
