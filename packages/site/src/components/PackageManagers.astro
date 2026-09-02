@@ -7,6 +7,6 @@ export type Props = StarlightPackageManagers.PackageManagersProps;
 ---
 
 <StarlightPackageManagers.PackageManagers
-	pkgManagers={packageManagers}
+	pkgManagers={[...packageManagers]}
 	{...Astro.props}
 />

@@ -1,4 +1,11 @@
-import type { PackageManagersProps } from "starlight-package-managers";
+export const packageManagers = ["npm", "bun", "deno", "pnpm", "yarn"] as const;
 
-export const packageManagers: NonNullable<PackageManagersProps["pkgManagers"]> =
-	["npm", "bun", "deno", "pnpm", "yarn"];
+type PackageManager = (typeof packageManagers)[number];
+
+export const packageManagerLabels = {
+	bun: "Bun",
+	deno: "Deno",
+	npm: "npm",
+	pnpm: "pnpm",
+	yarn: "Yarn",
+} satisfies Record<PackageManager, string>;

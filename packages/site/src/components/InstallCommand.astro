@@ -1,6 +1,8 @@
 ---
+import { Icon } from "@astrojs/starlight/components";
+
 import PackageManagers from "./PackageManagers.astro";
-import { packageManagers } from "./packageManagers.ts";
+import { packageManagerLabels, packageManagers } from "./packageManagers.ts";
 
 const defaultCommand = "npm i -D flint";
 const defaultPackageManager = "npm";
@@ -19,11 +21,15 @@ const defaultPackageManager = "npm";
 						selected={packageManager === defaultPackageManager}
 						value={packageManager}
 					>
-						{packageManager}
+						{packageManagerLabels[packageManager]}
+						<Icon class="option-check" name="approve-check" />
 					</option>
 				))
 			}
 		</select>
+		<span aria-hidden="true" class="selector-caret">
+			<Icon name="down-caret" />
+		</span>
 	</label>
 	<code data-install-output>{defaultCommand}</code>
 	<button
@@ -33,8 +39,8 @@ const defaultPackageManager = "npm";
 		data-copy-install
 		type="button"
 	>
-		<span aria-hidden="true" class="copy-icon"></span>
-		<span aria-hidden="true" class="check-icon"></span>
+		<Icon class="copy-icon" name="document" />
+		<Icon class="check-icon" name="approve-check" />
 	</button>
 
 	<div data-command-sources hidden>
@@ -59,7 +65,7 @@ const defaultPackageManager = "npm";
 			dev
 			frame="none"
 			pkg="flint"
-			pkgManagers={packageManagers}
+			pkgManagers={[...packageManagers]}
 			type="add"
 		/>
 	</div>
@@ -231,10 +237,12 @@ const defaultPackageManager = "npm";
 		border-end-start-radius: calc(0.5rem - 1px);
 		border-inline-end: 1px solid var(--flint-paper-border);
 		border-start-start-radius: calc(0.5rem - 1px);
+		box-sizing: border-box;
 		color: var(--flint-badge-text);
 		display: grid;
 		grid-template-columns: 1rem minmax(0, 1fr);
 		gap: 0.35rem;
+		inline-size: 6rem;
 		padding-inline-start: 0.625rem;
 		position: relative;
 	}
@@ -251,17 +259,14 @@ const defaultPackageManager = "npm";
 		inline-size: 1rem;
 	}
 
-	.package-manager::after {
-		block-size: 0.4rem;
-		border-block-end: 1px solid currentColor;
-		border-inline-end: 1px solid currentColor;
-		content: "";
-		inline-size: 0.4rem;
+	.selector-caret {
+		align-items: center;
+		display: flex;
+		inset-block: 0;
+		inset-inline-end: 0.4rem;
 		pointer-events: none;
 		position: absolute;
-		inset-inline-end: 0.55rem;
-		inset-block-start: calc(50% - 0.3rem);
-		rotate: 45deg;
+		transition: transform 120ms ease-out;
 	}
 
 	select {
@@ -274,7 +279,7 @@ const defaultPackageManager = "npm";
 		font-family: var(--sl-font);
 		font-size: var(--sl-text-xs);
 		font-weight: 700;
-		inline-size: 4rem;
+		inline-size: 100%;
 		padding: 0 1.25rem 0 0;
 	}
 
@@ -360,9 +365,7 @@ const defaultPackageManager = "npm";
 		}
 
 		option::checkmark {
-			color: var(--sl-color-accent);
-			margin-inline-start: auto;
-			order: 1;
+			display: none;
 		}
 
 		option :global(svg) {
@@ -371,12 +374,18 @@ const defaultPackageManager = "npm";
 			inline-size: 1rem;
 		}
 
-		.package-manager::after {
-			transition: rotate 120ms ease-out;
+		.option-check {
+			color: var(--sl-color-accent);
+			margin-inline-start: auto;
+			opacity: 0;
 		}
 
-		.package-manager:has(select:open)::after {
-			rotate: 225deg;
+		option:checked .option-check {
+			opacity: 1;
+		}
+
+		.package-manager:has(select:open) .selector-caret {
+			transform: rotate(180deg);
 		}
 
 		@media (width < 30rem) {
@@ -445,24 +454,15 @@ const defaultPackageManager = "npm";
 
 	.copy-icon,
 	.check-icon {
-		background: currentColor;
 		block-size: 1.125rem;
 		inline-size: 1.125rem;
-		mask-position: center;
-		mask-repeat: no-repeat;
-		mask-size: contain;
 		position: absolute;
 		transition:
 			opacity 150ms,
 			transform 150ms;
 	}
 
-	.copy-icon {
-		mask-image: url("/icons/copy.svg");
-	}
-
 	.check-icon {
-		mask-image: url("/icons/check.svg");
 		opacity: 0;
 		transform: scale(0.75);
 	}
