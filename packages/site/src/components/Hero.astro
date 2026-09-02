@@ -85,7 +85,7 @@ const alt = image?.alt ?? "";
 		margin: 0;
 	}
 
-	h1 :global(.hero-first) {
+	h1 :global(.hero-first-text) {
 		font-size: calc(var(--sl-text-5xl) * 2);
 	}
 
@@ -124,12 +124,12 @@ const alt = image?.alt ?? "";
 
 	.mark {
 		display: grid;
+		padding-inline-start: clamp(0.5rem, 2vw, 1.5rem);
 		place-items: center;
 	}
 
 	.mark :global(img) {
 		block-size: auto;
-		inline-size: clamp(9rem, 14vw, 12.5rem);
 		user-select: none;
 	}
 

@@ -38,7 +38,6 @@
 
 	--flint-paper: #16263d;
 	--flint-paper-border: #3b4d68;
-	--flint-paper-shadow: 0 2px 0 0 #060e1c;
 	--flint-badge-surface: #2a1a10;
 	--flint-badge-text: #ffc48a;
 	--sl-color-banner-bg: var(--flint-badge-surface);
@@ -81,7 +80,6 @@
 
 	--flint-paper: #fffaf1;
 	--flint-paper-border: #c7a98a;
-	--flint-paper-shadow: 0 3px 0 0 #4b291522;
 	--flint-badge-surface: #f7d19c;
 	--flint-badge-text: #6f1200;
 	--sl-color-banner-bg: var(--flint-badge-surface);
