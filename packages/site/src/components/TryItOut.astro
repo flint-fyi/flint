@@ -1,3 +1,27 @@
+---
+import { Code } from "@astrojs/starlight/components";
+
+const darkCliOutput = [
+	"$ flint",
+	"\u001b[90mLinting with \u001b[36m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[90m...\u001b[39m",
+	"",
+	"\u001b[4mfixtures/src/with-issues.ts\u001b[24m",
+	"\u001b[90m  2:2\u001b[39m  Debugger statements should not be used in production code.  \u001b[33mts/debuggerStatements\u001b[39m",
+	"",
+	"\u001b[3m\u001b[31m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
+].join("\n");
+
+const lightCliOutput = [
+	"$ flint",
+	"\u001b[38;2;120;120;120mLinting with \u001b[39m\u001b[38;2;0;122;204m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[38;2;120;120;120m...\u001b[39m",
+	"",
+	"\u001b[38;2;0;0;0m\u001b[4mfixtures/src/with-issues.ts\u001b[24m\u001b[39m",
+	"\u001b[38;2;120;120;120m  2:2\u001b[39m  \u001b[38;2;60;60;60mDebugger statements should not be used in production code.\u001b[39m  \u001b[38;2;170;0;0mts/debuggerStatements\u001b[39m",
+	"",
+	"\u001b[3m\u001b[38;2;170;0;0m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
+].join("\n");
+---
+
 <section class="try-it-out not-content" id="try-it-out">
 	<div class="content">
 		<h2 class="flint-display">Try Flint on any project</h2>
@@ -13,30 +37,23 @@
 			class="terminal"
 			role="region"
 		>
-			<div aria-hidden="true" class="terminal-bar">
-				<span></span>
-				<span></span>
-				<span></span>
+			<div class="only-dark">
+				<Code
+					code={darkCliOutput}
+					frame="terminal"
+					lang="ansi"
+					preserveIndent={false}
+					wrap
+				/>
 			</div>
-			<div class="terminal-output">
-				<div class="terminal-line command-line">
-					<span class="prompt">$</span>
-					<span>flint</span>
-				</div>
-				<div class="terminal-line muted">
-					Linting with <span class="config">flint.config.ts</span>...
-				</div>
-				<div class="terminal-line file">fixtures/src/with-issues.ts</div>
-				<div class="report">
-					<span class="location">2:2</span>
-					<span class="message">
-						Debugger statements should not be used in production code.
-					</span>
-					<span class="rule">ts/debuggerStatements</span>
-				</div>
-				<div class="terminal-line summary">
-					✖ Found <strong>1 report</strong> across <strong>1 file</strong>.
-				</div>
+			<div class="only-light">
+				<Code
+					code={lightCliOutput}
+					frame="terminal"
+					lang="ansi"
+					preserveIndent={false}
+					wrap
+				/>
 			</div>
 		</div>
 
@@ -79,106 +96,9 @@
 	}
 
 	.terminal {
-		background: #071220;
-		border: 1px solid #3b4d68;
-		border-radius: 0.5rem;
-		color: var(--flint-cream);
 		grid-area: terminal;
 		margin-block-start: 1.75rem;
 		min-inline-size: 0;
-		overflow: hidden;
-		text-align: start;
-	}
-
-	.terminal-bar {
-		align-items: center;
-		background: #0d1d31;
-		border-block-end: 1px solid #2c3e57;
-		display: flex;
-		gap: 0.4rem;
-		min-block-size: 2rem;
-		padding-inline: 0.85rem;
-	}
-
-	.terminal-bar span {
-		background: #f2bf80;
-		block-size: 0.55rem;
-		border-radius: 50%;
-		inline-size: 0.55rem;
-	}
-
-	.terminal-bar span:first-child {
-		background: #f58a3a;
-	}
-
-	.terminal-bar span:last-child {
-		background: #79ad6c;
-	}
-
-	.terminal-output {
-		font-family: var(--sl-font-mono);
-		font-size: clamp(0.72rem, 1.5vw, var(--sl-text-sm));
-		line-height: 1.6;
-		padding: clamp(1rem, 3vw, 1.5rem);
-	}
-
-	.terminal-line + .terminal-line,
-	.terminal-line + .report,
-	.report + .terminal-line {
-		margin-block-start: 0.75rem;
-	}
-
-	.command-line {
-		display: flex;
-		gap: 0.65rem;
-	}
-
-	.prompt,
-	.config {
-		color: #8bd2ff;
-	}
-
-	.config,
-	.summary strong {
-		font-weight: 800;
-	}
-
-	.muted,
-	.location {
-		color: #b9c4d6;
-	}
-
-	.file {
-		color: #a4dd98;
-		overflow-wrap: anywhere;
-		text-decoration: underline;
-		text-underline-offset: 0.2em;
-	}
-
-	.report {
-		display: grid;
-		gap: 0.3rem 0.75rem;
-		grid-template-columns: 2.75rem minmax(0, 1fr);
-	}
-
-	.rule {
-		color: #ffc48a;
-		grid-column: 2;
-		overflow-wrap: anywhere;
-	}
-
-	.summary {
-		color: #ffb48e;
-	}
-
-	@media (width >= 40rem) {
-		.report {
-			grid-template-columns: 2.75rem minmax(0, 1fr) auto;
-		}
-
-		.rule {
-			grid-column: auto;
-		}
 	}
 
 	.button {
