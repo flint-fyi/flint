@@ -8,6 +8,10 @@ const defaultPackageManager = "npm";
 
 <div class="install-command not-content" data-install-command>
 	<label class="package-manager">
+		<span
+			aria-hidden="true"
+			class="package-manager-icon"
+			data-package-manager-icon></span>
 		<select aria-label="Package manager" data-package-manager>
 			{
 				packageManagers.map((packageManager) => (
@@ -48,6 +52,16 @@ const defaultPackageManager = "npm";
 				</div>
 			))
 		}
+	</div>
+
+	<div data-package-manager-icons hidden>
+		<PackageManagers
+			dev
+			frame="none"
+			pkg="flint"
+			pkgManagers={packageManagers}
+			type="add"
+		/>
 	</div>
 </div>
 
@@ -94,10 +108,13 @@ const defaultPackageManager = "npm";
 			const select = container.querySelector<HTMLSelectElement>(
 				"[data-package-manager]",
 			);
-			if (!button || !output || !select) {
+			const iconOutput = container.querySelector<HTMLElement>(
+				"[data-package-manager-icon]",
+			);
+			if (!button || !output || !select || !iconOutput) {
 				return;
 			}
-			const installElements = { button, output, select };
+			const installElements = { button, iconOutput, output, select };
 
 			const commands = new Map<string, string>();
 			container
@@ -107,6 +124,18 @@ const defaultPackageManager = "npm";
 					const command = source.querySelector("code")?.textContent?.trim();
 					if (packageManager && command) {
 						commands.set(packageManager, command);
+					}
+				});
+			const icons = new Map<string, SVGElement>();
+			container
+				.querySelectorAll<HTMLElement>(
+					"[data-package-manager-icons] [role='tab']",
+				)
+				.forEach((tab) => {
+					const packageManager = tab.textContent?.trim();
+					const icon = tab.querySelector("svg");
+					if (packageManager && icon) {
+						icons.set(packageManager, icon);
 					}
 				});
 
@@ -120,7 +149,7 @@ const defaultPackageManager = "npm";
 				);
 			}
 
-			function updateCommand(): void {
+			function updateSelection(): void {
 				const command = commands.get(installElements.select.value);
 				if (!command) {
 					return;
@@ -128,9 +157,14 @@ const defaultPackageManager = "npm";
 
 				installElements.output.textContent = command;
 				installElements.button.dataset.command = command;
+				installElements.iconOutput.replaceChildren();
+				const icon = icons.get(installElements.select.value);
+				if (icon) {
+					installElements.iconOutput.append(icon.cloneNode(true));
+				}
 			}
 
-			updateCommand();
+			updateSelection();
 
 			installElements.select.addEventListener("change", () => {
 				if (resetTimer !== undefined) {
@@ -138,7 +172,7 @@ const defaultPackageManager = "npm";
 					resetTimer = undefined;
 				}
 
-				updateCommand();
+				updateSelection();
 				resetCopyState();
 			});
 
@@ -173,12 +207,11 @@ const defaultPackageManager = "npm";
 		border: 1px solid var(--flint-paper-border);
 		border-radius: 0.5rem;
 		display: grid;
-		grid-template-columns: auto minmax(0, 1fr) 3rem;
-		inline-size: min(100%, 32rem);
+		grid-template-columns: auto minmax(0, 1fr) 2.5rem;
+		inline-size: min(100%, 25.5rem);
 		overflow: hidden;
 	}
 
-	.package-manager,
 	code,
 	.copy-button {
 		align-items: center;
@@ -189,7 +222,23 @@ const defaultPackageManager = "npm";
 		background: var(--flint-badge-surface);
 		border-inline-end: 1px solid var(--flint-paper-border);
 		color: var(--flint-badge-text);
+		display: grid;
+		grid-template-columns: 1rem minmax(0, 1fr);
+		gap: 0.35rem;
+		padding-inline-start: 0.625rem;
 		position: relative;
+	}
+
+	.package-manager-icon {
+		align-items: center;
+		display: flex;
+		inline-size: 1rem;
+		justify-content: center;
+	}
+
+	.package-manager-icon :global(svg) {
+		block-size: 1rem;
+		inline-size: 1rem;
 	}
 
 	.package-manager::after {
@@ -200,7 +249,7 @@ const defaultPackageManager = "npm";
 		inline-size: 0.4rem;
 		pointer-events: none;
 		position: absolute;
-		inset-inline-end: 0.85rem;
+		inset-inline-end: 0.55rem;
 		inset-block-start: calc(50% - 0.3rem);
 		rotate: 45deg;
 	}
@@ -212,11 +261,11 @@ const defaultPackageManager = "npm";
 		border: 0;
 		color: inherit;
 		cursor: pointer;
-		font-family: var(--sl-font-mono);
+		font-family: var(--sl-font);
 		font-size: var(--sl-text-xs);
 		font-weight: 700;
-		inline-size: 6.25rem;
-		padding: 0 2rem 0 1rem;
+		inline-size: 4rem;
+		padding: 0 1.25rem 0 0;
 	}
 
 	select:focus-visible {
@@ -228,10 +277,10 @@ const defaultPackageManager = "npm";
 		background: transparent;
 		color: var(--sl-color-white);
 		font-family: var(--sl-font-mono);
-		font-size: var(--sl-text-sm);
-		min-block-size: 3.25rem;
+		font-size: var(--sl-text-xs);
+		min-block-size: 2.5rem;
 		overflow-x: auto;
-		padding-inline: 1rem;
+		padding-inline: 0.875rem;
 		white-space: nowrap;
 	}
 
@@ -295,25 +344,8 @@ const defaultPackageManager = "npm";
 	}
 
 	@media (width < 30rem) {
-		.install-command {
-			grid-template-columns: auto minmax(0, 1fr) 2.75rem;
-		}
-
 		code {
 			padding-inline: 0.75rem;
-		}
-
-		.package-manager::after {
-			inset-inline-end: 0.65rem;
-		}
-
-		select {
-			inline-size: 5.25rem;
-			padding-inline: 0.65rem 1.6rem;
-		}
-
-		code {
-			font-size: var(--sl-text-xs);
 		}
 	}
 

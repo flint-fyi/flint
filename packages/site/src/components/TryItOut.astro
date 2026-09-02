@@ -46,22 +46,25 @@
 
 <style>
 	.try-it-out {
-		background: var(--flint-band-surface);
-		border: 1px solid var(--flint-paper-border);
-		border-radius: 0.75rem;
+		border-block: 1px solid var(--flint-paper-border);
 		margin-block: 1rem 4rem;
-		padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem);
+		padding-block: clamp(3rem, 6vw, 4.5rem);
 	}
 
 	.content {
-		margin-inline: auto;
-		max-width: 48rem;
-		text-align: center;
+		display: grid;
+		grid-template-areas:
+			"heading"
+			"aside"
+			"terminal"
+			"button";
+		text-align: start;
 	}
 
 	h2 {
 		color: var(--flint-band-text);
 		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
+		grid-area: heading;
 		line-height: 1.15;
 		margin: 0;
 	}
@@ -69,8 +72,9 @@
 	.aside {
 		color: var(--flint-band-muted);
 		font-size: var(--sl-text-lg);
+		grid-area: aside;
 		line-height: 1.6;
-		margin: 1rem auto 0;
+		margin: 1rem 0 0;
 		max-width: 42rem;
 	}
 
@@ -79,7 +83,9 @@
 		border: 1px solid #3b4d68;
 		border-radius: 0.5rem;
 		color: var(--flint-cream);
+		grid-area: terminal;
 		margin-block-start: 1.75rem;
+		min-inline-size: 0;
 		overflow: hidden;
 		text-align: start;
 	}
@@ -182,6 +188,8 @@
 		color: var(--flint-ember-fill-text);
 		display: inline-block;
 		font-weight: 800;
+		grid-area: button;
+		justify-self: start;
 		margin-block-start: 2rem;
 		padding: 0.8rem 1.6rem;
 		text-decoration: none;
@@ -197,5 +205,21 @@
 			var(--flint-band-text)
 		);
 		border-color: transparent;
+	}
+
+	@media (width >= 50rem) {
+		.content {
+			column-gap: clamp(2.5rem, 5vw, 4rem);
+			grid-template-areas:
+				"heading terminal"
+				"aside terminal"
+				"button terminal";
+			grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+		}
+
+		.terminal {
+			align-self: center;
+			margin-block-start: 0;
+		}
 	}
 </style>

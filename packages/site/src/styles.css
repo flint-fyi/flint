@@ -176,6 +176,16 @@ header.header {
 	border-block-end: 1px solid var(--sl-color-gray-5);
 }
 
+footer.sl-flex {
+	background: var(--flint-sponsor-surface);
+	box-shadow: 0 0 0 100vmax var(--flint-sponsor-surface);
+	clip-path: inset(0 -100vmax);
+}
+
+footer.sl-flex .credits {
+	border-block-start: 0;
+}
+
 .site-title {
 	font-size: var(--sl-text-xl);
 }
