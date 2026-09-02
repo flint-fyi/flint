@@ -6,6 +6,6 @@ export const ruleCreator = new RuleCreator({
 	presets: ["logical", "logicalStrict", "stylistic", "stylisticStrict"],
 });
 
-export interface VitestRuleAbout extends RuleAbout {
+export interface VitestRuleAbout extends Omit<RuleAbout, "pluginId"> {
 	presets: ("logical" | "logicalStrict" | "stylistic" | "stylisticStrict")[];
 }

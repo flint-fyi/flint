@@ -15,7 +15,7 @@ export interface RuleCreatorOptions<Presets extends string> {
 
 export class RuleCreator<
 	Presets extends string,
-	const About extends RuleAbout = RuleAbout<Presets>,
+	const About extends RuleAbout = Omit<RuleAbout<Presets>, "pluginId">,
 > {
 	#options: RuleCreatorOptions<Presets>;
 
