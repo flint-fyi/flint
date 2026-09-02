@@ -309,11 +309,26 @@ const defaultPackageManager = "npm";
 			inline-size: anchor-size(inline);
 			inset-block-start: calc(anchor(bottom) + 0.375rem);
 			inset-inline-start: anchor(left);
+			opacity: 0;
 			padding: 0.25rem;
 			position-anchor: --package-manager-select;
 			position-area: none;
 			position-try: flip-block;
 			position-try-fallbacks: flip-block;
+			transition:
+				opacity 140ms ease-out,
+				display 140ms allow-discrete,
+				overlay 140ms allow-discrete;
+		}
+
+		select:open::picker(select) {
+			opacity: 1;
+		}
+
+		@starting-style {
+			select:open::picker(select) {
+				opacity: 0;
+			}
 		}
 
 		option {
@@ -366,6 +381,12 @@ const defaultPackageManager = "npm";
 
 			option {
 				min-block-size: 2.75rem;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			select::picker(select) {
+				transition: none;
 			}
 		}
 	}
