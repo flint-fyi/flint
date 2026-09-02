@@ -29,6 +29,7 @@
 	--sl-color-gray-5: #2c3e57;
 	--sl-color-gray-6: #182941;
 	--sl-color-black: #0b1628;
+	--flint-button-hover-surface: var(--flint-paper);
 
 	/* `--flint-ember` is a flame fill, not a text color: at 3:1 against these
 	   backgrounds it is unreadable as body copy. Text uses these instead. */
@@ -73,6 +74,11 @@
 	--sl-color-gray-6: #f1e7d2;
 	--sl-color-gray-7: #f7efe0;
 	--sl-color-black: #fbf4e6;
+	--flint-button-hover-surface: color-mix(
+		in srgb,
+		var(--sl-color-accent-low) 35%,
+		transparent
+	);
 
 	--flint-ember-text: #962900;
 	--flint-ember-fill: #962900;
@@ -111,6 +117,8 @@ html[data-theme="dark"] .only-light {
 
 /* General customizations. */
 :root {
+	--flint-button-hover-filter: brightness(1.1);
+	--flint-button-pressed-filter: brightness(0.78);
 	--sl-content-width: 56rem;
 	--sl-font: Nunito, ui-sans-serif, system-ui, sans-serif;
 	--sl-font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -148,21 +156,30 @@ a.sl-link-button.primary {
 	color: var(--flint-ember-fill-text);
 }
 
-a.sl-link-button.primary:hover {
-	background: color-mix(
-		in srgb,
-		var(--flint-ember-fill) 88%,
-		var(--sl-color-white)
-	);
-	border-color: transparent;
-}
-
 a.sl-link-button {
 	border-radius: 999px;
 	transition:
 		background-color 150ms,
-		border-color 150ms,
-		color 150ms;
+		color 150ms,
+		filter 120ms ease-out;
+}
+
+a.sl-link-button:hover {
+	filter: var(--flint-button-hover-filter);
+}
+
+a.sl-link-button.secondary:hover {
+	background: var(--flint-button-hover-surface);
+}
+
+a.sl-link-button.minimal:hover {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+a.sl-link-button:active {
+	filter: var(--flint-button-pressed-filter);
+	transition-duration: 0ms;
 }
 
 /* Starlight chrome customizations. */

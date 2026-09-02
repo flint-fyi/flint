@@ -71,7 +71,7 @@ import { Image } from "astro:assets";
 		text-decoration: none;
 		transition:
 			background-color 150ms,
-			border-color 150ms;
+			filter 120ms ease-out;
 	}
 
 	.button.pine {
@@ -81,6 +81,16 @@ import { Image } from "astro:assets";
 	}
 
 	.button:hover {
-		border-color: var(--sl-color-gray-3);
+		background: var(--flint-button-hover-surface);
+		filter: var(--flint-button-hover-filter);
+	}
+
+	.button.pine:hover {
+		background: var(--flint-pine);
+	}
+
+	.button:active {
+		filter: var(--flint-button-pressed-filter);
+		transition-duration: 0ms;
 	}
 </style>

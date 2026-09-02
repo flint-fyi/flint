@@ -195,16 +195,16 @@
 		text-decoration: none;
 		transition:
 			background-color 150ms,
-			border-color 150ms;
+			filter 120ms ease-out;
 	}
 
 	.button:hover {
-		background: color-mix(
-			in srgb,
-			var(--flint-ember-fill) 88%,
-			var(--flint-band-text)
-		);
-		border-color: transparent;
+		filter: var(--flint-button-hover-filter);
+	}
+
+	.button:active {
+		filter: var(--flint-button-pressed-filter);
+		transition-duration: 0ms;
 	}
 
 	@media (width >= 50rem) {

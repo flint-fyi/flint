@@ -98,8 +98,8 @@ const rules = ruleIds.map((ruleId) => {
 		text-decoration: none;
 		transition:
 			background-color 150ms,
-			border-color 150ms,
-			color 150ms;
+			color 150ms,
+			filter 120ms ease-out;
 	}
 
 	.button.primary {
@@ -109,16 +109,17 @@ const rules = ruleIds.map((ruleId) => {
 	}
 
 	.button:hover {
-		border-color: var(--sl-color-gray-3);
+		background: var(--flint-button-hover-surface);
+		filter: var(--flint-button-hover-filter);
 	}
 
 	.button.primary:hover {
-		background: color-mix(
-			in srgb,
-			var(--flint-ember-fill) 88%,
-			var(--sl-color-white)
-		);
-		border-color: transparent;
+		background: var(--flint-ember-fill);
+	}
+
+	.button:active {
+		filter: var(--flint-button-pressed-filter);
+		transition-duration: 0ms;
 	}
 
 	.rules {

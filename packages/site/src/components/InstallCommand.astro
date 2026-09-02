@@ -295,13 +295,23 @@ const defaultPackageManager = "npm";
 		position: relative;
 		transition:
 			background-color 150ms,
-			color 150ms;
+			color 150ms,
+			filter 120ms ease-out;
 	}
 
 	.copy-button:hover,
 	.copy-button[data-copied="true"] {
 		background: var(--flint-badge-surface);
 		color: var(--flint-badge-text);
+	}
+
+	.copy-button:hover {
+		filter: var(--flint-button-hover-filter);
+	}
+
+	.copy-button:active {
+		filter: var(--flint-button-pressed-filter);
+		transition-duration: 0ms;
 	}
 
 	.copy-button:focus-visible {
