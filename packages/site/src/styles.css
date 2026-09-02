@@ -139,16 +139,6 @@ table code {
 	padding: 0;
 }
 
-.card,
-.starlight-package-managers-tabs {
-	border-radius: 1rem;
-}
-
-.card {
-	background: var(--flint-paper);
-	border-color: var(--flint-paper-border);
-}
-
 a.sl-link-button.primary {
 	background: var(--flint-ember-fill);
 	border-color: var(--flint-ember-fill);
