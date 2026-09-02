@@ -3,22 +3,22 @@ import { Code } from "@astrojs/starlight/components";
 
 const darkCliOutput = [
 	"$ flint",
-	"\u001b[90mLinting with \u001b[36m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[90m...\u001b[39m",
+	"\u001b[38;2;185;196;214mLinting with \u001b[39m\u001b[38;2;139;210;255m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[38;2;185;196;214m...\u001b[39m",
 	"",
 	"\u001b[4mfixtures/src/with-issues.ts\u001b[24m",
-	"\u001b[90m  2:2\u001b[39m  Debugger statements should not be used in production code.  \u001b[33mts/debuggerStatements\u001b[39m",
+	"\u001b[38;2;185;196;214m  2:2\u001b[39m  Debugger statements should not be used in production code.  \u001b[38;2;255;196;138mts/debuggerStatements\u001b[39m",
 	"",
-	"\u001b[3m\u001b[31m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
+	"\u001b[3m\u001b[38;2;255;155;146m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
 ].join("\n");
 
 const lightCliOutput = [
 	"$ flint",
-	"\u001b[38;2;120;120;120mLinting with \u001b[39m\u001b[38;2;0;122;204m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[38;2;120;120;120m...\u001b[39m",
+	"\u001b[38;2;80;80;80mLinting with \u001b[39m\u001b[38;2;0;76;120m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[38;2;80;80;80m...\u001b[39m",
 	"",
 	"\u001b[38;2;0;0;0m\u001b[4mfixtures/src/with-issues.ts\u001b[24m\u001b[39m",
-	"\u001b[38;2;120;120;120m  2:2\u001b[39m  \u001b[38;2;60;60;60mDebugger statements should not be used in production code.\u001b[39m  \u001b[38;2;170;0;0mts/debuggerStatements\u001b[39m",
+	"\u001b[38;2;80;80;80m  2:2\u001b[39m  \u001b[38;2;60;60;60mDebugger statements should not be used in production code.\u001b[39m  \u001b[38;2;150;41;0mts/debuggerStatements\u001b[39m",
 	"",
-	"\u001b[3m\u001b[38;2;170;0;0m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
+	"\u001b[3m\u001b[38;2;150;41;0m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
 ].join("\n");
 ---
 
@@ -63,7 +63,7 @@ const lightCliOutput = [
 
 <style>
 	.try-it-out {
-		border-block: 1px solid var(--flint-paper-border);
+		border-block-start: 1px solid var(--flint-paper-border);
 		margin-block: 1rem 4rem;
 		padding-block: clamp(3rem, 6vw, 4.5rem);
 	}

@@ -178,10 +178,6 @@ header.header {
 	border-block-end: 1px solid var(--sl-color-gray-5);
 }
 
-footer.sl-flex .credits {
-	border-block-start: 0;
-}
-
 .site-title {
 	font-size: var(--sl-text-xl);
 }
