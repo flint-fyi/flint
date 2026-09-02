@@ -10,6 +10,7 @@ import {
 
 import {
 	RuleTester,
+	type TestCases,
 	type TesterSetupDescribe,
 	type TesterSetupIt,
 } from "./RuleTester.ts";
@@ -46,15 +47,66 @@ Another language report.`,
 	it("allows languages without language reports", async () => {
 		await expect(createTestSetup({})()).resolves.toBeUndefined();
 	});
+
+	it("fails a test case that duplicates an earlier test case", async () => {
+		const [first, second] = createTestSetups({
+			testCases: { invalid: [], valid: ["let a;", { code: "let a;" }] },
+		});
+		assert.ok(first);
+		assert.ok(second);
+
+		await expect(first()).resolves.toBeUndefined();
+		expect(second).toThrow(
+			"Expected no duplicate test cases, but an earlier test case has the same code, fileName, files, and options.",
+		);
+	});
+
+	it("allows test cases with the same code and different file names", async () => {
+		const [first, second] = createTestSetups({
+			testCases: {
+				invalid: [],
+				valid: ["let a;", { code: "let a;", fileName: "other.ts" }],
+			},
+		});
+		assert.ok(first);
+		assert.ok(second);
+
+		await expect(first()).resolves.toBeUndefined();
+		await expect(second()).resolves.toBeUndefined();
+	});
+
+	it("allows an invalid test case with the same code as a valid test case", async () => {
+		const [first, second] = createTestSetups({
+			testCases: {
+				invalid: [{ code: "let a;", snapshot: "let a;" }],
+				valid: ["let a;"],
+			},
+		});
+		assert.ok(first);
+		assert.ok(second);
+
+		await expect(first()).resolves.toBeUndefined();
+		await expect(second()).resolves.toBeUndefined();
+	});
 });
 
-function createTestSetup({
-	assertNoLanguageReports,
-	getLanguageReports,
-}: {
+interface TestSetupOptions {
 	assertNoLanguageReports?: boolean;
 	getLanguageReports?: () => LanguageReports;
-}): () => Promise<void> {
+	testCases?: TestCases<undefined>;
+}
+
+function createTestSetup(options: TestSetupOptions): () => Promise<void> {
+	const testSetup = createTestSetups(options)[0];
+	assert.ok(testSetup);
+	return testSetup;
+}
+
+function createTestSetups({
+	assertNoLanguageReports,
+	getLanguageReports,
+	testCases = { invalid: [], valid: [""] },
+}: TestSetupOptions): (() => Promise<void>)[] {
 	const testSetups: (() => Promise<void>)[] = [];
 	const collectTest: TesterSetupIt = (_description, setup): void => {
 		testSetups.push(setup);
@@ -88,9 +140,7 @@ function createTestSetup({
 		it: collectTest,
 		only: collectTest,
 		skip: collectTest,
-	}).describe(rule, { invalid: [], valid: [""] });
+	}).describe(rule, testCases);
 
-	const testSetup = testSetups[0];
-	assert.ok(testSetup);
-	return testSetup;
+	return testSetups;
 }

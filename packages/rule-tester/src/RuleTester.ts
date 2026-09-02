@@ -137,14 +137,16 @@ export class RuleTester {
 	): void {
 		this.#testerOptions.describe(rule.about.id, () => {
 			this.#testerOptions.describe("invalid", () => {
+				const seenTestCases = new Set<string>();
 				for (const testCase of invalid) {
-					this.#itInvalidCase(rule, testCase);
+					this.#itInvalidCase(rule, testCase, seenTestCases);
 				}
 			});
 
 			this.#testerOptions.describe("valid", () => {
+				const seenTestCases = new Set<string>();
 				for (const testCase of valid) {
-					this.#itValidCase(rule, testCase);
+					this.#itValidCase(rule, testCase, seenTestCases);
 				}
 			});
 		});
@@ -153,13 +155,14 @@ export class RuleTester {
 	#itInvalidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCase: InvalidTestCase<InferredInputObject<OptionsSchema>>,
+		seenTestCases: Set<string>,
 	) {
 		const testCaseNormalized = normalizeTestCase(
 			testCase,
 			this.#testerOptions.defaults.fileName,
 		);
 
-		this.#itTestCase(testCaseNormalized, async () => {
+		this.#itTestCase(testCaseNormalized, seenTestCases, async () => {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
@@ -190,7 +193,11 @@ export class RuleTester {
 		});
 	}
 
-	#itTestCase(testCase: TestCaseNormalized, setup: () => Promise<void>) {
+	#itTestCase(
+		testCase: TestCaseNormalized,
+		seenTestCases: Set<string>,
+		setup: () => Promise<void>,
+	) {
 		let test = testCase.only
 			? this.#testerOptions.only
 			: this.#testerOptions.it;
@@ -213,6 +220,7 @@ export class RuleTester {
 						)
 					: testCase.code),
 			() => {
+				assertNoDuplicateTestCase(testCase, seenTestCases);
 				if (testCase.files != null) {
 					assert.notEqual(
 						Object.keys(testCase.files).length,
@@ -228,6 +236,7 @@ export class RuleTester {
 	#itValidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCaseRaw: ValidTestCase<InferredInputObject<OptionsSchema>>,
+		seenTestCases: Set<string>,
 	) {
 		const testCase =
 			typeof testCaseRaw === "string" ? { code: testCaseRaw } : testCaseRaw;
@@ -236,7 +245,7 @@ export class RuleTester {
 			this.#testerOptions.defaults.fileName,
 		);
 
-		this.#itTestCase(testCaseNormalized, async () => {
+		this.#itTestCase(testCaseNormalized, seenTestCases, async () => {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
@@ -256,6 +265,26 @@ export class RuleTester {
 			}
 		});
 	}
+}
+
+function assertNoDuplicateTestCase(
+	testCase: TestCaseNormalized,
+	seenTestCases: Set<string>,
+): void {
+	const serializedTestCase = JSON.stringify({
+		code: testCase.code,
+		fileName: testCase.fileName,
+		files: testCase.files,
+		options: testCase.options,
+	});
+
+	if (seenTestCases.has(serializedTestCase)) {
+		assert.fail(
+			"Expected no duplicate test cases, but an earlier test case has the same code, fileName, files, and options.",
+		);
+	}
+
+	seenTestCases.add(serializedTestCase);
 }
 
 function assertNoLanguageReports(languageReports: LanguageReports) {
