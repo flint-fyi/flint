@@ -5,13 +5,14 @@ import {
 	isConfig,
 	validateConfigDefinition,
 	type LinterHost,
+	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
 
 export async function loadConfigDefinition(
 	host: LinterHost,
 	configFileName: string,
 	importVersion?: number,
-) {
+): Promise<ProcessedConfigDefinition | undefined> {
 	const configUrl = pathToFileURL(
 		path.join(host.getCurrentDirectory(), configFileName),
 	);

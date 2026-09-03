@@ -10,7 +10,7 @@ import { resolveChange } from "./resolveChange.ts";
 export function resolveChangesByFile(
 	filesResults: Map<string, FileResults>,
 	requestedSuggestions: Set<string>,
-) {
+): [string, FileChange[]][] {
 	const changesByFile = new CachedFactory<string, FileChange[]>(() => []);
 
 	function collectReportFix(absoluteFilePath: string, report: FileReport) {

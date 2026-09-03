@@ -1,9 +1,12 @@
 import type {
 	CommentDirective,
+	CommentDirectiveType,
 	CommentDirectiveWithinFile,
 } from "../types/directives.ts";
 
-export function isCommentDirectiveType(type: string) {
+export function isCommentDirectiveType(
+	type: string,
+): type is CommentDirectiveType {
 	return (
 		type === "disable-file" ||
 		type === "disable-lines-begin" ||

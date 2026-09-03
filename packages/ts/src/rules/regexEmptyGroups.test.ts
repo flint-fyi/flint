@@ -139,6 +139,6 @@ RegExp("()");
 		`new RegExp("(a)");`,
 		`new RegExp("(?:a)");`,
 		`RegExp("(a|b)");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

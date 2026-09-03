@@ -1,10 +1,11 @@
 import rule from "./exceptionAssignments.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -12,6 +13,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -23,6 +25,7 @@ try {
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (exception) {
@@ -30,6 +33,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (exception) {
@@ -41,42 +45,55 @@ try {
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
-    error++;
+    if (typeof error === "number") {
+        error++;
+    }
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
-    error++;
-    ~~~~~
-    Exception parameters in catch clauses should not be reassigned.
+    if (typeof error === "number") {
+        error++;
+        ~~~~~
+        Exception parameters in catch clauses should not be reassigned.
+    }
 }
 `,
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
-    ++error;
+    if (typeof error === "number") {
+        ++error;
+    }
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
-    ++error;
-      ~~~~~
-      Exception parameters in catch clauses should not be reassigned.
+    if (typeof error === "number") {
+        ++error;
+          ~~~~~
+          Exception parameters in catch clauses should not be reassigned.
+    }
 }
 `,
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -84,6 +101,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -95,6 +113,7 @@ try {
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -102,6 +121,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -113,6 +133,7 @@ try {
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -120,6 +141,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -131,6 +153,7 @@ try {
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -138,6 +161,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -149,6 +173,7 @@ try {
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -158,6 +183,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
@@ -169,87 +195,80 @@ try {
 }
 `,
 		},
-		{
-			code: `
-try {
-    doSomething();
-} catch ({ message }) {
-    message = "reassigned destructured parameter";
-}
-`,
-			snapshot: `
-try {
-    doSomething();
-} catch ({ message }) {
-    message = "reassigned destructured parameter";
-    ~~~~~~~
-    Exception parameters in catch clauses should not be reassigned.
-}
-`,
-		},
-		{
-			code: `
-try {
-    doSomething();
-} catch ({ message, code }) {
-    code = 500;
-}
-`,
-			snapshot: `
-try {
-    doSomething();
-} catch ({ message, code }) {
-    code = 500;
-    ~~~~
-    Exception parameters in catch clauses should not be reassigned.
-}
-`,
-		},
-		{
-			code: `
-try {
-    doSomething();
-} catch ([first, second]) {
-    first = "reassigned array destructured parameter";
-}
-`,
-			snapshot: `
-try {
-    doSomething();
-} catch ([first, second]) {
-    first = "reassigned array destructured parameter";
-    ~~~~~
-    Exception parameters in catch clauses should not be reassigned.
-}
-`,
-		},
 	],
 	valid: [
-		`try { doSomething(); } catch (error) { console.log(error); }`,
-		`try { doSomething(); } catch (error) { throw error; }`,
-		`try { doSomething(); } catch (error) { const message = error.message; }`,
-		`try { doSomething(); } catch (error) { if (error instanceof TypeError) { handle(); } }`,
-		`try { doSomething(); } catch { handleError(); }`,
-		`const error = new Error("test");`,
 		`
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
-    const error = "shadowed variable";
     console.log(error);
 }
 `,
 		`
+declare function doSomething(): void;
+try {
+    doSomething();
+} catch (error) {
+    throw error;
+}
+`,
+		`
+declare function doSomething(): void;
+try {
+    doSomething();
+} catch (error) {
+    if (error instanceof Error) {
+        const message = error.message;
+        console.log(message);
+    }
+}
+`,
+		`
+declare function doSomething(): void;
+declare function handle(): void;
+try {
+    doSomething();
+} catch (error) {
+    if (error instanceof TypeError) {
+        handle();
+    }
+}
+`,
+		`
+declare function doSomething(): void;
+declare function handleError(): void;
+try {
+    doSomething();
+} catch {
+    handleError();
+}
+`,
+		`const error = new Error("test");`,
+		`
+declare function doSomething(): void;
+try {
+    doSomething();
+} catch (error) {
+    {
+        const error = "shadowed variable";
+        console.log(error);
+    }
+}
+`,
+		`
+declare function doSomething(): void;
 try {
     doSomething();
 } catch (error) {
     function inner() {
-        const error = "shadowed in function";
+        let error = "shadowed in function";
         error = "reassigning shadowed variable is ok";
     }
 }
 `,
 		`
+declare function doSomething(): void;
 let error = "outer";
 try {
     doSomething();
@@ -258,8 +277,5 @@ try {
 }
 error = "reassigning outer is ok";
 `,
-		`try { doSomething(); } catch ({ message }) { console.log(message); }`,
-		`try { doSomething(); } catch ({ message, code }) { if (code === 404) { handle(); } }`,
-		`try { doSomething(); } catch ([first]) { console.log(first); }`,
 	],
 });

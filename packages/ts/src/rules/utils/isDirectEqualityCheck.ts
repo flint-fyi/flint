@@ -6,7 +6,7 @@ export function isDirectEqualityCheck(
 	node: AST.ArrowFunction | AST.FunctionExpression,
 	operators: SyntaxKind[],
 	parameterName: string,
-) {
+): boolean {
 	let body: AST.Expression | undefined;
 
 	switch (node.kind) {
@@ -23,13 +23,13 @@ export function isDirectEqualityCheck(
 	}
 
 	if (body?.kind !== SyntaxKind.BinaryExpression) {
-		return undefined;
+		return false;
 	}
 
 	const { left, operatorToken, right } = body;
 
 	if (!operators.includes(operatorToken.kind)) {
-		return undefined;
+		return false;
 	}
 
 	const isLeftParam =
@@ -38,13 +38,13 @@ export function isDirectEqualityCheck(
 		right.kind === SyntaxKind.Identifier && right.text === parameterName;
 
 	if (isLeftParam && !isRightParam) {
-		return right;
+		return true;
 	}
 	if (isRightParam && !isLeftParam) {
-		return left;
+		return true;
 	}
 
-	return undefined;
+	return false;
 }
 
 function getDirectReturnExpression(body: AST.Block) {

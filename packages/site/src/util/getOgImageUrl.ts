@@ -9,7 +9,7 @@ const routes = await getStaticPaths({
 
 const paths = new Set(routes.map(({ params }) => params.path));
 
-export function getOgImageUrl(path: string) {
+export function getOgImageUrl(path: string): string {
 	const normalizedPath = path.replace(/^\//, "").replace(/\/$/, "");
 
 	const ogPath = `${normalizedPath}.webp`;

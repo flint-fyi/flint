@@ -309,25 +309,34 @@ Prefer using a negative index over \`.length - index\` for \`subarray\`.
 		},
 		{
 			code: `
-this.items.slice(this.items.length - 2);
+function test(this: { items: number[] }) {
+    this.items.slice(this.items.length - 2);
+}
 `,
 			output: `
-this.items.slice(-2);
+function test(this: { items: number[] }) {
+    this.items.slice(-2);
+}
 `,
 			snapshot: `
-this.items.slice(this.items.length - 2);
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer using a negative index over \`.length - index\` for \`slice\`.
+function test(this: { items: number[] }) {
+    this.items.slice(this.items.length - 2);
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Prefer using a negative index over \`.length - index\` for \`slice\`.
+}
 `,
 		},
 		{
 			code: `
+declare const object: { array: number[] };
 object.array.slice(object.array.length - 2);
 `,
 			output: `
+declare const object: { array: number[] };
 object.array.slice(-2);
 `,
 			snapshot: `
+declare const object: { array: number[] };
 object.array.slice(object.array.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer using a negative index over \`.length - index\` for \`slice\`.
@@ -398,11 +407,27 @@ Prefer using a negative index over \`.length - index\` for \`slice\`.
 		`const values = [1, 2, 3]; values.indexOf(1);`,
 		`const values = [1, 2, 3]; values.push(4);`,
 		`const values = [1, 2, 3]; values.pop();`,
-		`values.slice(values.length - 1.5);`,
-		`const values = [1, 2, 3]; Object.prototype.slice.call(values, values.length - 2);`,
-		`const obj = { length: 5; slice(at: number) {} }; obj.slice(obj.length - 2);`,
+		`
+const values = [1, 2, 3];
+values.slice(values.length - 1.5);
+`,
+		`
+const values = [1, 2, 3];
+const object = { slice: Array.prototype.slice };
+object.slice.call(values, values.length - 2);
+`,
+		`
+const object = { length: 5, slice(at: number) {} };
+object.slice(object.length - 2);
+`,
 		`declare const custom: { length: number; slice(start: number): void }; custom.slice(custom.length - 2);`,
 		`const values = [1, 2, 3]; values.toSpliced(values.length);`,
-		`const text = "hello"; text.subarray?.(text.length - 2);`,
+		`
+const text = {
+    length: 5,
+    subarray: undefined as ((start: number) => void) | undefined,
+};
+text.subarray?.(text.length - 2);
+`,
 	],
 });

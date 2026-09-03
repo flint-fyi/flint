@@ -35,9 +35,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const scope: unknown;
 <span scope={scope} />
 `,
 			snapshot: `
+declare const scope: unknown;
 <span scope={scope} />
       ~~~~~~~~~~~~~
       The \`scope\` prop only has an effect on <th> elements.
@@ -47,7 +49,9 @@ ruleTester.describe(rule, {
 	valid: [
 		`<th scope="col" />`,
 		`<th scope="row" />`,
-		`<th scope={scope} />`,
+		`
+declare const scope: unknown;
+<th scope={scope} />`,
 		`<div />`,
 		`<td>Cell</td>`,
 	],

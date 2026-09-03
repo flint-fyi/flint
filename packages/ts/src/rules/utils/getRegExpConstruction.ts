@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
 import {
 	getStaticStringValue,
@@ -7,10 +7,18 @@ import {
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
+export interface RegExpConstruction {
+	args: NodeArray<AST.Expression>;
+	flags: string;
+	pattern: string;
+	raw: string;
+	start: number;
+}
+
 export function getRegExpConstruction(
 	node: AST.CallExpression | AST.NewExpression,
 	{ program, sourceFile, typeChecker }: TypeScriptFileServices,
-) {
+): RegExpConstruction | undefined {
 	if (
 		node.expression.kind !== SyntaxKind.Identifier ||
 		node.expression.text !== "RegExp" ||

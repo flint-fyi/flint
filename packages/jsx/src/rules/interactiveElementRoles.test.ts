@@ -90,6 +90,8 @@ ruleTester.describe(rule, {
 		`<a role="link" />`,
 		`<input role="textbox" />`,
 		`<div role="article" />`,
-		`<CustomElement role="article" />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement role="article" />`,
 	],
 });

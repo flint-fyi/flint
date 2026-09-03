@@ -1,5 +1,31 @@
 # @flint.fyi/plugin-flint
 
+## 0.8.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34), [`3f8e15d`](https://github.com/flint-fyi/flint/commit/3f8e15d092d0177bcbf0de75718a075bf5fb4c21)]:
+  - @flint.fyi/typescript-language@0.20.0
+  - @flint.fyi/utils@0.16.0
+  - @flint.fyi/core@0.25.0
+
+## 0.7.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/typescript-language@0.19.0
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+
 ## 0.6.0
 
 ### Minor Changes
@@ -34,7 +60,7 @@
 - ce55da4: Add `pluginRuleOrdering` rule.
 - 657dff9: Add `testCaseOnlyFlags` rule.
 - 5b72b31: Added a fixer for the `flint/testShorthands` rule.
-It will now replace the test case object with the string equivalent.
+  It will now replace the test case object with the string equivalent.
 - f0966ab: Add `testCaseNonStaticCode` rule.
 - Updated dependencies [4fc0eef]
 - Updated dependencies [57fa268]

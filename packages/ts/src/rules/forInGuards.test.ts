@@ -5,11 +5,15 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
 for (const key in object) {
     doSomething(key);
 }
 `,
 			snapshot: `
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
 for (const key in object) {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 For-in loop body should be wrapped in an if statement to filter inherited properties.
@@ -19,9 +23,13 @@ For-in loop body should be wrapped in an if statement to filter inherited proper
 		},
 		{
 			code: `
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
 for (const key in object) doSomething(key);
 `,
 			snapshot: `
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
 for (const key in object) doSomething(key);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 For-in loop body should be wrapped in an if statement to filter inherited properties.
@@ -29,6 +37,10 @@ For-in loop body should be wrapped in an if statement to filter inherited proper
 		},
 		{
 			code: `
+declare const condition: boolean;
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
+declare function doSomethingElse(key: string): void;
 for (const key in object) {
     if (condition) {
         doSomething(key);
@@ -37,6 +49,10 @@ for (const key in object) {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
+declare function doSomethingElse(key: string): void;
 for (const key in object) {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 For-in loop body should be wrapped in an if statement to filter inherited properties.
@@ -49,6 +65,10 @@ For-in loop body should be wrapped in an if statement to filter inherited proper
 		},
 		{
 			code: `
+declare const condition: boolean;
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
+declare function doSomethingElse(key: string): void;
 for (const key in object) {
     if (condition) {
         doSomething(key);
@@ -58,6 +78,10 @@ for (const key in object) {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
+declare function doSomethingElse(key: string): void;
 for (const key in object) {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 For-in loop body should be wrapped in an if statement to filter inherited properties.
@@ -71,6 +95,10 @@ For-in loop body should be wrapped in an if statement to filter inherited proper
 		},
 		{
 			code: `
+declare const condition: boolean;
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
+declare function doSomethingElse(key: string): void;
 for (const key in object) {
     if (condition) {
         continue;
@@ -80,6 +108,10 @@ for (const key in object) {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
+declare function doSomethingElse(key: string): void;
 for (const key in object) {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 For-in loop body should be wrapped in an if statement to filter inherited properties.
@@ -93,28 +125,54 @@ For-in loop body should be wrapped in an if statement to filter inherited proper
 		},
 	],
 	valid: [
-		`for (const key in object);`,
-		`for (const key in object) {}`,
-		`for (const key in object) if (condition) doSomething(key);`,
-		`for (const key in object) { if (condition) doSomething(key); }`,
 		`
+declare const object: Record<string, boolean>;
+for (const key in object);
+`,
+		`
+declare const object: Record<string, boolean>;
+for (const key in object) {}
+`,
+		`
+declare const condition: boolean;
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
+for (const key in object) if (condition) doSomething(key);
+`,
+		`
+declare const condition: boolean;
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
+for (const key in object) {
+    if (condition) doSomething(key);
+}
+`,
+		`
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
 for (const key in object) {
     if (Object.hasOwn(object, key)) {
         doSomething(key);
     }
 }`,
 		`
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
 for (const key in object) {
     if (Object.prototype.hasOwnProperty.call(object, key)) {
         doSomething(key);
     }
 }`,
 		`
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
 for (const key in object) {
     if (!Object.hasOwn(object, key)) continue;
     doSomething(key);
 }`,
 		`
+declare const object: Record<string, boolean>;
+declare function doSomething(key: string): void;
 for (const key in object) {
     if (!Object.hasOwn(object, key)) {
         continue;

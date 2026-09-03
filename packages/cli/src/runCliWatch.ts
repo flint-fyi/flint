@@ -28,7 +28,7 @@ export async function runCliWatch(
 	configFileName: string,
 	getRenderer: () => Renderer,
 	values: OptionsValues,
-) {
+): Promise<void> {
 	const cwd = host.getCurrentDirectory();
 	const isCaseSensitiveFS = host.isCaseSensitiveFS();
 

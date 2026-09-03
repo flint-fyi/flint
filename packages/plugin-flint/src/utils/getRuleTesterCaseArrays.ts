@@ -4,7 +4,14 @@ import type { AST } from "@flint.fyi/typescript-language";
 
 import { findProperty } from "./findProperty.ts";
 
-export function getRuleTesterCaseArrays(node: AST.CallExpression) {
+export interface RuleTesterCases {
+	invalid: AST.ArrayLiteralExpression;
+	valid: AST.ArrayLiteralExpression;
+}
+
+export function getRuleTesterCaseArrays(
+	node: AST.CallExpression,
+): RuleTesterCases | undefined {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.expression.kind !== SyntaxKind.Identifier ||
@@ -12,7 +19,7 @@ export function getRuleTesterCaseArrays(node: AST.CallExpression) {
 		node.expression.name.text !== "describe" ||
 		node.arguments.length !== 2
 	) {
-		return undefined;
+		return;
 	}
 
 	// TODO: Check node.expression.expression's type for being a RuleTester
@@ -20,7 +27,7 @@ export function getRuleTesterCaseArrays(node: AST.CallExpression) {
 
 	const argument = node.arguments[1];
 	if (argument?.kind !== SyntaxKind.ObjectLiteralExpression) {
-		return undefined;
+		return;
 	}
 
 	const valid = findProperty(
@@ -38,7 +45,7 @@ export function getRuleTesterCaseArrays(node: AST.CallExpression) {
 	);
 
 	if (!valid || !invalid) {
-		return undefined;
+		return;
 	}
 
 	return { invalid, valid };

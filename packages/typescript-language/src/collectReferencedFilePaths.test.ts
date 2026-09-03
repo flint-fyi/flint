@@ -8,12 +8,12 @@ import { afterEach, describe, expect, it } from "vitest";
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 
-const tempDirs: string[] = [];
+const tempDirectories: string[] = [];
 
 describe(collectReferencedFilePaths, () => {
 	afterEach(async () => {
 		await Promise.all(
-			tempDirs
+			tempDirectories
 				.splice(0)
 				.map((dir) => rm(dir, { force: true, recursive: true })),
 		);
@@ -21,7 +21,7 @@ describe(collectReferencedFilePaths, () => {
 
 	it("includes imports, import types, dynamic imports, and re-exports", async () => {
 		const root = await mkdtemp(path.join(os.tmpdir(), "flint-ts-deps-"));
-		tempDirs.push(root);
+		tempDirectories.push(root);
 
 		const indexPath = path.join(root, "index.ts");
 		const dependencyNames = [

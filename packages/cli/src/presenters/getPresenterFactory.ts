@@ -1,6 +1,4 @@
 import type { OptionsValues } from "../options.ts";
-import { briefPresenterFactory } from "./briefPresenterFactory.ts";
-import { detailedPresenterFactory } from "./detailed/detailedPresenterFactory.ts";
 import type { PresenterFactory } from "./types.ts";
 
 export async function getPresenterFactory(
@@ -10,9 +8,10 @@ export async function getPresenterFactory(
 
 	switch (presenterName) {
 		case "brief":
-			return briefPresenterFactory;
+			return (await import("./briefPresenterFactory.ts")).briefPresenterFactory;
 		case "detailed":
-			return detailedPresenterFactory;
+			return (await import("./detailed/detailedPresenterFactory.ts"))
+				.detailedPresenterFactory;
 		case "github":
 			return (await import("./githubPresenterFactory.ts"))
 				.githubPresenterFactory;

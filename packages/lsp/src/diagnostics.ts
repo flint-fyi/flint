@@ -1,7 +1,11 @@
 import { stripVTControlCharacters } from "node:util";
 
 import type { TextDocument } from "vscode-languageserver-textdocument";
-import { DiagnosticSeverity, Range } from "vscode-languageserver/node.js";
+import {
+	DiagnosticSeverity,
+	Range,
+	type Diagnostic,
+} from "vscode-languageserver/node.js";
 
 import {
 	formatReport,
@@ -18,7 +22,7 @@ const LANGUAGE_DIAGNOSTIC_SOURCE = "flint/language";
 export function mapFileResultsToDiagnostics(
 	fileResults: FileResults,
 	document: TextDocument | undefined,
-) {
+): Diagnostic[] {
 	return [
 		...fileResults.reports.map(mapReportToDiagnostic),
 		...fileResults.languageReports.map((report) =>

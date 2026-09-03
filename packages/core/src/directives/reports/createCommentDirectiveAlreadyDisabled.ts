@@ -1,9 +1,10 @@
 import type { CommentDirective } from "../../types/directives.ts";
+import type { FileReport } from "../../types/reports.ts";
 
 export function createCommentDirectiveAlreadyDisabled(
 	directive: CommentDirective,
 	selection: string,
-) {
+): FileReport {
 	return {
 		about: {
 			id: "commentDirectiveAlreadyDisabled",

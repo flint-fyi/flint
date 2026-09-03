@@ -16,11 +16,11 @@ This file contains no meaningful code.
 		},
 		{
 			code: `
-This file contains no meaningful code.
 /* multi-line
 comment */
 `,
 			snapshot: `
+
 This file contains no meaningful code.
 /* multi-line
 comment */
@@ -104,7 +104,14 @@ This file contains no meaningful code.
 	valid: [
 		`const x = 1;`,
 		`export const x = 1;`,
-		`import { x } from "module";`,
+		{
+			code: `import { x } from "module";`,
+			files: {
+				"node_modules/module/index.d.ts": `
+export const x: unknown;
+`,
+			},
+		},
 		`function getValue() { return 42; }`,
 		`class MyClass {}`,
 		`export {};`,

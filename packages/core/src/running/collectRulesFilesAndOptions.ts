@@ -6,7 +6,7 @@ import type { LanguageAndFile, LanguageFilesWithOptions } from "./types.ts";
 export function collectRulesFilesAndOptions(
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	languageFilesByFilePath: Map<string, LanguageAndFile[]>,
-) {
+): Map<AnyRule, LanguageFilesWithOptions[]> {
 	const rulesFilesAndOptionsByRule = new Map<
 		AnyRule,
 		LanguageFilesWithOptions[]

@@ -22,7 +22,7 @@
 		"lint:knip": "knip",
 		"lint:knip:prod": "knip --strict",
 		"prepare": "husky",
-		"release": "pnpm build && pnpm -r publish",
+		"release": "pnpm build && changeset publish",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest"
 	},
@@ -32,7 +32,7 @@
 		"@changesets/cli": "catalog:dev",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/js": "catalog:dev",
-		"@eslint/json": "2.0.0",
+		"@eslint/json": "2.0.1",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
@@ -59,6 +59,7 @@
 		"jiti": "catalog:dev",
 		"knip": "catalog:dev",
 		"lint-staged": "catalog:dev",
+		"pkg-pr-new": "catalog:dev",
 		"prettier": "catalog:dev",
 		"prettier-plugin-astro": "catalog:dev",
 		"prettier-plugin-curly": "catalog:dev",
@@ -68,15 +69,16 @@
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev",
 		"typescript-eslint": "catalog:dev",
-		"vitest": "catalog:dev"
+		"vitest": "catalog:dev",
+		"vitest-ansi-serializer": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"devEngines": {
 		"packageManager": {
 			"name": "pnpm",
-			"version": "11.9.0"
+			"version": "11.25.0"
 		}
 	}
 }

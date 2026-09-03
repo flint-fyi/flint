@@ -1,6 +1,11 @@
 import { debugForFile } from "debug-for-file";
 
-import { runConfig, runConfigFixing, type LinterHost } from "@flint.fyi/core";
+import {
+	runConfig,
+	runConfigFixing,
+	type LinterHost,
+	type LintResults,
+} from "@flint.fyi/core";
 
 import { loadConfigDefinition } from "./loadConfigDefinition.ts";
 import type { OptionsValues } from "./options.ts";
@@ -9,12 +14,17 @@ import type { Renderer } from "./renderers/types.ts";
 
 const log = debugForFile(import.meta.filename);
 
+export interface CliResult {
+	exitCode: number;
+	lintResults: LintResults | undefined;
+}
+
 export async function runCliOnce(
 	host: LinterHost,
 	configFileName: string,
 	renderer: Renderer,
 	values: OptionsValues,
-) {
+): Promise<CliResult> {
 	const configDefinition = await loadConfigDefinition(host, configFileName);
 	if (configDefinition == null) {
 		return { exitCode: 2, lintResults: undefined };

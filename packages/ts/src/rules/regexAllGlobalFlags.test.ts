@@ -107,7 +107,13 @@ text.matchAll(/o/);
 		`"text".matchAll(new RegExp("pattern", "gi"));`,
 		`"text".replaceAll(new RegExp("pattern", "g"), "replacement");`,
 		`const flags = "gi"; "text".matchAll(new RegExp("pattern", flags));`,
-		`declare const value: number[]; value.matchAll(/pattern/);`,
-		`declare const items: string[]; items.replaceAll(/pattern/, "x");`,
+		`
+declare const value: { matchAll(pattern: RegExp): void };
+value.matchAll(/pattern/);
+`,
+		`
+declare const items: { replaceAll(pattern: RegExp, replacement: string): void };
+items.replaceAll(/pattern/, "x");
+`,
 	],
 });

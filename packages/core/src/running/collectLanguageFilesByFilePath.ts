@@ -29,7 +29,13 @@ export function collectLanguageFilesByFilePath(
 			language.createFileFactory(host),
 		),
 	}: CollectLanguageFilesOptions = {},
-) {
+): Map<
+	string,
+	{
+		file: AnyLanguageFile;
+		language: AnyLanguage;
+	}[]
+> {
 	const filePathsByLanguage = new CachedFactory<AnyLanguage, Set<string>>(
 		() => new Set(),
 	);

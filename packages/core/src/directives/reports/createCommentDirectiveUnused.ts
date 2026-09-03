@@ -1,7 +1,9 @@
 import type { CommentDirective } from "../../types/directives.ts";
 import type { FileReport } from "../../types/reports.ts";
 
-export function createCommentDirectiveUnused(directive: CommentDirective) {
+export function createCommentDirectiveUnused(
+	directive: CommentDirective,
+): FileReport {
 	const selectionsText =
 		directive.selections.length === 1
 			? `"${directive.selections[0]}"`
@@ -23,5 +25,5 @@ export function createCommentDirectiveUnused(directive: CommentDirective) {
 			],
 		},
 		range: directive.range,
-	} satisfies FileReport;
+	};
 }

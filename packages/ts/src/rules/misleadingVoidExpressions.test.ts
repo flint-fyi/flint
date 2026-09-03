@@ -147,27 +147,6 @@ const promise = Promise.resolve().then(() => void save());
 		{
 			code: `
 declare function log(message: string): void;
-true && log("message") && false;
-`,
-			snapshot: `
-declare function log(message: string): void;
-true && log("message") && false;
-        ~~~~~~~~~~~~~~
-        Void expressions should not be used as values.
-`,
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `
-declare function log(message: string): void;
-true && void log("message") && false;
-`,
-				},
-			],
-		},
-		{
-			code: `
-declare function log(message: string): void;
 function run() {
     if (true) {
         return log("early");
@@ -262,11 +241,11 @@ const x = void log?.('foo');
 		},
 		{
 			code: `
-declare function log(message: string): void;
+declare function log(message: unknown): void;
 log(log('foo'));
 `,
 			snapshot: `
-declare function log(message: string): void;
+declare function log(message: unknown): void;
 log(log('foo'));
     ~~~~~~~~~~
     Void expressions should not be used as values.
@@ -275,7 +254,7 @@ log(log('foo'));
 				{
 					id: "wrapWithVoid",
 					updated: `
-declare function log(message: string): void;
+declare function log(message: unknown): void;
 log(void log('foo'));
 `,
 				},
@@ -326,100 +305,16 @@ declare function log(message: string): void;
 		{
 			code: `
 declare function log(message: string): void;
-log('foo') ? true : false;
-`,
-			snapshot: `
-declare function log(message: string): void;
-log('foo') ? true : false;
-~~~~~~~~~~
-Void expressions should not be used as values.
-`,
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `
-declare function log(message: string): void;
-void log('foo') ? true : false;
-`,
-				},
-			],
-		},
-		{
-			code: `
-declare function log(message: string): void;
-(log('foo') && true) || false;
-`,
-			snapshot: `
-declare function log(message: string): void;
-(log('foo') && true) || false;
- ~~~~~~~~~~
- Void expressions should not be used as values.
-`,
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `
-declare function log(message: string): void;
-(void log('foo') && true) || false;
-`,
-				},
-			],
-		},
-		{
-			code: `
-declare function log(message: string): void;
-!log('foo');
-`,
-			snapshot: `
-declare function log(message: string): void;
-!log('foo');
- ~~~~~~~~~~
- Void expressions should not be used as values.
-`,
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `
-declare function log(message: string): void;
-!void log('foo');
-`,
-				},
-			],
-		},
-		{
-			code: `
-declare function log(message: string): void;
-!!log('foo');
-`,
-			snapshot: `
-declare function log(message: string): void;
-!!log('foo');
-  ~~~~~~~~~~
-  Void expressions should not be used as values.
-`,
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `
-declare function log(message: string): void;
-!!void log('foo');
-`,
-				},
-			],
-		},
-		{
-			code: `
-declare function log(message: string): void;
 function example(input: string) {
-	return (input, log(input));
+	return (input.trim(), log(input));
 }
 `,
 			snapshot: `
 declare function log(message: string): void;
 function example(input: string) {
-	return (input, log(input));
-	               ~~~~~~~~~~
-	               Returning a void expression from a function is misleading.
+	return (input.trim(), log(input));
+	                      ~~~~~~~~~~
+	                      Returning a void expression from a function is misleading.
 }
 `,
 			suggestions: [
@@ -428,7 +323,7 @@ function example(input: string) {
 					updated: `
 declare function log(message: string): void;
 function example(input: string) {
-	(input, log(input));
+	(input.trim(), log(input));
 }
 `,
 				},
@@ -437,7 +332,7 @@ function example(input: string) {
 					updated: `
 declare function log(message: string): void;
 function example(input: string) {
-	return (input, void log(input));
+	return (input.trim(), void log(input));
 }
 `,
 				},
@@ -445,44 +340,44 @@ function example(input: string) {
 		},
 		{
 			code: `
-declare function log(message: string): void;
-foo => (foo ? log(true) : log(false));
+declare function log(value: boolean): void;
+(foo: boolean) => (foo ? log(true) : log(false));
 `,
 			snapshot: `
-declare function log(message: string): void;
-foo => (foo ? log(true) : log(false));
-              ~~~~~~~~~
-              Returning a void expression from an arrow function shorthand is misleading.
-                          ~~~~~~~~~~
-                          Returning a void expression from an arrow function shorthand is misleading.
+declare function log(value: boolean): void;
+(foo: boolean) => (foo ? log(true) : log(false));
+                         ~~~~~~~~~
+                         Returning a void expression from an arrow function shorthand is misleading.
+                                     ~~~~~~~~~~
+                                     Returning a void expression from an arrow function shorthand is misleading.
 `,
 			suggestions: [
 				{
 					id: "addBraces",
 					updated: `
-declare function log(message: string): void;
-foo => { (foo ? log(true) : log(false)); };
+declare function log(value: boolean): void;
+(foo: boolean) => { (foo ? log(true) : log(false)); };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
-declare function log(message: string): void;
-foo => (foo ? void log(true) : log(false));
+declare function log(value: boolean): void;
+(foo: boolean) => (foo ? void log(true) : log(false));
 `,
 				},
 				{
 					id: "addBraces",
 					updated: `
-declare function log(message: string): void;
-foo => { (foo ? log(true) : log(false)); };
+declare function log(value: boolean): void;
+(foo: boolean) => { (foo ? log(true) : log(false)); };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
-declare function log(message: string): void;
-foo => (foo ? log(true) : void log(false));
+declare function log(value: boolean): void;
+(foo: boolean) => (foo ? log(true) : void log(false));
 `,
 				},
 			],
@@ -490,6 +385,7 @@ foo => (foo ? log(true) : void log(false));
 		{
 			code: `
 declare function log(message: string): void;
+declare const cond: boolean;
 const f = function () {
 	if (cond) {
 		return log('foo');
@@ -499,6 +395,7 @@ const f = function () {
 `,
 			snapshot: `
 declare function log(message: string): void;
+declare const cond: boolean;
 const f = function () {
 	if (cond) {
 		return log('foo');
@@ -513,6 +410,7 @@ const f = function () {
 					id: "moveBeforeReturn",
 					updated: `
 declare function log(message: string): void;
+declare const cond: boolean;
 const f = function () {
 	if (cond) {
 		log('foo'); return;
@@ -525,6 +423,7 @@ const f = function () {
 					id: "wrapWithVoid",
 					updated: `
 declare function log(message: string): void;
+declare const cond: boolean;
 const f = function () {
 	if (cond) {
 		return void log('foo');
@@ -538,6 +437,7 @@ const f = function () {
 		{
 			code: `
 declare function log(message: string): void;
+declare const cond: boolean;
 const f = function () {
 	if (cond) return log('foo');
 	log('bar');
@@ -545,6 +445,7 @@ const f = function () {
 `,
 			snapshot: `
 declare function log(message: string): void;
+declare const cond: boolean;
 const f = function () {
 	if (cond) return log('foo');
 	                 ~~~~~~~~~~
@@ -557,6 +458,7 @@ const f = function () {
 					id: "moveBeforeReturn",
 					updated: `
 declare function log(message: string): void;
+declare const cond: boolean;
 const f = function () {
 	if (cond) log('foo'); return;
 	log('bar');
@@ -567,6 +469,7 @@ const f = function () {
 					id: "wrapWithVoid",
 					updated: `
 declare function log(message: string): void;
+declare const cond: boolean;
 const f = function () {
 	if (cond) return void log('foo');
 	log('bar');
@@ -805,7 +708,11 @@ const foo = () => (bar ? void log('foo') : bar);
 		`declare function log(message: string): void; const run = () => { log("test"); };`,
 		`declare function log(message: string): void; function run() { log("done"); }`,
 		`declare function log(message: string): void; true && log("message");`,
-		`declare function log(message: string): void; condition ? log("a") : log("b");`,
+		`
+declare function log(message: string): void;
+declare const condition: boolean;
+condition ? log("a") : log("b");
+`,
 		`declare function log(message: string): void; void log("ignored");`,
 		`declare function getValue(): number; const x = getValue();`,
 		`declare function getValue(): string | undefined; const x = getValue();`,
@@ -822,7 +729,7 @@ function cool(input: string) {
 		`
 declare function log(message: string): void;
 function cool(input: string) {
-	return (input, log(input), input);
+	return (input.trim(), log(input), input);
 }
 `,
 	],

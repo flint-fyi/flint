@@ -1,5 +1,5 @@
 import chalk from "chalk";
 
-export function printAllClear() {
+export function printAllClear(): string {
 	return chalk.green("No lint reports. Yay!");
 }

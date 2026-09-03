@@ -7,7 +7,7 @@ export function findProperty<Node extends AST.Expression>(
 	properties: ts.NodeArray<AST.ObjectLiteralElementLike>,
 	name: string,
 	predicate: (node: AST.Expression) => node is Node,
-) {
+): Node | undefined {
 	return properties.find(
 		(property): property is AST.PropertyAssignment & { initializer: Node } =>
 			property.kind === SyntaxKind.PropertyAssignment &&

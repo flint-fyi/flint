@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./anyCalls.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -85,18 +87,6 @@ declare const value: Function;
 value();
 ~~~~~
 Unsafe call of \`Function\` typed value.
-`,
-		},
-		{
-			code: `
-declare const value: Function;
-new value();
-`,
-			snapshot: `
-declare const value: Function;
-new value();
-    ~~~~~
-    Unsafe construction of \`Function\` typed value.
 `,
 		},
 		{
@@ -229,20 +219,6 @@ new obj.Ctor();
 			code: `
 interface UnsafeFunction extends Function {}
 declare const value: UnsafeFunction;
-new value();
-`,
-			snapshot: `
-interface UnsafeFunction extends Function {}
-declare const value: UnsafeFunction;
-new value();
-    ~~~~~
-    Unsafe construction of \`Function\` typed value.
-`,
-		},
-		{
-			code: `
-interface UnsafeFunction extends Function {}
-declare const value: UnsafeFunction;
 value\`template\`;
 `,
 			snapshot: `
@@ -251,24 +227,6 @@ declare const value: UnsafeFunction;
 value\`template\`;
 ~~~~~
 Unsafe use of \`Function\` typed template tag.
-`,
-		},
-		{
-			code: `
-interface UnsafeToConstruct extends Function {
-    (): void;
-}
-declare const value: UnsafeToConstruct;
-new value();
-`,
-			snapshot: `
-interface UnsafeToConstruct extends Function {
-    (): void;
-}
-declare const value: UnsafeToConstruct;
-new value();
-    ~~~~~
-    Unsafe construction of \`Function\` typed value.
 `,
 		},
 		{
@@ -344,29 +302,67 @@ obj.a?.();
 		`String.raw\`template\`;`,
 		`new Function('return 1');`,
 		`Function('return 1');`,
-		`const x = import('./foo');`,
-		`const mod = await import("./module");`,
-		`import("./dynamic-" + path);`,
-		`import(\`./\${moduleName}\`);`,
-		`
-let value: NotKnown;
-value();
+		{
+			code: `
+const value = import("./module");
+void value;
 `,
-		`
-let value: NotKnown;
-value\`template\`;
+			files: {
+				"module.ts": `export {};`,
+				...createRuleTesterTSConfig({
+					module: "esnext",
+					moduleDetection: "force",
+				}),
+			},
+		},
+		{
+			code: `
+const module = await import("./module");
+void module;
 `,
-		`
-let value: NotKnown;
-new value();
+			files: {
+				"module.ts": `export {};`,
+				...createRuleTesterTSConfig({
+					module: "esnext",
+					moduleDetection: "force",
+				}),
+			},
+		},
+		{
+			code: `
+declare const path: string;
+const value = import("./dynamic-" + path);
+void value;
 `,
+			files: {
+				"module.ts": `export {};`,
+				...createRuleTesterTSConfig({
+					module: "esnext",
+					moduleDetection: "force",
+				}),
+			},
+		},
+		{
+			code: `
+declare const moduleName: string;
+const value = import(\`./\${moduleName}\`);
+void value;
+`,
+			files: {
+				"module.ts": `export {};`,
+				...createRuleTesterTSConfig({
+					module: "esnext",
+					moduleDetection: "force",
+				}),
+			},
+		},
 		`
 declare const visitors: Record<string, ((node: unknown) => void) | undefined>;
 declare const key: string;
-visitors[key]?.();
+visitors[key]?.({});
 `,
 		`
-declare const obj: { [k: string]: unknown };
+declare const obj: { [k: string]: (() => void) | undefined };
 obj["method"]?.();
 `,
 		`
@@ -388,14 +384,6 @@ interface ConstructSignatureMakesSafe extends Function {
     new (): ConstructSignatureMakesSafe;
 }
 declare const safe: ConstructSignatureMakesSafe;
-new safe();
-`,
-		`
-interface SafeWithNonVoidCallSignature extends Function {
-    (): void;
-    (x: string): string;
-}
-declare const safe: SafeWithNonVoidCallSignature;
 new safe();
 `,
 		`

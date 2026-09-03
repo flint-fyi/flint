@@ -1,7 +1,7 @@
 import type { ValueNode } from "@humanwhocodes/momoa";
 import type { Result } from "package-json-validator";
 
-import type { AnyRule } from "@flint.fyi/core";
+import type { Rule } from "@flint.fyi/core";
 import {
 	getNodeRange,
 	getNodeText,
@@ -13,15 +13,33 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 export type PropertyValidator = (value: unknown) => Result;
 
-export function createDirectPropertyValidityRule<PropertyName extends string>(
+export type ValidityRule<PropertyName extends string> = Rule<
+	{
+		readonly description: string;
+		readonly id: ValidityRuleName<PropertyName>;
+		readonly presets: readonly ["logical"];
+	} & { readonly pluginId: string; readonly url: string },
+	"validationError",
+	undefined
+>;
+
+export type ValidityRuleName<PropertyName extends string> =
+	`${PropertyName}Validity`;
+
+export function createDirectPropertyValidityRule<
+	const PropertyName extends string,
+>(
 	propertyName: PropertyName,
 	propertyNameAliases: readonly string[],
 	propertyValidator: PropertyValidator,
-) {
+): {
+	id: ValidityRuleName<PropertyName>;
+	rule: ValidityRule<PropertyName>;
+} {
 	const id = `${propertyName}Validity` as const;
 	const propertyNames = [propertyName, ...propertyNameAliases];
 
-	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
+	const rule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\`${propertyNameAliases.length ? ` (also: ${propertyNameAliases.map((alias) => `\`${alias}\``).join(", ")})` : ""} property is valid.`,
 			id,

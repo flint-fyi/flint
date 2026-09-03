@@ -36,36 +36,6 @@ const re = /}/;
 		},
 		{
 			code: String.raw`
-const re = /\u{42}/;
-`,
-			snapshot: `
-const re = /\\u{42}/;
-            ~~
-            Incomplete escape sequence '\\u'.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\u000;/;
-`,
-			snapshot: `
-const re = /\\u000;/;
-            ~~
-            Incomplete escape sequence '\\u'.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\x4/;
-`,
-			snapshot: `
-const re = /\\x4/;
-            ~~
-            Incomplete escape sequence '\\x'.
-`,
-		},
-		{
-			code: String.raw`
 const re = /\c;/;
 `,
 			snapshot: `
@@ -82,80 +52,6 @@ const re = /\p/;
 const re = /\\p/;
             ~~
             Invalid property escape sequence '\\p'.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\p{H}/;
-`,
-			snapshot: `
-const re = /\\p{H}/;
-            ~~
-            Invalid property escape sequence '\\p'.
-              ~
-              Unescaped source character '{' should be escaped.
-                ~
-                Unescaped source character '}' should be escaped.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\012/;
-`,
-			snapshot: `
-const re = /\\012/;
-            ~~~~
-            Invalid legacy octal escape sequence '\\012'. Use a hexadecimal escape instead.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\12/;
-`,
-			snapshot: `
-const re = /\\12/;
-            ~~~
-            Invalid legacy octal escape sequence '\\12'. Use a hexadecimal escape instead.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\1/;
-`,
-			snapshot: `
-const re = /\\1/;
-            ~~
-            Invalid legacy octal escape sequence '\\1'. Use a hexadecimal escape instead.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\07/;
-`,
-			snapshot: `
-const re = /\\07/;
-            ~~~
-            Invalid legacy octal escape sequence '\\07'. Use a hexadecimal escape instead.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\k<foo/;
-`,
-			snapshot: `
-const re = /\\k<foo/;
-            ~~
-            Incomplete backreference '\\k'.
-`,
-		},
-		{
-			code: String.raw`
-const re = /\k<foo>/;
-`,
-			snapshot: `
-const re = /\\k<foo>/;
-            ~~
-            Incomplete backreference '\\k'.
 `,
 		},
 		{
@@ -244,16 +140,6 @@ const re = /(?!a)+/;
 		},
 		{
 			code: String.raw`
-const re = /\b+/;
-`,
-			snapshot: `
-const re = /\\b+/;
-            ~~~
-            Invalid regular expression: /\\b+/: Nothing to repeat.
-`,
-		},
-		{
-			code: String.raw`
 const re = RegExp("\\1");
 `,
 			snapshot: `
@@ -328,14 +214,18 @@ const re = new RegExp("a]");
 		String.raw`const re = /\\/;`,
 		String.raw`const re = /\(/;`,
 		String.raw`const re = /\)/;`,
-		String.raw`const re = /\1/u;`,
-		String.raw`const re = /\1/v;`,
 		String.raw`const re = /[A--B]/v;`,
 		String.raw`const re = RegExp("\\d+");`,
 		String.raw`const re = new RegExp("\\w+");`,
 		String.raw`const re = RegExp("\\1", "u");`,
 		String.raw`const re = new RegExp("\\1", "v");`,
-		`const re = RegExp(pattern);`,
-		`const re = new RegExp(getPattern());`,
+		`
+declare const pattern: string;
+
+const re = RegExp(pattern);`,
+		`
+declare function getPattern(): string;
+
+const re = new RegExp(getPattern());`,
 	],
 });

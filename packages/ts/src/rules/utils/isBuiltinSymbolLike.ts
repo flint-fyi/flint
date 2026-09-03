@@ -5,7 +5,7 @@ export function isBuiltinSymbolLike(
 	program: ts.Program,
 	type: ts.Type,
 	symbolName: string,
-) {
+): boolean {
 	return isBuiltinSymbolLikeRecurser(program, type, (subType) => {
 		const symbol = subType.getSymbol();
 		if (!symbol) {

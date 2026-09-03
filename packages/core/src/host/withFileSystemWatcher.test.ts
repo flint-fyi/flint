@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import type { FileSystemWatcher, LinterHost } from "../types/host.ts";
+import type { FileSystemWatcher, LinterHost } from "../index.ts";
 import { withFileSystemWatcher } from "./withFileSystemWatcher.ts";
 
 describe(withFileSystemWatcher, () => {

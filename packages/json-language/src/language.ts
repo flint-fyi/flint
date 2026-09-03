@@ -17,7 +17,7 @@ export interface JsonFileServices {
 }
 
 export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
-	createLanguage<JsonNodeVisitors, JsonFileServices>({
+	createLanguage({
 		about: {
 			name: "JSON",
 		},

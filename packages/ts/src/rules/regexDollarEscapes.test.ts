@@ -125,10 +125,22 @@ ruleTester.describe(rule, {
 	],
 	valid: [
 		`"abc".replace(/a/, "$$");`,
-		`"abc".foo(/./, "$");`,
-		`"abc".replace(/./, variable);`,
-		`"abc".replace(foo, "$");`,
-		`foo.replace(/./, "$");`,
+		`
+const text = { foo(pattern: RegExp, replacement: string) {} };
+text.foo(/./, "$");
+`,
+		`
+const variable = "$";
+"abc".replace(/./, variable);
+`,
+		`
+const pattern = ".";
+"abc".replace(pattern, "$");
+`,
+		`
+const text = { replace(pattern: RegExp, replacement: string) {} };
+text.replace(/./, "$");
+`,
 		`"abc".replace(/./, "$&$&");`,
 		`"abc".replace(/./, "$\`$'");`,
 		`"abc".replace(/(.)/, "$1");`,

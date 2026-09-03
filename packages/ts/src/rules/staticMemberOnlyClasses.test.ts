@@ -122,7 +122,8 @@ const anonymous = class {
 class WithStaticBlock {
     static value = 1;
     static {
-        console.log("initialized");
+        const value = "initialized";
+        value;
     }
 }
 `,
@@ -132,7 +133,8 @@ class WithStaticBlock {
       This class only contains static members. Consider using module-level exports instead.
     static value = 1;
     static {
-        console.log("initialized");
+        const value = "initialized";
+        value;
     }
 }
 `,
@@ -154,6 +156,8 @@ class Counter {
 }
 `,
 		`
+class Parent {}
+
 class Child extends Parent {
     static method() {}
 }
@@ -170,6 +174,8 @@ class Singleton {
 }
 `,
 		`
+declare const decorator: ClassDecorator;
+
 @decorator
 class DecoratedClass {
     static method() {}
@@ -205,7 +211,7 @@ class WithInstanceSetter {
 class WithNonEmptyConstructor {
     static value = 1;
     constructor(value: number) {
-        console.log(value);
+        value;
     }
 }
 `,
@@ -213,6 +219,10 @@ class WithNonEmptyConstructor {
 class Empty {}
 `,
 		`
+interface SomeInterface {
+    value: number;
+}
+
 class ImplementsInterface implements SomeInterface {
     value: number = 0;
 }

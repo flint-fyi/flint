@@ -38,7 +38,7 @@ import {
 const LINT_DEBOUNCE_MS = 250;
 const CONFIG_RELOAD_QUERY_PARAMETER = "flintLspCacheBust";
 
-export function startServer() {
+export function startServer(): void {
 	const connection = createConnection(process.stdin, process.stdout);
 	const documents = new TextDocuments(TextDocument);
 

@@ -14,7 +14,7 @@ export async function runPrettier(
 	lintResults: LintResultsMaybeWithChanges,
 	fix: boolean | undefined,
 	filePaths?: Iterable<string>,
-) {
+): Promise<FormattingResults> {
 	const allFilePaths = new Set([
 		...(lintResults.changed ?? []),
 		...(filePaths ?? lintResults.allFilePaths),

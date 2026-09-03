@@ -92,6 +92,6 @@ new RegExp("(a)?\\\\1");
 		`/(a)(b)\\1\\2/;`,
 		`/()\\1/;`,
 		`/(a?)\\1/;`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

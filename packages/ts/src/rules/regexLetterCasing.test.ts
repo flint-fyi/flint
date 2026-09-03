@@ -140,7 +140,7 @@ ruleTester.describe(rule, {
 		String.raw`/[a-z]/u;`,
 		String.raw`/\cA/;`,
 		String.raw`/\s$/`,
-		String.raw`/\u{a}/;`,
+		String.raw`/\u{a}/u;`,
 		String.raw`/\u000a/;`,
 		String.raw`/\x0a/;`,
 		String.raw`/^[-?:](?:\s|$)/`,

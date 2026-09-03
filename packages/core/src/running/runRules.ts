@@ -9,7 +9,7 @@ import type { LanguageFilesWithOptions } from "./types.ts";
 export async function runRules(
 	rulesFilesAndOptionsByRule: Map<AnyRule, LanguageFilesWithOptions[]>,
 	host: LinterHost,
-) {
+): Promise<CachedFactory<string, FileReport[]>> {
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
 
 	await Promise.all(
