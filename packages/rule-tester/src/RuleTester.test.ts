@@ -61,6 +61,31 @@ Another language report.`,
 		);
 	});
 
+	it("fails a duplicate test case whose files use different property order", async () => {
+		const [first, second] = createTestSetups({
+			testCases: {
+				invalid: [],
+				valid: [
+					{ code: "let a;", files: { "a.ts": "a", "b.ts": "b" } },
+					{
+						code: "let a;",
+						files: Object.fromEntries([
+							["b.ts", "b"],
+							["a.ts", "a"],
+						]),
+					},
+				],
+			},
+		});
+		assert.ok(first);
+		assert.ok(second);
+
+		await expect(first()).resolves.toBeUndefined();
+		expect(second).toThrow(
+			"Expected no duplicate test cases, but an earlier test case has the same code, fileName, files, and options.",
+		);
+	});
+
 	it("allows test cases with the same code and different file names", async () => {
 		const [first, second] = createTestSetups({
 			testCases: {
