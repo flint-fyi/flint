@@ -138,6 +138,7 @@ export type {
 	PluginRuleAbout,
 	Rule,
 	RuleAbout,
+	RuleCreatorAbout,
 	RuleDefinition,
 	RuleRuntime,
 	RuleSetup,

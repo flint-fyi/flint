@@ -60,7 +60,22 @@ export interface Rule<
 export interface RuleAbout<Presets extends string = string> extends BaseAbout {
 	readonly description: string;
 
+	/**
+	 * ID of the plugin parent of this rule, if this is part of a plugin.
+	 * @example "ts"
+	 */
+	readonly pluginId?: string;
+
 	readonly presets?: readonly Presets[];
+}
+
+/**
+ * Metadata a rule passes to its plugin's rule creator, which supplies the plugin ID itself.
+ */
+export interface RuleCreatorAbout<
+	Presets extends string = string,
+> extends RuleAbout<Presets> {
+	readonly pluginId?: never;
 }
 
 /**

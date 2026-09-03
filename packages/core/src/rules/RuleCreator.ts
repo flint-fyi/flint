@@ -7,7 +7,7 @@ import type {
 import type {
 	PluginRuleAbout,
 	Rule,
-	RuleAbout,
+	RuleCreatorAbout,
 	RuleDefinition,
 } from "../types/rules.ts";
 import type { AnyOptionalSchema } from "../types/shapes.ts";
@@ -20,7 +20,7 @@ export interface RuleCreatorOptions<Presets extends string> {
 
 export class RuleCreator<
 	Presets extends string,
-	const About extends RuleAbout = RuleAbout<Presets>,
+	const About extends RuleCreatorAbout = RuleCreatorAbout<Presets>,
 > {
 	#options: RuleCreatorOptions<Presets>;
 
