@@ -21228,7 +21228,7 @@
 			}
 		],
 		"flint": {
-			"name": "getOrInsertComputed",
+			"name": "getOrInsertComputeds",
 			"plugin": "ts",
 			"preset": "logical"
 		}
