@@ -19295,7 +19295,7 @@
 			}
 		],
 		"flint": {
-			"name": "directIteration",
+			"name": "directIterations",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
