@@ -32359,7 +32359,7 @@
 			}
 		],
 		"flint": {
-			"name": "uselessReExports",
+			"name": "uselessReexports",
 			"plugin": "ts",
 			"preset": "logical"
 		}
