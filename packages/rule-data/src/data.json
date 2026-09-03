@@ -20233,7 +20233,7 @@
 			}
 		],
 		"flint": {
-			"name": "errorIsError",
+			"name": "errorIsErrors",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
