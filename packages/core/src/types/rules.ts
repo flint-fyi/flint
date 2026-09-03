@@ -34,6 +34,18 @@ export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> =
 /* eslint-enable @typescript-eslint/no-explicit-any */
 // flint-disable-lines-end ts/explicitAnys
 
+export interface PluginRuleAbout<
+	Presets extends string = string,
+> extends RuleAbout<Presets> {
+	/**
+	 * ID of the plugin parent of this rule.
+	 * @example "ts"
+	 */
+	readonly pluginId: string;
+
+	readonly url: string;
+}
+
 /**
  * A single lint rule, as used by users in configs.
  */
@@ -47,12 +59,6 @@ export interface Rule<
 
 export interface RuleAbout<Presets extends string = string> extends BaseAbout {
 	readonly description: string;
-
-	/**
-	 * ID of the plugin parent of this rule, if this is part of a plugin.
-	 * @example "ts"
-	 */
-	readonly pluginId?: string;
 
 	readonly presets?: readonly Presets[];
 }

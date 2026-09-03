@@ -2,7 +2,7 @@ import { nullThrows } from "@flint.fyi/utils";
 
 import type { AnyLanguageFile } from "../types/languages.ts";
 import type { FileReport, RuleReport } from "../types/reports.ts";
-import type { AnyRule } from "../types/rules.ts";
+import type { AnyRule, PluginRuleAbout, RuleAbout } from "../types/rules.ts";
 import { getColumnAndLineOfPosition } from "../utils/getColumnAndLineOfPosition.ts";
 
 /**
@@ -10,7 +10,7 @@ import { getColumnAndLineOfPosition } from "../utils/getColumnAndLineOfPosition.
  */
 export function processRuleReport(
 	currentFile: AnyLanguageFile,
-	rule: AnyRule,
+	rule: AnyRule<PluginRuleAbout | RuleAbout>,
 	ruleReport: RuleReport,
 ): FileReport | null {
 	let range = ruleReport.range;
@@ -59,9 +59,10 @@ export function processRuleReport(
 		...ruleReport,
 		about: {
 			...rule.about,
-			id: rule.about.pluginId
-				? `${rule.about.pluginId}/${rule.about.id}`
-				: rule.about.id,
+			id:
+				"pluginId" in rule.about
+					? `${rule.about.pluginId}/${rule.about.id}`
+					: rule.about.id,
 		},
 		fix,
 		message: nullThrows(

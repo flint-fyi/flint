@@ -74,13 +74,15 @@ describe(createPlugin, () => {
 				setup: vi.fn(),
 			});
 
+			const aboutWithPluginId = {
+				description: "",
+				id: "withPluginIdProperty",
+				pluginId: "stub",
+			};
+
 			ruleCreator.createRule(stubLanguage, {
-				about: {
-					description: "",
-					id: "withPluginIdProperty",
-					// @ts-expect-error -- Rule about metadata must not set the creator's pluginId.
-					pluginId: "stub",
-				},
+				// @ts-expect-error -- Rule about metadata must not set the creator's pluginId.
+				about: aboutWithPluginId,
 				messages: stubMessages,
 				setup: vi.fn(),
 			});
