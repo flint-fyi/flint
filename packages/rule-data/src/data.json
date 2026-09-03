@@ -3521,7 +3521,7 @@
 			}
 		],
 		"flint": {
-			"name": "transitionAll",
+			"name": "transitionAlls",
 			"plugin": "css",
 			"preset": "logical"
 		}
