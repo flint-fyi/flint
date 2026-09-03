@@ -1177,7 +1177,7 @@
 			}
 		],
 		"flint": {
-			"name": "nodeReplaceChildren",
+			"name": "nodeReplaceChildrens",
 			"plugin": "browser",
 			"preset": "stylistic"
 		}
