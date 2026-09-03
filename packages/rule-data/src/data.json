@@ -30369,7 +30369,7 @@
 			}
 		],
 		"flint": {
-			"name": "typeLiteralLast",
+			"name": "typeLiteralsLast",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
