@@ -783,7 +783,7 @@
 			}
 		],
 		"flint": {
-			"name": "betterDomTraversing",
+			"name": "domTraversals",
 			"plugin": "browser",
 			"preset": "stylistic"
 		}
