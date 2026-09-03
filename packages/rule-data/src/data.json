@@ -32346,7 +32346,7 @@
 			}
 		],
 		"flint": {
-			"name": "uselessRecursion",
+			"name": "uselessRecursions",
 			"plugin": "ts",
 			"preset": "logical"
 		}
