@@ -59,7 +59,7 @@ export type TesterSetupIt = (
 	setup: () => Promise<void>,
 ) => void;
 
-type TestCaseDuplicateProperties = Pick<
+type TestCaseUniqueProperties = Pick<
 	TestCaseNormalized,
 	"code" | "fileName" | "files" | "options"
 >;
@@ -143,14 +143,14 @@ export class RuleTester {
 	): void {
 		this.#testerOptions.describe(rule.about.id, () => {
 			this.#testerOptions.describe("invalid", () => {
-				const seenTestCases: TestCaseDuplicateProperties[] = [];
+				const seenTestCases: TestCaseUniqueProperties[] = [];
 				for (const testCase of invalid) {
 					this.#itInvalidCase(rule, testCase, seenTestCases);
 				}
 			});
 
 			this.#testerOptions.describe("valid", () => {
-				const seenTestCases: TestCaseDuplicateProperties[] = [];
+				const seenTestCases: TestCaseUniqueProperties[] = [];
 				for (const testCase of valid) {
 					this.#itValidCase(rule, testCase, seenTestCases);
 				}
@@ -161,7 +161,7 @@ export class RuleTester {
 	#itInvalidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCase: InvalidTestCase<InferredInputObject<OptionsSchema>>,
-		seenTestCases: TestCaseDuplicateProperties[],
+		seenTestCases: TestCaseUniqueProperties[],
 	) {
 		const testCaseNormalized = normalizeTestCase(
 			testCase,
@@ -201,7 +201,7 @@ export class RuleTester {
 
 	#itTestCase(
 		testCase: TestCaseNormalized,
-		seenTestCases: TestCaseDuplicateProperties[],
+		seenTestCases: TestCaseUniqueProperties[],
 		setup: () => Promise<void>,
 	) {
 		let test = testCase.only
@@ -242,7 +242,7 @@ export class RuleTester {
 	#itValidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCaseRaw: ValidTestCase<InferredInputObject<OptionsSchema>>,
-		seenTestCases: TestCaseDuplicateProperties[],
+		seenTestCases: TestCaseUniqueProperties[],
 	) {
 		const testCase =
 			typeof testCaseRaw === "string" ? { code: testCaseRaw } : testCaseRaw;
@@ -275,14 +275,14 @@ export class RuleTester {
 
 function assertNoDuplicateTestCase(
 	testCase: TestCaseNormalized,
-	seenTestCases: TestCaseDuplicateProperties[],
+	seenTestCases: TestCaseUniqueProperties[],
 ): void {
 	const duplicateProperties = {
 		code: testCase.code,
 		fileName: testCase.fileName,
 		files: testCase.files,
 		options: testCase.options,
-	} satisfies TestCaseDuplicateProperties;
+	} satisfies TestCaseUniqueProperties;
 
 	if (
 		seenTestCases.some((seenTestCase) =>
