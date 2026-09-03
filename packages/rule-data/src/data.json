@@ -31666,7 +31666,7 @@
 			}
 		],
 		"flint": {
-			"name": "unreadableObjectDestructuring",
+			"name": "unreadableObjectDestructurings",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
