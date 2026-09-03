@@ -11,6 +11,7 @@ import {
 	writeToCache,
 	type LinterHost,
 	type LintResultsWithChanges,
+	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
 import { pathKey } from "@flint.fyi/utils";
 
@@ -33,9 +34,7 @@ export async function runCliWatch(
 	const isCaseSensitiveFS = host.isCaseSensitiveFS();
 
 	return new Promise<void>((resolve) => {
-		let configDefinition:
-			| Awaited<ReturnType<typeof loadConfigDefinition>>
-			| undefined;
+		let configDefinition: ProcessedConfigDefinition | undefined;
 		let currentRenderer: Renderer | undefined;
 		let currentTask: Promise<unknown> = Promise.resolve();
 		let importVersion = 0;

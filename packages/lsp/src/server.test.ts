@@ -3,7 +3,15 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	vi,
+	type Mock,
+} from "vitest";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { FileChangeType } from "vscode-languageserver/node.js";
 
@@ -53,19 +61,17 @@ const mocks = vi.hoisted(() => {
 				shutdown?: () => void;
 			};
 			console: {
-				error: ReturnType<typeof vi.fn>;
-				info: ReturnType<typeof vi.fn>;
+				error: Mock;
+				info: Mock;
 			};
-			listen: ReturnType<typeof vi.fn>;
-			onCodeAction: ReturnType<typeof vi.fn>;
-			onDidChangeWatchedFiles: ReturnType<typeof vi.fn>;
-			onInitialize: ReturnType<typeof vi.fn>;
-			onInitialized: ReturnType<typeof vi.fn>;
-			onShutdown: ReturnType<typeof vi.fn>;
-			sendDiagnostics: ReturnType<
-				typeof vi.fn<
-					(params: { diagnostics: unknown[]; uri: string }) => Promise<void>
-				>
+			listen: Mock;
+			onCodeAction: Mock;
+			onDidChangeWatchedFiles: Mock;
+			onInitialize: Mock;
+			onInitialized: Mock;
+			onShutdown: Mock;
+			sendDiagnostics: Mock<
+				(params: { diagnostics: unknown[]; uri: string }) => Promise<void>
 			>;
 		},
 		directoryEntries: [{ name: "flint.config.mjs" }],

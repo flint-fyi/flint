@@ -27,7 +27,7 @@ export interface LintSessionLintOptions {
 
 export class LintSession implements Disposable {
 	readonly allFilePaths: Set<string>;
-	readonly storedResults: Map<string, FinalizedFileResults> = new Map();
+	readonly storedResults: Map<string, FinalizedFileResults>;
 
 	get ruleCount(): number {
 		return this.#rulesOptionsByFile.size;
@@ -50,6 +50,7 @@ export class LintSession implements Disposable {
 		host: LinterHost,
 	) {
 		this.allFilePaths = allFilePaths;
+		this.storedResults = new Map();
 		this.#caseSensitiveFS = host.isCaseSensitiveFS();
 		this.#host = host;
 		this.#rulesOptionsByFile = rulesOptionsByFile;

@@ -9,7 +9,7 @@ import {
 	createLanguage,
 	RuleCreator,
 	type FileAboutData,
-	type LintSession,
+	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
 import { normalizePath } from "@flint.fyi/utils";
 
@@ -21,8 +21,6 @@ import { runCliWatch } from "./runCliWatch.ts";
 vi.mock("./loadConfigDefinition.ts", () => ({
 	loadConfigDefinition: vi.fn(),
 }));
-
-type ProcessedConfigDefinition = Parameters<typeof LintSession.create>[0];
 
 interface TestNodes {
 	file: FileAboutData;
