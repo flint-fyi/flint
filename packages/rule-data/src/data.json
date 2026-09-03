@@ -16663,7 +16663,7 @@
 			}
 		],
 		"flint": {
-			"name": "arrayFromAsync",
+			"name": "arrayFromAsyncs",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
