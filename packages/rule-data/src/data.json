@@ -22434,7 +22434,7 @@
 			}
 		],
 		"flint": {
-			"name": "iteratorToArrayAtEnd",
+			"name": "iteratorToArraysAtEnd",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
