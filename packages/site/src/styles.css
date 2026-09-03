@@ -6,10 +6,8 @@
 	--flint-cream: #fbf4e6;
 	--flint-ember: #f6722b;
 	--flint-ember-deep: #b33a0a;
-	--flint-ember-soft: #fab36d;
 	--flint-moss: #65955a;
 	--flint-night: #0c1a32;
-	--flint-night-top: #133555;
 	--flint-pine: #185b37;
 	--flint-pine-deep: #003821;
 
@@ -31,9 +29,6 @@
 	--sl-color-black: #0b1628;
 	--flint-button-hover-surface: var(--flint-paper);
 
-	/* `--flint-ember` is a flame fill, not a text color: at 3:1 against these
-	   backgrounds it is unreadable as body copy. Text uses these instead. */
-	--flint-ember-text: #f58a3a;
 	--flint-ember-fill: #f58a3a;
 	--flint-ember-fill-text: #0b1628;
 
@@ -54,10 +49,8 @@
 	--flint-tag-berry-bg: #3b1a28;
 	--flint-tag-berry-fg: #ffacce;
 
-	--flint-band-surface: var(--flint-night-top);
 	--flint-band-text: var(--flint-cream);
 	--flint-band-muted: #b9c4d6;
-	--flint-band-eyebrow: var(--flint-ember-soft);
 }
 
 /* Light mode colors. */
@@ -80,7 +73,6 @@
 		transparent
 	);
 
-	--flint-ember-text: #962900;
 	--flint-ember-fill: #962900;
 	--flint-ember-fill-text: var(--flint-cream);
 
@@ -101,10 +93,8 @@
 	--flint-tag-berry-bg: #fec5da;
 	--flint-tag-berry-fg: #701f46;
 
-	--flint-band-surface: #f4ead5;
 	--flint-band-text: #3b1d13;
 	--flint-band-muted: #664432;
-	--flint-band-eyebrow: #6f1200;
 }
 
 html[data-theme="light"] .only-dark {

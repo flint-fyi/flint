@@ -43,24 +43,7 @@ const defaultPackageManager = "npm";
 		<Icon class="check-icon" name="approve-check" />
 	</button>
 
-	<div data-command-sources hidden>
-		{
-			packageManagers.map((packageManager) => (
-				<div data-command-source={packageManager}>
-					<PackageManagers
-						dev
-						frame="none"
-						icons={false}
-						pkg="flint"
-						pkgManagers={[packageManager]}
-						type="add"
-					/>
-				</div>
-			))
-		}
-	</div>
-
-	<div data-package-manager-icons hidden>
+	<div data-package-manager-source hidden>
 		<PackageManagers
 			dev
 			frame="none"
@@ -75,11 +58,24 @@ const defaultPackageManager = "npm";
 			const container = document.currentScript?.closest(
 				"[data-install-command]",
 			);
-			const selectedTab = container?.querySelector(
-				"[data-package-manager-icons] [role='tab'][aria-selected='true']",
+			const packageManagerSource = container?.querySelector(
+				"[data-package-manager-source]",
+			);
+			if (!container || !packageManagerSource) {
+				return;
+			}
+
+			const selectedTab = packageManagerSource.querySelector(
+				"[role='tab'][aria-selected='true']",
 			);
 			const packageManager = selectedTab?.textContent?.trim();
-			if (!container || !packageManager) {
+			const selectedPanelId = selectedTab?.getAttribute("href")?.slice(1);
+			const selectedPanel = selectedPanelId
+				? [...packageManagerSource.querySelectorAll("[role='tabpanel']")].find(
+						(panel) => panel.id === selectedPanelId,
+					)
+				: undefined;
+			if (!packageManager) {
 				return;
 			}
 
@@ -87,10 +83,7 @@ const defaultPackageManager = "npm";
 			const iconOutput = container.querySelector("[data-package-manager-icon]");
 			const output = container.querySelector("[data-install-output]");
 			const select = container.querySelector("[data-package-manager]");
-			const command = [...container.querySelectorAll("[data-command-source]")]
-				.find((source) => source.dataset.commandSource === packageManager)
-				?.querySelector("code")
-				?.textContent?.trim();
+			const command = selectedPanel?.querySelector("code")?.textContent?.trim();
 			if (!button || !iconOutput || !output || !select || !command) {
 				return;
 			}
@@ -156,52 +149,69 @@ const defaultPackageManager = "npm";
 			const iconOutput = container.querySelector<HTMLElement>(
 				"[data-package-manager-icon]",
 			);
-			if (!button || !output || !select || !iconOutput) {
+			const packageManagerSource = container.querySelector<HTMLElement>(
+				"[data-package-manager-source]",
+			);
+			if (
+				!button ||
+				!output ||
+				!select ||
+				!iconOutput ||
+				!packageManagerSource
+			) {
 				return;
 			}
 			const installElements = { button, iconOutput, output, select };
 
-			const commands = new Map<string, string>();
-			container
-				.querySelectorAll<HTMLElement>("[data-command-source]")
-				.forEach((source) => {
-					const packageManager = source.dataset.commandSource;
-					const command = source.querySelector("code")?.textContent?.trim();
-					if (packageManager && command) {
-						commands.set(packageManager, command);
-					}
-				});
-			const icons = new Map<string, SVGElement>();
-			const packageManagerTabs = new Map<string, HTMLAnchorElement>();
-			container
-				.querySelectorAll<HTMLAnchorElement>(
-					"[data-package-manager-icons] [role='tab']",
-				)
+			const panels = new Map(
+				[
+					...packageManagerSource.querySelectorAll<HTMLElement>(
+						"[role='tabpanel']",
+					),
+				].map((panel) => [panel.id, panel]),
+			);
+			const packageManagerData = new Map<
+				string,
+				{
+					command: string;
+					icon: SVGElement | undefined;
+					tab: HTMLAnchorElement;
+				}
+			>();
+			packageManagerSource
+				.querySelectorAll<HTMLAnchorElement>("[role='tab']")
 				.forEach((tab) => {
 					const packageManager = tab.textContent?.trim();
-					const icon = tab.querySelector("svg");
-					if (packageManager) {
-						packageManagerTabs.set(packageManager, tab);
+					const panelId = tab.getAttribute("href")?.slice(1);
+					const command = panelId
+						? panels.get(panelId)?.querySelector("code")?.textContent?.trim()
+						: undefined;
+					if (!packageManager || !command) {
+						return;
 					}
-					if (packageManager && icon) {
-						icons.set(packageManager, icon);
-					}
+
+					packageManagerData.set(packageManager, {
+						command,
+						icon: tab.querySelector("svg") ?? undefined,
+						tab,
+					});
 				});
 			if (CSS.supports("appearance", "base-select")) {
 				for (const option of installElements.select.options) {
-					const icon = icons.get(option.value);
+					const icon = packageManagerData.get(option.value)?.icon;
 					if (icon) {
 						option.prepend(icon.cloneNode(true));
 					}
 				}
 			}
 
-			const selectedPackageManager = container
-				.querySelector<HTMLAnchorElement>(
-					"[data-package-manager-icons] [role='tab'][aria-selected='true']",
-				)
+			const selectedPackageManager = packageManagerSource
+				.querySelector<HTMLAnchorElement>("[role='tab'][aria-selected='true']")
 				?.textContent?.trim();
-			if (selectedPackageManager && commands.has(selectedPackageManager)) {
+			if (
+				selectedPackageManager &&
+				packageManagerData.has(selectedPackageManager)
+			) {
 				installElements.select.value = selectedPackageManager;
 			}
 
@@ -216,17 +226,18 @@ const defaultPackageManager = "npm";
 			}
 
 			function updateSelection(): void {
-				const command = commands.get(installElements.select.value);
-				if (!command) {
+				const selectedData = packageManagerData.get(
+					installElements.select.value,
+				);
+				if (!selectedData) {
 					return;
 				}
 
-				installElements.output.textContent = command;
-				installElements.button.dataset.command = command;
+				installElements.output.textContent = selectedData.command;
+				installElements.button.dataset.command = selectedData.command;
 				installElements.iconOutput.replaceChildren();
-				const icon = icons.get(installElements.select.value);
-				if (icon) {
-					installElements.iconOutput.append(icon.cloneNode(true));
+				if (selectedData.icon) {
+					installElements.iconOutput.append(selectedData.icon.cloneNode(true));
 				}
 			}
 
@@ -240,7 +251,7 @@ const defaultPackageManager = "npm";
 				}
 
 				updateSelection();
-				packageManagerTabs.get(installElements.select.value)?.click();
+				packageManagerData.get(installElements.select.value)?.tab.click();
 				resetCopyState();
 			});
 
@@ -260,6 +271,9 @@ const defaultPackageManager = "npm";
 					`Copied ${installElements.select.value} install command`,
 				);
 
+				if (resetTimer !== undefined) {
+					window.clearTimeout(resetTimer);
+				}
 				resetTimer = window.setTimeout(() => {
 					resetCopyState();
 					resetTimer = undefined;
@@ -378,7 +392,6 @@ const defaultPackageManager = "npm";
 			padding: 0.25rem;
 			position-anchor: --package-manager-select;
 			position-area: none;
-			position-try: flip-block;
 			position-try-fallbacks: flip-block;
 			transition:
 				opacity 140ms ease-out,
@@ -454,7 +467,8 @@ const defaultPackageManager = "npm";
 		}
 
 		@media (prefers-reduced-motion: reduce) {
-			select::picker(select) {
+			select::picker(select),
+			.selector-caret {
 				transition: none;
 			}
 		}
