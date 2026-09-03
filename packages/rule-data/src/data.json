@@ -16360,7 +16360,7 @@
 			}
 		],
 		"flint": {
-			"name": "arrayConcatInLoops",
+			"name": "arrayConcatsInLoops",
 			"plugin": "ts",
 			"preset": "logical"
 		}
