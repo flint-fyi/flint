@@ -22376,7 +22376,7 @@
 			}
 		],
 		"flint": {
-			"name": "iteratorConcat",
+			"name": "iteratorConcats",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
