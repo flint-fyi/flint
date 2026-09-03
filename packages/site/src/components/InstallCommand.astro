@@ -133,13 +133,17 @@ const defaultPackageManager = "npm";
 					}
 				});
 			const icons = new Map<string, SVGElement>();
+			const packageManagerTabs = new Map<string, HTMLAnchorElement>();
 			container
-				.querySelectorAll<HTMLElement>(
+				.querySelectorAll<HTMLAnchorElement>(
 					"[data-package-manager-icons] [role='tab']",
 				)
 				.forEach((tab) => {
 					const packageManager = tab.textContent?.trim();
 					const icon = tab.querySelector("svg");
+					if (packageManager) {
+						packageManagerTabs.set(packageManager, tab);
+					}
 					if (packageManager && icon) {
 						icons.set(packageManager, icon);
 					}
@@ -151,6 +155,15 @@ const defaultPackageManager = "npm";
 						option.prepend(icon.cloneNode(true));
 					}
 				}
+			}
+
+			const selectedPackageManager = container
+				.querySelector<HTMLAnchorElement>(
+					"[data-package-manager-icons] [role='tab'][aria-selected='true']",
+				)
+				?.textContent?.trim();
+			if (selectedPackageManager && commands.has(selectedPackageManager)) {
+				installElements.select.value = selectedPackageManager;
 			}
 
 			let resetTimer: number | undefined;
@@ -179,6 +192,7 @@ const defaultPackageManager = "npm";
 			}
 
 			updateSelection();
+			resetCopyState();
 
 			installElements.select.addEventListener("change", () => {
 				if (resetTimer !== undefined) {
@@ -187,6 +201,7 @@ const defaultPackageManager = "npm";
 				}
 
 				updateSelection();
+				packageManagerTabs.get(installElements.select.value)?.click();
 				resetCopyState();
 			});
 
