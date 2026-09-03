@@ -17590,7 +17590,7 @@
 			}
 		],
 		"flint": {
-			"name": "awaitOverThen",
+			"name": "awaitsOverPromiseChains",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
