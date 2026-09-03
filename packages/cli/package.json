@@ -27,14 +27,14 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@shikijs/cli": "^4.0.0",
-		"chalk": "^6.0.0",
-		"cli-cursor": "^5.0.0",
-		"debounce": "^3.0.0",
-		"debug-for-file": "^0.4.0",
-		"text-table-fast": "^0.1.0",
-		"typescript": "^6.0.0",
-		"wrap-ansi": "^10.0.0"
+		"@shikijs/cli": "catalog:prod",
+		"chalk": "catalog:prod",
+		"cli-cursor": "catalog:prod",
+		"debounce": "catalog:prod",
+		"debug-for-file": "catalog:prod",
+		"text-table-fast": "catalog:prod",
+		"typescript": "catalog:prod",
+		"wrap-ansi": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -42,7 +42,7 @@
 		"tsdown": "catalog:dev"
 	},
 	"peerDependencies": {
-		"prettier": "^3.7.4"
+		"prettier": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"

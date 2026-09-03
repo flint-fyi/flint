@@ -29,13 +29,13 @@
 		"@flint.fyi/svelte-language": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
-		"typescript": "^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"svelte": "5.57.0",
+		"svelte": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

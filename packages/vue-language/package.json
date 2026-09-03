@@ -29,9 +29,9 @@
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
-		"@volar/language-core": "2.4.28",
-		"@vue/compiler-dom": "^3.5.0",
-		"@vue/language-core": "3.3.11",
+		"@volar/language-core": "catalog:prod",
+		"@vue/compiler-dom": "catalog:prod",
+		"@vue/language-core": "catalog:prod",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {

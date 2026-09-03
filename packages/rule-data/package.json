@@ -43,12 +43,12 @@
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
 		"@flint.fyi/yaml": "workspace:^",
-		"zod": "^4.3.6"
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:comparisons",
-		"@emnapi/core": "1.11.3",
-		"@emnapi/runtime": "1.11.3",
+		"@emnapi/core": "catalog:dev",
+		"@emnapi/runtime": "catalog:dev",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:comparisons",
 		"@eslint/json": "catalog:comparisons",
 		"@eslint/markdown": "catalog:comparisons",

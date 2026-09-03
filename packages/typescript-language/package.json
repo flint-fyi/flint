@@ -27,11 +27,11 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@typescript-eslint/project-service": "^8.53.0",
-		"cached-factory": "^0.3.0",
-		"debug-for-file": "^0.4.0",
-		"pathe": "^2.0.3",
-		"ts-api-utils": "^2.4.0",
+		"@typescript-eslint/project-service": "catalog:prod",
+		"cached-factory": "catalog:prod",
+		"debug-for-file": "catalog:prod",
+		"pathe": "catalog:prod",
+		"ts-api-utils": "catalog:prod",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
