@@ -927,7 +927,7 @@
 			}
 		],
 		"flint": {
-			"name": "eventListenerOptions",
+			"name": "addEventListenerOptions",
 			"plugin": "browser",
 			"preset": "stylistic"
 		}
