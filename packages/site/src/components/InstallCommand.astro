@@ -69,6 +69,45 @@ const defaultPackageManager = "npm";
 			type="add"
 		/>
 	</div>
+
+	<script is:inline>
+		(() => {
+			const container = document.currentScript?.closest(
+				"[data-install-command]",
+			);
+			const selectedTab = container?.querySelector(
+				"[data-package-manager-icons] [role='tab'][aria-selected='true']",
+			);
+			const packageManager = selectedTab?.textContent?.trim();
+			if (!container || !packageManager) {
+				return;
+			}
+
+			const button = container.querySelector("[data-copy-install]");
+			const iconOutput = container.querySelector("[data-package-manager-icon]");
+			const output = container.querySelector("[data-install-output]");
+			const select = container.querySelector("[data-package-manager]");
+			const command = [...container.querySelectorAll("[data-command-source]")]
+				.find((source) => source.dataset.commandSource === packageManager)
+				?.querySelector("code")
+				?.textContent?.trim();
+			if (!button || !iconOutput || !output || !select || !command) {
+				return;
+			}
+
+			select.value = packageManager;
+			output.textContent = command;
+			button.dataset.command = command;
+			button.setAttribute(
+				"aria-label",
+				`Copy ${packageManager} install command`,
+			);
+			const icon = selectedTab.querySelector("svg");
+			if (icon) {
+				iconOutput.replaceChildren(icon.cloneNode(true));
+			}
+		})();
+	</script>
 </div>
 
 <script>
