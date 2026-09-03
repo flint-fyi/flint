@@ -17478,7 +17478,7 @@
 			}
 		],
 		"flint": {
-			"name": "asyncPromiseFinally",
+			"name": "asyncPromiseFinallys",
 			"plugin": "ts",
 			"preset": "logical"
 		}
