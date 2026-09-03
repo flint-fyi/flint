@@ -22421,7 +22421,7 @@
 			}
 		],
 		"flint": {
-			"name": "iteratorToArray",
+			"name": "iteratorToArrays",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
