@@ -16021,7 +16021,7 @@
 			}
 		],
 		"flint": {
-			"name": "abortSignalAny",
+			"name": "abortSignalAnys",
 			"plugin": "ts",
 			"preset": "stylistic"
 		}
