@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -180,7 +180,7 @@ describe(runCliWatch, () => {
 
 async function createTestProject({ fixText }: { fixText?: string } = {}) {
 	const root = normalizePath(
-		await mkdtemp(path.join(os.tmpdir(), "flint-cli-watch-")),
+		await realpath(await mkdtemp(path.join(os.tmpdir(), "flint-cli-watch-"))),
 	);
 	tempDirectories.push(root);
 
