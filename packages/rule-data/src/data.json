@@ -26821,7 +26821,7 @@
 	{
 		"biome": [
 			{
-				"name": "noReexportAll",
+				"name": "noReExportAll",
 				"url": "https://biomejs.dev/linter/rules/no-re-export-all"
 			}
 		],
