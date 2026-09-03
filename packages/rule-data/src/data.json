@@ -26826,7 +26826,7 @@
 			}
 		],
 		"flint": {
-			"name": "reExportAlls",
+			"name": "reexportAlls",
 			"plugin": "ts",
 			"preset": "logical",
 			"strictness": "strict"
