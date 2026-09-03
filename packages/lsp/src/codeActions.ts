@@ -23,7 +23,7 @@ export function createCodeActions(
 	reports: FileReport[],
 	document: TextDocument,
 	options?: CodeActionOptions,
-) {
+): CodeAction[] {
 	const reportsByKey = new Map(
 		reports.map((report) => [
 			diagnosticKey(

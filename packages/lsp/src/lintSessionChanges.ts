@@ -22,7 +22,7 @@ export function isStructuralFilePath(
 	filePath: string,
 	workspaceRoot: string,
 	configFileNames: readonly string[],
-) {
+): boolean {
 	const relativePath = normalizeFilePath(
 		path.relative(workspaceRoot, filePath),
 	);
@@ -51,6 +51,6 @@ export async function lintChangedFiles(
 	return { changedResults, dependentFilePaths };
 }
 
-export function normalizeFilePath(filePath: string) {
+export function normalizeFilePath(filePath: string): string {
 	return path.normalize(filePath).replaceAll("\\", "/");
 }
