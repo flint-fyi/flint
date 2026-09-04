@@ -27,6 +27,22 @@
 		{
 			"matchSourceUrls": ["https://github.com/withastro/starlight"],
 			"groupName": "astro"
+		},
+		{
+			"matchDepTypes": [
+				"pnpm.catalog.comparisons",
+				"pnpm.catalog.dev",
+				"pnpm.catalog.site"
+			],
+			"rangeStrategy": "pin"
+		},
+		{
+			"matchDepTypes": ["pnpm.catalog.peer"],
+			"rangeStrategy": "widen"
+		},
+		{
+			"matchDepTypes": ["pnpm.catalog.prod"],
+			"rangeStrategy": "replace"
 		}
 	]
 }

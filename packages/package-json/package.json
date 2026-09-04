@@ -28,18 +28,18 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"change-case": "^5.4.4",
-		"detect-indent": "^7.0.2",
-		"detect-newline": "^4.0.1",
-		"package-json-validator": "^1.5.1",
-		"sort-object-keys": "^2.1.0",
-		"sort-package-json": "^4.0.0",
-		"zod": "^4.3.6"
+		"change-case": "catalog:prod",
+		"detect-indent": "catalog:prod",
+		"detect-newline": "catalog:prod",
+		"package-json-validator": "catalog:prod",
+		"sort-object-keys": "catalog:prod",
+		"sort-package-json": "catalog:prod",
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@humanwhocodes/momoa": "3.3.12",
+		"@humanwhocodes/momoa": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev",
 		"vitest": "catalog:dev"

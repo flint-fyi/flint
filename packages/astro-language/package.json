@@ -25,14 +25,14 @@
 		"test": "vitest --project astro-language"
 	},
 	"dependencies": {
-		"@astrojs/compiler": "^4.0.0",
-		"@astrojs/ts-plugin": "^1.10.7",
+		"@astrojs/compiler": "catalog:prod",
+		"@astrojs/ts-plugin": "catalog:prod",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
