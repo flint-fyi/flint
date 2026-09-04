@@ -32,7 +32,7 @@
 		"@changesets/cli": "catalog:dev",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/js": "catalog:dev",
-		"@eslint/json": "2.0.1",
+		"@eslint/json": "2.1.0",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
