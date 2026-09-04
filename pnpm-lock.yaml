@@ -431,8 +431,8 @@ catalogs:
       specifier: 0.41.10
       version: 0.41.10
     '@expressive-code/core':
-      specifier: 0.44.1
-      version: 0.44.1
+      specifier: 0.44.2
+      version: 0.44.2
     '@konami-emoji-blast/astro':
       specifier: 0.3.0
       version: 0.3.0
@@ -1579,7 +1579,7 @@ importers:
         version: 6.0.4(@types/node@26.4.0)(@types/react-dom@19.2.5)(@types/react@19.2.18)(esbuild@0.28.2)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(supports-color@10.2.2)(yaml@2.9.0)
       '@expressive-code/core':
         specifier: catalog:site
-        version: 0.44.1
+        version: 0.44.2
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
@@ -1597,7 +1597,7 @@ importers:
         version: 0.44.1
       expressive-code-twoslash:
         specifier: catalog:site
-        version: 0.6.1(@expressive-code/core@0.44.1)(eslint@10.9.1)(expressive-code@0.44.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 0.6.1(@expressive-code/core@0.44.2)(eslint@10.9.1)(expressive-code@0.44.1)(supports-color@10.2.2)(typescript@6.0.3)
       react-dom:
         specifier: catalog:site
         version: 19.2.8(react@19.2.8)
@@ -3091,8 +3091,8 @@ packages:
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@expressive-code/core@0.44.1':
-    resolution: {integrity: sha512-3dDo9N8D7hYrLNNMMWFovg3+aDUtnQm7c7z0GZc1c0LEFVBc0Q6lKG+tVT28gDadOvsgOANfCn35fgpe97Pmgg==}
+  '@expressive-code/core@0.44.2':
+    resolution: {integrity: sha512-Yw5KonQCD1HoOO2P89y4wifqS9qrJcGVY0LkVMUsVZjhi++bhz4WwQ37inenKFNOEVo50P7cjoVsCdaVnUbq8w==}
 
   '@expressive-code/plugin-frames@0.44.1':
     resolution: {integrity: sha512-HC/bdRao9225ApcgO/e3jn8ZOhldKO7ob1O/Tcipvtv7Vb5nMphZhMtD9uuywpvxkPYBHJi3504WhrKg05Dwqg==}
@@ -9289,7 +9289,7 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@expressive-code/core@0.44.1':
+  '@expressive-code/core@0.44.2':
     dependencies:
       '@ctrl/tinycolor': 4.2.0
       hast-util-select: 6.0.4
@@ -9303,16 +9303,16 @@ snapshots:
 
   '@expressive-code/plugin-frames@0.44.1':
     dependencies:
-      '@expressive-code/core': 0.44.1
+      '@expressive-code/core': 0.44.2
 
   '@expressive-code/plugin-shiki@0.44.1':
     dependencies:
-      '@expressive-code/core': 0.44.1
+      '@expressive-code/core': 0.44.2
       shiki: 4.4.3
 
   '@expressive-code/plugin-text-markers@0.44.1':
     dependencies:
-      '@expressive-code/core': 0.44.1
+      '@expressive-code/core': 0.44.2
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -11780,11 +11780,11 @@ snapshots:
 
   expect-type@1.4.0: {}
 
-  expressive-code-twoslash@0.6.1(@expressive-code/core@0.44.1)(eslint@10.9.1)(expressive-code@0.44.1)(supports-color@10.2.2)(typescript@6.0.3):
+  expressive-code-twoslash@0.6.1(@expressive-code/core@0.44.2)(eslint@10.9.1)(expressive-code@0.44.1)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@ec-ts/twoslash': 1.0.0(typescript@6.0.3)
       '@ec-ts/twoslash-vue': 1.0.0(typescript@6.0.3)
-      '@expressive-code/core': 0.44.1
+      '@expressive-code/core': 0.44.2
       '@typescript-eslint/parser': 8.69.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       css-js-gen: 1.1.0
       expressive-code: 0.44.1
@@ -11799,7 +11799,7 @@ snapshots:
 
   expressive-code@0.44.1:
     dependencies:
-      '@expressive-code/core': 0.44.1
+      '@expressive-code/core': 0.44.2
       '@expressive-code/plugin-frames': 0.44.1
       '@expressive-code/plugin-shiki': 0.44.1
       '@expressive-code/plugin-text-markers': 0.44.1
