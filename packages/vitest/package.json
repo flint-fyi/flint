@@ -38,7 +38,7 @@
 		"vitest": "catalog:dev"
 	},
 	"peerDependencies": {
-		"vitest": ">=0.30.0"
+		"vitest": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"

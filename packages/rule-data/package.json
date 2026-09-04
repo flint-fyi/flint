@@ -59,7 +59,7 @@
 		"@types/eslint-plugin-promise": "catalog:comparisons",
 		"@typescript-eslint/eslint-plugin": "catalog:comparisons",
 		"@vitest/eslint-plugin": "catalog:comparisons",
-		"eslint": "catalog:dev",
+		"eslint": "catalog:comparisons",
 		"eslint-plugin-astro": "catalog:comparisons",
 		"eslint-plugin-eslint-plugin": "catalog:comparisons",
 		"eslint-plugin-import": "catalog:comparisons",

@@ -32,7 +32,7 @@
 		"debug-for-file": "catalog:prod",
 		"pathe": "catalog:prod",
 		"ts-api-utils": "catalog:prod",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

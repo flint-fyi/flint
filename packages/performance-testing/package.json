@@ -23,9 +23,9 @@
 	},
 	"dependencies": {
 		"@flint.fyi/rule-data": "workspace:^",
-		"console-table-without-index": "catalog:prod",
-		"debug-for-file": "catalog:prod",
-		"eslint": "catalog:dev",
+		"console-table-without-index": "catalog:dev",
+		"debug-for-file": "catalog:dev",
+		"eslint": "catalog:comparisons",
 		"execa": "catalog:dev",
 		"prettier": "catalog:dev"
 	},
@@ -35,7 +35,7 @@
 		"eslint-plugin-regexp": "catalog:comparisons",
 		"eslint-plugin-unicorn": "catalog:comparisons",
 		"typescript": "catalog:dev",
-		"typescript-eslint": "catalog:dev",
+		"typescript-eslint": "catalog:comparisons",
 		"vitest": "catalog:dev"
 	},
 	"engines": {

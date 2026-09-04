@@ -31,7 +31,7 @@
 		"@flint.fyi/volar-language": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",
 		"@vue/compiler-dom": "catalog:prod",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

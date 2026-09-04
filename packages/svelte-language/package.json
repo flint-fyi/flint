@@ -34,7 +34,7 @@
 		"@volar/language-core": "catalog:prod",
 		"svelte": "catalog:prod",
 		"svelte2tsx": "catalog:prod",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

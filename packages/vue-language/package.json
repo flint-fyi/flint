@@ -32,7 +32,7 @@
 		"@volar/language-core": "catalog:prod",
 		"@vue/compiler-dom": "catalog:prod",
 		"@vue/language-core": "catalog:prod",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

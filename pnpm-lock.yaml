@@ -236,6 +236,9 @@ catalogs:
     '@vitest/eslint-plugin':
       specifier: 1.6.27
       version: 1.6.27
+    eslint:
+      specifier: 10.9.1
+      version: 10.9.1
     eslint-plugin-astro:
       specifier: 3.1.0
       version: 3.1.0
@@ -296,6 +299,9 @@ catalogs:
     oxlint:
       specifier: 1.80.0
       version: 1.80.0
+    typescript-eslint:
+      specifier: 8.68.0
+      version: 8.68.0
     vue-eslint-parser:
       specifier: 10.4.1
       version: 10.4.1
@@ -360,6 +366,12 @@ catalogs:
     console-fail-test:
       specifier: 0.6.1
       version: 0.6.1
+    console-table-without-index:
+      specifier: 0.1.1
+      version: 0.1.1
+    debug-for-file:
+      specifier: 0.4.2
+      version: 0.4.2
     eslint:
       specifier: 10.9.1
       version: 10.9.1
@@ -444,9 +456,6 @@ catalogs:
     yaml-unist-parser:
       specifier: 3.2.0
       version: 3.2.0
-    zod:
-      specifier: 4.5.4
-      version: 4.5.4
   prod:
     '@altano/repository-tools':
       specifier: ^2.1.1
@@ -473,7 +482,7 @@ catalogs:
       specifier: ^4.0.0
       version: 4.4.3
     '@types/css-tree':
-      specifier: ^3.2.0
+      specifier: 3.2.0
       version: 3.2.0
     '@types/mdast':
       specifier: ^4.0.4
@@ -508,9 +517,6 @@ catalogs:
     cli-cursor:
       specifier: ^5.0.0
       version: 5.0.0
-    console-table-without-index:
-      specifier: ^0.1.1
-      version: 0.1.1
     cspell-lib:
       specifier: ^10.0.0
       version: 10.1.1
@@ -677,6 +683,9 @@ catalogs:
     starlight-sidebar-topics:
       specifier: 0.8.0
       version: 0.8.0
+    zod:
+      specifier: 4.5.4
+      version: 4.5.4
 
 overrides:
   read-package-up: 12.0.0
@@ -883,7 +892,7 @@ importers:
         specifier: workspace:^
         version: link:../volar-language
       typescript:
-        specifier: ^5.9.0 || ^6.0.0
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
@@ -908,7 +917,7 @@ importers:
         specifier: workspace:^
         version: link:../utils
       typescript:
-        specifier: catalog:dev
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
@@ -1056,7 +1065,7 @@ importers:
         specifier: catalog:prod
         version: 3.2.1
       typescript:
-        specifier: ^5.9.0 || ^6.0.0
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
@@ -1313,7 +1322,7 @@ importers:
         specifier: workspace:^
         version: link:../utils
       typescript:
-        specifier: catalog:dev
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
@@ -1431,13 +1440,13 @@ importers:
         specifier: workspace:^
         version: link:../rule-data
       console-table-without-index:
-        specifier: catalog:prod
+        specifier: catalog:dev
         version: 0.1.1
       debug-for-file:
-        specifier: catalog:prod
+        specifier: catalog:dev
         version: 0.4.2(supports-color@10.2.2)
       eslint:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       execa:
         specifier: catalog:dev
@@ -1462,7 +1471,7 @@ importers:
         specifier: catalog:dev
         version: 6.0.3
       typescript-eslint:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 8.68.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
@@ -1619,7 +1628,7 @@ importers:
         specifier: catalog:comparisons
         version: 1.6.27(@typescript-eslint/eslint-plugin@8.68.0)(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)(vitest@4.1.11)
       eslint:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-astro:
         specifier: catalog:comparisons
@@ -1804,7 +1813,7 @@ importers:
         specifier: catalog:site
         version: 0.8.0(@astrojs/starlight@0.41.10)
       zod:
-        specifier: catalog:dev
+        specifier: catalog:site
         version: 4.5.4
 
   packages/solid:
@@ -1921,7 +1930,7 @@ importers:
         specifier: catalog:prod
         version: 0.7.61(svelte@5.57.0)(typescript@6.0.3)
       typescript:
-        specifier: ^5.9.0 || ^6.0.0
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
@@ -2026,7 +2035,7 @@ importers:
         specifier: catalog:prod
         version: 2.5.0(typescript@6.0.3)
       typescript:
-        specifier: ^5.9.0 || ^6.0.0
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
@@ -2103,7 +2112,7 @@ importers:
         specifier: catalog:prod
         version: 2.4.28(typescript@6.0.3)
       typescript:
-        specifier: ^5.9.0 || ^6.0.0
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
@@ -2137,7 +2146,7 @@ importers:
         specifier: catalog:prod
         version: 3.5.42
       typescript:
-        specifier: ^5.9.0 || ^6.0.0
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
@@ -2183,7 +2192,7 @@ importers:
         specifier: catalog:prod
         version: 3.3.11
       typescript:
-        specifier: ^5.9.0 || ^6.0.0
+        specifier: catalog:prod
         version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
