@@ -3,11 +3,13 @@ import Default from "@astrojs/starlight/components/Pagination.astro";
 import type { StarlightRouteData } from "@astrojs/starlight/route-data";
 
 export type Props = StarlightRouteData;
+
+const isHomepage = Astro.url.pathname === "/";
 ---
 
-<Default {...Astro.props} />
+{!isHomepage && <Default {...Astro.props} />}
 
-<div class="credits">
+<div class:list={["credits", { homepage: isHomepage }]}>
 	Made with ❤️‍🔥 around the world by <a href="/team">the Flint team</a> and <a
 		href="http://github.com/flint-fyi/flint/contributors"
 		target="_blank">contributors</a
@@ -15,7 +17,7 @@ export type Props = StarlightRouteData;
 </div>
 
 {
-	Astro.url.pathname === "/" && (
+	isHomepage && (
 		<a class="netlify" href="https://www.netlify.com">
 			<img
 				alt="Deploys by Netlify"
@@ -40,6 +42,12 @@ export type Props = StarlightRouteData;
 		text-align: center;
 	}
 
+	.credits.homepage {
+		border-block-start: 0;
+		margin-block-start: 0;
+		padding-block: 1rem 0.5rem;
+	}
+
 	.credits a {
 		color: var(--sl-color-gray-2);
 	}
@@ -49,6 +57,10 @@ export type Props = StarlightRouteData;
 		margin-inline: auto;
 		padding-block-end: 2rem;
 		inline-size: fit-content;
+	}
+
+	:global(footer:has(.credits.homepage) .meta:empty) {
+		display: none;
 	}
 
 	:global(html[data-theme="dark"]) .light,

@@ -1,0 +1,561 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+
+import PackageManagers from "./PackageManagers.astro";
+import { packageManagerLabels, packageManagers } from "./packageManagers.ts";
+
+const defaultCommand = "npm i -D flint";
+const defaultPackageManager = "npm";
+---
+
+<div class="install-command not-content" data-install-command>
+	<label class="package-manager">
+		<span
+			aria-hidden="true"
+			class="package-manager-icon"
+			data-package-manager-icon></span>
+		<select aria-label="Package manager" data-package-manager>
+			{
+				packageManagers.map((packageManager) => (
+					<option
+						selected={packageManager === defaultPackageManager}
+						value={packageManager}
+					>
+						{packageManagerLabels[packageManager]}
+						<Icon class="option-check" name="approve-check" />
+					</option>
+				))
+			}
+		</select>
+		<span aria-hidden="true" class="selector-caret">
+			<Icon name="down-caret" />
+		</span>
+	</label>
+	<code data-install-output>{defaultCommand}</code>
+	<button
+		aria-label={`Copy ${defaultPackageManager} install command`}
+		class="copy-button"
+		data-command={defaultCommand}
+		data-copy-install
+		type="button"
+	>
+		<Icon class="copy-icon" name="document" />
+		<Icon class="check-icon" name="approve-check" />
+	</button>
+
+	<div data-package-manager-source hidden>
+		<PackageManagers
+			dev
+			frame="none"
+			pkg="flint"
+			pkgManagers={[...packageManagers]}
+			type="add"
+		/>
+	</div>
+
+	<script is:inline>
+		(() => {
+			const container = document.currentScript?.closest(
+				"[data-install-command]",
+			);
+			const packageManagerSource = container?.querySelector(
+				"[data-package-manager-source]",
+			);
+			if (!container || !packageManagerSource) {
+				return;
+			}
+
+			const selectedTab = packageManagerSource.querySelector(
+				"[role='tab'][aria-selected='true']",
+			);
+			const packageManager = selectedTab?.textContent?.trim();
+			const selectedPanelId = selectedTab?.getAttribute("href")?.slice(1);
+			const selectedPanel = selectedPanelId
+				? [...packageManagerSource.querySelectorAll("[role='tabpanel']")].find(
+						(panel) => panel.id === selectedPanelId,
+					)
+				: undefined;
+			if (!packageManager) {
+				return;
+			}
+
+			const button = container.querySelector("[data-copy-install]");
+			const iconOutput = container.querySelector("[data-package-manager-icon]");
+			const output = container.querySelector("[data-install-output]");
+			const select = container.querySelector("[data-package-manager]");
+			const command = selectedPanel?.querySelector("code")?.textContent?.trim();
+			if (!button || !iconOutput || !output || !select || !command) {
+				return;
+			}
+
+			select.value = packageManager;
+			output.textContent = command;
+			button.dataset.command = command;
+			button.setAttribute(
+				"aria-label",
+				`Copy ${packageManager} install command`,
+			);
+			const icon = selectedTab.querySelector("svg");
+			if (icon) {
+				iconOutput.replaceChildren(icon.cloneNode(true));
+			}
+		})();
+	</script>
+</div>
+
+<script>
+	async function copyToClipboard(value: string): Promise<boolean> {
+		const clipboardWrite = navigator.clipboard?.writeText(value);
+		const textarea = document.createElement("textarea");
+		textarea.value = value;
+		textarea.setAttribute("readonly", "");
+		textarea.style.position = "fixed";
+		textarea.style.opacity = "0";
+		document.body.append(textarea);
+		textarea.select();
+
+		const copied = (
+			document as unknown as {
+				execCommand(commandId: "copy"): boolean;
+			}
+		).execCommand("copy");
+		textarea.remove();
+
+		if (copied) {
+			void clipboardWrite?.catch(() => undefined);
+			return true;
+		}
+
+		try {
+			await clipboardWrite;
+			return clipboardWrite !== undefined;
+		} catch {
+			return false;
+		}
+	}
+
+	document
+		.querySelectorAll<HTMLElement>("[data-install-command]")
+		.forEach((container) => {
+			const button = container.querySelector<HTMLButtonElement>(
+				"[data-copy-install]",
+			);
+			const output = container.querySelector<HTMLElement>(
+				"[data-install-output]",
+			);
+			const select = container.querySelector<HTMLSelectElement>(
+				"[data-package-manager]",
+			);
+			const iconOutput = container.querySelector<HTMLElement>(
+				"[data-package-manager-icon]",
+			);
+			const packageManagerSource = container.querySelector<HTMLElement>(
+				"[data-package-manager-source]",
+			);
+			if (
+				!button ||
+				!output ||
+				!select ||
+				!iconOutput ||
+				!packageManagerSource
+			) {
+				return;
+			}
+			const installElements = { button, iconOutput, output, select };
+
+			const panels = new Map(
+				[
+					...packageManagerSource.querySelectorAll<HTMLElement>(
+						"[role='tabpanel']",
+					),
+				].map((panel) => [panel.id, panel]),
+			);
+			const packageManagerData = new Map<
+				string,
+				{
+					command: string;
+					icon: SVGElement | undefined;
+					tab: HTMLAnchorElement;
+				}
+			>();
+			packageManagerSource
+				.querySelectorAll<HTMLAnchorElement>("[role='tab']")
+				.forEach((tab) => {
+					const packageManager = tab.textContent?.trim();
+					const panelId = tab.getAttribute("href")?.slice(1);
+					const command = panelId
+						? panels.get(panelId)?.querySelector("code")?.textContent?.trim()
+						: undefined;
+					if (!packageManager || !command) {
+						return;
+					}
+
+					packageManagerData.set(packageManager, {
+						command,
+						icon: tab.querySelector("svg") ?? undefined,
+						tab,
+					});
+				});
+			if (CSS.supports("appearance", "base-select")) {
+				for (const option of installElements.select.options) {
+					const icon = packageManagerData.get(option.value)?.icon;
+					if (icon) {
+						option.prepend(icon.cloneNode(true));
+					}
+				}
+			}
+
+			const selectedPackageManager = packageManagerSource
+				.querySelector<HTMLAnchorElement>("[role='tab'][aria-selected='true']")
+				?.textContent?.trim();
+			if (
+				selectedPackageManager &&
+				packageManagerData.has(selectedPackageManager)
+			) {
+				installElements.select.value = selectedPackageManager;
+			}
+
+			let resetTimer: number | undefined;
+
+			function resetCopyState(): void {
+				delete installElements.button.dataset.copied;
+				installElements.button.setAttribute(
+					"aria-label",
+					`Copy ${installElements.select.value} install command`,
+				);
+			}
+
+			function updateSelection(): void {
+				const selectedData = packageManagerData.get(
+					installElements.select.value,
+				);
+				if (!selectedData) {
+					return;
+				}
+
+				installElements.output.textContent = selectedData.command;
+				installElements.button.dataset.command = selectedData.command;
+				installElements.iconOutput.replaceChildren();
+				if (selectedData.icon) {
+					installElements.iconOutput.append(selectedData.icon.cloneNode(true));
+				}
+			}
+
+			updateSelection();
+			resetCopyState();
+
+			installElements.select.addEventListener("change", () => {
+				if (resetTimer !== undefined) {
+					window.clearTimeout(resetTimer);
+					resetTimer = undefined;
+				}
+
+				updateSelection();
+				packageManagerData.get(installElements.select.value)?.tab.click();
+				resetCopyState();
+			});
+
+			installElements.button.addEventListener("click", async () => {
+				const command = installElements.button.dataset.command;
+				if (!command) {
+					return;
+				}
+
+				if (!(await copyToClipboard(command))) {
+					return;
+				}
+
+				installElements.button.dataset.copied = "true";
+				installElements.button.setAttribute(
+					"aria-label",
+					`Copied ${installElements.select.value} install command`,
+				);
+
+				if (resetTimer !== undefined) {
+					window.clearTimeout(resetTimer);
+				}
+				resetTimer = window.setTimeout(() => {
+					resetCopyState();
+					resetTimer = undefined;
+				}, 2000);
+			});
+		});
+</script>
+
+<style>
+	.install-command {
+		align-items: stretch;
+		background: var(--flint-paper);
+		border: 1px solid var(--flint-paper-border);
+		border-radius: 0.5rem;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) 2.5rem;
+		inline-size: min(100%, 25.5rem);
+		overflow: hidden;
+	}
+
+	code,
+	.copy-button {
+		align-items: center;
+		display: flex;
+	}
+
+	.package-manager {
+		background: var(--flint-badge-surface);
+		border-end-start-radius: calc(0.5rem - 1px);
+		border-inline-end: 1px solid var(--flint-paper-border);
+		border-start-start-radius: calc(0.5rem - 1px);
+		box-sizing: border-box;
+		color: var(--flint-badge-text);
+		display: grid;
+		grid-template-columns: 1rem minmax(0, 1fr);
+		gap: 0.35rem;
+		inline-size: 6rem;
+		padding-inline-start: 0.625rem;
+		position: relative;
+	}
+
+	.package-manager-icon {
+		align-items: center;
+		display: flex;
+		inline-size: 1rem;
+		justify-content: center;
+	}
+
+	.package-manager-icon :global(svg) {
+		block-size: 1rem;
+		inline-size: 1rem;
+	}
+
+	.selector-caret {
+		align-items: center;
+		display: flex;
+		inset-block: 0;
+		inset-inline-end: 0.4rem;
+		pointer-events: none;
+		position: absolute;
+		transition: transform 120ms ease-out;
+	}
+
+	select {
+		appearance: none;
+		background: transparent;
+		block-size: 100%;
+		border: 0;
+		color: inherit;
+		cursor: pointer;
+		font-family: var(--sl-font);
+		font-size: var(--sl-text-xs);
+		font-weight: 700;
+		inline-size: 100%;
+		padding: 0 1.25rem 0 0;
+	}
+
+	select:focus-visible {
+		outline: 2px solid var(--sl-color-accent-high);
+		outline-offset: -3px;
+	}
+
+	/* Prototype: enhanced picker with the existing native select as fallback. */
+	@supports (appearance: base-select) {
+		select,
+		select::picker(select) {
+			appearance: base-select;
+		}
+
+		select {
+			align-items: center;
+		}
+
+		select::picker-icon {
+			display: none;
+		}
+
+		.package-manager {
+			anchor-name: --package-manager-select;
+		}
+
+		.package-manager:has(select:open) {
+			outline: 2px solid var(--sl-color-accent-high);
+			outline-offset: -3px;
+		}
+
+		select::picker(select) {
+			background: var(--flint-paper);
+			border: 1px solid var(--flint-paper-border);
+			border-radius: 0.5rem;
+			color: var(--sl-color-white);
+			inline-size: anchor-size(inline);
+			inset-block-start: calc(anchor(bottom) + 0.375rem);
+			inset-inline-start: anchor(left);
+			opacity: 0;
+			padding: 0.25rem;
+			position-anchor: --package-manager-select;
+			position-area: none;
+			position-try-fallbacks: flip-block;
+			transition:
+				opacity 140ms ease-out,
+				display 140ms allow-discrete,
+				overlay 140ms allow-discrete;
+		}
+
+		select:open::picker(select) {
+			opacity: 1;
+		}
+
+		@starting-style {
+			select:open::picker(select) {
+				opacity: 0;
+			}
+		}
+
+		option {
+			align-items: center;
+			border-radius: 0.3rem;
+			cursor: pointer;
+			display: flex;
+			font-family: var(--sl-font);
+			font-size: var(--sl-text-xs);
+			gap: 0.35rem;
+			padding: 0.375rem 0.5rem;
+			white-space: nowrap;
+		}
+
+		option:hover,
+		option:focus-visible,
+		option:checked {
+			background: var(--sl-color-gray-5);
+		}
+
+		option:checked {
+			font-weight: 800;
+		}
+
+		option::checkmark {
+			display: none;
+		}
+
+		option :global(svg) {
+			block-size: 1rem;
+			flex: 0 0 auto;
+			inline-size: 1rem;
+		}
+
+		.option-check {
+			color: var(--sl-color-accent);
+			margin-inline-start: auto;
+			opacity: 0;
+		}
+
+		option:checked .option-check {
+			opacity: 1;
+		}
+
+		.package-manager:has(select:open) .selector-caret {
+			transform: rotate(180deg);
+		}
+
+		@media (width < 30rem) {
+			select::picker(select) {
+				inset-block-end: calc(anchor(top) + 0.375rem);
+				inset-block-start: auto;
+			}
+
+			option {
+				min-block-size: 2.75rem;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			select::picker(select),
+			.selector-caret {
+				transition: none;
+			}
+		}
+	}
+
+	code {
+		background: transparent;
+		color: var(--sl-color-white);
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-xs);
+		min-block-size: 2.5rem;
+		overflow-x: auto;
+		padding-inline: 0.875rem;
+		white-space: nowrap;
+	}
+
+	.copy-button {
+		background: transparent;
+		border: 0;
+		border-inline-start: 1px solid var(--flint-paper-border);
+		color: var(--sl-color-gray-2);
+		cursor: pointer;
+		justify-content: center;
+		padding: 0;
+		position: relative;
+		transition:
+			background-color 150ms,
+			color 150ms,
+			filter 120ms ease-out;
+	}
+
+	.copy-button:hover,
+	.copy-button[data-copied="true"] {
+		background: var(--flint-badge-surface);
+		color: var(--flint-badge-text);
+	}
+
+	.copy-button:hover {
+		filter: var(--flint-button-hover-filter);
+	}
+
+	.copy-button:active {
+		filter: var(--flint-button-pressed-filter);
+		transition-duration: 0ms;
+	}
+
+	.copy-button:focus-visible {
+		outline: 2px solid var(--sl-color-accent-high);
+		outline-offset: -3px;
+	}
+
+	.copy-icon,
+	.check-icon {
+		block-size: 1.125rem;
+		inline-size: 1.125rem;
+		position: absolute;
+		transition:
+			opacity 150ms,
+			transform 150ms;
+	}
+
+	.check-icon {
+		opacity: 0;
+		transform: scale(0.75);
+	}
+
+	.copy-button[data-copied="true"] .copy-icon {
+		opacity: 0;
+		transform: scale(0.75);
+	}
+
+	.copy-button[data-copied="true"] .check-icon {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	@media (width < 30rem) {
+		code {
+			padding-inline: 0.75rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.copy-button,
+		.copy-icon,
+		.check-icon {
+			transition: none;
+		}
+	}
+</style>

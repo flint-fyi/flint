@@ -27,7 +27,6 @@ const rules = ruleIds.map((ruleId) => {
 
 <section class="trail-map flint-paper not-content" id="rules">
 	<div class="copy">
-		<p class="flint-eyebrow">📖 The trail map</p>
 		<h2 class="flint-display">Hundreds of rules, hand-picked & happy.</h2>
 		<p class="lede">
 			Each rule comes with a friendly explanation, real-world examples, and an
@@ -44,16 +43,13 @@ const rules = ruleIds.map((ruleId) => {
 		{
 			rules.map((rule) => (
 				<li class="rule">
-					<a href={`/rules/ts/${rule.id}`}>{rule.id}</a>
-					<p set:html={rule.description} />
-					<span class="badges">
-						<span class="preset" data-preset="plugin">
-							ts
-						</span>
+					<div class="rule-heading">
+						<a href={`/rules/ts/${rule.id}`}>ts/{rule.id}</a>
 						<span class="preset" data-preset={rule.preset}>
 							{rule.preset}
 						</span>
-					</span>
+					</div>
+					<p set:html={rule.description} />
 				</li>
 			))
 		}
@@ -62,17 +58,18 @@ const rules = ruleIds.map((ruleId) => {
 
 <style>
 	.trail-map {
+		border-block-start: 1px solid var(--flint-paper-border);
 		display: grid;
 		gap: 2rem;
 		grid-template-columns: 100%;
-		padding: clamp(1.25rem, 4vw, 3rem);
+		padding: clamp(2.5rem, 5vw, 4rem) clamp(0rem, 3vw, 2rem);
 	}
 
 	h2 {
 		color: var(--sl-color-white);
 		font-size: clamp(1.75rem, calc(1rem + 2vw), 2.25rem);
 		line-height: 1.15;
-		margin: 0.5rem 0 0;
+		margin: 0;
 		text-wrap: balance;
 	}
 
@@ -91,8 +88,8 @@ const rules = ruleIds.map((ruleId) => {
 	}
 
 	.button {
-		border: 2px solid var(--flint-paper-border);
-		border-radius: 999px;
+		border: 1px solid var(--flint-paper-border);
+		border-radius: 0.5rem;
 		color: var(--sl-color-white);
 		flex: 1 1 auto;
 		font-weight: 700;
@@ -100,8 +97,9 @@ const rules = ruleIds.map((ruleId) => {
 		text-align: center;
 		text-decoration: none;
 		transition:
-			box-shadow 150ms,
-			transform 150ms;
+			background-color 150ms,
+			color 150ms,
+			filter 120ms ease-out;
 	}
 
 	.button.primary {
@@ -111,13 +109,22 @@ const rules = ruleIds.map((ruleId) => {
 	}
 
 	.button:hover {
-		box-shadow: var(--flint-glow);
-		transform: translateY(-2px);
+		background: var(--flint-button-hover-surface);
+		filter: var(--flint-button-hover-filter);
+	}
+
+	.button.primary:hover {
+		background: var(--flint-ember-fill);
+	}
+
+	.button:active {
+		filter: var(--flint-button-pressed-filter);
+		transition-duration: 0ms;
 	}
 
 	.rules {
 		display: grid;
-		gap: 0.75rem;
+		gap: 0.5rem;
 		grid-template-columns: 100%;
 		list-style: none;
 		margin: 0;
@@ -126,11 +133,18 @@ const rules = ruleIds.map((ruleId) => {
 
 	.rule {
 		background: var(--sl-color-black);
-		border: 2px solid var(--flint-paper-border);
-		border-radius: 0.75rem;
+		border: 1px solid var(--flint-paper-border);
+		border-radius: 0.5rem;
 		display: flex;
 		flex-direction: column;
-		padding: 0.75rem 0.9rem;
+		padding: 0.8rem 0.9rem;
+	}
+
+	.rule-heading {
+		align-items: baseline;
+		display: flex;
+		gap: 0.4rem;
+		white-space: nowrap;
 	}
 
 	.rule a {
@@ -143,35 +157,26 @@ const rules = ruleIds.map((ruleId) => {
 
 	.rule p {
 		color: var(--sl-color-gray-2);
-		flex: 1;
 		font-size: var(--sl-text-xs);
 		line-height: 1.5;
-		margin: 0.35rem 0 0.6rem;
+		margin: 0.35rem 0 0;
 	}
 
 	.rule p :global(code) {
 		background: var(--flint-badge-surface);
-		border-radius: 0.3rem;
+		border-radius: 0.25rem;
 		color: var(--flint-badge-text);
 		font-size: 0.95em;
 		padding: 0.05rem 0.25rem;
 	}
 
-	.badges {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35rem;
-	}
-
 	.preset {
-		align-self: start;
-		border-radius: 0.4rem;
+		border-radius: 0.25rem;
 		display: inline-block;
-		font-size: var(--sl-text-xs);
+		font-family: var(--sl-font-mono);
+		font-size: 0.68rem;
 		font-weight: 800;
-		letter-spacing: 0.12em;
-		padding: 0.15rem 0.45rem;
-		text-transform: uppercase;
+		padding: 0.1rem 0.35rem;
 	}
 
 	.preset[data-preset="logical"] {
@@ -184,18 +189,13 @@ const rules = ruleIds.map((ruleId) => {
 		color: var(--sl-color-white);
 	}
 
-	.preset[data-preset="plugin"] {
-		background: var(--sl-color-gray-6);
-		color: var(--sl-color-gray-2);
-	}
-
 	@media (width >= 50rem) {
 		.trail-map {
-			grid-template-columns: 1fr 1.4fr;
+			grid-template-columns: 0.85fr 1.55fr;
 		}
 
 		.rules {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
 		}
 	}
 </style>

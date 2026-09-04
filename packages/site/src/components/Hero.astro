@@ -2,6 +2,8 @@
 import { LinkButton } from "@astrojs/starlight/components";
 import { Image } from "astro:assets";
 
+import InstallCommand from "./InstallCommand.astro";
+
 const { data } = Astro.locals.starlightRoute.entry;
 const { actions = [], image, tagline, title = data.title } = data.hero ?? {};
 
@@ -14,6 +16,8 @@ const alt = image?.alt ?? "";
 		<h1 class="flint-display" data-page-title id="_top" set:html={title} />
 
 		{tagline && <p class="tagline" set:html={tagline} />}
+
+		<InstallCommand />
 
 		{
 			actions.length > 0 && (
@@ -43,8 +47,7 @@ const alt = image?.alt ?? "";
 	</div>
 
 	<div class="art">
-		<div aria-hidden="true" class="glow"></div>
-		<div class="flint-paper mark">
+		<div class="mark">
 			{
 				logo && (
 					<Image
@@ -80,6 +83,21 @@ const alt = image?.alt ?? "";
 		font-size: clamp(2.125rem, calc(1rem + 4.5vw), 4rem);
 		line-height: 1.05;
 		margin: 0;
+		text-wrap: balance;
+	}
+
+	h1 :global(.hero-first-text) {
+		font-size: calc(var(--sl-text-5xl) * 2);
+	}
+
+	h1 :global(.hero-second) {
+		color: var(--sl-color-accent);
+		font-size: calc(var(--sl-text-5xl) * 1.1);
+	}
+
+	h1 :global(.hero-third) {
+		color: var(--sl-color-accent-high);
+		font-size: var(--sl-text-5xl);
 	}
 
 	.tagline {
@@ -96,52 +114,19 @@ const alt = image?.alt ?? "";
 		gap: 0.75rem;
 	}
 
-	.actions a {
+	.actions :global(a) {
 		justify-content: center;
-	}
-
-	.dot {
-		block-size: 0.5rem;
-		border-radius: 999px;
-		inline-size: 0.5rem;
-	}
-
-	.dot[data-color="moss"] {
-		background: var(--flint-moss);
-	}
-
-	.dot[data-color="ember"] {
-		background: var(--flint-ember);
-	}
-
-	.dot[data-color="pine"] {
-		background: var(--flint-pine-mark);
 	}
 
 	.art {
 		display: grid;
 		place-items: center;
-		position: relative;
-	}
-
-	/* Stays inside `.art`: a negative inset would widen the page's scrollable
-	   overflow, while the blur bleeds outward without doing so. */
-	.glow {
-		background: radial-gradient(
-			circle,
-			color-mix(in srgb, var(--flint-ember) 25%, transparent),
-			transparent 70%
-		);
-		filter: blur(3rem);
-		inset: 0;
-		position: absolute;
 	}
 
 	.mark {
 		display: grid;
-		padding-left: clamp(0.5rem, 2vw, 1.5rem);
+		padding-inline-start: clamp(0.5rem, 2vw, 1.5rem);
 		place-items: center;
-		position: relative;
 	}
 
 	.mark :global(img) {
@@ -155,7 +140,7 @@ const alt = image?.alt ?? "";
 			flex-wrap: wrap;
 		}
 
-		.actions a {
+		.actions :global(a) {
 			inline-size: auto;
 		}
 	}
