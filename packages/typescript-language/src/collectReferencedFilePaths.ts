@@ -25,7 +25,7 @@ export function collectReferencedFilePaths(
 
 		if (resolved.resolvedModule?.isExternalLibraryImport === false) {
 			return path.relative(
-				process.cwd(),
+				program.getCurrentDirectory(),
 				resolved.resolvedModule.resolvedFileName,
 			);
 		}
@@ -37,6 +37,9 @@ export function collectReferencedFilePaths(
 
 		if (isImportDeclaration(node)) {
 			// import { x } from "./foo";
+			path = node.moduleSpecifier.text;
+		} else if (isExportDeclaration(node)) {
+			// export { x } from "./foo"; or export * from "./foo";
 			path = node.moduleSpecifier.text;
 		} else if (isImportCall(node)) {
 			// const x = import("./foo")
@@ -66,6 +69,16 @@ function isAwaitImportCall(node: ts.Node): node is AST.AwaitExpression & {
 	expression: ts.CallExpression & { arguments: [ts.StringLiteral] };
 } {
 	return ts.isAwaitExpression(node) && isImportCall(node.expression);
+}
+
+function isExportDeclaration(
+	node: ts.Node,
+): node is ts.ExportDeclaration & { moduleSpecifier: ts.StringLiteral } {
+	return (
+		ts.isExportDeclaration(node) &&
+		node.moduleSpecifier != null &&
+		ts.isStringLiteral(node.moduleSpecifier)
+	);
 }
 
 function isImportCall(

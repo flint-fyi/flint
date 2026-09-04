@@ -1,5 +1,13 @@
 # @flint.fyi/typescript-language
 
+## 0.20.1
+
+### Patch Changes
+
+- [#3346](https://github.com/flint-fyi/flint/pull/3346) [`b8027ad`](https://github.com/flint-fyi/flint/commit/b8027ad53c6ca60a7a3df0697bbca85b07b43912) - The TypeScript dependency tracker now respects re-exports.
+- Updated dependencies [[`7d6522c`](https://github.com/flint-fyi/flint/commit/7d6522cf53a5c7f9cf7823cf255e1cbdfef511a3), [`5b63f69`](https://github.com/flint-fyi/flint/commit/5b63f6901ff0d6cfabe4dbf61cb3f0333dc94602)]:
+  - @flint.fyi/core@0.26.0
+
 ## 0.20.0
 
 ### Minor Changes
