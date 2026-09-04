@@ -246,8 +246,8 @@ catalogs:
       specifier: 2.32.0
       version: 2.32.0
     eslint-plugin-jsdoc:
-      specifier: 64.3.2
-      version: 64.3.2
+      specifier: 64.3.3
+      version: 64.3.3
     eslint-plugin-jsonc:
       specifier: 3.4.2
       version: 3.4.2
@@ -343,8 +343,8 @@ catalogs:
       specifier: 10.9.1
       version: 10.9.1
     eslint-plugin-jsdoc:
-      specifier: 64.3.2
-      version: 64.3.2
+      specifier: 64.3.3
+      version: 64.3.3
     eslint-plugin-jsonc:
       specifier: 3.4.2
       version: 3.4.2
@@ -564,7 +564,7 @@ importers:
         version: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-jsdoc:
         specifier: catalog:dev
-        version: 64.3.2(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 64.3.3(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-jsonc:
         specifier: catalog:dev
         version: 3.4.2(@eslint/json@2.0.1)(eslint@10.9.1)
@@ -1448,7 +1448,7 @@ importers:
         version: 2.32.0(@typescript-eslint/parser@8.69.0)(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-jsdoc:
         specifier: catalog:comparisons
-        version: 64.3.2(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 64.3.3(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-jsonc:
         specifier: catalog:comparisons
         version: 3.4.2(@eslint/json@2.0.1)(eslint@10.9.1)
@@ -5189,8 +5189,8 @@ packages:
       '@typescript-eslint/parser':
         optional: true
 
-  eslint-plugin-jsdoc@64.3.2:
-    resolution: {integrity: sha512-9/j8KKTdLt5Gy7FbayPASLKabm9wcntcwkOJ+kidikNudqglqxjbsZBddkPwK9/6AeOyCwlwwAtuzHQzwTQP7A==}
+  eslint-plugin-jsdoc@64.3.3:
+    resolution: {integrity: sha512-MzGIg34NpwJGXvsvw8yvWy4W+Q30eHSLp7k+7eP64S88fNqyrTWt9BMJK6Fo5ySPqnPMZvTGIgj0+fgC8ZhnPw==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -11371,7 +11371,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jsdoc@64.3.2(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-jsdoc@64.3.3(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@es-joy/jsdoccomment': 0.95.1
       '@es-joy/resolve.exports': 1.2.0
