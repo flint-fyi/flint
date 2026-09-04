@@ -446,8 +446,8 @@ catalogs:
       specifier: 7.2.10
       version: 7.2.10
     astro-og-canvas:
-      specifier: 0.13.0
-      version: 0.13.0
+      specifier: 0.13.1
+      version: 0.13.1
     canvaskit-wasm:
       specifier: 0.42.0
       version: 0.42.0
@@ -1545,7 +1545,7 @@ importers:
         version: 7.2.10(@astrojs/markdown-remark@7.3.0)(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0)
       astro-og-canvas:
         specifier: catalog:site
-        version: 0.13.0(astro@7.2.10)
+        version: 0.13.1(astro@7.2.10)
       canvaskit-wasm:
         specifier: catalog:site
         version: 0.42.0
@@ -4560,8 +4560,8 @@ packages:
     peerDependencies:
       astro: ^4.0.0-beta || ^5.0.0-beta || ^3.3.0 || ^6.0.0-beta || ^7.0.0
 
-  astro-og-canvas@0.13.0:
-    resolution: {integrity: sha512-jcIDhE9OGIbd7LstZQ4CyzOpbbEKAlxJqEgdkVu6r26m7yJKlQjKysszfDxlox717cnCLPXKivyFjsufcq8sYA==}
+  astro-og-canvas@0.13.1:
+    resolution: {integrity: sha512-YrsWTht6TwNWpP/GHZeQS9sUtxsyf5XeycFEekX0NMyljOVr93MfWcTkNw7GnFD862j4JdekiVGdn/xJ6+8C/g==}
     peerDependencies:
       astro: ^5.0.0 || ^6.0.0 || ^7.0.0
 
@@ -4664,9 +4664,6 @@ packages:
 
   caniuse-lite@1.0.30001810:
     resolution: {integrity: sha512-TITQPUkaz+aVk5GL6NhOdwk1aEaNTSDPsGFWrTuhKGtjTF70jL/Oht2W4c6rXUe5fu7Ie19VIahAXHIIiWWNeg==}
-
-  canvaskit-wasm@0.41.1:
-    resolution: {integrity: sha512-gO2rNMIE0lOQ8MaarM4qNeq2zZAEknAObKP2XAKidMSAY8P5sURGdFkrx1TSdHuBFqTf5w35JqjuUzjibqkD5g==}
 
   canvaskit-wasm@0.42.0:
     resolution: {integrity: sha512-N3ikotmzYwDVAcpQKDMptBT2P5pIEWS9ywdmrQA2awwaMF9cxKEFuxZZHv9ay1Em9kDjxDsPtwUzDm1uNj136g==}
@@ -10629,10 +10626,10 @@ snapshots:
       rehype-expressive-code: 0.44.1
       url-extras: 0.1.0
 
-  astro-og-canvas@0.13.0(astro@7.2.10):
+  astro-og-canvas@0.13.1(astro@7.2.10):
     dependencies:
       astro: 7.2.10(@astrojs/markdown-remark@7.3.0)(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(@types/node@26.4.0)(jiti@2.7.0)(yaml@2.9.0)
-      canvaskit-wasm: 0.41.1
+      canvaskit-wasm: 0.42.0
       deterministic-object-hash: 2.0.2
       entities: 8.0.0
 
@@ -10805,10 +10802,6 @@ snapshots:
   callsites@3.1.0: {}
 
   caniuse-lite@1.0.30001810: {}
-
-  canvaskit-wasm@0.41.1:
-    dependencies:
-      '@webgpu/types': 0.1.21
 
   canvaskit-wasm@0.42.0:
     dependencies:
