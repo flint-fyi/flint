@@ -337,8 +337,8 @@ catalogs:
       specifier: 8.0.3
       version: 8.0.3
     '@humanwhocodes/momoa':
-      specifier: 3.3.12
-      version: 3.3.12
+      specifier: 3.3.13
+      version: 3.3.13
     '@ianvs/prettier-plugin-sort-imports':
       specifier: 4.7.1
       version: 4.7.1
@@ -1165,7 +1165,7 @@ importers:
         version: link:../rule-tester
       '@humanwhocodes/momoa':
         specifier: catalog:dev
-        version: 3.3.12
+        version: 3.3.13
       tsdown:
         specifier: catalog:dev
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@6.0.3)
@@ -1395,7 +1395,7 @@ importers:
         version: link:../rule-tester
       '@humanwhocodes/momoa':
         specifier: catalog:dev
-        version: 3.3.12
+        version: 3.3.13
       tsdown:
         specifier: catalog:dev
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@6.0.3)
@@ -3323,6 +3323,10 @@ packages:
 
   '@humanwhocodes/momoa@3.3.12':
     resolution: {integrity: sha512-xS9xl4ieqTqhSZfKV3YXj/htwJCUxbgvkTVaK1fkESgrOzvoVSOTRQeQ8tTLOZUS0Csi2xqtJQXgVTRH5OEbHQ==}
+    engines: {node: '>=18'}
+
+  '@humanwhocodes/momoa@3.3.13':
+    resolution: {integrity: sha512-AbKq3EW41+HY6pNMJgAOrz68iyiTTf0Nr1JRHHfuG5zwniJ9Dw8J3U7oa1I2ptpqYwmEf1sXKOGK6lbdZ9eqmg==}
     engines: {node: '>=18'}
 
   '@humanwhocodes/retry@0.4.3':
@@ -9500,7 +9504,7 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
-      '@humanwhocodes/momoa': 3.3.12
+      '@humanwhocodes/momoa': 3.3.13
       natural-compare: 1.4.0
 
   '@eslint/markdown@8.0.3(supports-color@10.2.2)':
@@ -9573,6 +9577,8 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/momoa@3.3.12': {}
+
+  '@humanwhocodes/momoa@3.3.13': {}
 
   '@humanwhocodes/retry@0.4.3': {}
 
