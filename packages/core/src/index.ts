@@ -152,6 +152,7 @@ export type {
 } from "./types/shapes.ts";
 export type { WithExitKeys } from "./types/visitors.ts";
 export { binarySearch } from "./utils/arrays.ts";
+export { jsonCodec } from "./utils/codecs.ts";
 export {
 	getColumnAndLineOfPosition,
 	getPositionOfColumnAndLine,
