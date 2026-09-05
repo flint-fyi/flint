@@ -21,7 +21,7 @@ catalogs:
     "@eslint/json": 2.1.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.3
-    "@humanwhocodes/momoa": 3.3.12
+    "@humanwhocodes/momoa": 3.3.13
     "@ianvs/prettier-plugin-sort-imports": 4.7.1
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
