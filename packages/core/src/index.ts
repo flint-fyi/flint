@@ -1,5 +1,6 @@
 export { getCacheFilePath } from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
+export { applyChangesToFiles } from "./changing/applyChangesToFiles.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";
 export {
@@ -34,6 +35,10 @@ export { createLanguage } from "./languages/createLanguage.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";
 export { RuleCreator, type RuleCreatorOptions } from "./rules/RuleCreator.ts";
+export {
+	LintSession,
+	type LintSessionLintOptions,
+} from "./running/LintSession.ts";
 export { parseOptions } from "./running/parseOptions.ts";
 export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";
@@ -61,6 +66,7 @@ export type {
 	ConfigRuleDefinition,
 	ConfigRuleDefinitionObject,
 	ConfigUseDefinition,
+	ProcessedConfigDefinition,
 } from "./types/configs.ts";
 export type {
 	MessageForContext,
