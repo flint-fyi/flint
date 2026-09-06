@@ -71,6 +71,38 @@ describe(runPrettier, () => {
 			),
 		).toHaveLength(1);
 	});
+
+	it("uses the repository root instead of a nested working directory", async () => {
+		const host = createVFSLinterHost({
+			caseSensitive: true,
+			cwd: "/root/packages/project",
+		});
+		vi.spyOn(host, "getRepositoryRoot").mockReturnValue("/root");
+		host.vfsUpsertFile(
+			"/root/.prettierignore",
+			"/packages/project/ignored.ts\n",
+		);
+		host.vfsUpsertFile(
+			"/root/packages/project/.prettierignore",
+			"included.ts\n",
+		);
+		host.vfsUpsertFile("/root/packages/project/ignored.ts", "const invalid =");
+		host.vfsUpsertFile("/root/packages/project/included.ts", "const value=1;");
+
+		const result = await runPrettier(
+			host,
+			createLintResults(
+				"/root/packages/project/ignored.ts",
+				"/root/packages/project/included.ts",
+			),
+			false,
+		);
+
+		expect(result.clean).toEqual(new Set());
+		expect(result.dirty).toEqual(
+			new Set(["/root/packages/project/included.ts"]),
+		);
+	});
 });
 
 function createLintResults(
