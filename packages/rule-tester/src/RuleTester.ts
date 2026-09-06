@@ -172,7 +172,7 @@ export class RuleTester {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
-				{ options: parseOptions(rule.options, testCase.options), rule },
+				{ options: await parseOptions(rule.options, testCase.options), rule },
 				testCaseNormalized,
 				{
 					collectLanguageReports: this.#testerOptions.assertNoLanguageReports,
@@ -255,7 +255,7 @@ export class RuleTester {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
-				{ options: parseOptions(rule.options, testCase.options), rule },
+				{ options: await parseOptions(rule.options, testCase.options), rule },
 				testCaseNormalized,
 				{
 					collectLanguageReports: this.#testerOptions.assertNoLanguageReports,

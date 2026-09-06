@@ -4,6 +4,7 @@ import z from "zod/v4";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { AnyLanguage } from "../types/languages.ts";
+import type { AnyRule } from "../types/rules.ts";
 import { createPlugin } from "./createPlugin.ts";
 
 const stubLanguage = createLanguage({
@@ -104,8 +105,28 @@ describe(createPlugin, () => {
 			plugin.rules({ withOptionalOption: { value: 123 } });
 		});
 
+		// eslint-disable-next-line vitest/expect-expect
+		it("rejects required option schemas", () => {
+			ruleCreator.createRule(stubLanguage, {
+				about: {
+					description: "",
+					id: "withRequiredOption",
+				},
+				messages: stubMessages,
+				options: {
+					// @ts-expect-error -- Rule option schemas must accept undefined.
+					value: z.string(),
+				},
+				setup: vi.fn(),
+			});
+		});
+
 		it("erases language internals from public rules", () => {
 			expectTypeOf(ruleStandalone.language).toEqualTypeOf<AnyLanguage>();
+		});
+
+		it("keeps rules with options assignable to AnyRule", () => {
+			expectTypeOf(ruleWithOptionalOption).toExtend<AnyRule>();
 		});
 	});
 });

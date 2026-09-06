@@ -4,7 +4,11 @@ import type { BaseAbout } from "./about.ts";
 import type { RuleContext } from "./context.ts";
 import type { AnyLanguage } from "./languages.ts";
 import type { ReportMessageData } from "./reports.ts";
-import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
+import type {
+	AnyOptionalSchema,
+	InferredOutputObject,
+	OptionalObjectSchema,
+} from "./shapes.ts";
 
 /**
  * A single lint rule, as used by users in configs.
@@ -69,7 +73,7 @@ export interface RuleDefinition<
 > {
 	about: About;
 	messages: Record<MessageId, ReportMessageData>;
-	options?: OptionsSchema;
+	options?: OptionalObjectSchema<OptionsSchema>;
 	setup: RuleSetup<
 		AstNodesByName,
 		FileServices,
