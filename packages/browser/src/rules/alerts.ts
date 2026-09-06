@@ -1,7 +1,4 @@
-import {
-	isIdentifier,
-	isPropertyAccessExpression,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -11,7 +8,6 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isASTExpression } from "./typeGuards.ts";
 
 const globalNames = new Set(["alert", "confirm", "prompt"]);
 
@@ -36,13 +32,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function getCalleeNameAndNode(node: AST.Node) {
-			if (isIdentifier(node)) {
+			if (node.kind === SyntaxKind.Identifier) {
 				return { name: node.text, node };
 			}
 
-			if (isPropertyAccessExpression(node)) {
+			if (node.kind === SyntaxKind.PropertyAccessExpression) {
 				const { expression, name } = node;
-				if (!isIdentifier(name) || !isIdentifier(expression)) {
+				if (
+					name.kind !== SyntaxKind.Identifier ||
+					expression.kind !== SyntaxKind.Identifier
+				) {
 					return undefined;
 				}
 
@@ -55,10 +54,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression(node, { typeChecker, program, sourceFile }) {
-					if (!isASTExpression(node.expression)) {
-						return;
-					}
-
 					const found = getCalleeNameAndNode(node.expression);
 					if (found === undefined) {
 						return;

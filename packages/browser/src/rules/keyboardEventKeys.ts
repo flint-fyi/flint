@@ -1,7 +1,4 @@
-import {
-	isIdentifier,
-	isInterfaceDeclaration,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import type { Program } from "typescript-native/unstable/sync";
 
 import {
@@ -14,7 +11,6 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isASTExpression } from "./typeGuards.ts";
 
 const deprecatedProperties = new Set(["charCode", "keyCode", "which"]);
 
@@ -60,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			return (
-				isInterfaceDeclaration(declaration.parent) &&
+				declaration.parent.kind === SyntaxKind.InterfaceDeclaration &&
 				["KeyboardEvent", "UIEvent"].includes(declaration.parent.name.text)
 			);
 		}
@@ -69,9 +65,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
 					if (
-						isIdentifier(node.name) &&
+						node.name.kind === SyntaxKind.Identifier &&
 						deprecatedProperties.has(node.name.text) &&
-						isASTExpression(node.expression) &&
 						isKeyboardEvent(node.expression, typeChecker) &&
 						isKeyboardEventProperty(node.name, typeChecker, program)
 					) {

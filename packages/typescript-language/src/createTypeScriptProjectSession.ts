@@ -276,7 +276,10 @@ export function createTypeScriptProjectSession(
 		seen.add(configFilePath);
 
 		const parsed = parseConfigSafely(configFilePath);
-		const references = parsed?.projectReferences;
+		if (!parsed) {
+			return configFilePath;
+		}
+		const references = parsed.projectReferences;
 		if (
 			!references?.length ||
 			countFilesUnder(parsed.fileNames, targetDirectory)

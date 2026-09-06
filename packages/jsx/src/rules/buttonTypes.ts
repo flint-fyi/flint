@@ -1,8 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isJsxExpression,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticStringValue,
@@ -13,7 +9,6 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isASTExpression } from "./typeGuards.ts";
 
 const validButtonTypes = new Set(["button", "reset", "submit"]);
 
@@ -57,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!isIdentifier(node.tagName)) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -68,8 +63,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const typeAttribute = node.attributes.properties.find(
 				(property): property is AST.JsxAttribute =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "type",
 			);
 
@@ -83,13 +78,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const typeInitializer = typeAttribute.initializer;
 			const typeExpression =
-				typeInitializer && isJsxExpression(typeInitializer)
+				typeInitializer && typeInitializer.kind === SyntaxKind.JsxExpression
 					? typeInitializer.expression
 					: typeInitializer;
-			const typeValue =
-				typeExpression &&
-				isASTExpression(typeExpression) &&
-				getStaticStringValue(typeExpression);
+			const typeValue = typeExpression && getStaticStringValue(typeExpression);
 
 			if (typeValue && !validButtonTypes.has(typeValue)) {
 				context.report({

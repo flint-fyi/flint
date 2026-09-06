@@ -1,8 +1,4 @@
-import {
-	isIdentifier,
-	isPropertyAccessExpression,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -12,7 +8,6 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isASTExpression } from "./typeGuards.ts";
 
 type ModernMethodName = "after" | "append" | "before" | "prepend";
 
@@ -31,7 +26,7 @@ function getModernMethodName(methodName: string, node: AST.CallExpression) {
 				node.arguments[0],
 				`First argument should be defined for call expression (${methodName})`,
 			);
-			if (!isStringLiteral(firstArgument)) {
+			if (firstArgument.kind !== SyntaxKind.StringLiteral) {
 				return undefined;
 			}
 
@@ -48,11 +43,11 @@ function getModernMethodName(methodName: string, node: AST.CallExpression) {
 }
 
 function getPropertyNameNode(node: AST.Node) {
-	if (!isPropertyAccessExpression(node)) {
+	if (node.kind !== SyntaxKind.PropertyAccessExpression) {
 		return undefined;
 	}
 
-	if (!isIdentifier(node.name)) {
+	if (node.name.kind !== SyntaxKind.Identifier) {
 		return undefined;
 	}
 
@@ -116,10 +111,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression(node, { sourceFile }) {
-					if (!isASTExpression(node.expression)) {
-						return;
-					}
-
 					const nameNode = getPropertyNameNode(node.expression);
 					if (nameNode === undefined) {
 						return;
