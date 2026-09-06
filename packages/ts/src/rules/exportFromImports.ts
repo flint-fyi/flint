@@ -1,4 +1,3 @@
-import * as ts from "typescript-native/unstable/ast";
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
@@ -43,9 +42,9 @@ function getImportInfo(
 	}
 
 	if (clause.namedBindings) {
-		if (ts.isNamespaceImport(clause.namedBindings)) {
+		if (clause.namedBindings.kind === SyntaxKind.NamespaceImport) {
 			info.namespaceImport = clause.namedBindings.name.text;
-		} else if (ts.isNamedImports(clause.namedBindings)) {
+		} else if (clause.namedBindings.kind === SyntaxKind.NamedImports) {
 			for (const element of clause.namedBindings.elements) {
 				const importedName = element.propertyName
 					? element.propertyName.text
@@ -137,8 +136,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const exportDeclaration of namedExports) {
 						if (
-							!exportDeclaration.exportClause ||
-							!ts.isNamedExports(exportDeclaration.exportClause)
+							exportDeclaration.exportClause?.kind !== SyntaxKind.NamedExports
 						) {
 							continue;
 						}
@@ -186,7 +184,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					for (const exportAssignment of exportAssignments) {
-						if (!ts.isIdentifier(exportAssignment.expression)) {
+						if (exportAssignment.expression.kind !== SyntaxKind.Identifier) {
 							continue;
 						}
 

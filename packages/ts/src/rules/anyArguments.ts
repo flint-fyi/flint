@@ -1,4 +1,3 @@
-import * as ts from "typescript-native/unstable/ast";
 import { SyntaxKind } from "typescript-native/unstable/ast";
 import {
 	TypeFlags,
@@ -333,11 +332,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return undefined;
 			}
 
-			const lastParamDeclaration = lastParam.declarations[0]?.resolve();
+			const lastParamDeclaration = lastParam.declarations[0]?.resolve() as
+				| AST.Declaration
+				| undefined;
 
 			if (
-				lastParamDeclaration &&
-				ts.isParameterDeclaration(lastParamDeclaration) &&
+				lastParamDeclaration?.kind === SyntaxKind.Parameter &&
 				lastParamDeclaration.dotDotDotToken
 			) {
 				if (index < parameters.length - 1) {

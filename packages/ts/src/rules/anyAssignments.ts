@@ -144,7 +144,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			for (let i = 0; i < pattern.elements.length; i++) {
 				const element = pattern.elements[i];
-				if (!element || ts.isOmittedExpression(element)) {
+				if (!element || element.kind === SyntaxKind.OmittedExpression) {
 					continue;
 				}
 
@@ -172,7 +172,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 					didReport = true;
-				} else if (ts.isArrayBindingPattern(name)) {
+				} else if (name.kind === SyntaxKind.ArrayBindingPattern) {
 					didReport =
 						checkArrayDestructureWorker(
 							name,
@@ -180,7 +180,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							sourceFile,
 							typeChecker,
 						) || didReport;
-				} else if (ts.isObjectBindingPattern(name)) {
+				} else if (name.kind === SyntaxKind.ObjectBindingPattern) {
 					didReport =
 						checkObjectDestructureWorker(
 							name,
@@ -214,16 +214,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				if (
-					ts.isIdentifier(propertyName) ||
-					ts.isStringLiteral(propertyName) ||
-					ts.isNumericLiteral(propertyName)
+					propertyName.kind === SyntaxKind.Identifier ||
+					propertyName.kind === SyntaxKind.StringLiteral ||
+					propertyName.kind === SyntaxKind.NumericLiteral
 				) {
 					key = propertyName.text;
-				} else if (ts.isComputedPropertyName(propertyName)) {
+				} else if (propertyName.kind === SyntaxKind.ComputedPropertyName) {
 					const expression = propertyName.expression;
 					if (
-						ts.isStringLiteral(expression) ||
-						ts.isNoSubstitutionTemplateLiteral(expression)
+						expression.kind === SyntaxKind.StringLiteral ||
+						expression.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 					) {
 						key = expression.text;
 					}
@@ -258,7 +258,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 					didReport = true;
-				} else if (ts.isArrayBindingPattern(name)) {
+				} else if (name.kind === SyntaxKind.ArrayBindingPattern) {
 					didReport =
 						checkArrayDestructureWorker(
 							name,
@@ -266,7 +266,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							sourceFile,
 							typeChecker,
 						) || didReport;
-				} else if (ts.isObjectBindingPattern(name)) {
+				} else if (name.kind === SyntaxKind.ObjectBindingPattern) {
 					didReport =
 						checkObjectDestructureWorker(
 							name,
