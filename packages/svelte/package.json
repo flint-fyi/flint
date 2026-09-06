@@ -26,10 +26,10 @@
 		"test": "vitest --project svelte"
 	},
 	"dependencies": {
+		"@flint.fyi/content-mapper": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/svelte-language": "workspace:^",
-		"@flint.fyi/ts": "workspace:^",
-		"@flint.fyi/volar-language": "workspace:^"
+		"@flint.fyi/ts": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

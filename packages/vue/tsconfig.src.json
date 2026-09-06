@@ -13,7 +13,6 @@
 		{ "path": "../ts/tsconfig.src.json" },
 		{ "path": "../typescript-language/tsconfig.src.json" },
 		{ "path": "../utils" },
-		{ "path": "../volar-language/tsconfig.src.json" },
 		{ "path": "../vue-language/tsconfig.src.json" }
 	]
 }

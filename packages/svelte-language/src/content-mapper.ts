@@ -12,13 +12,13 @@ import {
 	type OptionDiagnostic,
 	type TransformParams,
 	type TransformResult,
-} from "@flint.fyi/volar-language";
+} from "@flint.fyi/content-mapper";
 
 import {
 	createSvelteTransform,
 	transformSvelte as transform,
 	type SvelteTransformOptions,
-} from "./volarLanguagePlugin.ts";
+} from "./contentMapperPlugin.ts";
 
 export async function openSvelteProject(
 	params: OpenProjectParams,
@@ -36,7 +36,7 @@ export async function openSvelteProject(
 		// configs (`.cjs`, or `.js` without `"type": "module"`) are cached by file
 		// path in the require cache, so evict them explicitly to pick up edits.
 		const require = createRequire(import.meta.url);
-		delete require.cache[require.resolve(configFile)];
+		Reflect.deleteProperty(require.cache, require.resolve(configFile));
 		const imported = (await import(
 			`${url.pathToFileURL(configFile).href}?flint=${crypto.createHash("sha256").update(configSource).digest("hex")}`
 		)) as { default?: { compilerOptions?: SvelteTransformOptions } };

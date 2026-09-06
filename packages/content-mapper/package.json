@@ -1,12 +1,12 @@
 {
-	"name": "@flint.fyi/volar-language",
+	"name": "@flint.fyi/content-mapper",
 	"version": "0.3.0",
-	"description": "[Experimental] Volar.js language for Flint.",
+	"description": "[Experimental] Content-mapper protocol and transform helpers for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
-		"directory": "packages/volar-language"
+		"directory": "packages/content-mapper"
 	},
 	"license": "MIT",
 	"author": {
@@ -22,11 +22,10 @@
 		"dist/"
 	],
 	"scripts": {
-		"test": "vitest --project volar-language"
+		"test": "vitest --project content-mapper"
 	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:^",
-		"@volar/language-core": "2.4.28"
+		"@flint.fyi/core": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

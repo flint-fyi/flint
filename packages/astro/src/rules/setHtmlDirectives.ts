@@ -1,8 +1,8 @@
 import type { Node } from "@astrojs/compiler/types";
 
 import { astroLanguage, type AstroServices } from "@flint.fyi/astro-language";
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import { nullThrows } from "@flint.fyi/utils";
-import { reportSourceCode } from "@flint.fyi/volar-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -640,6 +640,9 @@ importers:
       '@flint.fyi/astro-language':
         specifier: workspace:^
         version: link:../astro-language
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -652,9 +655,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
       typescript-native:
         specifier: catalog:dev
         version: typescript@7.1.0-dev.20260830.1
@@ -683,6 +683,9 @@ importers:
       '@astrojs/ts-plugin':
         specifier: ^1.10.7
         version: 1.10.11(@typescript/typescript6@6.0.2)
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -692,9 +695,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -779,6 +779,22 @@ importers:
       tsdown:
         specifier: catalog:dev
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
+
+  packages/content-mapper:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+    devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
+      tsdown:
+        specifier: catalog:dev
+        version: 0.22.14(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.11(@types/node@26.4.0)(@vitest/coverage-v8@4.1.11)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/core:
     dependencies:
@@ -1278,12 +1294,12 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
       tsdown:
         specifier: catalog:dev
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
@@ -1642,6 +1658,9 @@ importers:
 
   packages/svelte:
     dependencies:
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1651,9 +1670,6 @@ importers:
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1676,6 +1692,9 @@ importers:
 
   packages/svelte-language:
     dependencies:
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1685,9 +1704,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
       '@jridgewell/sourcemap-codec':
         specifier: ^1.5.5
         version: 1.6.0
@@ -1837,25 +1853,6 @@ importers:
       tsdown:
         specifier: catalog:dev
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20260830.1)
-      vitest:
-        specifier: catalog:dev
-        version: 4.1.11(@types/node@26.4.0)(@vitest/coverage-v8@4.1.11)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)
-
-  packages/volar-language:
-    dependencies:
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
-      '@volar/language-core':
-        specifier: 2.4.28
-        version: 2.4.28
-    devDependencies:
-      '@flint.fyi/build':
-        specifier: workspace:^
-        version: link:../build
-      tsdown:
-        specifier: catalog:dev
-        version: 0.22.14(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 4.1.11(@types/node@26.4.0)(@vitest/coverage-v8@4.1.11)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)

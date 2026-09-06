@@ -44,7 +44,7 @@
 		{ "path": "./packages/typescript-language" },
 		{ "path": "./packages/utils" },
 		{ "path": "./packages/vitest" },
-		{ "path": "./packages/volar-language" },
+		{ "path": "./packages/content-mapper" },
 		{ "path": "./packages/vue" },
 		{ "path": "./packages/vue-language" },
 		{ "path": "./packages/yaml" },

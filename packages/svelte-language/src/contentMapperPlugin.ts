@@ -7,16 +7,16 @@ import type { CompileError } from "svelte/compiler";
 import { svelte2tsx } from "svelte2tsx";
 
 import {
+	createContentMapperTransform,
+	type MapperDiagnostic,
+	type TransformParams,
+	type TransformResult,
+} from "@flint.fyi/content-mapper";
+import {
 	getPositionOfColumnAndLine,
 	type LanguageReport,
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
-import {
-	createVolarTransform,
-	type MapperDiagnostic,
-	type TransformParams,
-	type TransformResult,
-} from "@flint.fyi/volar-language";
 
 const sveltePath = path.dirname(
 	url.fileURLToPath(import.meta.resolve("svelte/package.json")),
@@ -59,7 +59,7 @@ export function transformSvelte(
 		const text = `${transformed.code}\n\n${globalTypeFiles()
 			.map((file) => `import ${JSON.stringify(file)}`)
 			.join("\n")}`;
-		return createVolarTransform({
+		return createContentMapperTransform({
 			extension: ".tsx",
 			mappings,
 			text,

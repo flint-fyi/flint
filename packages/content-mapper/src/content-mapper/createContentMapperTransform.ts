@@ -1,12 +1,14 @@
-import type { CodeInformation, CodeMapping } from "@volar/language-core";
-
 import type {
 	SpanMapping,
 	TransformParams,
 	TransformResult,
 } from "./protocol.ts";
 
-export interface VolarTransformSource {
+// Locally-declared shape of the Volar-style code mappings that embedded-language
+// tools (e.g. astro2tsx) emit. Inlined here so this package carries no `@volar/*`
+// runtime or type dependency; the field set mirrors `@volar/language-core`'s
+// `CodeMapping`/`CodeInformation` for the members this transform actually reads.
+export interface ContentMapperTransformSource {
 	extension: string;
 	mappings: Pick<
 		CodeMapping,
@@ -19,11 +21,42 @@ export interface VolarTransformSource {
 	text: string;
 }
 
-export function createVolarTransform({
+interface CodeInformation {
+	completion?: boolean | { isAdditional?: boolean; onlyImport?: boolean };
+	format?: boolean;
+	navigation?:
+		| boolean
+		| {
+				resolveRenameEditText?(newText: string): string;
+				resolveRenameNewName?(newName: string): string;
+				shouldHighlight?(): boolean;
+				shouldRename?(): boolean;
+		  };
+	semantic?: boolean | { shouldHighlight?(): boolean };
+	structure?: boolean;
+	verification?:
+		| boolean
+		| {
+				shouldReport?(
+					source: string | undefined,
+					code: number | string | undefined,
+				): boolean;
+		  };
+}
+
+interface CodeMapping {
+	data: CodeInformation;
+	generatedLengths?: number[];
+	generatedOffsets: number[];
+	lengths: number[];
+	sourceOffsets: number[];
+}
+
+export function createContentMapperTransform({
 	extension,
 	mappings,
 	text,
-}: VolarTransformSource): (params: TransformParams) => TransformResult {
+}: ContentMapperTransformSource): (params: TransformParams) => TransformResult {
 	return ({ content }) => {
 		const flattened = mappings
 			.flatMap((mapping): SpanMapping[] => {
@@ -35,7 +68,7 @@ export function createVolarTransform({
 						mapping.generatedLengths.length !== count)
 				) {
 					throw new Error(
-						"Volar mapping parallel arrays must have equal lengths",
+						"Content mapper mapping parallel arrays must have equal lengths",
 					);
 				}
 				return mapping.generatedOffsets.map((generatedStart, index) => {
@@ -43,7 +76,7 @@ export function createVolarTransform({
 					const originalLength = mapping.lengths[index];
 					if (originalStart === undefined || originalLength === undefined) {
 						throw new Error(
-							`Volar mapping ${index} is missing a source offset or length`,
+							`Content mapper mapping ${index} is missing a source offset or length`,
 						);
 					}
 					const virtualLength =
@@ -59,7 +92,7 @@ export function createVolarTransform({
 						originalStart + originalLength > content.length
 					) {
 						throw new Error(
-							`Volar mapping ${index} has an invalid or out-of-bounds range`,
+							`Content mapper mapping ${index} has an invalid or out-of-bounds range`,
 						);
 					}
 					const isExact =
@@ -99,7 +132,7 @@ export function createVolarTransform({
 			const previous = nonOverlapping.at(-1);
 			if (previous && mapping[0] < previous[0] + previous[1]) {
 				throw new Error(
-					`Volar mappings overlap at virtual offset ${mapping[0]}`,
+					`Content mapper mappings overlap at virtual offset ${mapping[0]}`,
 				);
 			}
 			nonOverlapping.push(mapping);
@@ -115,7 +148,7 @@ export function createVolarTransform({
 				(current[2] !== previous[2] || current[3] !== previous[3])
 			) {
 				throw new Error(
-					`Volar mappings partially overlap at original offset ${current[2]}`,
+					`Content mapper mappings partially overlap at original offset ${current[2]}`,
 				);
 			}
 			previous = current;

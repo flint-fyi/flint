@@ -6,15 +6,15 @@ import { parse } from "@astrojs/compiler/sync";
 import type { ElementNode, ParentNode } from "@astrojs/compiler/types";
 import { astro2tsx } from "@astrojs/ts-plugin/dist/astro2tsx.js";
 
-import { getPositionOfColumnAndLine } from "@flint.fyi/core";
 import {
-	createVolarTransform,
+	createContentMapperTransform,
 	runContentMapper,
 	type ContentMapperProject,
+	type ContentMapperTransformSource,
 	type TransformParams,
 	type TransformResult,
-	type VolarTransformSource,
-} from "@flint.fyi/volar-language";
+} from "@flint.fyi/content-mapper";
+import { getPositionOfColumnAndLine } from "@flint.fyi/core";
 
 export function openAstroProject(): ContentMapperProject {
 	return { transform: transformAstro };
@@ -53,7 +53,7 @@ export function transformAstro(params: TransformParams): TransformResult {
 	);
 	const canonical = hasBlockingError
 		? { extension: ".tsx", mappings: [], text }
-		: createVolarTransform({
+		: createContentMapperTransform({
 				extension: ".tsx",
 				mappings: normalizeAstroMappings(
 					serviceScript.mappings,
@@ -125,12 +125,12 @@ function isJavaScriptScript(node: ElementNode): boolean {
 }
 
 function normalizeAstroMappings(
-	mappings: VolarTransformSource["mappings"],
+	mappings: ContentMapperTransformSource["mappings"],
 	generatedText: string,
 	originalText: string,
-): VolarTransformSource["mappings"] {
+): ContentMapperTransformSource["mappings"] {
 	const flattened: {
-		data: VolarTransformSource["mappings"][number]["data"];
+		data: ContentMapperTransformSource["mappings"][number]["data"];
 		exact: boolean;
 		generatedLength: number;
 		generatedOffset: number;

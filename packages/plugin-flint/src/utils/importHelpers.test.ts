@@ -116,7 +116,7 @@ describe("isImportedBindingFromModule", () => {
 describe("isImportedSpecifierFromModule", () => {
 	it("returns true for a matching named import", () => {
 		const specifier = parseAndFind<AST.ImportSpecifier>(
-			`import { reportSourceCode } from "@flint.fyi/volar-language";`,
+			`import { reportSourceCode } from "@flint.fyi/content-mapper";`,
 			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
@@ -124,7 +124,7 @@ describe("isImportedSpecifierFromModule", () => {
 		expect(
 			isImportedSpecifierFromModule(
 				specifier,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(true);
@@ -132,7 +132,7 @@ describe("isImportedSpecifierFromModule", () => {
 
 	it("returns true for a renamed import matching the original name", () => {
 		const specifier = parseAndFind<AST.ImportSpecifier>(
-			`import { reportSourceCode as report } from "@flint.fyi/volar-language";`,
+			`import { reportSourceCode as report } from "@flint.fyi/content-mapper";`,
 			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
@@ -140,7 +140,7 @@ describe("isImportedSpecifierFromModule", () => {
 		expect(
 			isImportedSpecifierFromModule(
 				specifier,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(true);
@@ -148,7 +148,7 @@ describe("isImportedSpecifierFromModule", () => {
 
 	it("returns false when the imported name does not match", () => {
 		const specifier = parseAndFind<AST.ImportSpecifier>(
-			`import { otherFunction } from "@flint.fyi/volar-language";`,
+			`import { otherFunction } from "@flint.fyi/content-mapper";`,
 			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
@@ -156,7 +156,7 @@ describe("isImportedSpecifierFromModule", () => {
 		expect(
 			isImportedSpecifierFromModule(
 				specifier,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(false);
@@ -172,7 +172,7 @@ describe("isImportedSpecifierFromModule", () => {
 		expect(
 			isImportedSpecifierFromModule(
 				specifier,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(false);
@@ -180,7 +180,7 @@ describe("isImportedSpecifierFromModule", () => {
 
 	it("returns false for a NamespaceImport", () => {
 		const nsImport = parseAndFind<AST.NamespaceImport>(
-			`import * as ns from "@flint.fyi/volar-language";`,
+			`import * as ns from "@flint.fyi/content-mapper";`,
 			(node): node is AST.NamespaceImport =>
 				node.kind === SyntaxKind.NamespaceImport,
 		);
@@ -188,7 +188,7 @@ describe("isImportedSpecifierFromModule", () => {
 		expect(
 			isImportedSpecifierFromModule(
 				nsImport,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(false);

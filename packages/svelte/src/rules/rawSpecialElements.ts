@@ -1,5 +1,6 @@
 import type { AST } from "svelte/compiler";
 
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import {
 	getPositionOfColumnAndLine,
 	type SourceFileWithLineMap,
@@ -8,7 +9,6 @@ import {
 	svelteLanguage,
 	type SvelteServices,
 } from "@flint.fyi/svelte-language";
-import { reportSourceCode } from "@flint.fyi/volar-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

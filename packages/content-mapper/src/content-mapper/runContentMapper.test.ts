@@ -3,9 +3,9 @@ import { PassThrough, Writable } from "node:stream";
 import { describe, expect, test, vi } from "vitest";
 
 import {
-	createVolarTransform,
-	type VolarTransformSource,
-} from "./createVolarTransform.ts";
+	createContentMapperTransform,
+	type ContentMapperTransformSource,
+} from "./createContentMapperTransform.ts";
 import type {
 	JsonRpcResponse,
 	RunContentMapperOptions,
@@ -942,10 +942,10 @@ describe("content mapper protocol", () => {
 	});
 });
 
-test("createVolarTransform flattens mapped ranges and excludes scaffolding", () => {
+test("createContentMapperTransform flattens mapped ranges and excludes scaffolding", () => {
 	const source = "éfoo BAR";
 	const generated = "éfoo baz(); BAR";
-	const transform = createVolarTransform({
+	const transform = createContentMapperTransform({
 		extension: ".ts",
 		mappings: [
 			{ generatedOffsets: [0, 12], lengths: [4, 3], sourceOffsets: [0, 5] },
@@ -955,7 +955,7 @@ test("createVolarTransform flattens mapped ranges and excludes scaffolding", () 
 				lengths: [0],
 				sourceOffsets: [4],
 			},
-		] as unknown as VolarTransformSource["mappings"],
+		] as unknown as ContentMapperTransformSource["mappings"],
 		text: generated,
 	});
 	expect(
@@ -971,8 +971,8 @@ test("createVolarTransform flattens mapped ranges and excludes scaffolding", () 
 	});
 });
 
-test("createVolarTransform preserves feature masks and validates mappings", () => {
-	const transform = createVolarTransform({
+test("createContentMapperTransform preserves feature masks and validates mappings", () => {
+	const transform = createContentMapperTransform({
 		extension: ".ts",
 		mappings: [
 			{
@@ -1008,7 +1008,7 @@ test("createVolarTransform preserves feature masks and validates mappings", () =
 		text: "ab",
 	});
 	expect(() =>
-		createVolarTransform({
+		createContentMapperTransform({
 			extension: ".ts",
 			mappings: [
 				{
@@ -1055,7 +1055,7 @@ test.each([
 		0b1111111_1000,
 	],
 ] as const)("preserves %s callback semantics", (_name, data, expected) => {
-	const transform = createVolarTransform({
+	const transform = createContentMapperTransform({
 		extension: ".ts",
 		mappings: [
 			{ data, generatedOffsets: [0], lengths: [1], sourceOffsets: [0] },
@@ -1069,16 +1069,16 @@ test.each([
 	});
 });
 
-describe("createVolarTransform mapping validation", () => {
+describe("createContentMapperTransform mapping validation", () => {
 	function transformMappings(
 		mappings: unknown[],
 		text = "abcdef",
 		content = "abcdef",
 	): () => unknown {
 		return () =>
-			createVolarTransform({
+			createContentMapperTransform({
 				extension: ".ts",
-				mappings: mappings as VolarTransformSource["mappings"],
+				mappings: mappings as ContentMapperTransformSource["mappings"],
 				text,
 			})({
 				content,
@@ -1203,7 +1203,7 @@ describe("createVolarTransform mapping validation", () => {
 	});
 
 	test("omits only the full feature mask and preserves zero and subsets", () => {
-		const result = createVolarTransform({
+		const result = createContentMapperTransform({
 			extension: ".ts",
 			mappings: [
 				{

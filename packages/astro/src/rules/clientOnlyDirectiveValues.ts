@@ -65,7 +65,7 @@ export default ruleCreator.createRule(astroLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsxAttribute(node, { typeChecker, sourceFile }) {
+				JsxAttribute(node, { sourceFile, typeChecker }) {
 					if (
 						node.name.kind !== SyntaxKind.JsxNamespacedName ||
 						node.name.namespace.text !== "client" ||

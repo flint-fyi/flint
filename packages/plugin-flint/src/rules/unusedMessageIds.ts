@@ -19,7 +19,7 @@ import {
 } from "../utils/ruleCreatorHelpers.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-const volarLanguagePackageName = "@flint.fyi/volar-language";
+const contentMapperPackageName = "@flint.fyi/content-mapper";
 
 function getResolvedDeclarations(
 	typeChecker: Checker,
@@ -43,11 +43,11 @@ function getResolvedDeclarations(
 	return declarations;
 }
 
-function isVolarReportSourceCodeCall(
+function isContentMapperReportSourceCodeCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 ): boolean {
-	// import { reportSourceCode } from "@flint.fyi/volar-language";
+	// import { reportSourceCode } from "@flint.fyi/content-mapper";
 	// reportSourceCode(...)
 	if (node.expression.kind === SyntaxKind.Identifier) {
 		return (
@@ -55,15 +55,15 @@ function isVolarReportSourceCodeCall(
 				(declaration) =>
 					isImportedSpecifierFromModule(
 						declaration,
-						volarLanguagePackageName,
+						contentMapperPackageName,
 						"reportSourceCode",
 					),
 			) ?? false
 		);
 	}
 
-	// import * as VolarLanguage from "@flint.fyi/volar-language";
-	// VolarLanguage.reportSourceCode(...)
+	// import * as ContentMapper from "@flint.fyi/content-mapper";
+	// ContentMapper.reportSourceCode(...)
 	if (
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.expression.kind === SyntaxKind.Identifier &&
@@ -73,7 +73,7 @@ function isVolarReportSourceCodeCall(
 			getResolvedDeclarations(typeChecker, node.expression.expression)?.some(
 				(declaration) =>
 					declaration.kind === SyntaxKind.NamespaceImport &&
-					isImportedBindingFromModule(declaration, volarLanguagePackageName),
+					isImportedBindingFromModule(declaration, contentMapperPackageName),
 			) ?? false
 		);
 	}
@@ -183,7 +183,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (isVolarReportSourceCodeCall(node, typeChecker)) {
+					if (isContentMapperReportSourceCodeCall(node, typeChecker)) {
 						detectMessageIdUsage(node, 1);
 						return;
 					}

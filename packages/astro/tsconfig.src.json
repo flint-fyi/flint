@@ -14,6 +14,6 @@
 		{ "path": "../ts/tsconfig.src.json" },
 		{ "path": "../typescript-language/tsconfig.src.json" },
 		{ "path": "../utils" },
-		{ "path": "../volar-language/tsconfig.src.json" }
+		{ "path": "../content-mapper/tsconfig.src.json" }
 	]
 }

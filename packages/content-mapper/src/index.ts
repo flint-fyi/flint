@@ -1,7 +1,7 @@
 export {
-	createVolarTransform,
-	type VolarTransformSource,
-} from "./content-mapper/createVolarTransform.ts";
+	type ContentMapperTransformSource,
+	createContentMapperTransform,
+} from "./content-mapper/createContentMapperTransform.ts";
 export type {
 	ContentMapperProject,
 	ContentMapperTransform,
