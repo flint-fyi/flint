@@ -135,8 +135,10 @@ export type {
 export type {
 	AnyRule,
 	AnyRuleDefinition,
+	PluginRuleAbout,
 	Rule,
 	RuleAbout,
+	RuleCreatorAbout,
 	RuleDefinition,
 	RuleRuntime,
 	RuleSetup,

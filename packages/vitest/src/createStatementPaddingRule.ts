@@ -1,6 +1,6 @@
 import ts, { SyntaxKind } from "typescript";
 
-import type { Rule } from "@flint.fyi/core";
+import type { PluginRuleAbout, Rule } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -8,7 +8,11 @@ import {
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
-import { ruleCreator, type VitestRuleAbout } from "./ruleCreator.ts";
+import {
+	ruleCreator,
+	type VitestPreset,
+	type VitestRuleAbout,
+} from "./ruleCreator.ts";
 
 export interface StatementPaddingMatch {
 	blockName: string;
@@ -16,7 +20,7 @@ export interface StatementPaddingMatch {
 }
 
 export type StatementPaddingRule = Rule<
-	VitestRuleAbout,
+	PluginRuleAbout<VitestPreset>,
 	"missingPadding",
 	undefined
 >;
