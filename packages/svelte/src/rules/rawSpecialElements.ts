@@ -4,7 +4,10 @@ import {
 	getPositionOfColumnAndLine,
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
-import { svelteLanguage } from "@flint.fyi/svelte-language";
+import {
+	svelteLanguage,
+	type SvelteServices,
+} from "@flint.fyi/svelte-language";
 import { reportSourceCode } from "@flint.fyi/volar-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -31,8 +34,12 @@ export default ruleCreator.createRule(svelteLanguage, {
 		return {
 			visitors: {
 				SourceFile(node, services) {
+					const svelteServices = (services as Partial<SvelteServices>).svelte;
+					if (!svelteServices) {
+						return;
+					}
 					const sourceText: SourceFileWithLineMap = {
-						text: services.svelte.sourceText,
+						text: svelteServices.sourceText,
 					};
 					function visit(
 						node:
@@ -74,7 +81,7 @@ export default ruleCreator.createRule(svelteLanguage, {
 							}
 						}
 					}
-					for (const child of services.svelte.ast.fragment.nodes) {
+					for (const child of svelteServices.ast.fragment.nodes) {
 						visit(child);
 					}
 				},

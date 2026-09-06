@@ -30,10 +30,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { checker, sourceFile }) => {
+				BinaryExpression: (node, { typeChecker, sourceFile }) => {
 					const result =
-						checkFilterLengthComparison(node, checker) ??
-						checkFindIndexComparison(node, checker);
+						checkFilterLengthComparison(node, typeChecker) ??
+						checkFindIndexComparison(node, typeChecker);
 					if (!result) {
 						return;
 					}
@@ -58,32 +58,32 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function checkFilterLengthComparison(
 	node: AST.BinaryExpression,
-	checker: Checker,
+	typeChecker: Checker,
 ) {
 	const lengthAccess = isNonZeroLengthCheck(node) && getLengthAccess(node);
 	return lengthAccess
-		? getFilterCall(lengthAccess.expression, checker)
+		? getFilterCall(lengthAccess.expression, typeChecker)
 		: undefined;
 }
 
 function checkFindIndexComparison(
 	node: AST.BinaryExpression,
-	checker: Checker,
+	typeChecker: Checker,
 ) {
 	return (
 		isFindIndexNegativeOneCheck(node) &&
 		node.left.kind === SyntaxKind.CallExpression &&
-		getFindIndexCall(node.left, checker)
+		getFindIndexCall(node.left, typeChecker)
 	);
 }
 
-function getFilterCall(node: AST.Expression, checker: Checker) {
+function getFilterCall(node: AST.Expression, typeChecker: Checker) {
 	if (
 		node.kind !== SyntaxKind.CallExpression ||
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "filter" ||
 		!node.arguments.length ||
-		!isArrayType(node.expression.expression, checker)
+		!isArrayType(node.expression.expression, typeChecker)
 	) {
 		return undefined;
 	}
@@ -95,12 +95,12 @@ function getFilterCall(node: AST.Expression, checker: Checker) {
 	};
 }
 
-function getFindIndexCall(node: AST.CallExpression, checker: Checker) {
+function getFindIndexCall(node: AST.CallExpression, typeChecker: Checker) {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		!["findIndex", "findLastIndex"].includes(node.expression.name.text) ||
 		!node.arguments.length ||
-		!isArrayType(node.expression.expression, checker)
+		!isArrayType(node.expression.expression, typeChecker)
 	) {
 		return undefined;
 	}
@@ -122,9 +122,9 @@ function getLengthAccess(node: AST.BinaryExpression) {
 	);
 }
 
-function isArrayType(node: AST.Expression, checker: Checker) {
-	const type = checker.getTypeAtLocation(node);
-	return checker.isArrayType(type);
+function isArrayType(node: AST.Expression, typeChecker: Checker) {
+	const type = typeChecker.getTypeAtLocation(node);
+	return typeChecker.isArrayType(type);
 }
 
 function isFindIndexNegativeOneCheck(node: AST.BinaryExpression) {

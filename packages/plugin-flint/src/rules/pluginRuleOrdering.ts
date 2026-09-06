@@ -41,20 +41,20 @@ function hasCommentsInArray(
 // TODO: Maybe we will have a function to check if a symbol is from Flint in the future
 function isCreatePluginCall(
 	node: AST.CallExpression,
-	checker: Checker,
+	typeChecker: Checker,
 ): boolean {
 	if (node.expression.kind !== SyntaxKind.Identifier) {
 		return false;
 	}
 
-	const symbol = checker.getSymbolAtLocation(node.expression);
+	const symbol = typeChecker.getSymbolAtLocation(node.expression);
 	if (!symbol) {
 		return false;
 	}
 
 	const resolvedSymbol =
 		symbol.flags & SymbolFlags.Alias
-			? checker.getAliasedSymbol(symbol)
+			? typeChecker.getAliasedSymbol(symbol)
 			: symbol;
 
 	if (resolvedSymbol.name !== "createPlugin") {
@@ -168,8 +168,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { checker, sourceFile }) {
-					if (!isCreatePluginCall(node, checker)) {
+				CallExpression(node, { typeChecker, sourceFile }) {
+					if (!isCreatePluginCall(node, typeChecker)) {
 						return;
 					}
 

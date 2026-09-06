@@ -31,20 +31,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isNewDateWithNoArguments(
 			node: AST.NewExpression,
-			checker: Checker,
+			typeChecker: Checker,
 			program: Program,
 		) {
 			return (
 				node.expression.kind === SyntaxKind.Identifier &&
 				node.expression.text === "Date" &&
 				!node.arguments?.length &&
-				isGlobalDeclarationOfName(node.expression, "Date", checker, program)
+				isGlobalDeclarationOfName(node.expression, "Date", typeChecker, program)
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression: (node, { checker, program, sourceFile }) => {
+				CallExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier ||
@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.expression.expression.kind !== SyntaxKind.NewExpression ||
 						!isNewDateWithNoArguments(
 							node.expression.expression,
-							checker,
+							typeChecker,
 							program,
 						)
 					) {
@@ -77,8 +77,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				NewExpression: (node, { checker, program, sourceFile }) => {
-					if (!isNewDateWithNoArguments(node, checker, program)) {
+				NewExpression: (node, { typeChecker, program, sourceFile }) => {
+					if (!isNewDateWithNoArguments(node, typeChecker, program)) {
 						return;
 					}
 
@@ -92,7 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								isGlobalDeclarationOfName(
 									node.parent.expression,
 									node.parent.expression.text,
-									checker,
+									typeChecker,
 									program,
 								)
 							) {

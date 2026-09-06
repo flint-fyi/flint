@@ -26,7 +26,7 @@ const errorConstructors = [
 
 function getErrorConstructorWithoutMessage(
 	node: AST.CallExpression | AST.NewExpression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
 	if (
@@ -40,7 +40,7 @@ function getErrorConstructorWithoutMessage(
 		isGlobalDeclarationOfName(
 			node.expression,
 			errorConstructor,
-			checker,
+			typeChecker,
 			program,
 		),
 	);
@@ -86,11 +86,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ checker, program, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			const errorConstructor = getErrorConstructorWithoutMessage(
 				node,
-				checker,
+				typeChecker,
 				program,
 			);
 

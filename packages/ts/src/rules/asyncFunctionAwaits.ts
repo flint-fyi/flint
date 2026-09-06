@@ -38,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.FunctionDeclaration
 				| AST.FunctionExpression
 				| AST.MethodDeclaration,
-			{ checker, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, sourceFile }: TypeScriptFileServices,
 		): void {
 			const asyncModifier = node.modifiers?.find(
 				(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
@@ -50,7 +50,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				!node.body ||
 				isEmptyBody(node.body) ||
 				checkForAwait(node.body) ||
-				bodyReturnsThenable(node.body, checker)
+				bodyReturnsThenable(node.body, typeChecker)
 			) {
 				return;
 			}
@@ -74,17 +74,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function bodyReturnsThenable(
 	body: AST.Block | AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 ): boolean | undefined {
 	if (body.kind !== SyntaxKind.Block) {
-		return isThenableType(checker, body);
+		return isThenableType(typeChecker, body);
 	}
 
 	function checkReturnStatements(node: AST.AnyNode): boolean | undefined {
 		if (
 			node.kind === SyntaxKind.ReturnStatement &&
 			node.expression &&
-			isThenableType(checker, node.expression)
+			isThenableType(typeChecker, node.expression)
 		) {
 			return true;
 		}
@@ -121,12 +121,12 @@ function getUnionConstituents(type: Type): readonly Type[] {
 }
 
 function isCallback(
-	checker: Checker,
+	typeChecker: Checker,
 	parameter: Symbol,
 	node: AST.AnyNode,
 ): boolean {
-	let type = checker.getApparentType(
-		checker.getTypeOfSymbolAtLocation(parameter, node),
+	let type = typeChecker.getApparentType(
+		typeChecker.getTypeOfSymbolAtLocation(parameter, node),
 	);
 	const declaration = parameter.valueDeclaration?.resolve();
 	if (
@@ -177,9 +177,9 @@ function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
 	return false;
 }
 
-function isThenableType(checker: Checker, node: AST.AnyNode): boolean {
+function isThenableType(typeChecker: Checker, node: AST.AnyNode): boolean {
 	for (const constituent of getUnionConstituents(
-		checker.getApparentType(checker.getTypeAtLocation(node)),
+		typeChecker.getApparentType(typeChecker.getTypeAtLocation(node)),
 	)) {
 		const then = constituent.getProperty("then");
 		if (!then) {
@@ -187,11 +187,11 @@ function isThenableType(checker: Checker, node: AST.AnyNode): boolean {
 		}
 
 		for (const thenType of getUnionConstituents(
-			checker.getTypeOfSymbolAtLocation(then, node),
+			typeChecker.getTypeOfSymbolAtLocation(then, node),
 		)) {
 			for (const signature of thenType.getCallSignatures()) {
 				const parameter = signature.getParameters()[0];
-				if (parameter && isCallback(checker, parameter, node)) {
+				if (parameter && isCallback(typeChecker, parameter, node)) {
 					return true;
 				}
 			}

@@ -57,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { checker, sourceFile }) => {
+				Identifier: (node, { typeChecker, sourceFile }) => {
 					if (node.text !== "arguments") {
 						return;
 					}
@@ -92,7 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const symbol = checker.getSymbolAtLocation(node);
+					const symbol = typeChecker.getSymbolAtLocation(node);
 
 					if (
 						!symbol ||

@@ -157,5 +157,5 @@ describe("packed TypeScript native integration", () => {
 
 		expect(result.exitCode).not.toBe(0);
 		expect(`${result.stdout}\n${result.stderr}`).toMatch(/target|tsconfig/i);
-	});
+	}, 60_000);
 });

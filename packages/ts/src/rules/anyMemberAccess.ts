@@ -58,9 +58,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function findRootAnyAccess(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
-			checker: Checker,
+			typeChecker: Checker,
 		): AST.ElementAccessExpression | AST.PropertyAccessExpression | undefined {
-			const objectType = getConstrainedTypeAtLocation(node.expression, checker);
+			const objectType = getConstrainedTypeAtLocation(
+				node.expression,
+				typeChecker,
+			);
 
 			if (!(objectType.flags & TypeFlags.Any)) {
 				return undefined;
@@ -70,7 +73,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.expression.kind === SyntaxKind.PropertyAccessExpression ||
 				node.expression.kind === SyntaxKind.ElementAccessExpression
 			) {
-				const deeper = findRootAnyAccess(node.expression, checker);
+				const deeper = findRootAnyAccess(node.expression, typeChecker);
 				if (deeper) {
 					return deeper;
 				}
@@ -95,13 +98,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkMemberExpression(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
 			sourceFile: AST.SourceFile,
-			checker: Checker,
+			typeChecker: Checker,
 		) {
 			if (reportedChains.has(node) || isInHeritageClause(node)) {
 				return;
 			}
 
-			const rootAccess = findRootAnyAccess(node, checker);
+			const rootAccess = findRootAnyAccess(node, typeChecker);
 			if (!rootAccess) {
 				return;
 			}
@@ -110,7 +113,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const objectType = getConstrainedTypeAtLocation(
 				rootAccess.expression,
-				checker,
+				typeChecker,
 			);
 			const reportNode =
 				rootAccess.kind === SyntaxKind.PropertyAccessExpression
@@ -129,7 +132,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkComputedKey(
 			node: AST.ElementAccessExpression,
 			sourceFile: AST.SourceFile,
-			checker: Checker,
+			typeChecker: Checker,
 		) {
 			const keyNode = node.argumentExpression;
 
@@ -141,7 +144,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const keyType = getConstrainedTypeAtLocation(keyNode, checker);
+			const keyType = getConstrainedTypeAtLocation(keyNode, typeChecker);
 
 			if (keyType.flags & TypeFlags.Any) {
 				context.report({
@@ -156,12 +159,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ElementAccessExpression: (node, { checker, sourceFile }) => {
-					checkMemberExpression(node, sourceFile, checker);
-					checkComputedKey(node, sourceFile, checker);
+				ElementAccessExpression: (node, { typeChecker, sourceFile }) => {
+					checkMemberExpression(node, sourceFile, typeChecker);
+					checkComputedKey(node, sourceFile, typeChecker);
 				},
-				PropertyAccessExpression: (node, { checker, sourceFile }) => {
-					checkMemberExpression(node, sourceFile, checker);
+				PropertyAccessExpression: (node, { typeChecker, sourceFile }) => {
+					checkMemberExpression(node, sourceFile, typeChecker);
 				},
 			},
 		};

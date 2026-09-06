@@ -4,10 +4,10 @@ import type { AST, Checker } from "@flint.fyi/typescript-language";
 
 export function isTypeFromTS(
 	node: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 	typeName: string,
 ): boolean {
-	const type = checker.getTypeAtLocation(node);
+	const type = typeChecker.getTypeAtLocation(node);
 	const visited = new Set<Type>();
 
 	function check(type: Type): boolean {

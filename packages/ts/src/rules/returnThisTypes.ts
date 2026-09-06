@@ -43,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkFunction(
 			functionNode: FunctionLike,
 			originalClassNode: AST.AnyNode,
-			{ checker, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, sourceFile }: TypeScriptFileServices,
 		) {
 			if (
 				originalClassNode.kind !== SyntaxKind.ClassDeclaration &&
@@ -60,7 +60,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const nameNode = tryGetNameInType(className, functionNode.type);
 			if (
 				!nameNode ||
-				!isFunctionReturningThis(functionNode, originalClassNode, checker)
+				!isFunctionReturningThis(functionNode, originalClassNode, typeChecker)
 			) {
 				return;
 			}
@@ -80,16 +80,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isFunctionReturningThis(
 			functionNode: FunctionLike,
 			originalClassNode: ClassLikeDeclaration,
-			checker: Checker,
+			typeChecker: Checker,
 		) {
 			if (!functionNode.body || isThisSpecifiedInParameters(functionNode)) {
 				return false;
 			}
 
-			const classType = checker.getTypeAtLocation(originalClassNode);
+			const classType = typeChecker.getTypeAtLocation(originalClassNode);
 
 			if (functionNode.body.kind !== SyntaxKind.Block) {
-				const type = checker.getTypeAtLocation(functionNode.body);
+				const type = typeChecker.getTypeAtLocation(functionNode.body);
 				return type.isTypeParameter() && type.isThisType === true;
 			}
 
@@ -106,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				const type = checker.getTypeAtLocation(statement.expression);
+				const type = typeChecker.getTypeAtLocation(statement.expression);
 				if (classType.id === type.id) {
 					hasReturnClassType = true;
 					return true;

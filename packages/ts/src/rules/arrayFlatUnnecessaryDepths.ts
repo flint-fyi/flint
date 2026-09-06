@@ -28,7 +28,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "flat" ||
@@ -45,7 +45,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						!isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
+						!isArrayOrTupleTypeAtLocation(
+							node.expression.expression,
+							typeChecker,
+						)
 					) {
 						return;
 					}

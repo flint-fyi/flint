@@ -42,10 +42,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isIdentifierNamespaceImport(
 			identifier: AST.Identifier,
-			checker: Checker,
+			typeChecker: Checker,
 		): boolean | undefined {
 			const declarations =
-				checker.getSymbolAtLocation(identifier)?.declarations;
+				typeChecker.getSymbolAtLocation(identifier)?.declarations;
 			if (!declarations) {
 				return undefined;
 			}
@@ -67,11 +67,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ElementAccessExpression(
 					node,
-					{ checker, sourceFile }: TypeScriptFileServices,
+					{ typeChecker, sourceFile }: TypeScriptFileServices,
 				) {
 					if (
 						node.expression.kind === SyntaxKind.Identifier &&
-						isIdentifierNamespaceImport(node.expression, checker)
+						isIdentifierNamespaceImport(node.expression, typeChecker)
 					) {
 						context.report({
 							message: "noDynamicAccess",

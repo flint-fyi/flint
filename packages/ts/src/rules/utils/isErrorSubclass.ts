@@ -19,7 +19,7 @@ const builtinErrorNames = new Set([
 
 export function isErrorSubclass(
 	node: AST.ClassDeclaration,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): boolean {
 	if (!node.heritageClauses) {
@@ -39,7 +39,7 @@ export function isErrorSubclass(
 			if (
 				typeName.kind === SyntaxKind.Identifier &&
 				builtinErrorNames.has(typeName.text) &&
-				isGlobalDeclaration(typeName, checker, program)
+				isGlobalDeclaration(typeName, typeChecker, program)
 			) {
 				return true;
 			}

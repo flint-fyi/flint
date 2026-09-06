@@ -42,12 +42,12 @@ import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 
 export interface TypeScriptFileServices {
-	checker: Checker;
 	program: Program;
 	project: Project;
 	snapshot: Snapshot;
 	sourceFile: AST.SourceFile;
 	spanMap: SpanMap | undefined;
+	typeChecker: Checker;
 }
 
 const log = debugForFile(import.meta.filename);
@@ -209,7 +209,6 @@ export const typescriptLanguage: Language<
 					disposed: boolean;
 					openFiles: string[];
 					session: TypeScriptProjectSession;
-					sourceTextByFilePath: Map<string, string | undefined>;
 			  };
 		let disposed = false;
 		let failed = false;
@@ -247,24 +246,6 @@ export const typescriptLanguage: Language<
 			throw error;
 		};
 
-		const updateTrackedSourceFiles = (
-			currentSessionState: NonNullable<typeof sessionState>,
-		): void => {
-			const snapshot = currentSessionState.session.getSnapshot();
-			const sourceFileNames = new Set<string>();
-			for (const project of snapshot.getProjects()) {
-				for (const fileName of project.program.getSourceFileNames()) {
-					sourceFileNames.add(fileName);
-				}
-			}
-			currentSessionState.sourceTextByFilePath = new Map(
-				Array.from(sourceFileNames, (fileName) => [
-					fileName,
-					host.readFileSync(fileName),
-				]),
-			);
-		};
-
 		function createFile(data: FileAboutData) {
 			if (disposed || failed) {
 				throw new Error("TypeScript project session has been disposed.");
@@ -274,7 +255,6 @@ export const typescriptLanguage: Language<
 				disposed: false,
 				openFiles: [] as string[],
 				session: createTypeScriptProjectSession(host),
-				sourceTextByFilePath: new Map<string, string | undefined>(),
 			});
 
 			log("Opening native file:", data.filePathAbsolute);
@@ -296,35 +276,31 @@ export const typescriptLanguage: Language<
 			if (openingFile) {
 				currentSessionState.openFiles.push(data.filePathAbsolute);
 			}
-			const changed = [data.filePathAbsolute];
-			const deleted: string[] = [];
-			for (const [
-				filePath,
-				previousSourceText,
-			] of currentSessionState.sourceTextByFilePath) {
-				const sourceText = host.readFileSync(filePath);
-				if (sourceText === undefined) {
-					deleted.push(filePath);
-				} else if (sourceText !== previousSourceText) {
-					changed.push(filePath);
-				}
-			}
+			// The session detects changes to every other file it is tracking by
+			// comparing modification times, so only the file being opened needs to
+			// be flagged as changed here.
 			try {
 				currentSessionState.session.update({
-					changed: [...new Set(changed)],
-					...(deleted.length && { deleted }),
+					changed: [data.filePathAbsolute],
 					...(restartingOpenFiles
 						? { openFiles: [...currentSessionState.openFiles] }
 						: openingFile
 							? { openFiles: [data.filePathAbsolute] }
 							: {}),
 				});
-				updateTrackedSourceFiles(currentSessionState);
 			} catch (error) {
 				return failSession(currentSessionState, error);
 			}
 			let fileDisposed = false;
 
+			// The project and source file are resolved through native lookups, and
+			// every access to a service getter (and each is invoked whenever the
+			// services are spread into a visitor run) would otherwise repeat them.
+			// They are stable while the snapshot is unchanged — which it is for the
+			// whole visitor phase — so memoize them and invalidate on a new snapshot.
+			let cachedSnapshot: Snapshot | undefined;
+			let cachedProject: Project | undefined;
+			let cachedSourceFile: AST.SourceFile | undefined;
 			const getSnapshot = (): Snapshot => {
 				if (currentSessionState.disposed) {
 					throw new Error("TypeScript project session has been disposed.");
@@ -332,21 +308,25 @@ export const typescriptLanguage: Language<
 				return currentSessionState.session.getSnapshot();
 			};
 			const getProject = (): Project => {
-				getSnapshot();
-				return nullThrows(
+				const snapshot = getSnapshot();
+				if (snapshot !== cachedSnapshot) {
+					cachedSnapshot = snapshot;
+					cachedProject = undefined;
+					cachedSourceFile = undefined;
+				}
+				return (cachedProject ??= nullThrows(
 					currentSessionState.session.getProjectForFile(data.filePathAbsolute),
 					`Could not find project for file: ${data.filePathAbsolute}`,
-				);
+				));
 			};
-			const getSourceFile = (): AST.SourceFile =>
-				nullThrows(
-					getProject().program.getSourceFile(data.filePathAbsolute),
+			const getSourceFile = (): AST.SourceFile => {
+				const project = getProject();
+				return (cachedSourceFile ??= nullThrows(
+					project.program.getSourceFile(data.filePathAbsolute),
 					`Could not retrieve source file for: ${data.filePathAbsolute}`,
-				) as AST.SourceFile;
+				) as AST.SourceFile);
+			};
 			const services: TypeScriptFileServices = {
-				get checker() {
-					return getProject().checker;
-				},
 				get program() {
 					return getProject().program;
 				},
@@ -361,6 +341,9 @@ export const typescriptLanguage: Language<
 				},
 				get spanMap() {
 					return getSourceFile().spanMap;
+				},
+				get typeChecker() {
+					return getProject().checker;
 				},
 			};
 			const dispose = (): void => {
@@ -417,7 +400,19 @@ export const typescriptLanguage: Language<
 
 				throwUnknownLanguageExtension(data.filePathAbsolute);
 			} catch (error) {
-				return failSession(currentSessionState, error);
+				// A failure to prepare this one file (for example, a content-mapped
+				// file with no ancestor tsconfig) must not tear down the session that
+				// every other file shares. Roll back this file's open state and
+				// rethrow so only this file fails.
+				if (openingFile) {
+					const index = currentSessionState.openFiles.indexOf(
+						data.filePathAbsolute,
+					);
+					if (index !== -1) {
+						currentSessionState.openFiles.splice(index, 1);
+					}
+				}
+				throw error;
 			}
 		}
 

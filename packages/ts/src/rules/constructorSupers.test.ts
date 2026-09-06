@@ -201,5 +201,9 @@ class Child extends Parent {
 			code: `const obj = { prop: class {} }; class A extends obj?.prop { constructor() { super(); } }`,
 			files: createRuleTesterTSConfig({ noUnusedLocals: false }),
 		},
+		{
+			code: `class Parent {} class Child extends Parent { "constructor"() {} }`,
+			files: createRuleTesterTSConfig({ noCheck: true }),
+		},
 	],
 });

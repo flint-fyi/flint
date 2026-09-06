@@ -13,7 +13,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 function isJsonMethod(
 	node: AST.AnyNode,
 	methodName: string,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): node is AST.CallExpression {
 	return (
@@ -23,7 +23,7 @@ function isJsonMethod(
 		isGlobalDeclarationOfName(
 			node.expression.expression,
 			"JSON",
-			checker,
+			typeChecker,
 			program,
 		) &&
 		node.expression.expression.text === "JSON" &&
@@ -54,10 +54,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(
 					node: AST.CallExpression,
-					{ checker, program, sourceFile },
+					{ typeChecker, program, sourceFile },
 				) {
 					if (
-						!isJsonMethod(node, "parse", checker, program) ||
+						!isJsonMethod(node, "parse", typeChecker, program) ||
 						node.arguments.length !== 1
 					) {
 						return;
@@ -68,7 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						argument.kind === SyntaxKind.SpreadElement ||
-						!isJsonMethod(argument, "stringify", checker, program) ||
+						!isJsonMethod(argument, "stringify", typeChecker, program) ||
 						argument.arguments.length !== 1
 					) {
 						return;

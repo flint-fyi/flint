@@ -30,13 +30,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isArrayPushCall(
 			node: AST.CallExpression,
-			checker: Checker,
+			typeChecker: Checker,
 		): boolean {
 			return (
 				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 				node.expression.name.text === "push" &&
-				checker.isArrayType(
-					checker.getTypeAtLocation(node.expression.expression),
+				typeChecker.isArrayType(
+					typeChecker.getTypeAtLocation(node.expression.expression),
 				)
 			);
 		}
@@ -54,12 +54,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isPushCallStatement(
 			statement: AST.Statement,
 			sourceFile: AST.SourceFile,
-			checker: Checker,
+			typeChecker: Checker,
 		): undefined | { arrayName: string; callExpression: AST.CallExpression } {
 			if (
 				statement.kind !== SyntaxKind.ExpressionStatement ||
 				statement.expression.kind !== SyntaxKind.CallExpression ||
-				!isArrayPushCall(statement.expression, checker)
+				!isArrayPushCall(statement.expression, typeChecker)
 			) {
 				return undefined;
 			}
@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkNode(
 			{ statements }: AST.Block | AST.SourceFile,
-			{ checker, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, sourceFile }: TypeScriptFileServices,
 		): void {
 			for (let i = 0; i < statements.length - 1; i += 1) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -85,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const currentPush = isPushCallStatement(
 					currentStatement,
 					sourceFile,
-					checker,
+					typeChecker,
 				);
 				if (!currentPush) {
 					continue;
@@ -96,7 +96,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const nextPush = isPushCallStatement(
 					nextStatement,
 					sourceFile,
-					checker,
+					typeChecker,
 				);
 
 				if (nextPush?.arrayName === currentPush.arrayName) {

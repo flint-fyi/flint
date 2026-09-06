@@ -58,12 +58,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						sourceFile,
 					);
 
-					const closeParenthesisToken = findToken(
-						node,
-						SyntaxKind.CloseParenToken,
-						sourceFile,
-					);
-
 					const objectText = sourceFile.text.slice(
 						node.expression.expression.getStart(sourceFile),
 						node.expression.expression.getEnd(),
@@ -71,7 +65,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const argumentsText = sourceFile.text.slice(
 						openParenthesisToken.getEnd(),
-						closeParenthesisToken.getStart(),
+						// The call expression always ends with its closing parenthesis
+						node.getEnd() - 1,
 					);
 
 					context.report({
@@ -97,13 +92,15 @@ function findToken(
 	token: SyntaxKind,
 	sourceFile: AST.SourceFile,
 ) {
-	const nodeStart = node.getStart(sourceFile);
+	// Scanning starts after the callee, which may itself contain parentheses,
+	// such as the call in `getObject().hasOwnProperty("key")`
+	const scanStart = node.expression.getEnd();
 	const scanner = createScanner(
 		true,
 		sourceFile.languageVariant,
 		sourceFile.text,
-		nodeStart,
-		node.getEnd() - nodeStart,
+		scanStart,
+		node.getEnd() - scanStart,
 	);
 
 	while (scanner.scan() !== SyntaxKind.EndOfFile) {

@@ -31,10 +31,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression(node, { checker, sourceFile }) {
+				BinaryExpression(node, { typeChecker, sourceFile }) {
 					if (
 						node.operatorToken.kind === SyntaxKind.InKeyword &&
-						isTypeFromTS(node.right, checker, "Node")
+						isTypeFromTS(node.right, typeChecker, "Node")
 					) {
 						context.report({
 							message: "nodePropertyInChecks",

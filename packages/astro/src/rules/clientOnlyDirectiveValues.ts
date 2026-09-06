@@ -6,7 +6,7 @@ import { getTSNodeRange, type Checker } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function typeCanBeClientOnlyValue(type: Type, checker: Checker): boolean {
+function typeCanBeClientOnlyValue(type: Type, typeChecker: Checker): boolean {
 	if (type.flags & (TypeFlags.Any | TypeFlags.StringLike | TypeFlags.Unknown)) {
 		return true;
 	}
@@ -14,17 +14,17 @@ function typeCanBeClientOnlyValue(type: Type, checker: Checker): boolean {
 	if (type.isUnionType() || type.isIntersectionType()) {
 		return type
 			.getTypes()
-			.some((childType) => typeCanBeClientOnlyValue(childType, checker));
+			.some((childType) => typeCanBeClientOnlyValue(childType, typeChecker));
 	}
 
-	const constraint = checker.getBaseConstraintOfType(type);
+	const constraint = typeChecker.getBaseConstraintOfType(type);
 	if (constraint && constraint !== type) {
-		return typeCanBeClientOnlyValue(constraint, checker);
+		return typeCanBeClientOnlyValue(constraint, typeChecker);
 	}
 
-	const apparentType = checker.getApparentType(type);
+	const apparentType = typeChecker.getApparentType(type);
 	if (apparentType !== type) {
-		return typeCanBeClientOnlyValue(apparentType, checker);
+		return typeCanBeClientOnlyValue(apparentType, typeChecker);
 	}
 
 	return false;
@@ -65,7 +65,7 @@ export default ruleCreator.createRule(astroLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsxAttribute(node, { checker, sourceFile }) {
+				JsxAttribute(node, { typeChecker, sourceFile }) {
 					if (
 						node.name.kind !== SyntaxKind.JsxNamespacedName ||
 						node.name.namespace.text !== "client" ||
@@ -90,8 +90,8 @@ export default ruleCreator.createRule(astroLanguage, {
 						node.initializer.kind === SyntaxKind.JsxExpression &&
 						node.initializer.expression &&
 						typeCanBeClientOnlyValue(
-							checker.getTypeAtLocation(node.initializer.expression),
-							checker,
+							typeChecker.getTypeAtLocation(node.initializer.expression),
+							typeChecker,
 						)
 					) {
 						return;

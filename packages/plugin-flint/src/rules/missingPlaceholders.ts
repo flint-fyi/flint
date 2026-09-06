@@ -154,13 +154,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { checker, sourceFile }) {
-					if (isRuleCreatorCreateRule(node, checker)) {
+				CallExpression(node, { typeChecker, sourceFile }) {
+					if (isRuleCreatorCreateRule(node, typeChecker)) {
 						checkMessageInCreateRule(node);
 						return;
 					}
 
-					if (isRuleContextReport(node, checker)) {
+					if (isRuleContextReport(node, typeChecker)) {
 						populateMessageInCreateRule(node, sourceFile);
 						return;
 					}

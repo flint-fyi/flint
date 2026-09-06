@@ -65,6 +65,7 @@ it.each([
 it.each([
 	["array and object literals", "[value]", "{ value }"],
 	["call and new expressions", "value()", "new value()"],
+	["sibling and nested calls", "f(g(), h())", "f(g(h()))"],
 ])(
 	"distinguishes structurally different %s",
 	(_name, firstCode, secondCode) => {
@@ -85,6 +86,20 @@ it.each([
 		).toBe(false);
 	},
 );
+
+it("distinguishes let and const declarations", () => {
+	const sourceFile = createNativeSourceFile("let a = 1; const a = 1;");
+	const first = nullThrows(
+		sourceFile.statements[0],
+		"Expected the first variable statement.",
+	) as AST.AnyNode;
+	const second = nullThrows(
+		sourceFile.statements[1],
+		"Expected the second variable statement.",
+	) as AST.AnyNode;
+
+	expect(hasSameTokens(first, second, sourceFile)).toBe(false);
+});
 
 it.each([
 	["interpolated template text", "`first${value}`", "`second${value}`", ".ts"],

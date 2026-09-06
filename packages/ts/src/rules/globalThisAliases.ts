@@ -15,10 +15,10 @@ const globalAliases = new Set(["global", "self", "window"]);
 
 function isOnlyGlobalDeclaration(
 	node: AST.Identifier,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
-	const symbol = checker.getSymbolAtLocation(node);
+	const symbol = typeChecker.getSymbolAtLocation(node);
 	if (!symbol) {
 		return false;
 	}
@@ -75,12 +75,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { checker, program, sourceFile }) => {
+				Identifier: (node, { typeChecker, program, sourceFile }) => {
 					if (
 						globalAliases.has(node.text) &&
 						!isPropertyAccess(node) &&
 						!isPropertyShorthand(node) &&
-						isOnlyGlobalDeclaration(node, checker, program)
+						isOnlyGlobalDeclaration(node, typeChecker, program)
 					) {
 						context.report({
 							data: { name: node.text },

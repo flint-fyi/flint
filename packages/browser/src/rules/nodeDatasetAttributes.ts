@@ -1,7 +1,4 @@
-import {
-	isIdentifier,
-	isPropertyAccessExpression,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticStringValue,
@@ -13,7 +10,6 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isASTExpression } from "./typeGuards.ts";
 
 type AttributeMethodName =
 	| "getAttribute"
@@ -34,8 +30,8 @@ function convertDataAttributeToDatasetKey(
 function getMethodDetails(node: AST.CallExpression) {
 	if (
 		!node.arguments.length ||
-		!isPropertyAccessExpression(node.expression) ||
-		!isIdentifier(node.expression.name)
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+		node.expression.name.kind !== SyntaxKind.Identifier
 	) {
 		return undefined;
 	}
@@ -85,7 +81,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { checker, program, sourceFile }) {
+				CallExpression(node, { typeChecker, program, sourceFile }) {
 					const details = getMethodDetails(node);
 					if (!details) {
 						return;
@@ -95,9 +91,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.arguments[0],
 						"First argument is expected to be present by prior length check",
 					);
-					if (!isASTExpression(firstArgument)) {
-						return;
-					}
 
 					const attributeName = getStaticStringValue(firstArgument);
 					if (!attributeName) {
@@ -109,10 +102,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (
-						!isASTExpression(node.expression) ||
-						!isGlobalDeclaration(node.expression, checker, program)
-					) {
+					if (!isGlobalDeclaration(node.expression, typeChecker, program)) {
 						return;
 					}
 

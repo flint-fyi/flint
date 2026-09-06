@@ -29,11 +29,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression(node, { checker, program, sourceFile }) {
+				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
 					if (
 						isIdentifier(node.name) &&
 						node.name.text === "innerText" &&
-						isGlobalDeclaration(node.name, checker, program)
+						isGlobalDeclaration(node.name, typeChecker, program)
 					) {
 						context.report({
 							message: "preferTextContent",

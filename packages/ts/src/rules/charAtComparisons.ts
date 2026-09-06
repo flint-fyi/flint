@@ -17,12 +17,15 @@ const comparisonOperators = new Set([
 	SyntaxKind.ExclamationEqualsToken,
 ]);
 
-function isStringCharAtCall(node: AST.Expression, checker: Checker): boolean {
+function isStringCharAtCall(
+	node: AST.Expression,
+	typeChecker: Checker,
+): boolean {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "charAt" &&
-		isStringType(checker.getTypeAtLocation(node.expression.expression))
+		isStringType(typeChecker.getTypeAtLocation(node.expression.expression))
 	);
 }
 
@@ -54,16 +57,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { checker, sourceFile }) => {
+				BinaryExpression: (node, { typeChecker, sourceFile }) => {
 					if (!comparisonOperators.has(node.operatorToken.kind)) {
 						return;
 					}
 
 					let literal: AST.Expression;
 
-					if (isStringCharAtCall(node.left, checker)) {
+					if (isStringCharAtCall(node.left, typeChecker)) {
 						literal = node.right;
-					} else if (isStringCharAtCall(node.right, checker)) {
+					} else if (isStringCharAtCall(node.right, typeChecker)) {
 						literal = node.left;
 					} else {
 						return;

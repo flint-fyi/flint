@@ -33,10 +33,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				VoidExpression: (node, { checker, sourceFile }) => {
+				VoidExpression: (node, { typeChecker, sourceFile }) => {
 					const argumentType = getConstrainedTypeAtLocation(
 						node.expression,
-						checker,
+						typeChecker,
 					);
 
 					const unionParts = argumentType.isUnionType()
@@ -49,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					context.report({
 						data: {
-							type: checker.typeToString(argumentType),
+							type: typeChecker.typeToString(argumentType),
 						},
 						message: "meaninglessVoid",
 						range: {

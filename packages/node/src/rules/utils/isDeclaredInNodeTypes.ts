@@ -2,9 +2,9 @@ import type { AST, Checker } from "@flint.fyi/typescript-language";
 
 export function isDeclaredInNodeTypes(
 	node: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 ): boolean {
-	const declarations = checker
+	const declarations = typeChecker
 		.getTypeAtLocation(node)
 		.getSymbol()?.declarations;
 

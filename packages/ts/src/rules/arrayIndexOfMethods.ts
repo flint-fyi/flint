@@ -13,7 +13,7 @@ import { isDirectEqualityCheck } from "./utils/isDirectEqualityCheck.ts";
 
 function isFindIndexWithDirectEquality(
 	node: AST.CallExpression,
-	checker: Checker,
+	typeChecker: Checker,
 ) {
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 		return undefined;
@@ -48,7 +48,7 @@ function isFindIndexWithDirectEquality(
 			[SyntaxKind.EqualsEqualsEqualsToken],
 			firstParameter.name.text,
 		) ||
-		!isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
+		!isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	) {
 		return undefined;
 	}
@@ -90,8 +90,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
-					const result = isFindIndexWithDirectEquality(node, checker);
+				CallExpression: (node, { typeChecker, sourceFile }) => {
+					const result = isFindIndexWithDirectEquality(node, typeChecker);
 					if (result) {
 						context.report({
 							message:

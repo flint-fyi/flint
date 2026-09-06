@@ -53,11 +53,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.Expression,
-			{ checker, program, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 			message: "unsafeCall" | "unsafeNew" | "unsafeTemplateTag",
 			allowVoid?: boolean,
 		) {
-			const type = getConstrainedTypeAtLocation(node, checker);
+			const type = getConstrainedTypeAtLocation(node, typeChecker);
 
 			if (type.flags & TypeFlags.Any) {
 				if (isIntrinsicErrorType(type)) {

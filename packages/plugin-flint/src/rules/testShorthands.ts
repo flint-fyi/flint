@@ -2,6 +2,7 @@ import {
 	isIdentifier,
 	isObjectLiteralExpression,
 	isPropertyAssignment,
+	isShorthandPropertyAssignment,
 } from "typescript-native/unstable/ast";
 
 import type { FileChange } from "@flint.fyi/core";
@@ -49,14 +50,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (
 							caseNode.properties.length === 1 &&
 							property &&
-							isPropertyAssignment(property) &&
+							(isPropertyAssignment(property) ||
+								isShorthandPropertyAssignment(property)) &&
 							isIdentifier(property.name) &&
 							property.name.text === "code"
 						) {
-							const fix: FileChange = {
-								range: getTSNodeRange(caseNode, sourceFile),
-								text: property.initializer.getText(sourceFile),
-							};
+							const fix: FileChange | undefined = isPropertyAssignment(property)
+								? {
+										range: getTSNodeRange(caseNode, sourceFile),
+										text: property.initializer.getText(sourceFile),
+									}
+								: undefined;
 							context.report({
 								fix,
 								message: "testShorthands",

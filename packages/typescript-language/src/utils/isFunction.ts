@@ -1,7 +1,10 @@
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 
-export function isFunction(node: AST.Expression, checker: Checker): boolean {
-	const objectType = checker.getTypeAtLocation(node);
+export function isFunction(
+	node: AST.Expression,
+	typeChecker: Checker,
+): boolean {
+	const objectType = typeChecker.getTypeAtLocation(node);
 	const callSignatures = objectType.getCallSignatures();
 
 	return !!callSignatures.length;

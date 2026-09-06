@@ -76,7 +76,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				let tokenKind: SyntaxKind;
 				do {
 					tokenKind = scanner.scan();
-				} while (tokenKind !== declarationKind);
+				} while (
+					tokenKind !== declarationKind &&
+					tokenKind !== SyntaxKind.EndOfFile
+				);
+				if (tokenKind !== declarationKind) {
+					continue;
+				}
 				return {
 					begin: scanner.getTokenStart(),
 					end: scanner.getTokenEnd(),

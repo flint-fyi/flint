@@ -72,7 +72,7 @@ export default ruleCreator.createRule(vueLanguage, {
 					if (!vueServices || !services.spanMap) {
 						return;
 					}
-					const { checker, project, spanMap } = services;
+					const { typeChecker, project, spanMap } = services;
 					const templateBlock = vueServices.sfc.children.find(
 						(child): child is vue.ElementNode =>
 							child.type === vue.NodeTypes.ELEMENT && child.tag === "template",
@@ -114,7 +114,7 @@ export default ruleCreator.createRule(vueLanguage, {
 								end <= range.end &&
 								isIdentifier(node)
 							) {
-								const declaration = checker
+								const declaration = typeChecker
 									.getSymbolAtLocation(node)
 									?.valueDeclaration?.resolve(project);
 								if (!declaration) {

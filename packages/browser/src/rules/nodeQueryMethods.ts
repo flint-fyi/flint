@@ -49,12 +49,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { checker, program, sourceFile }) {
+				CallExpression(node, { typeChecker, program, sourceFile }) {
 					if (
 						isPropertyAccessExpression(node.expression) &&
 						isIdentifier(node.expression.name) &&
 						legacyMethods.has(node.expression.name.text) &&
-						isGlobalDeclaration(node.expression.name, checker, program)
+						isGlobalDeclaration(node.expression.name, typeChecker, program)
 					) {
 						context.report({
 							data: {

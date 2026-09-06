@@ -91,7 +91,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					const argumentsNode = getVariadicArgumentsNode(node);
 					if (!argumentsNode) {
 						return;
@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
-						!isFunction(node.expression.expression, checker)
+						!isFunction(node.expression.expression, typeChecker)
 					) {
 						return;
 					}

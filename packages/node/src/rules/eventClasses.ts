@@ -69,9 +69,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isIdentifierEventEmitter(
 			identifier: AST.Identifier,
-			checker: Checker,
+			typeChecker: Checker,
 		) {
-			return checker
+			return typeChecker
 				.getSymbolAtLocation(identifier)
 				?.declarations.some((declaration) => {
 					const resolved = declaration.resolve() as AST.AnyNode | undefined;
@@ -82,11 +82,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkExpression(
 			expression: AST.Expression,
 			sourceFile: AST.SourceFile,
-			checker: Checker,
+			typeChecker: Checker,
 		) {
 			if (
 				expression.kind === SyntaxKind.Identifier &&
-				isIdentifierEventEmitter(expression, checker)
+				isIdentifierEventEmitter(expression, typeChecker)
 			) {
 				context.report({
 					message: "preferEventTarget",
@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ClassDeclaration(
 					node,
-					{ checker, sourceFile }: TypeScriptFileServices,
+					{ typeChecker, sourceFile }: TypeScriptFileServices,
 				) {
 					if (!node.heritageClauses) {
 						return;
@@ -115,12 +115,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								continue;
 							}
 
-							checkExpression(type.expression, sourceFile, checker);
+							checkExpression(type.expression, sourceFile, typeChecker);
 						}
 					}
 				},
-				NewExpression(node, { checker, sourceFile }: TypeScriptFileServices) {
-					checkExpression(node.expression, sourceFile, checker);
+				NewExpression(
+					node,
+					{ typeChecker, sourceFile }: TypeScriptFileServices,
+				) {
+					checkExpression(node.expression, sourceFile, typeChecker);
 				},
 			},
 		};

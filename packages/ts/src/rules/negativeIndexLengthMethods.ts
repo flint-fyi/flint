@@ -125,17 +125,20 @@ function isPositiveNumericLiteral(node: AST.Expression) {
 
 function isSupportedType(
 	node: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 	supportedTypes: Set<string>,
 ): boolean {
-	const type = getConstrainedTypeAtLocation(node, checker);
+	const type = getConstrainedTypeAtLocation(node, typeChecker);
 
 	return isTypeRecursive(type, (constituent) => {
 		if ((constituent.flags & TypeFlags.Any) !== 0) {
 			return true;
 		}
 
-		if (checker.isArrayType(constituent) || checker.isTupleType(constituent)) {
+		if (
+			typeChecker.isArrayType(constituent) ||
+			typeChecker.isTupleType(constituent)
+		) {
 			return supportedTypes.has("Array");
 		}
 
@@ -286,7 +289,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					const parsed = parseCallExpression(node);
 					if (!parsed) {
 						return;
@@ -301,7 +304,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!isSupportedType(
 							target,
-							checker,
+							typeChecker,
 							methodConfiguration.supportedTypes,
 						)
 					) {

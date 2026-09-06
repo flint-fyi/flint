@@ -22,25 +22,30 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isNewSetExpression(
 	expression: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
 	return (
 		isNewExpression(expression) &&
 		isIdentifier(expression.expression) &&
 		expression.expression.text === "Set" &&
-		isGlobalDeclarationOfName(expression.expression, "Set", checker, program)
+		isGlobalDeclarationOfName(
+			expression.expression,
+			"Set",
+			typeChecker,
+			program,
+		)
 	);
 }
 
 function isSetExpression(
 	expression: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
 	const unwrapped = unwrapParentheses(expression);
 
-	if (isNewSetExpression(unwrapped, checker, program)) {
+	if (isNewSetExpression(unwrapped, typeChecker, program)) {
 		return true;
 	}
 
@@ -48,7 +53,7 @@ function isSetExpression(
 		return false;
 	}
 
-	const valueDeclaration = checker
+	const valueDeclaration = typeChecker
 		.getSymbolAtLocation(unwrapped)
 		?.valueDeclaration?.resolve();
 	if (!valueDeclaration || !isVariableDeclaration(valueDeclaration)) {
@@ -67,7 +72,7 @@ function isSetExpression(
 
 	return isNewSetExpression(
 		unwrapParentheses(declaration.initializer as AST.Expression),
-		checker,
+		typeChecker,
 		program,
 	);
 }
@@ -100,7 +105,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression: (node, { checker, program, sourceFile }) => {
+				PropertyAccessExpression: (
+					node,
+					{ typeChecker, program, sourceFile },
+				) => {
 					if (
 						node.questionDotToken ||
 						node.name.text !== "length" ||
@@ -115,7 +123,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						!isSpreadElement(element) ||
-						!isSetExpression(element.expression, checker, program)
+						!isSetExpression(element.expression, typeChecker, program)
 					) {
 						return;
 					}

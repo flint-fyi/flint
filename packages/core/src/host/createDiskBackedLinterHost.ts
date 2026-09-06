@@ -179,11 +179,19 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return cwd;
 		},
 		async getFileTouchTime(filePath) {
-			const stat = await fs.promises.stat(filePath);
-			return stat.mtimeMs;
+			try {
+				const stat = await fs.promises.stat(filePath);
+				return stat.mtimeMs;
+			} catch {
+				return undefined;
+			}
 		},
 		getFileTouchTimeSync(filePath) {
-			return fs.statSync(filePath).mtimeMs;
+			try {
+				return fs.statSync(filePath).mtimeMs;
+			} catch {
+				return undefined;
+			}
 		},
 		getRepositoryRoot() {
 			return repositoryRoot;

@@ -70,14 +70,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { checker, program, sourceFile }) => {
+				Identifier: (node, { typeChecker, program, sourceFile }) => {
 					const replacement = globalReplacements.get(node.text);
 					if (
 						!replacement ||
 						isPropertyAccessOfNode(node) ||
 						isPropertyShorthandOfNode(node) ||
 						isDeclarationName(node) ||
-						!isGlobalVariable(node, checker, program) ||
+						!isGlobalVariable(node, typeChecker, program) ||
 						isLeftHandSide(node)
 					) {
 						return;

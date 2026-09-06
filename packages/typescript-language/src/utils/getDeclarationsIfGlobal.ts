@@ -6,10 +6,10 @@ import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
 
 export function getDeclarationsIfGlobal(
 	node: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): AST.Declaration[] | undefined {
-	const declarations = checker
+	const declarations = typeChecker
 		.getSymbolAtLocation(node)
 		?.declarations.map((declaration) => declaration.resolve())
 		.filter((declaration): declaration is AST.Declaration => !!declaration);

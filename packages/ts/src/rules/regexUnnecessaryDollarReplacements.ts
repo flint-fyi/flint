@@ -153,7 +153,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						(node.expression.name.text !== "replace" &&
@@ -165,7 +165,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const objectType = getConstrainedTypeAtLocation(
 						node.expression.expression,
-						checker,
+						typeChecker,
 					);
 					if (!(objectType.flags & TypeFlags.StringLike)) {
 						return;

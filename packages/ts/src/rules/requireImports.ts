@@ -11,14 +11,14 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
-function isGlobalRequire(node: AST.Expression, checker: Checker) {
+function isGlobalRequire(node: AST.Expression, typeChecker: Checker) {
 	// TODO: Use a util like getStaticValue
 	// https://github.com/flint-fyi/flint/issues/1298
 	if (node.kind !== SyntaxKind.Identifier || node.text !== "require") {
 		return false;
 	}
 
-	const symbol = checker.getSymbolAtLocation(node);
+	const symbol = typeChecker.getSymbolAtLocation(node);
 	if (!symbol) {
 		return true;
 	}
@@ -57,8 +57,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
-					if (isGlobalRequire(node.expression, checker)) {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
+					if (isGlobalRequire(node.expression, typeChecker)) {
 						context.report({
 							message: "noRequireImports",
 							range: getTSNodeRange(node.expression, sourceFile),

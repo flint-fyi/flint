@@ -85,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ checker, program, sourceFile }: TypeScriptFileServices,
+					{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 				) => {
 					if (!isIdentifier(node.expression)) {
 						return;
@@ -95,7 +95,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!literalConstructors.has(name) ||
 						node.arguments.length !== 1 ||
-						!isGlobalDeclarationOfName(node.expression, name, checker, program)
+						!isGlobalDeclarationOfName(
+							node.expression,
+							name,
+							typeChecker,
+							program,
+						)
 					) {
 						return;
 					}

@@ -78,7 +78,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, program, sourceFile }) => {
+				CallExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.arguments.length !== 1
@@ -106,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (methodName === "exec") {
 						const objectType = getConstrainedTypeAtLocation(
 							node.expression.expression,
-							checker,
+							typeChecker,
 						);
 						if (!isBuiltinSymbolLike(program, objectType, "RegExp")) {
 							return;
@@ -132,13 +132,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const objectType = getConstrainedTypeAtLocation(
 						node.expression.expression,
-						checker,
+						typeChecker,
 					);
 					if (!(objectType.flags & TypeFlags.StringLike)) {
 						return;
 					}
 
-					const argumentType = getConstrainedTypeAtLocation(argument, checker);
+					const argumentType = getConstrainedTypeAtLocation(
+						argument,
+						typeChecker,
+					);
 					if (!isBuiltinSymbolLike(program, argumentType, "RegExp")) {
 						return;
 					}

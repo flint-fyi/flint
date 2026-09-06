@@ -17,12 +17,12 @@ export interface RegExpConstruction {
 
 export function getRegExpConstruction(
 	node: AST.CallExpression | AST.NewExpression,
-	{ checker, program, sourceFile }: TypeScriptFileServices,
+	{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 ): RegExpConstruction | undefined {
 	if (
 		node.expression.kind !== SyntaxKind.Identifier ||
 		node.expression.text !== "RegExp" ||
-		!isGlobalDeclarationOfName(node.expression, "RegExp", checker, program)
+		!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker, program)
 	) {
 		return;
 	}

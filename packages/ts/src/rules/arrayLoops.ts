@@ -41,10 +41,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						isForEachCall(node) &&
-						isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
+						isArrayOrTupleTypeAtLocation(
+							node.expression.expression,
+							typeChecker,
+						)
 					) {
 						context.report({
 							message: "preferForOf",

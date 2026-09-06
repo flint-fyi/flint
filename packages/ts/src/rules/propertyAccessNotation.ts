@@ -72,7 +72,10 @@ function getFirstModifierKind(node: DeclarationBase | undefined) {
 		case SyntaxKind.Parameter:
 		case SyntaxKind.PropertyDeclaration:
 		case SyntaxKind.SetAccessor:
-			return declaration.modifiers?.[0]?.kind;
+			// Decorators are included in modifiers, before any modifier keywords
+			return declaration.modifiers?.find(
+				(modifier) => modifier.kind !== SyntaxKind.Decorator,
+			)?.kind;
 		default:
 			return undefined;
 	}
@@ -130,11 +133,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function getKeyTypeInformation(
 			node: AST.ElementAccessExpression,
-			checker: Checker,
+			typeChecker: Checker,
 		) {
 			const propertySymbol =
-				checker.getSymbolAtLocation(node.argumentExpression) ??
-				checker
+				typeChecker.getSymbolAtLocation(node.argumentExpression) ??
+				typeChecker
 					.getTypeAtLocation(node.expression)
 					.getNonNullableType()
 					.getProperties()
@@ -158,7 +161,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 		return {
 			visitors: {
-				ElementAccessExpression: (node, { checker, options, sourceFile }) => {
+				ElementAccessExpression: (
+					node,
+					{ typeChecker, options, sourceFile },
+				) => {
 					const key = getPropertyKeyText(node);
 					if (!key || keyCannotBeUsedWithDotNotation(key)) {
 						return;
@@ -166,18 +172,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const { inaccessible, propertySymbol } = getKeyTypeInformation(
 						node,
-						checker,
+						typeChecker,
 					);
 					if (inaccessible) {
 						return;
 					}
 
 					if (options.allowIndexSignaturePropertyAccess && !propertySymbol) {
-						const objectType = checker
+						const objectType = typeChecker
 							.getTypeAtLocation(node.expression)
 							.getNonNullableType();
 						if (
-							checker
+							typeChecker
 								.getIndexInfosOfType(objectType)
 								.some((info) => info.keyType.flags & TypeFlags.StringLike)
 						) {

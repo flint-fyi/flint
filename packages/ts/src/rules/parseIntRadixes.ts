@@ -15,7 +15,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isParseIntCall(
 	node: AST.CallExpression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
 	switch (node.expression.kind) {
@@ -23,7 +23,7 @@ function isParseIntCall(
 			return isGlobalDeclarationOfName(
 				node.expression,
 				"parseInt",
-				checker,
+				typeChecker,
 				program,
 			);
 
@@ -36,7 +36,7 @@ function isParseIntCall(
 				isGlobalDeclarationOfName(
 					node.expression.expression,
 					"Number",
-					checker,
+					typeChecker,
 					program,
 				)
 			);
@@ -95,9 +95,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ checker, program, sourceFile }: TypeScriptFileServices,
+					{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 				) => {
-					if (!isParseIntCall(node, checker, program)) {
+					if (!isParseIntCall(node, typeChecker, program)) {
 						return;
 					}
 

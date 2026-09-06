@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -41,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						(method !== "call" && method !== "apply") ||
 						!node.arguments.length ||
-						!isFunction(node.expression.expression, checker)
+						!isFunction(node.expression.expression, typeChecker)
 					) {
 						return;
 					}

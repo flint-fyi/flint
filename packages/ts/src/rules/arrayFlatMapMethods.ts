@@ -13,14 +13,14 @@ import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocati
 
 function isArrayMapCall(
 	node: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 ): node is AST.CallExpression {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "map" &&
 		node.arguments.length >= 1 &&
-		isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
+		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
 }
 
@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const objectExpression = node.expression.expression;
-					if (!isArrayMapCall(objectExpression, checker)) {
+					if (!isArrayMapCall(objectExpression, typeChecker)) {
 						return;
 					}
 

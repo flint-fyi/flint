@@ -90,9 +90,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ThrowStatement(
 					node: AST.ThrowStatement,
-					{ checker, program, sourceFile }: TypeScriptFileServices,
+					{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 				) {
-					const type = getConstrainedTypeAtLocation(node.expression, checker);
+					const type = getConstrainedTypeAtLocation(
+						node.expression,
+						typeChecker,
+					);
 
 					if (
 						(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||

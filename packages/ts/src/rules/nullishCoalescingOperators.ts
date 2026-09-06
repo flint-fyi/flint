@@ -322,7 +322,7 @@ function isConditionalTest(node: AST.AnyNode): boolean {
 	}
 }
 
-function isFalsyLiteralType(part: Type, checker: Checker): boolean {
+function isFalsyLiteralType(part: Type, typeChecker: Checker): boolean {
 	if (
 		(part.flags & TypeFlags.NumberLiteral) !== 0 &&
 		(part as Type & { value: number }).value === 0
@@ -341,14 +341,14 @@ function isFalsyLiteralType(part: Type, checker: Checker): boolean {
 
 	if (
 		(flags & TypeFlags.BooleanLiteral) !== 0 &&
-		checker.typeToString(part) === "false"
+		typeChecker.typeToString(part) === "false"
 	) {
 		return true;
 	}
 
 	if (
 		(flags & TypeFlags.BigIntLiteral) !== 0 &&
-		checker.typeToString(part) === "0n"
+		typeChecker.typeToString(part) === "0n"
 	) {
 		return true;
 	}
@@ -446,13 +446,13 @@ function isTypeEligibleForPreferNullish(
 function shouldIgnoreNode(
 	node: AST.AnyNode,
 	ignorePrimitives: IgnorePrimitives,
-	checker: Checker,
+	typeChecker: Checker,
 ) {
-	const type = checker.getTypeAtLocation(node);
+	const type = typeChecker.getTypeAtLocation(node);
 	return (
 		(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||
 		!typeCanBeNullish(type) ||
-		typeHasNonNullishFalsyValues(type, checker) ||
+		typeHasNonNullishFalsyValues(type, typeChecker) ||
 		!isTypeEligibleForPreferNullish(type, ignorePrimitives)
 	);
 }
@@ -461,10 +461,13 @@ function typeCanBeNullish(type: Type): boolean {
 	return getUnionConstituents(type).some(isNullishType);
 }
 
-function typeHasNonNullishFalsyValues(type: Type, checker: Checker): boolean {
+function typeHasNonNullishFalsyValues(
+	type: Type,
+	typeChecker: Checker,
+): boolean {
 	return getUnionConstituents(type).some(
 		(constituent) =>
-			isFalsyLiteralType(constituent, checker) ||
+			isFalsyLiteralType(constituent, typeChecker) ||
 			constituent.flags &
 				(TypeFlags.String |
 					TypeFlags.Number |
@@ -613,7 +616,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				BinaryExpression: (node, { checker, options, sourceFile }) => {
+				BinaryExpression: (node, { typeChecker, options, sourceFile }) => {
 					if (
 						(options.ignoreConditionalTests && isConditionalTest(node)) ||
 						(options.ignoreMixedLogicalExpressions &&
@@ -621,7 +624,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						![SyntaxKind.BarBarEqualsToken, SyntaxKind.BarBarToken].includes(
 							node.operatorToken.kind,
 						) ||
-						shouldIgnoreNode(node.left, options.ignorePrimitives, checker)
+						shouldIgnoreNode(node.left, options.ignorePrimitives, typeChecker)
 					) {
 						return;
 					}
@@ -641,7 +644,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						range: fullRange,
 					});
 				},
-				ConditionalExpression: (node, { checker, options, sourceFile }) => {
+				ConditionalExpression: (node, { typeChecker, options, sourceFile }) => {
 					if (
 						options.ignoreTernaryTests ||
 						(options.ignoreConditionalTests && isConditionalTest(node))
@@ -658,7 +661,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						!test ||
 						!consequent ||
 						!alternate ||
-						shouldIgnoreNode(test, options.ignorePrimitives, checker)
+						shouldIgnoreNode(test, options.ignorePrimitives, typeChecker)
 					) {
 						return;
 					}
@@ -676,7 +679,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						range,
 					});
 				},
-				IfStatement: (node, { checker, options, sourceFile }) => {
+				IfStatement: (node, { typeChecker, options, sourceFile }) => {
 					const checkedValue = getIfStatementNullishCheckValue(node);
 					if (
 						options.ignoreIfStatements ||
@@ -697,7 +700,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						shouldIgnoreNode(
 							assignmentExpression.left,
 							options.ignorePrimitives,
-							checker,
+							typeChecker,
 						)
 					) {
 						return;

@@ -12,9 +12,9 @@ import { ruleCreator } from "./ruleCreator.ts";
 function isLocalExportsVariable(
 	node: AST.Identifier,
 	sourceFile: AST.SourceFile,
-	checker: Checker,
+	typeChecker: Checker,
 ) {
-	return checker
+	return typeChecker
 		.getSymbolAtLocation(node)
 		?.declarations.some(
 			(declaration) => declaration.resolve()?.getSourceFile() === sourceFile,
@@ -60,12 +60,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { checker, sourceFile }) => {
+				BinaryExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.operatorToken.kind === SyntaxKind.EqualsToken &&
 						node.left.kind === SyntaxKind.Identifier &&
 						node.left.text === "exports" &&
-						!isLocalExportsVariable(node.left, sourceFile, checker) &&
+						!isLocalExportsVariable(node.left, sourceFile, typeChecker) &&
 						!isModuleExportsAccessAssignment(node.right) &&
 						!isModuleExportsAccessAssignment(node.parent)
 					) {

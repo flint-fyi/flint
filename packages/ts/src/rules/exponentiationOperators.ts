@@ -28,7 +28,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, program, sourceFile }) => {
+				CallExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "pow" ||
@@ -38,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						!isGlobalDeclarationOfName(
 							node.expression.expression,
 							"Math",
-							checker,
+							typeChecker,
 							program,
 						)
 					) {

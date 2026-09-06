@@ -23,23 +23,23 @@ export type AnyType = (typeof AnyType)[keyof typeof AnyType];
  */
 export function discriminateAnyType(
 	type: Type,
-	checker: Checker,
+	typeChecker: Checker,
 	tsNode: Node,
 ): AnyType {
-	return discriminateAnyTypeWorker(type, checker, tsNode, new Set());
+	return discriminateAnyTypeWorker(type, typeChecker, tsNode, new Set());
 }
 
 export function getAwaitedTypes(
 	type: Type,
-	checker: Checker,
+	typeChecker: Checker,
 	tsNode: Node,
 ): readonly Type[] {
-	return getAwaitedTypesWorker(type, checker, tsNode, new Set());
+	return getAwaitedTypesWorker(type, typeChecker, tsNode, new Set());
 }
 
 function discriminateAnyTypeWorker(
 	type: Type,
-	checker: Checker,
+	typeChecker: Checker,
 	tsNode: Node,
 	visited: Set<number>,
 ): AnyType {
@@ -50,19 +50,19 @@ function discriminateAnyTypeWorker(
 	if (type.flags & TypeFlags.Any) {
 		return type.isErrorType() ? AnyType.Error : AnyType.Any;
 	}
-	if (checker.isArrayType(type)) {
+	if (typeChecker.isArrayType(type)) {
 		const elementType = nullThrows(
-			checker.getTypeArguments(type as TypeReference)[0],
+			typeChecker.getTypeArguments(type as TypeReference)[0],
 			"Array type should have at least one type argument",
 		);
 		if (elementType.flags & TypeFlags.Any && !elementType.isErrorType()) {
 			return AnyType.AnyArray;
 		}
 	}
-	for (const awaitedType of getAwaitedTypes(type, checker, tsNode)) {
+	for (const awaitedType of getAwaitedTypes(type, typeChecker, tsNode)) {
 		if (
 			awaitedType.id !== type.id &&
-			discriminateAnyTypeWorker(awaitedType, checker, tsNode, visited) ===
+			discriminateAnyTypeWorker(awaitedType, typeChecker, tsNode, visited) ===
 				AnyType.Any &&
 			!awaitedType.isErrorType()
 		) {
@@ -74,7 +74,7 @@ function discriminateAnyTypeWorker(
 
 function getAwaitedTypesWorker(
 	type: Type,
-	checker: Checker,
+	typeChecker: Checker,
 	tsNode: Node,
 	visited: Set<number>,
 ): readonly Type[] {
@@ -86,14 +86,14 @@ function getAwaitedTypesWorker(
 	const awaitedTypes: Type[] = [];
 	let hasThenableConstituent = false;
 	for (const constituent of getTypeConstituents(type)) {
-		const apparentConstituent = checker.getApparentType(constituent);
+		const apparentConstituent = typeChecker.getApparentType(constituent);
 		const thenSymbol = apparentConstituent.getProperty("then");
 		if (!thenSymbol) {
 			awaitedTypes.push(constituent);
 			continue;
 		}
 
-		const thenType = checker.getTypeOfSymbolAtLocation(thenSymbol, tsNode);
+		const thenType = typeChecker.getTypeOfSymbolAtLocation(thenSymbol, tsNode);
 		const fulfilledTypes: Type[] = [];
 		for (const thenConstituent of getTypeConstituents(thenType)) {
 			for (const thenSignature of thenConstituent.getCallSignatures()) {
@@ -102,7 +102,7 @@ function getAwaitedTypesWorker(
 					continue;
 				}
 
-				const callbackType = checker.getTypeOfSymbolAtLocation(
+				const callbackType = typeChecker.getTypeOfSymbolAtLocation(
 					callbackSymbol,
 					tsNode,
 				);
@@ -111,7 +111,7 @@ function getAwaitedTypesWorker(
 						const valueSymbol = callbackSignature.getParameters()[0];
 						if (valueSymbol) {
 							fulfilledTypes.push(
-								checker.getTypeOfSymbolAtLocation(valueSymbol, tsNode),
+								typeChecker.getTypeOfSymbolAtLocation(valueSymbol, tsNode),
 							);
 						}
 					}
@@ -127,7 +127,12 @@ function getAwaitedTypesWorker(
 		hasThenableConstituent = true;
 		awaitedTypes.push(
 			...fulfilledTypes.flatMap((fulfilledType) =>
-				getAwaitedTypesWorker(fulfilledType, checker, tsNode, new Set(visited)),
+				getAwaitedTypesWorker(
+					fulfilledType,
+					typeChecker,
+					tsNode,
+					new Set(visited),
+				),
 			),
 		);
 	}

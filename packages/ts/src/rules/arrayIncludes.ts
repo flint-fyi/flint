@@ -11,13 +11,13 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-function hasIncludesMethod(node: AST.Expression, checker: Checker) {
-	const receiverType = getConstrainedTypeAtLocation(node, checker);
+function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
+	const receiverType = getConstrainedTypeAtLocation(node, typeChecker);
 	const includesProperty = receiverType.getProperty("includes");
 
 	return (
 		includesProperty &&
-		!!checker.getTypeOfSymbol(includesProperty).getCallSignatures().length
+		!!typeChecker.getTypeOfSymbol(includesProperty).getCallSignatures().length
 	);
 }
 
@@ -30,7 +30,7 @@ function isIndexOfCall(node: AST.CallExpression) {
 	);
 }
 
-function isIndexOfComparison(node: AST.BinaryExpression, checker: Checker) {
+function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 	const { left, operatorToken, right } = node;
 
 	let indexOfAndValue: [AST.CallExpression, AST.Expression] | undefined;
@@ -49,7 +49,7 @@ function isIndexOfComparison(node: AST.BinaryExpression, checker: Checker) {
 
 	if (
 		indexOfCall.expression.kind !== SyntaxKind.PropertyAccessExpression ||
-		!hasIncludesMethod(indexOfCall.expression.expression, checker)
+		!hasIncludesMethod(indexOfCall.expression.expression, typeChecker)
 	) {
 		return undefined;
 	}
@@ -94,8 +94,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { checker, sourceFile }) => {
-					const result = isIndexOfComparison(node, checker);
+				BinaryExpression: (node, { typeChecker, sourceFile }) => {
+					const result = isIndexOfComparison(node, typeChecker);
 					if (result) {
 						context.report({
 							message: "preferIncludes",

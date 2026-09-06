@@ -1,10 +1,22 @@
+import path from "node:path";
+
 import { resolve } from "pathe";
 
 import type { LinterHost } from "@flint.fyi/core";
-import { nullThrows, pathKey } from "@flint.fyi/utils";
+import { pathKey } from "@flint.fyi/utils";
 
-import { createTypeScriptProjectSession } from "./createTypeScriptProjectSession.ts";
+const configFileNames = ["tsconfig.json", "jsconfig.json"];
 
+/**
+ * Orders files so that files sharing a nearest TypeScript config are linted
+ * consecutively, which lets the project session reuse each program instead of
+ * thrashing between projects.
+ *
+ * This groups by walking up to the nearest config file rather than building a
+ * throwaway project session: ordering only affects lint sequencing, so it does
+ * not need a bound program, and building one here would duplicate all of the
+ * work {@link createTypeScriptProjectSession} does again when files are opened.
+ */
 export function orderTypeScriptFilePaths(
 	filePaths: readonly string[],
 	host: LinterHost,
@@ -13,45 +25,80 @@ export function orderTypeScriptFilePaths(
 		return [...filePaths];
 	}
 
-	using session = createTypeScriptProjectSession(host);
 	const caseSensitiveFileSystem = host.isCaseSensitiveFS();
 	const currentDirectory = host.getCurrentDirectory();
+
+	const configByDirectory = new Map<string, string | undefined>();
+	const findConfigFile = (filePath: string): string | undefined => {
+		let directory = path.dirname(filePath);
+		const walked: string[] = [];
+		while (true) {
+			const cached = configByDirectory.get(directory);
+			if (cached !== undefined || configByDirectory.has(directory)) {
+				for (const walkedDirectory of walked) {
+					configByDirectory.set(walkedDirectory, cached);
+				}
+				return cached;
+			}
+			walked.push(directory);
+
+			let configFilePath: string | undefined;
+			for (const configName of configFileNames) {
+				const candidate = path.join(directory, configName);
+				if (host.fileTypeSync(candidate) === "file") {
+					configFilePath = candidate;
+					break;
+				}
+			}
+			if (configFilePath) {
+				for (const walkedDirectory of walked) {
+					configByDirectory.set(walkedDirectory, configFilePath);
+				}
+				return configFilePath;
+			}
+
+			const parent = path.dirname(directory);
+			if (parent === directory) {
+				for (const walkedDirectory of walked) {
+					configByDirectory.set(walkedDirectory, undefined);
+				}
+				return undefined;
+			}
+			directory = parent;
+		}
+	};
+
 	const absolutePaths = new Map(
 		filePaths.map((filePath) => [
 			filePath,
 			resolve(currentDirectory, filePath),
 		]),
 	);
-	const snapshot = session.update({ openFiles: [...absolutePaths.values()] });
-	const projectRanks = new Map(
-		snapshot
-			.getProjects()
-			.map((project, index) => [project.configFileName, index]),
+	const configKeyByFilePath = new Map(
+		filePaths.map((filePath) => {
+			const configFilePath = findConfigFile(
+				absolutePaths.get(filePath) ?? filePath,
+			);
+			return [
+				filePath,
+				configFilePath == null
+					? "￿"
+					: pathKey(configFilePath, caseSensitiveFileSystem),
+			];
+		}),
 	);
 
 	return [...filePaths].sort((left, right) => {
-		const leftAbsolute = nullThrows(
-			absolutePaths.get(left),
-			`Expected an absolute path for ${left}`,
-		);
-		const rightAbsolute = nullThrows(
-			absolutePaths.get(right),
-			`Expected an absolute path for ${right}`,
-		);
-		const leftProject = snapshot.getDefaultProjectForFile(leftAbsolute);
-		const rightProject = snapshot.getDefaultProjectForFile(rightAbsolute);
-		const leftRank =
-			projectRanks.get(leftProject?.configFileName ?? "") ??
-			Number.MAX_SAFE_INTEGER;
-		const rightRank =
-			projectRanks.get(rightProject?.configFileName ?? "") ??
-			Number.MAX_SAFE_INTEGER;
-
-		return (
-			leftRank - rightRank ||
-			pathKey(leftAbsolute, caseSensitiveFileSystem).localeCompare(
-				pathKey(rightAbsolute, caseSensitiveFileSystem),
-			)
+		const leftConfig = configKeyByFilePath.get(left) ?? "￿";
+		const rightConfig = configKeyByFilePath.get(right) ?? "￿";
+		if (leftConfig !== rightConfig) {
+			return leftConfig < rightConfig ? -1 : 1;
+		}
+		return pathKey(
+			absolutePaths.get(left) ?? left,
+			caseSensitiveFileSystem,
+		).localeCompare(
+			pathKey(absolutePaths.get(right) ?? right, caseSensitiveFileSystem),
 		);
 	});
 }

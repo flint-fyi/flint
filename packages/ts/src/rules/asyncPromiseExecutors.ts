@@ -32,9 +32,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node, { checker, program, sourceFile }) => {
+				NewExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (
-						!isGlobalDeclaration(node.expression, checker, program) ||
+						!isGlobalDeclaration(node.expression, typeChecker, program) ||
 						!node.arguments?.length
 					) {
 						return;

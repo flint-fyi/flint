@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { checker, program, sourceFile }) {
+				CallExpression(node, { typeChecker, program, sourceFile }) {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier
@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const methodName = node.expression.name.text;
 					if (
 						!blobReadingMethods.has(methodName) ||
-						!isGlobalDeclaration(node.expression.name, checker, program)
+						!isGlobalDeclaration(node.expression.name, typeChecker, program)
 					) {
 						return;
 					}

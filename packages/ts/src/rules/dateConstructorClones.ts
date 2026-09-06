@@ -9,8 +9,8 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isDateType(node: AST.Expression, checker: Checker) {
-	return checker.getTypeAtLocation(node).getSymbol()?.name === "Date";
+function isDateType(node: AST.Expression, typeChecker: Checker) {
+	return typeChecker.getTypeAtLocation(node).getSymbol()?.name === "Date";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node, { checker, program, sourceFile }) => {
+				NewExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.text !== "Date" ||
@@ -41,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						!isGlobalDeclarationOfName(
 							node.expression,
 							"Date",
-							checker,
+							typeChecker,
 							program,
 						)
 					) {
@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						argument.expression.name.kind !== SyntaxKind.Identifier ||
 						argument.expression.name.text !== "getTime" ||
 						!!argument.arguments.length ||
-						!isDateType(argument.expression.expression, checker)
+						!isDateType(argument.expression.expression, typeChecker)
 					) {
 						return;
 					}

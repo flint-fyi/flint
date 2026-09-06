@@ -30,13 +30,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ checker, program, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			if (
 				node.expression.kind !== SyntaxKind.Identifier ||
 				node.expression.text !== "Array" ||
 				shouldAllowCallOrNew(node) ||
-				!isGlobalDeclarationOfName(node.expression, "Array", checker, program)
+				!isGlobalDeclarationOfName(
+					node.expression,
+					"Array",
+					typeChecker,
+					program,
+				)
 			) {
 				return;
 			}

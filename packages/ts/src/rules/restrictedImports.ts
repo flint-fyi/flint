@@ -51,21 +51,21 @@ function resolveDeclarations(
 
 function resolveModuleDeclarations(
 	moduleSpecifier: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 ) {
 	return resolveDeclarations(
-		checker.getSymbolAtLocation(moduleSpecifier)?.declarations,
+		typeChecker.getSymbolAtLocation(moduleSpecifier)?.declarations,
 	);
 }
 
-function resolveSymbolDeclarations(nameNode: Node, checker: Checker) {
-	let symbol = checker.getSymbolAtLocation(nameNode);
+function resolveSymbolDeclarations(nameNode: Node, typeChecker: Checker) {
+	let symbol = typeChecker.getSymbolAtLocation(nameNode);
 	if (!symbol) {
 		return undefined;
 	}
 
 	if (symbol.flags & SymbolFlags.Alias) {
-		symbol = checker.getAliasedSymbol(symbol);
+		symbol = typeChecker.getAliasedSymbol(symbol);
 	}
 
 	return resolveDeclarations(symbol.declarations);
@@ -241,7 +241,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ExportDeclaration: (
 					node,
-					{ checker, options, program, sourceFile },
+					{ typeChecker, options, program, sourceFile },
 				) => {
 					if (node.moduleSpecifier?.kind !== SyntaxKind.StringLiteral) {
 						return;
@@ -259,7 +259,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								: element.name.text;
 							const declarations = resolveSymbolDeclarations(
 								element.name,
-								checker,
+								typeChecker,
 							);
 							if (!declarations?.length) {
 								continue;
@@ -278,7 +278,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					} else {
 						const moduleDeclarations = resolveModuleDeclarations(
 							node.moduleSpecifier,
-							checker,
+							typeChecker,
 						);
 						if (!moduleDeclarations?.length) {
 							return;
@@ -296,7 +296,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				ImportDeclaration: (
 					node,
-					{ checker, options, program, sourceFile },
+					{ typeChecker, options, program, sourceFile },
 				) => {
 					if (node.moduleSpecifier.kind !== SyntaxKind.StringLiteral) {
 						return;
@@ -308,7 +308,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (!node.importClause) {
 						const moduleDeclarations = resolveModuleDeclarations(
 							node.moduleSpecifier,
-							checker,
+							typeChecker,
 						);
 						if (!moduleDeclarations?.length) {
 							return;
@@ -345,7 +345,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (node.importClause.name) {
 						const declarations = resolveSymbolDeclarations(
 							node.importClause.name,
-							checker,
+							typeChecker,
 						);
 						if (declarations?.length) {
 							checkNamedRestrictions(
@@ -373,7 +373,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								: element.name.text;
 							const declarations = resolveSymbolDeclarations(
 								element.name,
-								checker,
+								typeChecker,
 							);
 							if (!declarations?.length) {
 								continue;
@@ -395,7 +395,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const moduleDeclarations = resolveModuleDeclarations(
 						node.moduleSpecifier,
-						checker,
+						typeChecker,
 					);
 					if (!moduleDeclarations?.length) {
 						return;

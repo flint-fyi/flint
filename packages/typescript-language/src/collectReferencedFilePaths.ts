@@ -8,13 +8,13 @@ import { forEachChild } from "./utils/forEachChild.ts";
 
 export function collectReferencedFilePaths(
 	program: Program,
-	checker: Checker,
+	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
 ): string[] {
 	const modulePaths = new Set<string>();
 
 	function addModuleSpecifier(moduleSpecifier: AST.StringLiteral): void {
-		const symbol = checker.getSymbolAtLocation(moduleSpecifier);
+		const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
 		if (!symbol) {
 			return;
 		}
@@ -53,6 +53,23 @@ function getModuleSpecifierNode(
 		node.moduleSpecifier.kind === SyntaxKind.StringLiteral
 	) {
 		return node.moduleSpecifier;
+	}
+
+	// Re-exports (`export * from "y"`, `export { a } from "y"`) pull in another
+	// module just as imports do, so they must invalidate the cache too.
+	if (
+		node.kind === SyntaxKind.ExportDeclaration &&
+		node.moduleSpecifier?.kind === SyntaxKind.StringLiteral
+	) {
+		return node.moduleSpecifier;
+	}
+
+	if (
+		node.kind === SyntaxKind.ImportEqualsDeclaration &&
+		node.moduleReference.kind === SyntaxKind.ExternalModuleReference &&
+		node.moduleReference.expression.kind === SyntaxKind.StringLiteral
+	) {
+		return node.moduleReference.expression;
 	}
 
 	if (

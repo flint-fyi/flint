@@ -92,18 +92,18 @@ function getImportSpecifiers(node: AST.ImportDeclaration) {
 	return specifiers;
 }
 
-function getReferencedSymbol(checker: Checker, node: AST.Identifier) {
+function getReferencedSymbol(typeChecker: Checker, node: AST.Identifier) {
 	let symbol: Symbol | undefined;
 	const parent = node.parent;
 
 	if (isShorthandPropertyAssignment(parent)) {
-		symbol = checker.getShorthandAssignmentValueSymbol(parent);
+		symbol = typeChecker.getShorthandAssignmentValueSymbol(parent);
 	} else {
-		symbol = checker.getSymbolAtLocation(node);
+		symbol = typeChecker.getSymbolAtLocation(node);
 	}
 
 	return symbol?.flags && (symbol.flags & SymbolFlags.Alias) !== 0
-		? checker.getAliasedSymbol(symbol)
+		? typeChecker.getAliasedSymbol(symbol)
 		: symbol;
 }
 
@@ -380,7 +380,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				SourceFile(node, { checker, options, program, sourceFile }) {
+				SourceFile(node, { typeChecker, options, program, sourceFile }) {
 					if (options.prefer === "no-type-imports") {
 						for (const statement of node.statements) {
 							if (
@@ -466,7 +466,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							const importedSpecifier = {
 								local,
 								specifier,
-								symbol: getReferencedSymbol(checker, local),
+								symbol: getReferencedSymbol(typeChecker, local),
 							};
 
 							importedSpecifiers.push(importedSpecifier);
@@ -479,7 +479,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.kind === SyntaxKind.Identifier &&
 							!isInImportDeclaration(node)
 						) {
-							const symbol = getReferencedSymbol(checker, node);
+							const symbol = getReferencedSymbol(typeChecker, node);
 							const importedSpecifier = importedSpecifiers.find(
 								(specifier) =>
 									specifier.local.text === node.text &&

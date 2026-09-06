@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function hasNumberLikeLength(type: Type, checker: Checker): boolean {
+		function hasNumberLikeLength(type: Type, typeChecker: Checker): boolean {
 			const lengthProperty = type.getProperty("length");
 
 			if (lengthProperty == null) {
@@ -38,26 +38,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			return (
-				(checker.getTypeOfSymbol(lengthProperty).flags &
+				(typeChecker.getTypeOfSymbol(lengthProperty).flags &
 					TypeFlags.NumberLike) !==
 				0
 			);
 		}
 
-		function isArrayLike(type: Type, checker: Checker): boolean {
+		function isArrayLike(type: Type, typeChecker: Checker): boolean {
 			return isTypeRecursive(
 				type,
 				(t) =>
-					t.getNumberIndexType() != null && hasNumberLikeLength(t, checker),
+					t.getNumberIndexType() != null && hasNumberLikeLength(t, typeChecker),
 			);
 		}
 
 		return {
 			visitors: {
-				ForInStatement: (node, { checker, sourceFile }) => {
-					const type = getConstrainedTypeAtLocation(node.expression, checker);
+				ForInStatement: (node, { typeChecker, sourceFile }) => {
+					const type = getConstrainedTypeAtLocation(
+						node.expression,
+						typeChecker,
+					);
 
-					if (isArrayLike(type, checker)) {
+					if (isArrayLike(type, typeChecker)) {
 						context.report({
 							message: "forIn",
 							range: {

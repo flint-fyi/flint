@@ -11,7 +11,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";
 
-function isConcatApply(node: AST.CallExpression, checker: Checker) {
+function isConcatApply(node: AST.CallExpression, typeChecker: Checker) {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "apply"
@@ -55,10 +55,10 @@ function isConcatApply(node: AST.CallExpression, checker: Checker) {
 		return false;
 	}
 
-	return isArrayOrTupleTypeAtLocation(secondArg, checker);
+	return isArrayOrTupleTypeAtLocation(secondArg, typeChecker);
 }
 
-function isConcatCall(node: AST.CallExpression, checker: Checker) {
+function isConcatCall(node: AST.CallExpression, typeChecker: Checker) {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "call"
@@ -100,10 +100,10 @@ function isConcatCall(node: AST.CallExpression, checker: Checker) {
 		return false;
 	}
 
-	return isArrayOrTupleTypeAtLocation(secondArg.expression, checker);
+	return isArrayOrTupleTypeAtLocation(secondArg.expression, typeChecker);
 }
 
-function isConcatSpread(node: AST.CallExpression, checker: Checker) {
+function isConcatSpread(node: AST.CallExpression, typeChecker: Checker) {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "concat"
@@ -125,7 +125,7 @@ function isConcatSpread(node: AST.CallExpression, checker: Checker) {
 		return false;
 	}
 
-	return isArrayOrTupleTypeAtLocation(arg.expression, checker);
+	return isArrayOrTupleTypeAtLocation(arg.expression, typeChecker);
 }
 
 function isEmptyArrayLiteral(node: AST.Expression) {
@@ -155,7 +155,7 @@ function isIdentityArrowFunction(node: AST.Expression) {
 	return body.kind === SyntaxKind.Identifier && body.text === param.name.text;
 }
 
-function isIdentityFlatMapCall(node: AST.CallExpression, checker: Checker) {
+function isIdentityFlatMapCall(node: AST.CallExpression, typeChecker: Checker) {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "flatMap" ||
@@ -171,7 +171,7 @@ function isIdentityFlatMapCall(node: AST.CallExpression, checker: Checker) {
 		return false;
 	}
 
-	return isArrayOrTupleTypeAtLocation(node.expression.expression, checker);
+	return isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -194,12 +194,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					if (
-						isIdentityFlatMapCall(node, checker) ||
-						isConcatSpread(node, checker) ||
-						isConcatApply(node, checker) ||
-						isConcatCall(node, checker)
+						isIdentityFlatMapCall(node, typeChecker) ||
+						isConcatSpread(node, typeChecker) ||
+						isConcatApply(node, typeChecker) ||
+						isConcatCall(node, typeChecker)
 					) {
 						context.report({
 							message: "preferFlat",

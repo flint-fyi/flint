@@ -33,14 +33,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node, { checker, program, sourceFile }) => {
+				NewExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.Identifier ||
 						!wrapperConstructors.has(node.expression.text) ||
 						!isGlobalDeclarationOfName(
 							node.expression,
 							node.expression.text,
-							checker,
+							typeChecker,
 							program,
 						)
 					) {

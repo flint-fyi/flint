@@ -23,9 +23,9 @@ function hasNoAssignmentBeforeNode(
 	identifier: AST.Identifier,
 	node: AST.NonNullExpression,
 	sourceFile: AST.SourceFile,
-	checker: Checker,
+	typeChecker: Checker,
 ): boolean {
-	const symbol = checker.getSymbolAtLocation(identifier);
+	const symbol = typeChecker.getSymbolAtLocation(identifier);
 	if (!symbol) {
 		return false;
 	}
@@ -62,7 +62,7 @@ function hasNoAssignmentBeforeNode(
 
 	function findModifyingReference(current: AST.AnyNode): boolean {
 		if (isIdentifier(current)) {
-			const currentSymbol = checker.getSymbolAtLocation(current);
+			const currentSymbol = typeChecker.getSymbolAtLocation(current);
 			if (currentSymbol?.valueDeclaration?.resolve() === valueDeclaration) {
 				const parent = current.parent;
 
@@ -113,7 +113,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NonNullExpression: (node, { checker, sourceFile }) => {
+				NonNullExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.parent.kind !== SyntaxKind.BinaryExpression ||
 						node.parent.operatorToken.kind !==
@@ -129,7 +129,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.expression,
 							node,
 							sourceFile,
-							checker,
+							typeChecker,
 						)
 					) {
 						return;

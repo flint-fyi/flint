@@ -25,7 +25,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { checker, sourceFile }) => {
+				Identifier: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.parent.kind === SyntaxKind.VariableDeclaration &&
 						node.parent.name === node
@@ -83,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// TODO: This rule is untyped, so it should use scope analysis
 					// https://github.com/flint-fyi/flint/issues/400
-					if (!checker.getSymbolAtLocation(node)) {
+					if (!typeChecker.getSymbolAtLocation(node)) {
 						context.report({
 							data: {
 								name: node.text,

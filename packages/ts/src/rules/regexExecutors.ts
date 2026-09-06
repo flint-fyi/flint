@@ -67,14 +67,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "match" ||
 						node.arguments.length < 1 ||
 						!(
-							getConstrainedTypeAtLocation(node.expression.expression, checker)
-								.flags & TypeFlags.StringLike
+							getConstrainedTypeAtLocation(
+								node.expression.expression,
+								typeChecker,
+							).flags & TypeFlags.StringLike
 						)
 					) {
 						return;
@@ -83,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const firstArgument = node.arguments[0]!;
 
-					const objectType = checker.getTypeAtLocation(
+					const objectType = typeChecker.getTypeAtLocation(
 						node.expression.expression,
 					);
 					if (!(objectType.flags & TypeFlags.StringLike)) {

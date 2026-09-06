@@ -84,7 +84,7 @@ function isDefinitelyString(type: Type): boolean {
 
 function isFunction(
 	node: AST.AnyNode,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): boolean {
 	switch (node.kind) {
@@ -98,8 +98,8 @@ function isFunction(
 				return true;
 			}
 			return (
-				!isDefinitelyString(checker.getTypeAtLocation(node)) &&
-				isFunctionType(node, checker, program)
+				!isDefinitelyString(typeChecker.getTypeAtLocation(node)) &&
+				isFunctionType(node, typeChecker, program)
 			);
 
 		case SyntaxKind.NoSubstitutionTemplateLiteral:
@@ -108,9 +108,9 @@ function isFunction(
 			return false;
 
 		default: {
-			const type = checker.getTypeAtLocation(node);
+			const type = typeChecker.getTypeAtLocation(node);
 			return (
-				!isDefinitelyString(type) && isFunctionType(node, checker, program)
+				!isDefinitelyString(type) && isFunctionType(node, typeChecker, program)
 			);
 		}
 	}
@@ -118,10 +118,10 @@ function isFunction(
 
 function isFunctionType(
 	node: AST.AnyNode,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): boolean {
-	const type = checker.getTypeAtLocation(node);
+	const type = typeChecker.getTypeAtLocation(node);
 
 	if (
 		(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||
@@ -144,7 +144,7 @@ function isFunctionType(
 
 function isReferenceToGlobalFunction(
 	node: AST.CallExpression | AST.NewExpression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): boolean {
 	if (
@@ -154,7 +154,7 @@ function isReferenceToGlobalFunction(
 		return true;
 	}
 
-	const symbol = checker.getSymbolAtLocation(node.expression);
+	const symbol = typeChecker.getSymbolAtLocation(node.expression);
 	if (!symbol) {
 		return true;
 	}
@@ -207,13 +207,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkCalleeFunction(
 			node: AST.CallExpression | AST.NewExpression,
-			{ checker, program, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			if (!node.arguments?.length) {
 				return;
 			}
 
-			const type = checker.getTypeAtLocation(node.expression);
+			const type = typeChecker.getTypeAtLocation(node.expression);
 			if (!isBuiltinSymbolLike(program, type, "FunctionConstructor")) {
 				return;
 			}
@@ -227,7 +227,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkCalleeEval(
 			node: AST.CallExpression | AST.NewExpression,
 			calleeName: string,
-			{ checker, program, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 		) {
 			const args = node.arguments;
 			if (!args?.length) {
@@ -239,8 +239,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (
 				!evalLikeFunctions.has(calleeName) ||
-				isFunction(handler, checker, program) ||
-				!isReferenceToGlobalFunction(node, checker, program)
+				isFunction(handler, typeChecker, program) ||
+				!isReferenceToGlobalFunction(node, typeChecker, program)
 			) {
 				return;
 			}

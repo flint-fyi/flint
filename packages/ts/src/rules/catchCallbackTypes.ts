@@ -60,7 +60,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isCatchOrThenCallback(
 			node: AST.CallExpression,
-			checker: Checker,
+			typeChecker: Checker,
 			program: Program,
 		): "catch" | "then" | undefined {
 			if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
@@ -74,7 +74,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const objectType = getConstrainedTypeAtLocation(
 				node.expression.expression,
-				checker,
+				typeChecker,
 			);
 
 			if (!isGlobalPromiseType(objectType, program)) {
@@ -87,7 +87,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkCallbackParameter(
 			callback: AST.Expression,
 			sourceFile: AST.SourceFile,
-			checker: Checker,
+			typeChecker: Checker,
 		): void {
 			if (
 				(callback.kind !== SyntaxKind.ArrowFunction &&
@@ -101,7 +101,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const firstParameter = callback.parameters[0]!;
 
 			if (firstParameter.type) {
-				const parameterType = checker.getTypeFromTypeNode(firstParameter.type);
+				const parameterType = typeChecker.getTypeFromTypeNode(
+					firstParameter.type,
+				);
 
 				if (
 					(parameterType.flags & TypeFlags.Unknown) !== 0 ||
@@ -124,8 +126,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { checker, program, sourceFile }) => {
-					const callbackType = isCatchOrThenCallback(node, checker, program);
+				CallExpression: (node, { typeChecker, program, sourceFile }) => {
+					const callbackType = isCatchOrThenCallback(
+						node,
+						typeChecker,
+						program,
+					);
 
 					switch (callbackType) {
 						case "catch":
@@ -134,7 +140,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 									node.arguments[0]!,
 									sourceFile,
-									checker,
+									typeChecker,
 								);
 							}
 							break;
@@ -144,7 +150,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 									node.arguments[1]!,
 									sourceFile,
-									checker,
+									typeChecker,
 								);
 							}
 							break;

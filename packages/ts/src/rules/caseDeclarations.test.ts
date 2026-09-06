@@ -1,3 +1,8 @@
+import { afterAll, describe, it } from "vitest";
+
+import { RuleTester } from "@flint.fyi/rule-tester";
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./caseDeclarations.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -311,6 +316,64 @@ switch (value) {
     default: {
         let x = 1;
         break;
+    }
+}
+`,
+	],
+});
+
+// `await using` in a case clause is a TypeScript grammar error (TS1548), but
+// the rule must still terminate: its declaration list has the `Const` flag set
+// without a `const` keyword ever appearing in the scanned tokens.
+const languageReportsRuleTester = new RuleTester({
+	afterAll,
+	assertNoLanguageReports: false,
+	defaults: {
+		fileName: "file.ts",
+		files: createRuleTesterTSConfig(),
+	},
+	describe,
+	diskBackedFSRoot: import.meta.dirname,
+	it,
+});
+
+languageReportsRuleTester.describe(rule, {
+	invalid: [
+		{
+			code: `
+declare const value: number;
+async function example() {
+    switch (value) {
+        case 1:
+            await using x = null;
+            let y = 1;
+            break;
+    }
+}
+`,
+			snapshot: `
+declare const value: number;
+async function example() {
+    switch (value) {
+        case 1:
+            await using x = null;
+            let y = 1;
+            ~~~
+            Variables declared in case clauses without braces leak into the surrounding scope.
+            break;
+    }
+}
+`,
+		},
+	],
+	valid: [
+		`
+declare const value: number;
+async function example() {
+    switch (value) {
+        case 1:
+            await using x = null;
+            break;
     }
 }
 `,

@@ -1,4 +1,4 @@
-import { isPropertyAccessExpression } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -7,7 +7,6 @@ import {
 
 import { isGlobalDocumentReference } from "./isGlobalDocumentReference.ts";
 import { ruleCreator } from "./ruleCreator.ts";
-import { isASTExpression } from "./typeGuards.ts";
 
 const documentWriteNames = new Set(["write", "writeln"]);
 
@@ -34,13 +33,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { checker, program, sourceFile }) {
+				CallExpression(node, { typeChecker, program, sourceFile }) {
 					const { expression } = node;
 					if (
-						isPropertyAccessExpression(expression) &&
+						expression.kind === SyntaxKind.PropertyAccessExpression &&
 						documentWriteNames.has(expression.name.text) &&
-						isASTExpression(expression.expression) &&
-						isGlobalDocumentReference(expression.expression, checker, program)
+						isGlobalDocumentReference(
+							expression.expression,
+							typeChecker,
+							program,
+						)
 					) {
 						context.report({
 							data: { method: expression.name.text },

@@ -4,18 +4,18 @@ import type { AST, Checker } from "@flint.fyi/typescript-language";
 
 export function isLanguageCreateRule(
 	node: AST.CallExpression,
-	checker: Checker,
+	typeChecker: Checker,
 ): boolean {
 	return (
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "createRule" &&
-		!isRuleCreatorCreateRule(node, checker)
+		!isRuleCreatorCreateRule(node, typeChecker)
 	);
 }
 
 function isTypedMethodCall(
 	node: AST.CallExpression,
-	checker: Checker,
+	typeChecker: Checker,
 	leftType: string,
 	rightCall: string,
 ): boolean {
@@ -24,7 +24,7 @@ function isTypedMethodCall(
 	}
 
 	const propertyAccess = node.expression;
-	const type = checker.getTypeAtLocation(propertyAccess.expression);
+	const type = typeChecker.getTypeAtLocation(propertyAccess.expression);
 	const typeName = type.getSymbol()?.name;
 
 	// TODO: Maybe need to check it more strictly
@@ -34,10 +34,10 @@ function isTypedMethodCall(
 
 export const isRuleCreatorCreateRule = (
 	node: AST.CallExpression,
-	checker: Checker,
-): boolean => isTypedMethodCall(node, checker, "RuleCreator", "createRule");
+	typeChecker: Checker,
+): boolean => isTypedMethodCall(node, typeChecker, "RuleCreator", "createRule");
 
 export const isRuleContextReport = (
 	node: AST.CallExpression,
-	checker: Checker,
-): boolean => isTypedMethodCall(node, checker, "RuleContext", "report");
+	typeChecker: Checker,
+): boolean => isTypedMethodCall(node, typeChecker, "RuleContext", "report");

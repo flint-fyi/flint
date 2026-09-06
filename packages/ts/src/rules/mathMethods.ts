@@ -15,7 +15,7 @@ import { skipParentheses } from "./utils/skipParentheses.ts";
 
 function checkLogDivideConstant(
 	node: AST.BinaryExpression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 	constantName: string,
 	replacementMethod: string,
@@ -28,8 +28,8 @@ function checkLogDivideConstant(
 	const right = skipParentheses(node.right);
 
 	if (
-		getMathMethodArgument(left, "log", checker, program) &&
-		isMathProperty(right, constantName, checker, program)
+		getMathMethodArgument(left, "log", typeChecker, program) &&
+		isMathProperty(right, constantName, typeChecker, program)
 	) {
 		return {
 			description: `Math.log(…) / Math.${constantName}`,
@@ -40,7 +40,7 @@ function checkLogDivideConstant(
 
 function checkLogTimesConstant(
 	node: AST.BinaryExpression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 	constantName: string,
 	replacementMethod: string,
@@ -53,8 +53,8 @@ function checkLogTimesConstant(
 	const right = skipParentheses(node.right);
 
 	if (
-		getMathMethodArgument(left, "log", checker, program) &&
-		isMathProperty(right, constantName, checker, program)
+		getMathMethodArgument(left, "log", typeChecker, program) &&
+		isMathProperty(right, constantName, typeChecker, program)
 	) {
 		return {
 			description: `Math.log(…) * Math.${constantName}`,
@@ -63,8 +63,8 @@ function checkLogTimesConstant(
 	}
 
 	if (
-		isMathProperty(left, constantName, checker, program) &&
-		getMathMethodArgument(right, "log", checker, program)
+		isMathProperty(left, constantName, typeChecker, program) &&
+		getMathMethodArgument(right, "log", typeChecker, program)
 	) {
 		return {
 			description: `Math.${constantName} * Math.log(…)`,
@@ -92,7 +92,7 @@ function flattenPlusExpression(node: AST.Expression): AST.Expression[] {
 function getMathMethodArgument(
 	node: AST.Expression,
 	methodName: string,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
 	if (
@@ -108,7 +108,7 @@ function getMathMethodArgument(
 
 	if (
 		argument.kind === SyntaxKind.SpreadElement ||
-		!isMathProperty(node.expression, methodName, checker, program)
+		!isMathProperty(node.expression, methodName, typeChecker, program)
 	) {
 		return undefined;
 	}
@@ -119,7 +119,7 @@ function getMathMethodArgument(
 function isMathProperty(
 	node: AST.Expression,
 	propertyName: string,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
 	return (
@@ -128,7 +128,7 @@ function isMathProperty(
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === propertyName &&
 		node.expression.kind === SyntaxKind.Identifier &&
-		isGlobalDeclarationOfName(node.expression, "Math", checker, program)
+		isGlobalDeclarationOfName(node.expression, "Math", typeChecker, program)
 	);
 }
 
@@ -173,7 +173,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { checker, program, sourceFile }) => {
+				BinaryExpression: (node, { typeChecker, program, sourceFile }) => {
 					const logPatterns = [
 						{ constantName: "LOG10E", replacementMethod: "log10" },
 						{ constantName: "LOG2E", replacementMethod: "log2" },
@@ -182,7 +182,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const { constantName, replacementMethod } of logPatterns) {
 						const match = checkLogTimesConstant(
 							node,
-							checker,
+							typeChecker,
 							program,
 							constantName,
 							replacementMethod,
@@ -208,7 +208,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const { constantName, replacementMethod } of lnPatterns) {
 						const match = checkLogDivideConstant(
 							node,
-							checker,
+							typeChecker,
 							program,
 							constantName,
 							replacementMethod,
@@ -226,11 +226,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 				},
-				CallExpression: (node, { checker, program, sourceFile }) => {
+				CallExpression: (node, { typeChecker, program, sourceFile }) => {
 					const argument = getMathMethodArgument(
 						node,
 						"sqrt",
-						checker,
+						typeChecker,
 						program,
 					);
 					if (!argument) {

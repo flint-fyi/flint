@@ -33,13 +33,19 @@ describe(RuleTester, () => {
 		expect(dispose).toHaveBeenCalledOnce();
 	});
 
-	it("does not own cached language factories without afterAll", async () => {
-		const dispose = vi.fn();
-		const { run } = createTestSetup({ factoryDispose: dispose });
+	it("throws when no afterAll function is available", () => {
+		const noop = () => undefined;
 
-		await run();
-
-		expect(dispose).not.toHaveBeenCalled();
+		expect(
+			() =>
+				new RuleTester({
+					describe: noop,
+					it: noop,
+					only: noop,
+					scope: {},
+					skip: noop,
+				}),
+		).toThrow("No afterAll function found");
 	});
 
 	it("asserts that test cases contain no language reports by default", async () => {
@@ -76,7 +82,7 @@ Another language report.`,
 });
 
 function createTestSetup({
-	afterAll,
+	afterAll = () => undefined,
 	assertNoLanguageReports,
 	factoryDispose,
 	getLanguageReports,
@@ -117,7 +123,7 @@ function createTestSetup({
 	});
 
 	new RuleTester({
-		...(afterAll && { afterAll }),
+		afterAll,
 		...(assertNoLanguageReports === undefined
 			? {}
 			: { assertNoLanguageReports }),

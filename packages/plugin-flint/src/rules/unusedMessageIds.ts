@@ -25,10 +25,11 @@ import { ruleCreator } from "./ruleCreator.ts";
 const volarLanguagePackageName = "@flint.fyi/volar-language";
 
 function getResolvedDeclarations(
-	checker: Checker,
+	typeChecker: Checker,
 	node: AST.Identifier,
 ): DeclarationBase[] | undefined {
-	const declarationHandles = checker.getSymbolAtLocation(node)?.declarations;
+	const declarationHandles =
+		typeChecker.getSymbolAtLocation(node)?.declarations;
 	if (!declarationHandles) {
 		return undefined;
 	}
@@ -47,18 +48,19 @@ function getResolvedDeclarations(
 
 function isVolarReportSourceCodeCall(
 	node: AST.CallExpression,
-	checker: Checker,
+	typeChecker: Checker,
 ): boolean {
 	// import { reportSourceCode } from "@flint.fyi/volar-language";
 	// reportSourceCode(...)
 	if (node.expression.kind === SyntaxKind.Identifier) {
 		return (
-			getResolvedDeclarations(checker, node.expression)?.some((declaration) =>
-				isImportedSpecifierFromModule(
-					declaration,
-					volarLanguagePackageName,
-					"reportSourceCode",
-				),
+			getResolvedDeclarations(typeChecker, node.expression)?.some(
+				(declaration) =>
+					isImportedSpecifierFromModule(
+						declaration,
+						volarLanguagePackageName,
+						"reportSourceCode",
+					),
 			) ?? false
 		);
 	}
@@ -71,7 +73,7 @@ function isVolarReportSourceCodeCall(
 		node.expression.name.text === "reportSourceCode"
 	) {
 		return (
-			getResolvedDeclarations(checker, node.expression.expression)?.some(
+			getResolvedDeclarations(typeChecker, node.expression.expression)?.some(
 				(declaration) =>
 					declaration.kind === SyntaxKind.NamespaceImport &&
 					isImportedBindingFromModule(declaration, volarLanguagePackageName),
@@ -173,18 +175,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { checker, sourceFile }) {
-					if (isRuleCreatorCreateRule(node, checker)) {
+				CallExpression(node, { typeChecker, sourceFile }) {
+					if (isRuleCreatorCreateRule(node, typeChecker)) {
 						collectMessageIds(node, sourceFile);
 						return;
 					}
 
-					if (isRuleContextReport(node, checker)) {
+					if (isRuleContextReport(node, typeChecker)) {
 						detectMessageIdUsage(node, 0);
 						return;
 					}
 
-					if (isVolarReportSourceCodeCall(node, checker)) {
+					if (isVolarReportSourceCodeCall(node, typeChecker)) {
 						detectMessageIdUsage(node, 1);
 						return;
 					}

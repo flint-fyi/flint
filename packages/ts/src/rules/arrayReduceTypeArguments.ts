@@ -41,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, sourceFile }) => {
+				CallExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression &&
 						node.expression.kind !== SyntaxKind.ElementAccessExpression
@@ -69,17 +69,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						!isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
+						!isArrayOrTupleTypeAtLocation(
+							node.expression.expression,
+							typeChecker,
+						)
 					) {
 						return;
 					}
 
-					const initializerType = checker.getTypeAtLocation(
+					const initializerType = typeChecker.getTypeAtLocation(
 						secondArg.expression,
 					);
-					const assertedType = checker.getTypeAtLocation(secondArg.type);
+					const assertedType = typeChecker.getTypeAtLocation(secondArg.type);
 
-					if (!checker.isTypeAssignableTo(initializerType, assertedType)) {
+					if (!typeChecker.isTypeAssignableTo(initializerType, assertedType)) {
 						return;
 					}
 

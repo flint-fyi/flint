@@ -347,6 +347,16 @@ const container = new Container();
 container['protectedProperty'] = 123;
 `,
 		`
+declare function decorate(value: unknown, context: unknown): void;
+
+class Container {
+  @decorate private privateProperty = 123;
+}
+
+const container = new Container();
+container['privateProperty'] = 123;
+`,
+		`
 class Container {
   constructor(private privateProperty: number) {}
 }

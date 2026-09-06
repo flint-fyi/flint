@@ -1,7 +1,4 @@
-import {
-	isPropertyAccessExpression,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -130,12 +127,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression(node, { checker, program, sourceFile }) {
+				BinaryExpression(node, { typeChecker, program, sourceFile }) {
 					if (
 						node.operatorToken.kind !== SyntaxKind.EqualsToken ||
-						!isPropertyAccessExpression(node.left) ||
+						node.left.kind !== SyntaxKind.PropertyAccessExpression ||
 						!eventHandlerProperties.has(node.left.name.text.toLowerCase()) ||
-						!isGlobalDeclaration(node.left, checker, program)
+						!isGlobalDeclaration(node.left, typeChecker, program)
 					) {
 						return;
 					}

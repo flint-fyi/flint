@@ -128,19 +128,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkReturn(
 			returnNode: AST.Expression,
 			reportingNode: AST.AnyNode,
-			{ checker, program, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
 		): void {
-			const type = checker.getTypeAtLocation(returnNode);
+			const type = typeChecker.getTypeAtLocation(returnNode);
 			const functionNode = findFunctionAncestor(returnNode);
 			if (!functionNode) {
 				return;
 			}
 
 			// function has an explicit return type, so ensure it's a safe return
-			const returnNodeType = getConstrainedTypeAtLocation(returnNode, checker);
+			const returnNodeType = getConstrainedTypeAtLocation(
+				returnNode,
+				typeChecker,
+			);
 			const anyType = isIntrinsicErrorType(returnNodeType)
 				? AnyType.Error
-				: discriminateAnyType(type, checker, returnNode);
+				: discriminateAnyType(type, typeChecker, returnNode);
 
 			// function expressions will not have their return type modified based on receiver typing
 			// so we have to use the contextual typing in these cases, i.e.
@@ -149,9 +152,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let functionType =
 				functionNode.kind === SyntaxKind.FunctionExpression ||
 				functionNode.kind === SyntaxKind.ArrowFunction
-					? checker.getContextualType(functionNode)
-					: checker.getTypeAtLocation(functionNode);
-			functionType ??= checker.getTypeAtLocation(functionNode);
+					? typeChecker.getContextualType(functionNode)
+					: typeChecker.getTypeAtLocation(functionNode);
+			functionType ??= typeChecker.getTypeAtLocation(functionNode);
 			const callSignatures = getCallSignatures(functionType);
 			// If there is an explicit type annotation *and* that type matches the actual
 			// function return type, we shouldn't complain (it's intentional, even if unsafe)
@@ -175,12 +178,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					) {
 						const awaitedSignatureReturnTypes = getAwaitedTypes(
 							signatureReturnType,
-							checker,
+							typeChecker,
 							returnNode,
 						);
 						const awaitedReturnNodeTypes = getAwaitedTypes(
 							returnNodeType,
-							checker,
+							typeChecker,
 							returnNode,
 						);
 						if (
@@ -215,10 +218,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 					if (
 						anyType === AnyType.AnyArray &&
-						checker.isArrayType(functionReturnType) &&
+						typeChecker.isArrayType(functionReturnType) &&
 						isTypeFlagSet(
 							nullThrows(
-								checker.getTypeArguments(
+								typeChecker.getTypeArguments(
 									functionReturnType as TypeReference,
 								)[0],
 								"Array type should have at least one type argument",
@@ -241,16 +244,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				let message: "unsafeReturn" | "unsafeReturnThis" = "unsafeReturn";
 
+				// noImplicitThis defaults to the value of strict, which is off by default
 				const compilerOptions = program.getCompilerOptions();
 				if (
-					!(compilerOptions.noImplicitThis ?? compilerOptions.strict ?? true)
+					!(compilerOptions.noImplicitThis ?? compilerOptions.strict ?? false)
 				) {
 					// `return this`
 					const thisExpression = getThisExpression(returnNode);
 					if (
 						thisExpression &&
 						isTypeFlagSet(
-							getConstrainedTypeAtLocation(thisExpression, checker),
+							getConstrainedTypeAtLocation(thisExpression, typeChecker),
 							TypeFlags.Any,
 						)
 					) {
@@ -276,7 +280,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					returnNodeType,
 					functionReturnType,
 					returnNode,
-					checker,
+					typeChecker,
 				);
 				if (!result) {
 					return;
@@ -285,8 +289,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const { receiver, sender } = result;
 				context.report({
 					data: {
-						receiver: checker.typeToString(receiver),
-						sender: checker.typeToString(sender),
+						receiver: typeChecker.typeToString(receiver),
+						sender: typeChecker.typeToString(sender),
 					},
 					message: "unsafeReturnAssignment",
 					range: getTSNodeRange(reportingNode, sourceFile),

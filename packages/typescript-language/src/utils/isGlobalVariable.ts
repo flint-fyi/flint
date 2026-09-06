@@ -12,10 +12,10 @@ import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
  */
 export function isGlobalVariable(
 	node: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): boolean {
-	const symbol = checker.getSymbolAtLocation(node);
+	const symbol = typeChecker.getSymbolAtLocation(node);
 	if (!symbol) {
 		return false;
 	}

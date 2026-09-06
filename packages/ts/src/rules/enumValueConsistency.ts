@@ -15,8 +15,8 @@ const enumMemberKinds = {
 	Unknown: "unknown",
 };
 
-function getEnumMemberKind(member: AST.EnumMember, checker: Checker) {
-	const type = checker.getTypeAtLocation(member);
+function getEnumMemberKind(member: AST.EnumMember, typeChecker: Checker) {
+	const type = typeChecker.getTypeAtLocation(member);
 
 	if ((type.flags & TypeFlags.NumberLiteral) !== 0) {
 		if ((type.flags & TypeFlags.NumberLike) !== 0) {
@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				EnumDeclaration: (node, { checker, sourceFile }) => {
+				EnumDeclaration: (node, { typeChecker, sourceFile }) => {
 					if (node.members.length < 2) {
 						return;
 					}
@@ -65,7 +65,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					let hasString = false;
 
 					for (const member of node.members) {
-						const kind = getEnumMemberKind(member, checker);
+						const kind = getEnumMemberKind(member, typeChecker);
 
 						if (kind === enumMemberKinds.Number) {
 							hasNumber = true;

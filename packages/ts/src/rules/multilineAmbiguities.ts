@@ -57,18 +57,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
+					// When there are type arguments, compare from the closing > token
+					// rather than the expression end
+					const precedingEnd = getExpressionEnd(
+						node,
+						node.expression.getEnd(),
+						sourceFile,
+					);
+
 					const openParen = findChildToken(
 						node,
 						SyntaxKind.OpenParenToken,
 						sourceFile,
+						precedingEnd,
 					);
 					if (!openParen) {
 						return;
 					}
-
-					// When there are type arguments, compare from the closing > token
-					// rather than the expression end
-					const precedingEnd = getExpressionEnd(node, sourceFile);
 
 					checkMultilineDelimiter(
 						precedingEnd,
@@ -87,6 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						SyntaxKind.OpenBracketToken,
 						sourceFile,
+						node.expression.getEnd(),
 					);
 					if (!openBracket) {
 						return;
@@ -102,7 +108,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				TaggedTemplateExpression: (node, { sourceFile }) => {
 					checkMultilineDelimiter(
-						node.tag.getEnd(),
+						getExpressionEnd(node, node.tag.getEnd(), sourceFile),
 						node.template.getStart(sourceFile),
 						"a template literal",
 						"tagged template",
@@ -115,11 +121,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function findChildToken(
-	node: AST.CallExpression | AST.ElementAccessExpression,
+	node:
+		| AST.CallExpression
+		| AST.ElementAccessExpression
+		| AST.TaggedTemplateExpression,
 	kind: SyntaxKind,
 	sourceFile: AST.SourceFile,
+	begin: number,
 ) {
-	const begin = node.expression.getEnd();
 	const scanner = createScanner(
 		true,
 		sourceFile.languageVariant,
@@ -127,29 +136,34 @@ function findChildToken(
 		begin,
 		node.getEnd() - begin,
 	);
-	let range: undefined | { begin: number; end: number };
 	let tokenKind = scanner.scan();
 	while (tokenKind !== SyntaxKind.EndOfFile) {
 		if (tokenKind === kind) {
-			range = { begin: scanner.getTokenStart(), end: scanner.getTokenEnd() };
-			if (kind !== SyntaxKind.GreaterThanToken) {
-				return range;
-			}
+			return { begin: scanner.getTokenStart(), end: scanner.getTokenEnd() };
 		}
 		tokenKind = scanner.scan();
 	}
-	return range;
+	return undefined;
 }
 
 function getExpressionEnd(
-	node: AST.CallExpression,
+	node: AST.CallExpression | AST.TaggedTemplateExpression,
+	expressionEnd: number,
 	sourceFile: AST.SourceFile,
 ) {
+	// Scanning from the last type argument's end finds the closing > token
+	// without matching > tokens inside type arguments or call arguments
+	const lastTypeArgument = node.typeArguments?.at(-1);
 	const greaterThan =
-		node.typeArguments &&
-		findChildToken(node, SyntaxKind.GreaterThanToken, sourceFile);
+		lastTypeArgument &&
+		findChildToken(
+			node,
+			SyntaxKind.GreaterThanToken,
+			sourceFile,
+			lastTypeArgument.getEnd(),
+		);
 
-	return greaterThan?.end ?? node.expression.getEnd();
+	return greaterThan?.end ?? expressionEnd;
 }
 
 function getLineEndPosition(lineNumber: number, sourceFile: AST.SourceFile) {

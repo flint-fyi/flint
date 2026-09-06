@@ -11,10 +11,11 @@ import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 export function isGlobalDeclarationOfName(
 	node: AST.AnyNode,
 	name: string,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): boolean {
-	const declarationHandles = checker.getSymbolAtLocation(node)?.declarations;
+	const declarationHandles =
+		typeChecker.getSymbolAtLocation(node)?.declarations;
 	if (!declarationHandles?.length) {
 		return false;
 	}
@@ -38,7 +39,7 @@ export function isGlobalDeclarationOfName(
 			return isGlobalDeclarationOfName(
 				declaration.initializer,
 				name,
-				checker,
+				typeChecker,
 				program,
 			);
 		}
@@ -48,7 +49,7 @@ export function isGlobalDeclarationOfName(
 			return isGlobalDeclarationOfName(
 				declaration.parent,
 				name,
-				checker,
+				typeChecker,
 				program,
 			);
 		}

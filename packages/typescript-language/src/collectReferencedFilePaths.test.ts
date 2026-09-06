@@ -8,7 +8,7 @@ import { nullThrows } from "@flint.fyi/utils";
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 
-it("uses checker-resolved declarations for supported module resolution forms", () => {
+it("uses typeChecker-resolved declarations for supported module resolution forms", () => {
 	const files = new Map([
 		["/repo/node_modules/external/index.d.ts", "export {};"],
 		["/repo/node_modules/external/package.json", '{"types":"index.d.ts"}'],

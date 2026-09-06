@@ -40,7 +40,7 @@ function mockSnapshot(sourceFiles: Record<string, object>) {
 		getSourceFile: vi.fn((filePath: string) => sourceFiles[filePath]),
 		getSourceFileNames: vi.fn(() => Object.keys(sourceFiles)),
 	};
-	const project = { checker: {}, program };
+	const project = { typeChecker: {}, program };
 	const snapshot = {
 		getDefaultProjectForFile: vi.fn<() => object | undefined>(() => project),
 		getProjects: vi.fn(() => [project]),

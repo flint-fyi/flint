@@ -50,12 +50,19 @@ export async function runLintRule(
 			if (processedReport == null) {
 				return;
 			}
-			const reportKey = JSON.stringify(processedReport);
-			const reportKeys = reportKeysByFilePath.get(targetFile.about.filePath);
-			if (reportKeys.has(reportKey)) {
-				return;
+			// Only content-mapped files can emit duplicate reports: a single
+			// authored construct may appear in several supplemental source files
+			// that all map back to the same range. Deduplicating those is worth
+			// serializing the report; doing it for ordinary files would serialize
+			// every report for no benefit.
+			if (targetFile.adjustReportRange != null) {
+				const reportKey = JSON.stringify(processedReport);
+				const reportKeys = reportKeysByFilePath.get(targetFile.about.filePath);
+				if (reportKeys.has(reportKey)) {
+					return;
+				}
+				reportKeys.add(reportKey);
 			}
-			reportKeys.add(reportKey);
 
 			log(
 				"Adding %s report for file path %s",

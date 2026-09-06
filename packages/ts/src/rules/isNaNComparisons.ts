@@ -42,14 +42,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { checker, program, sourceFile }) => {
+				BinaryExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (!comparisonOperators.has(node.operatorToken.kind)) {
 						return;
 					}
 
 					if (
-						isNaNIdentifier(node.left, checker, program) ||
-						isNaNIdentifier(node.right, checker, program)
+						isNaNIdentifier(node.left, typeChecker, program) ||
+						isNaNIdentifier(node.right, typeChecker, program)
 					) {
 						context.report({
 							message: "useIsNaN",
@@ -62,14 +62,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isNaNIdentifier(
 			node: AST.Expression,
-			checker: Checker,
+			typeChecker: Checker,
 			program: Program,
 		) {
 			const unwrapped = unwrapParenthesizedNode(node);
 			return (
 				unwrapped.kind === SyntaxKind.Identifier &&
 				unwrapped.text === "NaN" &&
-				isGlobalDeclarationOfName(unwrapped, "NaN", checker, program)
+				isGlobalDeclarationOfName(unwrapped, "NaN", typeChecker, program)
 			);
 		}
 	},

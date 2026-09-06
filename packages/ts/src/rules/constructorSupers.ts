@@ -91,7 +91,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				let tokenKind: SyntaxKind;
 				do {
 					tokenKind = scanner.scan();
-				} while (tokenKind !== SyntaxKind.ConstructorKeyword);
+				} while (
+					tokenKind !== SyntaxKind.ConstructorKeyword &&
+					tokenKind !== SyntaxKind.EndOfFile
+				);
+				if (tokenKind !== SyntaxKind.ConstructorKeyword) {
+					return;
+				}
 
 				context.report({
 					message: "missingSuperCall",

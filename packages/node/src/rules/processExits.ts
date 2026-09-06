@@ -33,14 +33,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { checker, sourceFile }) {
+				CallExpression(node, { typeChecker, sourceFile }) {
 					if (
 						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 						node.expression.expression.kind === SyntaxKind.Identifier &&
 						node.expression.expression.text === "process" &&
 						node.expression.name.kind === SyntaxKind.Identifier &&
 						node.expression.name.text === "exit" &&
-						isDeclaredInNodeTypes(node.expression, checker)
+						isDeclaredInNodeTypes(node.expression, typeChecker)
 					) {
 						context.report({
 							message: "noProcessExit",

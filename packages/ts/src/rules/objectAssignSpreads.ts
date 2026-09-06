@@ -39,7 +39,7 @@ function hasArraySpread(node: AST.CallExpression) {
 
 function isObjectAssignCall(
 	node: AST.CallExpression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ): boolean {
 	return (
@@ -50,7 +50,7 @@ function isObjectAssignCall(
 		isGlobalDeclarationOfName(
 			node.expression.expression,
 			"Object",
-			checker,
+			typeChecker,
 			program,
 		)
 	);
@@ -92,9 +92,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, program, sourceFile }) => {
+				CallExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (
-						!isObjectAssignCall(node, checker, program) ||
+						!isObjectAssignCall(node, typeChecker, program) ||
 						node.arguments.length < 1
 					) {
 						return;

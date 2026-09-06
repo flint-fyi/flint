@@ -30,14 +30,14 @@ const consoleMethods = new Set([
 	"warn",
 ]);
 
-function isConsoleMethodCall(node: AST.Expression, checker: Checker) {
+function isConsoleMethodCall(node: AST.Expression, typeChecker: Checker) {
 	return (
 		node.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.kind === SyntaxKind.Identifier &&
 		node.expression.text === "console" &&
 		node.name.kind === SyntaxKind.Identifier &&
 		consoleMethods.has(node.name.text) &&
-		isDeclaredInNodeTypes(node.expression, checker)
+		isDeclaredInNodeTypes(node.expression, typeChecker)
 	);
 }
 
@@ -71,8 +71,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { checker, sourceFile }) {
-					if (!isConsoleMethodCall(node.expression, checker)) {
+				CallExpression(node, { typeChecker, sourceFile }) {
+					if (!isConsoleMethodCall(node.expression, typeChecker)) {
 						return;
 					}
 

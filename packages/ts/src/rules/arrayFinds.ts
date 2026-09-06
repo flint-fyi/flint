@@ -30,11 +30,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ElementAccessExpression: (node, { checker, sourceFile }) => {
+				ElementAccessExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.argumentExpression.kind !== SyntaxKind.NumericLiteral ||
 						node.argumentExpression.text !== "0" ||
-						!isFilterCall(node.expression, checker)
+						!isFilterCall(node.expression, typeChecker)
 					) {
 						return;
 					}
@@ -64,13 +64,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function isFilterCall(
 	node: AST.AnyNode,
-	checker: Checker,
+	typeChecker: Checker,
 ): node is AST.CallExpression & { expression: AST.PropertyAccessExpression } {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		!!node.arguments.length &&
 		node.expression.name.text === "filter" &&
-		checker.isArrayType(checker.getTypeAtLocation(node.expression.expression))
+		typeChecker.isArrayType(
+			typeChecker.getTypeAtLocation(node.expression.expression),
+		)
 	);
 }

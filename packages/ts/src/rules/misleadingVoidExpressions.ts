@@ -138,9 +138,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.AwaitExpression
 				| AST.CallExpression
 				| AST.TaggedTemplateExpression,
-			{ checker, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, sourceFile }: TypeScriptFileServices,
 		) {
-			const type = getConstrainedTypeAtLocation(node, checker);
+			const type = getConstrainedTypeAtLocation(node, typeChecker);
 
 			if (!isVoidLike(type)) {
 				return;

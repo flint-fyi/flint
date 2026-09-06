@@ -15,7 +15,7 @@ export function getTypeScriptFileCacheImpacts(
 
 			...collectReferencedFilePaths(
 				file.services.program,
-				file.services.checker,
+				file.services.typeChecker,
 				file.services.sourceFile,
 			),
 		],

@@ -1,11 +1,4 @@
-import {
-	isBlock,
-	isCallExpression,
-	isExpressionStatement,
-	isIdentifier,
-	isPropertyAccessExpression,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -15,7 +8,6 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { isASTStatement } from "./typeGuards.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -39,16 +31,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function getClassListMethodCall(node: AST.Statement) {
-			if (!isExpressionStatement(node)) {
+			if (node.kind !== SyntaxKind.ExpressionStatement) {
 				return undefined;
 			}
 
 			const expression = node.expression;
-			if (!isCallExpression(expression)) {
+			if (expression.kind !== SyntaxKind.CallExpression) {
 				return undefined;
 			}
 
-			if (!isPropertyAccessExpression(expression.expression)) {
+			if (expression.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 				return undefined;
 			}
 
@@ -56,24 +48,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const method = propertyAccess.name;
 
 			if (
-				!isIdentifier(method) ||
+				method.kind !== SyntaxKind.Identifier ||
 				(method.text !== "add" && method.text !== "remove")
 			) {
 				return undefined;
 			}
 
-			if (!isPropertyAccessExpression(propertyAccess.expression)) {
+			if (
+				propertyAccess.expression.kind !== SyntaxKind.PropertyAccessExpression
+			) {
 				return undefined;
 			}
 
 			const classList = propertyAccess.expression;
 			if (
-				!isIdentifier(classList.name) ||
+				classList.name.kind !== SyntaxKind.Identifier ||
 				classList.name.text !== "classList"
 			) {
 				return undefined;
 			}
-			if (!isIdentifier(classList.expression)) {
+			if (classList.expression.kind !== SyntaxKind.Identifier) {
 				return undefined;
 			}
 
@@ -86,7 +80,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				args[0],
 				"Argument is expected to be present by earlier length check",
 			);
-			if (!isStringLiteral(arg)) {
+			if (arg.kind !== SyntaxKind.StringLiteral) {
 				return undefined;
 			}
 
@@ -108,12 +102,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const thenBlock = isBlock(thenStatement)
-						? thenStatement.statements
-						: [thenStatement];
-					const elseBlock = isBlock(elseStatement)
-						? elseStatement.statements
-						: [elseStatement];
+					const thenBlock =
+						thenStatement.kind === SyntaxKind.Block
+							? thenStatement.statements
+							: [thenStatement];
+					const elseBlock =
+						elseStatement.kind === SyntaxKind.Block
+							? elseStatement.statements
+							: [elseStatement];
 
 					if (thenBlock.length !== 1 || elseBlock.length !== 1) {
 						return;
@@ -127,12 +123,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						elseBlock[0],
 						"Else block statement is expected to be present by prior length check",
 					);
-					if (
-						!isASTStatement(thenBlockStatement) ||
-						!isASTStatement(elseBlockStatement)
-					) {
-						return;
-					}
 
 					const thenCall = getClassListMethodCall(thenBlockStatement);
 					const elseCall = getClassListMethodCall(elseBlockStatement);

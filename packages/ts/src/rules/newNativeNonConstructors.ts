@@ -27,7 +27,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node, { checker, program, sourceFile }) => {
+				NewExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (node.expression.kind !== SyntaxKind.Identifier) {
 						return;
 					}
@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const name = node.expression.text;
 					if (
 						!["BigInt", "Symbol"].includes(name) ||
-						!isGlobalDeclaration(node.expression, checker, program)
+						!isGlobalDeclaration(node.expression, typeChecker, program)
 					) {
 						return;
 					}

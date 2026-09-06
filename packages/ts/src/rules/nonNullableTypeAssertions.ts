@@ -26,9 +26,9 @@ function couldBeNullish(type: Type): boolean {
 
 function getTypesIfNotLoose(
 	node: AST.Expression | AST.TypeNode,
-	checker: Checker,
+	typeChecker: Checker,
 ) {
-	const type = checker.getTypeAtLocation(node);
+	const type = typeChecker.getTypeAtLocation(node);
 	if ((type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0) {
 		return undefined;
 	}
@@ -112,18 +112,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.AsExpression | AST.TypeAssertion,
-			{ checker, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, sourceFile }: TypeScriptFileServices,
 		) {
 			if (isConstAssertion(node, sourceFile)) {
 				return;
 			}
 
-			const originalTypes = getTypesIfNotLoose(node.expression, checker);
+			const originalTypes = getTypesIfNotLoose(node.expression, typeChecker);
 			if (!originalTypes) {
 				return;
 			}
 
-			const assertedTypes = getTypesIfNotLoose(node.type, checker);
+			const assertedTypes = getTypesIfNotLoose(node.type, typeChecker);
 			if (
 				!assertedTypes ||
 				!sameTypeWithoutNullish(assertedTypes, originalTypes)

@@ -15,7 +15,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function getMathMethodInfo(
 	node: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
 	const unwrapped = unwrapParenthesizedNode(node);
@@ -31,7 +31,7 @@ function getMathMethodInfo(
 		return undefined;
 	}
 
-	if (isMathMethod(unwrapped.expression, "min", checker, program)) {
+	if (isMathMethod(unwrapped.expression, "min", typeChecker, program)) {
 		return {
 			arguments: Array.from(unwrapped.arguments),
 			method: "min",
@@ -39,7 +39,7 @@ function getMathMethodInfo(
 		};
 	}
 
-	if (isMathMethod(unwrapped.expression, "max", checker, program)) {
+	if (isMathMethod(unwrapped.expression, "max", typeChecker, program)) {
 		return {
 			arguments: Array.from(unwrapped.arguments),
 			method: "max",
@@ -53,7 +53,7 @@ function getMathMethodInfo(
 function isMathMethod(
 	node: AST.Expression,
 	methodName: string,
-	checker: Checker,
+	typeChecker: Checker,
 	program: Program,
 ) {
 	return (
@@ -62,7 +62,7 @@ function isMathMethod(
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === methodName &&
 		node.expression.kind === SyntaxKind.Identifier &&
-		isGlobalDeclarationOfName(node.expression, "Math", checker, program)
+		isGlobalDeclarationOfName(node.expression, "Math", typeChecker, program)
 	);
 }
 
@@ -98,8 +98,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { checker, program, sourceFile }) => {
-					const outerInfo = getMathMethodInfo(node, checker, program);
+				CallExpression: (node, { typeChecker, program, sourceFile }) => {
+					const outerInfo = getMathMethodInfo(node, typeChecker, program);
 					if (!outerInfo) {
 						return;
 					}
@@ -145,7 +145,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						const innerInfo = getMathMethodInfo(
 							secondArgument,
-							checker,
+							typeChecker,
 							program,
 						);
 

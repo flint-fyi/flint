@@ -38,11 +38,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { checker, sourceFile }) {
+				CallExpression(node, { typeChecker, sourceFile }) {
 					if (
 						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 						node.expression.name.text === "charCodeAt" &&
-						(checker.getTypeAtLocation(node.expression.expression).flags &
+						(typeChecker.getTypeAtLocation(node.expression.expression).flags &
 							TypeFlags.StringLike) !==
 							0
 					) {
@@ -55,14 +55,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				PropertyAccessExpression(node, { checker, program, sourceFile }) {
+				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
 					if (
 						node.name.text === "fromCharCode" &&
 						node.expression.kind === SyntaxKind.Identifier &&
 						isGlobalDeclarationOfName(
 							node.expression,
 							"String",
-							checker,
+							typeChecker,
 							program,
 						)
 					) {

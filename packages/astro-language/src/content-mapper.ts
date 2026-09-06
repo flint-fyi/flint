@@ -44,7 +44,14 @@ export function transformAstro(params: TransformParams): TransformResult {
 			]),
 		).values(),
 	];
-	const canonical = diagnostics.length
+	// Only genuine errors mean the transformed output can't be trusted enough to
+	// map back to. Warnings and hints must still map, or they would silently
+	// suppress all linting and type-checking for the file.
+	const hasBlockingError = diagnostics.some(
+		// `DiagnosticSeverity.Error` from @astrojs/compiler.
+		(diagnostic) => diagnostic.severity === 1,
+	);
+	const canonical = hasBlockingError
 		? { extension: ".tsx", mappings: [], text }
 		: createVolarTransform({
 				extension: ".tsx",
@@ -183,12 +190,23 @@ function normalizeAstroMappings(
 	}));
 }
 
-if (
-	process.argv[1] &&
-	path.resolve(process.argv[1]) === url.fileURLToPath(import.meta.url)
-) {
+/**
+ * Starts the Astro content-mapper JSON-RPC server over stdio.
+ *
+ * Thin wrapper packages (`@flint.fyi/astro`) re-export this module and are
+ * themselves the exec'd entry, so the `argv[1] === import.meta.url` guard below
+ * can never match for them. They call this directly instead.
+ */
+export async function runAstroContentMapper(): Promise<void> {
 	await runContentMapper({
 		diagnosticSource: "astro",
 		openProject: openAstroProject,
 	});
+}
+
+if (
+	process.argv[1] &&
+	path.resolve(process.argv[1]) === url.fileURLToPath(import.meta.url)
+) {
+	await runAstroContentMapper();
 }

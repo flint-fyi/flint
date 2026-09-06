@@ -4,8 +4,8 @@ import type { AST, Checker } from "@flint.fyi/typescript-language";
 
 export function getConstrainedTypeAtLocation(
 	node: AST.Expression,
-	checker: Checker,
+	typeChecker: Checker,
 ): Type {
-	const type = checker.getTypeAtLocation(node);
-	return checker.getBaseConstraintOfType(type) ?? type;
+	const type = typeChecker.getTypeAtLocation(node);
+	return typeChecker.getBaseConstraintOfType(type) ?? type;
 }

@@ -18,6 +18,32 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 		});
 	});
 
+	it("ignores directive-like text inside JSX text", () => {
+		const sourceFile = createNativeSourceFile(
+			"const element = <div>// flint-disable-next-line a</div>;\nconst value = 1;",
+			".tsx",
+		);
+
+		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
+
+		expect(actual).toEqual({
+			directives: [],
+			reports: [],
+		});
+	});
+
+	it("parses comment directives in files containing JSX text", () => {
+		const sourceFile = createNativeSourceFile(
+			"const element = <div>// not a comment</div>;\n// flint-disable-next-line a\nconst value = 1;",
+			".tsx",
+		);
+
+		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
+
+		expect(actual.directives).toHaveLength(1);
+		expect(actual.reports).toEqual([]);
+	});
+
 	it("accepts a disable-file directive in the header before code", () => {
 		const sourceFile = createNativeSourceFile(
 			"\n// flint-disable-file a\nconst value = 1;",

@@ -42,7 +42,13 @@ interface SnapshotChanges extends TypeScriptProjectChanges {
 export function createTypeScriptProjectSession(
 	host: LinterHost,
 ): TypeScriptProjectSession {
-	const observedSourceTextByFilePath = new Map<string, string | undefined>();
+	// Tracks the last-seen modification time of every real file the TypeScript
+	// file system has touched. Change detection compares these timestamps rather
+	// than re-reading full file contents, which keeps a lint pass linear in the
+	// number of files instead of O(files opened * files in program) disk reads.
+	// Virtual files (config overlays and parse temporaries) are managed here
+	// explicitly, so they are never disk-detected.
+	const observedTouchTimeByFilePath = new Map<string, number | undefined>();
 	const authoredConfigPaths = new Set<string>();
 	const authoredConfigPathsToOpen = new Set<string>();
 	let mappedExtensions = new Set<string>();
@@ -50,14 +56,23 @@ export function createTypeScriptProjectSession(
 	const openedOverlayPaths = new Set<string>();
 	const overlayPathByAuthoredConfigPath = new Map<string, string>();
 	const virtualFiles = new Map<string, string>();
+	// Memoizes parsed configs for a single update cycle so resolving a mapped
+	// file's owning project does not re-parse the same configs for every file.
+	let parsedConfigCache = new Map<
+		string,
+		ReturnType<typeof api.parseConfigFile> | undefined
+	>();
 	const api = new API({
 		cwd: host.getCurrentDirectory(),
 		fs: createTypeScriptFileSystem(
 			host,
 			(fileName) => {
-				observedSourceTextByFilePath.set(
+				if (virtualFiles.has(fileName)) {
+					return;
+				}
+				observedTouchTimeByFilePath.set(
 					fileName,
-					virtualFiles.get(fileName) ?? host.readFileSync(fileName),
+					host.getFileTouchTimeSync(fileName),
 				);
 			},
 			virtualFiles,
@@ -165,7 +180,7 @@ export function createTypeScriptProjectSession(
 			({ config, error } = api.readConfigFile(parseFilePath));
 		} finally {
 			virtualFiles.delete(parseFilePath);
-			observedSourceTextByFilePath.delete(parseFilePath);
+			observedTouchTimeByFilePath.delete(parseFilePath);
 		}
 		if (error) {
 			throw new Error(
@@ -189,7 +204,7 @@ export function createTypeScriptProjectSession(
 		);
 		return overlay.filePath;
 	};
-	const findConfigFile = (filePath: string): string | undefined => {
+	const findNearestConfigFile = (filePath: string): string | undefined => {
 		let directory = path.dirname(filePath);
 		while (true) {
 			for (const configName of ["tsconfig.json", "jsconfig.json"]) {
@@ -204,6 +219,107 @@ export function createTypeScriptProjectSession(
 			}
 			directory = parent;
 		}
+	};
+	const parseConfigSafely = (
+		configFilePath: string,
+	): ReturnType<typeof api.parseConfigFile> | undefined => {
+		if (parsedConfigCache.has(configFilePath)) {
+			return parsedConfigCache.get(configFilePath);
+		}
+		let parsed: ReturnType<typeof api.parseConfigFile> | undefined;
+		try {
+			parsed = api.parseConfigFile(configFilePath);
+		} catch {
+			parsed = undefined;
+		}
+		parsedConfigCache.set(configFilePath, parsed);
+		return parsed;
+	};
+	const isUnderDirectory = (directory: string, candidate: string): boolean =>
+		candidate === directory || candidate.startsWith(`${directory}/`);
+	const countFilesUnder = (
+		fileNames: readonly string[],
+		directory: string,
+	): number => {
+		let count = 0;
+		for (const fileName of fileNames) {
+			if (isUnderDirectory(directory, path.dirname(fileName))) {
+				count += 1;
+			}
+		}
+		return count;
+	};
+	const resolveReferencedConfigPath = (
+		referencePath: string,
+	): string | undefined => {
+		if (host.fileTypeSync(referencePath) === "file") {
+			return referencePath;
+		}
+		const asDirectoryConfig = path.join(referencePath, "tsconfig.json");
+		return host.fileTypeSync(asDirectoryConfig) === "file"
+			? asDirectoryConfig
+			: undefined;
+	};
+	// A solution-style config (a root `tsconfig.json` that only lists
+	// `references` and compiles no files itself) would leave a mapped file with
+	// no compiler options if used directly. Redirect to the referenced project
+	// whose source tree actually contains the file so it inherits the real
+	// strict/jsx/paths settings.
+	const resolveConfigForMappedFile = (
+		configFilePath: string,
+		targetDirectory: string,
+		seen: Set<string>,
+	): string => {
+		if (seen.has(configFilePath)) {
+			return configFilePath;
+		}
+		seen.add(configFilePath);
+
+		const parsed = parseConfigSafely(configFilePath);
+		const references = parsed?.projectReferences;
+		if (
+			!references?.length ||
+			countFilesUnder(parsed.fileNames, targetDirectory)
+		) {
+			// Not a solution config, or it already compiles files under the target.
+			return configFilePath;
+		}
+
+		let best: { configFilePath: string; score: number } | undefined;
+		let fallback: string | undefined;
+		for (const reference of references) {
+			const referencedConfigPath = resolveReferencedConfigPath(reference.path);
+			if (!referencedConfigPath) {
+				continue;
+			}
+			const resolved = resolveConfigForMappedFile(
+				referencedConfigPath,
+				targetDirectory,
+				seen,
+			);
+			const resolvedParsed = parseConfigSafely(resolved);
+			if (!resolvedParsed) {
+				continue;
+			}
+			const score = countFilesUnder(resolvedParsed.fileNames, targetDirectory);
+			if (score && (!best || score > best.score)) {
+				best = { configFilePath: resolved, score };
+			}
+			fallback ??= resolved;
+		}
+
+		return best?.configFilePath ?? fallback ?? configFilePath;
+	};
+	const findConfigFile = (filePath: string): string | undefined => {
+		const nearest = findNearestConfigFile(filePath);
+		if (!nearest) {
+			return undefined;
+		}
+		return resolveConfigForMappedFile(
+			nearest,
+			path.dirname(filePath),
+			new Set(),
+		);
 	};
 
 	return {
@@ -226,21 +342,21 @@ export function createTypeScriptProjectSession(
 		[Symbol.dispose]: dispose,
 		update({ changed, closeFiles, created, deleted, openFiles, openProjects }) {
 			assertActive();
+			// Configs may have changed on disk since the last update, so drop the
+			// per-cycle parse cache used for mapped-file project resolution.
+			parsedConfigCache = new Map();
 			const detectedChanged: string[] = [];
 			const detectedCreated: string[] = [];
 			const detectedDeleted: string[] = [];
-			for (const [
-				filePath,
-				previousSourceText,
-			] of observedSourceTextByFilePath) {
-				const sourceText =
-					virtualFiles.get(filePath) ?? host.readFileSync(filePath);
-				if (sourceText === previousSourceText) {
+			for (const [filePath, previousTouchTime] of observedTouchTimeByFilePath) {
+				const touchTime = host.getFileTouchTimeSync(filePath);
+				if (touchTime === previousTouchTime) {
 					continue;
 				}
-				if (previousSourceText === undefined) {
+				observedTouchTimeByFilePath.set(filePath, touchTime);
+				if (previousTouchTime === undefined) {
 					detectedCreated.push(filePath);
-				} else if (sourceText === undefined) {
+				} else if (touchTime === undefined) {
 					detectedDeleted.push(filePath);
 				} else {
 					detectedChanged.push(filePath);

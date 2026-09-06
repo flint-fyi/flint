@@ -202,7 +202,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				IntersectionType: (node, { checker, sourceFile }) => {
+				IntersectionType: (node, { typeChecker, sourceFile }) => {
 					const seenLiteralTypes = new Map<TypeFlags, string[]>();
 					const seenPrimitiveTypes = new Map<TypeFlags, AST.TypeNode[]>();
 					const seenUnionTypes = new Map<
@@ -211,7 +211,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					>();
 
 					for (const typeNode of node.types) {
-						const nodeType = checker.getTypeAtLocation(typeNode);
+						const nodeType = typeChecker.getTypeAtLocation(typeNode);
 						const typeParts = unionTypePartsUnlessBoolean(nodeType);
 
 						for (const typePart of typeParts) {
@@ -327,7 +327,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 				},
-				UnionType: (node, { checker, sourceFile }) => {
+				UnionType: (node, { typeChecker, sourceFile }) => {
 					const seenLiteralTypes = new Map<
 						TypeFlags,
 						{ literalValue: string; typeNode: AST.TypeNode }[]
@@ -335,7 +335,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const seenPrimitiveTypes = new Set<TypeFlags>();
 
 					for (const typeNode of node.types) {
-						const nodeType = checker.getTypeAtLocation(typeNode);
+						const nodeType = typeChecker.getTypeAtLocation(typeNode);
 						const typeParts = unionTypePartsUnlessBoolean(nodeType);
 
 						for (const typePart of typeParts) {

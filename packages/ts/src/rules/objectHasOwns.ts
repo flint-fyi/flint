@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isObjectPrototypeHasOwnProperty(
 			node: AST.Expression,
-			checker: Checker,
+			typeChecker: Checker,
 			program: Program,
 		) {
 			return (
@@ -44,7 +44,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.name.kind === SyntaxKind.Identifier &&
 				node.name.text === "prototype" &&
 				node.expression.kind === SyntaxKind.Identifier &&
-				isGlobalDeclarationOfName(node.expression, "Object", checker, program)
+				isGlobalDeclarationOfName(
+					node.expression,
+					"Object",
+					typeChecker,
+					program,
+				)
 			);
 		}
 
@@ -57,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isHasOwnProperty(
 			node: AST.Expression,
-			checker: Checker,
+			typeChecker: Checker,
 			program: Program,
 		): boolean {
 			if (
@@ -69,14 +74,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			return (
-				isObjectPrototypeHasOwnProperty(node.expression, checker, program) ||
-				isObjectLiteralHasOwnProperty(node.expression)
+				isObjectPrototypeHasOwnProperty(
+					node.expression,
+					typeChecker,
+					program,
+				) || isObjectLiteralHasOwnProperty(node.expression)
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression: (node, { checker, program, sourceFile }) => {
+				CallExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier
@@ -87,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.name.text === "call" &&
 						node.arguments.length >= 2 &&
-						isHasOwnProperty(node.expression.expression, checker, program)
+						isHasOwnProperty(node.expression.expression, typeChecker, program)
 					) {
 						context.report({
 							message: "preferHasOwn",
@@ -99,7 +107,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.name.text === "hasOwnProperty" &&
 						node.arguments.length >= 1 &&
-						!isHasOwnProperty(node.expression, checker, program)
+						!isHasOwnProperty(node.expression, typeChecker, program)
 					) {
 						context.report({
 							message: "preferHasOwn",

@@ -1,4 +1,5 @@
 import {
+	isClassLikeDeclaration,
 	isFunctionLikeDeclaration,
 	SyntaxKind,
 } from "typescript-native/unstable/ast";
@@ -70,7 +71,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const isGetter = accessor.kind === SyntaxKind.GetAccessor;
 
 			function checkNode(node: AST.AnyNode): void {
-				if (isFunctionLikeDeclaration(node)) {
+				// `this` inside a nested class or function refers to that scope's
+				// own `this`, not the accessor's
+				if (isClassLikeDeclaration(node) || isFunctionLikeDeclaration(node)) {
 					return;
 				}
 

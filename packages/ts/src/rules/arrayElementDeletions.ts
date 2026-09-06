@@ -78,10 +78,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				DeleteExpression: (node, { checker, sourceFile }) => {
+				DeleteExpression: (node, { typeChecker, sourceFile }) => {
 					if (
 						node.expression.kind !== SyntaxKind.ElementAccessExpression ||
-						!isArrayOrTupleTypeAtLocation(node.expression.expression, checker)
+						!isArrayOrTupleTypeAtLocation(
+							node.expression.expression,
+							typeChecker,
+						)
 					) {
 						return;
 					}

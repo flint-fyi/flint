@@ -307,7 +307,7 @@ void foo;
 function foo(this: any) {
   return this;
   ~~~~~~~~~~~~
-  Unsafe return of a value of type \`any\`.
+  Unsafe return of a value of type \`any\`. \`this\` is typed as \`any\`.
 }
 void foo;
 `,

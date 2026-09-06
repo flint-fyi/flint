@@ -37,19 +37,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isKeyboardEvent(expression: AST.Node, checker: Checker) {
+		function isKeyboardEvent(expression: AST.Node, typeChecker: Checker) {
 			return (
-				checker.getTypeAtLocation(expression).getSymbol()?.name ===
+				typeChecker.getTypeAtLocation(expression).getSymbol()?.name ===
 				"KeyboardEvent"
 			);
 		}
 
 		function isKeyboardEventProperty(
 			name: AST.Identifier,
-			checker: Checker,
+			typeChecker: Checker,
 			program: Program,
 		) {
-			const declarations = getDeclarationsIfGlobal(name, checker, program);
+			const declarations = getDeclarationsIfGlobal(name, typeChecker, program);
 			if (!declarations) {
 				return;
 			}
@@ -67,13 +67,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				PropertyAccessExpression(node, { checker, program, sourceFile }) {
+				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
 					if (
 						isIdentifier(node.name) &&
 						deprecatedProperties.has(node.name.text) &&
 						isASTExpression(node.expression) &&
-						isKeyboardEvent(node.expression, checker) &&
-						isKeyboardEventProperty(node.name, checker, program)
+						isKeyboardEvent(node.expression, typeChecker) &&
+						isKeyboardEventProperty(node.name, typeChecker, program)
 					) {
 						context.report({
 							data: { property: node.name.text },

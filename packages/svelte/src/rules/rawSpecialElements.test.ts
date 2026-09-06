@@ -88,5 +88,9 @@ ruleTester.describe(rule, {
 		"<svelte:document></svelte:document>",
 		'<svelte:element this="div"></svelte:element>',
 		"<svelte:options></svelte:options>",
+		{
+			code: `export const body = "<body></body>";`,
+			fileName: "file.ts",
+		},
 	],
 });

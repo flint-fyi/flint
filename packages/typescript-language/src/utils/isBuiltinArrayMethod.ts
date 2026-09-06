@@ -11,13 +11,15 @@ export type BuiltInArrayMethodNode = AST.CallExpression & {
 export function isBuiltinArrayMethod(
 	name: string,
 	node: AST.CallExpression,
-	checker: Checker,
+	typeChecker: Checker,
 ): node is BuiltInArrayMethodNode {
 	const expression = node.expression;
 	return (
 		expression.kind === SyntaxKind.PropertyAccessExpression &&
 		expression.name.text === name &&
-		checker.isArrayType(checker.getTypeAtLocation(expression.expression)) &&
+		typeChecker.isArrayType(
+			typeChecker.getTypeAtLocation(expression.expression),
+		) &&
 		node.parent.kind !== SyntaxKind.ExpressionStatement
 	);
 }

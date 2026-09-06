@@ -29,7 +29,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { checker, program, sourceFile }) => {
+				BinaryExpression: (node, { typeChecker, program, sourceFile }) => {
 					if (node.operatorToken.kind !== SyntaxKind.InstanceOfKeyword) {
 						return;
 					}
@@ -38,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						right.kind !== SyntaxKind.Identifier ||
 						right.text !== "Array" ||
-						!isGlobalDeclarationOfName(right, "Array", checker, program)
+						!isGlobalDeclarationOfName(right, "Array", typeChecker, program)
 					) {
 						return;
 					}

@@ -53,5 +53,9 @@ let string = 'this string contains some <strong>HTML!!!</strong>'
 <p>{string}</p>
 		`,
 		"<p>{`this string contains some <strong>HTML!!!</strong>`}</p>",
+		{
+			code: `export const setHtml = "set:html";`,
+			fileName: "file.ts",
+		},
 	],
 });

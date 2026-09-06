@@ -5,7 +5,6 @@ import {
 
 import { isGlobalDocumentReference } from "./isGlobalDocumentReference.ts";
 import { ruleCreator } from "./ruleCreator.ts";
-import { isASTExpression } from "./typeGuards.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -29,11 +28,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression(node, { checker, program, sourceFile }) {
+				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
 					if (
 						node.name.text === "domain" &&
-						isASTExpression(node.expression) &&
-						isGlobalDocumentReference(node.expression, checker, program)
+						isGlobalDocumentReference(node.expression, typeChecker, program)
 					) {
 						context.report({
 							message: "noDomain",

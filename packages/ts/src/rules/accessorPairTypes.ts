@@ -84,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkPairs(
 			pairs: Map<string, AccessorPair>,
-			{ checker, sourceFile }: TypeScriptFileServices,
+			{ typeChecker, sourceFile }: TypeScriptFileServices,
 		) {
 			for (const [, pair] of pairs) {
 				if (!pair.getter || pair.setter?.parameters.length !== 1) {
@@ -94,12 +94,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const setterParameter = pair.setter.parameters[0]!;
 
-				const getterReturnType = checker.getTypeAtLocation(pair.getter);
+				const getterReturnType = typeChecker.getTypeAtLocation(pair.getter);
 
-				const setterParameterType = checker.getTypeAtLocation(setterParameter);
+				const setterParameterType =
+					typeChecker.getTypeAtLocation(setterParameter);
 
 				if (
-					!checker.isTypeAssignableTo(getterReturnType, setterParameterType)
+					!typeChecker.isTypeAssignableTo(getterReturnType, setterParameterType)
 				) {
 					context.report({
 						message: "mismatchedTypes",

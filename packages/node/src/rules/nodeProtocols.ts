@@ -102,12 +102,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 		return {
 			visitors: {
-				CallExpression(node, { checker, sourceFile }) {
+				CallExpression(node, { typeChecker, sourceFile }) {
 					if (
 						node.expression.kind === SyntaxKind.Identifier &&
 						node.expression.text === "require" &&
 						!!node.arguments.length &&
-						isDeclaredInNodeTypes(node.expression, checker)
+						isDeclaredInNodeTypes(node.expression, typeChecker)
 					) {
 						checkNode(
 							nullThrows(

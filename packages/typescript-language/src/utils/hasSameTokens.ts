@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
@@ -24,6 +24,12 @@ export function hasSameTokens(
 	);
 }
 
+// Marks the end of a node's children, so that structurally different trees
+// with the same pre-order node identities don't compare as equal, such as
+// f(g(), h()) and f(g(h())). Node identities always start with a numeric
+// syntax kind, so this can never collide with one.
+const subtreeEnd = ")";
+
 function getNodeIdentities(
 	node: AST.AnyNode,
 	sourceFile: AST.SourceFile,
@@ -34,6 +40,7 @@ function getNodeIdentities(
 		current.forEachChild((child) => {
 			visit(child);
 		});
+		identities.push(subtreeEnd);
 	}
 	visit(node);
 	return identities;
@@ -72,6 +79,8 @@ function getNodeIdentity(
 			return `${String(node.kind)}:${node.text}`;
 		case SyntaxKind.TypeOperator:
 			return `${String(node.kind)}:${String(node.operator)}`;
+		case SyntaxKind.VariableDeclarationList:
+			return `${String(node.kind)}:${String(node.flags & NodeFlags.BlockScoped)}`;
 
 		default:
 			return String(node.kind);

@@ -111,20 +111,24 @@ export class RuleTester {
 			language.createFileFactory(this.#linterHost),
 		);
 		const afterAllSetup = afterAll ?? getSetupFromScope(scope, "afterAll");
-		if (afterAllSetup) {
-			let disposed = false;
-			afterAllSetup(() => {
-				if (disposed) {
-					return;
-				}
-				disposed = true;
-				const resources = new DisposableStack();
-				for (const [, fileFactory] of this.#fileFactories.entries()) {
-					resources.use(fileFactory);
-				}
-				resources.dispose();
-			});
+		if (!afterAllSetup) {
+			// Language file factories may hold onto resources such as native
+			// sessions, so an afterAll hook is required to dispose them.
+			throw new Error("No afterAll function found");
 		}
+
+		let disposed = false;
+		afterAllSetup(() => {
+			if (disposed) {
+				return;
+			}
+			disposed = true;
+			const resources = new DisposableStack();
+			for (const [, fileFactory] of this.#fileFactories.entries()) {
+				resources.use(fileFactory);
+			}
+			resources.dispose();
+		});
 
 		it = defaultTo(it, scope, "it");
 
