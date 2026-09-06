@@ -1,5 +1,11 @@
 # @flint/rule-tester
 
+## 0.20.0
+
+### Minor Changes
+
+- [#3363](https://github.com/flint-fyi/flint/pull/3363) [`8a37984`](https://github.com/flint-fyi/flint/commit/8a379847d35915d5ac08b51169748fa5d6a7975e) - Reject test cases that repeat an earlier test case's code, fileName, files, and options.
+
 ## 0.19.1
 
 ### Patch Changes

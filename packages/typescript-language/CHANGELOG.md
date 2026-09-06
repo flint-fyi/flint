@@ -1,5 +1,11 @@
 # @flint.fyi/typescript-language
 
+## 0.21.0
+
+### Minor Changes
+
+- [#3366](https://github.com/flint-fyi/flint/pull/3366) [`9372aeb`](https://github.com/flint-fyi/flint/commit/9372aeb77826b628a7d6d6013786bcbb85fd5a4b) - Raised the minimum supported TypeScript version to 6.0.3, removing remaining TypeScript 5 support.
+
 ## 0.20.1
 
 ### Patch Changes

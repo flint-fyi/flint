@@ -1,5 +1,12 @@
 # @flint.fyi/css
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`9372aeb`](https://github.com/flint-fyi/flint/commit/9372aeb77826b628a7d6d6013786bcbb85fd5a4b)]:
+  - @flint.fyi/css-language@0.3.0
+
 ## 0.3.1
 
 ### Patch Changes

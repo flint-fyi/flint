@@ -1,5 +1,14 @@
 # @flint.fyi/plugin-astro
 
+## 0.5.2
+
+### Patch Changes
+
+- Updated dependencies [[`9372aeb`](https://github.com/flint-fyi/flint/commit/9372aeb77826b628a7d6d6013786bcbb85fd5a4b)]:
+  - @flint.fyi/astro-language@0.3.0
+  - @flint.fyi/typescript-language@0.21.0
+  - @flint.fyi/volar-language@0.4.0
+
 ## 0.5.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @flint/ts
 
+## 0.23.3
+
+### Patch Changes
+
+- Updated dependencies [[`9372aeb`](https://github.com/flint-fyi/flint/commit/9372aeb77826b628a7d6d6013786bcbb85fd5a4b)]:
+  - @flint.fyi/typescript-language@0.21.0
+
 ## 0.23.2
 
 ### Patch Changes
