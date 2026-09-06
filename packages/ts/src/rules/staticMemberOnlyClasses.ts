@@ -1,8 +1,4 @@
-import {
-	isDecorator,
-	SyntaxKind,
-	type NodeArray,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -14,7 +10,11 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasDecorators(node: AST.ClassDeclaration | AST.ClassExpression) {
-	return node.modifiers?.some(isDecorator) ?? false;
+	return (
+		node.modifiers?.some(
+			(modifier) => modifier.kind === SyntaxKind.Decorator,
+		) ?? false
+	);
 }
 
 function hasExtendsClause(node: AST.ClassDeclaration | AST.ClassExpression) {

@@ -1,8 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -113,7 +109,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (
-				!isIdentifier(node.tagName) ||
+				node.tagName.kind !== SyntaxKind.Identifier ||
 				node.tagName.text.toLowerCase() !== node.tagName.text
 			) {
 				return;
@@ -121,12 +117,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const roleProperty = node.attributes.properties.find(
 				(property): property is AST.JsxAttribute =>
-					isJsxAttribute(property) && isIdentifier(property.name),
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier,
 			);
 
 			if (
 				!roleProperty?.initializer ||
-				!isStringLiteral(roleProperty.initializer)
+				roleProperty.initializer.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}

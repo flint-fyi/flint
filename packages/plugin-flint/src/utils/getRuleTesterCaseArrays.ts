@@ -1,9 +1,4 @@
-import {
-	isArrayLiteralExpression,
-	isIdentifier,
-	isObjectLiteralExpression,
-	isPropertyAccessExpression,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -18,9 +13,9 @@ export function getRuleTesterCaseArrays(
 	node: AST.CallExpression,
 ): RuleTesterCases | undefined {
 	if (
-		!isPropertyAccessExpression(node.expression) ||
-		!isIdentifier(node.expression.expression) ||
-		!isIdentifier(node.expression.name) ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+		node.expression.expression.kind !== SyntaxKind.Identifier ||
+		node.expression.name.kind !== SyntaxKind.Identifier ||
 		node.expression.name.text !== "describe" ||
 		node.arguments.length !== 2
 	) {
@@ -31,7 +26,7 @@ export function getRuleTesterCaseArrays(
 	// https://github.com/flint-fyi/flint/issues/152
 
 	const argument = node.arguments[1];
-	if (!argument || !isObjectLiteralExpression(argument)) {
+	if (!argument || argument.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return;
 	}
 
@@ -39,14 +34,14 @@ export function getRuleTesterCaseArrays(
 		argument.properties,
 		"valid",
 		(node): node is AST.ArrayLiteralExpression =>
-			isArrayLiteralExpression(node),
+			node.kind === SyntaxKind.ArrayLiteralExpression,
 	);
 
 	const invalid = findProperty(
 		argument.properties,
 		"invalid",
 		(node): node is AST.ArrayLiteralExpression =>
-			isArrayLiteralExpression(node),
+			node.kind === SyntaxKind.ArrayLiteralExpression,
 	);
 
 	if (!valid || !invalid) {

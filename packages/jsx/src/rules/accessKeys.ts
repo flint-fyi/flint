@@ -1,4 +1,4 @@
-import { isIdentifier } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				JsxAttribute(node, { sourceFile }) {
-					if (!isIdentifier(node.name)) {
+					if (node.name.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

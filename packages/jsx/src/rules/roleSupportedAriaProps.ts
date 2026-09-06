@@ -1,8 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -402,7 +398,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!isIdentifier(node.tagName)) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -410,16 +406,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const roleProperty = node.attributes.properties.find(
 				(property) =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			const role =
 				roleProperty &&
-				isJsxAttribute(roleProperty) &&
+				roleProperty.kind === SyntaxKind.JsxAttribute &&
 				roleProperty.initializer &&
-				isStringLiteral(roleProperty.initializer)
+				roleProperty.initializer.kind === SyntaxKind.StringLiteral
 					? roleProperty.initializer.text.toLowerCase()
 					: implicitRoles[elementName];
 
@@ -430,7 +426,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const supportedProps = getSupportedPropsForRole(role);
 
 			for (const property of node.attributes.properties) {
-				if (!isJsxAttribute(property) || !isIdentifier(property.name)) {
+				if (
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier
+				) {
 					continue;
 				}
 

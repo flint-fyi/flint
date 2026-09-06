@@ -1,4 +1,4 @@
-import { isIdentifier } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const openingElement = node.openingElement;
-					if (!isIdentifier(openingElement.tagName)) {
+					if (openingElement.tagName.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

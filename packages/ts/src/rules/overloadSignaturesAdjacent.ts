@@ -1,8 +1,4 @@
-import {
-	isStringLiteral,
-	SyntaxKind,
-	type PropertyName,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type PropertyName } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -125,7 +121,7 @@ function getNameFromPropertyName(
 ): undefined | { name: string; type: "computed" | "normal" | "quoted" } {
 	switch (name.kind) {
 		case SyntaxKind.ComputedPropertyName:
-			if (isStringLiteral(name.expression)) {
+			if (name.expression.kind === SyntaxKind.StringLiteral) {
 				return { name: name.expression.text, type: "quoted" };
 			}
 			return undefined;

@@ -1,9 +1,4 @@
-import {
-	isCallExpression,
-	isIdentifier,
-	isPropertyAccessExpression,
-	isTaggedTemplateExpression,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -46,8 +41,8 @@ export function parseVitestFunctionCall(
 	}
 
 	if (
-		isCallExpression(node.expression) ||
-		isTaggedTemplateExpression(node.expression)
+		node.expression.kind === SyntaxKind.CallExpression ||
+		node.expression.kind === SyntaxKind.TaggedTemplateExpression
 	) {
 		return parsedCallee.segments
 			.slice(0, -1)
@@ -56,11 +51,11 @@ export function parseVitestFunctionCall(
 			: undefined;
 	}
 
-	if (isIdentifier(node.expression)) {
+	if (node.expression.kind === SyntaxKind.Identifier) {
 		return parsedCallee;
 	}
 
-	return isPropertyAccessExpression(node.expression) &&
+	return node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		parsedCallee.segments.every((segment) =>
 			knownVitestFunctionModifiersSet.has(segment),
 		)
@@ -72,11 +67,11 @@ function parseVitestCallee(
 	node: AST.AnyNode,
 	targetNode?: AST.AnyNode,
 ): undefined | VitestCallee {
-	if (isCallExpression(node)) {
+	if (node.kind === SyntaxKind.CallExpression) {
 		return parseVitestCallee(node.expression, targetNode);
 	}
 
-	if (isIdentifier(node)) {
+	if (node.kind === SyntaxKind.Identifier) {
 		return {
 			name: node.text,
 			segments: [],
@@ -84,7 +79,7 @@ function parseVitestCallee(
 		};
 	}
 
-	if (isPropertyAccessExpression(node)) {
+	if (node.kind === SyntaxKind.PropertyAccessExpression) {
 		const parsedExpression = parseVitestCallee(node.expression, node);
 
 		return (
@@ -96,7 +91,7 @@ function parseVitestCallee(
 		);
 	}
 
-	if (isTaggedTemplateExpression(node)) {
+	if (node.kind === SyntaxKind.TaggedTemplateExpression) {
 		return parseVitestCallee(node.tag, targetNode);
 	}
 

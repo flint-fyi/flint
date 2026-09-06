@@ -1,9 +1,5 @@
 import languageTags from "language-tags";
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -42,8 +38,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const langAttribute = node.attributes.properties.find(
 				(property): property is AST.JsxAttribute =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "lang",
 			);
 
@@ -51,7 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (isStringLiteral(langAttribute.initializer)) {
+			if (langAttribute.initializer.kind === SyntaxKind.StringLiteral) {
 				const langValue = langAttribute.initializer.text;
 
 				if (!languageTags.check(langValue)) {

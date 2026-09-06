@@ -1,9 +1,6 @@
 import {
 	createScanner,
-	isExpressionWithTypeArguments,
-	isShorthandPropertyAssignment,
 	isTypeNode,
-	isTypeParameterDeclaration,
 	SyntaxKind,
 } from "typescript-native/unstable/ast";
 import { SymbolFlags, type Symbol } from "typescript-native/unstable/sync";
@@ -96,7 +93,7 @@ function getReferencedSymbol(typeChecker: Checker, node: AST.Identifier) {
 	let symbol: Symbol | undefined;
 	const parent = node.parent;
 
-	if (isShorthandPropertyAssignment(parent)) {
+	if (parent.kind === SyntaxKind.ShorthandPropertyAssignment) {
 		symbol = typeChecker.getShorthandAssignmentValueSymbol(parent);
 	} else {
 		symbol = typeChecker.getSymbolAtLocation(node);
@@ -246,12 +243,15 @@ function isOnlyTypeReference(node: AST.Identifier) {
 		if (
 			parent.kind === SyntaxKind.TypeAliasDeclaration ||
 			parent.kind === SyntaxKind.InterfaceDeclaration ||
-			isTypeParameterDeclaration(parent)
+			parent.kind === SyntaxKind.TypeParameter
 		) {
 			return true;
 		}
 
-		if (isTypeNode(parent) && !isExpressionWithTypeArguments(parent)) {
+		if (
+			isTypeNode(parent) &&
+			parent.kind !== SyntaxKind.ExpressionWithTypeArguments
+		) {
 			return true;
 		}
 

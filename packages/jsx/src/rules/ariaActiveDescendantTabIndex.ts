@@ -1,4 +1,4 @@
-import { isIdentifier, isJsxAttribute } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -48,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (isIdentifier(tagName)) {
+			if (tagName.kind === SyntaxKind.Identifier) {
 				const firstCharacter = tagName.text.charAt(0);
 				if (
 					firstCharacter === firstCharacter.toUpperCase() &&
@@ -61,8 +61,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (
 				!attributes.properties.some(
 					(property) =>
-						isJsxAttribute(property) &&
-						isIdentifier(property.name) &&
+						property.kind === SyntaxKind.JsxAttribute &&
+						property.name.kind === SyntaxKind.Identifier &&
 						property.name.text === "aria-activedescendant" &&
 						property.initializer,
 				)
@@ -71,7 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				isIdentifier(tagName) &&
+				tagName.kind === SyntaxKind.Identifier &&
 				inherentlyTabbableElements.has(tagName.text.toLowerCase())
 			) {
 				return;
@@ -79,20 +79,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const hasTabIndex = attributes.properties.some(
 				(property) =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "tabindex",
 			);
 
 			if (!hasTabIndex) {
 				const ariaProperty = attributes.properties.find(
 					(property) =>
-						isJsxAttribute(property) &&
-						isIdentifier(property.name) &&
+						property.kind === SyntaxKind.JsxAttribute &&
+						property.name.kind === SyntaxKind.Identifier &&
 						property.name.text === "aria-activedescendant",
 				);
 
-				if (ariaProperty && isJsxAttribute(ariaProperty)) {
+				if (ariaProperty && ariaProperty.kind === SyntaxKind.JsxAttribute) {
 					context.report({
 						message: "missingTabIndex",
 						range: getTSNodeRange(ariaProperty, sourceFile),

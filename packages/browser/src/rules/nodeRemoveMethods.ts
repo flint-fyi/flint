@@ -1,7 +1,4 @@
-import {
-	isIdentifier,
-	isPropertyAccessExpression,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -35,8 +32,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { typeChecker, program, sourceFile }) {
 					if (
-						!isPropertyAccessExpression(node.expression) ||
-						!isIdentifier(node.expression.name) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier ||
 						node.expression.name.text !== "removeChild" ||
 						node.arguments.length !== 1 ||
 						!isGlobalDeclaration(node.expression, typeChecker, program)

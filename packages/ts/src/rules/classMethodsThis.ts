@@ -1,10 +1,4 @@
-import {
-	isClassDeclaration,
-	isClassExpression,
-	isComputedPropertyName,
-	isPropertyDeclaration,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
@@ -37,14 +31,17 @@ function containsThis(node: AST.AnyNode): boolean {
 	switch (node.kind) {
 		case SyntaxKind.ClassDeclaration:
 		case SyntaxKind.ClassExpression: {
-			if (!isClassDeclaration(node) && !isClassExpression(node)) {
+			if (
+				node.kind !== SyntaxKind.ClassDeclaration &&
+				node.kind !== SyntaxKind.ClassExpression
+			) {
 				return false;
 			}
 
 			for (const member of node.members) {
 				if (
-					isPropertyDeclaration(member) &&
-					isComputedPropertyName(member.name) &&
+					member.kind === SyntaxKind.PropertyDeclaration &&
+					member.name.kind === SyntaxKind.ComputedPropertyName &&
 					containsThis(member.name.expression)
 				) {
 					return true;

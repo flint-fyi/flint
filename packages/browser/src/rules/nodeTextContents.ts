@@ -1,4 +1,4 @@
-import { isIdentifier } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
 					if (
-						isIdentifier(node.name) &&
+						node.name.kind === SyntaxKind.Identifier &&
 						node.name.text === "innerText" &&
 						isGlobalDeclaration(node.name, typeChecker, program)
 					) {

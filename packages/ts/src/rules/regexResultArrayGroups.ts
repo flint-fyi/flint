@@ -4,10 +4,6 @@ import type {
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
 import {
-	isBinaryExpression,
-	isIdentifier,
-	isParameterDeclaration,
-	isVariableDeclaration,
 	SyntaxKind,
 	type BinaryExpression,
 	type Node,
@@ -66,9 +62,9 @@ function findAssignmentsToSymbol(
 
 	function visit(node: Node) {
 		if (
-			isBinaryExpression(node) &&
+			node.kind === SyntaxKind.BinaryExpression &&
 			node.operatorToken.kind === SyntaxKind.EqualsToken &&
-			isIdentifier(node.left)
+			node.left.kind === SyntaxKind.Identifier
 		) {
 			const leftSymbol = typeChecker.getSymbolAtLocation(node.left);
 			if (leftSymbol === symbol) {
@@ -299,7 +295,10 @@ function getRegexInfoFromExpression(
 					if (!declaration) {
 						continue;
 					}
-					if (isVariableDeclaration(declaration) && declaration.initializer) {
+					if (
+						declaration.kind === SyntaxKind.VariableDeclaration &&
+						declaration.initializer
+					) {
 						return getRegexInfoFromExpression(
 							declaration.initializer as AST.Expression,
 							typeChecker,
@@ -327,7 +326,10 @@ function getRegexInfoFromSymbol(
 			if (!declaration) {
 				continue;
 			}
-			if (isVariableDeclaration(declaration) && declaration.initializer) {
+			if (
+				declaration.kind === SyntaxKind.VariableDeclaration &&
+				declaration.initializer
+			) {
 				const callExpression = extractCallExpression(
 					declaration.initializer as AST.Expression,
 				);
@@ -350,7 +352,7 @@ function getRegexInfoFromSymbol(
 				}
 			}
 
-			if (isParameterDeclaration(declaration)) {
+			if (declaration.kind === SyntaxKind.Parameter) {
 				continue;
 			}
 		}

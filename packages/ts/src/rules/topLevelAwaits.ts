@@ -1,13 +1,4 @@
-import {
-	isArrowFunction,
-	isConstructorDeclaration,
-	isFunctionDeclaration,
-	isFunctionExpression,
-	isGetAccessorDeclaration,
-	isMethodDeclaration,
-	isSetAccessorDeclaration,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
@@ -29,13 +20,13 @@ function isInsideFunction(node: AST.AnyNode): boolean {
 
 	while (current.kind !== SyntaxKind.SourceFile) {
 		if (
-			isFunctionDeclaration(current) ||
-			isFunctionExpression(current) ||
-			isArrowFunction(current) ||
-			isMethodDeclaration(current) ||
-			isConstructorDeclaration(current) ||
-			isGetAccessorDeclaration(current) ||
-			isSetAccessorDeclaration(current)
+			current.kind === SyntaxKind.FunctionDeclaration ||
+			current.kind === SyntaxKind.FunctionExpression ||
+			current.kind === SyntaxKind.ArrowFunction ||
+			current.kind === SyntaxKind.MethodDeclaration ||
+			current.kind === SyntaxKind.Constructor ||
+			current.kind === SyntaxKind.GetAccessor ||
+			current.kind === SyntaxKind.SetAccessor
 		) {
 			return true;
 		}

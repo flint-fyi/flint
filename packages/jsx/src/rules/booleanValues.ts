@@ -1,9 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isJsxExpression,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -39,10 +34,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			for (const property of node.attributes.properties) {
 				if (
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.initializer &&
-					isJsxExpression(property.initializer) &&
+					property.initializer.kind === SyntaxKind.JsxExpression &&
 					property.initializer.expression?.kind === SyntaxKind.TrueKeyword
 				) {
 					context.report({

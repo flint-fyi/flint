@@ -1,12 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isJsxElement,
-	isJsxExpression,
-	isJsxSelfClosingElement,
-	isNoSubstitutionTemplateLiteral,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -41,8 +33,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function hasValidAriaLabel(attributes: AST.JsxAttributes): boolean {
 			return attributes.properties.some((property) => {
 				if (
-					!isJsxAttribute(property) ||
-					!isIdentifier(property.name) ||
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier ||
 					(property.name.text !== "aria-label" &&
 						property.name.text !== "aria-labelledby")
 				) {
@@ -53,25 +45,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return false;
 				}
 
-				if (isJsxExpression(property.initializer)) {
+				if (property.initializer.kind === SyntaxKind.JsxExpression) {
 					const { expression } = property.initializer;
 					if (!expression) {
 						return false;
 					}
 
 					if (
-						isStringLiteral(expression) ||
-						isNoSubstitutionTemplateLiteral(expression)
+						expression.kind === SyntaxKind.StringLiteral ||
+						expression.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 					) {
 						return expression.text !== "";
 					}
 
-					if (isIdentifier(expression)) {
+					if (expression.kind === SyntaxKind.Identifier) {
 						return expression.text !== "undefined";
 					}
 				}
 
-				if (isStringLiteral(property.initializer)) {
+				if (property.initializer.kind === SyntaxKind.StringLiteral) {
 					return property.initializer.text !== "";
 				}
 
@@ -83,23 +75,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const tagName = isJsxElement(node)
-				? node.openingElement.tagName
-				: node.tagName;
+			const tagName =
+				node.kind === SyntaxKind.JsxElement
+					? node.openingElement.tagName
+					: node.tagName;
 
-			if (!isIdentifier(tagName) || tagName.text.toLowerCase() !== "svg") {
+			if (
+				tagName.kind !== SyntaxKind.Identifier ||
+				tagName.text.toLowerCase() !== "svg"
+			) {
 				return;
 			}
 
-			const attributes = isJsxElement(node)
-				? node.openingElement.attributes
-				: node.attributes;
+			const attributes =
+				node.kind === SyntaxKind.JsxElement
+					? node.openingElement.attributes
+					: node.attributes;
 
 			if (hasValidAriaLabel(attributes)) {
 				return;
 			}
 
-			if (isJsxElement(node) && node.children.some(isTitleElement)) {
+			if (
+				node.kind === SyntaxKind.JsxElement &&
+				node.children.some(isTitleElement)
+			) {
 				return;
 			}
 
@@ -119,13 +119,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function isTitleElement(node: AST.JsxChild) {
-	if (!isJsxElement(node) && !isJsxSelfClosingElement(node)) {
+	if (
+		node.kind !== SyntaxKind.JsxElement &&
+		node.kind !== SyntaxKind.JsxSelfClosingElement
+	) {
 		return false;
 	}
 
-	const childTagName = isJsxElement(node)
-		? node.openingElement.tagName
-		: node.tagName;
+	const childTagName =
+		node.kind === SyntaxKind.JsxElement
+			? node.openingElement.tagName
+			: node.tagName;
 
-	return isIdentifier(childTagName) && childTagName.text === "title";
+	return (
+		childTagName.kind === SyntaxKind.Identifier && childTagName.text === "title"
+	);
 }

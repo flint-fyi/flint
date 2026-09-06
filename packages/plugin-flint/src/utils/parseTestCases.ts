@@ -1,4 +1,4 @@
-import { isObjectLiteralExpression } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	isStaticString,
@@ -29,7 +29,7 @@ export function parseTestCase(
 		};
 	}
 
-	if (!isObjectLiteralExpression(node)) {
+	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return;
 	}
 
@@ -39,12 +39,16 @@ export function parseTestCase(
 	}
 
 	const fileName = findProperty(node.properties, "fileName", isStaticString);
-	const files = findProperty(node.properties, "files", (node) =>
-		isObjectLiteralExpression(node),
+	const files = findProperty(
+		node.properties,
+		"files",
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 	const name = findProperty(node.properties, "name", isStaticString);
-	const options = findProperty(node.properties, "options", (node) =>
-		isObjectLiteralExpression(node),
+	const options = findProperty(
+		node.properties,
+		"options",
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 
 	return {
@@ -67,7 +71,7 @@ export function parseTestCase(
 export function parseTestCaseInvalid(
 	node: AST.Expression,
 ): ParsedTestCaseInvalid | undefined {
-	if (!isObjectLiteralExpression(node)) {
+	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return;
 	}
 
@@ -77,12 +81,16 @@ export function parseTestCaseInvalid(
 	}
 
 	const fileName = findProperty(node.properties, "fileName", isStaticString);
-	const files = findProperty(node.properties, "files", (node) =>
-		isObjectLiteralExpression(node),
+	const files = findProperty(
+		node.properties,
+		"files",
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 	const name = findProperty(node.properties, "name", isStaticString);
-	const options = findProperty(node.properties, "options", (node) =>
-		isObjectLiteralExpression(node),
+	const options = findProperty(
+		node.properties,
+		"options",
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 	const snapshot = findProperty(node.properties, "snapshot", isStaticString);
 	if (!snapshot) {

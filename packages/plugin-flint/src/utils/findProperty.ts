@@ -1,8 +1,4 @@
-import {
-	isIdentifier,
-	isPropertyAssignment,
-	type NodeArray,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -13,8 +9,8 @@ export function findProperty<Node extends AST.Expression>(
 ): Node | undefined {
 	return properties.find(
 		(property): property is AST.PropertyAssignment & { initializer: Node } =>
-			isPropertyAssignment(property) &&
-			isIdentifier(property.name) &&
+			property.kind === SyntaxKind.PropertyAssignment &&
+			property.name.kind === SyntaxKind.Identifier &&
 			property.name.text === name &&
 			predicate(property.initializer),
 	)?.initializer;

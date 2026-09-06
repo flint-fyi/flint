@@ -1,7 +1,4 @@
-import {
-	isObjectLiteralExpression,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -42,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						...testArrays.valid.elements,
 						...testArrays.invalid.elements,
 					]) {
-						if (!isObjectLiteralExpression(testCase)) {
+						if (testCase.kind !== SyntaxKind.ObjectLiteralExpression) {
 							continue;
 						}
 

@@ -1,11 +1,5 @@
 import {
 	isAssignmentOperator,
-	isBinaryExpression,
-	isIdentifier,
-	isParameterDeclaration,
-	isPostfixUnaryExpression,
-	isPrefixUnaryExpression,
-	isVariableDeclaration,
 	SyntaxKind,
 } from "typescript-native/unstable/ast";
 
@@ -46,11 +40,14 @@ function hasNoAssignmentBeforeNode(
 			continue;
 		}
 
-		if (isVariableDeclaration(declaration)) {
+		if (declaration.kind === SyntaxKind.VariableDeclaration) {
 			if (declaration.exclamationToken || declaration.initializer) {
 				return false;
 			}
-		} else if (isParameterDeclaration(declaration) && declaration.initializer) {
+		} else if (
+			declaration.kind === SyntaxKind.Parameter &&
+			declaration.initializer
+		) {
 			return false;
 		}
 	}
@@ -61,13 +58,13 @@ function hasNoAssignmentBeforeNode(
 	}
 
 	function findModifyingReference(current: AST.AnyNode): boolean {
-		if (isIdentifier(current)) {
+		if (current.kind === SyntaxKind.Identifier) {
 			const currentSymbol = typeChecker.getSymbolAtLocation(current);
 			if (currentSymbol?.valueDeclaration?.resolve() === valueDeclaration) {
 				const parent = current.parent;
 
 				if (
-					isBinaryExpression(parent) &&
+					parent.kind === SyntaxKind.BinaryExpression &&
 					isAssignmentOperator(parent.operatorToken.kind) &&
 					parent.left === current &&
 					parent.getEnd() < nodeEnd
@@ -76,8 +73,8 @@ function hasNoAssignmentBeforeNode(
 				}
 
 				if (
-					(isPostfixUnaryExpression(parent) ||
-						isPrefixUnaryExpression(parent)) &&
+					(parent.kind === SyntaxKind.PostfixUnaryExpression ||
+						parent.kind === SyntaxKind.PrefixUnaryExpression) &&
 					parent.operand === current &&
 					parent.getEnd() < nodeEnd
 				) {

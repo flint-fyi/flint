@@ -4,17 +4,7 @@
 // Changing from the switch to manual ifs is due to:
 // https://github.com/Microsoft/TypeScript/issues/56275
 
-import {
-	isArrayLiteralExpression,
-	isIdentifier,
-	isNumericLiteral,
-	isObjectLiteralExpression,
-	isPropertyAssignment,
-	isSpreadElement,
-	isStringLiteral,
-	SyntaxKind,
-	type Node,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -31,29 +21,37 @@ export function tsAstToLiteral(node: Node): unknown {
 			return true;
 	}
 
-	if (isArrayLiteralExpression(node)) {
+	if (node.kind === SyntaxKind.ArrayLiteralExpression) {
 		return node.elements
-			.filter((element) => !isSpreadElement(element))
+			.filter((element) => element.kind !== SyntaxKind.SpreadElement)
 			.map((element) => tsAstToLiteral(element));
 	}
 
-	if (isNumericLiteral(node)) {
+	if (node.kind === SyntaxKind.NumericLiteral) {
 		return parseFloat(node.text);
 	}
 
-	if (isObjectLiteralExpression(node)) {
+	if (node.kind === SyntaxKind.ObjectLiteralExpression) {
 		return Object.fromEntries(
-			node.properties.filter(isPropertyAssignment).flatMap((property) => {
-				if (!isIdentifier(property.name) && !isStringLiteral(property.name)) {
-					return [];
-				}
+			node.properties
+				.filter(
+					(property): property is AST.PropertyAssignment =>
+						property.kind === SyntaxKind.PropertyAssignment,
+				)
+				.flatMap((property) => {
+					if (
+						property.name.kind !== SyntaxKind.Identifier &&
+						property.name.kind !== SyntaxKind.StringLiteral
+					) {
+						return [];
+					}
 
-				return [[property.name.text, tsAstToLiteral(property.initializer)]];
-			}),
+					return [[property.name.text, tsAstToLiteral(property.initializer)]];
+				}),
 		);
 	}
 
-	if (isStringLiteral(node)) {
+	if (node.kind === SyntaxKind.StringLiteral) {
 		return node.text;
 	}
 

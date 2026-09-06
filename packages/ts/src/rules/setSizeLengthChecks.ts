@@ -1,13 +1,4 @@
-import {
-	isArrayLiteralExpression,
-	isIdentifier,
-	isNewExpression,
-	isParenthesizedExpression,
-	isSpreadElement,
-	isVariableDeclaration,
-	NodeFlags,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 import type { Program } from "typescript-native/unstable/sync";
 
 import {
@@ -26,8 +17,8 @@ function isNewSetExpression(
 	program: Program,
 ) {
 	return (
-		isNewExpression(expression) &&
-		isIdentifier(expression.expression) &&
+		expression.kind === SyntaxKind.NewExpression &&
+		expression.expression.kind === SyntaxKind.Identifier &&
 		expression.expression.text === "Set" &&
 		isGlobalDeclarationOfName(
 			expression.expression,
@@ -49,14 +40,17 @@ function isSetExpression(
 		return true;
 	}
 
-	if (!isIdentifier(unwrapped)) {
+	if (unwrapped.kind !== SyntaxKind.Identifier) {
 		return false;
 	}
 
 	const valueDeclaration = typeChecker
 		.getSymbolAtLocation(unwrapped)
 		?.valueDeclaration?.resolve();
-	if (!valueDeclaration || !isVariableDeclaration(valueDeclaration)) {
+	if (
+		!valueDeclaration ||
+		valueDeclaration.kind !== SyntaxKind.VariableDeclaration
+	) {
 		return false;
 	}
 
@@ -78,7 +72,7 @@ function isSetExpression(
 }
 
 function unwrapParentheses(expression: AST.Expression): AST.Expression {
-	while (isParenthesizedExpression(expression)) {
+	while (expression.kind === SyntaxKind.ParenthesizedExpression) {
 		expression = expression.expression;
 	}
 	return expression;
@@ -112,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.questionDotToken ||
 						node.name.text !== "length" ||
-						!isArrayLiteralExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.ArrayLiteralExpression ||
 						node.expression.elements.length !== 1
 					) {
 						return;
@@ -122,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const element = node.expression.elements[0]!;
 
 					if (
-						!isSpreadElement(element) ||
+						element.kind !== SyntaxKind.SpreadElement ||
 						!isSetExpression(element.expression, typeChecker, program)
 					) {
 						return;

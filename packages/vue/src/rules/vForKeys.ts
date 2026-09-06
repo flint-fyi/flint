@@ -1,8 +1,8 @@
 import * as vue from "@vue/compiler-dom";
 import {
-	isIdentifier,
 	SpanMap,
 	SpanMapFeature,
+	SyntaxKind,
 	type Node,
 	type ReadonlyTextRange,
 } from "typescript-native/unstable/ast";
@@ -112,7 +112,7 @@ export default ruleCreator.createRule(vueLanguage, {
 							if (
 								begin >= range.pos &&
 								end <= range.end &&
-								isIdentifier(node)
+								node.kind === SyntaxKind.Identifier
 							) {
 								const declaration = typeChecker
 									.getSymbolAtLocation(node)

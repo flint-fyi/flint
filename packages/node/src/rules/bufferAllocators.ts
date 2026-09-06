@@ -1,4 +1,4 @@
-import { isIdentifier } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -34,7 +34,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				NewExpression(node, { sourceFile }) {
 					if (
-						!isIdentifier(node.expression) ||
+						node.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.text !== "Buffer"
 					) {
 						return;

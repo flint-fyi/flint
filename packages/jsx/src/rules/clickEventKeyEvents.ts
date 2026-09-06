@@ -1,4 +1,4 @@
-import { isIdentifier, isJsxAttribute } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -44,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (
-				!isIdentifier(node.tagName) ||
+				node.tagName.kind !== SyntaxKind.Identifier ||
 				node.tagName.text.toLowerCase() !== node.tagName.text
 			) {
 				return;
@@ -58,7 +58,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let onClickName: AST.JsxAttributeName | undefined;
 
 			for (const property of node.attributes.properties) {
-				if (isJsxAttribute(property) && isIdentifier(property.name)) {
+				if (
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier
+				) {
 					switch (property.name.text) {
 						case "aria-hidden":
 						case "onKeyDown":

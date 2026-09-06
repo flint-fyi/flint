@@ -2,14 +2,7 @@ import {
 	getLeadingCommentRanges,
 	getTokenAtPosition,
 	getTrailingCommentRanges,
-	isAwaitExpression,
-	isCallExpression,
-	isExpressionStatement,
-	isIdentifier,
-	isLabeledStatement,
-	isNonNullExpression,
-	isParenthesizedExpression,
-	isPropertyAccessExpression,
+	SyntaxKind,
 } from "typescript-native/unstable/ast";
 
 import type { Rule } from "@flint.fyi/core";
@@ -189,7 +182,7 @@ export function getStatementRootName(
 		return undefined;
 	}
 
-	if (isAwaitExpression(expression)) {
+	if (expression.kind === SyntaxKind.AwaitExpression) {
 		return getRootIdentifierName(expression.expression);
 	}
 
@@ -197,15 +190,15 @@ export function getStatementRootName(
 }
 
 function getRootIdentifierName(node: AST.AnyNode): string | undefined {
-	if (isIdentifier(node)) {
+	if (node.kind === SyntaxKind.Identifier) {
 		return node.text;
 	}
 
 	if (
-		isCallExpression(node) ||
-		isNonNullExpression(node) ||
-		isParenthesizedExpression(node) ||
-		isPropertyAccessExpression(node)
+		node.kind === SyntaxKind.CallExpression ||
+		node.kind === SyntaxKind.NonNullExpression ||
+		node.kind === SyntaxKind.ParenthesizedExpression ||
+		node.kind === SyntaxKind.PropertyAccessExpression
 	) {
 		return getRootIdentifierName(node.expression);
 	}
@@ -216,11 +209,11 @@ function getRootIdentifierName(node: AST.AnyNode): string | undefined {
 function getStatementExpression(
 	statement: AST.AnyNode,
 ): AST.AnyNode | undefined {
-	if (isExpressionStatement(statement)) {
+	if (statement.kind === SyntaxKind.ExpressionStatement) {
 		return statement.expression;
 	}
 
-	if (isLabeledStatement(statement)) {
+	if (statement.kind === SyntaxKind.LabeledStatement) {
 		return getStatementExpression(statement.statement);
 	}
 

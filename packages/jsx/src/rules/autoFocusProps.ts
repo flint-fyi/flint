@@ -1,10 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isJsxExpression,
-	isStringLiteral,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -42,13 +36,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
-			if (isStringLiteral(property.initializer)) {
+			if (property.initializer.kind === SyntaxKind.StringLiteral) {
 				// Any string value is already a TypeScript type error for boolean props,
 				// so we don't need to report on them here.
 				return true;
 			}
 
-			if (isJsxExpression(property.initializer)) {
+			if (property.initializer.kind === SyntaxKind.JsxExpression) {
 				const expr = property.initializer.expression;
 				if (expr?.kind === SyntaxKind.FalseKeyword) {
 					return true;
@@ -64,8 +58,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			for (const property of node.attributes.properties) {
 				if (
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "autofocus" &&
 					!isSetToFalse(property)
 				) {

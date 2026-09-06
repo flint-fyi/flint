@@ -1,8 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -57,16 +53,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const roleAttribute = node.attributes.properties.find(
 				(property) =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			if (
 				!roleAttribute ||
-				!isJsxAttribute(roleAttribute) ||
+				roleAttribute.kind !== SyntaxKind.JsxAttribute ||
 				!roleAttribute.initializer ||
-				!isStringLiteral(roleAttribute.initializer)
+				roleAttribute.initializer.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}
@@ -80,7 +76,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const existingProps = new Set<string>();
 			for (const property of node.attributes.properties) {
-				if (!isJsxAttribute(property) || !isIdentifier(property.name)) {
+				if (
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier
+				) {
 					continue;
 				}
 

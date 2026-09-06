@@ -1,10 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isJsxExpression,
-	isNumericLiteral,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -88,14 +82,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return undefined;
 			}
 
-			if (isStringLiteral(attr.initializer)) {
+			if (attr.initializer.kind === SyntaxKind.StringLiteral) {
 				const value = parseInt(attr.initializer.text, 10);
 				return Number.isNaN(value) ? undefined : value;
 			}
 
-			if (isJsxExpression(attr.initializer)) {
+			if (attr.initializer.kind === SyntaxKind.JsxExpression) {
 				const expr = attr.initializer.expression;
-				if (expr && isNumericLiteral(expr)) {
+				if (expr && expr.kind === SyntaxKind.NumericLiteral) {
 					const value = parseInt(expr.text, 10);
 					return Number.isNaN(value) ? undefined : value;
 				}
@@ -107,16 +101,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function getRoleValue(attributes: AST.JsxAttributes) {
 			const roleProperty = attributes.properties.find(
 				(property) =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			if (
 				roleProperty &&
-				isJsxAttribute(roleProperty) &&
+				roleProperty.kind === SyntaxKind.JsxAttribute &&
 				roleProperty.initializer &&
-				isStringLiteral(roleProperty.initializer)
+				roleProperty.initializer.kind === SyntaxKind.StringLiteral
 			) {
 				return roleProperty.initializer.text;
 			}
@@ -128,7 +122,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!isIdentifier(node.tagName)) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -145,12 +139,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const tabIndexProperty = node.attributes.properties.find(
 				(property) =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "tabIndex",
 			);
 
-			if (!tabIndexProperty || !isJsxAttribute(tabIndexProperty)) {
+			if (
+				!tabIndexProperty ||
+				tabIndexProperty.kind !== SyntaxKind.JsxAttribute
+			) {
 				return;
 			}
 

@@ -1,6 +1,5 @@
 import {
 	createScanner,
-	isTypeReferenceNode,
 	SyntaxKind,
 	type NodeArray,
 	type TypeNode,
@@ -172,7 +171,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				!isTypeReferenceNode(typeAnnotation) ||
+				typeAnnotation.kind !== SyntaxKind.TypeReference ||
 				typeAnnotation.typeName.kind !== SyntaxKind.Identifier ||
 				typeAnnotation.typeName.text !== constructorName ||
 				isBuiltInTypedArray(typeAnnotation.typeName.text) ||

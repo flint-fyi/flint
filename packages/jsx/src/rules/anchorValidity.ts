@@ -1,8 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -58,18 +54,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function getHrefValue(attributes: AST.JsxAttributes) {
 			const hrefProperty = attributes.properties.find(
 				(property) =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "href",
 			);
 
-			if (!hrefProperty || !isJsxAttribute(hrefProperty)) {
+			if (!hrefProperty || hrefProperty.kind !== SyntaxKind.JsxAttribute) {
 				return undefined;
 			}
 
 			if (
 				hrefProperty.initializer &&
-				isStringLiteral(hrefProperty.initializer)
+				hrefProperty.initializer.kind === SyntaxKind.StringLiteral
 			) {
 				return hrefProperty.initializer.text;
 			}
@@ -80,8 +76,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function hasOnClick(attributes: AST.JsxAttributes) {
 			return attributes.properties.some(
 				(property) =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "onClick",
 			);
 		}
@@ -94,7 +90,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!isIdentifier(node.tagName) || node.tagName.text !== "a") {
+			if (
+				node.tagName.kind !== SyntaxKind.Identifier ||
+				node.tagName.text !== "a"
+			) {
 				return;
 			}
 

@@ -1,10 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isJsxElement,
-	isJsxSelfClosingElement,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -40,11 +34,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const tagName = isJsxElement(node)
-				? node.openingElement.tagName
-				: node.tagName;
+			const tagName =
+				node.kind === SyntaxKind.JsxElement
+					? node.openingElement.tagName
+					: node.tagName;
 
-			if (!isIdentifier(tagName)) {
+			if (tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -53,22 +48,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const attributes = isJsxElement(node)
-				? node.openingElement.attributes
-				: node.attributes;
+			const attributes =
+				node.kind === SyntaxKind.JsxElement
+					? node.openingElement.attributes
+					: node.attributes;
 
 			if (
 				attributes.properties.some(
 					(properties) =>
-						isJsxAttribute(properties) &&
-						isIdentifier(properties.name) &&
+						properties.kind === SyntaxKind.JsxAttribute &&
+						properties.name.kind === SyntaxKind.Identifier &&
 						properties.name.text === "muted",
 				)
 			) {
 				return;
 			}
 
-			if (isJsxElement(node) && node.children.some(isCaptionsTrack)) {
+			if (
+				node.kind === SyntaxKind.JsxElement &&
+				node.children.some(isCaptionsTrack)
+			) {
 				return;
 			}
 
@@ -88,32 +87,43 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function isCaptionsTrack(node: AST.JsxChild) {
-	if (!isJsxElement(node) && !isJsxSelfClosingElement(node)) {
+	if (
+		node.kind !== SyntaxKind.JsxElement &&
+		node.kind !== SyntaxKind.JsxSelfClosingElement
+	) {
 		return false;
 	}
 
-	const childTagName = isJsxElement(node)
-		? node.openingElement.tagName
-		: node.tagName;
+	const childTagName =
+		node.kind === SyntaxKind.JsxElement
+			? node.openingElement.tagName
+			: node.tagName;
 
-	if (!isIdentifier(childTagName) || childTagName.text !== "track") {
+	if (
+		childTagName.kind !== SyntaxKind.Identifier ||
+		childTagName.text !== "track"
+	) {
 		return false;
 	}
 
-	const childAttributes = isJsxElement(node)
-		? node.openingElement.attributes
-		: node.attributes;
+	const childAttributes =
+		node.kind === SyntaxKind.JsxElement
+			? node.openingElement.attributes
+			: node.attributes;
 
 	return childAttributes.properties.some((property) => {
 		if (
-			!isJsxAttribute(property) ||
-			!isIdentifier(property.name) ||
+			property.kind !== SyntaxKind.JsxAttribute ||
+			property.name.kind !== SyntaxKind.Identifier ||
 			property.name.text !== "kind"
 		) {
 			return false;
 		}
 
-		if (property.initializer && isStringLiteral(property.initializer)) {
+		if (
+			property.initializer &&
+			property.initializer.kind === SyntaxKind.StringLiteral
+		) {
 			return property.initializer.text === "captions";
 		}
 

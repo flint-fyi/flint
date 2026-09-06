@@ -1,4 +1,4 @@
-import { isIdentifier, isJsxAttribute } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticStringValue,
@@ -132,7 +132,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const { attributes, tagName } = node;
-			if (!isIdentifier(tagName)) {
+			if (tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -143,14 +143,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const autocomplete = attributes.properties.find(
 				(property) =>
-					isJsxAttribute(property) &&
-					isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "autocomplete",
 			);
 
 			if (
 				!autocomplete ||
-				!isJsxAttribute(autocomplete) ||
+				autocomplete.kind !== SyntaxKind.JsxAttribute ||
 				!autocomplete.initializer
 			) {
 				return;

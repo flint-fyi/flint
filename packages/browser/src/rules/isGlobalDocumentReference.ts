@@ -1,7 +1,4 @@
-import {
-	isIdentifier,
-	isPropertyAccessExpression,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import type { Program } from "typescript-native/unstable/sync";
 
 import {
@@ -17,7 +14,7 @@ export function isGlobalDocumentReference(
 	typeChecker: Checker,
 	program: Program,
 ): boolean {
-	if (isIdentifier(node)) {
+	if (node.kind === SyntaxKind.Identifier) {
 		return (
 			node.text === "document" &&
 			isGlobalDeclaration(node, typeChecker, program)
@@ -25,9 +22,9 @@ export function isGlobalDocumentReference(
 	}
 
 	return (
-		isPropertyAccessExpression(node) &&
-		isIdentifier(node.expression) &&
-		isIdentifier(node.name) &&
+		node.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind === SyntaxKind.Identifier &&
+		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "document" &&
 		isGlobalDeclaration(node.name, typeChecker, program)
 	);

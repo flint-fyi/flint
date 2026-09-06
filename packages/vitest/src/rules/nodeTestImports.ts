@@ -1,4 +1,4 @@
-import { isStringLiteral } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ImportDeclaration: (node, { sourceFile }) => {
 					if (
-						!isStringLiteral(node.moduleSpecifier) ||
+						node.moduleSpecifier.kind !== SyntaxKind.StringLiteral ||
 						node.moduleSpecifier.text !== "node:test"
 					) {
 						return;

@@ -1,11 +1,4 @@
-import {
-	isElementAccessExpression,
-	isNumericLiteral,
-	isPrefixUnaryExpression,
-	isStringLiteral,
-	SyntaxKind,
-	type Expression,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type Expression } from "typescript-native/unstable/ast";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
@@ -13,11 +6,11 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isAcceptableIndexExpression(property: Expression): boolean {
 	return (
-		isStringLiteral(property) ||
-		isNumericLiteral(property) ||
-		(isPrefixUnaryExpression(property) &&
+		property.kind === SyntaxKind.StringLiteral ||
+		property.kind === SyntaxKind.NumericLiteral ||
+		(property.kind === SyntaxKind.PrefixUnaryExpression &&
 			property.operator === SyntaxKind.MinusToken &&
-			isNumericLiteral(property.operand))
+			property.operand.kind === SyntaxKind.NumericLiteral)
 	);
 }
 
@@ -48,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const argument = node.expression;
 
 					if (
-						!isElementAccessExpression(argument) ||
+						argument.kind !== SyntaxKind.ElementAccessExpression ||
 						isAcceptableIndexExpression(argument.argumentExpression)
 					) {
 						return;

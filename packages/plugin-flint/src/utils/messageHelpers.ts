@@ -1,10 +1,4 @@
-import {
-	isArrayLiteralExpression,
-	isIdentifier,
-	isObjectLiteralExpression,
-	isPropertyAssignment,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -19,19 +13,20 @@ export function findMessagesProperty(
 	node: AST.CallExpression,
 ): AST.PropertyAssignment | undefined {
 	const args = node.arguments[1];
-	if (!args || !isObjectLiteralExpression(args)) {
+	if (!args || args.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return undefined;
 	}
 
 	const messagesProperty = args.properties.find((prop) => {
 		return (
-			isPropertyAssignment(prop) &&
-			isIdentifier(prop.name) &&
+			prop.kind === SyntaxKind.PropertyAssignment &&
+			prop.name.kind === SyntaxKind.Identifier &&
 			prop.name.text === "messages"
 		);
 	});
 
-	return messagesProperty && isPropertyAssignment(messagesProperty)
+	return messagesProperty &&
+		messagesProperty.kind === SyntaxKind.PropertyAssignment
 		? messagesProperty
 		: undefined;
 }
@@ -39,15 +34,17 @@ export function findMessagesProperty(
 export function* forEachMessageString(
 	messagesProperty: AST.PropertyAssignment,
 ): Generator<MessageStringVisitorContext, void, void> {
-	if (!isObjectLiteralExpression(messagesProperty.initializer)) {
+	if (
+		messagesProperty.initializer.kind !== SyntaxKind.ObjectLiteralExpression
+	) {
 		return;
 	}
 
 	for (const prop of messagesProperty.initializer.properties) {
 		if (
-			!isPropertyAssignment(prop) ||
-			!isIdentifier(prop.name) ||
-			!isObjectLiteralExpression(prop.initializer)
+			prop.kind !== SyntaxKind.PropertyAssignment ||
+			prop.name.kind !== SyntaxKind.Identifier ||
+			prop.initializer.kind !== SyntaxKind.ObjectLiteralExpression
 		) {
 			continue;
 		}
@@ -56,15 +53,15 @@ export function* forEachMessageString(
 
 		for (const messageProp of prop.initializer.properties) {
 			if (
-				!isPropertyAssignment(messageProp) ||
-				!isIdentifier(messageProp.name)
+				messageProp.kind !== SyntaxKind.PropertyAssignment ||
+				messageProp.name.kind !== SyntaxKind.Identifier
 			) {
 				continue;
 			}
 
 			const propertyName = messageProp.name.text;
 
-			if (isStringLiteral(messageProp.initializer)) {
+			if (messageProp.initializer.kind === SyntaxKind.StringLiteral) {
 				yield {
 					isInArray: false,
 					messageId,
@@ -73,9 +70,9 @@ export function* forEachMessageString(
 				};
 			}
 
-			if (isArrayLiteralExpression(messageProp.initializer)) {
+			if (messageProp.initializer.kind === SyntaxKind.ArrayLiteralExpression) {
 				for (const el of messageProp.initializer.elements) {
-					if (isStringLiteral(el)) {
+					if (el.kind === SyntaxKind.StringLiteral) {
 						yield {
 							isInArray: true,
 							messageId,

@@ -1,11 +1,4 @@
-import {
-	isIdentifier,
-	isJsxAttribute,
-	isJsxElement,
-	isJsxExpression,
-	isJsxSelfClosingElement,
-	isJsxText,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -43,24 +36,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const tagName = isJsxElement(node)
-				? node.openingElement.tagName
-				: node.tagName;
+			const tagName =
+				node.kind === SyntaxKind.JsxElement
+					? node.openingElement.tagName
+					: node.tagName;
 
 			if (
-				!isIdentifier(tagName) ||
+				tagName.kind !== SyntaxKind.Identifier ||
 				!headingElements.has(tagName.text.toLowerCase())
 			) {
 				return;
 			}
 
-			const attributes = isJsxElement(node)
-				? node.openingElement.attributes
-				: node.attributes;
+			const attributes =
+				node.kind === SyntaxKind.JsxElement
+					? node.openingElement.attributes
+					: node.attributes;
 
 			if (
 				attributes.properties.some((property) => {
-					if (!isJsxAttribute(property) || !isIdentifier(property.name)) {
+					if (
+						property.kind !== SyntaxKind.JsxAttribute ||
+						property.name.kind !== SyntaxKind.Identifier
+					) {
 						return false;
 					}
 
@@ -75,15 +73,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				isJsxElement(node) &&
+				node.kind === SyntaxKind.JsxElement &&
 				node.children.some((child) => {
-					if (isJsxText(child)) {
+					if (child.kind === SyntaxKind.JsxText) {
 						return !!child.text.trim().length;
 					}
 					return (
-						isJsxElement(child) ||
-						isJsxSelfClosingElement(child) ||
-						isJsxExpression(child)
+						child.kind === SyntaxKind.JsxElement ||
+						child.kind === SyntaxKind.JsxSelfClosingElement ||
+						child.kind === SyntaxKind.JsxExpression
 					);
 				})
 			) {

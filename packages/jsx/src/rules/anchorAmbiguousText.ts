@@ -1,10 +1,4 @@
-import {
-	isIdentifier,
-	isJsxElement,
-	isJsxExpression,
-	isJsxText,
-	isStringLiteral,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -52,14 +46,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let text = "";
 
 			for (const child of node.children) {
-				if (isJsxText(child)) {
+				if (child.kind === SyntaxKind.JsxText) {
 					text += child.text;
-				} else if (isJsxElement(child)) {
+				} else if (child.kind === SyntaxKind.JsxElement) {
 					text += getTextContent(child);
 				} else if (
-					isJsxExpression(child) &&
+					child.kind === SyntaxKind.JsxExpression &&
 					child.expression &&
-					isStringLiteral(child.expression)
+					child.expression.kind === SyntaxKind.StringLiteral
 				) {
 					text += child.expression.text;
 				}
@@ -72,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				JsxElement(node, { sourceFile }) {
 					if (
-						!isIdentifier(node.openingElement.tagName) ||
+						node.openingElement.tagName.kind !== SyntaxKind.Identifier ||
 						node.openingElement.tagName.text !== "a"
 					) {
 						return;
@@ -84,7 +78,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const textNodes = node.children.filter(
-						(child) => isJsxText(child) && child.text.trim(),
+						(child) => child.kind === SyntaxKind.JsxText && child.text.trim(),
 					);
 
 					context.report({

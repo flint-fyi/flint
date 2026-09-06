@@ -1,4 +1,4 @@
-import { isCallExpression } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST, ScopeVariable } from "@flint.fyi/typescript-language";
 
@@ -30,7 +30,8 @@ export const getTestCallExpressionsFromDeclaredVariables = (
 					.map(({ identifier }) => identifier.parent)
 					.filter(
 						(node): node is AST.CallExpression =>
-							isCallExpression(node) && isVitestTestFunction(node),
+							node.kind === SyntaxKind.CallExpression &&
+							isVitestTestFunction(node),
 					),
 			),
 		[],

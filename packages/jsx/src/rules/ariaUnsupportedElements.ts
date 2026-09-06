@@ -1,4 +1,4 @@
-import { isIdentifier, isJsxAttribute } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!isIdentifier(node.tagName)) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -88,7 +88,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (
 				node.attributes.properties.some((property) => {
-					if (!isJsxAttribute(property) || !isIdentifier(property.name)) {
+					if (
+						property.kind !== SyntaxKind.JsxAttribute ||
+						property.name.kind !== SyntaxKind.Identifier
+					) {
 						return false;
 					}
 

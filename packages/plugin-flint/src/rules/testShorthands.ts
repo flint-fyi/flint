@@ -1,9 +1,4 @@
-import {
-	isIdentifier,
-	isObjectLiteralExpression,
-	isPropertyAssignment,
-	isShorthandPropertyAssignment,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { FileChange } from "@flint.fyi/core";
 import {
@@ -42,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const testCase of describedCases.valid) {
 						const caseNode = testCase.nodes.case;
-						if (!isObjectLiteralExpression(caseNode)) {
+						if (caseNode.kind !== SyntaxKind.ObjectLiteralExpression) {
 							continue;
 						}
 
@@ -50,17 +45,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (
 							caseNode.properties.length === 1 &&
 							property &&
-							(isPropertyAssignment(property) ||
-								isShorthandPropertyAssignment(property)) &&
-							isIdentifier(property.name) &&
+							(property.kind === SyntaxKind.PropertyAssignment ||
+								property.kind === SyntaxKind.ShorthandPropertyAssignment) &&
+							property.name.kind === SyntaxKind.Identifier &&
 							property.name.text === "code"
 						) {
-							const fix: FileChange | undefined = isPropertyAssignment(property)
-								? {
-										range: getTSNodeRange(caseNode, sourceFile),
-										text: property.initializer.getText(sourceFile),
-									}
-								: undefined;
+							const fix: FileChange | undefined =
+								property.kind === SyntaxKind.PropertyAssignment
+									? {
+											range: getTSNodeRange(caseNode, sourceFile),
+											text: property.initializer.getText(sourceFile),
+										}
+									: undefined;
 							context.report({
 								fix,
 								message: "testShorthands",

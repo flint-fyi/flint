@@ -1,10 +1,4 @@
-import {
-	isImportSpecifier,
-	isNamespaceImport,
-	isImportDeclaration as isNativeImportDeclaration,
-	isStringLiteral,
-	type Node,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -12,13 +6,17 @@ export function isImportedBindingFromModule(
 	declaration: Node,
 	moduleName: string,
 ): declaration is AST.ImportSpecifier | AST.NamespaceImport {
-	if (!isImportSpecifier(declaration) && !isNamespaceImport(declaration)) {
+	if (
+		declaration.kind !== SyntaxKind.ImportSpecifier &&
+		declaration.kind !== SyntaxKind.NamespaceImport
+	) {
 		return false;
 	}
 
-	const importDeclaration = isImportSpecifier(declaration)
-		? declaration.parent.parent.parent
-		: declaration.parent.parent;
+	const importDeclaration =
+		declaration.kind === SyntaxKind.ImportSpecifier
+			? declaration.parent.parent.parent
+			: declaration.parent.parent;
 
 	return (
 		isImportDeclaration(importDeclaration) &&
@@ -32,7 +30,7 @@ export function isImportedSpecifierFromModule(
 	importedName: string,
 ): declaration is AST.ImportSpecifier {
 	if (
-		!isImportSpecifier(declaration) ||
+		declaration.kind !== SyntaxKind.ImportSpecifier ||
 		!isImportedBindingFromModule(declaration, moduleName)
 	) {
 		return false;
@@ -47,6 +45,7 @@ function isImportDeclaration(
 	node: Node,
 ): node is AST.ImportDeclaration & { moduleSpecifier: AST.StringLiteral } {
 	return (
-		isNativeImportDeclaration(node) && isStringLiteral(node.moduleSpecifier)
+		node.kind === SyntaxKind.ImportDeclaration &&
+		node.moduleSpecifier.kind === SyntaxKind.StringLiteral
 	);
 }

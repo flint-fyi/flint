@@ -1,18 +1,4 @@
-import {
-	isArrowFunction,
-	isBindingElement,
-	isConstructorDeclaration,
-	isFunctionDeclaration,
-	isFunctionExpression,
-	isGetAccessorDeclaration,
-	isMethodDeclaration,
-	isParameterDeclaration,
-	isPropertyDeclaration,
-	isSetAccessorDeclaration,
-	isVariableDeclaration,
-	SyntaxKind,
-	type Node,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -22,16 +8,16 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isNonArrowFunctionBoundary(node: Node): "quit" | boolean {
-	if (isArrowFunction(node)) {
+	if (node.kind === SyntaxKind.ArrowFunction) {
 		return "quit";
 	}
 	return (
-		isFunctionDeclaration(node) ||
-		isFunctionExpression(node) ||
-		isMethodDeclaration(node) ||
-		isGetAccessorDeclaration(node) ||
-		isSetAccessorDeclaration(node) ||
-		isConstructorDeclaration(node)
+		node.kind === SyntaxKind.FunctionDeclaration ||
+		node.kind === SyntaxKind.FunctionExpression ||
+		node.kind === SyntaxKind.MethodDeclaration ||
+		node.kind === SyntaxKind.GetAccessor ||
+		node.kind === SyntaxKind.SetAccessor ||
+		node.kind === SyntaxKind.Constructor
 	);
 }
 
@@ -101,10 +87,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								const declaration = declarationHandle.resolve();
 								return (
 									!!declaration &&
-									(isParameterDeclaration(declaration) ||
-										isVariableDeclaration(declaration) ||
-										isPropertyDeclaration(declaration) ||
-										isBindingElement(declaration))
+									(declaration.kind === SyntaxKind.Parameter ||
+										declaration.kind === SyntaxKind.VariableDeclaration ||
+										declaration.kind === SyntaxKind.PropertyDeclaration ||
+										declaration.kind === SyntaxKind.BindingElement)
 								);
 							},
 						)

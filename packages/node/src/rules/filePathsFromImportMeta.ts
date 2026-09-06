@@ -1,12 +1,4 @@
-import {
-	isCallExpression,
-	isIdentifier,
-	isMetaProperty,
-	isNewExpression,
-	isPropertyAccessExpression,
-	isStringLiteral,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -19,8 +11,8 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isFileURLToPathCall(node: AST.Expression): node is AST.CallExpression {
 	return (
-		isCallExpression(node) &&
-		isIdentifier(node.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.Identifier &&
 		node.expression.text === "fileURLToPath" &&
 		node.arguments.length === 1
 	);
@@ -30,11 +22,11 @@ function isImportMetaFilename(
 	node: AST.Expression,
 ): node is AST.PropertyAccessExpression {
 	return (
-		isPropertyAccessExpression(node) &&
-		isMetaProperty(node.expression) &&
+		node.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind === SyntaxKind.MetaProperty &&
 		node.expression.keywordToken === SyntaxKind.ImportKeyword &&
 		node.expression.name.text === "meta" &&
-		isIdentifier(node.name) &&
+		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "filename"
 	);
 }
@@ -43,11 +35,11 @@ function isImportMetaUrl(
 	node: AST.Expression,
 ): node is AST.PropertyAccessExpression {
 	return (
-		isPropertyAccessExpression(node) &&
-		isMetaProperty(node.expression) &&
+		node.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind === SyntaxKind.MetaProperty &&
 		node.expression.keywordToken === SyntaxKind.ImportKeyword &&
 		node.expression.name.text === "meta" &&
-		isIdentifier(node.name) &&
+		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "url"
 	);
 }
@@ -56,8 +48,8 @@ function isNewURLWithDot(node: AST.Expression): node is AST.NewExpression & {
 	arguments: NonNullable<AST.NewExpression["arguments"]>;
 } {
 	if (
-		!isNewExpression(node) ||
-		!isIdentifier(node.expression) ||
+		node.kind !== SyntaxKind.NewExpression ||
+		node.expression.kind !== SyntaxKind.Identifier ||
 		node.expression.text !== "URL" ||
 		node.arguments?.length !== 2
 	) {
@@ -68,15 +60,18 @@ function isNewURLWithDot(node: AST.Expression): node is AST.NewExpression & {
 		node.arguments[0],
 		"First argument is expected to be present by prior length check",
 	);
-	return isStringLiteral(firstArgument) && firstArgument.text === ".";
+	return (
+		firstArgument.kind === SyntaxKind.StringLiteral &&
+		firstArgument.text === "."
+	);
 }
 
 function isPathDirnameCall(node: AST.CallExpression): boolean {
 	return (
-		isPropertyAccessExpression(node.expression) &&
-		isIdentifier(node.expression.expression) &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.expression.kind === SyntaxKind.Identifier &&
 		node.expression.expression.text === "path" &&
-		isIdentifier(node.expression.name) &&
+		node.expression.name.kind === SyntaxKind.Identifier &&
 		node.expression.name.text === "dirname" &&
 		node.arguments.length === 1
 	);
@@ -173,7 +168,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (isImportMetaUrl(firstArg)) {
 							// Don't report if this is inside a path.dirname call
 							if (
-								isCallExpression(node.parent) &&
+								node.parent.kind === SyntaxKind.CallExpression &&
 								isPathDirnameCall(node.parent) &&
 								node.parent.arguments[0] === node
 							) {

@@ -1,4 +1,4 @@
-import { isTaggedTemplateExpression } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				NoSubstitutionTemplateLiteral(node, { sourceFile }) {
-					if (!isTaggedTemplateExpression(node.parent)) {
+					if (node.parent.kind !== SyntaxKind.TaggedTemplateExpression) {
 						checkStringValue(node.text, node, sourceFile);
 					}
 				},
@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				TemplateExpression(node, { sourceFile }) {
 					if (
-						!isTaggedTemplateExpression(node.parent) &&
+						node.parent.kind !== SyntaxKind.TaggedTemplateExpression &&
 						node.head.text.toLowerCase().startsWith("javascript:")
 					) {
 						context.report({

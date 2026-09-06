@@ -1,12 +1,4 @@
-import {
-	isFunctionDeclaration,
-	isParameterDeclaration,
-	isPropertyAccessExpression,
-	isShorthandPropertyAssignment,
-	isVariableDeclaration,
-	SyntaxKind,
-	type Identifier,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind, type Identifier } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -24,9 +16,11 @@ const globalReplacements = new Map([
 
 function isDeclarationName(node: Identifier) {
 	return (
-		(isFunctionDeclaration(node.parent) && node.parent.name === node) ||
-		(isVariableDeclaration(node.parent) && node.parent.name === node) ||
-		(isParameterDeclaration(node.parent) && node.parent.name === node)
+		(node.parent.kind === SyntaxKind.FunctionDeclaration &&
+			node.parent.name === node) ||
+		(node.parent.kind === SyntaxKind.VariableDeclaration &&
+			node.parent.name === node) ||
+		(node.parent.kind === SyntaxKind.Parameter && node.parent.name === node)
 	);
 }
 
@@ -40,12 +34,16 @@ function isLeftHandSide(node: AST.Identifier) {
 }
 
 function isPropertyAccessOfNode(node: Identifier) {
-	return isPropertyAccessExpression(node.parent) && node.parent.name === node;
+	return (
+		node.parent.kind === SyntaxKind.PropertyAccessExpression &&
+		node.parent.name === node
+	);
 }
 
 function isPropertyShorthandOfNode(node: Identifier) {
 	return (
-		isShorthandPropertyAssignment(node.parent) && node.parent.name === node
+		node.parent.kind === SyntaxKind.ShorthandPropertyAssignment &&
+		node.parent.name === node
 	);
 }
 
