@@ -249,8 +249,8 @@ catalogs:
       specifier: 2.32.0
       version: 2.32.0
     eslint-plugin-jsdoc:
-      specifier: 64.3.4
-      version: 64.3.4
+      specifier: 64.3.5
+      version: 64.3.5
     eslint-plugin-jsonc:
       specifier: 3.4.2
       version: 3.4.2
@@ -376,8 +376,8 @@ catalogs:
       specifier: 10.9.1
       version: 10.9.1
     eslint-plugin-jsdoc:
-      specifier: 64.3.4
-      version: 64.3.4
+      specifier: 64.3.5
+      version: 64.3.5
     eslint-plugin-jsonc:
       specifier: 3.4.2
       version: 3.4.2
@@ -758,7 +758,7 @@ importers:
         version: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-jsdoc:
         specifier: catalog:dev
-        version: 64.3.4(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 64.3.5(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-jsonc:
         specifier: catalog:dev
         version: 3.4.2(@eslint/json@2.1.0)(eslint@10.9.1)
@@ -1642,7 +1642,7 @@ importers:
         version: 2.32.0(@typescript-eslint/parser@8.69.0)(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-jsdoc:
         specifier: catalog:comparisons
-        version: 64.3.4(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 64.3.5(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-jsonc:
         specifier: catalog:comparisons
         version: 3.4.2(@eslint/json@2.1.0)(eslint@10.9.1)
@@ -2997,8 +2997,8 @@ packages:
   '@emnapi/wasi-threads@1.2.3':
     resolution: {integrity: sha512-ELEBe8PsLvvJ6QMr0zLt8ffvOHW/dc1m3CEzNMg7aJUv3bMaoDtw2TXyDAwkYBuroxxuHEwhRTLJSe5sya547g==}
 
-  '@es-joy/jsdoccomment@0.95.1':
-    resolution: {integrity: sha512-LO/RI08Fo9bhXwB7Od9G+1j3eSNq63+ZS5CQO8YLXHbDg6kx6S/DhTeY0+Fc9uZrjK1zZSyTx8Sg5gv5DIoCnA==}
+  '@es-joy/jsdoccomment@0.96.0':
+    resolution: {integrity: sha512-nvtxrDqAJOKMPSsMHqshCnHvnCqFnJTsKpTaTSaZoUi9VxGVe2JvgQeAY/Qvh2wyqXByIAqNTgI7h9elXzn0yQ==}
     engines: {node: ^22.22.2 || >=24.15.0}
 
   '@es-joy/resolve.exports@1.2.0':
@@ -5357,8 +5357,8 @@ packages:
       '@typescript-eslint/parser':
         optional: true
 
-  eslint-plugin-jsdoc@64.3.4:
-    resolution: {integrity: sha512-aZZp44/yc6UTuH6U+cp1IVTTImfP2gd4JTuc+zMoB76ZI746avwbAqbdTejlKDFIYl6gBBhx3FG+jTRPZjnSXw==}
+  eslint-plugin-jsdoc@64.3.5:
+    resolution: {integrity: sha512-BqRUwfREoBH+7pzDD+uIQ3aema5P7BnPYcHj3mU0DLm+p/5TEHdimkXgnQfYl0AGgB9PZxZW/Lk7D69FTJSLXw==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -6226,10 +6226,6 @@ packages:
   js-yaml@4.3.2:
     resolution: {integrity: sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==}
     hasBin: true
-
-  jsdoc-type-pratt-parser@9.1.2:
-    resolution: {integrity: sha512-9EXymowgk1mb9RY1VxuwKc+AhaxfBk2CV0dWxgGM+l5RURTtiUoAx7MlKwcsiVcEXK5HEPa7FeH/tsRpqjEPRg==}
-    engines: {node: ^22.22.2 || >=24.15.0}
 
   jsdoc-type-pratt-parser@9.2.0:
     resolution: {integrity: sha512-9TsacmMHRpB1pcKGuXZCJxV6MzYD6h0filpYuYnoO1WzUVin5dg8TFrwbfZSR3R6wlNN+Q81iwcIR2gzpCWmdg==}
@@ -9261,13 +9257,13 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@es-joy/jsdoccomment@0.95.1':
+  '@es-joy/jsdoccomment@0.96.0':
     dependencies:
       '@types/estree': 1.0.9
       '@typescript-eslint/types': 8.69.0
       comment-parser: 1.4.8
       esquery: 1.7.0
-      jsdoc-type-pratt-parser: 9.1.2
+      jsdoc-type-pratt-parser: 9.2.0
 
   '@es-joy/resolve.exports@1.2.0': {}
 
@@ -11550,9 +11546,9 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jsdoc@64.3.4(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-jsdoc@64.3.5(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
-      '@es-joy/jsdoccomment': 0.95.1
+      '@es-joy/jsdoccomment': 0.96.0
       '@es-joy/resolve.exports': 1.2.0
       '@typescript-eslint/utils': 8.69.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       are-docs-informative: 0.1.1
@@ -12690,10 +12686,6 @@ snapshots:
   js-yaml@4.3.2:
     dependencies:
       argparse: 2.0.1
-
-  jsdoc-type-pratt-parser@9.1.2:
-    dependencies:
-      '@types/estree': 1.0.9
 
   jsdoc-type-pratt-parser@9.2.0:
     dependencies:
