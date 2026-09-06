@@ -1,4 +1,4 @@
-import { SyntaxKind, type PropertyName } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -117,7 +117,7 @@ function getMethodDisplayName(method: Method) {
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 function getNameFromPropertyName(
-	name: PropertyName,
+	name: AST.PropertyName,
 ): undefined | { name: string; type: "computed" | "normal" | "quoted" } {
 	switch (name.kind) {
 		case SyntaxKind.ComputedPropertyName:

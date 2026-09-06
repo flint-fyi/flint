@@ -249,8 +249,8 @@ function isOnlyTypeReference(node: AST.Identifier) {
 		}
 
 		if (
-			isTypeNode(parent) &&
-			parent.kind !== SyntaxKind.ExpressionWithTypeArguments
+			parent.kind !== SyntaxKind.ExpressionWithTypeArguments &&
+			isTypeNode(parent)
 		) {
 			return true;
 		}

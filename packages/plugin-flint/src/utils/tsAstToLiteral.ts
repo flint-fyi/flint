@@ -4,14 +4,14 @@
 // Changing from the switch to manual ifs is due to:
 // https://github.com/Microsoft/TypeScript/issues/56275
 
-import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
 export function tsAstToLiteral(node: AST.ArrayLiteralExpression): unknown[];
 export function tsAstToLiteral(node: AST.ObjectLiteralExpression): object;
-export function tsAstToLiteral(node: Node): unknown;
-export function tsAstToLiteral(node: Node): unknown {
+export function tsAstToLiteral(node: AST.Node): unknown;
+export function tsAstToLiteral(node: AST.Node): unknown {
 	switch (node.kind) {
 		case SyntaxKind.FalseKeyword:
 			return false;

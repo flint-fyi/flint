@@ -1,4 +1,4 @@
-import { SyntaxKind, type Identifier } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -14,7 +14,7 @@ const globalReplacements = new Map([
 	["isNaN", "Number.isNaN"],
 ]);
 
-function isDeclarationName(node: Identifier) {
+function isDeclarationName(node: AST.Identifier) {
 	return (
 		(node.parent.kind === SyntaxKind.FunctionDeclaration &&
 			node.parent.name === node) ||
@@ -33,14 +33,14 @@ function isLeftHandSide(node: AST.Identifier) {
 	);
 }
 
-function isPropertyAccessOfNode(node: Identifier) {
+function isPropertyAccessOfNode(node: AST.Identifier) {
 	return (
 		node.parent.kind === SyntaxKind.PropertyAccessExpression &&
 		node.parent.name === node
 	);
 }
 
-function isPropertyShorthandOfNode(node: Identifier) {
+function isPropertyShorthandOfNode(node: AST.Identifier) {
 	return (
 		node.parent.kind === SyntaxKind.ShorthandPropertyAssignment &&
 		node.parent.name === node

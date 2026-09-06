@@ -80,8 +80,6 @@ function isRecursiveCall(
 		}
 		if (
 			isFunctionLikeDeclaration(current) ||
-			current.kind === SyntaxKind.ArrowFunction ||
-			current.kind === SyntaxKind.MethodDeclaration ||
 			isClassLikeDeclaration(current) ||
 			current.kind === SyntaxKind.EnumDeclaration ||
 			current.kind === SyntaxKind.ModuleDeclaration ||

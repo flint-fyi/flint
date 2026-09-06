@@ -1,7 +1,4 @@
-import {
-	SyntaxKind,
-	type DeclarationBase,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
@@ -27,7 +24,7 @@ const volarLanguagePackageName = "@flint.fyi/volar-language";
 function getResolvedDeclarations(
 	typeChecker: Checker,
 	node: AST.Identifier,
-): DeclarationBase[] | undefined {
+): AST.Declaration[] | undefined {
 	const declarationHandles =
 		typeChecker.getSymbolAtLocation(node)?.declarations;
 	if (!declarationHandles) {
@@ -40,7 +37,7 @@ function getResolvedDeclarations(
 		if (!declaration) {
 			return undefined;
 		}
-		declarations.push(declaration);
+		declarations.push(declaration as AST.Declaration);
 	}
 
 	return declarations;

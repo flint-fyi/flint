@@ -46,7 +46,7 @@ function isSetExpression(
 
 	const valueDeclaration = typeChecker
 		.getSymbolAtLocation(unwrapped)
-		?.valueDeclaration?.resolve();
+		?.valueDeclaration?.resolve() as AST.Declaration | undefined;
 	if (
 		!valueDeclaration ||
 		valueDeclaration.kind !== SyntaxKind.VariableDeclaration

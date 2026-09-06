@@ -3,11 +3,7 @@ import type {
 	CapturingGroup,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
-import {
-	SyntaxKind,
-	type BinaryExpression,
-	type Node,
-} from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import {
 	SymbolFlags,
 	TypeFlags,
@@ -58,9 +54,9 @@ function findAssignmentsToSymbol(
 	sourceFile: AST.SourceFile,
 	typeChecker: Checker,
 ) {
-	const assignments: BinaryExpression[] = [];
+	const assignments: AST.BinaryExpression[] = [];
 
-	function visit(node: Node) {
+	function visit(node: AST.Node) {
 		if (
 			node.kind === SyntaxKind.BinaryExpression &&
 			node.operatorToken.kind === SyntaxKind.EqualsToken &&
@@ -291,7 +287,9 @@ function getRegexInfoFromExpression(
 		if (symbol) {
 			if (symbol.declarations.length) {
 				for (const declarationHandle of symbol.declarations) {
-					const declaration = declarationHandle.resolve();
+					const declaration = declarationHandle.resolve() as
+						| AST.Declaration
+						| undefined;
 					if (!declaration) {
 						continue;
 					}
@@ -322,7 +320,9 @@ function getRegexInfoFromSymbol(
 ) {
 	if (symbol.declarations.length) {
 		for (const declarationHandle of symbol.declarations) {
-			const declaration = declarationHandle.resolve();
+			const declaration = declarationHandle.resolve() as
+				| AST.Declaration
+				| undefined;
 			if (!declaration) {
 				continue;
 			}

@@ -1,10 +1,10 @@
-import { SyntaxKind, type Expression } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isAcceptableIndexExpression(property: Expression): boolean {
+function isAcceptableIndexExpression(property: AST.Expression): boolean {
 	return (
 		property.kind === SyntaxKind.StringLiteral ||
 		property.kind === SyntaxKind.NumericLiteral ||
