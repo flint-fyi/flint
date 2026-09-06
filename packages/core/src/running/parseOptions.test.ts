@@ -8,20 +8,20 @@ import type {
 } from "../types/shapes.ts";
 import { parseOptions } from "./parseOptions.ts";
 
-const asyncNumberSchema: StandardSchemaV1<string | undefined, number> = {
+const numberSchema: StandardSchemaV1<string | undefined, number> = {
 	"~standard": {
 		validate(value) {
 			if (value === undefined) {
-				return Promise.resolve({ value: 0 });
+				return { value: 0 };
 			}
 
 			if (typeof value !== "string") {
-				return Promise.resolve({
+				return {
 					issues: [{ message: "Expected a string.", path: ["received"] }],
-				});
+				};
 			}
 
-			return Promise.resolve({ value: Number(value) });
+			return { value: Number(value) };
 		},
 		vendor: "test",
 		version: 1,
@@ -59,54 +59,113 @@ describe(parseOptions, () => {
 		>();
 	});
 
-	it("returns undefined without a schema", async () => {
+	it("returns undefined without a schema", () => {
+		// eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- Verify the undefined return type and value.
 		const result = parseOptions(undefined, undefined);
 
-		expectTypeOf(result).toEqualTypeOf<Promise<undefined>>();
-		await expect(result).resolves.toBeUndefined();
+		expectTypeOf(result).toEqualTypeOf<undefined>();
+		expect(result).toBeUndefined();
 	});
 
-	it("validates and transforms options with an asynchronous Standard Schema", async () => {
-		const result = await parseOptions(
-			{ value: asyncNumberSchema },
-			{ value: "123" },
-		);
+	it("validates and transforms options with a synchronous Standard Schema", () => {
+		const result = parseOptions({ value: numberSchema }, { value: "123" });
 
 		expectTypeOf(result).toExtend<{ value: number }>();
 		expectTypeOf<{ value: number }>().toExtend<typeof result>();
 		expect(result).toEqual({ value: 123 });
 	});
 
-	it("applies Standard Schema defaults", async () => {
-		await expect(
-			parseOptions({ value: asyncNumberSchema }, {}),
-		).resolves.toEqual({ value: 0 });
+	it("applies Standard Schema defaults", () => {
+		expect(parseOptions({ value: numberSchema }, {})).toEqual({ value: 0 });
 	});
 
-	it("omits absent optional outputs", async () => {
-		await expect(
-			parseOptions({ value: z.string().optional() }, {}),
-		).resolves.toEqual({});
+	it("omits absent optional outputs", () => {
+		expect(parseOptions({ value: z.string().optional() }, {})).toStrictEqual(
+			{},
+		);
 	});
 
-	it("prefixes validation issue paths and rejects unknown options", async () => {
-		await expect(
-			parseOptions({ value: asyncNumberSchema }, {
+	it("applies defaults when options are undefined", () => {
+		expect(
+			parseOptions({ value: numberSchema }, undefined as never),
+		).toStrictEqual({ value: 0 });
+	});
+
+	it("prefixes validation issue paths and rejects unknown options", () => {
+		expect(() =>
+			parseOptions({ value: numberSchema }, {
 				extra: true,
 				value: 123,
 			} as never),
-		).rejects.toThrow(
-			JSON.stringify(
-				[
-					{ message: "Unrecognized option.", path: ["extra"] },
+		).toThrow(
+			expect.objectContaining({
+				issues: expect.arrayContaining([
 					{
+						code: "unrecognized_keys",
+						keys: ["extra"],
+						message: expect.any(String),
+						path: [],
+					},
+					{
+						code: "custom",
 						message: "Expected a string.",
 						path: ["value", "received"],
 					},
+				]),
+			}),
+		);
+	});
+
+	it("preserves explicitly undefined optional outputs", () => {
+		expect(
+			parseOptions({ value: z.string().optional() }, { value: undefined }),
+		).toStrictEqual({ value: undefined });
+	});
+
+	it.each([[null], [[]], ["value"], [123]])(
+		"rejects non-object options: %j",
+		(options) => {
+			expect(() => parseOptions({}, options as never)).toThrow(
+				z.core.$ZodError,
+			);
+		},
+	);
+
+	it("normalizes Standard Schema path segments", () => {
+		const schema: StandardSchemaV1<undefined> = {
+			"~standard": {
+				validate: () => ({
+					issues: [
+						{ message: "Invalid item.", path: [{ key: "items" }, { key: 0 }] },
+					],
+				}),
+				vendor: "test",
+				version: 1,
+			},
+		};
+		expect(() => parseOptions({ value: schema }, {})).toThrow(
+			expect.objectContaining({
+				issues: [
+					{
+						code: "custom",
+						message: "Invalid item.",
+						path: ["value", "items", 0],
+					},
 				],
-				undefined,
-				2,
-			),
+			}),
+		);
+	});
+
+	it("rejects Promise-returning validators", () => {
+		const schema: StandardSchemaV1<undefined> = {
+			"~standard": {
+				validate: () => Promise.resolve({ value: undefined }),
+				vendor: "test",
+				version: 1,
+			},
+		};
+		expect(() => parseOptions({ value: schema }, {})).toThrow(
+			"Async rule-option schemas are not supported.",
 		);
 	});
 });

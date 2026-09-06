@@ -520,8 +520,8 @@ Those string keys have no associated types in config files.
 Linters themselves can validate rule options, such as [ESLint's options schemas](https://eslint.org/docs/latest/extend/custom-rules#options-schemas), but those don't translate to TypeScript types.
 You don't get editor intellisense while authoring; instead, you have to use [`@eslint/config-inspector`](https://www.npmjs.com/package/@eslint/config-inspector) or run your config to know whether you've mistyped the name of a rule or an option.
 
-Flint's rules take a more modern approach.
-They allow any [Standard Schema](https://standardschema.dev)-compliant validator for rule options, which enables the use of TypeScript-friendly schema validation libraries such as [Zod](https://zod.dev):
+Flint's rules will take a more modern approach.
+They will allow [Standard Schema](https://standardschema.dev) descriptions for rule options, which enables the use of TypeScript-friendly schema validation libraries such as [Zod](https://zod.dev):
 
 ```ts title="src/rules/someRule.ts"
 import { typescriptLanguage } from "@flint/typescript-language";
@@ -529,15 +529,13 @@ import { z } from "zod";
 
 export const someRule = typescriptLanguage.createRule({
 	options: {
-		option: z.string().default("Hooray!"),
+		option: z.string(),
 	},
 	setup(context) {
 		// ...
 	},
 });
 ```
-
-Each option schema must accept `undefined` so that users can enable the rule without explicitly configuring its options.
 
 ```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";

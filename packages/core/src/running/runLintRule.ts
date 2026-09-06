@@ -71,7 +71,7 @@ export async function runLintRule(
 		if (ruleRuntime.visitors) {
 			for (const { languageFiles, options } of filesAndOptions) {
 				const parsedOptions: InferredOutputObject<(typeof rule)["options"]> =
-					await parseOptions(
+					parseOptions(
 						rule.options,
 						// TODO: Figure out a way around the type assertion...
 						options as InferredInputObject<(typeof rule)["options"]>,
