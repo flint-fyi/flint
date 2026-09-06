@@ -53,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.Expression,
-			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 			message: "unsafeCall" | "unsafeNew" | "unsafeTemplateTag",
 			allowVoid?: boolean,
 		) {

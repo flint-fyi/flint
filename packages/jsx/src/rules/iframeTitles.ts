@@ -52,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				);
 			});
 
-			if (!titleAttribute || titleAttribute.kind !== SyntaxKind.JsxAttribute) {
+			if (titleAttribute?.kind !== SyntaxKind.JsxAttribute) {
 				context.report({
 					message: "missingTitle",
 					range: getTSNodeRange(tagName, sourceFile),

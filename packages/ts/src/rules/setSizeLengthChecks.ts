@@ -47,10 +47,7 @@ function isSetExpression(
 	const valueDeclaration = typeChecker
 		.getSymbolAtLocation(unwrapped)
 		?.valueDeclaration?.resolve() as AST.Declaration | undefined;
-	if (
-		!valueDeclaration ||
-		valueDeclaration.kind !== SyntaxKind.VariableDeclaration
-	) {
+	if (valueDeclaration?.kind !== SyntaxKind.VariableDeclaration) {
 		return false;
 	}
 
@@ -65,7 +62,7 @@ function isSetExpression(
 	}
 
 	return isNewSetExpression(
-		unwrapParentheses(declaration.initializer as AST.Expression),
+		unwrapParentheses(declaration.initializer),
 		typeChecker,
 		program,
 	);
@@ -101,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				PropertyAccessExpression: (
 					node,
-					{ typeChecker, program, sourceFile },
+					{ program, sourceFile, typeChecker },
 				) => {
 					if (
 						node.questionDotToken ||

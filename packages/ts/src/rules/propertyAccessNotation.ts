@@ -163,7 +163,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ElementAccessExpression: (
 					node,
-					{ typeChecker, options, sourceFile },
+					{ options, sourceFile, typeChecker },
 				) => {
 					const key = getPropertyKeyText(node);
 					if (!key || keyCannotBeUsedWithDotNotation(key)) {

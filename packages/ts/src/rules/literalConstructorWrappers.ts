@@ -84,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) => {
 					if (node.expression.kind !== SyntaxKind.Identifier) {
 						return;

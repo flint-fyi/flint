@@ -90,7 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ThrowStatement(
 					node: AST.ThrowStatement,
-					{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) {
 					const type = getConstrainedTypeAtLocation(
 						node.expression,

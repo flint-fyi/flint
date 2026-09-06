@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
+				PropertyAccessExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.name.kind === SyntaxKind.Identifier &&
 						node.name.text === "cookie" &&

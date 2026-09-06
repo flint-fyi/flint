@@ -138,7 +138,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				TypeReference: (
 					node,
-					{ typeChecker, options, program, sourceFile },
+					{ options, program, sourceFile, typeChecker },
 				) => {
 					if (
 						node.typeName.kind !== SyntaxKind.Identifier ||

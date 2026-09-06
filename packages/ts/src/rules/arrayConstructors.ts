@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (
 				node.expression.kind !== SyntaxKind.Identifier ||

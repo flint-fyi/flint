@@ -412,10 +412,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			const role =
-				roleProperty &&
-				roleProperty.kind === SyntaxKind.JsxAttribute &&
-				roleProperty.initializer &&
-				roleProperty.initializer.kind === SyntaxKind.StringLiteral
+				roleProperty?.kind === SyntaxKind.JsxAttribute &&
+				roleProperty.initializer?.kind === SyntaxKind.StringLiteral
 					? roleProperty.initializer.text.toLowerCase()
 					: implicitRoles[elementName];
 

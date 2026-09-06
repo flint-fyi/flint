@@ -31,13 +31,6 @@ function containsThis(node: AST.AnyNode): boolean {
 	switch (node.kind) {
 		case SyntaxKind.ClassDeclaration:
 		case SyntaxKind.ClassExpression: {
-			if (
-				node.kind !== SyntaxKind.ClassDeclaration &&
-				node.kind !== SyntaxKind.ClassExpression
-			) {
-				return false;
-			}
-
 			for (const member of node.members) {
 				if (
 					member.kind === SyntaxKind.PropertyDeclaration &&

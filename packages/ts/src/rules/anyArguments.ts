@@ -68,7 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkCallArguments(
 			node: AST.CallExpression | AST.NewExpression,
-			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (!node.arguments) {
 				return;
@@ -232,7 +232,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: checkCallArguments,
 				NewExpression: checkCallArguments,
-				TaggedTemplateExpression: (node, { typeChecker, sourceFile }) => {
+				TaggedTemplateExpression: (node, { sourceFile, typeChecker }) => {
 					const signature = typeChecker.getResolvedSignature(node);
 					const parameters = signature.getParameters();
 					if (parameters.length <= 1) {

@@ -94,7 +94,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { typeChecker, sourceFile }) => {
+				BinaryExpression: (node, { sourceFile, typeChecker }) => {
 					const result = isIndexOfComparison(node, typeChecker);
 					if (result) {
 						context.report({

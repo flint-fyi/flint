@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			namesToReport: Set<string>,
 			message: "disallowedNew" | "missingNew",
-			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (node.expression.kind !== SyntaxKind.Identifier) {
 				return;

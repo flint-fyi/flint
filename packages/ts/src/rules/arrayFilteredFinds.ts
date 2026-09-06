@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { typeChecker, sourceFile }) => {
+				CallExpression: (node, { sourceFile, typeChecker }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -117,7 +117,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 					}
 				},
-				ElementAccessExpression: (node, { typeChecker, sourceFile }) => {
+				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
 					if (
 						getStaticNumberValue(node.argumentExpression) === 0 &&
 						isArrayFilterCall(node.expression, typeChecker)

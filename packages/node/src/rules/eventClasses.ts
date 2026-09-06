@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ClassDeclaration(
 					node,
-					{ typeChecker, sourceFile }: TypeScriptFileServices,
+					{ sourceFile, typeChecker }: TypeScriptFileServices,
 				) {
 					if (!node.heritageClauses) {
 						return;
@@ -121,7 +121,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				NewExpression(
 					node,
-					{ typeChecker, sourceFile }: TypeScriptFileServices,
+					{ sourceFile, typeChecker }: TypeScriptFileServices,
 				) {
 					checkExpression(node.expression, sourceFile, typeChecker);
 				},

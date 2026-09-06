@@ -241,7 +241,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ExportDeclaration: (
 					node,
-					{ typeChecker, options, program, sourceFile },
+					{ options, program, sourceFile, typeChecker },
 				) => {
 					if (node.moduleSpecifier?.kind !== SyntaxKind.StringLiteral) {
 						return;
@@ -296,7 +296,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				ImportDeclaration: (
 					node,
-					{ typeChecker, options, program, sourceFile },
+					{ options, program, sourceFile, typeChecker },
 				) => {
 					if (node.moduleSpecifier.kind !== SyntaxKind.StringLiteral) {
 						return;

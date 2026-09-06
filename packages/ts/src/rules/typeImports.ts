@@ -380,7 +380,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				SourceFile(node, { typeChecker, options, program, sourceFile }) {
+				SourceFile(node, { options, program, sourceFile, typeChecker }) {
 					if (options.prefer === "no-type-imports") {
 						for (const statement of node.statements) {
 							if (

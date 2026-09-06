@@ -17,7 +17,7 @@ export interface RegExpConstruction {
 
 export function getRegExpConstruction(
 	node: AST.CallExpression | AST.NewExpression,
-	{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+	{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 ): RegExpConstruction | undefined {
 	if (
 		node.expression.kind !== SyntaxKind.Identifier ||

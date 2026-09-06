@@ -98,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { typeChecker, program, sourceFile }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					const outerInfo = getMathMethodInfo(node, typeChecker, program);
 					if (!outerInfo) {
 						return;

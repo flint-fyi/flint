@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				VoidExpression: (node, { typeChecker, sourceFile }) => {
+				VoidExpression: (node, { sourceFile, typeChecker }) => {
 					const argumentType = getConstrainedTypeAtLocation(
 						node.expression,
 						typeChecker,

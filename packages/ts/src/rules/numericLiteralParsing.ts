@@ -88,7 +88,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { typeChecker, program, sourceFile }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (node.expression.kind === SyntaxKind.Identifier) {
 						if (
 							node.expression.text === "parseInt" &&

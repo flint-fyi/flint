@@ -95,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) => {
 					if (!isParseIntCall(node, typeChecker, program)) {
 						return;

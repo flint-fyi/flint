@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { typeChecker, program, sourceFile }) {
+				CallExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.arguments.length < 2 &&
 						node.expression.kind === SyntaxKind.PropertyAccessExpression &&

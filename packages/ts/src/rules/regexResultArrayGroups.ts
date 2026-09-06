@@ -67,7 +67,7 @@ function findAssignmentsToSymbol(
 				assignments.push(node);
 			}
 		}
-		forEachChild(node as AST.AnyNode, visit);
+		forEachChild(node, visit);
 	}
 
 	visit(sourceFile);
@@ -270,9 +270,9 @@ function getRegexInfoFromExpression(
 		unwrapped.kind === SyntaxKind.NewExpression
 	) {
 		const construction = getRegExpConstruction(unwrapped, {
-			typeChecker,
 			program,
 			sourceFile,
+			typeChecker,
 		} as TypeScriptFileServices);
 		if (construction) {
 			return {
@@ -298,7 +298,7 @@ function getRegexInfoFromExpression(
 						declaration.initializer
 					) {
 						return getRegexInfoFromExpression(
-							declaration.initializer as AST.Expression,
+							declaration.initializer,
 							typeChecker,
 							program,
 							sourceFile,
@@ -330,9 +330,7 @@ function getRegexInfoFromSymbol(
 				declaration.kind === SyntaxKind.VariableDeclaration &&
 				declaration.initializer
 			) {
-				const callExpression = extractCallExpression(
-					declaration.initializer as AST.Expression,
-				);
+				const callExpression = extractCallExpression(declaration.initializer);
 				if (callExpression) {
 					const regexInfo = getRegexFromCall(
 						callExpression,
@@ -360,9 +358,7 @@ function getRegexInfoFromSymbol(
 
 	const assignments = findAssignmentsToSymbol(symbol, sourceFile, typeChecker);
 	for (const assignment of assignments) {
-		const callExpression = extractCallExpression(
-			assignment.right as AST.Expression,
-		);
+		const callExpression = extractCallExpression(assignment.right);
 		if (callExpression) {
 			const regexInfo = getRegexFromCall(
 				callExpression,
@@ -438,7 +434,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ElementAccessExpression: (
 					node,
-					{ typeChecker, program, sourceFile },
+					{ program, sourceFile, typeChecker },
 				) => {
 					const argument = skipParentheses(node.argumentExpression);
 					if (argument.kind !== SyntaxKind.NumericLiteral) {

@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(
 					node: AST.CallExpression,
-					{ typeChecker, program, sourceFile },
+					{ program, sourceFile, typeChecker },
 				) {
 					if (
 						!isJsonMethod(node, "parse", typeChecker, program) ||

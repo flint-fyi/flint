@@ -78,7 +78,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const typeInitializer = typeAttribute.initializer;
 			const typeExpression =
-				typeInitializer && typeInitializer.kind === SyntaxKind.JsxExpression
+				typeInitializer?.kind === SyntaxKind.JsxExpression
 					? typeInitializer.expression
 					: typeInitializer;
 			const typeValue = typeExpression && getStaticStringValue(typeExpression);

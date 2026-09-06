@@ -53,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { typeChecker, program, sourceFile }) {
+				CallExpression(node, { program, sourceFile, typeChecker }) {
 					const found = getCalleeNameAndNode(node.expression);
 					if (found === undefined) {
 						return;

@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ElementAccessExpression: (node, { typeChecker, sourceFile }) => {
+				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
 					if (
 						node.argumentExpression.kind !== SyntaxKind.NumericLiteral ||
 						node.argumentExpression.text !== "0" ||

@@ -616,7 +616,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				BinaryExpression: (node, { typeChecker, options, sourceFile }) => {
+				BinaryExpression: (node, { options, sourceFile, typeChecker }) => {
 					if (
 						(options.ignoreConditionalTests && isConditionalTest(node)) ||
 						(options.ignoreMixedLogicalExpressions &&
@@ -644,7 +644,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						range: fullRange,
 					});
 				},
-				ConditionalExpression: (node, { typeChecker, options, sourceFile }) => {
+				ConditionalExpression: (node, { options, sourceFile, typeChecker }) => {
 					if (
 						options.ignoreTernaryTests ||
 						(options.ignoreConditionalTests && isConditionalTest(node))
@@ -679,7 +679,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						range,
 					});
 				},
-				IfStatement: (node, { typeChecker, options, sourceFile }) => {
+				IfStatement: (node, { options, sourceFile, typeChecker }) => {
 					const checkedValue = getIfStatementNullishCheckValue(node);
 					if (
 						options.ignoreIfStatements ||

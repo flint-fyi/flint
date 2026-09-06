@@ -43,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { typeChecker, sourceFile }) => {
+				Identifier: (node, { sourceFile, typeChecker }) => {
 					if (node.text !== "arguments") {
 						return;
 					}

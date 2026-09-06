@@ -154,7 +154,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				TypeReference: (
 					node,
-					{ typeChecker, options, program, sourceFile },
+					{ options, program, sourceFile, typeChecker },
 				) => {
 					if (
 						options.style === "index-signature" &&

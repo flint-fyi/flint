@@ -120,10 +120,7 @@ function isCaptionsTrack(node: AST.JsxChild) {
 			return false;
 		}
 
-		if (
-			property.initializer &&
-			property.initializer.kind === SyntaxKind.StringLiteral
-		) {
+		if (property.initializer?.kind === SyntaxKind.StringLiteral) {
 			return property.initializer.text === "captions";
 		}
 

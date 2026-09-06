@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { typeChecker, sourceFile }) => {
+				BinaryExpression: (node, { sourceFile, typeChecker }) => {
 					const result =
 						checkFilterLengthComparison(node, typeChecker) ??
 						checkFindIndexComparison(node, typeChecker);

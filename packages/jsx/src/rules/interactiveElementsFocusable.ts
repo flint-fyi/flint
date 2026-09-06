@@ -142,7 +142,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (tabIndex.initializer.kind === SyntaxKind.JsxExpression) {
 				const expression = tabIndex.initializer.expression;
-				if (expression && expression.kind === SyntaxKind.NumericLiteral) {
+				if (expression?.kind === SyntaxKind.NumericLiteral) {
 					return Number(expression.text);
 				}
 			}
@@ -165,10 +165,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				role &&
-				role.kind === SyntaxKind.JsxAttribute &&
-				role.initializer &&
-				role.initializer.kind === SyntaxKind.StringLiteral
+				role?.kind === SyntaxKind.JsxAttribute &&
+				role.initializer?.kind === SyntaxKind.StringLiteral
 			) {
 				return role.initializer.text;
 			}
@@ -187,8 +185,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				!ariaHidden ||
-				ariaHidden.kind !== SyntaxKind.JsxAttribute ||
+				ariaHidden?.kind !== SyntaxKind.JsxAttribute ||
 				!ariaHidden.initializer
 			) {
 				return false;
@@ -228,10 +225,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					property.name.text === "disabled",
 			);
 
-			if (
-				!disabledProperty ||
-				disabledProperty.kind !== SyntaxKind.JsxAttribute
-			) {
+			if (disabledProperty?.kind !== SyntaxKind.JsxAttribute) {
 				return false;
 			}
 
@@ -301,7 +295,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					data: { role: displayRole },
 					message: "notFocusable",
 					range: getTSNodeRange(
-						roleProperty && roleProperty.kind === SyntaxKind.JsxAttribute
+						roleProperty?.kind === SyntaxKind.JsxAttribute
 							? roleProperty
 							: node.tagName,
 						sourceFile,

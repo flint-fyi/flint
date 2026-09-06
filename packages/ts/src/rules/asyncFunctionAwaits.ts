@@ -38,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.FunctionDeclaration
 				| AST.FunctionExpression
 				| AST.MethodDeclaration,
-			{ typeChecker, sourceFile }: TypeScriptFileServices,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			const asyncModifier = node.modifiers?.find(
 				(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,

@@ -25,7 +25,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { typeChecker, sourceFile }) => {
+				Identifier: (node, { sourceFile, typeChecker }) => {
 					if (
 						node.parent.kind === SyntaxKind.VariableDeclaration &&
 						node.parent.name === node

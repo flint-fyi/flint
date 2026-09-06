@@ -72,7 +72,7 @@ export default ruleCreator.createRule(vueLanguage, {
 					if (!vueServices || !services.spanMap) {
 						return;
 					}
-					const { typeChecker, project, spanMap } = services;
+					const { project, spanMap, typeChecker } = services;
 					const templateBlock = vueServices.sfc.children.find(
 						(child): child is vue.ElementNode =>
 							child.type === vue.NodeTypes.ELEMENT && child.tag === "template",

@@ -58,8 +58,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				!ariaHiddenProperty ||
-				ariaHiddenProperty.kind !== SyntaxKind.JsxAttribute ||
+				ariaHiddenProperty?.kind !== SyntaxKind.JsxAttribute ||
 				!isAriaHiddenTrue(ariaHiddenProperty)
 			) {
 				return;
@@ -106,7 +105,7 @@ function findTabIndexValue(
 
 	if (tabIndexProperty.initializer.kind === SyntaxKind.JsxExpression) {
 		const expression = tabIndexProperty.initializer.expression;
-		if (expression && expression.kind === SyntaxKind.NumericLiteral) {
+		if (expression?.kind === SyntaxKind.NumericLiteral) {
 			return Number(expression.text);
 		}
 	}

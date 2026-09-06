@@ -84,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkPairs(
 			pairs: Map<string, AccessorPair>,
-			{ typeChecker, sourceFile }: TypeScriptFileServices,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			for (const [, pair] of pairs) {
 				if (!pair.getter || pair.setter?.parameters.length !== 1) {

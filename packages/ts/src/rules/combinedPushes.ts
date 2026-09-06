@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkNode(
 			{ statements }: AST.Block | AST.SourceFile,
-			{ typeChecker, sourceFile }: TypeScriptFileServices,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			for (let i = 0; i < statements.length - 1; i += 1) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

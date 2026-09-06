@@ -28,7 +28,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
+				PropertyAccessExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.name.text === "domain" &&
 						isGlobalDocumentReference(node.expression, typeChecker, program)

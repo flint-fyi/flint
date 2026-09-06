@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node, { typeChecker, program, sourceFile }) => {
+				Identifier: (node, { program, sourceFile, typeChecker }) => {
 					if (
 						globalAliases.has(node.text) &&
 						!isPropertyAccess(node) &&

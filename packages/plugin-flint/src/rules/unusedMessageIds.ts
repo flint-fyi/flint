@@ -31,7 +31,7 @@ function getResolvedDeclarations(
 		return undefined;
 	}
 
-	const declarations = [];
+	const declarations: AST.Declaration[] = [];
 	for (const declarationHandle of declarationHandles) {
 		const declaration = declarationHandle.resolve();
 		if (!declaration) {
@@ -172,7 +172,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { typeChecker, sourceFile }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (isRuleCreatorCreateRule(node, typeChecker)) {
 						collectMessageIds(node, sourceFile);
 						return;

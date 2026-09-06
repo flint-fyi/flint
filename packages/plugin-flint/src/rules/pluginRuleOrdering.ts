@@ -168,7 +168,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { typeChecker, sourceFile }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (!isCreatePluginCall(node, typeChecker)) {
 						return;
 					}

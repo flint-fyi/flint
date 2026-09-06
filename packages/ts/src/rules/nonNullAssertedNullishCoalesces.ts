@@ -112,7 +112,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NonNullExpression: (node, { typeChecker, sourceFile }) => {
+				NonNullExpression: (node, { sourceFile, typeChecker }) => {
 					if (
 						node.parent.kind !== SyntaxKind.BinaryExpression ||
 						node.parent.operatorToken.kind !==

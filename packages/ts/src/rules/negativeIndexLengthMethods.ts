@@ -289,7 +289,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { typeChecker, sourceFile }) => {
+				CallExpression: (node, { sourceFile, typeChecker }) => {
 					const parsed = parseCallExpression(node);
 					if (!parsed) {
 						return;

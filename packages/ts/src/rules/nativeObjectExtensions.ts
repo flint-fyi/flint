@@ -104,7 +104,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
-			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (!isPrototypeAccess(node)) {
 				return;

@@ -26,7 +26,7 @@ export function getRuleTesterCaseArrays(
 	// https://github.com/flint-fyi/flint/issues/152
 
 	const argument = node.arguments[1];
-	if (!argument || argument.kind !== SyntaxKind.ObjectLiteralExpression) {
+	if (argument?.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return;
 	}
 

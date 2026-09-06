@@ -57,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { typeChecker, sourceFile }) => {
+				BinaryExpression: (node, { sourceFile, typeChecker }) => {
 					if (!comparisonOperators.has(node.operatorToken.kind)) {
 						return;
 					}

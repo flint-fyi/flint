@@ -202,7 +202,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				IntersectionType: (node, { typeChecker, sourceFile }) => {
+				IntersectionType: (node, { sourceFile, typeChecker }) => {
 					const seenLiteralTypes = new Map<TypeFlags, string[]>();
 					const seenPrimitiveTypes = new Map<TypeFlags, AST.TypeNode[]>();
 					const seenUnionTypes = new Map<
@@ -327,7 +327,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 				},
-				UnionType: (node, { typeChecker, sourceFile }) => {
+				UnionType: (node, { sourceFile, typeChecker }) => {
 					const seenLiteralTypes = new Map<
 						TypeFlags,
 						{ literalValue: string; typeNode: AST.TypeNode }[]

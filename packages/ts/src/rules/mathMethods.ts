@@ -173,7 +173,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { typeChecker, program, sourceFile }) => {
+				BinaryExpression: (node, { program, sourceFile, typeChecker }) => {
 					const logPatterns = [
 						{ constantName: "LOG10E", replacementMethod: "log10" },
 						{ constantName: "LOG2E", replacementMethod: "log2" },
@@ -226,7 +226,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 				},
-				CallExpression: (node, { typeChecker, program, sourceFile }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					const argument = getMathMethodArgument(
 						node,
 						"sqrt",

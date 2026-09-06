@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				PropertyAccessExpression(node, { typeChecker, program, sourceFile }) {
+				PropertyAccessExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.name.kind === SyntaxKind.Identifier &&
 						deprecatedProperties.has(node.name.text) &&

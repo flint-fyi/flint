@@ -29,7 +29,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { typeChecker, sourceFile }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (!isLanguageCreateRule(node, typeChecker)) {
 						return;
 					}

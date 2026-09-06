@@ -373,7 +373,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ArrayLiteralExpression: (node, { typeChecker, sourceFile }) => {
+				ArrayLiteralExpression: (node, { sourceFile, typeChecker }) => {
 					for (const element of node.elements) {
 						if (element.kind !== SyntaxKind.SpreadElement) {
 							continue;
@@ -420,7 +420,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				Parameter: (node, { typeChecker, sourceFile }) => {
+				Parameter: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}
@@ -462,7 +462,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					);
 				},
 
-				PropertyAssignment: (node, { typeChecker, sourceFile }) => {
+				PropertyAssignment: (node, { sourceFile, typeChecker }) => {
 					const initializerType = typeChecker.getTypeAtLocation(
 						node.initializer,
 					);
@@ -517,7 +517,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				PropertyDeclaration: (node, { typeChecker, sourceFile }) => {
+				PropertyDeclaration: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}
@@ -538,7 +538,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						typeChecker,
 					);
 				},
-				ShorthandPropertyAssignment: (node, { typeChecker, sourceFile }) => {
+				ShorthandPropertyAssignment: (node, { sourceFile, typeChecker }) => {
 					const initializerType = typeChecker.getTypeAtLocation(node.name);
 
 					if (!isTypeAny(initializerType)) {
@@ -577,7 +577,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				VariableDeclaration: (node, { typeChecker, sourceFile }) => {
+				VariableDeclaration: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}

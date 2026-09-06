@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ForInStatement: (node, { typeChecker, sourceFile }) => {
+				ForInStatement: (node, { sourceFile, typeChecker }) => {
 					const type = getConstrainedTypeAtLocation(
 						node.expression,
 						typeChecker,

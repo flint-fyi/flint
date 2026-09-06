@@ -207,7 +207,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkCalleeFunction(
 			node: AST.CallExpression | AST.NewExpression,
-			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (!node.arguments?.length) {
 				return;
@@ -227,7 +227,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkCalleeEval(
 			node: AST.CallExpression | AST.NewExpression,
 			calleeName: string,
-			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			const args = node.arguments;
 			if (!args?.length) {

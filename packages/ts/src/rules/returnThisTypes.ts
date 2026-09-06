@@ -43,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkFunction(
 			functionNode: FunctionLike,
 			originalClassNode: AST.AnyNode,
-			{ typeChecker, sourceFile }: TypeScriptFileServices,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (
 				originalClassNode.kind !== SyntaxKind.ClassDeclaration &&

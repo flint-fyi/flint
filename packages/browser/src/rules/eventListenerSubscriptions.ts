@@ -127,7 +127,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression(node, { typeChecker, program, sourceFile }) {
+				BinaryExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.operatorToken.kind !== SyntaxKind.EqualsToken ||
 						node.left.kind !== SyntaxKind.PropertyAccessExpression ||

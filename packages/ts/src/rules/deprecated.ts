@@ -486,15 +486,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				BindingElement: (node, { typeChecker, sourceFile }) => {
+				BindingElement: (node, { sourceFile, typeChecker }) => {
 					checkBindingElement(node, sourceFile, typeChecker);
 				},
 
-				ElementAccessExpression: (node, { typeChecker, sourceFile }) => {
+				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
 					checkComputedPropertyAccess(node, sourceFile, typeChecker);
 				},
 
-				Identifier: (node, { typeChecker, sourceFile }) => {
+				Identifier: (node, { sourceFile, typeChecker }) => {
 					if (isInsideHeritageClause(node)) {
 						if (
 							(node.parent.kind === SyntaxKind.ExpressionWithTypeArguments &&
@@ -535,7 +535,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					checkNode(node, sourceFile, typeChecker);
 				},
 
-				PrivateIdentifier: (node, { typeChecker, sourceFile }) => {
+				PrivateIdentifier: (node, { sourceFile, typeChecker }) => {
 					if (
 						node.parent.kind === SyntaxKind.PropertyAccessExpression &&
 						node === node.parent.name
@@ -544,7 +544,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 
-				SuperKeyword: (node, { typeChecker, sourceFile }) => {
+				SuperKeyword: (node, { sourceFile, typeChecker }) => {
 					checkSuperCall(node, sourceFile, typeChecker);
 				},
 			},

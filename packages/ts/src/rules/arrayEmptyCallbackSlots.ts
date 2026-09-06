@@ -49,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { typeChecker, program, sourceFile }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}

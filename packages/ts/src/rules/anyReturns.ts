@@ -128,7 +128,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkReturn(
 			returnNode: AST.Expression,
 			reportingNode: AST.AnyNode,
-			{ typeChecker, program, sourceFile }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			const type = typeChecker.getTypeAtLocation(returnNode);
 			const functionNode = findFunctionAncestor(returnNode);

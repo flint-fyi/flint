@@ -112,7 +112,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.AsExpression | AST.TypeAssertion,
-			{ typeChecker, sourceFile }: TypeScriptFileServices,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (isConstAssertion(node, sourceFile)) {
 				return;

@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				EnumDeclaration: (node, { typeChecker, sourceFile }) => {
+				EnumDeclaration: (node, { sourceFile, typeChecker }) => {
 					if (node.members.length < 2) {
 						return;
 					}

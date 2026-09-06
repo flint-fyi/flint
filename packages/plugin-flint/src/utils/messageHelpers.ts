@@ -13,7 +13,7 @@ export function findMessagesProperty(
 	node: AST.CallExpression,
 ): AST.PropertyAssignment | undefined {
 	const args = node.arguments[1];
-	if (!args || args.kind !== SyntaxKind.ObjectLiteralExpression) {
+	if (args?.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return undefined;
 	}
 
@@ -25,8 +25,7 @@ export function findMessagesProperty(
 		);
 	});
 
-	return messagesProperty &&
-		messagesProperty.kind === SyntaxKind.PropertyAssignment
+	return messagesProperty?.kind === SyntaxKind.PropertyAssignment
 		? messagesProperty
 		: undefined;
 }
