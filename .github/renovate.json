@@ -25,7 +25,10 @@
 			"groupName": "astro"
 		},
 		{
-			"matchSourceUrls": ["https://github.com/withastro/starlight"],
+			"matchSourceUrls": [
+				"https://github.com/HiDeoo/starlight-*",
+				"https://github.com/withastro/starlight"
+			],
 			"groupName": "astro"
 		},
 		{
