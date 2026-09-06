@@ -1,5 +1,13 @@
 # @flint.fyi/plugin-flint
 
+## 0.8.2
+
+### Patch Changes
+
+- [#3369](https://github.com/flint-fyi/flint/pull/3369) [`bd0fc45`](https://github.com/flint-fyi/flint/commit/bd0fc450f491adcda039c7cde2b01041dfcc2a4a) - Detect duplicate invalid test cases declared with `String.raw` snapshots.
+- Updated dependencies [[`9372aeb`](https://github.com/flint-fyi/flint/commit/9372aeb77826b628a7d6d6013786bcbb85fd5a4b)]:
+  - @flint.fyi/typescript-language@0.21.0
+
 ## 0.8.1
 
 ### Patch Changes
