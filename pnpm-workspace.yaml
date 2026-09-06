@@ -55,7 +55,7 @@ catalogs:
     prettier-plugin-sh: 0.19.0
     svelte: 5.57.0
     tsdown: 0.23.0
-    typescript: 6.0.3
+    typescript: 7.0.2
     typescript-eslint: 8.69.0
     vitest: 4.1.11
     vitest-ansi-serializer: 0.2.1
@@ -143,7 +143,7 @@ catalogs:
     text-table-fast: ^0.1.0
     tinyglobby: ^0.2.17
     ts-api-utils: ^2.4.0
-    typescript: ^6.0.3
+    typescript: ^7.0.0
     unist-util-visit: ^5.0.0
     wrap-ansi: ^10.0.0
     yaml-unist-parser: ^3.0.0
