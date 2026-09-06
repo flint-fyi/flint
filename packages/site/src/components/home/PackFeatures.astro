@@ -43,20 +43,18 @@ const features = [
 	</div>
 
 	<div class="grid">
-		{
-			features.map((feature) => (
-				<article class="flint-paper feature" data-accent={feature.accent}>
-					<div class="icon">
-						<Icon name={feature.icon} size="2rem" />
-					</div>
-					<div class="body">
-						<span class="label">{feature.label}</span>
-						<h3 class="flint-display">{feature.title}</h3>
-						<p>{feature.body}</p>
-					</div>
-				</article>
-			))
-		}
+		{features.map((feature) => (
+			<article class="flint-paper feature" data-accent={feature.accent}>
+				<div class="icon">
+					<Icon name={feature.icon} size="2rem" />
+				</div>
+				<div class="body">
+					<span class="label">{feature.label}</span>
+					<h3 class="flint-display">{feature.title}</h3>
+					<p>{feature.body}</p>
+				</div>
+			</article>
+		))}
 	</div>
 </section>
 

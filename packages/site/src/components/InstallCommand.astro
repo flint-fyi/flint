@@ -13,19 +13,18 @@ const defaultPackageManager = "npm";
 		<span
 			aria-hidden="true"
 			class="package-manager-icon"
-			data-package-manager-icon></span>
+			data-package-manager-icon
+		></span>
 		<select aria-label="Package manager" data-package-manager>
-			{
-				packageManagers.map((packageManager) => (
-					<option
-						selected={packageManager === defaultPackageManager}
-						value={packageManager}
-					>
-						{packageManagerLabels[packageManager]}
-						<Icon class="option-check" name="approve-check" />
-					</option>
-				))
-			}
+			{packageManagers.map((packageManager) => (
+				<option
+					selected={packageManager === defaultPackageManager}
+					value={packageManager}
+				>
+					{packageManagerLabels[packageManager]}
+					<Icon class="option-check" name="approve-check" />
+				</option>
+			))}
 		</select>
 		<span aria-hidden="true" class="selector-caret">
 			<Icon name="down-caret" />

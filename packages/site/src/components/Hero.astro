@@ -19,46 +19,36 @@ const alt = image?.alt ?? "";
 
 		<InstallCommand />
 
-		{
-			actions.length > 0 && (
-				<div class="actions">
-					{actions.map(
-						({
-							attrs: { class: className, ...attrs } = {},
-							icon,
-							link: href,
-							text,
-							variant,
-						}) => (
-							<LinkButton
-								{href}
-								{variant}
-								icon={icon?.name}
-								class:list={[className]}
-								{...attrs}
-							>
-								{text}
-							</LinkButton>
-						),
-					)}
-				</div>
-			)
-		}
+		{actions.length > 0 && (
+			<div class="actions">
+				{actions.map(
+					({
+						attrs: { class: className, ...attrs } = {},
+						icon,
+						link: href,
+						text,
+						variant,
+					}) => (
+						<LinkButton
+							{href}
+							{variant}
+							icon={icon?.name}
+							class:list={[className]}
+							{...attrs}
+						>
+							{text}
+						</LinkButton>
+					),
+				)}
+			</div>
+		)}
 	</div>
 
 	<div class="art">
 		<div class="mark">
-			{
-				logo && (
-					<Image
-						alt={alt}
-						height={200}
-						loading="eager"
-						src={logo}
-						width={200}
-					/>
-				)
-			}
+			{logo && (
+				<Image alt={alt} height={200} loading="eager" src={logo} width={200} />
+			)}
 		</div>
 	</div>
 </div>

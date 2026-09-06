@@ -23,7 +23,9 @@ const sponsors: SponsorData[] = [
 ---
 
 <div class="sponsors-list">
-	{sponsors.map((sponsor) => <Sponsor data={sponsor} />)}
+	{sponsors.map((sponsor) => (
+		<Sponsor data={sponsor} />
+	))}
 </div>
 
 <style>

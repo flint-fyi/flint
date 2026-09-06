@@ -18,16 +18,15 @@ const rule = getRuleForPlugin(Astro.props.plugin, Astro.props.rule);
 
 <blockquote>
 	✅ This rule is included in the {Astro.props.plugin}{" "}
-	{
-		rule.about.presets?.map((preset, i) => (
-			<>
-				{i !== 0 && " and "}
-				<a href={`/rules/${Astro.props.plugin}#${preset}`}>
-					<code>{preset}</code>
-				</a>
-			</>
-		))
-	}preset{rule.about.presets?.length ? "s" : ""}.
+	{rule.about.presets?.map((preset, i) => (
+		<>
+			{i !== 0 && " and "}
+			<a href={`/rules/${Astro.props.plugin}#${preset}`}>
+				<code>{preset}</code>
+			</a>
+		</>
+	))}
+	preset{rule.about.presets?.length ? "s" : ""}.
 </blockquote>
 
 <style>

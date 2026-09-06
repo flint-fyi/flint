@@ -34,25 +34,27 @@ const rules = ruleIds.map((ruleId) => {
 			scout-master.
 		</p>
 		<div class="actions">
-			<a class="button primary" href="/rules">Browse rules</a>
-			<a class="button" href="/about">Read the docs</a>
+			<a class="button primary" href="/rules">
+				Browse rules
+			</a>
+			<a class="button" href="/about">
+				Read the docs
+			</a>
 		</div>
 	</div>
 
 	<ul class="rules">
-		{
-			rules.map((rule) => (
-				<li class="rule">
-					<div class="rule-heading">
-						<a href={`/rules/ts/${rule.id}`}>ts/{rule.id}</a>
-						<span class="preset" data-preset={rule.preset}>
-							{rule.preset}
-						</span>
-					</div>
-					<p set:html={rule.description} />
-				</li>
-			))
-		}
+		{rules.map((rule) => (
+			<li class="rule">
+				<div class="rule-heading">
+					<a href={`/rules/ts/${rule.id}`}>ts/{rule.id}</a>
+					<span class="preset" data-preset={rule.preset}>
+						{rule.preset}
+					</span>
+				</div>
+				<p set:html={rule.description} />
+			</li>
+		))}
 	</ul>
 </section>
 
