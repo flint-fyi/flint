@@ -44,7 +44,7 @@ function getImportInfo(
 	if (clause.namedBindings) {
 		if (clause.namedBindings.kind === SyntaxKind.NamespaceImport) {
 			info.namespaceImport = clause.namedBindings.name.text;
-		} else if (clause.namedBindings.kind === SyntaxKind.NamedImports) {
+		} else {
 			for (const element of clause.namedBindings.elements) {
 				const importedName = element.propertyName
 					? element.propertyName.text

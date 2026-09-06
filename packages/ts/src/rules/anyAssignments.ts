@@ -1,4 +1,3 @@
-import * as ts from "typescript-native/unstable/ast";
 import { SyntaxKind } from "typescript-native/unstable/ast";
 import {
 	TypeFlags,
@@ -116,7 +115,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkArrayDestructureWorker(
-			pattern: ts.ArrayBindingPattern,
+			pattern: AST.ArrayBindingPattern,
 			senderType: Type,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
@@ -144,7 +143,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			for (let i = 0; i < pattern.elements.length; i++) {
 				const element = pattern.elements[i];
-				if (!element || element.kind === SyntaxKind.OmittedExpression) {
+				if (!element) {
 					continue;
 				}
 
@@ -195,7 +194,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function checkObjectDestructureWorker(
-			pattern: ts.ObjectBindingPattern,
+			pattern: AST.ObjectBindingPattern,
 			senderType: Type,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,

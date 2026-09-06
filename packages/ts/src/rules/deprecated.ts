@@ -561,11 +561,14 @@ function isInsideHeritageClause(node: AST.AnyNode) {
 	let current: ts.Node | undefined = node.parent;
 
 	while (current) {
-		if (ts.isHeritageClause(current)) {
+		if (current.kind === SyntaxKind.HeritageClause) {
 			return true;
 		}
 
-		if (ts.isSourceFile(current) || ts.isClassDeclaration(current)) {
+		if (
+			current.kind === SyntaxKind.SourceFile ||
+			current.kind === SyntaxKind.ClassDeclaration
+		) {
 			break;
 		}
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
@@ -584,18 +587,18 @@ function isInsideImport(node: AST.AnyNode) {
 	let current: ts.Node | undefined = node.parent;
 
 	while (current) {
-		if (ts.isImportDeclaration(current)) {
+		if (current.kind === SyntaxKind.ImportDeclaration) {
 			return true;
 		}
 
 		if (
-			ts.isSourceFile(current) ||
-			ts.isFunctionDeclaration(current) ||
-			ts.isFunctionExpression(current) ||
-			ts.isArrowFunction(current) ||
-			ts.isClassDeclaration(current) ||
-			ts.isClassExpression(current) ||
-			ts.isBlock(current)
+			current.kind === SyntaxKind.SourceFile ||
+			current.kind === SyntaxKind.FunctionDeclaration ||
+			current.kind === SyntaxKind.FunctionExpression ||
+			current.kind === SyntaxKind.ArrowFunction ||
+			current.kind === SyntaxKind.ClassDeclaration ||
+			current.kind === SyntaxKind.ClassExpression ||
+			current.kind === SyntaxKind.Block
 		) {
 			return false;
 		}
