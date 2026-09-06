@@ -158,7 +158,7 @@ catalogs:
     "@astrojs/check": 0.9.10
     "@astrojs/markdown-remark": 7.3.0
     "@astrojs/react": 6.0.5
-    "@astrojs/starlight": 0.42.0
+    "@astrojs/starlight": 0.41.11
     "@expressive-code/core": 0.44.2
     "@konami-emoji-blast/astro": 0.3.0
     "@types/react": 19.2.18
@@ -192,6 +192,7 @@ nodeVersion: 26.7.0
 
 overrides:
   read-package-up: 12.0.0
+  starlight-blog>satteri: 0.10.5
   unicorn-magic: 0.4.0
 
 peerDependencyRules:
