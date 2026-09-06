@@ -13,10 +13,11 @@ export async function runPrettier(
 	host: LinterHost,
 	lintResults: LintResultsMaybeWithChanges,
 	fix: boolean | undefined,
+	filePaths?: Iterable<string>,
 ): Promise<FormattingResults> {
 	const allFilePaths = new Set([
 		...(lintResults.changed ?? []),
-		...lintResults.allFilePaths,
+		...(filePaths ?? lintResults.allFilePaths),
 	]);
 	log("Running Prettier on %d file(s)", allFilePaths.size);
 
