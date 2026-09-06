@@ -1,5 +1,18 @@
 # @flint/rule-tester
 
+## 0.19.1
+
+### Patch Changes
+
+- Updated dependencies [[`7d6522c`](https://github.com/flint-fyi/flint/commit/7d6522cf53a5c7f9cf7823cf255e1cbdfef511a3), [`5b63f69`](https://github.com/flint-fyi/flint/commit/5b63f6901ff0d6cfabe4dbf61cb3f0333dc94602)]:
+  - @flint.fyi/core@0.26.0
+
+## 0.19.0
+
+### Minor Changes
+
+- [#2985](https://github.com/flint-fyi/flint/pull/2985) [`91bff9b`](https://github.com/flint-fyi/flint/commit/91bff9bec64b9770f3dc8df634b16f69401af4bf) - Collect TS semantic diagnostics in RuleTester tests.
+
 ## 0.18.0
 
 ### Minor Changes

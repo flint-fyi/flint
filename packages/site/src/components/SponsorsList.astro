@@ -12,7 +12,7 @@ const sponsors: SponsorData[] = [
 	{
 		name: "Amp",
 		href: "https://ampcode.com?utm_source=flint",
-		image: "https://avatars.githubusercontent.com/u/220109460",
+		image: "https://ampcode.com/app-icon.png?v=4",
 	},
 	{
 		name: "Mintlify",
@@ -23,7 +23,9 @@ const sponsors: SponsorData[] = [
 ---
 
 <div class="sponsors-list">
-	{sponsors.map((sponsor) => <Sponsor data={sponsor} />)}
+	{sponsors.map((sponsor) => (
+		<Sponsor data={sponsor} />
+	))}
 </div>
 
 <style>

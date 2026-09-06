@@ -12,7 +12,7 @@ export async function* createDetailedReport(
 	report: FileReport,
 	sourceFileText: string,
 	width: number,
-): AsyncGenerator<string, void, unknown> {
+): AsyncGenerator<string, void, void> {
 	yield indenter;
 	yield wrapIfNeeded(
 		chalk.hex(ColorCodes.primaryMessage),

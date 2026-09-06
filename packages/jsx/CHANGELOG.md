@@ -1,5 +1,12 @@
 # @flint.fyi/jsx
 
+## 0.6.1
+
+### Patch Changes
+
+- Updated dependencies [[`7d6522c`](https://github.com/flint-fyi/flint/commit/7d6522cf53a5c7f9cf7823cf255e1cbdfef511a3), [`5b63f69`](https://github.com/flint-fyi/flint/commit/5b63f6901ff0d6cfabe4dbf61cb3f0333dc94602)]:
+  - @flint.fyi/core@0.26.0
+
 ## 0.6.0
 
 ### Minor Changes
@@ -67,7 +74,7 @@
 ### Minor Changes
 
 - d85f625: Add file selectors.
-The plugin now includes the following selectors:
+  The plugin now includes the following selectors:
   - `all`: `**/*.{jsx,tsx}`
   - `javascript`: `**/*.jsx`
   - `typescript`: `**/*.tsx`

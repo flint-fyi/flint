@@ -9,6 +9,7 @@ import {
 	type VolarLanguage,
 } from "@flint.fyi/volar-language";
 
+import { addAstroTypes } from "./addAstroTypes.ts";
 import { astroCompilerDiagnosticToLanguageReport } from "./astroCompilerDiagnosticToLanguageReport.ts";
 import { extractDirectives } from "./extractDirectives.ts";
 
@@ -21,7 +22,9 @@ export interface AstroServices {
 }
 
 export const astroLanguage: VolarLanguage<AstroServices> =
-	createVolarBasedLanguage(() => {
+	createVolarBasedLanguage((typescript, options) => {
+		addAstroTypes(typescript, options);
+
 		return {
 			createFile({ sourceFile, sourceScript }) {
 				const sourceText = sourceScript.snapshot.getText(

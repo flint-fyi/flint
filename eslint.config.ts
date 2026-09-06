@@ -10,7 +10,7 @@ import packageJson from "eslint-plugin-package-json/experimental";
 import perfectionist from "eslint-plugin-perfectionist";
 import * as regexp from "eslint-plugin-regexp";
 import yml from "eslint-plugin-yml";
-import { defineConfig, globalIgnores } from "eslint/config";
+import { defineConfig, globalIgnores, type ConfigObject } from "eslint/config";
 import tseslint from "typescript-eslint";
 
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#importextensions-enforcing-extensions-are-not-used
@@ -36,7 +36,7 @@ function banJsImportExtension() {
 	];
 }
 
-export default defineConfig(
+const config: ConfigObject[] = defineConfig(
 	globalIgnores([
 		"**/*.snap",
 		"**/node_modules",
@@ -44,6 +44,7 @@ export default defineConfig(
 		"packages/*/dist",
 		"packages/*/lib",
 		"packages/fixtures",
+		"packages/performance-testing/cases",
 		"packages/e2e/tests/**/fixtures/**",
 		"pnpm-lock.yaml",
 		"coverage",
@@ -250,3 +251,5 @@ export default defineConfig(
 		},
 	},
 );
+
+export default config;

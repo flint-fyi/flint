@@ -1,5 +1,5 @@
 {
-	"extends": "@flint.fyi/build/tsconfig.base.json",
+	"extends": "@flint.fyi/build/tsconfig.plugin.json",
 	"include": [],
 	"references": [
 		{ "path": "./tsconfig.src.json" },

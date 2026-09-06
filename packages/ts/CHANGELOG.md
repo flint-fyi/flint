@@ -1,5 +1,18 @@
 # @flint/ts
 
+## 0.23.2
+
+### Patch Changes
+
+- Updated dependencies [[`7d6522c`](https://github.com/flint-fyi/flint/commit/7d6522cf53a5c7f9cf7823cf255e1cbdfef511a3), [`5b63f69`](https://github.com/flint-fyi/flint/commit/5b63f6901ff0d6cfabe4dbf61cb3f0333dc94602)]:
+  - @flint.fyi/core@0.26.0
+
+## 0.23.1
+
+### Patch Changes
+
+- [#3242](https://github.com/flint-fyi/flint/pull/3242) [`84c5f15`](https://github.com/flint-fyi/flint/commit/84c5f154162efde80ceeb3ccb80d0c435d52d28b) - Ensure `typeImports` properly detects references from shorthand property assignment identifiers.
+
 ## 0.23.0
 
 ### Minor Changes

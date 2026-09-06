@@ -1,0 +1,117 @@
+---
+description: "Enforces that `expect` statements aren't conditionally executed."
+title: "conditionalExpects"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="conditionalExpects" />
+
+Calling `expect` inside a conditional statement (`if`, `switch`, a ternary, `&&`/`||`/`??`, or a `catch` block) means the assertion may never run.
+If the condition is never met, the test passes without actually checking anything.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+test("something", () => {
+	if (something) {
+		expect(something).toBe(true);
+	}
+});
+```
+
+```ts
+test("something", () => {
+	something ? expect(something).toBe(true) : null;
+});
+```
+
+```ts
+promise.catch(() => {
+	expect(true).toBe(false);
+});
+```
+
+```ts
+test("something", () => {
+	try {
+		doSomething();
+	} catch {
+		expect(true).toBe(false);
+	}
+});
+```
+
+```ts
+test("something", () => {
+	switch (something) {
+		case "a":
+			expect(something).toBe("a");
+			break;
+	}
+});
+```
+
+```ts
+test("something", () => {
+	something && expect(something).toBe(true);
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+test("something", () => {
+	expect(something).toBe(true);
+});
+```
+
+```ts
+test("something", async () => {
+	await expect(promise).rejects.toThrow();
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `expectAssertions`
+
+Whether to allow `expect` calls inside conditionals when the test case calls `expect.assertions(...)`.
+Defaults to `false`.
+
+`expect.assertions(...)` tells Vitest exactly how many assertions the test must run, so a conditional `expect` that gets skipped will still fail the test for not matching that count.
+
+Examples of **correct** code with `{ expectAssertions: true }`:
+
+```ts
+test("something", () => {
+	expect.assertions(1);
+	if (something) {
+		expect(something).toBe(true);
+	}
+});
+```
+
+## When Not To Use It
+
+If your test suite relies on other mechanisms to guarantee conditional assertions still run, such as always calling `expect.assertions(...)` without opting into the `expectAssertions` option, this rule might report cases you've already accounted for.
+
+## Further Reading
+
+- [Vitest API: expect](https://vitest.dev/api/expect.html)
+- [Vitest API: expect.assertions](https://vitest.dev/api/expect.html#expect-assertions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="conditionalExpects" />

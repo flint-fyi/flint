@@ -1,0 +1,32 @@
+name: Rule Data Renovate
+
+on:
+  pull_request:
+    paths:
+      - packages/rule-data/package.json
+      - pnpm-workspace.yaml
+
+concurrency:
+  group: rule-data-renovate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  file_missing_rules_issues:
+    name: File Missing Rules Issues
+    if: >-
+      github.event.pull_request.user.login == 'renovate[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: $/.github/actions/setup
+      - run: pnpm run --filter=rule-data file-missing-rules-issues
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

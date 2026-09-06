@@ -37,7 +37,7 @@
 		"@flint.fyi/ts": "workspace:",
 		"@flint.fyi/ts-patch": "workspace:",
 		"@flint.fyi/yaml": "workspace:",
-		"typescript": "^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -45,7 +45,7 @@
 		"tsdown": "catalog:dev"
 	},
 	"peerDependencies": {
-		"prettier": "^3.7.4"
+		"prettier": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"

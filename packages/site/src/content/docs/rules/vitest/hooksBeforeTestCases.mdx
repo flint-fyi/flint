@@ -1,0 +1,66 @@
+---
+description: "Enforces that all lifecycle hooks should come before all test cases."
+title: "hooksBeforeTestCases"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="hooksBeforeTestCases" />
+
+Vitest runs setup and teardown hooks for every test case in their scope, regardless of where they are declared.
+Some repositories prefer to declare hooks before all test cases, so the setup/teardown that tests rely on is visible above them.
+
+This rule reports on any hook declared after a test case in the same scope.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+describe("math", () => {
+	it("adds values", () => {});
+
+	beforeEach(() => {
+		// ...
+	});
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+describe("math", () => {
+	beforeEach(() => {
+		// ...
+	});
+
+	it("adds values", () => {});
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not to Use It
+
+If you prefer to declare hooks close to the test cases that use them, this rule might not be for you.
+Because Vitest applies hooks to every test in their scope no matter their placement, the ordering is a matter of readability rather than correctness.
+
+## Further Reading
+
+- [Vitest API: Setup and Teardown](https://vitest.dev/api/#setup-and-teardown)
+- [Vitest API: Test](https://vitest.dev/api/test)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="hooksBeforeTestCases" />

@@ -35,32 +35,24 @@ const {
 			<p class="description">{description}</p>
 		</div>
 		<ol class="services">
-			{
-				[["github", `https://github.com/${username}`] as const, ...links]
-					.sort(([a], [b]) => (a === "seti:html" ? 1 : a.localeCompare(b)))
-					.map(([service, url]) => (
-						<li class="service">
-							<a
-								aria-label={`${name}'s ${service}'`}
-								href={url}
-								target="_blank"
-							>
-								<Icon name={service} />
-							</a>
-						</li>
-					))
-			}
+			{[["github", `https://github.com/${username}`] as const, ...links]
+				.sort(([a], [b]) => (a === "seti:html" ? 1 : a.localeCompare(b)))
+				.map(([service, url]) => (
+					<li class="service">
+						<a aria-label={`${name}'s ${service}'`} href={url} target="_blank">
+							<Icon name={service} />
+						</a>
+					</li>
+				))}
 		</ol>
 	</div>
-	{
-		extras && (
-			<div class="extras">
-				{extras.map((extra) => (
-					<InlineMarkdown class="extra" markdown={extra} />
-				))}
-			</div>
-		)
-	}
+	{extras && (
+		<div class="extras">
+			{extras.map((extra) => (
+				<InlineMarkdown class="extra" markdown={extra} />
+			))}
+		</div>
+	)}
 </li>
 
 <style>

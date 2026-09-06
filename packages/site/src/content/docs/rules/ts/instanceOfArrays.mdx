@@ -13,7 +13,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 Using `instanceof Array` to check if a value is an array has two potential issues:
 
 1. **Cross-realm failures**: In JavaScript, each execution context (such as an iframe or web worker) has its own global scope with its own `Array` constructor.
-When arrays are passed between contexts, `instanceof Array` returns `false` because the array was created with a different `Array` constructor.
+   When arrays are passed between contexts, `instanceof Array` returns `false` because the array was created with a different `Array` constructor.
 
 2. **Array-like objects**: Some objects like `arguments` have array-like behavior but are not instances of `Array`.
 

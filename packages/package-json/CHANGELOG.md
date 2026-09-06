@@ -1,5 +1,12 @@
 # @flint.fyi/package-json
 
+## 0.21.1
+
+### Patch Changes
+
+- Updated dependencies [[`7d6522c`](https://github.com/flint-fyi/flint/commit/7d6522cf53a5c7f9cf7823cf255e1cbdfef511a3), [`5b63f69`](https://github.com/flint-fyi/flint/commit/5b63f6901ff0d6cfabe4dbf61cb3f0333dc94602)]:
+  - @flint.fyi/core@0.26.0
+
 ## 0.21.0
 
 ### Minor Changes
@@ -42,7 +49,7 @@
 - [#2788](https://github.com/flint-fyi/flint/pull/2788) [`0f40630`](https://github.com/flint-fyi/flint/commit/0f40630eed7974f6753459c2ff3504ef4bed2267) - Add `filesRedundancy` rule.
 
 - [#2903](https://github.com/flint-fyi/flint/pull/2903) [`74e4581`](https://github.com/flint-fyi/flint/commit/74e45817750088a1092df3d95e75c013335fce86) - Add `propertyOrder` rule, and add `sorting` preset.
-This rule ensures that top-level properties are kept in a consistent order.
+  This rule ensures that top-level properties are kept in a consistent order.
 - Updated dependencies [[`2ffc7eb`](https://github.com/flint-fyi/flint/commit/2ffc7eb1d0d885fe9b9e758d8bff649a97553380), [`91f1cc2`](https://github.com/flint-fyi/flint/commit/91f1cc2d211f49f2cde6349cbab28548484b42d8), [`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f), [`9386e9a`](https://github.com/flint-fyi/flint/commit/9386e9ae62269aaf659aad31ee459f6ecf45ca72), [`0e8c8ab`](https://github.com/flint-fyi/flint/commit/0e8c8ab4926792ebe7b5b881e78e2b6e8ae4cd96)]:
   - @flint.fyi/json-language@0.17.0
   - @flint.fyi/core@0.23.0

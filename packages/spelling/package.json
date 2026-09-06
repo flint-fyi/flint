@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/spelling",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"description": "[Experimental] A spell-checker plugin for Flint powered by CSpell.",
 	"homepage": "https://flint.fyi/rules/spelling",
 	"repository": {
@@ -25,11 +25,11 @@
 		"test": "vitest --project spelling"
 	},
 	"dependencies": {
-		"@cspell/url": "^10.0.0",
+		"@cspell/url": "catalog:prod",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/text-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"cspell-lib": "^10.0.0"
+		"cspell-lib": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

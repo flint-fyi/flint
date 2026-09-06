@@ -55,10 +55,8 @@
 						"type": "string",
 						"description": "The preset this rule belongs to.",
 						"enum": [
-							"config",
 							"javascript",
 							"logical",
-							"none",
 							"security",
 							"sorting",
 							"stylistic"

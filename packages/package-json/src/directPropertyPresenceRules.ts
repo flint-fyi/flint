@@ -1,6 +1,8 @@
-import type { AnyRule } from "@flint.fyi/core";
-
-import { createDirectPropertyValidityRule } from "./createDirectPropertyPresenceRule.ts";
+import {
+	createDirectPropertyValidityRule,
+	type PresenceRule,
+	type PresenceRuleName,
+} from "./createDirectPropertyPresenceRule.ts";
 
 const properties = [
 	["author"],
@@ -46,8 +48,6 @@ const properties = [
 
 type PresenceProperty = (typeof properties)[number][0];
 
-type PresenceRuleName = `${PresenceProperty}Presence`;
-
 export const directPropertyPresenceRules = Object.fromEntries(
 	properties.map(([propertyName, options]) => {
 		const { id, rule } = createDirectPropertyValidityRule(
@@ -56,4 +56,6 @@ export const directPropertyPresenceRules = Object.fromEntries(
 		);
 		return [id, rule] as const;
 	}),
-) as Record<PresenceRuleName, AnyRule>;
+) as {
+	[PropertyName in PresenceProperty as PresenceRuleName<PropertyName>]: PresenceRule<PropertyName>;
+};

@@ -1073,6 +1073,60 @@ All imports in this declaration are only used as types. Use 'import type'.
 type Alias = Type & { role: Role };
 `,
 		},
+		{
+			code: `
+import { base } from "./base";
+
+export interface Globs {
+	base: typeof base;
+}
+
+export const globs = () => {
+  const base = true;
+  return {
+		base,
+	};
+};
+`,
+			files: {
+				"base.ts": `
+export const base = {
+  exclude: [],
+	include: [],
+}
+`,
+			},
+			output: `
+import { type base } from "./base";
+
+export interface Globs {
+	base: typeof base;
+}
+
+export const globs = () => {
+  const base = true;
+  return {
+		base,
+	};
+};
+`,
+			snapshot: `
+import { base } from "./base";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+All imports in this declaration are only used as types. Use 'import type'.
+
+export interface Globs {
+	base: typeof base;
+}
+
+export const globs = () => {
+  const base = true;
+  return {
+		base,
+	};
+};
+`,
+		},
 	],
 	valid: [
 		{
@@ -1430,6 +1484,51 @@ export function createValue() {
 }
 
 export default Value;
+`,
+			},
+		},
+		{
+			code: `
+import { all } from "./all";
+
+export interface Globs {
+	all: typeof all;
+}
+
+export const globs: Globs = {
+	all,
+};
+`,
+			files: {
+				"all.ts": `
+export const all = {
+  exclude: [],
+	include: [],
+}
+`,
+			},
+		},
+		{
+			code: `
+import type { all } from "./all";
+
+export interface Globs {
+	all: typeof all;
+}
+
+export const globs = () => {
+  const all = true;
+  return {
+		all,
+	};
+};
+`,
+			files: {
+				"all.ts": `
+export const all = {
+  exclude: [],
+	include: [],
+}
 `,
 			},
 		},
