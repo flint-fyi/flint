@@ -179,7 +179,7 @@ catalogs:
     starlight-blog: 0.29.0
     starlight-links-validator: 0.25.3
     starlight-package-managers: 0.12.0
-    starlight-sidebar-topics: 0.8.0
+    starlight-sidebar-topics: 0.9.0
     zod: 4.5.4
 
 dedupePeers: true
