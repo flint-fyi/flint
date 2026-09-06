@@ -1,0 +1,82 @@
+---
+description: "Reports type assertions that do not change an expression's type or are unnecessary in context."
+title: "unnecessaryTypeAssertions"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTypeAssertions" />
+
+Type assertions are useful when a program has information that TypeScript cannot infer.
+Assertions that retain the same type, are already accepted by their context, pass through `any` or `unknown` without changing the final type, or remove nullability from an already non-null value add no type information.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const name: string;
+const displayedName = name as string;
+```
+
+```ts
+const count = 1;
+const displayedCount = count!;
+```
+
+```ts
+declare function display(value: number): void;
+display(1 as any);
+```
+
+```ts
+declare const count: number;
+const displayedCount = count as unknown as number;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const value: unknown;
+const name = value as string;
+```
+
+```ts
+declare const name: string | undefined;
+const displayedName = name!;
+```
+
+```ts
+const name = "Flint" as const;
+```
+
+```ts
+declare function create<T = unknown>(): T;
+const count = create() as number;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Do not use this rule when generated code intentionally emits redundant assertions for consistency with other generated output.
+
+## Further Reading
+
+- [TypeScript: Type Assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions)
+- [TypeScript: Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
+- [TypeScript: `noUncheckedIndexedAccess`](https://www.typescriptlang.org/tsconfig/noUncheckedIndexedAccess.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTypeAssertions" />
