@@ -2,9 +2,16 @@ import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
+import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { Fix } from "../types/changes.ts";
 import type { CharacterReportRange } from "../types/ranges.ts";
 import { runConfigFixing } from "./runConfigFixing.ts";
+
+const ruleCreator = new RuleCreator({
+	docs: (ruleId) => `https://example.com/${ruleId}`,
+	pluginId: "test",
+	presets: [],
+});
 
 describe(runConfigFixing, () => {
 	it.each([
@@ -47,16 +54,20 @@ describe(runConfigFixing, () => {
 						{ range: { begin: 1, end: 2 }, text: "B" },
 						{ range: { begin: 2, end: 3 }, text: "C" },
 					];
-		const rule = language.createRule({
+		const rule = ruleCreator.createRule(language, {
 			about: { description: "Test fixes", id: "test" },
 			messages: {
 				test: { primary: "Test report", secondary: [], suggestions: [] },
 			},
-			setup: ({ report }) => ({
+			setup: (context) => ({
 				visitors: {
 					text(sourceText): void {
 						if (sourceText === "abc") {
-							report({ fix, message: "test", range: { begin: 0, end: 1 } });
+							context.report({
+								fix,
+								message: "test",
+								range: { begin: 0, end: 1 },
+							});
 						}
 					},
 				},
