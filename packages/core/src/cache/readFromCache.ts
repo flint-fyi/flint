@@ -1,3 +1,5 @@
+import { resolve } from "node:path";
+
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
@@ -16,7 +18,8 @@ export async function readFromCache(
 	configFilePath: string,
 	cacheLocation: string | undefined,
 ): Promise<Map<string, FileCacheStorage> | undefined> {
-	const cacheFilePath = getCacheFilePath(cacheLocation);
+	const cwd = host.getCurrentDirectory();
+	const cacheFilePath = resolve(cwd, getCacheFilePath(cacheLocation));
 	const rawCacheString = await host.readFile(cacheFilePath);
 
 	if (!rawCacheString) {
@@ -56,7 +59,9 @@ export async function readFromCache(
 			"Cache timestamp is expected to be present",
 		);
 		// flint-disable-next-line performance/loopAwaits
-		const timestampTouched = await host.getFileTouchTime(filePath);
+		const timestampTouched = await host.getFileTouchTime(
+			resolve(cwd, filePath),
+		);
 		if (timestampTouched == null || timestampTouched > timestampCached) {
 			log(
 				"Linting all %d file path(s) due to %s touch timestamp %d after cache timestamp %d",
@@ -78,7 +83,9 @@ export async function readFromCache(
 		touchTime: cachedTouchTime,
 	} of cache.globalInvalidations) {
 		// flint-disable-next-line performance/loopAwaits
-		const currentTouchTime = await host.getFileTouchTime(filePath);
+		const currentTouchTime = await host.getFileTouchTime(
+			resolve(cwd, filePath),
+		);
 		if (currentTouchTime == null || currentTouchTime > cachedTouchTime) {
 			log(
 				"Linting all %d file(s) because cache-invalidating file %s has changed (current: %d, cached: %d)",
@@ -108,7 +115,9 @@ export async function readFromCache(
 
 		const timestampCached = fileCached.timestamp;
 		// flint-disable-next-line performance/loopAwaits
-		const timestampTouched = await host.getFileTouchTime(filePath);
+		const timestampTouched = await host.getFileTouchTime(
+			resolve(cwd, filePath),
+		);
 		if (timestampTouched == null || timestampTouched > timestampCached) {
 			log(
 				"Directly invalidating cache for: %s due to touch timestamp %d after cache timestamp %d",

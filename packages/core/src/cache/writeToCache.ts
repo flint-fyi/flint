@@ -1,3 +1,5 @@
+import { resolve } from "node:path";
+
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 import omitEmpty from "omit-empty";
@@ -16,6 +18,7 @@ export async function writeToCache(
 	lintResults: LintResults,
 	cacheLocation: string | undefined,
 ): Promise<void> {
+	const cwd = host.getCurrentDirectory();
 	const fileDependents = new CachedFactory(() => new Set<string>());
 	const timestamp = Date.now();
 	const globalInvalidations: GlobalInvalidation[] = [];
@@ -28,7 +31,7 @@ export async function writeToCache(
 				// touch time: a fabricated "now" would mask later changes, whereas 0
 				// forces a safe re-validation on the next run.
 				// flint-disable-next-line performance/loopAwaits
-				touchTime: (await host.getFileTouchTime(filePath)) ?? 0,
+				touchTime: (await host.getFileTouchTime(resolve(cwd, filePath))) ?? 0,
 			});
 		}
 		for (const dependency of fileResult.dependencies) {
@@ -41,8 +44,10 @@ export async function writeToCache(
 			// Fall back to 0 (not the current time) when the host can't report a
 			// touch time: a fabricated "now" would mask later changes, whereas 0
 			// forces a safe re-validation on the next run.
-			[configFileName]: (await host.getFileTouchTime(configFileName)) ?? 0,
-			"package.json": (await host.getFileTouchTime("package.json")) ?? 0,
+			[configFileName]:
+				(await host.getFileTouchTime(resolve(cwd, configFileName))) ?? 0,
+			"package.json":
+				(await host.getFileTouchTime(resolve(cwd, "package.json"))) ?? 0,
 		},
 		files: {
 			...Object.fromEntries(
@@ -76,6 +81,6 @@ export async function writeToCache(
 		return;
 	}
 
-	const cacheFilePath = getCacheFilePath(cacheLocation);
+	const cacheFilePath = resolve(cwd, getCacheFilePath(cacheLocation));
 	await host.writeFile(cacheFilePath, encoded.data);
 }
