@@ -1,5 +1,7 @@
-import { defineConfig } from "tsdown";
+import { defineConfig, type UserConfig } from "tsdown";
 
-export default defineConfig({
+const config: UserConfig = defineConfig({
 	workspace: true,
 });
+
+export default config;

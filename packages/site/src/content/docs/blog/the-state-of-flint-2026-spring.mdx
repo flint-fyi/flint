@@ -162,14 +162,14 @@ The initial 2026 version of this initializer will rely on metadata provided in F
 We see most forms of linter documentation as falling into one of three categories:
 
 - **End-user**: explaining what a linter is, how to get started using it, and details of each plugin and rule within.
-These users range from complete linting novices to power users configuring their individual rule options.
-For them, we'll have a glossary, FAQs, introductory docs, and guided walkthroughs of common tasks.
+  These users range from complete linting novices to power users configuring their individual rule options.
+  For them, we'll have a glossary, FAQs, introductory docs, and guided walkthroughs of common tasks.
 - **Plugin developer**: showing how to use Flint's APIs to work with custom plugins and write custom rules.
-Many of these users are writing small custom rules to achieve company/project-specific linting tasks.
-These developers will have reference documentation and sample projects showing how to use Flint.
+  Many of these users are writing small custom rules to achieve company/project-specific linting tasks.
+  These developers will have reference documentation and sample projects showing how to use Flint.
 - **Linter developer**: someone working on the linter itself, or at least directly using its programmatic APIs.
-These users often want to know how the linter is architected at a high-level.
-For them, we plan to have full architecture documentation, Node.js API reference pages, and guides for basic usage of the API.
+  These users often want to know how the linter is architected at a high-level.
+  For them, we plan to have full architecture documentation, Node.js API reference pages, and guides for basic usage of the API.
 
 The glossary and FAQs were started in 2025.
 We plan on fleshing out most or all the rest of that documentation as the project solidifies its architecture and best practices through 2026.
@@ -244,9 +244,9 @@ See that repository for a deep dive on different strategies, as well as motivati
 We plan on focusing our 2026 performance work into two areas:
 
 - **Benchmarking:** tooling that creates real-world-like projects and measures how Flint compares to other linters.
-This will allow us to understand Flint's performance characteristics across uses such as cold vs. warm cache, full vs. partial linting, and for various scales of codebase.
+  This will allow us to understand Flint's performance characteristics across uses such as cold vs. warm cache, full vs. partial linting, and for various scales of codebase.
 - **Prototyping:** building up a corpus of potential techniques for talking with typescript-go, then evaluating them for performance.
-We need to understand the tradeoffs between FFI and IPC, async vs sync, and so on.
+  We need to understand the tradeoffs between FFI and IPC, async vs sync, and so on.
 
 Our 2026 goal is to have a near-complete understanding of how we _could_ build true hybrid linting for Flint with typescript-go.
 We may have a prototype of it working by the end of the year.

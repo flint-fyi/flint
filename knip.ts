@@ -1,16 +1,12 @@
 import type { KnipConfig } from "knip";
 
-export default {
+const config: KnipConfig = {
 	ignore: ["packages/e2e/**/*"],
 	ignoreExportsUsedInFile: { interface: true, type: true },
 	treatConfigHintsAsErrors: true,
 	workspaces: {
 		".": {
 			entry: ["*.config.{js,ts}"],
-			ignoreDependencies: [
-				// The changesets CLI isn't directly referenced anywhere, but we need it to create new changesets.
-				"@changesets/cli",
-			],
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
 		},
 		"packages/astro": {
@@ -44,6 +40,16 @@ export default {
 		"packages/performance": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
+		"packages/performance-testing": {
+			entry: ["src/{generate,measure}.ts!"],
+			ignoreDependencies: [
+				"eslint-plugin-import",
+				"eslint-plugin-regexp",
+				"eslint-plugin-unicorn",
+				"typescript-eslint",
+			],
+			project: ["src/**/*.ts!"],
+		},
 		"packages/plugin-flint": {
 			ignoreDependencies: [
 				// It's bugging IDK.
@@ -56,6 +62,7 @@ export default {
 		},
 		"packages/rule-data": {
 			entry: ["scripts/*.ts"],
+			ignoreDependencies: ["@emnapi/core", "@emnapi/runtime"],
 			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
 		},
 		"packages/site": {
@@ -95,4 +102,6 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 	},
-} satisfies KnipConfig;
+};
+
+export default config;

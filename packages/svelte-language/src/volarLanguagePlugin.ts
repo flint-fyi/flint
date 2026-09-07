@@ -97,7 +97,8 @@ export function volarLanguagePlugin(
 	};
 }
 
-export const virtualCodeReports = new WeakMap<VirtualCode, LanguageReport>();
+export const virtualCodeReports: WeakMap<VirtualCode, LanguageReport> =
+	new WeakMap<VirtualCode, LanguageReport>();
 
 export function errorToLanguageReport(
 	fileName: string,

@@ -9,10 +9,10 @@
 	"include": ["src"],
 	"exclude": ["src/**/*.test.ts"],
 	"references": [
-		{ "path": "../core" },
+		{ "path": "../core/tsconfig.src.json" },
 		{ "path": "../ts-patch" },
-		{ "path": "../typescript-language" },
+		{ "path": "../typescript-language/tsconfig.src.json" },
 		{ "path": "../utils" },
-		{ "path": "../volar-language" }
+		{ "path": "../volar-language/tsconfig.src.json" }
 	]
 }

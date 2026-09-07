@@ -1,7 +1,9 @@
-import { defineConfig } from "tsdown";
+import { defineConfig, type UserConfig } from "tsdown";
 
 import { base } from "@flint.fyi/build/tsdown";
 
-export default defineConfig({
+const config: UserConfig = defineConfig({
 	...base,
 });
+
+export default config;

@@ -3,9 +3,18 @@ import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
 import { vitest } from "@flint.fyi/vitest";
-import { defineConfig, globs, json, md, packageJson, ts, yaml } from "flint";
+import {
+	defineConfig,
+	globs,
+	json,
+	md,
+	packageJson,
+	ts,
+	yaml,
+	type Config,
+} from "flint";
 
-export default defineConfig({
+const config: Config = defineConfig({
 	ignore: ["coverage/", "packages/e2e/tests/**/fixtures/**/*"],
 	use: [
 		{
@@ -69,3 +78,5 @@ export default defineConfig({
 		},
 	],
 });
+
+export default config;

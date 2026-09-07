@@ -22,7 +22,7 @@
 		"lint:knip": "knip",
 		"lint:knip:prod": "knip --strict",
 		"prepare": "husky",
-		"release": "pnpm build && pnpm -r publish",
+		"release": "pnpm build && changeset publish",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest"
 	},
@@ -32,7 +32,7 @@
 		"@changesets/cli": "catalog:dev",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/js": "catalog:dev",
-		"@eslint/json": "2.0.0",
+		"@eslint/json": "catalog:dev",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
@@ -41,7 +41,7 @@
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
-		"@ianvs/prettier-plugin-sort-imports": "4.7.1",
+		"@ianvs/prettier-plugin-sort-imports": "catalog:dev",
 		"@types/node": "catalog:dev",
 		"@vitest/coverage-v8": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",
@@ -59,6 +59,7 @@
 		"jiti": "catalog:dev",
 		"knip": "catalog:dev",
 		"lint-staged": "catalog:dev",
+		"pkg-pr-new": "catalog:dev",
 		"prettier": "catalog:dev",
 		"prettier-plugin-astro": "catalog:dev",
 		"prettier-plugin-curly": "catalog:dev",
@@ -77,7 +78,7 @@
 	"devEngines": {
 		"packageManager": {
 			"name": "pnpm",
-			"version": "11.9.0"
+			"version": "11.25.0"
 		}
 	}
 }

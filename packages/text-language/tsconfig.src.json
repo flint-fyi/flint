@@ -8,5 +8,5 @@
 	},
 	"include": ["src"],
 	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
-	"references": [{ "path": "../core" }]
+	"references": [{ "path": "../core/tsconfig.src.json" }]
 }

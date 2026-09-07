@@ -18,6 +18,7 @@
 	"exports": {
 		"./package.json": "./package.json",
 		"./tsconfig.base.json": "./tsconfig.base.json",
+		"./tsconfig.plugin.json": "./tsconfig.plugin.json",
 		"./tsdown": "./src/tsdown/index.ts"
 	},
 	"dependencies": {

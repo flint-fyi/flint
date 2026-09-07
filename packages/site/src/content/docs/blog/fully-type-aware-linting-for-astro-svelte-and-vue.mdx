@@ -338,10 +338,10 @@ It reports `return X` statements where the type of `X` is `any`.
 In this file, we have two possible candidates for a report.
 
 1. `return MyComponent` -- returns a Vue component.
-This line is reported by ESLint unless you use `typescript-eslint-parser-for-extra-files`.
-However, we would like Flint not to report it, since this is a legitimate usage.
+   This line is reported by ESLint unless you use `typescript-eslint-parser-for-extra-files`.
+   However, we would like Flint not to report it, since this is a legitimate usage.
 2. `return anyValue` -- returns `any`-typed value.
-This is unsafe, so we would like this return statement to be reported.
+   This is unsafe, so we would like this return statement to be reported.
 
 Let's proceed to `src/MyComponent.vue`:
 
@@ -435,18 +435,19 @@ And finally, let's run Flint:
 
 {/* spellchecker: enable */}
 
-Cool! What do we have here:
+Cool!
+What do we have here:
 
 1. `function vueComponent() { return MyComponent }` is not reported!
    The type of the `MyComponent` identifier is resolved to a valid Vue component type.
-It's no longer an `any`.
+   It's no longer an `any`.
 2. `function any() { return anyValue }` is reported by [`ts/anyReturns`](/rules/ts/anyreturns).
-This shows us that `return MyComponent` wasn't reported not because the rule is broken.
-In fact, it's functioning as expected, reporting all `any`-typed values returned from functions.
+   This shows us that `return MyComponent` wasn't reported not because the rule is broken.
+   In fact, it's functioning as expected, reporting all `any`-typed values returned from functions.
 3. `@click="() => { anyFunction() }"` in Vue `<template>` is reported by the [`ts/anyCalls`](/rules/ts/anycalls) rule.
-We can see that the TypeScript-only rule works in JavaScript expressions embedded in Vue templates just fine!
+   We can see that the TypeScript-only rule works in JavaScript expressions embedded in Vue templates just fine!
 4. `<div v-for="i in 3"></div>` is reported by `vue/vForKeys`.
-Vue rules can access the Vue AST and analyze it.
+   Vue rules can access the Vue AST and analyze it.
 
 ## What's Next
 

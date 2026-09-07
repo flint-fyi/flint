@@ -1,87 +1,147 @@
 ---
-import FlankedLinkButton from "./FlankedLinkButton.astro";
-import PackageManagers from "./PackageManagers.astro";
+import { Code } from "@astrojs/starlight/components";
+
+const darkCliOutput = [
+	"$ flint",
+	"\u001b[38;2;185;196;214mLinting with \u001b[39m\u001b[38;2;139;210;255m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[38;2;185;196;214m...\u001b[39m",
+	"",
+	"\u001b[4mfixtures/src/with-issues.ts\u001b[24m",
+	"\u001b[38;2;185;196;214m  2:2\u001b[39m  Debugger statements should not be used in production code.  \u001b[38;2;255;196;138mts/debuggerStatements\u001b[39m",
+	"",
+	"\u001b[3m\u001b[38;2;255;155;146m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
+].join("\n");
+
+const lightCliOutput = [
+	"$ flint",
+	"\u001b[38;2;80;80;80mLinting with \u001b[39m\u001b[38;2;0;76;120m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[38;2;80;80;80m...\u001b[39m",
+	"",
+	"\u001b[38;2;0;0;0m\u001b[4mfixtures/src/with-issues.ts\u001b[24m\u001b[39m",
+	"\u001b[38;2;80;80;80m  2:2\u001b[39m  \u001b[38;2;60;60;60mDebugger statements should not be used in production code.\u001b[39m  \u001b[38;2;150;41;0mts/debuggerStatements\u001b[39m",
+	"",
+	"\u001b[3m\u001b[38;2;150;41;0m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
+].join("\n");
 ---
 
-<div class="try-it-out" id="try-it-out">
-	<h2>Try out Flint on any web project:</h2>
+<section class="try-it-out not-content" id="try-it-out">
+	<div class="content">
+		<h2 class="flint-display">Try Flint on any project</h2>
 
-	<PackageManagers type="dlx" pkg="flint" />
+		<p class="aside">
+			Frustrated with slow linting that doesn't catch what you care about? Or
+			maybe your linter is fast, but doesn't lint everything you think it
+			should? Give Flint a shot.
+		</p>
 
-	<div class="ad-area">
-		<p>
-			Frustrated with slow linting that doesn't catch what you actually care
-			about?
-		</p>
-		<p>
-			Or maybe your linter is fast, but doesn't include powerful lint rules?
-		</p>
-		<p class="ad-last-line">Let Flint help you out.</p>
+		<div
+			aria-label="Representative Flint CLI output"
+			class="terminal"
+			role="region"
+		>
+			<div class="only-dark">
+				<Code
+					code={darkCliOutput}
+					frame="terminal"
+					lang="ansi"
+					preserveIndent={false}
+					wrap
+				/>
+			</div>
+			<div class="only-light">
+				<Code
+					code={lightCliOutput}
+					frame="terminal"
+					lang="ansi"
+					preserveIndent={false}
+					wrap
+				/>
+			</div>
+		</div>
+
+		<a class="button" href="/about">
+			Get started →
+		</a>
 	</div>
-	<FlankedLinkButton href="/about">
-		Get started linting with Flint
-	</FlankedLinkButton>
-</div>
+</section>
 
 <style>
 	.try-it-out {
-		display: flex;
-		flex-direction: column;
-		margin: auto;
-		max-width: 49rem;
-		padding: 6rem 0 4rem;
+		border-block-end: 1px solid var(--flint-paper-border);
+		margin-block: 1rem 4rem;
+		padding-block: clamp(3rem, 6vw, 4.5rem);
 	}
 
-	h2,
-	p {
-		text-align: center;
+	.content {
+		display: grid;
+		grid-template-areas:
+			"heading"
+			"aside"
+			"terminal"
+			"button";
+		text-align: start;
 	}
 
 	h2 {
-		margin-bottom: 2rem;
-	}
-
-	p {
-		font-size: var(--sl-text-xl);
-		line-height: 1.25;
+		color: var(--flint-band-text);
+		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
+		grid-area: heading;
+		line-height: 1.15;
 		margin: 0;
 	}
 
-	.ad-area {
-		padding: 2rem 0;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
+	.aside {
+		color: var(--flint-band-muted);
+		font-size: var(--sl-text-lg);
+		grid-area: aside;
+		line-height: 1.6;
+		margin: 1rem 0 0;
+		max-width: 42rem;
 	}
 
-	.ad-last-line {
-		margin-top: 1rem;
+	.terminal {
+		grid-area: terminal;
+		margin-block-start: 1.75rem;
+		min-inline-size: 0;
 	}
 
-	.get-started-area {
-		align-items: center;
-		display: flex;
-		flex-direction: row;
-		gap: 2rem;
-		margin-top: 4rem;
+	.button {
+		background: var(--flint-ember-fill);
+		border: 1px solid var(--flint-ember-fill);
+		border-radius: 0.5rem;
+		color: var(--flint-ember-fill-text);
+		display: inline-block;
+		font-weight: 800;
+		grid-area: button;
+		justify-self: start;
+		margin-block-start: 2rem;
+		padding: 0.8rem 1.6rem;
+		text-decoration: none;
+		transition:
+			background-color 150ms,
+			filter 120ms ease-out;
 	}
 
-	a {
-		margin: 0;
-		margin-inline-end: 0;
+	.button:hover {
+		filter: var(--flint-button-hover-filter);
 	}
 
-	.hr {
-		background: var(--sl-color-gray-5);
-		display: block;
-		height: 2px;
-		width: 100%;
+	.button:active {
+		filter: var(--flint-button-pressed-filter);
+		transition-duration: 0ms;
 	}
 
-	.get-started-button-text {
-		display: block;
-		font-size: var(--sl-text-xl);
-		margin: 0 1rem;
-		text-wrap: nowrap;
+	@media (width >= 50rem) {
+		.content {
+			column-gap: clamp(2.5rem, 5vw, 4rem);
+			grid-template-areas:
+				"heading terminal"
+				"aside terminal"
+				"button terminal";
+			grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+		}
+
+		.terminal {
+			align-self: center;
+			margin-block-start: 0;
+		}
 	}
 </style>

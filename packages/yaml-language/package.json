@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/yaml-language",
-	"version": "0.17.0",
+	"version": "0.17.1",
 	"description": "[Experimental] YAML language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -27,7 +27,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"yaml-unist-parser": "^3.0.0"
+		"yaml-unist-parser": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
