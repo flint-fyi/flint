@@ -27,10 +27,10 @@ export function collectLanguageFilesByFilePath(
 		Map<AnyLanguage, AnyLanguageFile | undefined>
 	>(() => new Map());
 
-	const languageFilesByLanguage = new CachedFactory((language: AnyLanguage) => {
+	const languageFactories = new CachedFactory((language: AnyLanguage) => {
 		const fileFactory = resources.use(language.createFileFactory(host));
 
-		return new CachedFactory((filePath: string) =>
+		const filesByPath = new CachedFactory((filePath: string) =>
 			resources.use(
 				fileFactory.createFile({
 					filePath,
@@ -43,6 +43,8 @@ export function collectLanguageFilesByFilePath(
 				}),
 			),
 		);
+
+		return { fileFactory, filesByPath };
 	});
 
 	for (const [rule, optionsByFile] of rulesOptionsByFile) {
@@ -58,15 +60,20 @@ export function collectLanguageFilesByFilePath(
 	}
 
 	for (const [language, filePaths] of filePathsByLanguage.entries()) {
-		const languageFiles = languageFilesByLanguage.get(language);
+		const { fileFactory, filesByPath } = languageFactories.get(language);
 		const orderedFilePaths = language.orderFilePaths
 			? language.orderFilePaths([...filePaths], host)
-			: filePaths;
+			: [...filePaths];
+
+		// Give whole-program languages (e.g. TypeScript) the chance to open every
+		// file at once, so the per-file `createFile` calls below become cheap
+		// lookups against a stable program instead of rebuilding it per file.
+		fileFactory.prepareFiles?.(orderedFilePaths.map(makeAbsolute));
 
 		for (const filePath of orderedFilePaths) {
 			languageFilesByFilePath
 				.get(filePath)
-				.set(language, languageFiles.get(filePath));
+				.set(language, filesByPath.get(filePath));
 		}
 	}
 

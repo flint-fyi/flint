@@ -208,6 +208,7 @@ export const typescriptLanguage: Language<
 					activeFiles: number;
 					disposed: boolean;
 					openFiles: string[];
+					prepared: boolean;
 					session: TypeScriptProjectSession;
 			  };
 		let disposed = false;
@@ -254,42 +255,51 @@ export const typescriptLanguage: Language<
 				activeFiles: 0,
 				disposed: false,
 				openFiles: [] as string[],
+				prepared: false,
 				session: createTypeScriptProjectSession(host),
 			});
 
 			log("Opening native file:", data.filePathAbsolute);
-			const restartingOpenFiles =
-				currentSessionState.openFiles.length > 0 &&
-				currentSessionState.activeFiles === 0;
-			if (restartingOpenFiles) {
+			// When prepareFiles has already batch-opened every file, the snapshot is
+			// stable and this file is directly queryable, so the per-file update is
+			// skipped — doing one update per file is quadratic in the file count.
+			const alreadyPrepared =
+				currentSessionState.prepared &&
+				currentSessionState.openFiles.includes(data.filePathAbsolute);
+			const openingFile =
+				!alreadyPrepared &&
+				!currentSessionState.openFiles.includes(data.filePathAbsolute);
+			if (!alreadyPrepared) {
+				const restartingOpenFiles =
+					currentSessionState.openFiles.length > 0 &&
+					currentSessionState.activeFiles === 0;
+				if (restartingOpenFiles) {
+					try {
+						currentSessionState.session.update({
+							closeFiles: [...currentSessionState.openFiles],
+						});
+					} catch (error) {
+						return failSession(currentSessionState, error);
+					}
+				}
+				if (openingFile) {
+					currentSessionState.openFiles.push(data.filePathAbsolute);
+				}
+				// The session detects changes to every other file it is tracking by
+				// comparing modification times, so only the file being opened needs to
+				// be flagged as changed here.
 				try {
 					currentSessionState.session.update({
-						closeFiles: [...currentSessionState.openFiles],
+						changed: [data.filePathAbsolute],
+						...(restartingOpenFiles
+							? { openFiles: [...currentSessionState.openFiles] }
+							: openingFile
+								? { openFiles: [data.filePathAbsolute] }
+								: {}),
 					});
 				} catch (error) {
 					return failSession(currentSessionState, error);
 				}
-			}
-			const openingFile = !currentSessionState.openFiles.includes(
-				data.filePathAbsolute,
-			);
-			if (openingFile) {
-				currentSessionState.openFiles.push(data.filePathAbsolute);
-			}
-			// The session detects changes to every other file it is tracking by
-			// comparing modification times, so only the file being opened needs to
-			// be flagged as changed here.
-			try {
-				currentSessionState.session.update({
-					changed: [data.filePathAbsolute],
-					...(restartingOpenFiles
-						? { openFiles: [...currentSessionState.openFiles] }
-						: openingFile
-							? { openFiles: [data.filePathAbsolute] }
-							: {}),
-				});
-			} catch (error) {
-				return failSession(currentSessionState, error);
 			}
 			let fileDisposed = false;
 
@@ -416,8 +426,53 @@ export const typescriptLanguage: Language<
 			}
 		}
 
+		function prepareFiles(filePathsAbsolute: readonly string[]) {
+			if (disposed || failed || filePathsAbsolute.length === 0) {
+				return;
+			}
+			const currentSessionState = (sessionState ??= {
+				activeFiles: 0,
+				disposed: false,
+				openFiles: [] as string[],
+				prepared: false,
+				session: createTypeScriptProjectSession(host),
+			});
+			const alreadyOpen = new Set(currentSessionState.openFiles);
+			const newFilePaths = filePathsAbsolute.filter(
+				(filePath) => !alreadyOpen.has(filePath),
+			);
+			if (newFilePaths.length === 0) {
+				currentSessionState.prepared = true;
+				return;
+			}
+			for (const filePath of newFilePaths) {
+				currentSessionState.openFiles.push(filePath);
+			}
+			// Open every file in a single update so the whole lint pass builds the
+			// program once, rather than rebuilding it per file (which is quadratic).
+			try {
+				currentSessionState.session.update({
+					changed: [...newFilePaths],
+					openFiles: [...currentSessionState.openFiles],
+				});
+				currentSessionState.prepared = true;
+			} catch {
+				// Batch preparation failed (for example, a malformed tsconfig). Roll
+				// back so createFile falls back to opening files one at a time, which
+				// preserves per-file error isolation.
+				for (const filePath of newFilePaths) {
+					const index = currentSessionState.openFiles.indexOf(filePath);
+					if (index !== -1) {
+						currentSessionState.openFiles.splice(index, 1);
+					}
+				}
+				currentSessionState.prepared = false;
+			}
+		}
+
 		return {
 			createFile,
+			prepareFiles,
 			[Symbol.dispose]: () => {
 				if (disposed) {
 					return;

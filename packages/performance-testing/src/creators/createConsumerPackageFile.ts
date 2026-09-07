@@ -10,16 +10,17 @@ export function createConsumerPackageFile(
 			`file:${path.relative(testCasesPath, artifactPath).split(path.sep).join("/")}`,
 		]),
 	);
-	const dependencies = Object.fromEntries(
-		["@flint.fyi/astro", "@flint.fyi/svelte", "@flint.fyi/vue", "flint"]
-			.filter((packageName) => overrides[packageName] !== undefined)
-			.map((packageName) => [packageName, overrides[packageName]]),
-	);
+	// Install every packed workspace artifact as a direct `file:` dependency.
+	// pnpm no longer reads `pnpm.overrides` from a package.json (only from
+	// pnpm-workspace.yaml), so relying on overrides to redirect transitive
+	// `@flint.fyi/*` ranges to the local tarballs fails with registry 404s.
+	// Listing them directly lets pnpm satisfy those transitive `^0.x` ranges
+	// from the tarball versions instead.
+	const dependencies = { ...overrides };
 
 	return {
 		dependencies,
 		name: "@flint.fyi/performance-testing-cases",
-		pnpm: { overrides },
 		private: true,
 		type: "module",
 	};

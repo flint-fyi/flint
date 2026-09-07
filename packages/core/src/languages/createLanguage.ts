@@ -27,6 +27,8 @@ export function createLanguage<
 			const fileFactoryDefinition = languageDefinition.createFileFactory(host);
 
 			const fileFactory = {
+				// `prepareFiles` (optional) passes through from the spread unchanged;
+				// only `createFile` and disposal need wrapping.
 				...fileFactoryDefinition,
 				createFile: (data: FileAboutData) => {
 					return makeDisposable(fileFactoryDefinition.createFile(data));
