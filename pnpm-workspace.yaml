@@ -13,7 +13,7 @@ catalogs:
   dev:
     "@arethetypeswrong/core": 0.18.5
     "@astrojs/compiler": 4.0.0
-    "@changesets/changelog-github": 1.0.0
+    "@changesets/changelog-github": 1.0.1
     "@changesets/cli": 3.0.1
     "@emnapi/core": 1.11.3
     "@emnapi/runtime": 1.11.3
