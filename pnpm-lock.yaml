@@ -276,8 +276,8 @@ catalogs:
       specifier: 7.1.1
       version: 7.1.1
     eslint-plugin-regexp:
-      specifier: 3.2.0
-      version: 3.2.0
+      specifier: 3.3.0
+      version: 3.3.0
     eslint-plugin-solid:
       specifier: 0.17.0
       version: 0.17.0
@@ -391,8 +391,8 @@ catalogs:
       specifier: 5.11.0
       version: 5.11.0
     eslint-plugin-regexp:
-      specifier: 3.2.0
-      version: 3.2.0
+      specifier: 3.3.0
+      version: 3.3.0
     eslint-plugin-yml:
       specifier: 3.8.1
       version: 3.8.1
@@ -773,7 +773,7 @@ importers:
         version: 5.11.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-regexp:
         specifier: catalog:dev
-        version: 3.2.0(eslint@10.9.1)
+        version: 3.3.0(eslint@10.9.1)
       eslint-plugin-yml:
         specifier: catalog:dev
         version: 3.8.1(eslint@10.9.1)
@@ -1464,7 +1464,7 @@ importers:
         version: 2.32.0(@typescript-eslint/parser@8.69.0)(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-regexp:
         specifier: catalog:comparisons
-        version: 3.2.0(eslint@10.9.1)
+        version: 3.3.0(eslint@10.9.1)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
         version: 74.0.0(eslint@10.9.1)
@@ -1669,7 +1669,7 @@ importers:
         version: 7.1.1(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-regexp:
         specifier: catalog:comparisons
-        version: 3.2.0(eslint@10.9.1)
+        version: 3.3.0(eslint@10.9.1)
       eslint-plugin-solid:
         specifier: catalog:comparisons
         version: 0.17.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
@@ -5408,8 +5408,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
 
-  eslint-plugin-regexp@3.2.0:
-    resolution: {integrity: sha512-4yq47CnLxyfHFKJEo5kvNaiJ0aDtBxSJWk4M2LiamplUXdWxdlzDYqImb/ZVCp+2BqkQjBAmw4Xc07Q8SXVDZg==}
+  eslint-plugin-regexp@3.3.0:
+    resolution: {integrity: sha512-TT0JTQbW7CRKohntpGAsMdQ1K3MsmJK4gdAhKJtIwlJ0JvuYxauymFgJdvqxIY4lqNj0EuRZWVrymQtEdJYEFg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -11620,7 +11620,7 @@ snapshots:
       string.prototype.matchall: 4.1.0
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-regexp@3.2.0(eslint@10.9.1):
+  eslint-plugin-regexp@3.3.0(eslint@10.9.1):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.9.1)
       '@eslint-community/regexpp': 4.12.2
