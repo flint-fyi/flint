@@ -1,0 +1,102 @@
+---
+description: "Reports `continue` statements that do not change control flow."
+title: "unnecessaryContinues"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryContinues" />
+
+A `continue` statement is unnecessary when normal completion of its surrounding statements reaches the same loop continuation point.
+Removing it preserves the loop's update, iteration advance, or condition check.
+
+This rule follows matching labels, including stacked labels, and recognizes terminal `switch` clauses when all later clauses are empty.
+It conservatively leaves a `continue` in place when later executable syntax would become reachable, when it crosses a nested loop, or when it exits a `finally` block.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+while (isPending()) {
+	processNext();
+	continue;
+}
+```
+
+```ts
+outer: inner: for (const value of values) {
+	if (shouldSkip(value)) {
+		continue outer;
+	}
+}
+```
+
+```ts
+while (isPending()) {
+	switch (status) {
+		case "waiting":
+			continue;
+		default:
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+while (isPending()) {
+	if (shouldSkip()) {
+		continue;
+	}
+	processNext();
+}
+```
+
+```ts
+outer: while (isPending()) {
+	while (hasNestedWork()) {
+		continue outer;
+	}
+}
+```
+
+```ts
+while (isPending()) {
+	switch (status) {
+		case "waiting":
+			continue;
+		default:
+			processNext();
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Generated code may deliberately emit a terminal `continue` to keep templates uniform.
+Projects that retain terminal `continue` statements as visual markers may also avoid enabling this rule when migration churn outweighs that convention's maintenance cost.
+
+## Further Reading
+
+- [MDN: `continue`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/continue)
+- [MDN: Labeled statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/label)
+- [MDN: Loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration)
+- [MDN: `switch`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch)
+- [MDN: `try...catch`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryContinues" />
