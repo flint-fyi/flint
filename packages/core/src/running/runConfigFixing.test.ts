@@ -1,0 +1,90 @@
+import { describe, expect, it, vi } from "vitest";
+
+import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
+import { createLanguage } from "../languages/createLanguage.ts";
+import type { Fix } from "../types/changes.ts";
+import type { CharacterReportRange } from "../types/ranges.ts";
+import { runConfigFixing } from "./runConfigFixing.ts";
+
+describe(runConfigFixing, () => {
+	it.each([
+		{ expectedRounds: 1, kind: "explicit empty", shouldChange: false },
+		{ expectedRounds: 1, kind: "source-mapped empty", shouldChange: false },
+		{ expectedRounds: 2, kind: "nonempty", shouldChange: true },
+	])("handles $kind fixes", async ({ expectedRounds, kind, shouldChange }) => {
+		const filePath = "/root/file.txt";
+		const cacheLocation = "/root/cache.json";
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		host.vfsUpsertFile(filePath, "abc");
+		const writeFile = vi.spyOn(host, "writeFile");
+		const visit = vi.fn();
+		const language = createLanguage<{ text: string }>({
+			about: { name: "test" },
+			createFileFactory: () => ({
+				createFile: (about) => ({
+					about,
+					...(kind === "source-mapped empty" && {
+						adjustReportRange: (
+							range: CharacterReportRange,
+						): CharacterReportRange | null =>
+							range.begin === 0 ? range : null,
+					}),
+					services: {},
+				}),
+			}),
+			runFileVisitors(file, options, runtime): void {
+				visit();
+				runtime.visitors?.text?.(file.about.sourceText, {
+					...file.services,
+					options,
+				});
+			},
+		});
+		const fix: Fix[] =
+			kind === "explicit empty"
+				? []
+				: [
+						{ range: { begin: 1, end: 2 }, text: "B" },
+						{ range: { begin: 2, end: 3 }, text: "C" },
+					];
+		const rule = language.createRule({
+			about: { description: "Test fixes", id: "test" },
+			messages: {
+				test: { primary: "Test report", secondary: [], suggestions: [] },
+			},
+			setup: ({ report }) => ({
+				visitors: {
+					text(sourceText): void {
+						if (sourceText === "abc") {
+							report({ fix, message: "test", range: { begin: 0, end: 1 } });
+						}
+					},
+				},
+			}),
+		});
+
+		const results = await runConfigFixing(
+			{
+				filePath: "/root/flint.config.ts",
+				use: [{ files: ["*.txt"], rules: [rule] }],
+			},
+			host,
+			{
+				cacheLocation,
+				ignoreCache: true,
+				requestedSuggestions: new Set(),
+				skipLanguageReports: false,
+			},
+		);
+
+		expect(visit).toHaveBeenCalledTimes(expectedRounds);
+		expect(results.changed).toEqual(new Set(shouldChange ? [filePath] : []));
+		expect(host.readFileSync(filePath)).toBe(shouldChange ? "aBC" : "abc");
+		expect(
+			writeFile.mock.calls.filter(([path]) => path !== cacheLocation),
+		).toEqual(shouldChange ? [[filePath, "aBC"]] : []);
+		expect(
+			results.allFileResults.get(filePath)?.reports.map((report) => report.fix),
+		).toEqual(shouldChange ? [] : [[]]);
+	});
+});
