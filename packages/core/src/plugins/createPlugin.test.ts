@@ -5,6 +5,7 @@ import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { AnyLanguage } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
+import type { OptionalObjectSchema } from "../types/shapes.ts";
 import { createPlugin } from "./createPlugin.ts";
 
 const stubLanguage = createLanguage({
@@ -62,8 +63,9 @@ describe(createPlugin, () => {
 			expectTypeOf(plugin.presets).not.toHaveProperty("third");
 		});
 
-		// eslint-disable-next-line vitest/expect-expect
 		it("types rule about properties exactly", () => {
+			expectTypeOf(ruleStandalone.about).not.toHaveProperty("preset");
+
 			ruleCreator.createRule(stubLanguage, {
 				about: {
 					description: "",
@@ -105,8 +107,11 @@ describe(createPlugin, () => {
 			plugin.rules({ withOptionalOption: { value: 123 } });
 		});
 
-		// eslint-disable-next-line vitest/expect-expect
 		it("rejects required option schemas", () => {
+			expectTypeOf<OptionalObjectSchema<{ value: z.ZodString }>>()
+				.toHaveProperty("value")
+				.toBeNever();
+
 			ruleCreator.createRule(stubLanguage, {
 				about: {
 					description: "",
