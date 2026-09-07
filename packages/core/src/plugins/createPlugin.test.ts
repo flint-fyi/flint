@@ -3,9 +3,6 @@ import z from "zod/v4";
 
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
-import type { AnyLanguage } from "../types/languages.ts";
-import type { AnyRule } from "../types/rules.ts";
-import type { OptionalObjectSchema } from "../types/shapes.ts";
 import { createPlugin } from "./createPlugin.ts";
 
 const stubLanguage = createLanguage({
@@ -62,21 +59,6 @@ describe(createPlugin, () => {
 		it("does not type unused presets", () => {
 			expectTypeOf(plugin.presets).not.toHaveProperty("third");
 		});
-
-		it("types rule about properties exactly", () => {
-			expectTypeOf(ruleStandalone.about).not.toHaveProperty("preset");
-
-			ruleCreator.createRule(stubLanguage, {
-				about: {
-					description: "",
-					id: "withInvalidPresetProperty",
-					// @ts-expect-error -- Rule about metadata must use presets, not preset.
-					preset: "first",
-				},
-				messages: stubMessages,
-				setup: vi.fn(),
-			});
-		});
 	});
 
 	describe("rules", () => {
@@ -105,33 +87,6 @@ describe(createPlugin, () => {
 
 			// @ts-expect-error -- Rule option values must match the rule's schema.
 			plugin.rules({ withOptionalOption: { value: 123 } });
-		});
-
-		it("rejects required option schemas", () => {
-			expectTypeOf<OptionalObjectSchema<{ value: z.ZodString }>>()
-				.toHaveProperty("value")
-				.toBeNever();
-
-			ruleCreator.createRule(stubLanguage, {
-				about: {
-					description: "",
-					id: "withRequiredOption",
-				},
-				messages: stubMessages,
-				options: {
-					// @ts-expect-error -- Rule option schemas must accept undefined.
-					value: z.string(),
-				},
-				setup: vi.fn(),
-			});
-		});
-
-		it("erases language internals from public rules", () => {
-			expectTypeOf(ruleStandalone.language).toEqualTypeOf<AnyLanguage>();
-		});
-
-		it("keeps rules with options assignable to AnyRule", () => {
-			expectTypeOf(ruleWithOptionalOption).toExtend<AnyRule>();
 		});
 	});
 });

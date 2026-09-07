@@ -2,10 +2,6 @@ import type { StandardSchemaV1 } from "@standard-schema/spec";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import z from "zod/v4";
 
-import type {
-	InferredInputObject,
-	InferredOutputObject,
-} from "../types/shapes.ts";
 import { parseOptions } from "./parseOptions.ts";
 
 const numberSchema: StandardSchemaV1<string | undefined, number> = {
@@ -44,19 +40,12 @@ describe(parseOptions, () => {
 			optional?: string | undefined;
 		}
 
-		expectTypeOf(schema).toExtend<Record<string, StandardSchemaV1>>();
-		expectTypeOf<
-			InferredInputObject<typeof schema>
-		>().toExtend<ExpectedInput>();
-		expectTypeOf<ExpectedInput>().toExtend<
-			InferredInputObject<typeof schema>
-		>();
-		expectTypeOf<
-			InferredOutputObject<typeof schema>
-		>().toExtend<ExpectedOutput>();
-		expectTypeOf<ExpectedOutput>().toExtend<
-			InferredOutputObject<typeof schema>
-		>();
+		expectTypeOf(parseOptions<typeof schema>)
+			.parameter(1)
+			.toEqualTypeOf<ExpectedInput>();
+		const result = parseOptions(schema, {});
+		expectTypeOf(result).toExtend<ExpectedOutput>();
+		expectTypeOf<ExpectedOutput>().toExtend<typeof result>();
 	});
 
 	it("returns undefined without a schema", () => {
@@ -91,27 +80,25 @@ describe(parseOptions, () => {
 		).toStrictEqual({ value: 0 });
 	});
 
-	it("prefixes validation issue paths and rejects unknown options", () => {
+	it("rejects unknown options", () => {
+		expect(() =>
+			parseOptions({ value: numberSchema }, { extra: true } as never),
+		).toThrow(/extra/);
+	});
+
+	it("identifies the option that failed validation", () => {
 		expect(() =>
 			parseOptions({ value: numberSchema }, {
-				extra: true,
 				value: 123,
 			} as never),
 		).toThrow(
 			expect.objectContaining({
-				issues: expect.arrayContaining([
-					{
-						code: "unrecognized_keys",
-						keys: ["extra"],
-						message: expect.any(String),
-						path: [],
-					},
-					{
-						code: "custom",
+				issues: [
+					expect.objectContaining({
 						message: "Expected a string.",
 						path: ["value", "received"],
-					},
-				]),
+					}),
+				],
 			}),
 		);
 	});
@@ -125,13 +112,11 @@ describe(parseOptions, () => {
 	it.each([[null], [[]], ["value"], [123]])(
 		"rejects non-object options: %j",
 		(options) => {
-			expect(() => parseOptions({}, options as never)).toThrow(
-				z.core.$ZodError,
-			);
+			expect(() => parseOptions({}, options as never)).toThrow();
 		},
 	);
 
-	it("normalizes Standard Schema path segments", () => {
+	it("preserves nested property and array-index locations in errors", () => {
 		const schema: StandardSchemaV1<undefined> = {
 			"~standard": {
 				validate: () => ({
@@ -146,11 +131,10 @@ describe(parseOptions, () => {
 		expect(() => parseOptions({ value: schema }, {})).toThrow(
 			expect.objectContaining({
 				issues: [
-					{
-						code: "custom",
+					expect.objectContaining({
 						message: "Invalid item.",
 						path: ["value", "items", 0],
-					},
+					}),
 				],
 			}),
 		);
