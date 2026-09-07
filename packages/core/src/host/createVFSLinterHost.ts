@@ -146,7 +146,11 @@ export function createVFSLinterHost(
 			const found: string[] = [];
 			const seen = new Set<PathKey>();
 			for (const file of fileMap.values()) {
-				const relative = relativeWithinCwd(file.path, cwdNormalized);
+				const relative = relativeWithinCwd(
+					file.path,
+					cwdNormalized,
+					caseSensitiveFS,
+				);
 				if (relative == null) {
 					continue;
 				}
@@ -178,7 +182,7 @@ export function createVFSLinterHost(
 			const dirNorm = normalizePath(directoryPathAbsolute);
 			const dirNormSlash = dirNorm.endsWith("/") ? dirNorm : dirNorm + "/";
 			const dirKeySlash = dirnameKey(dirNorm, caseSensitiveFS);
-			const result = new Map<string, LinterHostDirectoryEntry>();
+			const result = new Map<PathKey, LinterHostDirectoryEntry>();
 
 			for (const [fileKey, file] of fileMap) {
 				if (!fileKey.startsWith(dirKeySlash)) {
@@ -196,8 +200,9 @@ export function createVFSLinterHost(
 						type: "directory",
 					};
 				}
-				if (!result.get(dirent.name)) {
-					result.set(dirent.name, dirent);
+				const entryKey = pathKey(dirent.name, caseSensitiveFS);
+				if (!result.has(entryKey)) {
+					result.set(entryKey, dirent);
 				}
 			}
 
@@ -206,10 +211,7 @@ export function createVFSLinterHost(
 				...(baseHost?.fileTypeSync(directoryPathAbsolute) === "directory"
 					? baseHost
 							.readDirectorySync(directoryPathAbsolute)
-							.filter(
-								({ name }) =>
-									!result.has(caseSensitiveFS ? name : name.toLowerCase()),
-							)
+							.filter(({ name }) => !result.has(pathKey(name, caseSensitiveFS)))
 					: []),
 			];
 		},
@@ -325,17 +327,23 @@ function createExcludeMatcher(patterns: string[] | undefined) {
 	return picomatch(withDescendants, { dot: true });
 }
 
-function relativeWithinCwd(filePathAbsolute: string, cwdNormalized: string) {
-	if (filePathAbsolute === cwdNormalized) {
+function relativeWithinCwd(
+	filePathAbsolute: string,
+	cwdNormalized: string,
+	caseSensitiveFS: boolean,
+): string | undefined {
+	const fileKey = pathKey(filePathAbsolute, caseSensitiveFS);
+	const cwdKey = pathKey(cwdNormalized, caseSensitiveFS);
+	if (fileKey === cwdKey) {
 		return "";
 	}
 
-	const prefix = cwdNormalized.endsWith("/")
-		? cwdNormalized
-		: `${cwdNormalized}/`;
-	if (!filePathAbsolute.startsWith(prefix)) {
+	const prefix = cwdKey.endsWith("/") ? cwdKey : `${cwdKey}/`;
+	if (!fileKey.startsWith(prefix)) {
 		return undefined;
 	}
 
-	return filePathAbsolute.slice(prefix.length);
+	return filePathAbsolute.slice(
+		cwdNormalized.length + (cwdNormalized.endsWith("/") ? 0 : 1),
+	);
 }
