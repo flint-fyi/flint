@@ -755,11 +755,13 @@ describe(createVFSLinterHost, () => {
 				host.vfsUpsertFile("/ROOT-sibling/Outside.ts", "");
 				host.vfsUpsertFile("/ROOT2/Outside.ts", "");
 
-				for (const cwd of ["/ROOT", "/ROOT/"]) {
-					expect(await host.glob(["**/*.ts"], { cwd, exclude: [] })).toEqual(
-						caseSensitive ? [] : ["Src/File.ts", "Base.ts"],
-					);
-				}
+				await Promise.all(
+					["/ROOT", "/ROOT/"].map(async (cwd) => {
+						expect(await host.glob(["**/*.ts"], { cwd, exclude: [] })).toEqual(
+							caseSensitive ? [] : ["Src/File.ts", "Base.ts"],
+						);
+					}),
+				);
 				expect(
 					await host.glob(["**/*.ts"], { cwd: "/Root", exclude: [] }),
 				).toEqual(
