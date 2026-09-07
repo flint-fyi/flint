@@ -50,7 +50,8 @@ describe(parseOptions, () => {
 
 	it("returns undefined without a schema", () => {
 		// flint-disable-next-line ts/misleadingVoidExpressions
-		const result = parseOptions(undefined, undefined); // eslint-disable-line @typescript-eslint/no-confusing-void-expression -- Verify the undefined return type and value.
+		// eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- Verify the undefined return type and value.
+		const result = parseOptions(undefined, undefined);
 
 		expectTypeOf(result).toEqualTypeOf<undefined>();
 		expect(result).toBeUndefined();
