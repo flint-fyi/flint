@@ -3,11 +3,9 @@ import path from "node:path";
 import { debugForFile } from "debug-for-file";
 import {
 	SpanMap,
-	SyntaxKind,
 	type Node as NativeNode,
 } from "typescript-native/unstable/ast";
 import type {
-	Checker,
 	Diagnostic,
 	Program,
 	Project,
@@ -29,31 +27,23 @@ import { assert, nullThrows } from "@flint.fyi/utils";
 import packageJson from "../package.json" with { type: "json" };
 import { getTypeScriptContentMapperRegistrations } from "./contentMappers.ts";
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+import { createNodeVisitorsForFile } from "./createNodeVisitorsForFile.ts";
 import {
 	createTypeScriptProjectSession,
 	type TypeScriptProjectSession,
 } from "./createTypeScriptProjectSession.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
-import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
+import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
+import type { TypeScriptFileServices } from "./types/services.ts";
 
-export interface TypeScriptFileServices {
-	program: Program;
-	project: Project;
-	snapshot: Snapshot;
-	sourceFile: AST.SourceFile;
-	spanMap: SpanMap | undefined;
-	typeChecker: Checker;
-}
+export type { TypeScriptFileServices } from "./types/services.ts";
 
 const log = debugForFile(import.meta.filename);
-
-export const NodeSyntaxKinds: typeof SyntaxKind =
-	getFirstEnumValues(SyntaxKind);
 
 type ContentMappedLanguageFileDefinition =
 	LanguageFileDefinition<TypeScriptFileServices> & {
@@ -531,12 +521,7 @@ export const typescriptLanguage: Language<
 			: reports;
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
-	runFileVisitors(file, options, runtime) {
-		if (!runtime.visitors) {
-			return;
-		}
-
-		const { visitors } = runtime;
+	runFileVisitors(file, fileVisitors) {
 		for (const sourceFile of getMappedSourceFiles(
 			file.services.program,
 			file.services.sourceFile,
@@ -552,12 +537,22 @@ export const typescriptLanguage: Language<
 					adjustMappedRange(range, sourceFile.spanMap);
 			}
 			try {
-				visitTypeScriptNodes(sourceFile, visitors, {
-					options,
-					...file.services,
-					sourceFile,
-					spanMap: sourceFile.spanMap,
-				});
+				// Walk each mapped source file once for all of its rules. For
+				// content-mapped supplemental source files, re-key every rule's
+				// services to that source file so reports land in the right
+				// coordinates; the primary source file uses the visitors as-is.
+				const sourceFileVisitors =
+					sourceFile === file.services.sourceFile
+						? fileVisitors
+						: fileVisitors.map((fileVisitor) => ({
+								...fileVisitor,
+								services: {
+									...fileVisitor.services,
+									sourceFile,
+									spanMap: sourceFile.spanMap,
+								},
+							}));
+				createNodeVisitorsForFile(sourceFileVisitors)?.visit(sourceFile);
 			} finally {
 				if (adjustFixRange) {
 					file.adjustFixRange = adjustFixRange;

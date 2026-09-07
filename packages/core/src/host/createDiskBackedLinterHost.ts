@@ -180,8 +180,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		},
 		async getFileTouchTime(filePath) {
 			try {
-				const stat = await fs.promises.stat(filePath);
-				return stat.mtimeMs;
+				return (await fs.promises.stat(filePath)).mtimeMs;
 			} catch {
 				return undefined;
 			}

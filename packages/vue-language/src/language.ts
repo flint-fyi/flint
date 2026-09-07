@@ -26,7 +26,7 @@ export interface VueServices extends TypeScriptFileServices {
 	};
 }
 
-export const vueLanguage = typescriptLanguage as Language<
+export const vueLanguage = typescriptLanguage as unknown as Language<
 	TypeScriptNodeVisitors,
 	VueServices
 >;

@@ -29,8 +29,8 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@vue/compiler-dom": "^3.5.0",
-		"vize": "0.387.0"
+		"@vue/compiler-dom": "catalog:prod",
+		"vize": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

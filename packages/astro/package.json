@@ -35,7 +35,7 @@
 		"typescript-native": "catalog:dev"
 	},
 	"devDependencies": {
-		"@astrojs/compiler": "4.0.0",
+		"@astrojs/compiler": "catalog:dev",
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",

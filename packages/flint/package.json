@@ -43,7 +43,7 @@
 		"tsdown": "catalog:dev"
 	},
 	"peerDependencies": {
-		"prettier": "^3.7.4"
+		"prettier": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"

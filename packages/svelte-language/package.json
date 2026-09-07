@@ -33,9 +33,9 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@jridgewell/sourcemap-codec": "^1.5.5",
-		"svelte": "^5.0.0",
-		"svelte2tsx": "^0.7.55",
+		"@jridgewell/sourcemap-codec": "catalog:prod",
+		"svelte": "catalog:prod",
+		"svelte2tsx": "catalog:prod",
 		"typescript": "catalog:dev"
 	},
 	"devDependencies": {

@@ -1,15 +1,10 @@
-import { CachedFactory } from "cached-factory";
-
 import { writeToCache } from "../cache/writeToCache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
-import type { FileReport } from "../types/reports.ts";
-import type { AnyRule } from "../types/rules.ts";
 import { collectFilesAndOptions } from "./collectFilesAndOptions.ts";
 import { finalizeFileResults } from "./finalizeFileResults.ts";
-import { runLintRule } from "./runLintRule.ts";
-import type { LanguageFilesWithOptions } from "./types.ts";
+import { runRules } from "./runRules.ts";
 
 export interface RunConfigOptions {
 	cacheLocation?: string | undefined;
@@ -37,21 +32,24 @@ export async function runConfig(
 	//   - Any cached results amongst those file paths
 	//   - The language (virtual) file representations
 	//   - For each rule, the options it'll run with on each of its files
-	const {
-		allFilePaths,
-		cached,
-		languageFilesByFilePath,
-		rulesFilesAndOptionsByRule,
-	} = await collectFilesAndOptions(
-		configDefinition,
-		host,
-		ignoreCache,
-		cacheLocationOverride,
-		resources,
-	);
+	// The file factories and per-file language files register themselves on the
+	// `resources` stack (see collectLanguageFilesByFilePath), so disposing it tears
+	// down every TypeScript project session opened during the run.
+	const { allFilePaths, cached, languageFilesByFilePath, rulesOptionsByFile } =
+		await collectFilesAndOptions(
+			configDefinition,
+			host,
+			ignoreCache,
+			cacheLocationOverride,
+			resources,
+		);
 
-	// 2. For each lint rule, run it on all files and store each file's results
-	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule, host);
+	// 2. Walk each file once, running all of its rules and storing their reports
+	const reportsByFilePath = await runRules(
+		languageFilesByFilePath,
+		rulesOptionsByFile,
+		host,
+	);
 
 	// 3. For each file path, finalize output using each of its language files
 	const allFileResults = new Map(
@@ -60,7 +58,7 @@ export async function runConfig(
 			finalizeFileResults(
 				filePath,
 				languageAndFiles,
-				reportsByFilePath.get(filePath).flat(),
+				reportsByFilePath.get(filePath),
 				host,
 				skipLanguageReports,
 			),
@@ -79,7 +77,7 @@ export async function runConfig(
 	}
 
 	// 5. Write the results to cache, then return them! We did it!
-	const ruleCount = rulesFilesAndOptionsByRule.size;
+	const ruleCount = rulesOptionsByFile.size;
 	const lintResults: LintResults = {
 		allFilePaths,
 		allFileResults,
@@ -97,29 +95,4 @@ export async function runConfig(
 	}
 
 	return lintResults;
-}
-
-async function runRules(
-	rulesFilesAndOptionsByRule: Map<AnyRule, LanguageFilesWithOptions[]>,
-	host: LinterHost,
-) {
-	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
-
-	await Promise.all(
-		Array.from(rulesFilesAndOptionsByRule).map(
-			async ([rule, filesAndOptions]) => {
-				const ruleReportsByFilePath = await runLintRule(
-					rule,
-					filesAndOptions,
-					host,
-				);
-
-				for (const [filePath, ruleReports] of ruleReportsByFilePath) {
-					reportsByFilePath.get(filePath).push(...ruleReports);
-				}
-			},
-		),
-	);
-
-	return reportsByFilePath;
 }

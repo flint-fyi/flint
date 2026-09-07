@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import path from "node:path";
+import { isDeepStrictEqual } from "node:util";
 
 import { CachedFactory } from "cached-factory";
 
@@ -60,6 +61,11 @@ export type TesterSetupIt = (
 	description: string,
 	setup: () => Promise<void>,
 ) => void;
+
+type TestCaseUniqueProperties = Pick<
+	TestCaseNormalized,
+	"code" | "fileName" | "files" | "options"
+>;
 
 export class RuleTester {
 	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
@@ -162,14 +168,16 @@ export class RuleTester {
 	): void {
 		this.#testerOptions.describe(rule.about.id, () => {
 			this.#testerOptions.describe("invalid", () => {
+				const seenTestCases: TestCaseUniqueProperties[] = [];
 				for (const testCase of invalid) {
-					this.#itInvalidCase(rule, testCase);
+					this.#itInvalidCase(rule, testCase, seenTestCases);
 				}
 			});
 
 			this.#testerOptions.describe("valid", () => {
+				const seenTestCases: TestCaseUniqueProperties[] = [];
 				for (const testCase of valid) {
-					this.#itValidCase(rule, testCase);
+					this.#itValidCase(rule, testCase, seenTestCases);
 				}
 			});
 		});
@@ -178,13 +186,14 @@ export class RuleTester {
 	#itInvalidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCase: InvalidTestCase<InferredInputObject<OptionsSchema>>,
+		seenTestCases: TestCaseUniqueProperties[],
 	) {
 		const testCaseNormalized = normalizeTestCase(
 			testCase,
 			this.#testerOptions.defaults.fileName,
 		);
 
-		this.#itTestCase(testCaseNormalized, async () => {
+		this.#itTestCase(testCaseNormalized, seenTestCases, async () => {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
@@ -215,7 +224,11 @@ export class RuleTester {
 		});
 	}
 
-	#itTestCase(testCase: TestCaseNormalized, setup: () => Promise<void>) {
+	#itTestCase(
+		testCase: TestCaseNormalized,
+		seenTestCases: TestCaseUniqueProperties[],
+		setup: () => Promise<void>,
+	) {
 		let test = testCase.only
 			? this.#testerOptions.only
 			: this.#testerOptions.it;
@@ -238,6 +251,7 @@ export class RuleTester {
 						)
 					: testCase.code),
 			() => {
+				assertNoDuplicateTestCase(testCase, seenTestCases);
 				if (testCase.files != null) {
 					assert.notEqual(
 						Object.keys(testCase.files).length,
@@ -253,6 +267,7 @@ export class RuleTester {
 	#itValidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCaseRaw: ValidTestCase<InferredInputObject<OptionsSchema>>,
+		seenTestCases: TestCaseUniqueProperties[],
 	) {
 		const testCase =
 			typeof testCaseRaw === "string" ? { code: testCaseRaw } : testCaseRaw;
@@ -261,7 +276,7 @@ export class RuleTester {
 			this.#testerOptions.defaults.fileName,
 		);
 
-		this.#itTestCase(testCaseNormalized, async () => {
+		this.#itTestCase(testCaseNormalized, seenTestCases, async () => {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
@@ -281,6 +296,30 @@ export class RuleTester {
 			}
 		});
 	}
+}
+
+function assertNoDuplicateTestCase(
+	testCase: TestCaseNormalized,
+	seenTestCases: TestCaseUniqueProperties[],
+): void {
+	const duplicateProperties = {
+		code: testCase.code,
+		fileName: testCase.fileName,
+		files: testCase.files,
+		options: testCase.options,
+	} satisfies TestCaseUniqueProperties;
+
+	if (
+		seenTestCases.some((seenTestCase) =>
+			isDeepStrictEqual(seenTestCase, duplicateProperties),
+		)
+	) {
+		assert.fail(
+			"Expected no duplicate test cases, but an earlier test case has the same code, fileName, files, and options.",
+		);
+	}
+
+	seenTestCases.push(duplicateProperties);
 }
 
 function assertNoLanguageReports(languageReports: LanguageReports) {

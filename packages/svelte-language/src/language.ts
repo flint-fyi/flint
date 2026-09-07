@@ -21,7 +21,7 @@ export interface SvelteServices extends TypeScriptFileServices {
 	};
 }
 
-export const svelteLanguage = typescriptLanguage as Language<
+export const svelteLanguage = typescriptLanguage as unknown as Language<
 	TypeScriptNodeVisitors,
 	SvelteServices
 >;

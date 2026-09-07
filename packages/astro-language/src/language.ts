@@ -20,7 +20,7 @@ export interface AstroServices extends TypeScriptFileServices {
 	};
 }
 
-export const astroLanguage = typescriptLanguage as Language<
+export const astroLanguage = typescriptLanguage as unknown as Language<
 	TypeScriptNodeVisitors,
 	AstroServices
 >;

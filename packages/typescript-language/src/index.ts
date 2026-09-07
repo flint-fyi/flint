@@ -7,6 +7,11 @@ export {
 	type TSDiagnostic,
 } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 export {
+	createNodeVisitorsForFile,
+	type NodeVisitorsForFile,
+	type NodeVisitorSubscriptions,
+} from "./createNodeVisitorsForFile.ts";
+export {
 	createTypeScriptOverlayConfig,
 	type TypeScriptOverlayConfig,
 } from "./createTypeScriptOverlayConfig.ts";
@@ -21,13 +26,12 @@ export {
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 export { getTSNodeRange } from "./getTSNodeRange.ts";
 export {
-	NodeSyntaxKinds,
 	throwUnknownLanguageExtension,
-	type TypeScriptFileServices,
 	typescriptLanguage,
 	visitTypeScriptNodes,
 } from "./language.ts";
 export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
+export { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 export {
 	type FunctionWithParameters,
 	getScopeManager,
@@ -40,6 +44,7 @@ export {
 } from "./scope/scopeManager.ts";
 export type * as AST from "./types/ast.ts";
 export type { Checker } from "./types/checker.ts";
+export type { TypeScriptFileServices } from "./types/services.ts";
 export { createRuleTesterTSConfig } from "./utils/createRuleTesterTSConfig.ts";
 export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts";
 export { forEachChild } from "./utils/forEachChild.ts";

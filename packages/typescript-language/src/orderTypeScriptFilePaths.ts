@@ -15,7 +15,7 @@ const configFileNames = ["tsconfig.json", "jsconfig.json"];
  * This groups by walking up to the nearest config file rather than building a
  * throwaway project session: ordering only affects lint sequencing, so it does
  * not need a bound program, and building one here would duplicate all of the
- * work {@link createTypeScriptProjectSession} does again when files are opened.
+ * work `createTypeScriptProjectSession` does again when files are opened.
  */
 export function orderTypeScriptFilePaths(
 	filePaths: readonly string[],

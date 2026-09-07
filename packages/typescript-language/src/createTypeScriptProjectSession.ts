@@ -2,6 +2,7 @@ import path from "node:path";
 
 import {
 	API,
+	type ParsedCommandLine,
 	type Project,
 	type Snapshot,
 } from "typescript-native/unstable/sync";
@@ -58,10 +59,7 @@ export function createTypeScriptProjectSession(
 	const virtualFiles = new Map<string, string>();
 	// Memoizes parsed configs for a single update cycle so resolving a mapped
 	// file's owning project does not re-parse the same configs for every file.
-	let parsedConfigCache = new Map<
-		string,
-		ReturnType<typeof api.parseConfigFile> | undefined
-	>();
+	let parsedConfigCache = new Map<string, ParsedCommandLine | undefined>();
 	const api = new API({
 		cwd: host.getCurrentDirectory(),
 		fs: createTypeScriptFileSystem(
@@ -222,11 +220,11 @@ export function createTypeScriptProjectSession(
 	};
 	const parseConfigSafely = (
 		configFilePath: string,
-	): ReturnType<typeof api.parseConfigFile> | undefined => {
+	): ParsedCommandLine | undefined => {
 		if (parsedConfigCache.has(configFilePath)) {
 			return parsedConfigCache.get(configFilePath);
 		}
-		let parsed: ReturnType<typeof api.parseConfigFile> | undefined;
+		let parsed: ParsedCommandLine | undefined;
 		try {
 			parsed = api.parseConfigFile(configFilePath);
 		} catch {
@@ -288,7 +286,7 @@ export function createTypeScriptProjectSession(
 			return configFilePath;
 		}
 
-		let best: { configFilePath: string; score: number } | undefined;
+		let best: undefined | { configFilePath: string; score: number };
 		let fallback: string | undefined;
 		for (const reference of references) {
 			const referencedConfigPath = resolveReferencedConfigPath(reference.path);
