@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+
 import {
 	applyChangesToText,
 	isSuggestionForFiles,
@@ -26,61 +28,69 @@ export function resolveReportedSuggestions(
 		return;
 	}
 
-	return suggestionsReported.map((suggestionReported) =>
-		isSuggestionForFiles(suggestionReported)
-			? {
-					files: resolveReportedSuggestionForFiles(
-						suggestionReported,
-						testCaseNormalized,
-					),
-					id: suggestionReported.id,
-				}
-			: {
-					id: suggestionReported.id,
-					updated: applyChangesToText(
-						[suggestionReported],
-						testCaseNormalized.code,
-					),
-				},
-	);
+	return suggestionsReported.map((suggestionReported, index) => {
+		const suggestionExpected = testCaseNormalized.suggestions?.[index];
+		if (isSuggestionForFiles(suggestionReported)) {
+			return {
+				files: resolveReportedSuggestionForFiles(
+					suggestionReported,
+					suggestionExpected,
+				),
+				id: suggestionReported.id,
+			};
+		}
+
+		if (suggestionExpected && isTestSuggestionForFiles(suggestionExpected)) {
+			throw new Error(
+				"This test case describes a suggestion across files, but the rule is only reporting changes to its own file.",
+			);
+		}
+
+		return {
+			id: suggestionReported.id,
+			updated: applyChangesToText(
+				[suggestionReported],
+				testCaseNormalized.code,
+			),
+		};
+	});
 }
 
 function resolveReportedSuggestionForFiles(
 	suggestionReported: SuggestionForFiles,
-	testCaseNormalized: InvalidTestCase & TestCaseNormalized,
-) {
-	if (!testCaseNormalized.suggestions) {
+	suggestionExpected: TestSuggestion | undefined,
+): Record<string, TestSuggestionFileCase[]> {
+	if (!suggestionExpected) {
 		return {};
 	}
 
-	if (!testCaseNormalized.suggestions.every(isTestSuggestionForFiles)) {
+	if (!isTestSuggestionForFiles(suggestionExpected)) {
 		throw new Error(
-			"This test case describes suggestions across files, but the rule is only reporting changes to its own file.",
+			"This test case describes a suggestion to its own file, but the rule is reporting changes across files.",
 		);
 	}
 
+	assert.deepStrictEqual(
+		Object.keys(suggestionReported.files).sort(),
+		Object.keys(suggestionExpected.files).sort(),
+		"Reported suggestion target paths must exactly match expected target paths.",
+	);
+
 	return Object.fromEntries(
-		testCaseNormalized.suggestions.flatMap(
-			(suggestionExpected): [string, TestSuggestionFileCase[]][] => {
-				return Object.entries(suggestionExpected.files).map(
-					([filePath, suggestionCasesExpected]) => {
-						return [
-							filePath,
-							suggestionCasesExpected.map((suggestionCaseExpected) => {
-								const changes = suggestionReported.files[filePath];
-								return {
-									original: suggestionCaseExpected.original,
-									updated: changes
-										? applyChangesToText(
-												changes,
-												suggestionCaseExpected.original,
-											)
-										: suggestionCaseExpected.original,
-								};
-							}),
-						];
-					},
-				);
+		Object.entries(suggestionExpected.files).map(
+			([filePath, suggestionCasesExpected]) => {
+				const changes = suggestionReported.files[filePath];
+				assert(changes);
+				return [
+					filePath,
+					suggestionCasesExpected.map((suggestionCaseExpected) => ({
+						original: suggestionCaseExpected.original,
+						updated: applyChangesToText(
+							changes,
+							suggestionCaseExpected.original,
+						),
+					})),
+				];
 			},
 		),
 	);
