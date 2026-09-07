@@ -80,7 +80,7 @@ function resolveReportedSuggestionForFiles(
 		Object.entries(suggestionExpected.files).map(
 			([filePath, suggestionCasesExpected]) => {
 				const changes = suggestionReported.files[filePath];
-				assert(changes);
+				assert.ok(changes);
 				return [
 					filePath,
 					suggestionCasesExpected.map((suggestionCaseExpected) => ({
