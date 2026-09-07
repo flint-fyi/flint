@@ -1,6 +1,77 @@
 /* cspell:disable */
+import assert from "node:assert/strict";
+import path from "node:path";
+
+import { expect, it } from "vitest";
+
+import {
+	applyChangesToText,
+	createVFSLinterHost,
+	isSuggestionForFiles,
+	runLintRule,
+} from "@flint.fyi/core";
+
 import rule from "./cspell.ts";
 import { ruleTester } from "./ruleTester.ts";
+
+it.each([undefined, '{"words":["existing"]}'])(
+	"applies dictionary suggestions to the host cwd with config %s",
+	async (configText) => {
+		const cwd = path.resolve("cspell-project");
+		const host = createVFSLinterHost({ cwd });
+		const configPath = path.resolve(cwd, "cspell.json");
+		const processConfigPath = path.resolve("cspell.json");
+		host.vfsUpsertFile(processConfigPath, "{}");
+		if (configText !== undefined) {
+			host.vfsUpsertFile(configPath, configText);
+		}
+		const filePath = "src/example.txt";
+		const filePathAbsolute = path.resolve(cwd, filePath);
+		host.vfsUpsertFile(filePathAbsolute, "incorect");
+		using file = rule.language.createFileFactory(host).createFile({
+			filePath,
+			filePathAbsolute,
+			sourceText: "incorect",
+		});
+		const filesAndOptions = [
+			{ languageFiles: [{ file, language: rule.language }], options: {} },
+		];
+
+		expect(cwd).not.toBe(process.cwd());
+		const reports = await runLintRule(rule, filesAndOptions, host);
+		expect(reports.get(filePath)).toHaveLength(1);
+		const suggestion = reports.get(filePath)?.[0]?.suggestions?.[0];
+		assert(suggestion && isSuggestionForFiles(suggestion));
+		expect(suggestion).toEqual({
+			files: {
+				[configPath]: [
+					{
+						range: { begin: 0, end: configText?.length ?? 0 },
+						text: JSON.stringify({
+							words: [...(configText ? ["existing"] : []), "incorect"],
+						}),
+					},
+				],
+			},
+			id: "addWordToWords",
+		});
+		for (const [target, changes] of Object.entries(suggestion.files)) {
+			assert(changes);
+			await host.writeFile(
+				target,
+				applyChangesToText(changes, (await host.readFile(target)) ?? ""),
+			);
+		}
+		expect(await host.readFile(configPath)).toBe(
+			JSON.stringify({
+				words: [...(configText ? ["existing"] : []), "incorect"],
+			}),
+		);
+		expect(await host.readFile(processConfigPath)).toBe("{}");
+		expect(await host.readFile(filePathAbsolute)).toBe("incorect");
+		expect(await runLintRule(rule, filesAndOptions, host)).toEqual(new Map());
+	},
+);
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -16,7 +87,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{ original: ``, updated: '{"words":["incorect"]}' },
 						],
 					},
@@ -37,7 +108,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{ original: `{}`, updated: '{"words":["incorect"]}' },
 						],
 					},
@@ -60,7 +131,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{ original: `{"words":[]}`, updated: '{"words":["incorect"]}' },
 						],
 					},
@@ -83,7 +154,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{
 								original: `{"words":["existing"]}`,
 								updated: '{"words":["existing","incorect"]}',
@@ -108,7 +179,9 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [{ original: ``, updated: '{"words":["myarray"]}' }],
+						[path.resolve("cspell.json")]: [
+							{ original: ``, updated: '{"words":["myarray"]}' },
+						],
 					},
 					id: "addWordToWords",
 				},
@@ -129,7 +202,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{ original: `{}`, updated: '{"words":["myarray"]}' },
 						],
 					},
@@ -152,7 +225,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{ original: `{"words":[]}`, updated: '{"words":["myarray"]}' },
 						],
 					},
@@ -175,7 +248,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{
 								original: `{"words":["existing"]}`,
 								updated: '{"words":["existing","myarray"]}',
@@ -200,7 +273,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{ original: ``, updated: '{"words":["qwertyuiop"]}' },
 						],
 					},
@@ -223,7 +296,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{ original: `{}`, updated: '{"words":["qwertyuiop"]}' },
 						],
 					},
@@ -246,7 +319,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{ original: `{"words":[]}`, updated: '{"words":["qwertyuiop"]}' },
 						],
 					},
@@ -269,7 +342,7 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
-						"cspell.json": [
+						[path.resolve("cspell.json")]: [
 							{
 								original: `{"words":["existing"]}`,
 								updated: '{"words":["existing","qwertyuiop"]}',
