@@ -127,13 +127,17 @@ export function createVFSLinterHost(
 		getCurrentDirectory() {
 			return cwd;
 		},
-		// flint-disable-next-line ts/asyncFunctionAwaits
-		// eslint-disable-next-line @typescript-eslint/require-await
 		async getFileTouchTime(filePath) {
-			return host.getFileTouchTimeSync(filePath);
+			return (
+				fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime ??
+				(await baseHost?.getFileTouchTime(filePath))
+			);
 		},
 		getFileTouchTimeSync(filePath) {
-			return fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime;
+			return (
+				fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime ??
+				baseHost?.getFileTouchTimeSync(filePath)
+			);
 		},
 		getRepositoryRoot() {
 			return baseHost?.getRepositoryRoot();
