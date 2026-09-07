@@ -62,30 +62,99 @@ describe("createDiskBackedLinterHost", () => {
 		expect(host.fileTypeSync(missingPath)).toEqual(undefined);
 	});
 
-	it("returns file touch times", async () => {
-		const host = createDiskBackedLinterHost(integrationRoot);
-		const filePath = path.join(integrationRoot, "file.txt");
-		const touchTime = new Date("2025-01-02T03:04:05.000Z");
+	it.each(["missing/file.txt", "file.txt/child.txt"])(
+		"returns undefined for file type of %s",
+		(relativePath) => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			fs.writeFileSync(path.join(integrationRoot, "file.txt"), "hello");
 
-		fs.writeFileSync(filePath, "hello");
-		fs.utimesSync(filePath, touchTime, touchTime);
+			expect(
+				host.fileTypeSync(path.join(integrationRoot, relativePath)),
+			).toBeUndefined();
+		},
+	);
 
-		expect(await host.getFileTouchTime(filePath)).toEqual(touchTime.getTime());
-		expect(host.getFileTouchTimeSync(filePath)).toEqual(touchTime.getTime());
-	});
+	it.each(["EACCES", "EIO"])(
+		"preserves %s errors when checking file types and resolving symlinks",
+		async (code) => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const directoryPath = path.join(integrationRoot, "dir");
+			fs.mkdirSync(directoryPath);
+			fs.symlinkSync(
+				directoryPath,
+				path.join(integrationRoot, "link"),
+				"junction",
+			);
+			const error = Object.assign(new Error("Cannot stat entry"), { code });
+			using asynchronousStat = vi
+				.spyOn(fs.promises, "stat")
+				.mockRejectedValue(error);
+			using synchronousStat = vi
+				.spyOn(fs, "statSync")
+				.mockImplementation(() => {
+					throw error;
+				});
 
-	it("returns undefined for a missing file touch time asynchronously", async () => {
-		const host = createDiskBackedLinterHost(integrationRoot);
-		const missingPath = path.join(integrationRoot, "missing.txt");
+			expect(() => host.fileTypeSync(directoryPath)).toThrow(error);
+			expect(() => host.readDirectorySync(integrationRoot)).toThrow(error);
+			await expect(host.readDirectory(integrationRoot)).rejects.toBe(error);
+			expect(asynchronousStat).toHaveBeenCalledWith(
+				path.join(integrationRoot, "link"),
+				{ throwIfNoEntry: false },
+			);
+			expect(synchronousStat).toHaveBeenCalledWith(
+				path.join(integrationRoot, "link"),
+				{ throwIfNoEntry: false },
+			);
+		},
+	);
 
-		expect(await host.getFileTouchTime(missingPath)).toBeUndefined();
-	});
+	describe("file touch times", () => {
+		it("returns the modification time of an existing file", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = path.join(integrationRoot, "file.txt");
+			const touchTime = new Date("2025-01-02T03:04:05.000Z");
+			fs.writeFileSync(filePath, "hello");
+			fs.utimesSync(filePath, touchTime, touchTime);
 
-	it("returns undefined for a missing file touch time synchronously", () => {
-		const host = createDiskBackedLinterHost(integrationRoot);
-		const missingPath = path.join(integrationRoot, "missing.txt");
+			expect(await host.getFileTouchTime(filePath)).toBe(touchTime.getTime());
+			expect(host.getFileTouchTimeSync(filePath)).toBe(touchTime.getTime());
+		});
 
-		expect(host.getFileTouchTimeSync(missingPath)).toBeUndefined();
+		it.each(["missing.txt", "missing/file.txt", "file.txt/child.txt"])(
+			"returns undefined for missing path %s",
+			async (relativePath) => {
+				const host = createDiskBackedLinterHost(integrationRoot);
+				fs.writeFileSync(path.join(integrationRoot, "file.txt"), "hello");
+				const filePath = path.join(integrationRoot, relativePath);
+
+				expect(await host.getFileTouchTime(filePath)).toBeUndefined();
+				expect(host.getFileTouchTimeSync(filePath)).toBeUndefined();
+			},
+		);
+
+		it.each(["EACCES", "EIO"])("preserves %s errors", async (code) => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = path.join(integrationRoot, "file.txt");
+			const error = Object.assign(new Error("Cannot stat file"), { code });
+			using asynchronousStat = vi
+				.spyOn(fs.promises, "stat")
+				.mockRejectedValue(error);
+			using synchronousStat = vi
+				.spyOn(fs, "statSync")
+				.mockImplementation(() => {
+					throw error;
+				});
+
+			await expect(host.getFileTouchTime(filePath)).rejects.toBe(error);
+			expect(() => host.getFileTouchTimeSync(filePath)).toThrow(error);
+			expect(asynchronousStat).toHaveBeenCalledWith(filePath, {
+				throwIfNoEntry: false,
+			});
+			expect(synchronousStat).toHaveBeenCalledWith(filePath, {
+				throwIfNoEntry: false,
+			});
+		});
 	});
 
 	it("finds the repository root from a nested file", () => {
@@ -128,7 +197,7 @@ describe("createDiskBackedLinterHost", () => {
 		expect(host.readFileSync(filePath)).toEqual("hello");
 	});
 
-	it("lists directory entries and resolves directory symlinks", () => {
+	it("lists directory entries and resolves directory symlinks", async () => {
 		const host = createDiskBackedLinterHost(integrationRoot);
 		const dirPath = path.join(integrationRoot, "dir");
 		const dirLink = path.join(integrationRoot, "dir-link");
@@ -137,6 +206,7 @@ describe("createDiskBackedLinterHost", () => {
 		fs.symlinkSync(dirPath, dirLink, "junction");
 
 		const entries = host.readDirectorySync(integrationRoot);
+		expect(await host.readDirectory(integrationRoot)).toEqual(entries);
 		const sortedEntries = entries
 			.map((entry) => ({ name: entry.name, type: entry.type }))
 			.toSorted((a, b) => a.name.localeCompare(b.name));
@@ -150,7 +220,7 @@ describe("createDiskBackedLinterHost", () => {
 	// junctions can be created only for directories on win32
 	it.skipIf(process.platform === "win32")(
 		"lists directory entries and resolves file symlinks",
-		() => {
+		async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const filePath = path.join(integrationRoot, "file.txt");
 			const fileLink = path.join(integrationRoot, "file-link.txt");
@@ -162,6 +232,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.symlinkSync(missingPath, brokenLink);
 
 			const entries = host.readDirectorySync(integrationRoot);
+			expect(await host.readDirectory(integrationRoot)).toEqual(entries);
 			const sortedEntries = entries
 				.map((entry) => ({ name: entry.name, type: entry.type }))
 				.toSorted((a, b) => a.name.localeCompare(b.name));
