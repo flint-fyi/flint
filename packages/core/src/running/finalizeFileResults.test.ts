@@ -8,7 +8,7 @@ import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { finalizeFileResults } from "./finalizeFileResults.ts";
 
-describe("finalizeFileResults", () => {
+describe(finalizeFileResults, () => {
 	it.each([true, false])(
 		"roots dependencies at host cwd with caseSensitive=%s",
 		(caseSensitive) => {

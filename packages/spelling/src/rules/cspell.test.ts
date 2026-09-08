@@ -65,14 +65,16 @@ describe("dictionary suggestions", () => {
 					);
 				}),
 			);
-			expect(await host.readFile(configPath)).toBe(
+			await expect(host.readFile(configPath)).resolves.toBe(
 				JSON.stringify({
 					words: [...(configText ? ["existing"] : []), "incorect"],
 				}),
 			);
-			expect(await host.readFile(processConfigPath)).toBe("{}");
-			expect(await host.readFile(filePathAbsolute)).toBe("incorect");
-			expect(await runLintRule(rule, filesAndOptions, host)).toEqual(new Map());
+			await expect(host.readFile(processConfigPath)).resolves.toBe("{}");
+			await expect(host.readFile(filePathAbsolute)).resolves.toBe("incorect");
+			await expect(runLintRule(rule, filesAndOptions, host)).resolves.toEqual(
+				new Map(),
+			);
 		},
 	);
 });
