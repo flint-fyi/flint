@@ -13,10 +13,17 @@ import type {
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
 
-export function createDiskBackedLinterHost(cwd: string): LinterHost {
+interface CreateDiskBackedLinterHostOptions {
+	findRepositoryRoot?: ((cwd: string) => null | string | undefined) | undefined;
+}
+
+export function createDiskBackedLinterHost(
+	cwd: string,
+	{ findRepositoryRoot = findRootSync }: CreateDiskBackedLinterHostOptions = {},
+): LinterHost {
 	const caseSensitiveFS = isFileSystemCaseSensitive();
 	cwd = normalizePath(cwd);
-	const foundRepositoryRoot = findRootSync(cwd);
+	const foundRepositoryRoot = findRepositoryRoot(cwd);
 	const repositoryRoot =
 		foundRepositoryRoot == null
 			? undefined

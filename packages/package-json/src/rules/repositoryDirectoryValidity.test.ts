@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import { describe } from "vitest";
 
 import { repositoryRootRuleTester, ruleTester } from "../ruleTester.ts";
@@ -128,7 +126,7 @@ describe("with a known repository root", () => {
   "repository": {
     "type": "git",
     "url": "https://github.com/flint-fyi/flint",
-    "directory": "packages/package-json/src/_flint-rule-tester-virtual/packages/example"
+    "directory": "packages/example"
   }
 }
 `,
@@ -166,7 +164,7 @@ describe("with a known repository root", () => {
   "repository": {
     "type": "git",
     "url": "https://github.com/flint-fyi/flint",
-    "directory": "packages/package-json/src/_flint-rule-tester-virtual/packages/example"
+    "directory": "packages/example"
   }
 }
 `,
@@ -183,7 +181,7 @@ describe("with a known repository root", () => {
   }
 }
 `,
-				fileName: path.resolve(import.meta.dirname, "../../../../package.json"),
+				fileName: "package.json",
 				name: "a package.json in the repository root itself",
 				snapshot: `
 {
@@ -219,7 +217,7 @@ describe("with a known repository root", () => {
   "repository": {
     "type": "git",
     "url": "https://github.com/flint-fyi/flint",
-    "directory": "packages/package-json/src/_flint-rule-tester-virtual/packages/example"
+    "directory": "packages/example"
   }
 }
 `,
@@ -235,7 +233,7 @@ describe("with a known repository root", () => {
   }
 }
 `,
-				fileName: path.resolve(import.meta.dirname, "../../../../package.json"),
+				fileName: "package.json",
 				name: "an empty directory for a package.json in the repository root itself",
 			},
 		],

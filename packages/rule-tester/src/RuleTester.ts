@@ -79,15 +79,6 @@ export class RuleTester {
 		scope = globalThis,
 		skip,
 	}: RuleTesterOptions = {}) {
-		let baseHost =
-			diskBackedFSRoot != null
-				? createEphemeralLinterHost(
-						createDiskBackedLinterHost(
-							path.resolve(process.cwd(), diskBackedFSRoot),
-						),
-					)
-				: undefined;
-
 		const virtualRoot =
 			diskBackedFSRoot == null
 				? undefined
@@ -96,13 +87,18 @@ export class RuleTester {
 						diskBackedFSRoot,
 						"_flint-rule-tester-virtual",
 					);
-
+		let baseHost =
+			virtualRoot != null
+				? createEphemeralLinterHost(
+						createDiskBackedLinterHost(virtualRoot, {
+							findRepositoryRoot: () => virtualRoot,
+						}),
+					)
+				: undefined;
 		const { files: defaultFiles = {} } = defaults;
 		if (Object.keys(defaultFiles).length) {
 			const vfs = createVFSLinterHost(
-				baseHost == null
-					? { cwd: process.cwd() }
-					: { baseHost, cwd: virtualRoot },
+				baseHost == null ? { cwd: process.cwd() } : { baseHost },
 			);
 			for (const [name, content] of Object.entries(defaultFiles)) {
 				const filePath = path.resolve(vfs.getCurrentDirectory(), name);
@@ -113,9 +109,7 @@ export class RuleTester {
 		// another overlay to prevent `defaultFiles` from being overwritten
 		// by per-test-case `files`
 		this.#linterHost = createVFSLinterHost(
-			baseHost == null
-				? { cwd: process.cwd() }
-				: { baseHost, cwd: virtualRoot },
+			baseHost == null ? { cwd: process.cwd() } : { baseHost },
 		);
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
