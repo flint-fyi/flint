@@ -757,14 +757,14 @@ describe(createVFSLinterHost, () => {
 
 				await Promise.all(
 					["/ROOT", "/ROOT/"].map(async (cwd) => {
-						expect(await host.glob(["**/*.ts"], { cwd, exclude: [] })).toEqual(
-							caseSensitive ? [] : ["Src/File.ts", "Base.ts"],
-						);
+						await expect(
+							host.glob(["**/*.ts"], { cwd, exclude: [] }),
+						).resolves.toEqual(caseSensitive ? [] : ["Src/File.ts", "Base.ts"]);
 					}),
 				);
-				expect(
-					await host.glob(["**/*.ts"], { cwd: "/Root", exclude: [] }),
-				).toEqual(
+				await expect(
+					host.glob(["**/*.ts"], { cwd: "/Root", exclude: [] }),
+				).resolves.toEqual(
 					caseSensitive
 						? ["Src/File.ts", "src/file.ts", "Base.ts"]
 						: ["Src/File.ts", "Base.ts"],
@@ -778,9 +778,9 @@ describe(createVFSLinterHost, () => {
 				const host = createVFSLinterHost({ caseSensitive: false, cwd });
 				host.vfsUpsertFile(`${cwd}Src/File.ts`, "");
 
-				expect(await host.glob(["**/*.ts"], { cwd, exclude: [] })).toEqual([
-					"Src/File.ts",
-				]);
+				await expect(
+					host.glob(["**/*.ts"], { cwd, exclude: [] }),
+				).resolves.toEqual(["Src/File.ts"]);
 			},
 		);
 
