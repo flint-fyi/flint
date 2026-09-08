@@ -106,6 +106,7 @@ catalogs:
     "@humanwhocodes/momoa": ^3.3.10
     "@jridgewell/sourcemap-codec": ^1.5.5
     "@shikijs/cli": ^4.0.0
+    "@standard-schema/spec": ^1.1.0
     "@types/css-tree": 3.2.0
     "@types/mdast": ^4.0.4
     "@types/unist": ^3.0.3

@@ -1,41 +1,49 @@
-import type * as z from "zod/v4/core";
+import type { StandardSchemaV1 } from "@standard-schema/spec";
 
 /**
- * Any object containing Zod schemas that are optional.
+ * Any object containing Standard Schemas that are optional.
  * In other words, allows providing an empty object {} value.
  */
-export type AnyOptionalSchema = Record<string, z.$ZodDefault | z.$ZodOptional>;
+export type AnyOptionalSchema = Record<string, StandardSchemaV1>;
 
-export type OptionalObjectSchema<OptionsSchema extends AnyOptionalSchema> =
-	z.$ZodObject<OptionsSchema, z.$strict> &
-		z.$ZodType<
-			Record<string, unknown>,
-			Record<string, unknown>,
-			z.$ZodObjectInternals<OptionsSchema, z.$strict>
-		>;
+export type OptionalObjectSchema<
+	OptionsSchema extends AnyOptionalSchema | undefined,
+> = OptionsSchema & {
+	[Key in keyof OptionsSchema]: undefined extends StandardSchemaV1.InferInput<
+		OptionsSchema[Key] & StandardSchemaV1
+	>
+		? OptionsSchema[Key]
+		: never;
+};
 
 /**
- * Given an object containing Zod schemas, produces the equivalent runtime type.
+ * Given an object containing Standard Schemas, produces the equivalent input type.
  * @example
  * ```type
- * InferredInputObject<{ value: z.ZodDefault<z.ZodNumber> }>
+ * InferredInputObject<{ value: StandardSchemaV1<number | undefined> }>
  * ```
  * is the same as:
  * ```type
- * { value?: number }
+ * { value?: number | undefined }
  * ```
  */
 export type InferredInputObject<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 > = OptionsSchema extends AnyOptionalSchema
-	? z.input<OptionalObjectSchema<OptionsSchema>>
+	? {
+			[Key in keyof OptionsSchema]?: StandardSchemaV1.InferInput<
+				OptionsSchema[Key]
+			>;
+		}
 	: undefined;
 
 /**
- * Given an object containing Zod schemas, produces the equivalent runtime type.
+ * Given an object containing Standard Schemas, produces the equivalent output type.
  * @example
  * ```type
- * InferredOutputObject<{ value: z.ZodOptional<z.ZodNumber> }>
+ * InferredOutputObject<{
+ *   value: StandardSchemaV1<number | undefined, number>
+ * }>
  * ```
  * is the same as:
  * ```type
@@ -45,5 +53,17 @@ export type InferredInputObject<
 export type InferredOutputObject<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 > = OptionsSchema extends AnyOptionalSchema
-	? z.output<OptionalObjectSchema<OptionsSchema>>
+	? {
+			[Key in keyof OptionsSchema as undefined extends StandardSchemaV1.InferOutput<
+				OptionsSchema[Key]
+			>
+				? Key
+				: never]?: StandardSchemaV1.InferOutput<OptionsSchema[Key]>;
+		} & {
+			[Key in keyof OptionsSchema as undefined extends StandardSchemaV1.InferOutput<
+				OptionsSchema[Key]
+			>
+				? never
+				: Key]: StandardSchemaV1.InferOutput<OptionsSchema[Key]>;
+		}
 	: undefined;
