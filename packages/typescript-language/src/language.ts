@@ -6,10 +6,13 @@ import {
 	type Node as NativeNode,
 } from "typescript-native/unstable/ast";
 import type {
+	Checker,
 	Diagnostic,
 	Program,
 	Project,
 	Snapshot,
+	Symbol as TSSymbol,
+	Type,
 } from "typescript-native/unstable/sync";
 
 import {
@@ -44,6 +47,60 @@ import type { TypeScriptFileServices } from "./types/services.ts";
 export type { TypeScriptFileServices } from "./types/services.ts";
 
 const log = debugForFile(import.meta.filename);
+
+// The native checker runs out-of-process, so every `getTypeAtLocation` /
+// `getSymbolAtLocation` is an IPC round-trip. Many type-aware rules query the
+// same node, so memoizing per node (per snapshot's checker, keyed by node
+// identity) collapses those repeats to one round-trip. Results are stable while
+// the snapshot is unchanged, which it is for the whole visitor phase.
+const memoizedCheckerCache = new WeakMap<Checker, Checker>();
+
+function getMemoizedChecker(checker: Checker): Checker {
+	const existing = memoizedCheckerCache.get(checker);
+	if (existing) {
+		return existing;
+	}
+	const typeByNode = new WeakMap<object, Type>();
+	const symbolByNode = new WeakMap<object, TSSymbol | undefined>();
+	const rawGetTypeAtLocation = checker.getTypeAtLocation;
+	const rawGetSymbolAtLocation = checker.getSymbolAtLocation;
+	const wrapped = new Proxy(checker, {
+		get(target, property, receiver) {
+			if (property === "getTypeAtLocation") {
+				return (node: NativeNode | readonly NativeNode[]): unknown => {
+					if (Array.isArray(node)) {
+						return rawGetTypeAtLocation(node);
+					}
+					const key = node as object;
+					const cached = typeByNode.get(key);
+					if (cached !== undefined) {
+						return cached;
+					}
+					const result = rawGetTypeAtLocation(node as NativeNode);
+					typeByNode.set(key, result);
+					return result;
+				};
+			}
+			if (property === "getSymbolAtLocation") {
+				return (node: NativeNode | readonly NativeNode[]): unknown => {
+					if (Array.isArray(node)) {
+						return rawGetSymbolAtLocation(node);
+					}
+					const key = node as object;
+					if (symbolByNode.has(key)) {
+						return symbolByNode.get(key);
+					}
+					const result = rawGetSymbolAtLocation(node as NativeNode);
+					symbolByNode.set(key, result);
+					return result;
+				};
+			}
+			return Reflect.get(target, property, receiver) as unknown;
+		},
+	});
+	memoizedCheckerCache.set(checker, wrapped);
+	return wrapped;
+}
 
 type ContentMappedLanguageFileDefinition =
 	LanguageFileDefinition<TypeScriptFileServices> & {
@@ -343,7 +400,7 @@ export const typescriptLanguage: Language<
 					return getSourceFile().spanMap;
 				},
 				get typeChecker() {
-					return getProject().checker;
+					return getMemoizedChecker(getProject().checker);
 				},
 			};
 			const dispose = (): void => {
