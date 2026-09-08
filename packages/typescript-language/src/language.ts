@@ -55,6 +55,17 @@ const log = debugForFile(import.meta.filename);
 // the snapshot is unchanged, which it is for the whole visitor phase.
 const memoizedCheckerCache = new WeakMap<Checker, Checker>();
 
+// Checker queries that are deterministic given a single Type/Symbol argument
+// (for a stable snapshot), so results can be memoized by that argument's identity.
+const firstArgIdentityMethods: ReadonlySet<string> = new Set([
+	"getApparentType",
+	"getBaseConstraintOfType",
+	"getTypeArguments",
+	"getTypeOfSymbol",
+	"isArrayType",
+	"isTupleType",
+]);
+
 function getMemoizedChecker(checker: Checker): Checker {
 	const existing = memoizedCheckerCache.get(checker);
 	if (existing) {
@@ -62,6 +73,7 @@ function getMemoizedChecker(checker: Checker): Checker {
 	}
 	const typeByNode = new WeakMap<object, Type>();
 	const symbolByNode = new WeakMap<object, TSSymbol | undefined>();
+	const singleArgCaches: Record<string, WeakMap<object, unknown>> = {};
 	const rawGetTypeAtLocation = checker.getTypeAtLocation;
 	const rawGetSymbolAtLocation = checker.getSymbolAtLocation;
 	const wrapped = new Proxy(checker, {
@@ -92,6 +104,26 @@ function getMemoizedChecker(checker: Checker): Checker {
 					}
 					const result = rawGetSymbolAtLocation(node as NativeNode);
 					symbolByNode.set(key, result);
+					return result;
+				};
+			}
+			// Other frequently-called checker queries that are deterministic given a
+			// single Type/Symbol argument (per stable snapshot) are memoized by that
+			// argument's identity too, to cut their IPC round-trips.
+			if (firstArgIdentityMethods.has(property as string)) {
+				const cache = (singleArgCaches[property as string] ??= new WeakMap());
+				const raw = Reflect.get(target, property, receiver) as (
+					arg: object,
+				) => unknown;
+				return (arg: object): unknown => {
+					if (arg == null || typeof arg !== "object") {
+						return raw(arg);
+					}
+					if (cache.has(arg)) {
+						return cache.get(arg);
+					}
+					const result = raw(arg);
+					cache.set(arg, result);
 					return result;
 				};
 			}
