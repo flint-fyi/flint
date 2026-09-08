@@ -39,12 +39,11 @@ describe(runConfigFixing, () => {
 					services: {},
 				}),
 			}),
-			runFileVisitors(file, options, runtime): void {
+			runFileVisitors(file, fileVisitors): void {
 				visit();
-				runtime.visitors?.text?.(file.about.sourceText, {
-					...file.services,
-					options,
-				});
+				for (const { services, visitors } of fileVisitors) {
+					visitors.text?.(file.about.sourceText, services);
+				}
 			},
 		});
 		const fix: Fix[] =
