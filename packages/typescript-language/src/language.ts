@@ -6,13 +6,10 @@ import {
 	type Node as NativeNode,
 } from "typescript-native/unstable/ast";
 import type {
-	Checker,
 	Diagnostic,
 	Program,
 	Project,
 	Snapshot,
-	Symbol as TSSymbol,
-	Type,
 } from "typescript-native/unstable/sync";
 
 import {
@@ -38,6 +35,7 @@ import {
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
+import { getMemoizedChecker } from "./memoizedChecker.ts";
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
@@ -47,92 +45,6 @@ import type { TypeScriptFileServices } from "./types/services.ts";
 export type { TypeScriptFileServices } from "./types/services.ts";
 
 const log = debugForFile(import.meta.filename);
-
-// The native checker runs out-of-process, so every `getTypeAtLocation` /
-// `getSymbolAtLocation` is an IPC round-trip. Many type-aware rules query the
-// same node, so memoizing per node (per snapshot's checker, keyed by node
-// identity) collapses those repeats to one round-trip. Results are stable while
-// the snapshot is unchanged, which it is for the whole visitor phase.
-const memoizedCheckerCache = new WeakMap<Checker, Checker>();
-
-// Checker queries that are deterministic given a single Type/Symbol argument
-// (for a stable snapshot), so results can be memoized by that argument's identity.
-const firstArgIdentityMethods: ReadonlySet<string> = new Set([
-	"getApparentType",
-	"getBaseConstraintOfType",
-	"getTypeArguments",
-	"getTypeOfSymbol",
-	"isArrayType",
-	"isTupleType",
-]);
-
-function getMemoizedChecker(checker: Checker): Checker {
-	const existing = memoizedCheckerCache.get(checker);
-	if (existing) {
-		return existing;
-	}
-	const typeByNode = new WeakMap<object, Type>();
-	const symbolByNode = new WeakMap<object, TSSymbol | undefined>();
-	const singleArgCaches: Record<string, WeakMap<object, unknown>> = {};
-	const rawGetTypeAtLocation = checker.getTypeAtLocation;
-	const rawGetSymbolAtLocation = checker.getSymbolAtLocation;
-	const wrapped = new Proxy(checker, {
-		get(target, property, receiver) {
-			if (property === "getTypeAtLocation") {
-				return (node: NativeNode | readonly NativeNode[]): unknown => {
-					if (Array.isArray(node)) {
-						return rawGetTypeAtLocation(node);
-					}
-					const key = node as object;
-					const cached = typeByNode.get(key);
-					if (cached !== undefined) {
-						return cached;
-					}
-					const result = rawGetTypeAtLocation(node as NativeNode);
-					typeByNode.set(key, result);
-					return result;
-				};
-			}
-			if (property === "getSymbolAtLocation") {
-				return (node: NativeNode | readonly NativeNode[]): unknown => {
-					if (Array.isArray(node)) {
-						return rawGetSymbolAtLocation(node);
-					}
-					const key = node as object;
-					if (symbolByNode.has(key)) {
-						return symbolByNode.get(key);
-					}
-					const result = rawGetSymbolAtLocation(node as NativeNode);
-					symbolByNode.set(key, result);
-					return result;
-				};
-			}
-			// Other frequently-called checker queries that are deterministic given a
-			// single Type/Symbol argument (per stable snapshot) are memoized by that
-			// argument's identity too, to cut their IPC round-trips.
-			if (firstArgIdentityMethods.has(property as string)) {
-				const cache = (singleArgCaches[property as string] ??= new WeakMap());
-				const raw = Reflect.get(target, property, receiver) as (
-					arg: object,
-				) => unknown;
-				return (arg: object): unknown => {
-					if (arg == null || typeof arg !== "object") {
-						return raw(arg);
-					}
-					if (cache.has(arg)) {
-						return cache.get(arg);
-					}
-					const result = raw(arg);
-					cache.set(arg, result);
-					return result;
-				};
-			}
-			return Reflect.get(target, property, receiver) as unknown;
-		},
-	});
-	memoizedCheckerCache.set(checker, wrapped);
-	return wrapped;
-}
 
 type ContentMappedLanguageFileDefinition =
 	LanguageFileDefinition<TypeScriptFileServices> & {
