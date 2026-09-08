@@ -9,6 +9,7 @@ import {
 	createEphemeralLinterHost,
 	createVFSLinterHost,
 	parseOptions,
+	withRepositoryRoot,
 	type AnyLanguage,
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
@@ -90,9 +91,10 @@ export class RuleTester {
 		let baseHost =
 			virtualRoot != null
 				? createEphemeralLinterHost(
-						createDiskBackedLinterHost(virtualRoot, {
-							findRepositoryRoot: () => virtualRoot,
-						}),
+						withRepositoryRoot(
+							createDiskBackedLinterHost(virtualRoot),
+							virtualRoot,
+						),
 					)
 				: undefined;
 		const { files: defaultFiles = {} } = defaults;

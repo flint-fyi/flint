@@ -1,6 +1,6 @@
 ---
-"@flint.fyi/core": patch
+"@flint.fyi/core": minor
 "@flint.fyi/rule-tester": patch
 ---
 
-Add a `findRepositoryRoot` option to `createDiskBackedLinterHost` so disk-backed rule testers resolve `getRepositoryRoot()`.
+Add `withRepositoryRoot` to compose a known repository root onto a host, and use it so disk-backed rule testers resolve `getRepositoryRoot()`.

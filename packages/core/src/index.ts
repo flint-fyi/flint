@@ -30,6 +30,7 @@ export {
 	vcsDirectories,
 } from "./host/watcher.ts";
 export { withFileSystemWatcher } from "./host/withFileSystemWatcher.ts";
+export { withRepositoryRoot } from "./host/withRepositoryRoot.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";

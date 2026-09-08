@@ -93,18 +93,6 @@ describe("createDiskBackedLinterHost", () => {
 		expect(host.getRepositoryRoot()).toEqual(normalizePath(repositoryRoot));
 	});
 
-	it("uses the injected repository root lookup", () => {
-		const findRepositoryRoot = vi.fn(() => "/injected/root");
-		const host = createDiskBackedLinterHost(integrationRoot, {
-			findRepositoryRoot,
-		});
-
-		expect(findRepositoryRoot).toHaveBeenCalledWith(
-			normalizePath(integrationRoot),
-		);
-		expect(host.getRepositoryRoot()).toEqual("/injected/root");
-	});
-
 	it("reads file contents", () => {
 		const host = createDiskBackedLinterHost(integrationRoot);
 		const filePath = path.join(integrationRoot, "file.txt");
