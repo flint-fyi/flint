@@ -1,12 +1,16 @@
 import {
 	parse,
 	traverse,
-	type AnyNode,
 	type DocumentNode,
 	type Node,
 } from "@humanwhocodes/momoa";
 
-import { createLanguage, type Language } from "@flint.fyi/core";
+import {
+	createLanguage,
+	groupFileVisitors,
+	runFileVisitorSubscriptions,
+	type Language,
+} from "@flint.fyi/core";
 
 import type { JsonNodeVisitors } from "./nodes.ts";
 
@@ -40,24 +44,28 @@ export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 				},
 			};
 		},
-		runFileVisitors: (file, options, runtime) => {
-			if (!runtime.visitors) {
-				return;
-			}
-
-			const { visitors } = runtime;
-			const visitorServices = { options, ...file.services };
+		runFileVisitors: (file, fileVisitors) => {
+			const { enter, exit } = groupFileVisitors<Node, JsonFileServices>(
+				fileVisitors,
+			);
 
 			traverse(file.services.root, {
-				enter: (node: Node) =>
-					// @ts-expect-error -- The intersection DocumentNode & ArrayNode &...was reduced to `never` because property `type` has conflicting types in some constituents.
-					visitors[node.type as AnyNode["type"]]?.(node, visitorServices),
-				exit: (node: Node) =>
-					visitors[`${node.type as AnyNode["type"]}:exit`]?.(
-						// @ts-expect-error -- Argument of type `Node` is not assignable to parameter of type `undefined`
-						node,
-						visitorServices,
-					),
+				...(enter && {
+					enter: (node: Node) => {
+						const entering = enter.get(node.type);
+						if (entering !== undefined) {
+							runFileVisitorSubscriptions(entering, node);
+						}
+					},
+				}),
+				...(exit && {
+					exit: (node: Node) => {
+						const exiting = exit.get(node.type);
+						if (exiting !== undefined) {
+							runFileVisitorSubscriptions(exiting, node);
+						}
+					},
+				}),
 			});
 		},
 	});
