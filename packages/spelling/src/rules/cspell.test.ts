@@ -8,8 +8,10 @@ import {
 	applyChangesToText,
 	createVFSLinterHost,
 	isSuggestionForFiles,
-	runLintRule,
+	runConfig,
+	type FileReport,
 } from "@flint.fyi/core";
+import { normalizePath } from "@flint.fyi/utils";
 
 import rule from "./cspell.ts";
 import { ruleTester } from "./ruleTester.ts";
@@ -29,19 +31,27 @@ describe("dictionary suggestions", () => {
 			const filePath = "src/example.txt";
 			const filePathAbsolute = path.resolve(cwd, filePath);
 			host.vfsUpsertFile(filePathAbsolute, "incorect");
-			using file = rule.language.createFileFactory(host).createFile({
-				filePath,
-				filePathAbsolute,
-				sourceText: "incorect",
-			});
-			const filesAndOptions = [
-				{ languageFiles: [{ file, language: rule.language }], options: {} },
-			];
+
+			async function lint(): Promise<FileReport[]> {
+				const results = await runConfig(
+					{
+						filePath: path.resolve(cwd, "flint.config.ts"),
+						use: [{ files: [filePath], rules: [rule] }],
+					},
+					host,
+					{ ignoreCache: true, skipCacheWrite: true },
+				);
+				const fileResults = results.allFileResults.get(
+					normalizePath(filePathAbsolute),
+				);
+				assert.ok(fileResults);
+				return fileResults.reports;
+			}
 
 			expect(cwd).not.toBe(process.cwd());
-			const reports = await runLintRule(rule, filesAndOptions, host);
-			expect(reports.get(filePath)).toHaveLength(1);
-			const suggestion = reports.get(filePath)?.[0]?.suggestions?.[0];
+			const reports = await lint();
+			expect(reports).toHaveLength(1);
+			const suggestion = reports[0]?.suggestions?.[0];
 			assert.ok(suggestion && isSuggestionForFiles(suggestion));
 			expect(suggestion).toEqual({
 				files: {
@@ -72,9 +82,7 @@ describe("dictionary suggestions", () => {
 			);
 			await expect(host.readFile(processConfigPath)).resolves.toBe("{}");
 			await expect(host.readFile(filePathAbsolute)).resolves.toBe("incorect");
-			await expect(runLintRule(rule, filesAndOptions, host)).resolves.toEqual(
-				new Map(),
-			);
+			await expect(lint()).resolves.toEqual([]);
 		},
 	);
 });
