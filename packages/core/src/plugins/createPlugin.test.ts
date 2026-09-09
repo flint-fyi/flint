@@ -73,7 +73,10 @@ describe(createPlugin, () => {
 				messages: stubMessages,
 				setup: vi.fn(),
 			});
+		});
 
+		// eslint-disable-next-line vitest/expect-expect
+		it("rejects pluginId in rule about metadata", () => {
 			const aboutWithPluginId = {
 				description: "",
 				id: "withPluginIdProperty",

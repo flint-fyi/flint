@@ -70,11 +70,14 @@ export interface RuleAbout<Preset extends string = string> extends BaseAbout {
 }
 
 /**
- * Metadata a rule passes to its plugin's rule creator, which supplies the plugin ID itself.
+ * Metadata a rule passes to its plugin's rule creator.
  */
 export interface RuleCreatorAbout<
 	Preset extends string = string,
 > extends RuleAbout<Preset> {
+	/**
+	 * This is set by the rule creator, so rules shouldn't try to pass it themselves.
+	 */
 	readonly pluginId?: never;
 }
 

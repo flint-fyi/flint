@@ -12,19 +12,19 @@ import type {
 } from "../types/rules.ts";
 import type { AnyOptionalSchema } from "../types/shapes.ts";
 
-export interface RuleCreatorOptions<Presets extends string> {
+export interface RuleCreatorOptions<Preset extends string> {
 	docs: (ruleId: string) => string;
 	pluginId: string;
-	presets: readonly Presets[];
+	presets: readonly Preset[];
 }
 
 export class RuleCreator<
-	Presets extends string,
-	const About extends RuleCreatorAbout = RuleCreatorAbout<Presets>,
+	Preset extends string,
+	const About extends RuleCreatorAbout = RuleCreatorAbout<Preset>,
 > {
-	#options: RuleCreatorOptions<Presets>;
+	#options: RuleCreatorOptions<Preset>;
 
-	constructor(options: RuleCreatorOptions<Presets>) {
+	constructor(options: RuleCreatorOptions<Preset>) {
 		this.#options = options;
 	}
 
