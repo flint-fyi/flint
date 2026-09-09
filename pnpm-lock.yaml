@@ -288,8 +288,8 @@ catalogs:
       specifier: 74.0.0
       version: 74.0.0
     eslint-plugin-vue:
-      specifier: 10.10.0
-      version: 10.10.0
+      specifier: 10.11.0
+      version: 10.11.0
     eslint-plugin-yml:
       specifier: 3.8.1
       version: 3.8.1
@@ -1681,7 +1681,7 @@ importers:
         version: 74.0.0(eslint@10.10.0)
       eslint-plugin-vue:
         specifier: catalog:comparisons
-        version: 10.10.0(@typescript-eslint/parser@8.69.0)(eslint@10.10.0)(vue-eslint-parser@10.4.1)
+        version: 10.11.0(@typescript-eslint/parser@8.69.0)(eslint@10.10.0)(vue-eslint-parser@10.4.1)
       eslint-plugin-yml:
         specifier: catalog:comparisons
         version: 3.8.1(eslint@10.10.0)
@@ -5455,8 +5455,8 @@ packages:
     peerDependencies:
       eslint: '>=10.4'
 
-  eslint-plugin-vue@10.10.0:
-    resolution: {integrity: sha512-dL9x9rBHqqNcByWiLOHK6L0SB97V82/NC0cZRn9cXPjM7pCuWlpQQP9bFH4vjBv80ej1ZpzAkuD8zWH1o9bZbA==}
+  eslint-plugin-vue@10.11.0:
+    resolution: {integrity: sha512-fGt38SsaPCZ2FmA3bX/3vOW2qdsPNx0/9x+7Aab6NMX++PhynMtK4LWC4vzXgfQBCqpUAler18H38GA+NBAd0Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       '@stylistic/eslint-plugin': ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
@@ -11755,7 +11755,7 @@ snapshots:
       strip-indent: 4.1.1
       yaml: 2.9.0
 
-  eslint-plugin-vue@10.10.0(@typescript-eslint/parser@8.69.0)(eslint@10.10.0)(vue-eslint-parser@10.4.1):
+  eslint-plugin-vue@10.11.0(@typescript-eslint/parser@8.69.0)(eslint@10.10.0)(vue-eslint-parser@10.4.1):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.10.0)
       eslint: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
