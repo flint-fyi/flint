@@ -25,7 +25,7 @@ catalogs:
     "@ianvs/prettier-plugin-sort-imports": 4.7.1
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
-    "@types/node": 26.4.1
+    "@types/node": 26.5.0
     "@types/omit-empty": 1.0.4
     "@types/picomatch": 4.0.3
     "@vitest/coverage-v8": 5.0.0
