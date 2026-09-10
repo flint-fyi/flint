@@ -31,7 +31,6 @@ import { mapFileResultsToDiagnostics } from "./diagnostics.ts";
 import { filePathToUri } from "./filePathToUri.ts";
 import {
 	isStructuralFilePath,
-	lintChangedFiles,
 	normalizeFilePath,
 } from "./lintSessionChanges.ts";
 
@@ -240,7 +239,7 @@ export function startServer(): void {
 
 		if (!nextConfigFileName) {
 			configFileName = undefined;
-			lintSession?.dispose();
+			lintSession?.[Symbol.dispose]();
 			lintSession = undefined;
 			storedResults.clear();
 			connection.console.error(`No flint.config.* found in ${workspaceRoot}`);
@@ -256,11 +255,11 @@ export function startServer(): void {
 		);
 
 		if (expectedStructuralVersion !== structuralVersion) {
-			nextLintSession.dispose();
+			nextLintSession[Symbol.dispose]();
 			return undefined;
 		}
 
-		lintSession?.dispose();
+		lintSession?.[Symbol.dispose]();
 		lintSession = nextLintSession;
 		storedResults.clear();
 
@@ -280,30 +279,22 @@ export function startServer(): void {
 		const isStale = () =>
 			expectedStructuralVersion !== structuralVersion ||
 			session !== lintSession;
+		const publishedUris = new Set<string>();
 
-		const { changedResults, dependentFilePaths } = await lintChangedFiles(
-			session,
-			filePaths,
-			{ skipLanguageReports: false },
-		);
-		if (isStale()) {
-			return undefined;
-		}
+		await session.lintChangedFiles(filePaths, {
+			async onResults(results) {
+				if (isStale()) {
+					return;
+				}
 
-		const publishedUris = await publishResults(changedResults);
-
-		const dependentResults = await session.lintFiles(dependentFilePaths, {
+				for (const uri of await publishResults(results)) {
+					publishedUris.add(uri);
+				}
+			},
 			skipLanguageReports: false,
 		});
-		if (isStale()) {
-			return undefined;
-		}
 
-		for (const uri of await publishResults(dependentResults)) {
-			publishedUris.add(uri);
-		}
-
-		return publishedUris;
+		return isStale() ? undefined : publishedUris;
 	}
 
 	async function loadConfigDefinition(configFileName: string) {
@@ -439,7 +430,7 @@ export function startServer(): void {
 	connection.onShutdown(() => {
 		watchedFilesSubscription?.[Symbol.dispose]();
 		watchedFilesSubscription = undefined;
-		lintSession?.dispose();
+		lintSession?.[Symbol.dispose]();
 	});
 
 	documents.listen(connection);

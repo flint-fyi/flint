@@ -49,8 +49,28 @@ async function flushQueuedWork() {
 
 const mocks = vi.hoisted(() => {
 	const lintAll = vi.fn();
-	const lintFiles =
-		vi.fn<(filePaths: Iterable<string>) => Promise<Map<string, FileResults>>>();
+	const lintBatches: Map<string, FileResults>[][] = [];
+	const lintChangedFiles = vi.fn(
+		async (
+			_filePaths: Iterable<string>,
+			options?: {
+				onResults?: (results: Map<string, FileResults>) => Promise<void> | void;
+			},
+		) => {
+			const allResults = new Map<string, FileResults>();
+
+			for (const batch of lintBatches.shift() ?? [
+				new Map<string, FileResults>(),
+			]) {
+				for (const [filePath, fileResults] of batch) {
+					allResults.set(filePath, fileResults);
+				}
+				await options?.onResults?.(batch);
+			}
+
+			return allResults;
+		},
+	);
 	const state = {
 		connection: undefined as unknown as {
 			callbacks: {
@@ -80,13 +100,13 @@ const mocks = vi.hoisted(() => {
 			fireDidClose(document: { getText(): string; uri: string }): void;
 		},
 		lintAll,
-		lintFiles,
+		lintBatches,
+		lintChangedFiles,
 		lintSessionCreate: vi.fn(),
 		session: {
-			dispose: vi.fn(),
-			getTransitiveDependentsOf: vi.fn(() => new Set()),
 			lintAll,
-			lintFiles,
+			lintChangedFiles,
+			[Symbol.dispose]: vi.fn(),
 		},
 		validateConfigDefinition: vi.fn<() => string | undefined>(() => undefined),
 	};
@@ -245,15 +265,13 @@ describe("startServer", () => {
 			"export default { definition: { use: [] } };\n",
 		);
 		mocks.lintAll.mockReset();
-		mocks.lintFiles.mockReset();
-		mocks.lintFiles.mockResolvedValue(new Map());
+		mocks.lintBatches.length = 0;
+		mocks.lintChangedFiles.mockClear();
 		mocks.lintSessionCreate.mockReset();
 		mocks.lintSessionCreate.mockImplementation(() =>
 			Promise.resolve(mocks.session),
 		);
-		mocks.session.dispose.mockReset();
-		mocks.session.getTransitiveDependentsOf.mockReset();
-		mocks.session.getTransitiveDependentsOf.mockReturnValue(new Set());
+		mocks.session[Symbol.dispose].mockReset();
 		mocks.validateConfigDefinition.mockReset();
 		mocks.validateConfigDefinition.mockReturnValue(undefined);
 		mocks.directoryEntries = [{ name: "flint.config.mjs" }];
@@ -349,7 +367,7 @@ describe("startServer", () => {
 
 			mocks.connection.callbacks.shutdown?.();
 
-			expect(mocks.session.dispose).toHaveBeenCalled();
+			expect(mocks.session[Symbol.dispose]).toHaveBeenCalled();
 		},
 	);
 
@@ -370,9 +388,7 @@ describe("startServer", () => {
 		const openedFileUri = pathToFileURL(openedFilePath).href;
 
 		mocks.lintAll.mockReturnValue(initialFullLint.promise);
-		mocks.lintFiles.mockResolvedValue(
-			new Map([[openedFilePath, openedFileResults]]),
-		);
+		mocks.lintBatches.push([new Map([[openedFilePath, openedFileResults]])]);
 
 		await startInitializedServer();
 
@@ -385,7 +401,7 @@ describe("startServer", () => {
 		await vi.advanceTimersByTimeAsync(1_000);
 
 		expect(mocks.connection.console.error).not.toHaveBeenCalled();
-		expect(mocks.lintFiles).toHaveBeenCalled();
+		expect(mocks.lintChangedFiles).toHaveBeenCalled();
 
 		try {
 			expect(mocks.connection.sendDiagnostics).toHaveBeenCalledWith({
@@ -426,22 +442,16 @@ describe("startServer", () => {
 			transitiveDependentFilePath,
 		).href;
 
-		mocks.session.getTransitiveDependentsOf.mockReturnValue(
-			new Set([dependentFilePath, transitiveDependentFilePath]),
-		);
-		mocks.lintFiles
-			.mockResolvedValueOnce(
-				new Map([[changedFilePath, createFileResults("changed")]]),
-			)
-			.mockResolvedValueOnce(
-				new Map([
-					[dependentFilePath, createFileResults("dependent")],
-					[
-						transitiveDependentFilePath,
-						createFileResults("transitive dependent"),
-					],
-				]),
-			);
+		mocks.lintBatches.push([
+			new Map([[changedFilePath, createFileResults("changed")]]),
+			new Map([
+				[dependentFilePath, createFileResults("dependent")],
+				[
+					transitiveDependentFilePath,
+					createFileResults("transitive dependent"),
+				],
+			]),
+		]);
 
 		await startInitializedServer();
 		mocks.documents.fireDidChangeContent(
@@ -449,12 +459,9 @@ describe("startServer", () => {
 		);
 		await flushQueuedWork();
 
-		expect(mocks.lintFiles).toHaveBeenCalledTimes(2);
-		expect(Array.from(mocks.lintFiles.mock.calls[0]?.[0] ?? [])).toEqual([
-			changedFilePath,
-		]);
-		expect(new Set(mocks.lintFiles.mock.calls[1]?.[0] ?? [])).toEqual(
-			new Set([dependentFilePath, transitiveDependentFilePath]),
+		expect(mocks.lintChangedFiles).toHaveBeenCalledTimes(1);
+		expect(Array.from(mocks.lintChangedFiles.mock.calls[0]?.[0] ?? [])).toEqual(
+			[changedFilePath],
 		);
 		expect(mocks.connection.sendDiagnostics.mock.calls[0]?.[0]).toEqual(
 			expect.objectContaining({ uri: changedFileUri }),
@@ -525,14 +532,10 @@ describe("startServer", () => {
 		const filePath = path.join(workspaceRoot, "src/closed.ts");
 		const fileUri = pathToFileURL(filePath).href;
 
-		mocks.lintFiles
-			.mockResolvedValueOnce(
-				new Map([[filePath, createFileResults("open buffer diagnostic")]]),
-			)
-			.mockResolvedValueOnce(new Map())
-			.mockResolvedValueOnce(
-				new Map([[filePath, createFileResults("disk diagnostic")]]),
-			);
+		mocks.lintBatches.push(
+			[new Map([[filePath, createFileResults("open buffer diagnostic")]])],
+			[new Map([[filePath, createFileResults("disk diagnostic")]])],
+		);
 
 		await startInitializedServer();
 		const document = TextDocument.create(
