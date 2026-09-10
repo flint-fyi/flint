@@ -55,7 +55,7 @@ export async function runCliWatch(
 
 			currentTask = currentTask.finally(() => {
 				currentRenderer?.dispose?.();
-				lintSession?.dispose();
+				lintSession?.[Symbol.dispose]();
 				resolve();
 			});
 		}
@@ -82,7 +82,7 @@ export async function runCliWatch(
 		async function rebuildSession() {
 			currentRenderer?.dispose?.();
 			currentRenderer = undefined;
-			lintSession?.dispose();
+			lintSession?.[Symbol.dispose]();
 			lintSession = undefined;
 			knownUnrelatedFilePaths.clear();
 
@@ -114,6 +114,9 @@ export async function runCliWatch(
 		async function lintFiles(session: LintSession, filePaths?: Set<string>) {
 			const changed = new Set<string>();
 			const formatFilePaths = new Set<string>();
+			const lintOptions = {
+				skipLanguageReports: values["skip-language-reports"] ?? false,
+			};
 
 			async function runIteration(
 				nextFilePaths: Set<string> | undefined,
@@ -121,18 +124,14 @@ export async function runCliWatch(
 			): Promise<void> {
 				const filesResults =
 					nextFilePaths == null
-						? await session.lintAll({
-								skipLanguageReports: values["skip-language-reports"] ?? false,
-							})
-						: await session.lintFiles(nextFilePaths, {
-								skipLanguageReports: values["skip-language-reports"] ?? false,
-							});
+						? await session.lintAll(lintOptions)
+						: await session.lintFiles(nextFilePaths, lintOptions);
 
 				for (const filePath of filesResults.keys()) {
 					formatFilePaths.add(filePath);
 				}
 
-				if (!values.fix) {
+				if (!values.fix || iteration >= maximumFixIterations) {
 					return;
 				}
 
@@ -150,15 +149,7 @@ export async function runCliWatch(
 					formatFilePaths.add(filePath);
 				}
 
-				if (iteration + 1 < maximumFixIterations) {
-					await runIteration(
-						new Set([
-							...fixedFilePaths,
-							...session.getTransitiveDependentsOf(fixedFilePaths),
-						]),
-						iteration + 1,
-					);
-				}
+				await runIteration(new Set(fixedFilePaths), iteration + 1);
 			}
 
 			await runIteration(filePaths, 0);
@@ -244,9 +235,6 @@ export async function runCliWatch(
 
 			for (const changedFilePath of changedFilePaths) {
 				const normalizedPath = pathKey(changedFilePath, isCaseSensitiveFS);
-				const dependents = lintSession.getTransitiveDependentsOf([
-					changedFilePath,
-				]);
 
 				if (lintedFilePaths.has(normalizedPath)) {
 					if (host.fileTypeSync(changedFilePath) !== "file") {
@@ -254,18 +242,15 @@ export async function runCliWatch(
 						break;
 					}
 					filePaths.add(changedFilePath);
-				} else if (dependents.size) {
+				} else if (lintSession.hasDependents(changedFilePath)) {
 					if (host.fileTypeSync(changedFilePath) == null) {
 						filesetChanged = true;
 						break;
 					}
+					filePaths.add(changedFilePath);
 				} else if (!knownUnrelatedFilePaths.has(normalizedPath)) {
 					filesetChanged = true;
 					break;
-				}
-
-				for (const filePath of dependents) {
-					filePaths.add(filePath);
 				}
 			}
 
@@ -284,7 +269,7 @@ export async function runCliWatch(
 						const normalizedPath = pathKey(filePath, isCaseSensitiveFS);
 						if (
 							!currentLintedFilePaths.has(normalizedPath) &&
-							!rebuiltSession.getTransitiveDependentsOf([filePath]).size
+							!rebuiltSession.hasDependents(filePath)
 						) {
 							knownUnrelatedFilePaths.add(normalizedPath);
 						}

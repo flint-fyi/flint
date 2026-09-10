@@ -96,10 +96,8 @@ export const typescriptLanguage: Language<
 
 		function createFile(data: FileAboutData) {
 			log("Opening client file:", data.filePathAbsolute);
-			if (!openClientFilePaths.has(data.filePathAbsolute)) {
-				service.openClientFile(data.filePathAbsolute);
-				openClientFilePaths.add(data.filePathAbsolute);
-			}
+			service.openClientFile(data.filePathAbsolute, data.sourceText);
+			openClientFilePaths.add(data.filePathAbsolute);
 
 			log("Retrieving client services:", data.filePathAbsolute);
 			const scriptInfo = nullThrows(

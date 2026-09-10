@@ -39,11 +39,10 @@ export class LintSession implements Disposable {
 
 	/**
 	 * Reverse index: dependency key -> file paths that depend on it.
-	 * Maintained as results are stored so getTransitiveDependentsOf avoids
+	 * Maintained as results are stored so collecting files to lint avoids
 	 * rescanning every stored result on each call.
 	 */
 	readonly #dependentsByDependencyKey = new Map<string, Set<string>>();
-	#disposed = false;
 	readonly #filePathByKey = new Map<string, string>();
 	readonly #host: LinterHost;
 	readonly #languageFileFactories: CachedFactory<
@@ -86,47 +85,8 @@ export class LintSession implements Disposable {
 		);
 	}
 
-	dispose(): void {
-		if (this.#disposed) {
-			return;
-		}
-
-		this.#disposed = true;
-
-		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
-			fileFactory[Symbol.dispose]?.();
-		}
-	}
-
-	getTransitiveDependentsOf(filePaths: Iterable<string>): Set<string> {
-		this.#assertNotDisposed();
-
-		const dependents = new Set<string>();
-		const inputKeys = new Set(
-			Array.from(filePaths, (filePath) => this.#toPathKey(filePath)),
-		);
-		const queuedKeys = Array.from(inputKeys);
-		const visitedKeys = new Set(inputKeys);
-
-		for (const currentKey of queuedKeys) {
-			const directDependents = this.#dependentsByDependencyKey.get(currentKey);
-			if (directDependents == null) {
-				continue;
-			}
-
-			for (const filePath of directDependents) {
-				const fileKey = this.#toPathKey(filePath);
-				if (visitedKeys.has(fileKey)) {
-					continue;
-				}
-
-				visitedKeys.add(fileKey);
-				dependents.add(filePath);
-				queuedKeys.push(fileKey);
-			}
-		}
-
-		return dependents;
+	hasDependents(filePath: string): boolean {
+		return this.#dependentsByDependencyKey.has(this.#toPathKey(filePath));
 	}
 
 	async lintAll(
@@ -139,9 +99,7 @@ export class LintSession implements Disposable {
 		filePaths: Iterable<string>,
 		options?: LintSessionLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
-		this.#assertNotDisposed();
-
-		const lintedFilePaths = this.#resolveLintedFilePaths(filePaths);
+		const lintedFilePaths = this.#collectFilePathsToLint(filePaths);
 		if (!lintedFilePaths.size) {
 			return new Map();
 		}
@@ -189,7 +147,9 @@ export class LintSession implements Disposable {
 	}
 
 	[Symbol.dispose](): void {
-		this.dispose();
+		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
+			fileFactory[Symbol.dispose]?.();
+		}
 	}
 
 	#addFilesRequiredByRules(filePaths: Set<string>): void {
@@ -207,23 +167,51 @@ export class LintSession implements Disposable {
 		}
 	}
 
-	#assertNotDisposed(): void {
-		if (this.#disposed) {
-			throw new Error("LintSession has already been disposed.");
-		}
-	}
-
-	#resolveLintedFilePaths(filePaths: Iterable<string>): Set<string> {
-		const lintedFilePaths = new Set<string>();
+	#collectFilePathsToLint(filePaths: Iterable<string>): Set<string> {
+		const filePathsToLint = new Set<string>();
+		const queuedKeys: string[] = [];
+		const visitedKeys = new Set<string>();
 
 		for (const filePath of filePaths) {
-			const lintedFilePath = this.#filePathByKey.get(this.#toPathKey(filePath));
-			if (lintedFilePath != null) {
-				lintedFilePaths.add(lintedFilePath);
+			const fileKey = this.#toPathKey(filePath);
+			if (visitedKeys.has(fileKey)) {
+				continue;
+			}
+
+			visitedKeys.add(fileKey);
+			queuedKeys.push(fileKey);
+
+			const lintedFilePath = this.#filePathByKey.get(fileKey);
+			if (lintedFilePath == null) {
+				continue;
+			}
+
+			if (this.storedResults.get(lintedFilePath)?.invalidatesCache) {
+				return new Set(this.allFilePaths);
+			}
+
+			filePathsToLint.add(lintedFilePath);
+		}
+
+		for (const currentKey of queuedKeys) {
+			const directDependents = this.#dependentsByDependencyKey.get(currentKey);
+			if (directDependents == null) {
+				continue;
+			}
+
+			for (const dependentFilePath of directDependents) {
+				const dependentKey = this.#toPathKey(dependentFilePath);
+				if (visitedKeys.has(dependentKey)) {
+					continue;
+				}
+
+				visitedKeys.add(dependentKey);
+				filePathsToLint.add(dependentFilePath);
+				queuedKeys.push(dependentKey);
 			}
 		}
 
-		return lintedFilePaths;
+		return filePathsToLint;
 	}
 
 	#storeResults(filePath: string, fileResults: FinalizedFileResults): void {

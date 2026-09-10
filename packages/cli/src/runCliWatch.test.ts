@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
 	createLanguage,
 	createVFSLinterHost,
+	maximumFixIterations,
 	RuleCreator,
 	type FileAboutData,
 	type ProcessedConfigDefinition,
@@ -173,9 +174,43 @@ describe(runCliWatch, () => {
 			project.aPath,
 		]);
 	});
+
+	it("lints the fixed files once more after the last fix iteration", async () => {
+		const project = createTestProject({ appendFixText: "!" });
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		let quit: (() => void) | undefined;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						quit?.();
+						return Promise.resolve();
+					},
+				}) satisfies Renderer,
+			{ ...values, fix: true },
+		);
+
+		const fixedText = `a1${"!".repeat(maximumFixIterations)}`;
+
+		expect(project.host.readFileSync(project.aPath)).toBe(fixedText);
+		expect(
+			project.visitedFilePaths.filter((filePath) => filePath === project.aPath),
+		).toHaveLength(maximumFixIterations + 1);
+		expect(project.visitedSourceTexts.at(-1)).toBe(fixedText);
+	});
 });
 
-function createTestProject({ fixText }: { fixText?: string } = {}) {
+function createTestProject({
+	appendFixText,
+	fixText,
+}: { appendFixText?: string; fixText?: string } = {}) {
 	const root = "/root";
 	const aPath = path.posix.join(root, "a.txt");
 	const bPath = path.posix.join(root, "b.txt");
@@ -183,6 +218,7 @@ function createTestProject({ fixText }: { fixText?: string } = {}) {
 	host.vfsUpsertFile(aPath, "a1");
 	host.vfsUpsertFile(bPath, "b1");
 	const visitedFilePaths: string[] = [];
+	const visitedSourceTexts: string[] = [];
 	const createFileFactory = vi.fn(() => ({
 		createFile(data: FileAboutData) {
 			return {
@@ -221,6 +257,20 @@ function createTestProject({ fixText }: { fixText?: string } = {}) {
 				visitors: {
 					file(file) {
 						visitedFilePaths.push(file.filePath);
+						visitedSourceTexts.push(file.sourceText);
+						if (appendFixText && file.filePath === aPath) {
+							context.report({
+								fix: {
+									range: {
+										begin: file.sourceText.length,
+										end: file.sourceText.length,
+									},
+									text: appendFixText,
+								},
+								message: "found",
+								range: { begin: 0, end: file.sourceText.length },
+							});
+						}
 						if (
 							fixText &&
 							file.filePath === aPath &&
@@ -258,5 +308,6 @@ function createTestProject({ fixText }: { fixText?: string } = {}) {
 		host,
 		root,
 		visitedFilePaths,
+		visitedSourceTexts,
 	};
 }

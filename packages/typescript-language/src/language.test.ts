@@ -1,82 +1,112 @@
-import ts from "typescript";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import type {
+	createProjectService,
+	CreateProjectServiceSettings,
+} from "@typescript-eslint/project-service";
+import type ts from "typescript";
+import { describe, expect, it, vi } from "vitest";
 
-import { createVFSLinterHost } from "@flint.fyi/core";
+import { createVFSLinterHost, type LinterHost } from "@flint.fyi/core";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { typescriptLanguage } from "./language.ts";
 
-const mocks = vi.hoisted(() => {
-	const sourceFiles = new Map<string, ts.SourceFile>();
-	const program = {
-		getSourceFile: vi.fn((filePath: string) => sourceFiles.get(filePath)),
-		getTypeChecker: vi.fn(() => ({})),
-	};
-	const languageService = {
-		getProgram: vi.fn(() => program),
-	};
-	const defaultProject = {
-		getLanguageService: vi.fn(() => languageService),
-	};
-	const service = {
-		closeClientFile: vi.fn(),
-		getDefaultProjectForFile: vi.fn(() => defaultProject),
-		getScriptInfo: vi.fn((fileName: string) => ({ fileName })),
-		openClientFile: vi.fn(),
-	};
+const projectServices = vi.hoisted(() => [] as ts.server.ProjectService[]);
+
+vi.mock("@typescript-eslint/project-service", async (importOriginal) => {
+	const original = await importOriginal<{
+		createProjectService: typeof createProjectService;
+	}>();
 
 	return {
-		createProjectService: vi.fn(() => ({ service })),
-		service,
-		sourceFiles,
+		...original,
+		createProjectService(settings?: CreateProjectServiceSettings) {
+			const result = original.createProjectService(settings);
+			projectServices.push(result.service);
+			return result;
+		},
 	};
 });
 
-vi.mock("@typescript-eslint/project-service", () => ({
-	createProjectService: mocks.createProjectService,
-}));
+const aPath = "/root/a.ts";
+const bPath = "/root/b.ts";
 
 describe("typescriptLanguage", () => {
-	beforeEach(() => {
-		mocks.createProjectService.mockClear();
-		mocks.service.closeClientFile.mockClear();
-		mocks.service.getDefaultProjectForFile.mockClear();
-		mocks.service.getScriptInfo.mockClear();
-		mocks.service.openClientFile.mockClear();
-		mocks.sourceFiles.clear();
-	});
-
 	it("closes remaining open client files when the factory is disposed", () => {
-		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
-		const aPath = "/root/a.ts";
-		const bPath = "/root/b.ts";
-		mocks.sourceFiles.set(
-			aPath,
-			ts.createSourceFile(aPath, "", ts.ScriptTarget.Latest, true),
-		);
-		mocks.sourceFiles.set(
-			bPath,
-			ts.createSourceFile(bPath, "", ts.ScriptTarget.Latest, true),
-		);
+		const { factory, service } = createTestFactory();
+		const closeClientFile = vi.spyOn(service, "closeClientFile");
+		const openClientFile = vi.spyOn(service, "openClientFile");
 
-		const factory = typescriptLanguage.createFileFactory(host);
-		const aFile = factory.createFile({
-			filePath: aPath,
-			filePathAbsolute: aPath,
-			sourceText: "",
-		});
-		factory.createFile({
-			filePath: bPath,
-			filePathAbsolute: bPath,
-			sourceText: "",
-		});
+		const aFile = factory.createFile(
+			createAboutData(aPath, "export const a = 1;"),
+		);
+		factory.createFile(createAboutData(bPath, "export const b = 1;"));
 
 		aFile[Symbol.dispose]();
 		factory[Symbol.dispose]?.();
 
-		expect(mocks.service.openClientFile.mock.calls).toEqual([[aPath], [bPath]]);
-		expect(mocks.service.closeClientFile.mock.calls).toEqual([
-			[aPath],
-			[bPath],
+		expect(openClientFile.mock.calls).toEqual([
+			[aPath, "export const a = 1;"],
+			[bPath, "export const b = 1;"],
 		]);
+		expect(closeClientFile.mock.calls).toEqual([[aPath], [bPath]]);
+	});
+
+	it("reads updated source text when a changed file is recreated before file watchers fire", () => {
+		const { factory, vfs } = createTestFactory();
+
+		const first = factory.createFile(
+			createAboutData(aPath, "export const a = 1;"),
+		);
+		expect(first.services.sourceFile.text).toBe("export const a = 1;");
+		first[Symbol.dispose]();
+
+		vfs.vfsUpsertFile(aPath, "export const a = 2;");
+		const second = factory.createFile(
+			createAboutData(aPath, "export const a = 2;"),
+		);
+
+		expect(second.services.sourceFile.text).toBe("export const a = 2;");
 	});
 });
+
+function createAboutData(filePathAbsolute: string, sourceText: string) {
+	return {
+		filePath: filePathAbsolute,
+		filePathAbsolute,
+		sourceText,
+	};
+}
+
+function createTestFactory() {
+	const vfs = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+	vfs.vfsUpsertFile(
+		"/root/tsconfig.json",
+		JSON.stringify({ files: ["a.ts", "b.ts"] }),
+	);
+	vfs.vfsUpsertFile(aPath, "export const a = 1;");
+	vfs.vfsUpsertFile(bPath, "export const b = 1;");
+
+	const hostWithoutWatchers: LinterHost = {
+		...vfs,
+		watchDirectorySync: () => ({
+			[Symbol.dispose]() {
+				return undefined;
+			},
+		}),
+		watchFileSync: () => ({
+			[Symbol.dispose]() {
+				return undefined;
+			},
+		}),
+	};
+	const factory = typescriptLanguage.createFileFactory(hostWithoutWatchers);
+
+	return {
+		factory,
+		service: nullThrows(
+			projectServices.at(-1),
+			"Expected the factory to create a project service",
+		),
+		vfs,
+	};
+}
