@@ -92,7 +92,7 @@ export function parseTestCaseInvalid(
 		"options",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
-	const snapshot = findProperty(node.properties, "snapshot", isStaticString);
+	const snapshot = findProperty(node.properties, "snapshot", isTestCaseCode);
 	if (!snapshot) {
 		return;
 	}
@@ -112,7 +112,7 @@ export function parseTestCaseInvalid(
 			snapshot,
 		},
 		options: options && tsAstToLiteral(options),
-		snapshot: snapshot.text,
+		snapshot: getTestCaseCode(snapshot),
 	};
 }
 

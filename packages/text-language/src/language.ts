@@ -17,18 +17,19 @@ export const textLanguage: Language<TextNodes, TextFileServices> =
 				},
 			};
 		},
-		runFileVisitors: (file, options, runtime) => {
-			if (!runtime.visitors) {
-				return;
-			}
+		runFileVisitors: (file, fileVisitors) => {
+			const { sourceText } = file.services;
+			let lines: string[] | undefined;
 
-			const visitorServices = { options, ...file.services };
+			for (const { services, visitors } of fileVisitors) {
+				visitors.file?.(sourceText, services);
 
-			runtime.visitors.file?.(file.services.sourceText, visitorServices);
+				if (visitors.line) {
+					lines ??= sourceText.split(/\r\n|\n|\r/);
 
-			if (runtime.visitors.line) {
-				for (const line of file.services.sourceText.split(/\r\n|\n|\r/)) {
-					runtime.visitors.line(line, visitorServices);
+					for (const line of lines) {
+						visitors.line(line, services);
+					}
 				}
 			}
 		},

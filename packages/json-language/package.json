@@ -26,7 +26,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@humanwhocodes/momoa": "^3.3.10"
+		"@humanwhocodes/momoa": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

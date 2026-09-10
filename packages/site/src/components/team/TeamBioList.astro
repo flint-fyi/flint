@@ -13,7 +13,9 @@ const { bios, width = "half" } = Astro.props;
 ---
 
 <ul class="team-bio-list">
-	{bios.map((bio) => <TeamBio {...bio} width={width} />)}
+	{bios.map((bio) => (
+		<TeamBio {...bio} width={width} />
+	))}
 </ul>
 
 <style>

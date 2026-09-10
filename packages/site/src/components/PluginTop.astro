@@ -20,20 +20,20 @@ const npmPackage =
 		<InlineMarkdown markdown={plugin.description} />
 		<br />
 		<InlineMarkdown
-			markdown={group === "core"
-				? `This plugin comes packaged with the [\`${npmPackage}\`](${npmPackage}) npm package.`
-				: `This plugin is provided in a standalone [\`${npmPackage}\`](https://npmjs.com/package/${npmPackage}) npm package.`}
+			markdown={
+				group === "core"
+					? `This plugin comes packaged with the [\`${npmPackage}\`](${npmPackage}) npm package.`
+					: `This plugin is provided in a standalone [\`${npmPackage}\`](https://npmjs.com/package/${npmPackage}) npm package.`
+			}
 		/>
 	</p>
 </div>
 
-{
-	group === "focused" && (
-		<div class="plugin-top-focused">
-			<PackageManagers type="install" pkg={npmPackage} />
-		</div>
-	)
-}
+{group === "focused" && (
+	<div class="plugin-top-focused">
+		<PackageManagers type="install" pkg={npmPackage} />
+	</div>
+)}
 
 <style>
 	.plugin-top-main {

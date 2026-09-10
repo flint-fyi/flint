@@ -371,6 +371,40 @@ ruleTester.describe(rule, {
 
 `,
 		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [
+        { code: "a", snapshot: String.raw\`a\` },
+        { code: "a", snapshot: String.raw\`a\` },
+    ]
+});
+
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [
+        { code: "a", snapshot: String.raw\`a\` },
+        { code: "a", snapshot: String.raw\`a\` },
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ]
+});
+
+`,
+		},
 	],
 	valid: [
 		`

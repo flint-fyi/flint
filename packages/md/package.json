@@ -28,7 +28,7 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/markdown-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"github-slugger": "^2.0.0"
+		"github-slugger": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

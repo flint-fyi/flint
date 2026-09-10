@@ -7,7 +7,6 @@ import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { FileAboutData } from "../types/languages.ts";
-import type { RuleRuntime } from "../types/rules.ts";
 import { runConfig } from "./runConfig.ts";
 
 interface TestNodes {
@@ -94,13 +93,10 @@ function createTestProject({
 		getLanguageReports(file) {
 			return [{ text: file.services.generation.toString() }];
 		},
-		runFileVisitors(file, options, runtime) {
-			(
-				runtime as RuleRuntime<TestNodes, TestServices & { options: object }>
-			).visitors?.Root?.(file.about, {
-				options: options ?? {},
-				...file.services,
-			});
+		runFileVisitors(file, fileVisitors) {
+			for (const { services, visitors } of fileVisitors) {
+				visitors.Root?.(file.about, services);
+			}
 		},
 	});
 	const ruleCreator = new RuleCreator({

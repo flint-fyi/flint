@@ -34,7 +34,7 @@
 		"typescript": "catalog:dev"
 	},
 	"peerDependencies": {
-		"typescript": "^6.0.0"
+		"typescript": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"

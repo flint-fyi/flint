@@ -25,15 +25,15 @@
 		"test": "vitest --project ts"
 	},
 	"dependencies": {
-		"@eslint-community/regexpp": "^4.12.2",
+		"@eslint-community/regexpp": "catalog:prod",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"regexp-ast-analysis": "^0.7.1",
-		"scslre": "^0.3.0",
-		"ts-api-utils": "^2.4.0",
-		"typescript": "^6.0.0",
-		"zod": "^4.3.6"
+		"regexp-ast-analysis": "catalog:prod",
+		"scslre": "catalog:prod",
+		"ts-api-utils": "catalog:prod",
+		"typescript": "catalog:prod",
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

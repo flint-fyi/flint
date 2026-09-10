@@ -28,8 +28,8 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"language-tags": "^2.1.0",
-		"typescript": "^6.0.0"
+		"language-tags": "catalog:prod",
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

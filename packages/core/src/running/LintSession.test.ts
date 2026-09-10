@@ -11,7 +11,6 @@ import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { FileAboutData } from "../types/languages.ts";
-import type { RuleRuntime } from "../types/rules.ts";
 import { LintSession } from "./LintSession.ts";
 
 interface TestNodes {
@@ -265,13 +264,10 @@ async function createTestProject({
 			return [{ text: file.services.sourceText }];
 		},
 		...(orderFilePaths && { orderFilePaths }),
-		runFileVisitors(file, options, runtime) {
-			(
-				runtime as RuleRuntime<TestNodes, TestServices & { options: object }>
-			).visitors?.Root?.(
-				{ filePath: file.about.filePath },
-				{ options: options ?? {}, ...file.services },
-			);
+		runFileVisitors(file, fileVisitors) {
+			for (const { services, visitors } of fileVisitors) {
+				visitors.Root?.({ filePath: file.about.filePath }, services);
+			}
 		},
 	});
 

@@ -194,11 +194,10 @@ function createTestProject({ fixText }: { fixText?: string } = {}) {
 	const language = createLanguage<TestNodes>({
 		about: { name: "Test" },
 		createFileFactory,
-		runFileVisitors(file, options, runtime) {
-			runtime.visitors?.file?.(file.about, {
-				options,
-				...file.services,
-			});
+		runFileVisitors(file, fileVisitors) {
+			for (const { services, visitors } of fileVisitors) {
+				visitors.file?.(file.about, services);
+			}
 		},
 	});
 	const rule = new RuleCreator({

@@ -12,7 +12,6 @@ import type {
 } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
-import { collectRulesFilesAndOptions } from "./collectRulesFilesAndOptions.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
 import { computeUseDefinitions } from "./computeUseDefinitions.ts";
 import {
@@ -51,11 +50,11 @@ export class LintSession implements Disposable {
 		AnyLanguage,
 		AnyLanguageFileFactory
 	>;
-	readonly #rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>;
+	readonly #rulesOptionsByFile: Map<AnyRule, Map<string, object>>;
 
 	private constructor(
 		allFilePaths: Set<string>,
-		rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
+		rulesOptionsByFile: Map<AnyRule, Map<string, object>>,
 		host: LinterHost,
 	) {
 		this.allFilePaths = allFilePaths;
@@ -159,13 +158,9 @@ export class LintSession implements Disposable {
 		);
 
 		try {
-			const rulesFilesAndOptionsByRule = collectRulesFilesAndOptions(
-				this.#rulesOptionsByFile,
-				languageFilesByFilePath,
-			);
-
 			const reportsByFilePath = await runRules(
-				rulesFilesAndOptionsByRule,
+				languageFilesByFilePath,
+				this.#rulesOptionsByFile,
 				this.#host,
 			);
 			const filesResults = new Map<string, FinalizedFileResults>();
