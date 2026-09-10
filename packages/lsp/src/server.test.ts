@@ -65,6 +65,7 @@ const mocks = vi.hoisted(() => {
 				for (const [filePath, fileResults] of batch) {
 					allResults.set(filePath, fileResults);
 				}
+				// flint-disable-next-line performance/loopAwaits
 				await options?.onResults?.(batch);
 			}
 
