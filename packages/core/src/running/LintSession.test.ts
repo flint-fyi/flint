@@ -95,15 +95,69 @@ describe(LintSession, () => {
 
 		await session.lintAll();
 
-		expect(lintedFileNames(await session.lintFiles([cPath]))).toEqual(
+		expect(lintedFileNames(await session.lintChangedFiles([cPath]))).toEqual(
 			new Set(["a.txt", "b.txt", "c.txt"]),
 		);
-		expect(lintedFileNames(await session.lintFiles([bPath]))).toEqual(
+		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
 			new Set(["a.txt", "b.txt"]),
 		);
-		expect(lintedFileNames(await session.lintFiles([aPath]))).toEqual(
+		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
 			new Set(["a.txt"]),
 		);
+	});
+
+	it("lints every file in a dependency cycle once", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		const cPath = path.posix.join(root, "c.txt");
+		dependenciesByFilePath.set(aPath, [bPath]);
+		dependenciesByFilePath.set(bPath, [cPath]);
+		dependenciesByFilePath.set(cPath, [aPath]);
+		using session = await LintSession.create(configDefinition, host);
+
+		await session.lintAll();
+
+		expect(lintedFileNames(await session.lintChangedFiles([cPath]))).toEqual(
+			new Set(["a.txt", "b.txt", "c.txt"]),
+		);
+	});
+
+	it("lints exactly the requested files with lintFiles", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		dependenciesByFilePath.set(aPath, [bPath]);
+		using session = await LintSession.create(configDefinition, host);
+
+		await session.lintAll();
+
+		expect(lintedFileNames(await session.lintFiles([bPath]))).toEqual(
+			new Set(["b.txt"]),
+		);
+	});
+
+	it("reports changed files before their dependents", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		const cPath = path.posix.join(root, "c.txt");
+		dependenciesByFilePath.set(aPath, [bPath]);
+		dependenciesByFilePath.set(bPath, [cPath]);
+		using session = await LintSession.create(configDefinition, host);
+		const passes: Set<string>[] = [];
+
+		await session.lintAll();
+		await session.lintChangedFiles([cPath], {
+			onResults(results) {
+				passes.push(lintedFileNames(results));
+			},
+		});
+
+		expect(passes).toEqual([new Set(["c.txt"]), new Set(["a.txt", "b.txt"])]);
 	});
 
 	it("lints dependents of files outside the session", async () => {
@@ -117,9 +171,9 @@ describe(LintSession, () => {
 		await session.lintAll();
 
 		expect(session.hasDependents(sharedPath)).toBe(true);
-		expect(lintedFileNames(await session.lintFiles([sharedPath]))).toEqual(
-			new Set(["a.txt"]),
-		);
+		expect(
+			lintedFileNames(await session.lintChangedFiles([sharedPath])),
+		).toEqual(new Set(["a.txt"]));
 	});
 
 	it("replaces dependencies when a file is relinted", async () => {
@@ -139,10 +193,10 @@ describe(LintSession, () => {
 		await session.lintFiles([aPath]);
 
 		expect(session.hasDependents(bPath)).toBe(false);
-		expect(lintedFileNames(await session.lintFiles([bPath]))).toEqual(
+		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
 			new Set(["b.txt"]),
 		);
-		expect(lintedFileNames(await session.lintFiles([cPath]))).toEqual(
+		expect(lintedFileNames(await session.lintChangedFiles([cPath]))).toEqual(
 			new Set(["a.txt", "c.txt"]),
 		);
 	});
@@ -157,11 +211,40 @@ describe(LintSession, () => {
 
 		await session.lintAll();
 
-		expect(lintedFileNames(await session.lintFiles([bPath]))).toEqual(
+		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
 			new Set(["b.txt"]),
 		);
-		expect(lintedFileNames(await session.lintFiles([aPath]))).toEqual(
+		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
 			new Set(["a.txt", "b.txt", "c.txt"]),
+		);
+	});
+
+	it("lints every file when a relinted file starts invalidating the cache", async () => {
+		const invalidatingFileNames = new Set<string>();
+		const { configDefinition, host, root } = await createTestProject({
+			invalidatingFileNames,
+		});
+		using session = await LintSession.create(configDefinition, host);
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+
+		await session.lintAll();
+		invalidatingFileNames.add("a.txt");
+
+		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
+			new Set(["a.txt", "b.txt", "c.txt"]),
+		);
+
+		invalidatingFileNames.clear();
+
+		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
+			new Set(["a.txt", "b.txt", "c.txt"]),
+		);
+		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
+			new Set(["a.txt"]),
+		);
+		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
+			new Set(["b.txt"]),
 		);
 	});
 
@@ -205,10 +288,11 @@ describe(LintSession, () => {
 	it("ignores unknown files", async () => {
 		const { configDefinition, host, root } = await createTestProject();
 		using session = await LintSession.create(configDefinition, host);
+		const unknownPath = path.posix.join(root, "unknown.txt");
 
-		expect(
-			await session.lintFiles([path.posix.join(root, "unknown.txt")]),
-		).toEqual(new Map());
+		expect(session.hasFilePath(path.posix.join(root, "a.txt"))).toBe(true);
+		expect(session.hasFilePath(unknownPath)).toBe(false);
+		expect(await session.lintFiles([unknownPath])).toEqual(new Map());
 	});
 });
 

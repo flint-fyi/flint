@@ -4,6 +4,7 @@ import { CachedFactory } from "cached-factory";
 
 import { pathKey } from "@flint.fyi/utils";
 
+import { collectTransitiveDependents } from "../cache/collectTransitiveDependents.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type {
@@ -19,6 +20,12 @@ import {
 	type FinalizedFileResults,
 } from "./finalizeFileResults.ts";
 import { runRules } from "./runRules.ts";
+
+export interface LintSessionChangedLintOptions extends LintSessionLintOptions {
+	onResults?: (
+		results: Map<string, FinalizedFileResults>,
+	) => Promise<void> | void;
+}
 
 export interface LintSessionLintOptions {
 	skipLanguageReports?: boolean;
@@ -89,28 +96,112 @@ export class LintSession implements Disposable {
 		return this.#dependentsByDependencyKey.has(this.#toPathKey(filePath));
 	}
 
+	hasFilePath(filePath: string): boolean {
+		return this.#filePathByKey.has(this.#toPathKey(filePath));
+	}
+
 	async lintAll(
 		options?: LintSessionLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
 		return await this.lintFiles(this.allFilePaths, options);
 	}
 
+	async lintChangedFiles(
+		filePaths: Iterable<string>,
+		options?: LintSessionChangedLintOptions,
+	): Promise<Map<string, FinalizedFileResults>> {
+		const changedKeys = new Set(
+			Array.from(filePaths, (filePath) => this.#toPathKey(filePath)),
+		);
+		const changedFilePaths = this.#resolveFilePaths(filePaths);
+		const allResults = new Map<string, FinalizedFileResults>();
+		let invalidatesCache = Array.from(changedFilePaths).some(
+			(filePath) => this.storedResults.get(filePath)?.invalidatesCache,
+		);
+
+		const lintPass = async (passFilePaths: Set<string>) => {
+			if (!passFilePaths.size) {
+				return;
+			}
+
+			const results = await this.lintFiles(passFilePaths, options);
+			for (const [filePath, fileResults] of results) {
+				allResults.set(filePath, fileResults);
+				if (fileResults.invalidatesCache) {
+					invalidatesCache = true;
+				}
+			}
+
+			await options?.onResults?.(results);
+		};
+
+		await lintPass(changedFilePaths);
+
+		if (!invalidatesCache) {
+			await lintPass(
+				collectTransitiveDependents(
+					changedKeys,
+					(dependencyKey) => this.#dependentsByDependencyKey.get(dependencyKey),
+					(filePath) => this.#toPathKey(filePath),
+				).difference(new Set(allResults.keys())),
+			);
+		}
+
+		if (invalidatesCache) {
+			await lintPass(this.allFilePaths.difference(new Set(allResults.keys())));
+		}
+
+		return allResults;
+	}
+
 	async lintFiles(
 		filePaths: Iterable<string>,
 		options?: LintSessionLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
-		const lintedFilePaths = this.#collectFilePathsToLint(filePaths);
-		if (!lintedFilePaths.size) {
+		const filePathsToLint = this.#resolveFilePaths(filePaths);
+		if (!filePathsToLint.size) {
 			return new Map();
 		}
 
-		this.#addFilesRequiredByRules(lintedFilePaths);
+		this.#addFilesRequiredByRules(filePathsToLint);
+
+		return await this.#lintCollectedFiles(filePathsToLint, options);
+	}
+
+	[Symbol.dispose](): void {
+		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
+			fileFactory[Symbol.dispose]?.();
+		}
+	}
+
+	#addFilesRequiredByRules(filePaths: Set<string>): void {
+		for (const [rule, optionsByFile] of this.#rulesOptionsByFile) {
+			if (
+				!rule.requiresAllFiles ||
+				!filePaths.intersection(optionsByFile).size
+			) {
+				continue;
+			}
+
+			for (const filePath of optionsByFile.keys()) {
+				filePaths.add(filePath);
+			}
+		}
+	}
+
+	async #lintCollectedFiles(
+		filePaths: Set<string>,
+		options?: LintSessionLintOptions,
+	): Promise<Map<string, FinalizedFileResults>> {
+		if (!filePaths.size) {
+			return new Map();
+		}
 
 		const languageFilesByFilePath = collectLanguageFilesByFilePath(
 			this.#rulesOptionsByFile,
 			this.#host,
 			{
-				filePaths: lintedFilePaths,
+				filePaths,
 				languageFileFactories: this.#languageFileFactories,
 			},
 		);
@@ -146,72 +237,17 @@ export class LintSession implements Disposable {
 		}
 	}
 
-	[Symbol.dispose](): void {
-		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
-			fileFactory[Symbol.dispose]?.();
-		}
-	}
-
-	#addFilesRequiredByRules(filePaths: Set<string>): void {
-		for (const [rule, optionsByFile] of this.#rulesOptionsByFile) {
-			if (
-				!rule.requiresAllFiles ||
-				!filePaths.intersection(optionsByFile).size
-			) {
-				continue;
-			}
-
-			for (const filePath of optionsByFile.keys()) {
-				filePaths.add(filePath);
-			}
-		}
-	}
-
-	#collectFilePathsToLint(filePaths: Iterable<string>): Set<string> {
-		const filePathsToLint = new Set<string>();
-		const queuedKeys: string[] = [];
-		const visitedKeys = new Set<string>();
+	#resolveFilePaths(filePaths: Iterable<string>): Set<string> {
+		const resolvedFilePaths = new Set<string>();
 
 		for (const filePath of filePaths) {
-			const fileKey = this.#toPathKey(filePath);
-			if (visitedKeys.has(fileKey)) {
-				continue;
-			}
-
-			visitedKeys.add(fileKey);
-			queuedKeys.push(fileKey);
-
-			const lintedFilePath = this.#filePathByKey.get(fileKey);
-			if (lintedFilePath == null) {
-				continue;
-			}
-
-			if (this.storedResults.get(lintedFilePath)?.invalidatesCache) {
-				return new Set(this.allFilePaths);
-			}
-
-			filePathsToLint.add(lintedFilePath);
-		}
-
-		for (const currentKey of queuedKeys) {
-			const directDependents = this.#dependentsByDependencyKey.get(currentKey);
-			if (directDependents == null) {
-				continue;
-			}
-
-			for (const dependentFilePath of directDependents) {
-				const dependentKey = this.#toPathKey(dependentFilePath);
-				if (visitedKeys.has(dependentKey)) {
-					continue;
-				}
-
-				visitedKeys.add(dependentKey);
-				filePathsToLint.add(dependentFilePath);
-				queuedKeys.push(dependentKey);
+			const lintedFilePath = this.#filePathByKey.get(this.#toPathKey(filePath));
+			if (lintedFilePath != null) {
+				resolvedFilePaths.add(lintedFilePath);
 			}
 		}
 
-		return filePathsToLint;
+		return resolvedFilePaths;
 	}
 
 	#storeResults(filePath: string, fileResults: FinalizedFileResults): void {

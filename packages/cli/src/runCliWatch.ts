@@ -125,7 +125,7 @@ export async function runCliWatch(
 				const filesResults =
 					nextFilePaths == null
 						? await session.lintAll(lintOptions)
-						: await session.lintFiles(nextFilePaths, lintOptions);
+						: await session.lintChangedFiles(nextFilePaths, lintOptions);
 
 				for (const filePath of filesResults.keys()) {
 					formatFilePaths.add(filePath);
@@ -206,15 +206,6 @@ export async function runCliWatch(
 		}
 
 		async function processChanges(changedFilePaths: string[]) {
-			const lintedFilePaths =
-				lintSession == null
-					? new Set<string>()
-					: new Set(
-							Array.from(lintSession.allFilePaths, (filePath) =>
-								pathKey(filePath, isCaseSensitiveFS),
-							),
-						);
-
 			if (
 				changedFilePaths.some((filePath) =>
 					isStructuralFile(filePath, configFileName, cwd),
@@ -234,9 +225,7 @@ export async function runCliWatch(
 			let filesetChanged = false;
 
 			for (const changedFilePath of changedFilePaths) {
-				const normalizedPath = pathKey(changedFilePath, isCaseSensitiveFS);
-
-				if (lintedFilePaths.has(normalizedPath)) {
+				if (lintSession.hasFilePath(changedFilePath)) {
 					if (host.fileTypeSync(changedFilePath) !== "file") {
 						filesetChanged = true;
 						break;
@@ -248,7 +237,11 @@ export async function runCliWatch(
 						break;
 					}
 					filePaths.add(changedFilePath);
-				} else if (!knownUnrelatedFilePaths.has(normalizedPath)) {
+				} else if (
+					!knownUnrelatedFilePaths.has(
+						pathKey(changedFilePath, isCaseSensitiveFS),
+					)
+				) {
 					filesetChanged = true;
 					break;
 				}
@@ -259,19 +252,12 @@ export async function runCliWatch(
 				const rebuiltSession = await run({ rebuild: true });
 
 				if (rebuiltSession != null) {
-					const currentLintedFilePaths = new Set(
-						Array.from(rebuiltSession.allFilePaths, (filePath) =>
-							pathKey(filePath, isCaseSensitiveFS),
-						),
-					);
-
 					for (const filePath of changedFilePaths) {
-						const normalizedPath = pathKey(filePath, isCaseSensitiveFS);
 						if (
-							!currentLintedFilePaths.has(normalizedPath) &&
+							!rebuiltSession.hasFilePath(filePath) &&
 							!rebuiltSession.hasDependents(filePath)
 						) {
-							knownUnrelatedFilePaths.add(normalizedPath);
+							knownUnrelatedFilePaths.add(pathKey(filePath, isCaseSensitiveFS));
 						}
 					}
 				}
