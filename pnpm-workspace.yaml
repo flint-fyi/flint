@@ -58,7 +58,7 @@ catalogs:
     typescript: 6.0.3
     typescript-eslint: 8.69.0
     vitest: 5.0.0
-    vitest-ansi-serializer: 0.2.1
+    vitest-ansi-serializer: 0.3.1
     vue: 3.5.42
     yaml-unist-parser: 3.2.0
 
