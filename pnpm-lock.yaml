@@ -210,8 +210,8 @@ catalogs:
       specifier: 2.5.12
       version: 2.5.12
     '@eslint-community/eslint-plugin-eslint-comments':
-      specifier: 4.7.2
-      version: 4.7.2
+      specifier: 4.8.0
+      version: 4.8.0
     '@eslint/json':
       specifier: 2.1.0
       version: 2.1.0
@@ -325,8 +325,8 @@ catalogs:
       specifier: 1.11.3
       version: 1.11.3
     '@eslint-community/eslint-plugin-eslint-comments':
-      specifier: 4.7.2
-      version: 4.7.2
+      specifier: 4.8.0
+      version: 4.8.0
     '@eslint/js':
       specifier: 10.0.1
       version: 10.0.1
@@ -707,7 +707,7 @@ importers:
         version: 3.0.2
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: catalog:dev
-        version: 4.7.2(eslint@10.10.0)
+        version: 4.8.0(eslint@10.10.0)
       '@eslint/js':
         specifier: catalog:dev
         version: 10.0.1(eslint@10.10.0)
@@ -1600,7 +1600,7 @@ importers:
         version: 1.11.3
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: catalog:comparisons
-        version: 4.7.2(eslint@10.10.0)
+        version: 4.8.0(eslint@10.10.0)
       '@eslint/json':
         specifier: catalog:comparisons
         version: 2.1.0
@@ -3167,8 +3167,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@eslint-community/eslint-plugin-eslint-comments@4.7.2':
-    resolution: {integrity: sha512-LF03qURSwEWm2dz5wtdDCzNk+7Opl0X7q6I3undsaIuNsEiNvRV3BCtqu14Q/6Pzg1tBj44LcxpW2EpSLZStZw==}
+  '@eslint-community/eslint-plugin-eslint-comments@4.8.0':
+    resolution: {integrity: sha512-bzGg2H83F9p55TKzlNUS/LWb1WF2OqdVX67FK1OadDPLVOhabFRERC7TiDJzk//LedaVnRS5uqK/2f/AZ/+VyA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -9367,7 +9367,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@eslint-community/eslint-plugin-eslint-comments@4.7.2(eslint@10.10.0)':
+  '@eslint-community/eslint-plugin-eslint-comments@4.8.0(eslint@10.10.0)':
     dependencies:
       escape-string-regexp: 4.0.0
       eslint: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
