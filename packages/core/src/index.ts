@@ -30,6 +30,7 @@ export {
 	vcsDirectories,
 } from "./host/watcher.ts";
 export { withFileSystemWatcher } from "./host/withFileSystemWatcher.ts";
+export { withRepositoryRoot } from "./host/withRepositoryRoot.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
 export {
 	type FileVisitorSubscription,
@@ -141,8 +142,10 @@ export type {
 export type {
 	AnyRule,
 	AnyRuleDefinition,
+	PluginRuleAbout,
 	Rule,
 	RuleAbout,
+	RuleCreatorAbout,
 	RuleDefinition,
 	RuleRuntime,
 	RuleSetup,

@@ -17,7 +17,7 @@ catalogs:
     "@changesets/cli": 3.0.2
     "@emnapi/core": 1.11.3
     "@emnapi/runtime": 1.11.3
-    "@eslint-community/eslint-plugin-eslint-comments": 4.7.2
+    "@eslint-community/eslint-plugin-eslint-comments": 4.8.0
     "@eslint/json": 2.1.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.3
@@ -25,7 +25,7 @@ catalogs:
     "@ianvs/prettier-plugin-sort-imports": 4.7.1
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
-    "@types/node": 26.4.1
+    "@types/node": 26.5.0
     "@types/omit-empty": 1.0.4
     "@types/picomatch": 4.0.3
     "@vitest/coverage-v8": 5.0.0
@@ -33,8 +33,8 @@ catalogs:
     console-fail-test: 0.6.1
     console-table-without-index: 0.1.1
     debug-for-file: 0.4.2
-    eslint: 10.9.1
-    eslint-plugin-jsdoc: 64.3.5
+    eslint: 10.10.0
+    eslint-plugin-jsdoc: 64.3.6
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-n: 18.3.0
     eslint-plugin-package-json: 1.8.0
@@ -45,7 +45,7 @@ catalogs:
     husky: 9.1.7
     jiti: 2.7.0
     knip: 6.34.0
-    lint-staged: 17.4.1
+    lint-staged: 17.5.0
     pkg-pr-new: 0.0.88
     prettier: 3.8.1
     prettier-plugin-astro: 1.0.0-beta.2
@@ -60,14 +60,14 @@ catalogs:
     typescript-native: npm:typescript@7.1.0-dev.20260830.1
     typescript-eslint: 8.69.0
     vitest: 5.0.0
-    vitest-ansi-serializer: 0.2.1
-    zod: 4.5.4
+    vitest-ansi-serializer: 0.3.1
     vue: 3.5.42
     yaml-unist-parser: 3.2.0
+    zod: 4.5.4
 
   comparisons:
     "@biomejs/biome": 2.5.12
-    "@eslint-community/eslint-plugin-eslint-comments": 4.7.2
+    "@eslint-community/eslint-plugin-eslint-comments": 4.8.0
     "@eslint/json": 2.1.0
     "@eslint/markdown": 8.0.3
     "@next/eslint-plugin-next": 16.3.4
@@ -76,11 +76,11 @@ catalogs:
     "@types/eslint-plugin-promise": 7.3.0
     "@typescript-eslint/eslint-plugin": 8.69.0
     "@vitest/eslint-plugin": 1.6.27
-    eslint: 10.9.1
+    eslint: 10.10.0
     eslint-plugin-astro: 3.1.0
     eslint-plugin-eslint-plugin: 7.6.2
     eslint-plugin-import: 2.32.0
-    eslint-plugin-jsdoc: 64.3.5
+    eslint-plugin-jsdoc: 64.3.6
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.3.0
@@ -93,10 +93,10 @@ catalogs:
     eslint-plugin-solid: 0.17.0
     eslint-plugin-svelte: 3.23.0
     eslint-plugin-unicorn: 74.0.0
-    eslint-plugin-vue: 10.10.0
+    eslint-plugin-vue: 10.11.0
     eslint-plugin-yml: 3.8.1
     markdownlint: 0.41.1
-    oxlint: 1.81.0
+    oxlint: 1.82.0
     typescript-eslint: 8.69.0
     vue-eslint-parser: 10.4.1
 
@@ -160,14 +160,14 @@ catalogs:
 
   site:
     "@astrojs/check": 0.9.10
-    "@astrojs/markdown-remark": 7.3.0
+    "@astrojs/markdown-remark": 7.3.1
     "@astrojs/react": 6.0.5
     "@astrojs/starlight": 0.42.0
     "@expressive-code/core": 0.44.2
     "@konami-emoji-blast/astro": 0.3.0
     "@types/react": 19.2.18
     "@types/react-dom": 19.2.7
-    astro: 7.3.1
+    astro: 7.3.2
     astro-og-canvas: 0.13.1
     canvaskit-wasm: 0.42.0
     clsx: 2.1.1

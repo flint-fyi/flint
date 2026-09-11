@@ -9,6 +9,7 @@ import {
 	createEphemeralLinterHost,
 	createVFSLinterHost,
 	parseOptions,
+	withRepositoryRoot,
 	type AnyLanguage,
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
@@ -85,15 +86,20 @@ export class RuleTester {
 		scope = globalThis,
 		skip,
 	}: RuleTesterOptions = {}) {
+		const virtualRoot =
+			diskBackedFSRoot == null
+				? undefined
+				: path.resolve(
+						process.cwd(),
+						diskBackedFSRoot,
+						"_flint-rule-tester-virtual",
+					);
 		let baseHost =
-			diskBackedFSRoot != null
+			virtualRoot != null
 				? createEphemeralLinterHost(
-						createDiskBackedLinterHost(
-							path.resolve(
-								process.cwd(),
-								diskBackedFSRoot,
-								"_flint-rule-tester-virtual",
-							),
+						withRepositoryRoot(
+							createDiskBackedLinterHost(virtualRoot),
+							virtualRoot,
 						),
 					)
 				: undefined;

@@ -30,7 +30,7 @@ describe(processRuleReport, () => {
 			begin: expect.objectContaining({ column: 1, line: 0 }),
 			end: expect.objectContaining({ column: 2, line: 0 }),
 		});
-		expect(report?.fix).toEqual([]);
+		expect(report?.fix).toBeUndefined();
 		expect(adjustReportRange).toHaveBeenCalledOnce();
 		expect(adjustFixRange).toHaveBeenCalledOnce();
 	});

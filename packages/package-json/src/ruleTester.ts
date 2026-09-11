@@ -8,3 +8,11 @@ export const ruleTester = new RuleTester({
 	describe,
 	it,
 });
+
+export const repositoryRootRuleTester = new RuleTester({
+	afterAll,
+	defaults: { fileName: "package.json" },
+	describe,
+	diskBackedFSRoot: import.meta.dirname,
+	it,
+});
