@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import z from "zod/v4";
 
 import {
@@ -179,7 +179,7 @@ function isCatchCall({ expression }: AST.CallExpression): boolean {
 	}
 	if (expression.kind === ts.SyntaxKind.ElementAccessExpression) {
 		return (
-			ts.isStringLiteral(expression.argumentExpression) &&
+			expression.argumentExpression.kind === SyntaxKind.StringLiteral &&
 			expression.argumentExpression.text === "catch"
 		);
 	}

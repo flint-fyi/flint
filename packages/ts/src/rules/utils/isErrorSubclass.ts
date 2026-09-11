@@ -1,4 +1,4 @@
-import { isIdentifier, SyntaxKind, type Program } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	isGlobalDeclaration,
@@ -33,7 +33,7 @@ export function isErrorSubclass(
 		for (const type of clause.types) {
 			const typeName = type.expression;
 			if (
-				isIdentifier(typeName) &&
+				typeName.kind === SyntaxKind.Identifier &&
 				builtinErrorNames.has(typeName.text) &&
 				isGlobalDeclaration(typeName, typeChecker, program)
 			) {

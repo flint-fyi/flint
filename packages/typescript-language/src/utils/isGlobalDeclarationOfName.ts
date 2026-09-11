@@ -1,17 +1,8 @@
-import {
-	isClassDeclaration,
-	isFunctionDeclaration,
-	isIdentifier,
-	isInterfaceDeclaration,
-	isPropertySignature,
-	isVariableDeclaration,
-	type Declaration,
-	type Node,
-	type Program,
-} from "typescript";
+import { SyntaxKind, type Node, type Program } from "typescript";
 
 import type { Checker } from "@flint.fyi/typescript-language";
 
+import type * as AST from "../types/ast.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 
 /**
@@ -28,13 +19,14 @@ export function isGlobalDeclarationOfName(
 		return false;
 	}
 
-	return declarations.every((declaration) => {
+	return declarations.every((tsDeclaration) => {
+		const declaration = tsDeclaration as AST.AnyNode;
+
 		// Special case: a variable set to a known identifier. E.g.:
 		// const CustomFunction = Function;
 		if (
-			isVariableDeclaration(declaration) &&
-			declaration.initializer &&
-			isIdentifier(declaration.initializer)
+			declaration.kind === SyntaxKind.VariableDeclaration &&
+			declaration.initializer?.kind === SyntaxKind.Identifier
 		) {
 			return isGlobalDeclarationOfName(
 				declaration.initializer,
@@ -45,7 +37,7 @@ export function isGlobalDeclarationOfName(
 		}
 
 		// Special case: a property of an interface
-		if (isPropertySignature(declaration)) {
+		if (declaration.kind === SyntaxKind.PropertySignature) {
 			return isGlobalDeclarationOfName(
 				declaration.parent,
 				name,
@@ -56,20 +48,22 @@ export function isGlobalDeclarationOfName(
 
 		return (
 			isDeclarationOfName(declaration, name) &&
-			declarationIncludesGlobal(declaration, program)
+			declarationIncludesGlobal(tsDeclaration, program)
 		);
 	});
 }
 
-function isDeclarationOfName(node: Declaration, name: string) {
-	if (
-		isClassDeclaration(node) ||
-		isFunctionDeclaration(node) ||
-		isInterfaceDeclaration(node) ||
-		isVariableDeclaration(node)
-	) {
-		return node.name && isIdentifier(node.name) && node.name.text === name;
-	}
+function isDeclarationOfName(node: AST.AnyNode, name: string) {
+	switch (node.kind) {
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.InterfaceDeclaration:
+		case SyntaxKind.VariableDeclaration:
+			return (
+				node.name?.kind === SyntaxKind.Identifier && node.name.text === name
+			);
 
-	return false;
+		default:
+			return false;
+	}
 }

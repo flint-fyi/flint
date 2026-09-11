@@ -1,17 +1,22 @@
 import ts, { SyntaxKind } from "typescript";
 
+import type * as AST from "../types/ast.ts";
+
 /**
  * Inspects top-level statements of a TS source file to determine
  * if it introduces or modifies entities in the global scope.
  */
 export function containsGlobalDeclarations(
-	sourceFileNode: ts.SourceFile,
+	sourceFileNode: AST.SourceFile,
 ): boolean {
 	const isModule = ts.isExternalModule(sourceFileNode);
 
 	return sourceFileNode.statements.some((statement) => {
 		// Checks for 'declare global {}'
-		if (ts.isModuleDeclaration(statement) && statement.name.text === "global") {
+		if (
+			statement.kind === SyntaxKind.ModuleDeclaration &&
+			statement.name.text === "global"
+		) {
 			return true;
 		}
 

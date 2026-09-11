@@ -1,12 +1,4 @@
-import {
-	isExpressionWithTypeArguments,
-	isShorthandPropertyAssignment,
-	isTypeNode,
-	isTypeParameterDeclaration,
-	SymbolFlags,
-	SyntaxKind,
-	type Symbol,
-} from "typescript";
+import { isTypeNode, SymbolFlags, SyntaxKind, type Symbol } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -96,7 +88,7 @@ function getReferencedSymbol(typeChecker: Checker, node: AST.Identifier) {
 	let symbol: Symbol | undefined;
 	const parent = node.parent;
 
-	if (isShorthandPropertyAssignment(parent)) {
+	if (parent.kind === SyntaxKind.ShorthandPropertyAssignment) {
 		symbol = typeChecker.getShorthandAssignmentValueSymbol(parent);
 	} else {
 		symbol = typeChecker.getSymbolAtLocation(node);
@@ -198,14 +190,13 @@ function getTypeKeywordRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 }
 
 function isInImportDeclaration(node: AST.AnyNode) {
-	let current: AST.AnyNode | undefined = node;
-	while (current) {
+	let current = node;
+	while (current.kind !== SyntaxKind.SourceFile) {
 		if (current.kind === SyntaxKind.ImportDeclaration) {
 			return true;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as AST.AnyNode | undefined;
+		current = current.parent;
 	}
 
 	return false;
@@ -235,12 +226,15 @@ function isOnlyTypeReference(node: AST.Identifier) {
 		if (
 			parent.kind === SyntaxKind.TypeAliasDeclaration ||
 			parent.kind === SyntaxKind.InterfaceDeclaration ||
-			isTypeParameterDeclaration(parent)
+			parent.kind === SyntaxKind.TypeParameter
 		) {
 			return true;
 		}
 
-		if (isTypeNode(parent) && !isExpressionWithTypeArguments(parent)) {
+		if (
+			isTypeNode(parent) &&
+			parent.kind !== SyntaxKind.ExpressionWithTypeArguments
+		) {
 			return true;
 		}
 

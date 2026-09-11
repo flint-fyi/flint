@@ -1,7 +1,8 @@
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
+	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -21,7 +22,7 @@ function hasNoAssignmentBeforeNode(
 		return false;
 	}
 
-	const declarations = symbol.getDeclarations();
+	const declarations = symbol.getDeclarations() as AST.AnyNode[] | undefined;
 	if (!declarations?.length) {
 		return false;
 	}
@@ -33,11 +34,14 @@ function hasNoAssignmentBeforeNode(
 			continue;
 		}
 
-		if (ts.isVariableDeclaration(declaration)) {
+		if (declaration.kind === SyntaxKind.VariableDeclaration) {
 			if (declaration.exclamationToken || declaration.initializer) {
 				return false;
 			}
-		} else if (ts.isParameter(declaration) && declaration.initializer) {
+		} else if (
+			declaration.kind === SyntaxKind.Parameter &&
+			declaration.initializer
+		) {
 			return false;
 		}
 	}
@@ -47,14 +51,14 @@ function hasNoAssignmentBeforeNode(
 		return true;
 	}
 
-	function findModifyingReference(current: ts.Node): boolean {
-		if (ts.isIdentifier(current)) {
+	function findModifyingReference(current: AST.AnyNode): boolean {
+		if (current.kind === SyntaxKind.Identifier) {
 			const currentSymbol = typeChecker.getSymbolAtLocation(current);
 			if (currentSymbol?.valueDeclaration === valueDeclaration) {
 				const parent = current.parent;
 
 				if (
-					ts.isBinaryExpression(parent) &&
+					parent.kind === SyntaxKind.BinaryExpression &&
 					tsutils.isAssignmentKind(parent.operatorToken.kind) &&
 					parent.left === current &&
 					parent.getEnd() < nodeEnd
@@ -63,8 +67,8 @@ function hasNoAssignmentBeforeNode(
 				}
 
 				if (
-					(ts.isPostfixUnaryExpression(parent) ||
-						ts.isPrefixUnaryExpression(parent)) &&
+					(parent.kind === SyntaxKind.PostfixUnaryExpression ||
+						parent.kind === SyntaxKind.PrefixUnaryExpression) &&
 					parent.operand === current &&
 					parent.getEnd() < nodeEnd
 				) {
@@ -73,7 +77,7 @@ function hasNoAssignmentBeforeNode(
 			}
 		}
 
-		return ts.forEachChild(current, findModifyingReference) ?? false;
+		return forEachChild(current, findModifyingReference) ?? false;
 	}
 
 	return !findModifyingReference(sourceFile);
