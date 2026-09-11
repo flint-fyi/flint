@@ -448,8 +448,8 @@ catalogs:
       specifier: 5.0.0
       version: 5.0.0
     vitest-ansi-serializer:
-      specifier: 0.2.1
-      version: 0.2.1
+      specifier: 0.3.1
+      version: 0.3.1
     vue:
       specifier: 3.5.42
       version: 3.5.42
@@ -827,7 +827,7 @@ importers:
         version: 5.0.0(@types/node@26.5.0)(@vitest/coverage-v8@5.0.0)(vite@8.2.2)
       vitest-ansi-serializer:
         specifier: catalog:dev
-        version: 0.2.1(vitest@5.0.0)
+        version: 0.3.1(vitest@5.0.0)
 
   packages/astro:
     dependencies:
@@ -1104,7 +1104,7 @@ importers:
         version: 5.0.0(@types/node@26.5.0)(@vitest/coverage-v8@5.0.0)(vite@8.2.2)
       vitest-ansi-serializer:
         specifier: catalog:dev
-        version: 0.2.1(vitest@5.0.0)
+        version: 0.3.1(vitest@5.0.0)
 
   packages/flint:
     dependencies:
@@ -8027,10 +8027,10 @@ packages:
       vite:
         optional: true
 
-  vitest-ansi-serializer@0.2.1:
-    resolution: {integrity: sha512-IC60vT8raDlHwk2tZAy9wfetJMJkVOGC50jyjcC1HTYBAYfJEXVeKe72Jd5Jzcw1Xt73Nri2cdE98p+K2mnDrA==}
+  vitest-ansi-serializer@0.3.1:
+    resolution: {integrity: sha512-XZ4T7TnO1KrE6xDOjBFCiChq++0uNEWaYi/t6mJfxDqUQzJ/oBLU+ntYO6itGew9Th9aFb2c6jmjpJJEGVj0DA==}
     peerDependencies:
-      vitest: ^3.0.0 || ^4.0.0
+      vitest: ^3.0.0 || ^4.0.0 || ^5.0.0
 
   vitest@5.0.0:
     resolution: {integrity: sha512-gpsMNoRhMjMktVxPtstOH4/PJuPyovVaMDr4oDilXaGH1EcqM2OE96SoHT2VIQ6fTGtTjqmHDrEu2X9RQiXf8Q==}
@@ -14982,7 +14982,7 @@ snapshots:
     optionalDependencies:
       vite: 8.2.2(@types/node@26.5.0)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)
 
-  vitest-ansi-serializer@0.2.1(vitest@5.0.0):
+  vitest-ansi-serializer@0.3.1(vitest@5.0.0):
     dependencies:
       vitest: 5.0.0(@types/node@26.5.0)(@vitest/coverage-v8@5.0.0)(vite@8.2.2)
 
