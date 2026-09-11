@@ -1,3 +1,4 @@
+import { globSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,6 +13,13 @@ import { testCaseEntries, testCasesPath } from "./testCases.ts";
 
 const results: unknown[] = [];
 
+const biomeCommand = `node ${path.resolve(
+	path.dirname(
+		fileURLToPath(import.meta.resolve("@biomejs/biome/package.json")),
+	),
+	"bin/biome",
+)} lint src`;
+
 const eslintCommand = `node ${path.resolve(
 	path.dirname(fileURLToPath(import.meta.resolve("eslint"))),
 	"../bin/eslint.js",
@@ -21,14 +29,39 @@ const eslintCommand = `node ${path.resolve(
 // cache against ESLint runs that have none.
 const flintCommand = `node ${path.resolve(testCasesPath, "node_modules/flint/bin/index.js")} --cache-ignore --skip-formatting --skip-language-reports`;
 
+const oxlintExecutable = `node ${path.resolve(
+	path.dirname(fileURLToPath(import.meta.resolve("oxlint/package.json"))),
+	"bin/oxlint",
+)}`;
+
+const rslintCommand = `node ${fileURLToPath(import.meta.resolve("@rslint/core/bin"))} src`;
+
+function createOxlintCommand(testCaseSlug: string): string {
+	// Oxlint honors the parent .gitignore even with --no-ignore.
+	// Explicit files allow it to lint the ignored generated cases.
+	return `${oxlintExecutable} ${globSync("src/**/*.ts", {
+		cwd: path.join(testCasesPath, testCaseSlug),
+	}).join(" ")}`;
+}
+
 for (const files of testCaseEntries[0].values) {
 	for (const rules of testCaseEntries[1].values) {
 		const testCase = { files, rules };
 		const testCaseSlug = createTestCaseSlug(testCase);
 		// flint-disable-next-line performance/loopAwaits
+		const biome = await runInHyperfine(biomeCommand, "Biome", testCaseSlug);
+		// flint-disable-next-line performance/loopAwaits
 		const eslint = await runInHyperfine(eslintCommand, "ESLint", testCaseSlug);
 		// flint-disable-next-line performance/loopAwaits
 		const flint = await runInHyperfine(flintCommand, "Flint", testCaseSlug);
+		// flint-disable-next-line performance/loopAwaits
+		const oxlint = await runInHyperfine(
+			createOxlintCommand(testCaseSlug),
+			"Oxlint",
+			testCaseSlug,
+		);
+		// flint-disable-next-line performance/loopAwaits
+		const rslint = await runInHyperfine(rslintCommand, "Rslint", testCaseSlug);
 
 		// Measurements run one at a time: linters sharing the machine would
 		// contend for CPU and report times that say nothing about either.
@@ -36,9 +69,15 @@ for (const files of testCaseEntries[0].values) {
 		results.push({
 			files: countCaseFiles(testCase),
 			rules: ruleCounts[rules],
+			biome,
 			eslint,
 			flint,
-			delta: calculateDelta(eslint, flint),
+			oxlint,
+			rslint,
+			vsBiome: calculateDelta(biome, flint),
+			vsESLint: calculateDelta(eslint, flint),
+			vsOxlint: calculateDelta(oxlint, flint),
+			vsRslint: calculateDelta(rslint, flint),
 		});
 		/* eslint-enable perfectionist/sort-objects */
 	}

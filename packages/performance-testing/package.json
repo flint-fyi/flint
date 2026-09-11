@@ -22,11 +22,15 @@
 		"test": "vitest --project performance-testing"
 	},
 	"dependencies": {
+		"@biomejs/biome": "catalog:comparisons",
 		"@flint.fyi/rule-data": "workspace:^",
+		"@rslint/core": "catalog:comparisons",
 		"console-table-without-index": "catalog:dev",
 		"debug-for-file": "catalog:dev",
 		"eslint": "catalog:comparisons",
 		"execa": "catalog:dev",
+		"oxlint": "catalog:comparisons",
+		"oxlint-tsgolint": "catalog:comparisons",
 		"prettier": "catalog:dev"
 	},
 	"devDependencies": {

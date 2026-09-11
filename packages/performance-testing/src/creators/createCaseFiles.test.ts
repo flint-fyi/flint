@@ -18,8 +18,11 @@ describe(createCaseFiles, () => {
 		const actual = createCaseFiles({ files: 2, rules: 1 });
 
 		expect(Object.keys(actual)).toEqual([
+			".oxlintrc.json",
+			"biome.json",
 			"eslint.config.js",
 			"flint.config.ts",
+			"rslint.config.ts",
 			"src",
 			"tsconfig.json",
 		]);
