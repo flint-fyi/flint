@@ -152,7 +152,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function getCallLikeExpression(node: AST.AnyNode) {
-			let current: AST.AnyNode = node;
+			let current = node;
 
 			while (
 				current.parent.kind === SyntaxKind.PropertyAccessExpression &&

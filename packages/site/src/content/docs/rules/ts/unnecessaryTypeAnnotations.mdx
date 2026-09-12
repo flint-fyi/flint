@@ -1,0 +1,92 @@
+---
+description: "Reports type annotations that do not change TypeScript's inferred type."
+title: "unnecessaryTypeAnnotations"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTypeAnnotations" />
+
+TypeScript can infer many declaration types from their initializers.
+This rule compares the inferred type with the annotation and reports annotations that do not affect the resulting type.
+It accounts for literal widening in mutable declarations and preserves annotations where contextual typing could affect an initializer.
+Its type-aware checks handle resolved globals, aliases, class fields, and non-generic calls without relying on initializer names.
+
+The rule retains annotations on object, array, function, property-access, element-access, and generic-call initializers because removing them can change contextual or circular inference.
+Under `isolatedDeclarations`, it only reports directly inferable primitive and nullish literals.
+Annotations containing comments are reported without an automatic fix so removing the annotation does not remove the comments.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let count: number = 1;
+```
+
+```ts
+const status: "ready" = "ready";
+```
+
+```ts
+function greet(name: string = "world") {
+	return `Hello, ${name}`;
+}
+```
+
+```ts
+function getCount(): number {
+	return 1;
+}
+
+const count: number = getCount();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const count: number = 1;
+```
+
+```ts
+let status: "ready" = "ready";
+```
+
+```ts
+const options: { retries: number } = { retries: 3 };
+```
+
+```ts
+function identity<Value>(value: Value) {
+	return value;
+}
+
+const count: number = identity(1);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Explicit annotations may be useful in exported public APIs when generated declarations should communicate deliberate API boundaries.
+They may also document intended API stability or satisfy a codebase's established annotation style.
+
+## Further Reading
+
+- [TypeScript Handbook: Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html)
+- [TypeScript Handbook: Literal Types](https://www.typescriptlang.org/docs/handbook/literal-types.html)
+- [TypeScript: Isolated Declarations](https://devblogs.microsoft.com/typescript/announcing-typescript-5-5/#isolated-declarations)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTypeAnnotations" />

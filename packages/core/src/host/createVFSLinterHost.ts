@@ -84,7 +84,7 @@ export function createVFSLinterHost(
 			watcher(fileEvent);
 		}
 
-		let currentFile: string = normalizedFilePathAbsolute;
+		let currentFile = normalizedFilePathAbsolute;
 		let currentDir = normalizeDirname(currentFile);
 		do {
 			for (const watcher of directoryWatchers.get(

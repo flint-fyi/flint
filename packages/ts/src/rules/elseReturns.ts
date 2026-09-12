@@ -102,7 +102,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const thenBranches: AST.Statement[] = [];
-					let lastIfNode: AST.IfStatement = node;
+					let lastIfNode = node;
 					let currentNode: AST.Statement = node;
 
 					while (currentNode.kind === SyntaxKind.IfStatement) {

@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 		) {
 			const seen: AST.Expression[] = [];
-			let current: AST.IfStatement = node;
+			let current = node;
 
 			while (true) {
 				if (
