@@ -6,3 +6,5 @@ export function debug(value: unknown): void {
 export function calculate(a: number, b: number): number {
 	return a + b;
 }
+
+export type Timestamp = Date;
