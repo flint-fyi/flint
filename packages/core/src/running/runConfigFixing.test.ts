@@ -69,7 +69,6 @@ const options = {
 
 describe(runConfigFixing, () => {
 	beforeEach(() => {
-		vi.clearAllMocks();
 		getFix.mockReset();
 		adjustReportRange.mockReset();
 		host.vfsUpsertFile(filePath, "abc");
