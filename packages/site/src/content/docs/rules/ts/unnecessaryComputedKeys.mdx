@@ -1,0 +1,79 @@
+---
+description: "Reports computed property keys that can be written as literal property names."
+title: "unnecessaryComputedKeys"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryComputedKeys" />
+
+Computed property syntax is useful when evaluating an expression determines a property name.
+It adds unnecessary punctuation when TypeScript knows that a safe expression has one string or number value.
+
+This rule uses TypeScript's type information, so it recognizes literal-valued constants and type-preserving wrappers in addition to literal syntax.
+It does not report expressions whose evaluation could have side effects, even when their return type is a single literal.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const settings = { ["theme"]: "dark" };
+```
+
+```ts
+const statusKey = "status" as const;
+const record = { [statusKey]: "ready" };
+```
+
+```ts
+class Registry {
+	["lookup"]() {}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const settings = { theme: "dark" };
+```
+
+```ts
+const statusKey = "status" as const;
+const record = { status: "ready" };
+```
+
+```ts
+declare function getKey(): "dynamic";
+const record = { [getKey()]: true };
+```
+
+```ts
+const object = { ["__proto__"]: prototype };
+```
+
+</TabItem>
+</Tabs>
+
+The last two examples preserve computed syntax because removing a function call can remove observable evaluation and because an object initializer's literal `__proto__` data property has special prototype-setting semantics.
+The rule also preserves class keys where literal `constructor` or `prototype` syntax would change or invalidate the class member.
+
+## When Not To Use It
+
+Do not use this rule when a project intentionally keeps computed syntax to emphasize that keys originate from shared constants, even when those constants currently have singleton literal types.
+It may also be unsuitable during a large migration where changing property spelling would create excessive formatting churn.
+
+## Further Reading
+
+- [MDN: Object initializer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer)
+- [MDN: Public class fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields)
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryComputedKeys" />
