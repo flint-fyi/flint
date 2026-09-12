@@ -35,6 +35,7 @@ import {
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
+import { getMemoizedChecker } from "./memoizedChecker.ts";
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
@@ -343,7 +344,7 @@ export const typescriptLanguage: Language<
 					return getSourceFile().spanMap;
 				},
 				get typeChecker() {
-					return getProject().checker;
+					return getMemoizedChecker(getProject().checker);
 				},
 			};
 			const dispose = (): void => {
