@@ -66,9 +66,9 @@ describe(collectLanguageFilesByFilePath, () => {
 		]);
 
 		const filesByPath = collectLanguageFilesByFilePath(
-			cached,
 			rulesOptionsByFile,
 			host,
+			{ cached },
 		);
 
 		expect(orderedFilePaths).toHaveBeenCalledWith(

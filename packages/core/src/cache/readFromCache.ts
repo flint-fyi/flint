@@ -6,6 +6,7 @@ import { nullThrows, pathKey } from "@flint.fyi/utils";
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
+import { collectTransitiveDependents } from "./collectTransitiveDependents.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
 const log = debugForFile(import.meta.filename);
@@ -132,19 +133,17 @@ export async function readFromCache(
 		}
 	}
 
-	const transitivelyCheckedForChanges = new Set<string>();
-	const transitivelyImpactedByChanges = Array.from(filePathsToLint);
+	const transitiveDependents = collectTransitiveDependents(
+		Array.from(filePathsToLint, (filePath) =>
+			pathKey(filePath, caseSensitiveFS),
+		),
+		(dependencyKey) => fileDependents.get(dependencyKey),
+		(filePath) => pathKey(filePath, caseSensitiveFS),
+	);
 
-	for (const filePath of transitivelyImpactedByChanges) {
-		const dependents = fileDependents.get(pathKey(filePath, caseSensitiveFS));
-		for (const dependent of dependents) {
-			if (!transitivelyCheckedForChanges.has(dependent)) {
-				log("Transitively invalidating cache for: %s", dependent);
-				markAsUncached(dependent);
-				transitivelyCheckedForChanges.add(dependent);
-				transitivelyImpactedByChanges.push(dependent);
-			}
-		}
+	for (const dependent of transitiveDependents) {
+		log("Transitively invalidating cache for: %s", dependent);
+		markAsUncached(dependent);
 	}
 
 	// Remove cached files that no longer exist
