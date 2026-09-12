@@ -1,0 +1,113 @@
+---
+description: "Reports type conversion idioms that do not change an expression's type or value."
+title: "unnecessaryTypeConversions"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTypeConversions" />
+
+JavaScript provides constructors, methods, and operators that convert values to primitive types.
+When TypeScript already knows that a value has the resulting primitive type, these conversions preserve both its type and value while obscuring that information.
+
+This rule reports redundant `String`, `Number`, `Boolean`, and `BigInt` calls, string `.toString()` calls, empty-string concatenations and assignments, unary `+`, double logical negation, and double bitwise negation of integer literal types.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const title: string;
+const displayedTitle = String(title);
+```
+
+```ts
+declare const identifier: bigint;
+const normalizedIdentifier = BigInt(identifier);
+```
+
+```ts
+declare const title: string;
+const displayedTitle = title.toString();
+```
+
+```ts
+declare const title: string;
+const displayedTitle = title + "";
+```
+
+```ts
+declare const count: number;
+const numericCount = +count;
+```
+
+```ts
+declare const enabled: boolean;
+const booleanEnabled = !!enabled;
+```
+
+```ts
+declare let label: string;
+label += "";
+```
+
+```ts
+declare const count: 1 | 2;
+const integerCount = ~~count;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const count: number;
+const displayedCount = String(count);
+```
+
+```ts
+declare const input: string;
+const numericInput = Number(input);
+```
+
+```ts
+declare const value: unknown;
+const enabled = Boolean(value);
+```
+
+```ts
+enum Status {
+	Ready = "ready",
+}
+
+const serializedStatus = Status.Ready.toString();
+```
+
+```ts
+declare const measurement: number;
+const integerMeasurement = ~~measurement;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Disable this rule where an explicit conversion intentionally documents a runtime boundary, improves local readability, or preserves an interoperability convention required by another system.
+
+## Further Reading
+
+- [MDN: Type coercion](https://developer.mozilla.org/en-US/docs/Glossary/Type_coercion)
+- [MDN: Operator precedence](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_precedence)
+- [TypeScript: The `satisfies` Operator](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTypeConversions" />
