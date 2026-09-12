@@ -963,6 +963,9 @@ importers:
       debug-for-file:
         specifier: catalog:prod
         version: 0.4.2(supports-color@10.2.2)
+      ignore:
+        specifier: catalog:prod
+        version: 7.0.6
       text-table-fast:
         specifier: catalog:prod
         version: 0.1.0
