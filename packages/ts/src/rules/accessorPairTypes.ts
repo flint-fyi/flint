@@ -1,4 +1,4 @@
-import { SyntaxKind, type NodeArray } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
 
 import {
 	typescriptLanguage,

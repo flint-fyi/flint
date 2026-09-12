@@ -1,9 +1,9 @@
-import { SyntaxKind, type Node } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
 export function isImportedBindingFromModule(
-	declaration: Node,
+	declaration: AST.Node,
 	moduleName: string,
 ): declaration is AST.ImportSpecifier | AST.NamespaceImport {
 	if (
@@ -25,12 +25,12 @@ export function isImportedBindingFromModule(
 }
 
 export function isImportedSpecifierFromModule(
-	declaration: Node,
+	declaration: AST.Node,
 	moduleName: string,
 	importedName: string,
 ): declaration is AST.ImportSpecifier {
 	if (
-		!isImportSpecifier(declaration) ||
+		declaration.kind !== SyntaxKind.ImportSpecifier ||
 		!isImportedBindingFromModule(declaration, moduleName)
 	) {
 		return false;
@@ -42,15 +42,10 @@ export function isImportedSpecifierFromModule(
 }
 
 function isImportDeclaration(
-	node: Node,
+	node: AST.Node,
 ): node is AST.ImportDeclaration & { moduleSpecifier: AST.StringLiteral } {
 	return (
 		node.kind === SyntaxKind.ImportDeclaration &&
-		(node as AST.ImportDeclaration).moduleSpecifier.kind ===
-			SyntaxKind.StringLiteral
+		node.moduleSpecifier.kind === SyntaxKind.StringLiteral
 	);
-}
-
-function isImportSpecifier(node: Node): node is AST.ImportSpecifier {
-	return node.kind === SyntaxKind.ImportSpecifier;
 }

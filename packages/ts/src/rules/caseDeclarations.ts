@@ -1,8 +1,10 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import {
+	createScanner,
+	NodeFlags,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
-	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -31,27 +33,60 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function getLexicalDeclaration(
-			statements: ts.NodeArray<AST.Statement>,
+		function getLexicalDeclarationRange(
+			statements: readonly AST.Statement[],
 			sourceFile: AST.SourceFile,
-		): ts.Node | undefined {
+		): undefined | { begin: number; end: number } {
 			for (const statement of statements) {
+				let declarationKind: SyntaxKind | undefined;
 				if (
 					statement.kind === SyntaxKind.VariableStatement &&
-					tsutils.isNodeFlagSet(
-						statement.declarationList,
-						ts.NodeFlags.Let | ts.NodeFlags.Const,
-					)
+					(statement.declarationList.flags &
+						(NodeFlags.Let | NodeFlags.Const)) !==
+						0
 				) {
-					return statement.declarationList.getChildAt(0, sourceFile);
+					declarationKind =
+						statement.declarationList.flags & NodeFlags.Const
+							? SyntaxKind.ConstKeyword
+							: SyntaxKind.LetKeyword;
 				}
 
 				if (
 					statement.kind === SyntaxKind.ClassDeclaration ||
 					statement.kind === SyntaxKind.FunctionDeclaration
 				) {
-					return statement.getChildAt(0, sourceFile);
+					declarationKind =
+						statement.kind === SyntaxKind.ClassDeclaration
+							? SyntaxKind.ClassKeyword
+							: SyntaxKind.FunctionKeyword;
 				}
+
+				if (declarationKind === undefined) {
+					continue;
+				}
+
+				const statementStart = statement.getStart(sourceFile);
+				const scanner = createScanner(
+					true,
+					sourceFile.languageVariant,
+					sourceFile.text,
+					statementStart,
+					statement.getEnd() - statementStart,
+				);
+				let tokenKind: SyntaxKind;
+				do {
+					tokenKind = scanner.scan();
+				} while (
+					tokenKind !== declarationKind &&
+					tokenKind !== SyntaxKind.EndOfFile
+				);
+				if (tokenKind !== declarationKind) {
+					continue;
+				}
+				return {
+					begin: scanner.getTokenStart(),
+					end: scanner.getTokenEnd(),
+				};
 			}
 
 			return undefined;
@@ -61,14 +96,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CaseClause | AST.DefaultClause,
 			{ sourceFile }: TypeScriptFileServices,
 		): void {
-			const declarationNode = getLexicalDeclaration(
+			const declarationRange = getLexicalDeclarationRange(
 				node.statements,
 				sourceFile,
 			);
-			if (declarationNode) {
+			if (declarationRange) {
 				context.report({
 					message: "unexpectedLexicalDeclaration",
-					range: getTSNodeRange(declarationNode, sourceFile),
+					range: declarationRange,
 				});
 			}
 		}

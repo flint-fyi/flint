@@ -7,10 +7,12 @@ interface PackageData {
 	version: string;
 }
 
-const packCommand = "pnpm build && pnpm --filter-prod flint... pack";
+const packCommand =
+	"pnpm build && pnpm --filter-prod flint... --filter-prod @flint.fyi/astro... --filter-prod @flint.fyi/svelte... --filter-prod @flint.fyi/vue... pack";
 
 export async function getFlintArtifacts(
 	rootPath: string,
+	packageNames: readonly string[] = ["flint"],
 ): Promise<Map<string, string>> {
 	const packagesPath = path.join(rootPath, "packages");
 	const packageData = await Promise.all(
@@ -72,7 +74,7 @@ export async function getFlintArtifacts(
 		artifacts.set(packageName, artifactPath);
 	}
 
-	await addArtifact("flint");
+	await Promise.all(packageNames.map(addArtifact));
 
 	return new Map(
 		[...artifacts].sort(([left], [right]) => left.localeCompare(right)),

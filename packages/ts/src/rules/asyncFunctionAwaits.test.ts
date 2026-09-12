@@ -194,5 +194,13 @@ async function withAbstract() {
     return asyncOperation();
 }
 `,
+		`
+declare const value: {
+    then(...callbacks: Array<(value: unknown) => void>): void;
+};
+async function returnsRestThenable() {
+    return value;
+}
+`,
 	],
 });

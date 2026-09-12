@@ -1,4 +1,4 @@
-import { SyntaxKind, type NodeArray } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
@@ -86,7 +86,7 @@ function expressionMatchesName(expression: AST.Expression, name: string) {
 }
 
 function getSingleParameterName(
-	parameters: NodeArray<AST.ParameterDeclaration>,
+	parameters: readonly AST.ParameterDeclaration[],
 ) {
 	if (parameters.length !== 1) {
 		return undefined;

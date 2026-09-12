@@ -21,38 +21,43 @@ export function processRuleReport(
 	let suggestions = ruleReport.suggestions;
 	const { adjustReportRange } = currentFile;
 	if (adjustReportRange != null) {
+		const adjustFixRange = currentFile.adjustFixRange ?? adjustReportRange;
 		const adjustedRange = adjustReportRange(ruleReport.range);
 		if (adjustedRange == null) {
 			return null;
 		}
 		range = adjustedRange;
-		fix &&= fix
-			.map((fix) => {
-				const range = adjustReportRange(fix.range);
-				return (
-					range && {
-						...fix,
-						range,
-					}
-				);
-			})
-			.filter((f) => f != null);
+		fix &&= nullIfEmpty(
+			fix
+				.map((fix) => {
+					const range = adjustFixRange(fix.range);
+					return (
+						range && {
+							...fix,
+							range,
+						}
+					);
+				})
+				.filter((f) => f != null),
+		);
 
-		suggestions &&= suggestions
-			.map((s) => {
-				if ("files" in s) {
-					// TODO: support cross-file suggestions
-					return null;
-				}
-				const range = adjustReportRange(s.range);
-				return (
-					range && {
-						...s,
-						range,
+		suggestions &&= nullIfEmpty(
+			suggestions
+				.map((s) => {
+					if ("files" in s) {
+						// TODO: support cross-file suggestions
+						return null;
 					}
-				);
-			})
-			.filter((s) => s != null);
+					const range = adjustFixRange(s.range);
+					return (
+						range && {
+							...s,
+							range,
+						}
+					);
+				})
+				.filter((s) => s != null),
+		);
 	}
 
 	return {
@@ -77,4 +82,13 @@ export function processRuleReport(
 		},
 		suggestions,
 	};
+}
+
+/**
+ * Collapses an emptied array back to `undefined` so a report whose fixes or
+ * suggestions all failed to map is not treated as having an (empty) change,
+ * which would otherwise rewrite the file unchanged and re-trigger fix passes.
+ */
+function nullIfEmpty<T>(values: T[]): T[] | undefined {
+	return values.length ? values : undefined;
 }

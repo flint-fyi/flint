@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -19,7 +19,6 @@ export function isStringRawNoSubstitution(
 		tag.kind === SyntaxKind.PropertyAccessExpression &&
 		tag.expression.kind === SyntaxKind.Identifier &&
 		tag.expression.text === "String" &&
-		tag.name.kind === SyntaxKind.Identifier &&
 		tag.name.text === "raw" &&
 		node.template.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 	);

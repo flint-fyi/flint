@@ -1,8 +1,8 @@
 import type { Node } from "@astrojs/compiler/types";
 
-import { astroLanguage } from "@flint.fyi/astro-language";
+import { astroLanguage, type AstroServices } from "@flint.fyi/astro-language";
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import { nullThrows } from "@flint.fyi/utils";
-import { reportSourceCode } from "@flint.fyi/volar-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -30,10 +30,10 @@ export default ruleCreator.createRule(astroLanguage, {
 		return {
 			visitors: {
 				SourceFile(node, services) {
-					if (services.astro == null) {
+					const astroServices = (services as Partial<AstroServices>).astro;
+					if (!astroServices) {
 						return;
 					}
-
 					function visit(node: Node) {
 						if ("attributes" in node) {
 							for (const attr of node.attributes) {
@@ -59,7 +59,7 @@ export default ruleCreator.createRule(astroLanguage, {
 							}
 						}
 					}
-					for (const child of services.astro.ast.children) {
+					for (const child of astroServices.ast.children) {
 						visit(child);
 					}
 				},

@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -40,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function isWindowLikeIdentifier(
-			node: AST.LeftHandSideExpression,
+			node: AST.Node,
 			typeChecker: Checker,
 			program: Program,
 		): boolean {

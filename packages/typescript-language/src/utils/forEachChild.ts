@@ -1,10 +1,16 @@
-import ts from "typescript";
+import type { Node, NodeArray } from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 
-// TODO (#2772): Fill out remaining TypeScript APIs
-export const forEachChild = ts.forEachChild as unknown as <T>(
+export const forEachChild = <T>(
 	node: AST.AnyNode,
 	cbNode: (node: AST.AnyNode) => T | undefined,
-	cbNodes?: (nodes: ts.NodeArray<AST.AnyNode>) => T | undefined,
-) => T | undefined;
+	cbNodes?: (nodes: readonly AST.AnyNode[]) => T | undefined,
+): T | undefined =>
+	node.forEachChild(
+		(child: Node) => cbNode(child as AST.AnyNode),
+		cbNodes
+			? (children: NodeArray<Node>) =>
+					cbNodes(children as readonly AST.AnyNode[])
+			: undefined,
+	);

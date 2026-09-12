@@ -53,14 +53,17 @@ catalogs:
     prettier-plugin-packagejson: 3.0.2
     prettier-plugin-sentences-per-line: 0.2.4
     prettier-plugin-sh: 0.19.0
+    prettier-plugin-svelte: 3.4.0
     svelte: 5.57.0
     tsdown: 0.23.0
-    typescript: 6.0.3
+    typescript: npm:@typescript/typescript6@6.0.2
+    typescript-native: npm:typescript@7.1.0-dev.20260830.1
     typescript-eslint: 8.69.0
     vitest: 5.0.0
     vitest-ansi-serializer: 0.3.1
     vue: 3.5.42
     yaml-unist-parser: 3.2.0
+    zod: 4.5.4
 
   comparisons:
     "@biomejs/biome": 2.5.12
@@ -145,6 +148,7 @@ catalogs:
     ts-api-utils: ^2.4.0
     typescript: ^6.0.3
     unist-util-visit: ^5.0.0
+    vize: 0.387.0
     wrap-ansi: ^10.0.0
     yaml-unist-parser: ^3.0.0
     zod: ^4.5.4
@@ -188,6 +192,16 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
+minimumReleaseAgeExclude:
+  - "@typescript/typescript-darwin-arm64@7.1.0-dev.20260830.1"
+  - "@typescript/typescript-darwin-x64@7.1.0-dev.20260830.1"
+  - "@typescript/typescript-linux-arm64@7.1.0-dev.20260830.1"
+  - "@typescript/typescript-linux-arm@7.1.0-dev.20260830.1"
+  - "@typescript/typescript-linux-x64@7.1.0-dev.20260830.1"
+  - "@typescript/typescript-win32-arm64@7.1.0-dev.20260830.1"
+  - "@typescript/typescript-win32-x64@7.1.0-dev.20260830.1"
+  - typescript@7.1.0-dev.20260830.1
+
 nodeVersion: 26.7.0
 
 overrides:
@@ -204,7 +218,9 @@ peerDependencyRules:
     eslint-plugin-solid>eslint: "10"
     expressive-code-twoslash>@expressive-code/core: "0.44"
     expressive-code-twoslash>expressive-code: "0.44"
-    typescript: "6"
+    typescript: "6 || 7.1.0-dev.20260830.1"
+    # https://github.com/43081j/vitest-ansi-serializer/issues/113
+    vitest-ansi-serializer>vitest: "5"
 
 shellEmulator: true
 

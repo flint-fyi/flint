@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -85,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			switch (name.kind) {
 				case SyntaxKind.ArrayBindingPattern: {
 					for (const element of name.elements) {
-						if (element.kind === SyntaxKind.BindingElement) {
+						if (element.name) {
 							addBindingNames(element.name, variables);
 						}
 					}
@@ -99,6 +98,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 				case SyntaxKind.ObjectBindingPattern: {
 					for (const element of name.elements) {
+						if (!element.name) {
+							continue;
+						}
+
 						addBindingNames(element.name, variables);
 					}
 
@@ -117,7 +120,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			return forEachChild(node, (child) => {
 				return (
-					!tsutils.isFunctionScopeBoundary(child) &&
+					!isFunctionScopeBoundary(child) &&
 					child.kind !== SyntaxKind.DoStatement &&
 					child.kind !== SyntaxKind.ForInStatement &&
 					child.kind !== SyntaxKind.ForOfStatement &&
@@ -139,7 +142,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			loopVariables: Set<string>,
 			sourceFile: AST.SourceFile,
 		): void {
-			if (tsutils.isFunctionScopeBoundary(node)) {
+			if (isFunctionScopeBoundary(node)) {
 				if (referencesLoopVariable(node, loopVariables)) {
 					const start = node.getStart(sourceFile);
 					let keyword = "function";
@@ -150,11 +153,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					) {
 						keyword = "function";
 					} else if (node.kind === SyntaxKind.ArrowFunction) {
-						const firstToken = node.getFirstToken(sourceFile) as
-							| AST.AnyNode
-							| undefined;
-						if (firstToken?.kind === SyntaxKind.Identifier) {
-							keyword = firstToken.text;
+						const firstParameter = node.parameters[0];
+						if (
+							firstParameter?.name.kind === SyntaxKind.Identifier &&
+							firstParameter.name.getStart(sourceFile) === start
+						) {
+							keyword = firstParameter.name.text;
 						} else {
 							keyword = "(";
 						}
@@ -212,3 +216,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
+
+function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.CallSignature:
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression:
+		case SyntaxKind.Constructor:
+		case SyntaxKind.ConstructorType:
+		case SyntaxKind.ConstructSignature:
+		case SyntaxKind.EnumDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionType:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.MethodSignature:
+		case SyntaxKind.ModuleDeclaration:
+		case SyntaxKind.SetAccessor:
+			return true;
+		case SyntaxKind.SourceFile:
+			return !!node.externalModuleIndicator;
+		default:
+			return false;
+	}
+}

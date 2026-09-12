@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -52,7 +51,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							return;
 						}
 
-						if (tsutils.isFunctionScopeBoundary(node)) {
+						if (isFunctionScopeBoundary(node)) {
 							return;
 						}
 
@@ -65,3 +64,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
+
+function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.CallSignature:
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression:
+		case SyntaxKind.Constructor:
+		case SyntaxKind.ConstructorType:
+		case SyntaxKind.ConstructSignature:
+		case SyntaxKind.EnumDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionType:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.MethodSignature:
+		case SyntaxKind.ModuleDeclaration:
+		case SyntaxKind.SetAccessor:
+			return true;
+		default:
+			return false;
+	}
+}

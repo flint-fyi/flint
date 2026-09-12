@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	typescriptLanguage,
@@ -31,20 +30,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function hasNumberLikeLength(type: ts.Type, typeChecker: Checker): boolean {
+		function hasNumberLikeLength(type: Type, typeChecker: Checker): boolean {
 			const lengthProperty = type.getProperty("length");
 
 			if (lengthProperty == null) {
 				return false;
 			}
 
-			return tsutils.isTypeFlagSet(
-				typeChecker.getTypeOfSymbol(lengthProperty),
-				ts.TypeFlags.NumberLike,
+			return (
+				(typeChecker.getTypeOfSymbol(lengthProperty).flags &
+					TypeFlags.NumberLike) !==
+				0
 			);
 		}
 
-		function isArrayLike(type: ts.Type, typeChecker: Checker): boolean {
+		function isArrayLike(type: Type, typeChecker: Checker): boolean {
 			return isTypeRecursive(
 				type,
 				(t) =>

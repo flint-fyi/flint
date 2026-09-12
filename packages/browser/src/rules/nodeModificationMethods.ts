@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -42,7 +42,7 @@ function getModernMethodName(methodName: string, node: AST.CallExpression) {
 	}
 }
 
-function getPropertyNameNode(node: AST.LeftHandSideExpression) {
+function getPropertyNameNode(node: AST.Node) {
 	if (node.kind !== SyntaxKind.PropertyAccessExpression) {
 		return undefined;
 	}

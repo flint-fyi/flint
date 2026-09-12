@@ -111,8 +111,21 @@ export interface LanguageFileCacheImpacts {
 /**
  * Creates prepared information around files to be linted.
  */
-export interface LanguageFileFactory<FileServices extends object> {
+export interface LanguageFileFactory<
+	FileServices extends object,
+> extends Disposable {
 	createFile(data: FileAboutData): LanguageFile<FileServices>;
+
+	/**
+	 * Optionally prepares every file that will be linted, in one batch, before
+	 * any `createFile` call.
+	 * @remarks
+	 * Languages backed by a whole-program model (such as TypeScript) can open all
+	 * files in a single pass here, so that per-file `createFile` work becomes
+	 * cheap lookups against a stable program instead of re-building it once per
+	 * file (which is quadratic in the number of files).
+	 */
+	prepareFiles?(filePathsAbsolute: readonly string[]): void;
 }
 
 /**
@@ -126,6 +139,7 @@ export type LanguageFile<FileServices extends object> = Disposable &
  */
 export interface LanguageFileBase<FileServices extends object> {
 	about: FileAboutData;
+	adjustFixRange?: (range: CharacterReportRange) => CharacterReportRange | null;
 	adjustReportRange?: (
 		range: CharacterReportRange,
 	) => CharacterReportRange | null;
@@ -147,6 +161,8 @@ export type LanguageFileDefinition<FileServices extends object> =
  * are {@link LanguageFileDefinition}s (which do not have to be disposable), rather
  * than {@link LanguageFile}s (which are always disposable).
  */
-export interface LanguageFileFactoryDefinition<FileServices extends object> {
-	createFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
-}
+export type LanguageFileFactoryDefinition<FileServices extends object> =
+	Partial<Disposable> & {
+		createFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
+		prepareFiles?(filePathsAbsolute: readonly string[]): void;
+	};

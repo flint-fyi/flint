@@ -158,6 +158,7 @@ function createTestSetups({
 	});
 
 	new RuleTester({
+		afterAll: vi.fn(),
 		...(assertNoLanguageReports === undefined
 			? {}
 			: { assertNoLanguageReports }),

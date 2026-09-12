@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -71,7 +71,7 @@ function hasAsyncModifier(
 	modifiers: AST.FunctionExpression["modifiers"] | undefined,
 ) {
 	return modifiers?.some(
-		(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
+		(modifier: AST.ModifierLike) => modifier.kind === SyntaxKind.AsyncKeyword,
 	);
 }
 

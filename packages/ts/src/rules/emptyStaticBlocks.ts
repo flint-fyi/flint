@@ -31,14 +31,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const openBrace = node.body.getFirstToken(sourceFile);
-					if (!openBrace) {
-						return;
-					}
-
 					const range = {
 						begin: node.getStart(sourceFile),
-						end: openBrace.getEnd(),
+						end: node.body.getStart(sourceFile) + 1,
 					};
 
 					context.report({

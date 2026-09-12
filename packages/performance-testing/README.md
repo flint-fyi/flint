@@ -13,12 +13,20 @@ From the repository root, create Flint's publishable artifacts with:
 
 ```shell
 pnpm build
-pnpm --filter-prod flint... pack
+pnpm --filter-prod flint... --filter-prod @flint.fyi/astro... --filter-prod @flint.fyi/svelte... --filter-prod @flint.fyi/vue... pack
 ```
 
-Then in this `packages/performance-testing` directory:
+Generate the fixtures and run every comparison and native scenario from the repository root with:
 
 ```shell
-pnpm generate
-pnpm measure
+pnpm --filter=performance-testing generate
+pnpm --filter=performance-testing measure
 ```
+
+`generate` replaces `packages/performance-testing/cases`, installs the packed artifacts there, and creates identical fixtures for each measurement.
+
+`measure` first runs the existing Flint and ESLint size-and-rule comparisons.
+It then reports Flint timings for cold project startup, a warm unchanged lint, one changed file after a cached lint, type-aware rules, Astro, Svelte, and Vue.
+The warm and changed-file preparations run before every Hyperfine sample so samples do not share cache state.
+
+The output reports whole-command timings because Flint does not currently expose native phase timings for project creation, AST transfer, checker queries, mapper transformation, or rule execution.

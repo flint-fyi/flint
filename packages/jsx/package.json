@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/jsx",
-	"version": "0.6.1",
+	"version": "0.6.0",
 	"description": "[Experimental] A Flint plugin for JSX code.",
 	"homepage": "https://flint.fyi/rules/jsx",
 	"repository": {
@@ -29,7 +29,7 @@
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"language-tags": "catalog:prod",
-		"typescript": "catalog:prod"
+		"typescript-native": "catalog:dev"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

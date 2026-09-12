@@ -152,6 +152,51 @@ const has = Object.prototype.hasOwnProperty.call(object, "key");
 		},
 		{
 			code: `
+declare function getObject(): object;
+const has = getObject().hasOwnProperty("key");
+`,
+			snapshot: `
+declare function getObject(): object;
+const has = getObject().hasOwnProperty("key");
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            Prefer the safer \`Object.prototype.hasOwnProperty.call()\` over calling \`hasOwnProperty()\` directly on objects.
+`,
+			suggestions: [
+				{
+					id: "usePrototypeCall",
+					updated: `
+declare function getObject(): object;
+const has = Object.prototype.hasOwnProperty.call(getObject(), "key");
+`,
+				},
+			],
+		},
+		{
+			code: `
+const object = { key: 1 };
+declare function getKey(name: string): string;
+const has = object.hasOwnProperty(getKey("key"));
+`,
+			snapshot: `
+const object = { key: 1 };
+declare function getKey(name: string): string;
+const has = object.hasOwnProperty(getKey("key"));
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            Prefer the safer \`Object.prototype.hasOwnProperty.call()\` over calling \`hasOwnProperty()\` directly on objects.
+`,
+			suggestions: [
+				{
+					id: "usePrototypeCall",
+					updated: `
+const object = { key: 1 };
+declare function getKey(name: string): string;
+const has = Object.prototype.hasOwnProperty.call(object, getKey("key"));
+`,
+				},
+			],
+		},
+		{
+			code: `
 const object = { key: 1 };
 const has = object.hasOwnProperty(/* comment */ "key");
 `,

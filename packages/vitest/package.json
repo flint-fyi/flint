@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/vitest",
-	"version": "0.4.1",
+	"version": "0.4.0",
 	"description": "[Experimental] A Flint plugin for Vitest.",
 	"homepage": "https://flint.fyi/rules/vitest",
 	"repository": {
@@ -28,7 +28,7 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"typescript": "catalog:prod",
+		"typescript-native": "catalog:dev",
 		"zod": "catalog:prod"
 	},
 	"devDependencies": {

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -102,7 +102,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.parent.parent.kind === SyntaxKind.IfStatement &&
 				node.parent.parent.elseStatement === node.parent
 			) {
-				const grandparent = node.parent.parent;
 				const openBrace = node.parent.getStart(sourceFile);
 				const closeBrace = node.parent.getEnd();
 
@@ -117,14 +116,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				if (hasCommentsInRange(sourceFile, node.getEnd(), closeBrace - 1)) {
-					return;
-				}
-
-				const elseKeyword = grandparent
-					.getChildren(sourceFile)
-					.find((child) => child.kind === SyntaxKind.ElseKeyword);
-
-				if (!elseKeyword) {
 					return;
 				}
 

@@ -1,4 +1,5 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -74,7 +75,7 @@ function getNegativeIndexLengthNode(
 	target: AST.Expression,
 	sourceFile: AST.SourceFile,
 ): NegativeIndexInfo | undefined {
-	const unwrapped = unwrapParenthesizedNode(node);
+	const unwrapped = unwrapParenthesizedNode(node) as AST.Expression;
 
 	if (
 		unwrapped.kind !== SyntaxKind.BinaryExpression ||
@@ -130,7 +131,7 @@ function isSupportedType(
 	const type = getConstrainedTypeAtLocation(node, typeChecker);
 
 	return isTypeRecursive(type, (constituent) => {
-		if ((constituent.flags & ts.TypeFlags.Any) !== 0) {
+		if ((constituent.flags & TypeFlags.Any) !== 0) {
 			return true;
 		}
 
@@ -141,14 +142,14 @@ function isSupportedType(
 			return supportedTypes.has("Array");
 		}
 
-		const typeName = constituent.getSymbol()?.getName();
+		const typeName = constituent.getSymbol()?.name;
 		if (typeName) {
 			return supportedTypes.has(typeName);
 		}
 
 		if (
-			constituent.isStringLiteral() ||
-			(constituent.flags & ts.TypeFlags.String) !== 0
+			(constituent.flags & TypeFlags.StringLiteral) !== 0 ||
+			(constituent.flags & TypeFlags.String) !== 0
 		) {
 			return supportedTypes.has("String");
 		}

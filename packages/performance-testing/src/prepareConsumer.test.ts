@@ -37,19 +37,20 @@ describe("consumer preparation", () => {
 			).toEqual({
 				dependencies: { flint: "file:../../flint-1.2.3.tgz" },
 				name: "@flint.fyi/performance-testing-cases",
-				pnpm: {
-					overrides: {
-						flint: "file:../../flint-1.2.3.tgz",
-					},
-				},
 				private: true,
 				type: "module",
 			});
+			expect(
+				(
+					await fs.readFile(path.join(casesPath, "pnpm-workspace.yaml"))
+				).toString(),
+			).toBe(
+				'packages: []\noverrides:\n  "flint": "file:../../flint-1.2.3.tgz"\n',
+			);
 			expect(mockExeca).toHaveBeenCalledWith("pnpm", [
 				"install",
 				"--dir",
 				casesPath,
-				"--ignore-workspace",
 			]);
 		});
 	});

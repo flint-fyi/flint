@@ -1,5 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	TypeFlags,
+	type Program,
+	type Symbol,
+	type Type,
+	type TypeReference,
+} from "typescript-native/unstable/sync";
 
 import {
 	typescriptLanguage,
@@ -12,6 +18,10 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
+
+function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
+	return (type.flags & flags) !== 0;
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -64,10 +74,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const signature = typeChecker.getResolvedSignature(node);
-			if (!signature) {
-				return;
-			}
-
 			const parameters = signature.getParameters();
 
 			let parameterIndex = 0;
@@ -87,22 +93,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const restParameter = parameters.at(-1);
 						if (restParameter) {
 							const restType = typeChecker.getTypeOfSymbol(restParameter);
-							if (
-								tsutils.isTypeFlagSet(
-									restType,
-									ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-								)
-							) {
+							if (isTypeFlagSet(restType, TypeFlags.Any | TypeFlags.Unknown)) {
 								continue;
 							}
 							if (typeChecker.isArrayType(restType)) {
-								const elementType = typeChecker.getTypeArguments(restType)[0];
+								const elementType = typeChecker.getTypeArguments(
+									restType as TypeReference,
+								)[0];
 								if (
 									elementType &&
-									tsutils.isTypeFlagSet(
-										elementType,
-										ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-									)
+									isTypeFlagSet(elementType, TypeFlags.Any | TypeFlags.Unknown)
 								) {
 									continue;
 								}
@@ -147,7 +147,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								},
 							});
 						}
-						const tupleTypeArgs = typeChecker.getTypeArguments(spreadType);
+						const tupleTypeArgs = typeChecker.getTypeArguments(
+							spreadType as TypeReference,
+						);
 						parameterIndex += tupleTypeArgs.length;
 					}
 					continue;
@@ -170,6 +172,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							argumentType,
 							paramInfo.type,
 							argument,
+							typeChecker,
 						);
 						if (unsafeResult) {
 							context.report({
@@ -203,10 +206,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				if (
-					tsutils.isTypeFlagSet(
-						parameterInfo.type,
-						ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-					)
+					isTypeFlagSet(parameterInfo.type, TypeFlags.Any | TypeFlags.Unknown)
 				) {
 					parameterIndex++;
 					continue;
@@ -233,10 +233,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				NewExpression: checkCallArguments,
 				TaggedTemplateExpression: (node, { sourceFile, typeChecker }) => {
 					const signature = typeChecker.getResolvedSignature(node);
-					if (!signature) {
-						return;
-					}
-
 					const parameters = signature.getParameters();
 					if (parameters.length <= 1) {
 						return;
@@ -268,6 +264,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									expressionType,
 									parameterType,
 									expression,
+									typeChecker,
 								);
 								if (unsafeResult) {
 									context.report({
@@ -300,10 +297,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const parameterType = typeChecker.getTypeOfSymbol(parameter);
 
 						if (
-							tsutils.isTypeFlagSet(
-								parameterType,
-								ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-							)
+							isTypeFlagSet(parameterType, TypeFlags.Any | TypeFlags.Unknown)
 						) {
 							continue;
 						}
@@ -325,10 +319,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 
 		function getParameterAtIndex(
-			parameters: readonly ts.Symbol[],
+			parameters: readonly Symbol[],
 			index: number,
-			typeChecker: ts.TypeChecker,
-		): undefined | { symbol: ts.Symbol; tupleIndex?: number; type: ts.Type } {
+			typeChecker: Checker,
+		): undefined | { symbol: Symbol; tupleIndex?: number; type: Type } {
 			if (!parameters.length) {
 				return undefined;
 			}
@@ -338,8 +332,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return undefined;
 			}
 
-			const lastParamDeclaration = lastParam.declarations?.[0] as
-				| AST.AnyNode
+			const lastParamDeclaration = lastParam.declarations[0]?.resolve() as
+				| AST.Declaration
 				| undefined;
 
 			if (
@@ -358,7 +352,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				if (typeChecker.isTupleType(restType)) {
 					const tupleArgs = typeChecker.getTypeArguments(
-						restType as ts.TypeReference,
+						restType as TypeReference,
 					);
 					const tupleIndex = index - (parameters.length - 1);
 					const tupleType = tupleArgs[tupleIndex];
@@ -387,14 +381,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function checkTupleSpread(
-			tupleType: ts.TypeReference,
-			parameters: readonly ts.Symbol[],
+			tupleType: Type,
+			parameters: readonly Symbol[],
 			startIndex: number,
 			typeChecker: Checker,
-			program: ts.Program,
-			node: ts.Node,
-		): undefined | { paramType: ts.Type; type: string } {
-			const tupleTypeArgs = typeChecker.getTypeArguments(tupleType);
+			program: Program,
+			node: AST.AnyNode,
+		): undefined | { paramType: Type; type: string } {
+			const tupleTypeArgs = typeChecker.getTypeArguments(
+				tupleType as TypeReference,
+			);
 
 			for (const [i, elementType] of tupleTypeArgs.entries()) {
 				const anyType = discriminateAnyType(elementType, typeChecker, node);
@@ -414,12 +410,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				const parameterType = paramInfo.type;
 
-				if (
-					tsutils.isTypeFlagSet(
-						parameterType,
-						ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-					)
-				) {
+				if (isTypeFlagSet(parameterType, TypeFlags.Any | TypeFlags.Unknown)) {
 					continue;
 				}
 

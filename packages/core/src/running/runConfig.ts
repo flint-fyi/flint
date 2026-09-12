@@ -25,27 +25,24 @@ export async function runConfig(
 ): Promise<LintResults> {
 	const cacheLocationOverride =
 		cacheLocationFromCli || configDefinition.cacheLocation;
+	using resources = new DisposableStack();
 
 	// 1. Based on the original config definition, collect:
 	//   - The full list of all file paths to be linted
 	//   - Any cached results amongst those file paths
 	//   - The language (virtual) file representations
 	//   - For each rule, the options it'll run with on each of its files
+	// The file factories and per-file language files register themselves on the
+	// `resources` stack (see collectLanguageFilesByFilePath), so disposing it tears
+	// down every TypeScript project session opened during the run.
 	const { allFilePaths, cached, languageFilesByFilePath, rulesOptionsByFile } =
 		await collectFilesAndOptions(
 			configDefinition,
 			host,
 			ignoreCache,
 			cacheLocationOverride,
+			resources,
 		);
-
-	using files = new DisposableStack();
-
-	for (const languageAndFiles of languageFilesByFilePath.values()) {
-		for (const { file } of languageAndFiles) {
-			files.use(file);
-		}
-	}
 
 	// 2. Walk each file once, running all of its rules and storing their reports
 	const reportsByFilePath = await runRules(

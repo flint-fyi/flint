@@ -1,5 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -38,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (
 				unwrapped.kind === SyntaxKind.BinaryExpression &&
-				tsutils.isAssignmentKind(unwrapped.operatorToken.kind)
+				isAssignmentOperator(unwrapped.operatorToken.kind)
 			) {
 				context.report({
 					message: "noReturnAssign",

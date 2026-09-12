@@ -9,16 +9,25 @@
 	"include": ["tests", "vitest.setup.ts"],
 	"references": [
 		{
+			"path": "../astro"
+		},
+		{
 			"path": "../flint"
 		},
 		{
 			"path": "../spelling"
 		},
 		{
+			"path": "../svelte"
+		},
+		{
 			"path": "../ts"
 		},
 		{
 			"path": "../utils"
+		},
+		{
+			"path": "../vue"
 		}
 	]
 }

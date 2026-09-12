@@ -1,11 +1,15 @@
-import { SyntaxKind, type Expression, type SourceFile } from "typescript";
+import {
+	SyntaxKind,
+	type Expression,
+	type SourceFile,
+} from "typescript-native/unstable/ast";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function endsWithNonNullAssertion(node: Expression, sourceFile: SourceFile) {
-	return node.getLastToken(sourceFile)?.kind === SyntaxKind.ExclamationToken;
+	return node.getText(sourceFile).trimEnd().endsWith("!");
 }
 
 const confusingOperatorTexts = new Map([

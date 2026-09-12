@@ -1,11 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, type ModifierLike, type NodeArray } from "typescript";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
-import {
-	getTSNodeRange,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -62,17 +58,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						allowDeclarations &&
-						tsutils.includesModifier(
-							node.modifiers as NodeArray<ModifierLike>,
-							SyntaxKind.DeclareKeyword,
+						node.modifiers?.some(
+							(modifier) => modifier.kind === SyntaxKind.DeclareKeyword,
 						)
 					) {
 						return;
 					}
 
+					const begin = node.getStart(sourceFile);
+					const scanner = createScanner(
+						true,
+						sourceFile.languageVariant,
+						sourceFile.text,
+						begin,
+						node.getEnd() - begin,
+					);
+					scanner.scan();
+
 					context.report({
 						message: "preferModules",
-						range: getTSNodeRange(node.getChildAt(0), sourceFile),
+						range: {
+							begin: scanner.getTokenStart(),
+							end: scanner.getTokenEnd(),
+						},
 					});
 				},
 			},

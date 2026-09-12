@@ -1,5 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -34,10 +34,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 						node.expression.name.text === "substring" &&
-						tsutils.isTypeFlagSet(
-							getConstrainedTypeAtLocation(node, typeChecker),
-							TypeFlags.StringLike,
-						)
+						(getConstrainedTypeAtLocation(node, typeChecker).flags &
+							TypeFlags.StringLike) !==
+							0
 					) {
 						const args = node.arguments.map((arg) => arg.getText(sourceFile));
 						const receiver = node.expression.expression.getText(sourceFile);

@@ -1,55 +1,171 @@
 import path from "node:path";
 
-import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
-import { getPreEmitDiagnostics, type Program } from "typescript";
+import {
+	SpanMap,
+	type Node as NativeNode,
+} from "typescript-native/unstable/ast";
+import type {
+	Diagnostic,
+	Program,
+	Project,
+	Snapshot,
+} from "typescript-native/unstable/sync";
 
 import {
 	createLanguage,
+	getColumnAndLineOfPosition,
+	type CharacterReportRange,
 	type FileAboutData,
-	type FileVisitors,
 	type Language,
 	type LanguageFileDefinition,
 	type LanguageReports,
+	type RuleVisitors,
 } from "@flint.fyi/core";
 import { assert, nullThrows } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
+import { getTypeScriptContentMapperRegistrations } from "./contentMappers.ts";
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 import { createNodeVisitorsForFile } from "./createNodeVisitorsForFile.ts";
-import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
+import {
+	createTypeScriptProjectSession,
+	type TypeScriptProjectSession,
+} from "./createTypeScriptProjectSession.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
+import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
-import type { TypeScriptNodeVisitors } from "./nodes.ts";
+import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
+import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
-import type { Checker } from "./types/checker.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
+
+export type { TypeScriptFileServices } from "./types/services.ts";
 
 const log = debugForFile(import.meta.filename);
 
+type ContentMappedLanguageFileDefinition =
+	LanguageFileDefinition<TypeScriptFileServices> & {
+		__contentMapperLanguageReports: LanguageReports;
+	};
+
 interface GlobalLanguageState {
 	packageVersion: string;
-	volarCreateFile: null | VolarCreateFile;
 }
-type VolarCreateFile = (
-	data: FileAboutData,
+
+export function visitTypeScriptNodes<Services extends object>(
+	sourceFile: AST.SourceFile,
+	visitors: RuleVisitors<TypeScriptNodeVisitors, Services>,
+	services: Services,
+): void {
+	const visit = (node: NativeNode): void => {
+		const syntaxKindName = NodeSyntaxKinds[node.kind];
+		if (typeof syntaxKindName !== "string") {
+			node.forEachChild(visit);
+			return;
+		}
+
+		const key = syntaxKindName as keyof TypeScriptNodesByName;
+
+		// @ts-expect-error -- A dynamically selected visitor accepts this kind's node.
+		visitors[key]?.(node, services);
+		node.forEachChild(visit);
+		// @ts-expect-error -- A dynamically selected visitor accepts this kind's node.
+		visitors[`${key}:exit`]?.(node, services);
+	};
+
+	visit(sourceFile);
+}
+
+function adjustMappedRange(
+	range: CharacterReportRange,
+	spanMap: SpanMap | undefined,
+	requireExact = false,
+): CharacterReportRange | null {
+	if (range.begin < 0) {
+		return { begin: -range.begin, end: range.end };
+	}
+	if (!spanMap) {
+		return null;
+	}
+	const mapped = spanMap.virtualToOriginalSpan({
+		end: range.end,
+		pos: range.begin,
+	});
+	if (
+		SpanMap.isNone(mapped.fidelity) ||
+		(requireExact && !SpanMap.isExact(mapped.fidelity))
+	) {
+		return null;
+	}
+	return { begin: mapped.range.pos, end: mapped.range.end };
+}
+
+function getMappedSourceFiles(
 	program: Program,
 	sourceFile: AST.SourceFile,
-) => VolarLanguageFileDefinition;
+): AST.SourceFile[] {
+	const sourceFiles = [sourceFile];
+	for (const fileName of new Set(
+		sourceFile.supplementalSourceFileNames ?? [],
+	)) {
+		const supplementalSourceFile = program.getSourceFile(fileName);
+		if (supplementalSourceFile && supplementalSourceFile !== sourceFile) {
+			sourceFiles.push(supplementalSourceFile as AST.SourceFile);
+		}
+	}
+	return sourceFiles;
+}
 
-type VolarLanguageFileDefinition =
-	LanguageFileDefinition<TypeScriptFileServices> & {
-		__volarServices: {
-			getLanguageReports(): LanguageReports;
-			runVisitors(
-				fileVisitors: readonly FileVisitors<
-					TypeScriptNodeVisitors,
-					TypeScriptFileServices
-				>[],
-			): void;
+function mapDiagnosticToAuthoredSource(
+	diagnostic: Diagnostic,
+	sourceFiles: AST.SourceFile[],
+	about: FileAboutData,
+): Diagnostic | undefined {
+	const relatedInformation = diagnostic.relatedInformation?.flatMap(
+		(related) => {
+			const mapped = mapDiagnosticToAuthoredSource(related, sourceFiles, about);
+			return mapped ? [mapped] : [];
+		},
+	);
+	const sourceFile = sourceFiles.find(
+		(candidate) => candidate.fileName === diagnostic.fileName,
+	);
+	if (!sourceFile?.spanMap) {
+		return {
+			...diagnostic,
+			...(relatedInformation && { relatedInformation }),
 		};
+	}
+	const range = adjustMappedRange(
+		{ begin: diagnostic.pos, end: diagnostic.end },
+		sourceFile.spanMap,
+	);
+	if (!range) {
+		return undefined;
+	}
+	const startPosition = getColumnAndLineOfPosition(
+		about.sourceText,
+		range.begin,
+	);
+	const endPosition = getColumnAndLineOfPosition(about.sourceText, range.end);
+	return {
+		...diagnostic,
+		end: range.end,
+		endPosition: {
+			character: endPosition.column,
+			line: endPosition.line,
+		},
+		fileName: about.filePathAbsolute,
+		pos: range.begin,
+		...(relatedInformation && { relatedInformation }),
+		startPosition: {
+			character: startPosition.column,
+			line: startPosition.line,
+		},
 	};
+}
 
 const stateSymbol = Symbol.for("@flint.fyi/typescript-language/state");
 
@@ -62,18 +178,9 @@ assert(
 	`Two different versions of ${packageJson.name} are imported: ${packageJson.version} and ${globalTyped[stateSymbol]?.packageVersion}`,
 );
 
-const languageState: GlobalLanguageState = (globalTyped[stateSymbol] = {
+globalTyped[stateSymbol] = {
 	packageVersion: packageJson.version,
-	volarCreateFile: null,
-});
-
-export function setVolarCreateFile(create: VolarCreateFile): void {
-	assert(
-		languageState.volarCreateFile == null,
-		"setVolarCreateFile is expected to be called only once",
-	);
-	languageState.volarCreateFile = create;
-}
+};
 
 export const typescriptLanguage: Language<
 	TypeScriptNodeVisitors,
@@ -83,94 +190,382 @@ export const typescriptLanguage: Language<
 		name: "TypeScript",
 	},
 	createFileFactory: (host) => {
-		const { service } = createProjectService({
-			host: createTypeScriptServerHost(host),
-		});
+		const unwrapError = (error: unknown): unknown[] =>
+			error instanceof AggregateError ? error.errors : [error];
+		let sessionState:
+			| undefined
+			| {
+					activeFiles: number;
+					disposed: boolean;
+					openFiles: string[];
+					prepared: boolean;
+					session: TypeScriptProjectSession;
+			  };
+		let disposed = false;
+		let failed = false;
+		const disposeSession = (
+			currentSessionState: NonNullable<typeof sessionState>,
+		): void => {
+			if (currentSessionState.disposed) {
+				return;
+			}
+			currentSessionState.disposed = true;
+			currentSessionState.session[Symbol.dispose]();
+		};
+		const disposeSessionForFailure = (
+			currentSessionState: NonNullable<typeof sessionState>,
+		): undefined | { disposalError: unknown } => {
+			try {
+				disposeSession(currentSessionState);
+			} catch (disposalError) {
+				return { disposalError };
+			}
+		};
+		const failSession = (
+			currentSessionState: NonNullable<typeof sessionState>,
+			error: unknown,
+		): never => {
+			failed = true;
+			const disposalFailure = disposeSessionForFailure(currentSessionState);
+			if (disposalFailure) {
+				throw new AggregateError(
+					[error, ...unwrapError(disposalFailure.disposalError)],
+					"TypeScript file creation and project session cleanup both failed.",
+					{ cause: error },
+				);
+			}
+			throw error;
+		};
 
 		function createFile(data: FileAboutData) {
-			log("Opening client file:", data.filePathAbsolute);
-			service.openClientFile(data.filePathAbsolute);
-
-			log("Retrieving client services:", data.filePathAbsolute);
-			const scriptInfo = nullThrows(
-				service.getScriptInfo(data.filePathAbsolute),
-				`Could not find script info for file: ${data.filePathAbsolute}`,
-			);
-
-			const defaultProject = nullThrows(
-				service.getDefaultProjectForFile(scriptInfo.fileName, true),
-				`Could not find default project for file: ${data.filePathAbsolute}`,
-			);
-
-			const program = nullThrows(
-				defaultProject.getLanguageService(true).getProgram(),
-				`Could not retrieve program for file: ${data.filePathAbsolute}`,
-			);
-
-			const sourceFile = nullThrows(
-				program.getSourceFile(data.filePathAbsolute),
-				`Could not retrieve source file for: ${data.filePathAbsolute}`,
-			);
-
-			const fileExtension = path.extname(data.filePathAbsolute);
-			if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
-				return {
-					...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
-					about: data,
-					language: typescriptLanguage,
-					services: {
-						program,
-						sourceFile: sourceFile as AST.SourceFile,
-						// ew, I don't like this. the ts -> AST type story is not great
-						typeChecker: program.getTypeChecker() as unknown as Checker,
-					},
-					[Symbol.dispose]() {
-						service.closeClientFile(data.filePathAbsolute);
-					},
-				};
+			if (disposed || failed) {
+				throw new Error("TypeScript project session has been disposed.");
 			}
+			const currentSessionState = (sessionState ??= {
+				activeFiles: 0,
+				disposed: false,
+				openFiles: [] as string[],
+				prepared: false,
+				session: createTypeScriptProjectSession(host),
+			});
 
-			if (languageState.volarCreateFile == null) {
-				throwUnknownLanguageExtension(data.filePathAbsolute);
+			log("Opening native file:", data.filePathAbsolute);
+			// When prepareFiles has already batch-opened every file, the snapshot is
+			// stable and this file is directly queryable, so the per-file update is
+			// skipped — doing one update per file is quadratic in the file count.
+			const alreadyPrepared =
+				currentSessionState.prepared &&
+				currentSessionState.openFiles.includes(data.filePathAbsolute);
+			const openingFile =
+				!alreadyPrepared &&
+				!currentSessionState.openFiles.includes(data.filePathAbsolute);
+			if (!alreadyPrepared) {
+				const restartingOpenFiles =
+					currentSessionState.openFiles.length > 0 &&
+					currentSessionState.activeFiles === 0;
+				if (restartingOpenFiles) {
+					try {
+						currentSessionState.session.update({
+							closeFiles: [...currentSessionState.openFiles],
+						});
+					} catch (error) {
+						return failSession(currentSessionState, error);
+					}
+				}
+				if (openingFile) {
+					currentSessionState.openFiles.push(data.filePathAbsolute);
+				}
+				// The session detects changes to every other file it is tracking by
+				// comparing modification times, so only the file being opened needs to
+				// be flagged as changed here.
+				try {
+					currentSessionState.session.update({
+						changed: [data.filePathAbsolute],
+						...(restartingOpenFiles
+							? { openFiles: [...currentSessionState.openFiles] }
+							: openingFile
+								? { openFiles: [data.filePathAbsolute] }
+								: {}),
+					});
+				} catch (error) {
+					return failSession(currentSessionState, error);
+				}
 			}
+			let fileDisposed = false;
 
-			return {
-				...languageState.volarCreateFile(
-					data,
-					program,
-					sourceFile as AST.SourceFile,
-				),
-				[Symbol.dispose]() {
-					service.closeClientFile(data.filePathAbsolute);
+			// The project and source file are resolved through native lookups, and
+			// every access to a service getter (and each is invoked whenever the
+			// services are spread into a visitor run) would otherwise repeat them.
+			// They are stable while the snapshot is unchanged — which it is for the
+			// whole visitor phase — so memoize them and invalidate on a new snapshot.
+			let cachedSnapshot: Snapshot | undefined;
+			let cachedProject: Project | undefined;
+			let cachedSourceFile: AST.SourceFile | undefined;
+			const getSnapshot = (): Snapshot => {
+				if (currentSessionState.disposed) {
+					throw new Error("TypeScript project session has been disposed.");
+				}
+				return currentSessionState.session.getSnapshot();
+			};
+			const getProject = (): Project => {
+				const snapshot = getSnapshot();
+				if (snapshot !== cachedSnapshot) {
+					cachedSnapshot = snapshot;
+					cachedProject = undefined;
+					cachedSourceFile = undefined;
+				}
+				return (cachedProject ??= nullThrows(
+					currentSessionState.session.getProjectForFile(data.filePathAbsolute),
+					`Could not find project for file: ${data.filePathAbsolute}`,
+				));
+			};
+			const getSourceFile = (): AST.SourceFile => {
+				const project = getProject();
+				return (cachedSourceFile ??= nullThrows(
+					project.program.getSourceFile(data.filePathAbsolute),
+					`Could not retrieve source file for: ${data.filePathAbsolute}`,
+				) as AST.SourceFile);
+			};
+			const services: TypeScriptFileServices = {
+				get program() {
+					return getProject().program;
+				},
+				get project() {
+					return getProject();
+				},
+				get snapshot() {
+					return getSnapshot();
+				},
+				get sourceFile() {
+					return getSourceFile();
+				},
+				get spanMap() {
+					return getSourceFile().spanMap;
+				},
+				get typeChecker() {
+					return getProject().checker;
 				},
 			};
+			const dispose = (): void => {
+				if (fileDisposed) {
+					return;
+				}
+				fileDisposed = true;
+				currentSessionState.activeFiles -= 1;
+			};
+			try {
+				const sourceFile = getSourceFile();
+				const fileExtension = path.extname(data.filePathAbsolute);
+				const mapperRegistration =
+					getTypeScriptContentMapperRegistrations().find((registration) =>
+						registration.extensions.includes(fileExtension),
+					);
+				if (
+					typeScriptCoreSupportedExtensions.has(fileExtension) ||
+					mapperRegistration
+				) {
+					const mapped = mapperRegistration?.createFile?.({
+						about: data,
+						services,
+						sourceFile,
+						sourceText: host.readFileSync(data.filePathAbsolute) ?? "",
+					});
+					if (mapped?.services) {
+						Object.assign(services, mapped.services);
+					}
+					const file = {
+						...(mapperRegistration
+							? {
+									...(mapped?.languageReports && {
+										__contentMapperLanguageReports: mapped.languageReports,
+									}),
+									...(mapped?.directives && { directives: mapped.directives }),
+									...(mapped?.reports && { reports: mapped.reports }),
+								}
+							: parseDirectivesFromTypeScriptFile(sourceFile)),
+						about: data,
+						...(mapperRegistration && {
+							adjustFixRange: (range: CharacterReportRange) =>
+								adjustMappedRange(range, sourceFile.spanMap, true),
+							adjustReportRange: (range: CharacterReportRange) =>
+								adjustMappedRange(range, sourceFile.spanMap),
+						}),
+						language: typescriptLanguage,
+						services,
+						[Symbol.dispose]: dispose,
+					};
+					currentSessionState.activeFiles += 1;
+					return file;
+				}
+
+				throwUnknownLanguageExtension(data.filePathAbsolute);
+			} catch (error) {
+				// A failure to prepare this one file (for example, a content-mapped
+				// file with no ancestor tsconfig) must not tear down the session that
+				// every other file shares. Roll back this file's open state and
+				// rethrow so only this file fails.
+				if (openingFile) {
+					const index = currentSessionState.openFiles.indexOf(
+						data.filePathAbsolute,
+					);
+					if (index !== -1) {
+						currentSessionState.openFiles.splice(index, 1);
+					}
+				}
+				throw error;
+			}
 		}
 
-		return { createFile };
+		function prepareFiles(filePathsAbsolute: readonly string[]) {
+			if (disposed || failed || filePathsAbsolute.length === 0) {
+				return;
+			}
+			const currentSessionState = (sessionState ??= {
+				activeFiles: 0,
+				disposed: false,
+				openFiles: [] as string[],
+				prepared: false,
+				session: createTypeScriptProjectSession(host),
+			});
+			const alreadyOpen = new Set(currentSessionState.openFiles);
+			const newFilePaths = filePathsAbsolute.filter(
+				(filePath) => !alreadyOpen.has(filePath),
+			);
+			if (newFilePaths.length === 0) {
+				currentSessionState.prepared = true;
+				return;
+			}
+			for (const filePath of newFilePaths) {
+				currentSessionState.openFiles.push(filePath);
+			}
+			// Open every file in a single update so the whole lint pass builds the
+			// program once, rather than rebuilding it per file (which is quadratic).
+			try {
+				currentSessionState.session.update({
+					changed: [...newFilePaths],
+					openFiles: [...currentSessionState.openFiles],
+				});
+				currentSessionState.prepared = true;
+			} catch {
+				// Batch preparation failed (for example, a malformed tsconfig). Roll
+				// back so createFile falls back to opening files one at a time, which
+				// preserves per-file error isolation.
+				for (const filePath of newFilePaths) {
+					const index = currentSessionState.openFiles.indexOf(filePath);
+					if (index !== -1) {
+						currentSessionState.openFiles.splice(index, 1);
+					}
+				}
+				currentSessionState.prepared = false;
+			}
+		}
+
+		return {
+			createFile,
+			prepareFiles,
+			[Symbol.dispose]: () => {
+				if (disposed) {
+					return;
+				}
+				disposed = true;
+				if (sessionState) {
+					disposeSession(sessionState);
+				}
+			},
+		};
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
 	getLanguageReports(file) {
-		if ("__volarServices" in file) {
-			return (
-				file as VolarLanguageFileDefinition
-			).__volarServices.getLanguageReports();
-		}
-		return getPreEmitDiagnostics(
+		const reports: LanguageReports = [];
+		const reportKeys = new Set<string>();
+		const sourceFiles = getMappedSourceFiles(
 			file.services.program,
 			file.services.sourceFile,
-		).map(convertTypeScriptDiagnosticToLanguageReport);
+		);
+		for (const sourceFile of sourceFiles) {
+			for (const diagnostic of getTypeScriptDiagnostics(
+				file.services.program,
+				sourceFile.fileName,
+			)) {
+				const mappedDiagnostic = mapDiagnosticToAuthoredSource(
+					diagnostic,
+					sourceFiles,
+					file.about,
+				);
+				if (!mappedDiagnostic) {
+					continue;
+				}
+				const report =
+					convertTypeScriptDiagnosticToLanguageReport(mappedDiagnostic);
+				const key = JSON.stringify([
+					mappedDiagnostic.category,
+					mappedDiagnostic.code,
+					mappedDiagnostic.text,
+					mappedDiagnostic.messageChain,
+					mappedDiagnostic.relatedInformation,
+					report.range,
+				]);
+				if (!reportKeys.has(key)) {
+					reportKeys.add(key);
+					reports.push(report);
+				}
+			}
+		}
+		return "__contentMapperLanguageReports" in file
+			? [
+					...reports,
+					...(file as ContentMappedLanguageFileDefinition)
+						.__contentMapperLanguageReports,
+				]
+			: reports;
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
 	runFileVisitors(file, fileVisitors) {
-		if ("__volarServices" in file) {
-			(file as VolarLanguageFileDefinition).__volarServices.runVisitors(
-				fileVisitors,
-			);
-			return;
+		for (const sourceFile of getMappedSourceFiles(
+			file.services.program,
+			file.services.sourceFile,
+		)) {
+			const adjustFixRange = file.adjustFixRange;
+			const adjustReportRange = file.adjustReportRange;
+			if (adjustFixRange) {
+				file.adjustFixRange = (range) =>
+					adjustMappedRange(range, sourceFile.spanMap, true);
+			}
+			if (adjustReportRange) {
+				file.adjustReportRange = (range) =>
+					adjustMappedRange(range, sourceFile.spanMap);
+			}
+			try {
+				// Walk each mapped source file once for all of its rules. For
+				// content-mapped supplemental source files, re-key every rule's
+				// services to that source file so reports land in the right
+				// coordinates; the primary source file uses the visitors as-is.
+				const sourceFileVisitors =
+					sourceFile === file.services.sourceFile
+						? fileVisitors
+						: fileVisitors.map((fileVisitor) => ({
+								...fileVisitor,
+								services: {
+									...fileVisitor.services,
+									sourceFile,
+									spanMap: sourceFile.spanMap,
+								},
+							}));
+				createNodeVisitorsForFile(sourceFileVisitors)?.visit(sourceFile);
+			} finally {
+				if (adjustFixRange) {
+					file.adjustFixRange = adjustFixRange;
+				} else {
+					delete file.adjustFixRange;
+				}
+				if (adjustReportRange) {
+					file.adjustReportRange = adjustReportRange;
+				} else {
+					delete file.adjustReportRange;
+				}
+			}
 		}
-
-		createNodeVisitorsForFile(fileVisitors)?.visit(file.services.sourceFile);
 	},
 });
 

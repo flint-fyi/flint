@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	isStaticString,
@@ -118,7 +118,7 @@ export function parseTestCaseInvalid(
 
 function getTestCaseCode(node: ParsedTestCaseCodeNode) {
 	if (isStringRawNoSubstitution(node)) {
-		return node.template.rawText ?? node.template.text;
+		return node.template.getText().slice(1, -1);
 	}
 
 	return node.text;

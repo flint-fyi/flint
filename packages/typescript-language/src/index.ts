@@ -1,4 +1,8 @@
 export {
+	registerTypeScriptContentMapper,
+	type TypeScriptContentMapperRegistration,
+} from "./contentMappers.ts";
+export {
 	convertTypeScriptDiagnosticToLanguageReport,
 	type TSDiagnostic,
 } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
@@ -8,14 +12,23 @@ export {
 	type NodeVisitorSubscriptions,
 } from "./createNodeVisitorsForFile.ts";
 export {
+	createTypeScriptOverlayConfig,
+	type TypeScriptOverlayConfig,
+} from "./createTypeScriptOverlayConfig.ts";
+export {
+	createTypeScriptProjectSession,
+	type TypeScriptProjectChanges,
+	type TypeScriptProjectSession,
+} from "./createTypeScriptProjectSession.ts";
+export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 export { getTSNodeRange } from "./getTSNodeRange.ts";
 export {
-	setVolarCreateFile,
 	throwUnknownLanguageExtension,
 	typescriptLanguage,
+	visitTypeScriptNodes,
 } from "./language.ts";
 export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 export { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";

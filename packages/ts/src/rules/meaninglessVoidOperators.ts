@@ -1,16 +1,12 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-function isVoidOrUndefinedType(type: ts.Type) {
-	return tsutils.isTypeFlagSet(
-		type,
-		ts.TypeFlags.Void | ts.TypeFlags.Undefined,
-	);
+function isVoidOrUndefinedType(type: Type): boolean {
+	return (type.flags & (TypeFlags.Void | TypeFlags.Undefined)) !== 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -43,7 +39,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						typeChecker,
 					);
 
-					const unionParts = tsutils.unionConstituents(argumentType);
+					const unionParts = argumentType.isUnionType()
+						? argumentType.getTypes()
+						: [argumentType];
 
 					if (!unionParts.every(isVoidOrUndefinedType)) {
 						return;

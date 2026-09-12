@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import { domLibRuleTester } from "./ruleTester.ts";
 import rule from "./tslintComments.ts";
 
@@ -62,6 +64,12 @@ console.log("hello");
 `,
 		},
 		{
+			code: `const value = /* tslint:disable */ 1;`,
+			snapshot: `const value = /* tslint:disable */ 1;
+              ~~~~~~~~~~~~~~~~~~~~
+              TSLint is deprecated and its comments are no longer necessary.`,
+		},
+		{
 			code: `
 // tslint:disable no-console no-debugger
 const value = 1;
@@ -77,6 +85,22 @@ const value = 1;
 	valid: [
 		`// Regular comment`,
 		`const value = 1;`,
+		`const pattern = /[/* tslint:disable]/;`,
+		`const input = 1; const value = \`a \${input} /* tslint:disable */\`;`,
+		{
+			code: `const value = <div>/* tslint:disable */</div>;`,
+			fileName: "file.tsx",
+			files: {
+				"global.d.ts": `
+declare namespace JSX {
+    interface IntrinsicElements {
+        div: {};
+    }
+}
+`,
+				...createRuleTesterTSConfig({ jsx: "preserve" }),
+			},
+		},
 		`// This comment mentions tslint but is not a directive`,
 		`// TODO: migrate from tslint to eslint`,
 		`// The tslint:disable format is explained here`,

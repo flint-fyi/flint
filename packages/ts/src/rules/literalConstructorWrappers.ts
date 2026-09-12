@@ -1,4 +1,7 @@
-import { isLiteralExpression, SyntaxKind } from "typescript";
+import {
+	isLiteralExpression,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	isGlobalDeclarationOfName,

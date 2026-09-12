@@ -1,7 +1,9 @@
-import type { Declaration, Program } from "typescript";
+import type { Program } from "typescript-native/unstable/sync";
+
+import type * as AST from "../types/ast.ts";
 
 export function declarationIncludesGlobal(
-	declaration: Declaration,
+	declaration: AST.Declaration,
 	program: Program,
 ): boolean {
 	const sourceFile = declaration.getSourceFile();

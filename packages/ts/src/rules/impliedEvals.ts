@@ -1,12 +1,10 @@
-import * as tsutils from "ts-api-utils";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import {
-	SignatureKind,
 	SymbolFlags,
-	SyntaxKind,
 	TypeFlags,
 	type Program,
 	type Type,
-} from "typescript";
+} from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -72,21 +70,16 @@ function isBind(node: AST.AnyNode) {
 	}
 }
 
-function isDefinitelyString(type: Type) {
-	if (
-		tsutils.isTypeFlagSet(
-			type,
-			TypeFlags.Any | TypeFlags.Unknown | TypeFlags.Never,
-		)
-	) {
+function isDefinitelyString(type: Type): boolean {
+	if (type.flags & (TypeFlags.Any | TypeFlags.Unknown | TypeFlags.Never)) {
 		return false;
 	}
 
-	if (type.isUnion()) {
-		return type.types.every(isDefinitelyString);
+	if (type.isUnionType()) {
+		return type.getTypes().every(isDefinitelyString);
 	}
 
-	return tsutils.isTypeFlagSet(type, TypeFlags.StringLike);
+	return (type.flags & TypeFlags.StringLike) !== 0;
 }
 
 function isFunction(
@@ -131,7 +124,7 @@ function isFunctionType(
 	const type = typeChecker.getTypeAtLocation(node);
 
 	if (
-		tsutils.isTypeFlagSet(type, TypeFlags.Any | TypeFlags.Unknown) ||
+		(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||
 		isBuiltinSymbolLike(program, type, "Function")
 	) {
 		return true;
@@ -141,14 +134,12 @@ function isFunctionType(
 
 	if (
 		symbol &&
-		tsutils.isSymbolFlagSet(symbol, SymbolFlags.Function | SymbolFlags.Method)
+		(symbol.flags & (SymbolFlags.Function | SymbolFlags.Method)) !== 0
 	) {
 		return true;
 	}
 
-	const signatures = typeChecker.getSignaturesOfType(type, SignatureKind.Call);
-
-	return !!signatures.length;
+	return !!type.getCallSignatures().length;
 }
 
 function isReferenceToGlobalFunction(
@@ -168,14 +159,20 @@ function isReferenceToGlobalFunction(
 		return true;
 	}
 
-	return !!symbol.getDeclarations()?.some((declaration) => {
-		const sourceFile = declaration.getSourceFile();
-		return (
-			program.isSourceFileDefaultLibrary(sourceFile) ||
-			sourceFile.fileName.includes("node_modules/@types/node/") ||
-			/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)
-		);
-	});
+	return symbol.declarations.some(
+		(declarationHandle: (typeof symbol.declarations)[number]) => {
+			const declaration = declarationHandle.resolve();
+			if (!declaration) {
+				return false;
+			}
+			const sourceFile = declaration.getSourceFile();
+			return (
+				program.isSourceFileDefaultLibrary(sourceFile) ||
+				sourceFile.fileName.includes("node_modules/@types/node/") ||
+				/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)
+			);
+		},
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

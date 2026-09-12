@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/solid",
-	"version": "0.4.1",
+	"version": "0.4.0",
 	"description": "[Experimental] A Flint plugin for SolidJS code.",
 	"homepage": "https://flint.fyi/rules/solid",
 	"repository": {
@@ -25,8 +25,7 @@
 		"test": "vitest --project solid"
 	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:^",
-		"typescript": "catalog:prod"
+		"@flint.fyi/core": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

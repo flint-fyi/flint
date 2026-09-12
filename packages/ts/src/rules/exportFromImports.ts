@@ -1,5 +1,4 @@
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticStringValue,
@@ -20,7 +19,7 @@ interface ImportInfo {
 
 function getImportInfo(
 	node: AST.ImportDeclaration,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): ImportInfo | undefined {
 	if (!node.importClause) {
 		return undefined;

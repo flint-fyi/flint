@@ -1,4 +1,9 @@
-import { isTypeNode, SymbolFlags, SyntaxKind, type Symbol } from "typescript";
+import {
+	createScanner,
+	isTypeNode,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
+import { SymbolFlags, type Symbol } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
 import {
@@ -172,9 +177,21 @@ function getTypeKeywordFixRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 }
 
 function getTypeKeywordRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
-	for (const child of node.getChildren(sourceFile)) {
-		if (child.kind === SyntaxKind.TypeKeyword) {
-			const range = getTSNodeRange(child, sourceFile);
+	const nodeStart = node.getStart(sourceFile);
+	const scanner = createScanner(
+		true,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		nodeStart,
+		node.getEnd() - nodeStart,
+	);
+
+	while (scanner.scan() !== SyntaxKind.EndOfFile) {
+		if (scanner.getToken() === SyntaxKind.TypeKeyword) {
+			const range = {
+				begin: scanner.getTokenStart(),
+				end: scanner.getTokenEnd(),
+			};
 			if (
 				node.kind === SyntaxKind.ImportSpecifier &&
 				sourceFile.text[range.end] === " "
@@ -232,8 +249,8 @@ function isOnlyTypeReference(node: AST.Identifier) {
 		}
 
 		if (
-			isTypeNode(parent) &&
-			parent.kind !== SyntaxKind.ExpressionWithTypeArguments
+			parent.kind !== SyntaxKind.ExpressionWithTypeArguments &&
+			isTypeNode(parent)
 		) {
 			return true;
 		}
@@ -263,7 +280,7 @@ function isPropertySignatureComputedReference(node: AST.Identifier) {
 				continue;
 
 			case SyntaxKind.PropertyAccessExpression:
-				if ((parent as AST.PropertyAccessExpression).expression !== child) {
+				if (parent.expression !== child) {
 					return false;
 				}
 				child = parent;
@@ -289,7 +306,11 @@ function isTypeOnlyExportReference(node: AST.Identifier) {
 	}
 
 	const exportDeclaration = parent.parent.parent;
-	return parent.name === node && exportDeclaration.isTypeOnly;
+	return (
+		parent.name === node &&
+		exportDeclaration.kind === SyntaxKind.ExportDeclaration &&
+		exportDeclaration.isTypeOnly
+	);
 }
 
 function isTypeQueryReference(node: AST.Identifier) {
@@ -462,7 +483,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							const importedSpecifier = importedSpecifiers.find(
 								(specifier) =>
 									specifier.local.text === node.text &&
-									(!specifier.symbol || specifier.symbol === symbol),
+									(!specifier.symbol || specifier.symbol.id === symbol?.id),
 							);
 
 							if (importedSpecifier) {
@@ -540,7 +561,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							if (
 								!report.valueSpecifiers.length &&
 								!report.unusedSpecifiers.length &&
-								!report.node.attributes?.elements.length
+								!report.node.attributes?.attributes.length
 							) {
 								context.report({
 									fix,

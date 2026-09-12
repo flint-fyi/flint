@@ -1,7 +1,6 @@
-import { SyntaxKind } from "typescript";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -33,33 +32,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const syntaxList = node.parent
-						.getChildren(sourceFile)
-						.find((child) => child.kind === SyntaxKind.SyntaxList);
-
-					if (!syntaxList) {
-						return;
-					}
-
-					const children = syntaxList.getChildren(sourceFile);
-					const omittedIndex = children.indexOf(node);
-
-					for (let i = omittedIndex + 1; i < children.length; i++) {
-						const child = nullThrows(
-							children[i],
-							"Child is expected to be present by the loop condition",
-						);
-						if (child.kind === SyntaxKind.CommaToken) {
-							context.report({
-								message: "noSparseArray",
-								range: {
-									begin: child.getStart(sourceFile),
-									end: child.getEnd(),
-								},
-							});
-							break;
-						}
-					}
+					const scanner = createScanner(
+						true,
+						sourceFile.languageVariant,
+						sourceFile.text,
+						node.getStart(sourceFile),
+					);
+					scanner.scan();
+					context.report({
+						message: "noSparseArray",
+						range: {
+							begin: scanner.getTokenStart(),
+							end: scanner.getTokenEnd(),
+						},
+					});
 				},
 			},
 		};

@@ -6,13 +6,13 @@ export function isDeclaredInNodeTypes(
 ): boolean {
 	const declarations = typeChecker
 		.getTypeAtLocation(node)
-		.getSymbol()
-		?.getDeclarations();
+		.getSymbol()?.declarations;
 
 	return (
 		declarations?.some((declaration) =>
 			declaration
-				.getSourceFile()
+				.resolve()
+				?.getSourceFile()
 				.fileName.includes("node_modules/@types/node/"),
 		) ?? false
 	);

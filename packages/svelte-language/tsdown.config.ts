@@ -10,6 +10,7 @@ const config: UserConfig = defineConfig({
 		// https://github.com/sxzz/rolldown-plugin-dts/issues/170
 		neverBundle: ["svelte/compiler"],
 	},
+	entry: ["src/index.ts", "src/content-mapper.ts"],
 });
 
 export default config;

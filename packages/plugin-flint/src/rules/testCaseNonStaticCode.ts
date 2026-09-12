@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -22,6 +22,7 @@ function getCodeProperty(node: AST.ObjectLiteralExpression) {
 
 		return (
 			property.kind === SyntaxKind.ShorthandPropertyAssignment &&
+			property.name.kind === SyntaxKind.Identifier &&
 			property.name.text === "code"
 		);
 	});

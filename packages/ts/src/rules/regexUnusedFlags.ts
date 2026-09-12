@@ -2,7 +2,7 @@ import {
 	visitRegExpAST,
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	typescriptLanguage,

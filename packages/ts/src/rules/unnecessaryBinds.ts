@@ -1,7 +1,6 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -25,7 +24,7 @@ function containsThis(node: AST.AnyNode): boolean {
 	}
 
 	let found = false;
-	forEachChild(node, (child) => {
+	node.forEachChild((child: AST.Node) => {
 		if (containsThis(child)) {
 			found = true;
 		}

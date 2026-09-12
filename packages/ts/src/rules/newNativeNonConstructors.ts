@@ -1,7 +1,6 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -51,7 +50,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							text: "",
 						},
 						message: "noNewNonConstructor",
-						range: getTSNodeRange(node.getChildAt(0, sourceFile), sourceFile),
+						range: {
+							begin: node.getStart(sourceFile),
+							end: node.getStart(sourceFile) + 3,
+						},
 					});
 				},
 			},

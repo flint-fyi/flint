@@ -1,4 +1,4 @@
-import { SyntaxKind, type Node } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkStringValue(
 			value: string,
-			node: Node,
+			node: AST.Node,
 			sourceFile: AST.SourceFile,
 		) {
 			if (value.toLowerCase().startsWith("javascript:")) {

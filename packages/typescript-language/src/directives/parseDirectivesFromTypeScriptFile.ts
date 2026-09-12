@@ -1,5 +1,8 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import {
+	createScanner,
+	LanguageVariant,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	DirectivesCollector,
@@ -21,12 +24,41 @@ export function extractDirectivesFromTypeScriptFile(
 	sourceFile: AST.SourceFile,
 ): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
+	const jsxTextRanges = collectJsxTextRanges(sourceFile);
 
-	tsutils.forEachComment(sourceFile, (fullText, sourceRange) => {
-		const commentText = fullText.slice(sourceRange.pos, sourceRange.end);
+	const scanner = createScanner(
+		false,
+		sourceFile.languageVariant,
+		sourceFile.text,
+	);
+	for (
+		let kind = scanner.scan();
+		kind !== SyntaxKind.EndOfFile;
+		kind = scanner.scan()
+	) {
+		if (
+			kind !== SyntaxKind.SingleLineCommentTrivia &&
+			kind !== SyntaxKind.MultiLineCommentTrivia
+		) {
+			continue;
+		}
+		const sourceRange = {
+			end: scanner.getTokenEnd(),
+			pos: scanner.getTokenStart(),
+		};
+		const jsxTextRange = jsxTextRanges.find(
+			(range) => sourceRange.pos >= range.pos && sourceRange.pos < range.end,
+		);
+		if (jsxTextRange) {
+			// `//` and `/*` sequences inside JSX text are not comment trivia.
+			// Skip past the JSX text so its contents are not parsed as directives.
+			scanner.resetTokenState(jsxTextRange.end);
+			continue;
+		}
+		const commentText = sourceFile.text.slice(sourceRange.pos, sourceRange.end);
 		const match = /^\/\/\s*flint-(\S+)(?:\s+(.+))?/.exec(commentText);
 		if (!match) {
-			return;
+			continue;
 		}
 
 		const commentRange = {
@@ -47,7 +79,7 @@ export function extractDirectivesFromTypeScriptFile(
 		}
 
 		directives.push({ range, selection, type });
-	});
+	}
 
 	return directives;
 }
@@ -68,6 +100,28 @@ export function parseDirectivesFromTypeScriptFile(
 	return collector.collect();
 }
 
+function collectJsxTextRanges(
+	sourceFile: AST.SourceFile,
+): { end: number; pos: number }[] {
+	if (sourceFile.languageVariant !== LanguageVariant.JSX) {
+		return [];
+	}
+
+	const ranges: { end: number; pos: number }[] = [];
+
+	function visit(node: AST.Node) {
+		if (node.kind === SyntaxKind.JsxText) {
+			ranges.push({ end: node.end, pos: node.pos });
+		} else {
+			node.forEachChild(visit);
+		}
+	}
+
+	sourceFile.forEachChild(visit);
+
+	return ranges;
+}
+
 function computeNextCodeLine(
 	sourceFile: AST.SourceFile,
 	directiveLine: number,
@@ -80,19 +134,17 @@ function computeNextCodeLine(
 	}
 
 	// Skip comments and whitespace to find the first token on the next line
-	const scanner = ts.createScanner(
-		sourceFile.languageVersion,
+	const scanner = createScanner(
 		true,
 		sourceFile.languageVariant,
 		sourceFile.text,
-		undefined,
 		nextLineStart,
 	);
 
 	const kind = scanner.scan();
 
 	// Reaching the end of the file means there are no more lines
-	if (kind === SyntaxKind.EndOfFileToken) {
+	if (kind === SyntaxKind.EndOfFile) {
 		return undefined;
 	}
 

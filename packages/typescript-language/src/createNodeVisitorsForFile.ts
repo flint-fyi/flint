@@ -1,4 +1,4 @@
-import type { Node, SyntaxKind } from "typescript";
+import type { Node, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	groupFileVisitors,

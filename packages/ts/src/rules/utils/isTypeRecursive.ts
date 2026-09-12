@@ -1,10 +1,14 @@
-import type * as ts from "typescript";
+import type { Type } from "typescript-native/unstable/sync";
 
 export function isTypeRecursive(
-	type: ts.Type,
-	predicate: (t: ts.Type) => boolean,
+	type: Type,
+	predicate: (type: Type) => boolean,
 ): boolean {
-	return type.isUnionOrIntersection()
-		? type.types.some((subType) => isTypeRecursive(subType, predicate))
-		: predicate(type);
+	if (type.isUnionType() || type.isIntersectionType()) {
+		return type
+			.getTypes()
+			.some((subType) => isTypeRecursive(subType, predicate));
+	}
+
+	return predicate(type);
 }

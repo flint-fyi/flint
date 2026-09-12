@@ -306,6 +306,27 @@ declare const arr: number[];
 				},
 			],
 		},
+		{
+			code: `
+declare const arr: number[];
+delete arr /* [ */ [0];
+`,
+			snapshot: `
+declare const arr: number[];
+delete arr /* [ */ [0];
+~~~~~~~~~~~~~~~~~~~~~~
+Avoid using the \`delete\` operator on arrays.
+`,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: number[];
+ arr /* [ */ .splice(0, 1);
+`,
+				},
+			],
+		},
 	],
 	valid: [
 		`

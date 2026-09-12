@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -36,7 +35,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
-						tsutils.isAssignmentKind(node.operatorToken.kind) &&
+						node.operatorToken.kind >= SyntaxKind.FirstAssignment &&
+						node.operatorToken.kind <= SyntaxKind.LastAssignment &&
 						isGlobalVariable(node.left, typeChecker, program)
 					) {
 						context.report({
