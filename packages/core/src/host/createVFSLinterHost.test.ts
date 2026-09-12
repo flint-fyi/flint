@@ -222,6 +222,33 @@ describe(createVFSLinterHost, () => {
 	});
 
 	describe("readDirectory", () => {
+		it.each([false, true])(
+			"merges differently cased entries with caseSensitive=%s",
+			(caseSensitive) => {
+				const baseHost = createVFSLinterHost({ caseSensitive, cwd: "/root" });
+				baseHost.vfsUpsertFile("/root/file.ts", "base");
+				baseHost.vfsUpsertFile("/root/sub/base.ts", "base");
+				const host = createVFSLinterHost({ baseHost });
+				host.vfsUpsertFile("/root/File.ts", "overlay");
+				host.vfsUpsertFile("/root/Sub/first.ts", "overlay");
+				host.vfsUpsertFile("/root/sub/second.ts", "overlay");
+
+				expect(host.readDirectorySync("/root")).toEqual([
+					{ name: "File.ts", type: "file" },
+					{ name: "Sub", type: "directory" },
+					...(caseSensitive
+						? [
+								{ name: "sub", type: "directory" },
+								{ name: "file.ts", type: "file" },
+							]
+						: []),
+				]);
+				expect(host.readFileSync("/root/file.ts")).toBe(
+					caseSensitive ? "base" : "overlay",
+				);
+			},
+		);
+
 		it("skips non-matching files when reading a directory", () => {
 			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 			host.vfsUpsertFile("/root/other/file.txt", "content");
@@ -772,6 +799,46 @@ describe(createVFSLinterHost, () => {
 	});
 
 	describe("glob", () => {
+		it.each([false, true])(
+			"uses cwd identity while preserving display paths with caseSensitive=%s",
+			async (caseSensitive) => {
+				const baseHost = createVFSLinterHost({ caseSensitive, cwd: "/Root" });
+				baseHost.vfsUpsertFile("/Root/src/file.ts", "base");
+				baseHost.vfsUpsertFile("/Root/Base.ts", "base");
+				const host = createVFSLinterHost({ baseHost });
+				host.vfsUpsertFile("/Root/Src/File.ts", "overlay");
+				host.vfsUpsertFile("/ROOT-sibling/Outside.ts", "");
+				host.vfsUpsertFile("/ROOT2/Outside.ts", "");
+
+				await Promise.all(
+					["/ROOT", "/ROOT/"].map(async (cwd) => {
+						await expect(
+							host.glob(["**/*.ts"], { cwd, exclude: [] }),
+						).resolves.toEqual(caseSensitive ? [] : ["Src/File.ts", "Base.ts"]);
+					}),
+				);
+				await expect(
+					host.glob(["**/*.ts"], { cwd: "/Root", exclude: [] }),
+				).resolves.toEqual(
+					caseSensitive
+						? ["Src/File.ts", "src/file.ts", "Base.ts"]
+						: ["Src/File.ts", "Base.ts"],
+				);
+			},
+		);
+
+		it.each(["/", "C:/"])(
+			"preserves root cwd containment for %s",
+			async (cwd) => {
+				const host = createVFSLinterHost({ caseSensitive: false, cwd });
+				host.vfsUpsertFile(`${cwd}Src/File.ts`, "");
+
+				await expect(
+					host.glob(["**/*.ts"], { cwd, exclude: [] }),
+				).resolves.toEqual(["Src/File.ts"]);
+			},
+		);
+
 		it("returns overlay paths relative to options.cwd", async () => {
 			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 			host.vfsUpsertFile("/root/src/file.ts", "");
