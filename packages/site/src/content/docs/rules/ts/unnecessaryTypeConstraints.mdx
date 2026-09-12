@@ -1,0 +1,83 @@
+---
+description: "Reports type parameters constrained to `any` or `unknown`."
+title: "unnecessaryTypeConstraints"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTypeConstraints" />
+
+Type parameter constraints restrict the types that callers can supply.
+The direct constraints `extends any` and `extends unknown` allow every type, so they do not restrict the type parameter.
+This rule reports only those direct constraint keywords and does not report aliases, unions containing `any`, parenthesized `any`, or `keyof any`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function identity<Value extends any>(value: Value) {
+	return value;
+}
+```
+
+```ts
+interface Container<Value extends unknown> {
+	value: Value;
+}
+```
+
+```ts
+const identity = <Value extends unknown>(value: Value) => value;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function identity<Value>(value: Value) {
+	return value;
+}
+```
+
+```ts
+interface StringContainer<Value extends string> {
+	value: Value;
+}
+```
+
+```ts
+const identity = <Value>(value: Value) => value;
+```
+
+```ts
+type AnyAlias = any;
+
+interface GeneratedContainer<Value extends AnyAlias> {
+	value: Value;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Do not use this rule when generated declarations or an external API convention require explicit top-type constraints, even though those constraints do not narrow the accepted types.
+
+## Further Reading
+
+- [TypeScript Handbook: Generic Constraints](https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-constraints)
+- [TypeScript Handbook: The `unknown` Type](https://www.typescriptlang.org/docs/handbook/2/functions.html#unknown)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTypeConstraints" />
