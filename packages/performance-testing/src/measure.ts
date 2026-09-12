@@ -1,3 +1,4 @@
+import { globSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -28,6 +29,19 @@ const eslintCommand = `node ${path.resolve(
 // cache against ESLint runs that have none.
 const flintCommand = `node ${path.resolve(testCasesPath, "node_modules/flint/bin/index.js")} --cache-ignore --skip-formatting --skip-language-reports`;
 
+const oxlintExecutable = `node ${path.resolve(
+	path.dirname(fileURLToPath(import.meta.resolve("oxlint/package.json"))),
+	"bin/oxlint",
+)}`;
+
+function createOxlintCommand(testCaseSlug: string): string {
+	// Oxlint honors the parent .gitignore even with --no-ignore.
+	// Explicit files allow it to lint the ignored generated cases.
+	return `${oxlintExecutable} ${globSync("src/**/*.ts", {
+		cwd: path.join(testCasesPath, testCaseSlug),
+	}).join(" ")}`;
+}
+
 // flint-disable-lines-begin performance/loopAwaits
 for (const files of testCaseEntries[0].values) {
 	for (const rules of testCaseEntries[1].values) {
@@ -36,6 +50,11 @@ for (const files of testCaseEntries[0].values) {
 		const biome = await runInHyperfine(biomeCommand, "Biome", testCaseSlug);
 		const eslint = await runInHyperfine(eslintCommand, "ESLint", testCaseSlug);
 		const flint = await runInHyperfine(flintCommand, "Flint", testCaseSlug);
+		const oxlint = await runInHyperfine(
+			createOxlintCommand(testCaseSlug),
+			"Oxlint",
+			testCaseSlug,
+		);
 
 		// Measurements run one at a time: linters sharing the machine would
 		// contend for CPU and report times that say nothing about either.
@@ -46,8 +65,10 @@ for (const files of testCaseEntries[0].values) {
 			biome,
 			eslint,
 			flint,
+			oxlint,
 			vsBiome: calculateDelta(biome, flint),
 			vsESLint: calculateDelta(eslint, flint),
+			vsOxlint: calculateDelta(oxlint, flint),
 		});
 		/* eslint-enable perfectionist/sort-objects */
 	}

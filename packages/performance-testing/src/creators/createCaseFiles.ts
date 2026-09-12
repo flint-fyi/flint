@@ -3,6 +3,7 @@ import type { Structure } from "../writing/writeStructure.ts";
 import { createBiomeConfigFile } from "./files/createBiomeConfigFile.ts";
 import { createESLintConfigFile } from "./files/createESLintConfigFile.ts";
 import { createFlintConfigFile } from "./files/createFlintConfigFile.ts";
+import { createOxlintConfigFile } from "./files/createOxlintConfigFile.ts";
 import { createStandardTSConfigFile } from "./files/createStandardTSConfigFile.ts";
 import { range } from "./range.ts";
 
@@ -12,6 +13,7 @@ export function countCaseFiles(testCase: TestCase): number {
 
 export function createCaseFiles(testCase: TestCase): Structure {
 	return {
+		".oxlintrc.json": [createOxlintConfigFile(testCase.rules), "json"],
 		"biome.json": [createBiomeConfigFile(testCase.rules), "json"],
 		"eslint.config.js": [createESLintConfigFile(testCase.rules), "typescript"],
 		"flint.config.ts": [createFlintConfigFile(testCase.rules), "typescript"],
