@@ -22,6 +22,7 @@
 		"test": "vitest --project performance-testing"
 	},
 	"dependencies": {
+		"@biomejs/biome": "catalog:comparisons",
 		"@flint.fyi/rule-data": "workspace:^",
 		"console-table-without-index": "catalog:dev",
 		"debug-for-file": "catalog:dev",

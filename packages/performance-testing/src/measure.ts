@@ -12,6 +12,13 @@ import { testCaseEntries, testCasesPath } from "./testCases.ts";
 
 const results: unknown[] = [];
 
+const biomeCommand = `node ${path.resolve(
+	path.dirname(
+		fileURLToPath(import.meta.resolve("@biomejs/biome/package.json")),
+	),
+	"bin/biome",
+)} lint src`;
+
 const eslintCommand = `node ${path.resolve(
 	path.dirname(fileURLToPath(import.meta.resolve("eslint"))),
 	"../bin/eslint.js",
@@ -26,6 +33,8 @@ for (const files of testCaseEntries[0].values) {
 		const testCase = { files, rules };
 		const testCaseSlug = createTestCaseSlug(testCase);
 		// flint-disable-next-line performance/loopAwaits
+		const biome = await runInHyperfine(biomeCommand, "Biome", testCaseSlug);
+		// flint-disable-next-line performance/loopAwaits
 		const eslint = await runInHyperfine(eslintCommand, "ESLint", testCaseSlug);
 		// flint-disable-next-line performance/loopAwaits
 		const flint = await runInHyperfine(flintCommand, "Flint", testCaseSlug);
@@ -36,9 +45,11 @@ for (const files of testCaseEntries[0].values) {
 		results.push({
 			files: countCaseFiles(testCase),
 			rules: ruleCounts[rules],
+			biome,
 			eslint,
 			flint,
-			delta: calculateDelta(eslint, flint),
+			vsBiome: calculateDelta(biome, flint),
+			vsESLint: calculateDelta(eslint, flint),
 		});
 		/* eslint-enable perfectionist/sort-objects */
 	}

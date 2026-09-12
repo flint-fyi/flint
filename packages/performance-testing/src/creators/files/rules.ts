@@ -3,6 +3,7 @@ import { ruleData, type LinterRuleReference } from "@flint.fyi/rule-data";
 import type { TestCaseRules } from "../../testCases.ts";
 
 export interface ComparedRule {
+	biome: string[];
 	eslint: string;
 	flint: string;
 	preset: string | undefined;
@@ -13,11 +14,11 @@ const measuredPresets = new Set(["javascript", "logical", "stylistic"]);
 
 const singleRuleName = "forInArrays";
 
-function compareESLintRules(a: string, b: string) {
+function compareESLintRules(a: string, b: string): number {
 	return rankESLintRule(a) - rankESLintRule(b) || a.localeCompare(b);
 }
 
-function rankESLintRule(name: string) {
+function rankESLintRule(name: string): number {
 	if (name.startsWith("@typescript-eslint/")) {
 		return 0;
 	}
@@ -28,7 +29,7 @@ function rankESLintRule(name: string) {
 // Flint rules are often mapped to several overlapping ESLint rules, such as a
 // core rule and its typescript-eslint extension. Enabling all of them would
 // make ESLint repeat work that Flint only does once.
-function selectESLintRule(references: LinterRuleReference[]) {
+function selectESLintRule(references: LinterRuleReference[]): string {
 	return references
 		.map((reference) => reference.name)
 		.reduce((selected, name) =>
@@ -43,6 +44,7 @@ const comparableRules: ComparedRule[] = ruleData
 		if (
 			flint.plugin !== "ts" ||
 			flint.status !== "implemented" ||
+			!details.biome?.length ||
 			!details.eslint?.length
 		) {
 			return [];
@@ -50,6 +52,7 @@ const comparableRules: ComparedRule[] = ruleData
 
 		return [
 			{
+				biome: details.biome.map((reference) => reference.name),
 				eslint: selectESLintRule(details.eslint),
 				flint: flint.name,
 				preset: flint.preset,
@@ -70,7 +73,7 @@ const commonRules = manyRules.filter(
 const singleRule = manyRules.find((rule) => rule.flint === singleRuleName);
 
 if (!singleRule) {
-	throw new Error(`No ESLint comparison is known for ts/${singleRuleName}.`);
+	throw new Error(`No Biome comparison is known for ts/${singleRuleName}.`);
 }
 
 export const comparedRules: Record<TestCaseRules, ComparedRule[]> = {

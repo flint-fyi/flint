@@ -1440,6 +1440,9 @@ importers:
 
   packages/performance-testing:
     dependencies:
+      '@biomejs/biome':
+        specifier: catalog:comparisons
+        version: 2.5.12
       '@flint.fyi/rule-data':
         specifier: workspace:^
         version: link:../rule-data

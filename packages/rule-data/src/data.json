@@ -16084,8 +16084,8 @@
 	{
 		"biome": [
 			{
-				"name": "useFind",
-				"url": "https://biomejs.dev/linter/rules/use-find"
+				"name": "useArrayFind",
+				"url": "https://biomejs.dev/linter/rules/use-array-find"
 			}
 		],
 		"eslint": [
@@ -19893,8 +19893,8 @@
 	{
 		"biome": [
 			{
-				"name": "useSpread",
-				"url": "https://biomejs.dev/linter/rules/use-spread"
+				"name": "useSpreadOverApply",
+				"url": "https://biomejs.dev/linter/rules/use-spread-over-apply"
 			}
 		],
 		"eslint": [
@@ -23442,12 +23442,6 @@
 		]
 	},
 	{
-		"biome": [
-			{
-				"name": "noFloatingClasses",
-				"url": "https://biomejs.dev/linter/rules/no-floating-classes"
-			}
-		],
 		"eslint": [
 			{
 				"name": "no-new",
