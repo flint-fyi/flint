@@ -44,7 +44,7 @@ catalogs:
     execa: 10.0.1
     husky: 9.1.7
     jiti: 2.7.0
-    knip: 6.35.0
+    knip: 6.35.1
     lint-staged: 17.5.0
     pkg-pr-new: 0.0.88
     prettier: 3.8.1

@@ -406,8 +406,8 @@ catalogs:
       specifier: 2.7.0
       version: 2.7.0
     knip:
-      specifier: 6.35.0
-      version: 6.35.0
+      specifier: 6.35.1
+      version: 6.35.1
     lint-staged:
       specifier: 17.5.0
       version: 17.5.0
@@ -788,7 +788,7 @@ importers:
         version: 2.7.0
       knip:
         specifier: catalog:dev
-        version: 6.35.0
+        version: 6.35.1
       lint-staged:
         specifier: catalog:dev
         version: 17.5.0
@@ -6304,8 +6304,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.35.0:
-    resolution: {integrity: sha512-eER1hSyi47lJTO9MTnEoJspEscPaVuFtFkHsGbuCmhjDlphzvg2xxcweNg1NCeylo9ERSkb/NzAo7sAcT9gLmA==}
+  knip@6.35.1:
+    resolution: {integrity: sha512-22wnEnv4do2fvoeJsxpFCG/MBxReNxoCVBccaCl7suUJsG+F0UvxI9ycxZ9YgtLHSSjrZl5tOas0JZ/R1vJ93g==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -12764,7 +12764,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.35.0:
+  knip@6.35.1:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.7)
       formatly: 0.7.0
