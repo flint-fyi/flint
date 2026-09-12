@@ -18,6 +18,7 @@ describe(createCaseFiles, () => {
 		const actual = createCaseFiles({ files: 2, rules: 1 });
 
 		expect(Object.keys(actual)).toEqual([
+			"biome.json",
 			"eslint.config.js",
 			"flint.config.ts",
 			"src",

@@ -3,6 +3,7 @@ import { ruleData, type LinterRuleReference } from "@flint.fyi/rule-data";
 import type { TestCaseRules } from "../../testCases.ts";
 
 export interface ComparedRule {
+	biome: string[];
 	eslint: string;
 	flint: string;
 	preset: string | undefined;
@@ -43,6 +44,7 @@ const comparableRules: ComparedRule[] = ruleData
 		if (
 			flint.plugin !== "ts" ||
 			flint.status !== "implemented" ||
+			!details.biome?.length ||
 			!details.eslint?.length
 		) {
 			return [];
@@ -50,6 +52,7 @@ const comparableRules: ComparedRule[] = ruleData
 
 		return [
 			{
+				biome: details.biome.map((reference) => reference.name),
 				eslint: selectESLintRule(details.eslint),
 				flint: flint.name,
 				preset: flint.preset,
@@ -68,9 +71,20 @@ const commonRules = manyRules.filter(
 );
 
 const singleRule = manyRules.find((rule) => rule.flint === singleRuleName);
+const singleRuleDetails = ruleData.find(
+	(details) =>
+		details.flint.name === singleRuleName && details.flint.plugin === "ts",
+);
 
 if (!singleRule) {
-	throw new Error(`No ESLint comparison is known for ts/${singleRuleName}.`);
+	const missingLinters = [
+		...(singleRuleDetails?.biome?.length ? [] : ["Biome"]),
+		...(singleRuleDetails?.eslint?.length ? [] : ["ESLint"]),
+	];
+
+	throw new Error(
+		`No ${missingLinters.join(" or ")} comparison is known for ts/${singleRuleName}.`,
+	);
 }
 
 export const comparedRules: Record<TestCaseRules, ComparedRule[]> = {
