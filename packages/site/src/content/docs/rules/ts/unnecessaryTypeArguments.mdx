@@ -1,0 +1,71 @@
+---
+description: "Reports type arguments that match their type parameter defaults."
+title: "unnecessaryTypeArguments"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTypeArguments" />
+
+Generic type parameters may declare defaults that TypeScript uses when callers omit trailing type arguments.
+Repeating those defaults adds duplication and can obscure which arguments materially specialize the generic.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+type ResponseBody<Value = string> = { value: Value };
+type TextResponse = ResponseBody<string>;
+```
+
+```ts
+declare function create<Value = string>(): Value;
+create<string>();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+type ResponseBody<Value = string> = { value: Value };
+type TextResponse = ResponseBody;
+```
+
+```ts
+declare function create<Value = string>(): Value;
+create();
+```
+
+</TabItem>
+</Tabs>
+
+## Behavior and Edit Policy
+
+The rule compares the final supplied type argument with the corresponding declared default using TypeScript's semantic type identities.
+It does not report required arguments that TypeScript might infer.
+Type references and heritage clauses are automatically fixed.
+Calls, constructor calls, tagged templates, and JSX receive opt-in suggestions because removing an argument can affect inference or overload selection.
+Edits containing comments are not offered.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Explicit defaults may intentionally pin behavior against future library changes or emphasize a deliberate API choice.
+Projects that rely on that notation may disable this rule for those APIs.
+
+## Further Reading
+
+- [TypeScript Handbook: Generic Parameter Defaults](https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-parameter-defaults)
+- [TypeScript 2.3 Release Notes: Generic Parameter Defaults](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-3.html#generic-parameter-defaults)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTypeArguments" />
