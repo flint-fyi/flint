@@ -1,0 +1,90 @@
+---
+description: "Reports spread syntax that redundantly copies values into literals or built-in operations."
+title: "unnecessarySpreads"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessarySpreads" />
+
+This rule reports spreads that copy values immediately before another literal or standard built-in consumes them.
+It fixes transformations that preserve evaluation and property semantics, while timing-sensitive iterable and property-copy cases are report-only.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = [0, ...[1, 2]];
+```
+
+```ts
+const result = [...Array.from(new Set([1, 2]))];
+```
+
+```ts
+for (const value of [...new Set([1, 2])]) {
+	console.log(value);
+}
+```
+
+```ts
+const target = {};
+const source = { value: 1 };
+Object.assign(target, { ...source });
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values = [0, 1, 2];
+```
+
+```ts
+const result = Array.from(new Set([1, 2]));
+```
+
+```ts
+for (const value of new Set([1, 2])) {
+	console.log(value);
+}
+```
+
+```ts
+const target = {};
+const source = { value: 1 };
+Object.assign(target, source);
+```
+
+</TabItem>
+</Tabs>
+
+Nested object literals containing accessors, methods, or a statically named `__proto__` property are reported without a fix because flattening changes property descriptors or method semantics.
+Iterable wrappers around collection constructors, typed arrays, promise combinators, loops, and delegated yields are also report-only because removal changes eager iteration and side-effect interleaving.
+Sparse nested arrays are report-only in array literals because spreading turns holes into explicit `undefined` values.
+Fresh arrays are report-only when removing the spread could change tuple inference or a `const` assertion.
+The rule only recognizes standard globals and definitely ordinary arrays, not shadowed built-ins, typed arrays, array subclasses, iterator helpers, or custom functions returning `T[]`.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Do not use this rule when redundant-looking spreads intentionally create an eager iterable snapshot or establish a specific property-copy timing boundary.
+
+## Further Reading
+
+- [MDN: Spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+- [MDN: Iteration protocols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)
+- [MDN: Object initializer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer)
+- [MDN: Property descriptors](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#description)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessarySpreads" />
