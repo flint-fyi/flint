@@ -205,8 +205,6 @@ peerDependencyRules:
     expressive-code-twoslash>@expressive-code/core: "0.44"
     expressive-code-twoslash>expressive-code: "0.44"
     typescript: "6"
-    # https://github.com/43081j/vitest-ansi-serializer/issues/113
-    vitest-ansi-serializer>vitest: "5"
 
 shellEmulator: true
 
