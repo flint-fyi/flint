@@ -1,5 +1,5 @@
 ---
-"@flint.fyi/rule-tester": major
+"@flint.fyi/rule-tester": minor
 ---
 
 Reject incomplete or mismatched cross-file suggestion expectations that were previously accepted.
