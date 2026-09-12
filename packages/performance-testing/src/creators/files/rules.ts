@@ -14,11 +14,11 @@ const measuredPresets = new Set(["javascript", "logical", "stylistic"]);
 
 const singleRuleName = "forInArrays";
 
-function compareESLintRules(a: string, b: string): number {
+function compareESLintRules(a: string, b: string) {
 	return rankESLintRule(a) - rankESLintRule(b) || a.localeCompare(b);
 }
 
-function rankESLintRule(name: string): number {
+function rankESLintRule(name: string) {
 	if (name.startsWith("@typescript-eslint/")) {
 		return 0;
 	}
@@ -29,7 +29,7 @@ function rankESLintRule(name: string): number {
 // Flint rules are often mapped to several overlapping ESLint rules, such as a
 // core rule and its typescript-eslint extension. Enabling all of them would
 // make ESLint repeat work that Flint only does once.
-function selectESLintRule(references: LinterRuleReference[]): string {
+function selectESLintRule(references: LinterRuleReference[]) {
 	return references
 		.map((reference) => reference.name)
 		.reduce((selected, name) =>
@@ -71,9 +71,20 @@ const commonRules = manyRules.filter(
 );
 
 const singleRule = manyRules.find((rule) => rule.flint === singleRuleName);
+const singleRuleDetails = ruleData.find(
+	(details) =>
+		details.flint.name === singleRuleName && details.flint.plugin === "ts",
+);
 
 if (!singleRule) {
-	throw new Error(`No Biome comparison is known for ts/${singleRuleName}.`);
+	const missingLinters = [
+		...(singleRuleDetails?.biome?.length ? [] : ["Biome"]),
+		...(singleRuleDetails?.eslint?.length ? [] : ["ESLint"]),
+	];
+
+	throw new Error(
+		`No ${missingLinters.join(" or ")} comparison is known for ts/${singleRuleName}.`,
+	);
 }
 
 export const comparedRules: Record<TestCaseRules, ComparedRule[]> = {
