@@ -26869,7 +26869,8 @@
 		],
 		"flint": {
 			"name": "restrictedProperties",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

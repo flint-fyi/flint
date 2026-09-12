@@ -250,6 +250,7 @@ import requireImports from "./rules/requireImports.ts";
 import responseJsonMethods from "./rules/responseJsonMethods.ts";
 import restrictedIdentifiers from "./rules/restrictedIdentifiers.ts";
 import restrictedImports from "./rules/restrictedImports.ts";
+import restrictedProperties from "./rules/restrictedProperties.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import returnThisTypes from "./rules/returnThisTypes.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -562,6 +563,7 @@ export const ts = createPlugin({
 		responseJsonMethods,
 		restrictedIdentifiers,
 		restrictedImports,
+		restrictedProperties,
 		returnAssignments,
 		returnThisTypes,
 		selfAssignments,
