@@ -1,5 +1,24 @@
 # @flint/core
 
+## 0.27.0
+
+### Minor Changes
+
+- [#3135](https://github.com/flint-fyi/flint/pull/3135) [`fb6ceba`](https://github.com/flint-fyi/flint/commit/fb6ceba45d56c32294e27afff078736ac8e12e07) - Add `withRepositoryRoot` to compose a known repository root onto a host, and use it so disk-backed rule testers resolve `getRepositoryRoot()`.
+
+### Patch Changes
+
+- [#3402](https://github.com/flint-fyi/flint/pull/3402) [`6a34cee`](https://github.com/flint-fyi/flint/commit/6a34cee256df6c575793bd9ab8b094ed06e0efe4) - Ignore empty fix arrays, including fixes entirely filtered out by source mapping, so they do not write unchanged source files, count files as changed, or trigger repeated fixing rounds.
+
+- [#3254](https://github.com/flint-fyi/flint/pull/3254) [`a32109c`](https://github.com/flint-fyi/flint/commit/a32109c1ef55226efd1c05b853a9651c4d4ece6b) - Walk each file's AST once for all rules.
+
+- [#3364](https://github.com/flint-fyi/flint/pull/3364) [`8950424`](https://github.com/flint-fyi/flint/commit/8950424bd54371e56344eff50f752aba1e5752a3) - Reject `pluginId` in the `about` passed to `RuleCreator.createRule`, since the creator already sets it.
+  Adds `RuleCreatorAbout` and `PluginRuleAbout` types.
+
+- [#3403](https://github.com/flint-fyi/flint/pull/3403) [`07f1ca7`](https://github.com/flint-fyi/flint/commit/07f1ca70461eff08d4bd096ca5d14f2f82dffc68) - Fall back to base-host timestamps for files absent from the VFS overlay, including disk-backed files.
+
+- [#3406](https://github.com/flint-fyi/flint/pull/3406) [`f02543b`](https://github.com/flint-fyi/flint/commit/f02543b8a418ae793b1b0ead1542db899486e7aa) - Fix case-insensitive VFS directory deduplication and glob cwd containment while preserving display spelling and overlay precedence.
+
 ## 0.26.0
 
 ### Minor Changes
