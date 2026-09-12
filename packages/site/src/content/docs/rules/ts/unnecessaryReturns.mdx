@@ -1,0 +1,78 @@
+---
+description: "Reports bare return statements that do not change control flow."
+title: "unnecessaryReturns"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryReturns" />
+
+A bare `return;` completes a function with an `undefined` result.
+When execution would otherwise reach the function's end with the same result, the statement does not change control flow.
+Valued returns are not reported.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function update(): void {
+	performUpdate();
+	return;
+}
+```
+
+```ts
+function updateIfNeeded(needed: boolean): void {
+	if (needed) {
+		return;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function read(): number {
+	return 1;
+}
+```
+
+```ts
+function updateIfNeeded(needed: boolean): void {
+	if (needed) {
+		return;
+	}
+	performUpdate();
+}
+```
+
+</TabItem>
+</Tabs>
+
+Returns inside loops are preserved because they can exit the function rather than continuing another iteration.
+The rule accounts for switch fallthrough and try/catch/finally completion before reporting a return.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+You might not want this rule when explicit terminal returns serve as visual completion markers in a codebase.
+Generated code may also avoid the rule when removing returns would create unnecessary generated-file churn.
+
+## Further Reading
+
+- [MDN: return](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/return)
+- [MDN: Control flow and error handling](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
+- [MDN: try...catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryReturns" />
