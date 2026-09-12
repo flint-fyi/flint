@@ -124,7 +124,7 @@ export default ruleCreator.createRule(textLanguage, {
 								const suggestions: Suggestion[] = [
 									{
 										files: {
-											"cspell.json": words.includes(issue.text)
+											[cspellJsonPath]: words.includes(issue.text)
 												? []
 												: [
 														{
