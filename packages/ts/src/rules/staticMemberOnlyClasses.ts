@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -10,7 +10,11 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasDecorators(node: AST.ClassDeclaration | AST.ClassExpression) {
-	return node.modifiers?.some(ts.isDecorator) ?? false;
+	return (
+		node.modifiers?.some(
+			(modifier) => modifier.kind === SyntaxKind.Decorator,
+		) ?? false
+	);
 }
 
 function hasExtendsClause(node: AST.ClassDeclaration | AST.ClassExpression) {
@@ -29,9 +33,7 @@ function hasPrivateConstructor(node: AST.ConstructorDeclaration) {
 	);
 }
 
-function hasStaticModifier(
-	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
-) {
+function hasStaticModifier(modifiers: NodeArray<AST.ModifierLike> | undefined) {
 	return (
 		modifiers?.some((modifier) => modifier.kind === SyntaxKind.StaticKeyword) ??
 		false

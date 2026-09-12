@@ -1,4 +1,6 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
+
+import type * as AST from "../types/ast.ts";
 
 const methodsReturningNewArray = new Set([
 	"concat",
@@ -22,21 +24,21 @@ const objectStaticMethods = new Set(["entries", "keys", "values"]);
  * These are cases where a new array is created immediately before the method call,
  * so mutating methods like .sort() or .reverse() are safe to use.
  */
-export function isInlineArrayCreation(node: ts.Expression): boolean {
-	if (ts.isArrayLiteralExpression(node)) {
+export function isInlineArrayCreation(node: AST.Expression): boolean {
+	if (node.kind === SyntaxKind.ArrayLiteralExpression) {
 		return true;
 	}
 
-	if (ts.isParenthesizedExpression(node)) {
+	if (node.kind === SyntaxKind.ParenthesizedExpression) {
 		return isInlineArrayCreation(node.expression);
 	}
 
-	if (ts.isCallExpression(node)) {
-		if (ts.isPropertyAccessExpression(node.expression)) {
+	if (node.kind === SyntaxKind.CallExpression) {
+		if (node.expression.kind === SyntaxKind.PropertyAccessExpression) {
 			const methodName = node.expression.name.text;
 
 			if (
-				ts.isIdentifier(node.expression.expression) &&
+				node.expression.expression.kind === SyntaxKind.Identifier &&
 				node.expression.expression.text === "Object" &&
 				objectStaticMethods.has(methodName)
 			) {
@@ -44,7 +46,7 @@ export function isInlineArrayCreation(node: ts.Expression): boolean {
 			}
 
 			if (
-				ts.isIdentifier(node.expression.expression) &&
+				node.expression.expression.kind === SyntaxKind.Identifier &&
 				node.expression.expression.text === "Array" &&
 				(methodName === "from" || methodName === "of")
 			) {
@@ -57,17 +59,17 @@ export function isInlineArrayCreation(node: ts.Expression): boolean {
 		}
 
 		if (
-			ts.isIdentifier(node.expression) &&
+			node.expression.kind === SyntaxKind.Identifier &&
 			node.expression.text === "Array" &&
-			ts.isNewExpression(node.parent)
+			node.parent.kind === SyntaxKind.NewExpression
 		) {
 			return true;
 		}
 	}
 
 	if (
-		ts.isNewExpression(node) &&
-		ts.isIdentifier(node.expression) &&
+		node.kind === SyntaxKind.NewExpression &&
+		node.expression.kind === SyntaxKind.Identifier &&
 		node.expression.text === "Array"
 	) {
 		return true;

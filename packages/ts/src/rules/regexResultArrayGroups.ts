@@ -6,6 +6,7 @@ import type {
 import ts, { SyntaxKind } from "typescript";
 
 import {
+	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -46,20 +47,20 @@ function findAssignmentsToSymbol(
 	sourceFile: AST.SourceFile,
 	typeChecker: Checker,
 ) {
-	const assignments: ts.BinaryExpression[] = [];
+	const assignments: AST.BinaryExpression[] = [];
 
-	function visit(node: ts.Node) {
+	function visit(node: AST.AnyNode) {
 		if (
-			ts.isBinaryExpression(node) &&
+			node.kind === SyntaxKind.BinaryExpression &&
 			node.operatorToken.kind === SyntaxKind.EqualsToken &&
-			ts.isIdentifier(node.left)
+			node.left.kind === SyntaxKind.Identifier
 		) {
 			const leftSymbol = typeChecker.getSymbolAtLocation(node.left);
 			if (leftSymbol === symbol) {
 				assignments.push(node);
 			}
 		}
-		ts.forEachChild(node, visit);
+		forEachChild(node, visit);
 	}
 
 	visit(sourceFile);
@@ -249,15 +250,17 @@ function getRegexInfoFromExpression(
 	if (unwrapped.kind === SyntaxKind.Identifier) {
 		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
 		if (symbol) {
-			const declarations = symbol.getDeclarations();
+			const declarations = symbol.getDeclarations() as
+				| AST.AnyNode[]
+				| undefined;
 			if (declarations) {
 				for (const declaration of declarations) {
 					if (
-						ts.isVariableDeclaration(declaration) &&
+						declaration.kind === SyntaxKind.VariableDeclaration &&
 						declaration.initializer
 					) {
 						return getRegexInfoFromExpression(
-							declaration.initializer as AST.Expression,
+							declaration.initializer,
 							typeChecker,
 							sourceFile,
 						);
@@ -275,14 +278,15 @@ function getRegexInfoFromSymbol(
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
 ) {
-	const declarations = symbol.getDeclarations();
+	const declarations = symbol.getDeclarations() as AST.AnyNode[] | undefined;
 
 	if (declarations) {
 		for (const declaration of declarations) {
-			if (ts.isVariableDeclaration(declaration) && declaration.initializer) {
-				const callExpression = extractCallExpression(
-					declaration.initializer as AST.Expression,
-				);
+			if (
+				declaration.kind === SyntaxKind.VariableDeclaration &&
+				declaration.initializer
+			) {
+				const callExpression = extractCallExpression(declaration.initializer);
 				if (callExpression) {
 					const regexInfo = getRegexFromCall(
 						callExpression,
@@ -301,7 +305,7 @@ function getRegexInfoFromSymbol(
 				}
 			}
 
-			if (ts.isParameter(declaration)) {
+			if (declaration.kind === SyntaxKind.Parameter) {
 				continue;
 			}
 		}
@@ -309,9 +313,7 @@ function getRegexInfoFromSymbol(
 
 	const assignments = findAssignmentsToSymbol(symbol, sourceFile, typeChecker);
 	for (const assignment of assignments) {
-		const callExpression = extractCallExpression(
-			assignment.right as AST.Expression,
-		);
+		const callExpression = extractCallExpression(assignment.right);
 		if (callExpression) {
 			const regexInfo = getRegexFromCall(
 				callExpression,

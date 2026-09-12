@@ -1,4 +1,4 @@
-import { isInterfaceDeclaration, SyntaxKind, type Program } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getDeclarationsIfGlobal,
@@ -55,10 +55,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const declaration = nullThrows(
 				declarations[0],
 				"Declaration is expected to be present by the length check",
-			);
+			) as AST.AnyNode;
 
 			return (
-				isInterfaceDeclaration(declaration.parent) &&
+				declaration.parent.kind === SyntaxKind.InterfaceDeclaration &&
 				["KeyboardEvent", "UIEvent"].includes(declaration.parent.name.text)
 			);
 		}
