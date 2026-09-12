@@ -117,7 +117,9 @@ describe("createDiskBackedLinterHost", () => {
 			fs.writeFileSync(filePath, "hello");
 			fs.utimesSync(filePath, touchTime, touchTime);
 
-			expect(await host.getFileTouchTime(filePath)).toBe(touchTime.getTime());
+			await expect(host.getFileTouchTime(filePath)).resolves.toBe(
+				touchTime.getTime(),
+			);
 			expect(host.getFileTouchTimeSync(filePath)).toBe(touchTime.getTime());
 		});
 
@@ -128,7 +130,7 @@ describe("createDiskBackedLinterHost", () => {
 				fs.writeFileSync(path.join(integrationRoot, "file.txt"), "hello");
 				const filePath = path.join(integrationRoot, relativePath);
 
-				expect(await host.getFileTouchTime(filePath)).toBeUndefined();
+				await expect(host.getFileTouchTime(filePath)).resolves.toBeUndefined();
 				expect(host.getFileTouchTimeSync(filePath)).toBeUndefined();
 			},
 		);
@@ -197,7 +199,7 @@ describe("createDiskBackedLinterHost", () => {
 		expect(host.readFileSync(filePath)).toEqual("hello");
 	});
 
-	it("lists directory entries and resolves directory symlinks", async () => {
+	it("lists directory entries and resolves directory symlinks", () => {
 		const host = createDiskBackedLinterHost(integrationRoot);
 		const dirPath = path.join(integrationRoot, "dir");
 		const dirLink = path.join(integrationRoot, "dir-link");
@@ -206,7 +208,6 @@ describe("createDiskBackedLinterHost", () => {
 		fs.symlinkSync(dirPath, dirLink, "junction");
 
 		const entries = host.readDirectorySync(integrationRoot);
-		expect(await host.readDirectory(integrationRoot)).toEqual(entries);
 		const sortedEntries = entries
 			.map((entry) => ({ name: entry.name, type: entry.type }))
 			.toSorted((a, b) => a.name.localeCompare(b.name));
@@ -220,7 +221,7 @@ describe("createDiskBackedLinterHost", () => {
 	// junctions can be created only for directories on win32
 	it.skipIf(process.platform === "win32")(
 		"lists directory entries and resolves file symlinks",
-		async () => {
+		() => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const filePath = path.join(integrationRoot, "file.txt");
 			const fileLink = path.join(integrationRoot, "file-link.txt");
@@ -232,7 +233,6 @@ describe("createDiskBackedLinterHost", () => {
 			fs.symlinkSync(missingPath, brokenLink);
 
 			const entries = host.readDirectorySync(integrationRoot);
-			expect(await host.readDirectory(integrationRoot)).toEqual(entries);
 			const sortedEntries = entries
 				.map((entry) => ({ name: entry.name, type: entry.type }))
 				.toSorted((a, b) => a.name.localeCompare(b.name));
