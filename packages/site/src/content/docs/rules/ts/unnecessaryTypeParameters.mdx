@@ -1,0 +1,64 @@
+---
+description: "Reports type parameters that aren't used multiple times."
+title: "unnecessaryTypeParameters"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTypeParameters" />
+
+Type parameters express relationships between two or more types in a signature.
+A type parameter used once can instead be replaced by its constraint, or by `unknown` when it has no constraint.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function serialize<Value>(value: Value) {
+	return JSON.stringify(value);
+}
+```
+
+```ts
+class Container<Value> {}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function identity<Value>(value: Value): Value {
+	return value;
+}
+```
+
+```ts
+class Container<Value> {
+	values: Value[] = [];
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Do not use this rule when a public API intentionally preserves a single-use type parameter for compatibility with existing explicit type arguments.
+
+## Further Reading
+
+- [TypeScript Handbook: Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html)
+- [TypeScript Handbook: More on Functions](https://www.typescriptlang.org/docs/handbook/2/functions.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTypeParameters" />
