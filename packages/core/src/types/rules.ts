@@ -94,6 +94,8 @@ export interface RuleDefinition<
 	about: About;
 	messages: Record<MessageId, ReportMessageData>;
 	options?: OptionsSchema;
+
+	requiresAllFiles?: boolean;
 	setup: RuleSetup<
 		AstNodesByName,
 		FileServices,

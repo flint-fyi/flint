@@ -37,5 +37,9 @@ export function collectRulesOptionsByFile(
 		}
 	}
 
-	return new Map(rulesOptionsByFile.entries());
+	return new Map(
+		Array.from(rulesOptionsByFile.entries()).filter(
+			([, optionsByFile]) => optionsByFile.size,
+		),
+	);
 }

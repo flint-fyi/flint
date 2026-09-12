@@ -111,7 +111,9 @@ export interface LanguageFileCacheImpacts {
 /**
  * Creates prepared information around files to be linted.
  */
-export interface LanguageFileFactory<FileServices extends object> {
+export interface LanguageFileFactory<
+	FileServices extends object,
+> extends Partial<Disposable> {
 	createFile(data: FileAboutData): LanguageFile<FileServices>;
 }
 
@@ -147,6 +149,8 @@ export type LanguageFileDefinition<FileServices extends object> =
  * are {@link LanguageFileDefinition}s (which do not have to be disposable), rather
  * than {@link LanguageFile}s (which are always disposable).
  */
-export interface LanguageFileFactoryDefinition<FileServices extends object> {
+export interface LanguageFileFactoryDefinition<
+	FileServices extends object,
+> extends Partial<Disposable> {
 	createFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
 }

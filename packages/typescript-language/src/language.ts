@@ -86,10 +86,18 @@ export const typescriptLanguage: Language<
 		const { service } = createProjectService({
 			host: createTypeScriptServerHost(host),
 		});
+		const openClientFilePaths = new Set<string>();
+
+		function closeClientFile(filePathAbsolute: string) {
+			if (openClientFilePaths.delete(filePathAbsolute)) {
+				service.closeClientFile(filePathAbsolute);
+			}
+		}
 
 		function createFile(data: FileAboutData) {
 			log("Opening client file:", data.filePathAbsolute);
-			service.openClientFile(data.filePathAbsolute);
+			service.openClientFile(data.filePathAbsolute, data.sourceText);
+			openClientFilePaths.add(data.filePathAbsolute);
 
 			log("Retrieving client services:", data.filePathAbsolute);
 			const scriptInfo = nullThrows(
@@ -125,7 +133,7 @@ export const typescriptLanguage: Language<
 						typeChecker: program.getTypeChecker() as unknown as Checker,
 					},
 					[Symbol.dispose]() {
-						service.closeClientFile(data.filePathAbsolute);
+						closeClientFile(data.filePathAbsolute);
 					},
 				};
 			}
@@ -134,19 +142,30 @@ export const typescriptLanguage: Language<
 				throwUnknownLanguageExtension(data.filePathAbsolute);
 			}
 
+			const volarFile = languageState.volarCreateFile(
+				data,
+				program,
+				sourceFile as AST.SourceFile,
+			);
+
 			return {
-				...languageState.volarCreateFile(
-					data,
-					program,
-					sourceFile as AST.SourceFile,
-				),
+				...volarFile,
 				[Symbol.dispose]() {
-					service.closeClientFile(data.filePathAbsolute);
+					volarFile[Symbol.dispose]?.();
+					closeClientFile(data.filePathAbsolute);
 				},
 			};
 		}
 
-		return { createFile };
+		return {
+			createFile,
+			[Symbol.dispose]() {
+				for (const filePathAbsolute of openClientFilePaths) {
+					service.closeClientFile(filePathAbsolute);
+				}
+				openClientFilePaths.clear();
+			},
+		};
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
