@@ -6,6 +6,7 @@ export interface ComparedRule {
 	biome: string[];
 	eslint: string;
 	flint: string;
+	oxlint: string;
 	preset: string | undefined;
 	strictness: string | undefined;
 }
@@ -37,6 +38,23 @@ function selectESLintRule(references: LinterRuleReference[]): string {
 		);
 }
 
+function selectOxlintRule(
+	references: LinterRuleReference[],
+	eslint: string,
+): string {
+	const eslintName = eslint.slice(eslint.lastIndexOf("/") + 1);
+	const oxlint = references.find(
+		(reference) =>
+			reference.name.slice(reference.name.lastIndexOf("/") + 1) === eslintName,
+	)?.name;
+
+	if (!oxlint) {
+		throw new Error(`No matching Oxlint comparison is known for ${eslint}.`);
+	}
+
+	return oxlint;
+}
+
 const comparableRules: ComparedRule[] = ruleData
 	.flatMap((details): ComparedRule[] => {
 		const { flint } = details;
@@ -45,16 +63,20 @@ const comparableRules: ComparedRule[] = ruleData
 			flint.plugin !== "ts" ||
 			flint.status !== "implemented" ||
 			!details.biome?.length ||
-			!details.eslint?.length
+			!details.eslint?.length ||
+			!details.oxlint?.length
 		) {
 			return [];
 		}
 
+		const eslint = selectESLintRule(details.eslint);
+
 		return [
 			{
 				biome: details.biome.map((reference) => reference.name),
-				eslint: selectESLintRule(details.eslint),
+				eslint,
 				flint: flint.name,
+				oxlint: selectOxlintRule(details.oxlint, eslint),
 				preset: flint.preset,
 				strictness: flint.strictness,
 			},
@@ -73,7 +95,7 @@ const commonRules = manyRules.filter(
 const singleRule = manyRules.find((rule) => rule.flint === singleRuleName);
 
 if (!singleRule) {
-	throw new Error(`No Biome comparison is known for ts/${singleRuleName}.`);
+	throw new Error(`No Oxlint comparison is known for ts/${singleRuleName}.`);
 }
 
 export const comparedRules: Record<TestCaseRules, ComparedRule[]> = {

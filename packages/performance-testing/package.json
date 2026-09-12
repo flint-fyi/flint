@@ -28,6 +28,8 @@
 		"debug-for-file": "catalog:dev",
 		"eslint": "catalog:comparisons",
 		"execa": "catalog:dev",
+		"oxlint": "catalog:comparisons",
+		"oxlint-tsgolint": "catalog:comparisons",
 		"prettier": "catalog:dev"
 	},
 	"devDependencies": {
