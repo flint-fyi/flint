@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
@@ -7,94 +7,118 @@ import type { Fix } from "../types/changes.ts";
 import type { CharacterReportRange } from "../types/ranges.ts";
 import { runConfigFixing } from "./runConfigFixing.ts";
 
+const filePath = "/root/file.txt";
+const cacheLocation = "/root/cache.json";
+const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+const writeFile = vi.spyOn(host, "writeFile");
+const visit = vi.fn();
+const getFix = vi.fn((): Fix[] => []);
+const adjustReportRange = vi.fn(
+	(range: CharacterReportRange): CharacterReportRange | null => range,
+);
+const fixes: Fix[] = [
+	{ range: { begin: 1, end: 2 }, text: "B" },
+	{ range: { begin: 2, end: 3 }, text: "C" },
+];
+const language = createLanguage<{ text: string }>({
+	about: { name: "test" },
+	createFileFactory: () => ({
+		createFile: (about) => ({ about, adjustReportRange, services: {} }),
+	}),
+	runFileVisitors(file, fileVisitors): void {
+		visit();
+		for (const { services, visitors } of fileVisitors) {
+			visitors.text?.(file.about.sourceText, services);
+		}
+	},
+});
 const ruleCreator = new RuleCreator({
 	docs: (ruleId) => `https://example.com/${ruleId}`,
 	pluginId: "test",
 	presets: [],
 });
-
-describe(runConfigFixing, () => {
-	it.each([
-		{ expectedRounds: 1, kind: "explicit empty", shouldChange: false },
-		{ expectedRounds: 1, kind: "source-mapped empty", shouldChange: false },
-		{ expectedRounds: 2, kind: "nonempty", shouldChange: true },
-	])("handles $kind fixes", async ({ expectedRounds, kind, shouldChange }) => {
-		const filePath = "/root/file.txt";
-		const cacheLocation = "/root/cache.json";
-		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
-		host.vfsUpsertFile(filePath, "abc");
-		const writeFile = vi.spyOn(host, "writeFile");
-		const visit = vi.fn();
-		const language = createLanguage<{ text: string }>({
-			about: { name: "test" },
-			createFileFactory: () => ({
-				createFile: (about) => ({
-					about,
-					...(kind === "source-mapped empty" && {
-						adjustReportRange: (
-							range: CharacterReportRange,
-						): CharacterReportRange | null =>
-							range.begin === 0 ? range : null,
-					}),
-					services: {},
-				}),
-			}),
-			runFileVisitors(file, fileVisitors): void {
-				visit();
-				for (const { services, visitors } of fileVisitors) {
-					visitors.text?.(file.about.sourceText, services);
+const rule = ruleCreator.createRule(language, {
+	about: { description: "Test fixes", id: "test" },
+	messages: {
+		test: { primary: "Test report", secondary: [], suggestions: [] },
+	},
+	setup: (context) => ({
+		visitors: {
+			text(sourceText): void {
+				if (sourceText === "abc") {
+					context.report({
+						fix: getFix(),
+						message: "test",
+						range: { begin: 0, end: 1 },
+					});
 				}
 			},
-		});
-		const fix: Fix[] =
-			kind === "explicit empty"
-				? []
-				: [
-						{ range: { begin: 1, end: 2 }, text: "B" },
-						{ range: { begin: 2, end: 3 }, text: "C" },
-					];
-		const rule = ruleCreator.createRule(language, {
-			about: { description: "Test fixes", id: "test" },
-			messages: {
-				test: { primary: "Test report", secondary: [], suggestions: [] },
-			},
-			setup: (context) => ({
-				visitors: {
-					text(sourceText): void {
-						if (sourceText === "abc") {
-							context.report({
-								fix,
-								message: "test",
-								range: { begin: 0, end: 1 },
-							});
-						}
-					},
-				},
-			}),
-		});
+		},
+	}),
+});
+const config = {
+	filePath: "/root/flint.config.ts",
+	use: [{ files: ["*.txt"], rules: [rule] }],
+};
+const options = {
+	cacheLocation,
+	ignoreCache: true,
+	requestedSuggestions: new Set<string>(),
+	skipLanguageReports: false,
+};
 
-		const results = await runConfigFixing(
-			{
-				filePath: "/root/flint.config.ts",
-				use: [{ files: ["*.txt"], rules: [rule] }],
-			},
-			host,
-			{
-				cacheLocation,
-				ignoreCache: true,
-				requestedSuggestions: new Set(),
-				skipLanguageReports: false,
-			},
-		);
+describe(runConfigFixing, () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		getFix.mockReset();
+		adjustReportRange.mockReset();
+		host.vfsUpsertFile(filePath, "abc");
+	});
 
-		expect(visit).toHaveBeenCalledTimes(expectedRounds);
-		expect(results.changed).toEqual(new Set(shouldChange ? [filePath] : []));
-		expect(host.readFileSync(filePath)).toBe(shouldChange ? "aBC" : "abc");
-		expect(
-			writeFile.mock.calls.filter(([path]) => path !== cacheLocation),
-		).toEqual(shouldChange ? [[filePath, "aBC"]] : []);
+	it("does not write or repeat fixing for explicit empty fixes", async () => {
+		const results = await runConfigFixing(config, host, options);
+
+		expect(visit).toHaveBeenCalledTimes(1);
+		expect(results.changed).toEqual(new Set());
+		expect(host.readFileSync(filePath)).toBe("abc");
+		expect(writeFile).not.toHaveBeenCalled();
 		expect(
 			results.allFileResults.get(filePath)?.reports.map((report) => report.fix),
-		).toEqual(shouldChange ? [] : [[]]);
+		).toEqual([[]]);
+	});
+
+	it("does not write or repeat fixing when source mapping filters out all fixes", async () => {
+		getFix.mockReturnValue(fixes);
+		adjustReportRange
+			.mockReturnValue(null)
+			.mockReturnValueOnce({ begin: 0, end: 1 });
+
+		const results = await runConfigFixing(config, host, options);
+
+		expect(visit).toHaveBeenCalledTimes(1);
+		expect(results.changed).toEqual(new Set());
+		expect(host.readFileSync(filePath)).toBe("abc");
+		expect(writeFile).not.toHaveBeenCalled();
+		expect(
+			results.allFileResults.get(filePath)?.reports.map((report) => report.fix),
+		).toEqual([[]]);
+	});
+
+	it("writes nonempty fixes and lints the changed file again", async () => {
+		getFix.mockReturnValue(fixes);
+
+		const results = await runConfigFixing(config, host, options);
+
+		expect(visit).toHaveBeenCalledTimes(2);
+		expect(results.changed).toEqual(new Set([filePath]));
+		expect(host.readFileSync(filePath)).toBe("aBC");
+		expect(writeFile).toHaveBeenCalledTimes(2);
+		expect(writeFile).toHaveBeenNthCalledWith(1, filePath, "aBC");
+		expect(writeFile).toHaveBeenNthCalledWith(
+			2,
+			cacheLocation,
+			expect.any(String),
+		);
+		expect(results.allFileResults.get(filePath)?.reports).toEqual([]);
 	});
 });
