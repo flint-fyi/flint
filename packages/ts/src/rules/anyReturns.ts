@@ -22,6 +22,7 @@ import {
 } from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
+import { isIntrinsicErrorType, isTypeFlagSet } from "./utils/typePredicates.ts";
 
 function findFunctionAncestor(
 	node: AST.AnyNode,
@@ -72,14 +73,6 @@ function getThisExpression(
 			return node.kind === SyntaxKind.ThisKeyword ? node : undefined;
 		}
 	}
-}
-
-function isIntrinsicErrorType(type: Type): boolean {
-	return type.isIntrinsicType() && type.intrinsicName === "error";
-}
-
-function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
-	return (type.flags & flags) !== 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

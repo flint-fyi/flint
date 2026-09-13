@@ -1,5 +1,5 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
-import { TypeFlags, type Type } from "typescript-native/unstable/sync";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -11,6 +11,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isBuiltinSymbolLike } from "./utils/isBuiltinSymbolLike.ts";
+import { isIntrinsicErrorType } from "./utils/typePredicates.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -113,7 +114,3 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
-
-function isIntrinsicErrorType(type: Type): boolean {
-	return type.isIntrinsicType() && type.intrinsicName === "error";
-}

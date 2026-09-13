@@ -18,10 +18,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
-
-function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
-	return (type.flags & flags) !== 0;
-}
+import { isTypeFlagSet } from "./utils/typePredicates.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

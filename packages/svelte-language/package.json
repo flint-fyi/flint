@@ -19,9 +19,6 @@
 		".": "./src/index.ts",
 		"./content-mapper": "./src/content-mapper.ts"
 	},
-	"bin": {
-		"svelte-language": "./src/content-mapper.ts"
-	},
 	"files": [
 		"dist/"
 	],
@@ -48,9 +45,6 @@
 	},
 	"publishConfig": {
 		"access": "public",
-		"bin": {
-			"svelte-language": "./dist/content-mapper.mjs"
-		},
 		"exports": {
 			".": "./dist/index.mjs",
 			"./content-mapper": "./dist/content-mapper.mjs"

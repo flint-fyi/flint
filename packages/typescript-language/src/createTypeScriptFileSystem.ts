@@ -42,8 +42,20 @@ export function createTypeScriptFileSystem(
 			if (host.fileTypeSync(directoryName) === "directory") {
 				return true;
 			}
-			const entries = getVirtualAccessibleEntries(directoryName);
-			return !!(entries.directories.size || entries.files.size);
+
+			for (const fileName of virtualFiles.keys()) {
+				const relativePath = path.relative(directoryName, fileName);
+				if (
+					relativePath &&
+					relativePath !== ".." &&
+					!relativePath.startsWith(`..${path.sep}`) &&
+					!path.isAbsolute(relativePath)
+				) {
+					return true;
+				}
+			}
+
+			return false;
 		},
 		fileExists: (fileName) => {
 			onFileAccess?.(fileName);

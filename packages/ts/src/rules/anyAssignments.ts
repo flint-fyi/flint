@@ -1,9 +1,5 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
-import {
-	TypeFlags,
-	type Type,
-	type TypeReference,
-} from "typescript-native/unstable/sync";
+import type { Type, TypeReference } from "typescript-native/unstable/sync";
 
 import {
 	typescriptLanguage,
@@ -15,31 +11,12 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
-
-function isIntrinsicErrorType(type: Type): boolean {
-	return type.isIntrinsicType() && type.intrinsicName === "error";
-}
-
-function isTypeAny(type: Type): boolean {
-	return isTypeFlagSet(type, TypeFlags.Any) && !isIntrinsicErrorType(type);
-}
-
-function isTypeAnyArray(type: Type, typeChecker: Checker): boolean {
-	if (!typeChecker.isArrayType(type)) {
-		return false;
-	}
-	const typeArgs = typeChecker.getTypeArguments(type as TypeReference);
-	const elementType = typeArgs[0];
-	return elementType !== undefined && isTypeAny(elementType);
-}
-
-function isTypeAnyOrUnknown(type: Type): boolean {
-	return isTypeFlagSet(type, TypeFlags.Any | TypeFlags.Unknown);
-}
-
-function isTypeFlagSet(type: Type, flags: TypeFlags): boolean {
-	return (type.flags & flags) !== 0;
-}
+import {
+	isIntrinsicErrorType,
+	isTypeAny,
+	isTypeAnyArray,
+	isTypeAnyOrUnknown,
+} from "./utils/typePredicates.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
