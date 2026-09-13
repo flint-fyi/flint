@@ -1,70 +1,85 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 
-import ts from "typescript";
-import { afterEach, describe, expect, it } from "vitest";
+import { API, JsxEmit } from "typescript-native/unstable/sync";
+import { expect, it } from "vitest";
+
+import { nullThrows } from "@flint.fyi/utils";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 
-const tempDirectories: string[] = [];
-
-describe(collectReferencedFilePaths, () => {
-	afterEach(async () => {
-		await Promise.all(
-			tempDirectories
-				.splice(0)
-				.map((dir) => rm(dir, { force: true, recursive: true })),
-		);
-	});
-
-	it("includes imports, import types, dynamic imports, and re-exports", async () => {
-		const root = await mkdtemp(path.join(os.tmpdir(), "flint-ts-deps-"));
-		tempDirectories.push(root);
-
-		const indexPath = path.join(root, "index.ts");
-		const dependencyNames = [
-			"imported",
-			"dynamic",
-			"awaited",
-			"typed",
-			"exported",
-			"export-all",
-		];
-
-		await Promise.all([
-			writeFile(
-				indexPath,
-				`
-					import { imported } from "./imported";
-					void import("./dynamic");
-					await import("./awaited");
-					type Typed = import("./typed").Typed;
-					export { exported } from "./exported";
-					export * from "./export-all";
-				`,
-			),
-			...dependencyNames.map((name) =>
-				writeFile(path.join(root, `${name}.ts`), "export const value = 1;"),
-			),
-		]);
-
-		const program = ts.createProgram([indexPath], {
-			allowJs: true,
-			module: ts.ModuleKind.NodeNext,
-			moduleResolution: ts.ModuleResolutionKind.NodeNext,
-			target: ts.ScriptTarget.ESNext,
-		});
-		const sourceFile = program.getSourceFile(indexPath);
-
-		expect(sourceFile).toBeDefined();
-		expect(
-			new Set(
-				collectReferencedFilePaths(program, sourceFile as AST.SourceFile).map(
-					(filePath) => path.basename(filePath, ".ts"),
+it("uses typeChecker-resolved declarations for supported module resolution forms", () => {
+	const files = new Map([
+		["/repo/node_modules/external/index.d.ts", "export {};"],
+		["/repo/node_modules/external/package.json", '{"types":"index.d.ts"}'],
+		["/repo/src/aliased.ts", "export {};"],
+		["/repo/src/data.json", "{}"],
+		["/repo/src/directory/index.ts", "export {};"],
+		[
+			"/repo/src/index.ts",
+			[
+				'import "@alias/path";',
+				'import "./substituted.js";',
+				'import data from "./data.json";',
+				'import("./directory");',
+				'type Declaration = import("./types.d.mts");',
+				'import "external";',
+			].join("\n"),
+		],
+		["/repo/src/substituted.ts", "export {};"],
+		["/repo/src/types.d.mts", "export {};"],
+	]);
+	const api = new API({
+		cwd: "/repo",
+		fs: {
+			directoryExists: (directoryName) =>
+				[...files].some(([fileName]) =>
+					fileName.startsWith(`${directoryName}/`),
 				),
-			),
-		).toEqual(new Set(dependencyNames));
+			fileExists: (fileName) => files.has(fileName),
+			getAccessibleEntries: (directoryName) => {
+				const entries = [...files]
+					.map(([fileName]) => path.relative(directoryName, fileName))
+					.filter((fileName) => !fileName.startsWith(".."));
+				return {
+					directories: entries
+						.filter((fileName) => fileName.includes("/"))
+						.map((fileName) => fileName.slice(0, fileName.indexOf("/"))),
+					files: entries.filter((fileName) => !fileName.includes("/")),
+				};
+			},
+			readFile: (fileName) => files.get(fileName) ?? null,
+		},
 	});
+	const program = api.createProgram(["/repo/src/index.ts"], {
+		compilerOptions: {
+			allowJs: true,
+			jsx: JsxEmit.Preserve,
+			moduleResolution: 2,
+			paths: { "@alias/*": ["src/aliased.ts"] },
+			resolveJsonModule: true,
+		},
+	});
+	const sourceFile = nullThrows(
+		program.getSourceFile("/repo/src/index.ts"),
+		"Expected the program source file.",
+	) as unknown as AST.SourceFile;
+
+	expect(
+		collectReferencedFilePaths(
+			program,
+			program.getProject().checker,
+			sourceFile,
+		).sort(),
+	).toEqual(
+		[
+			"/repo/src/aliased.ts",
+			"/repo/src/data.json",
+			"/repo/src/directory/index.ts",
+			"/repo/src/substituted.ts",
+			"/repo/src/types.d.mts",
+		].map((fileName) => path.relative(process.cwd(), fileName)),
+	);
+
+	program.dispose();
 });

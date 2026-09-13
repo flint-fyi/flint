@@ -1,4 +1,8 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	SyntaxKind,
+	type DeclarationBase,
+} from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
 import {
@@ -59,8 +63,22 @@ const javascriptReservedWords = new Set([
 	"yield",
 ]);
 
-function getModifiers(node: null | ts.Node | undefined) {
-	return node && ts.canHaveModifiers(node) ? ts.getModifiers(node) : undefined;
+function getFirstModifierKind(node: DeclarationBase | undefined) {
+	const declaration = node as AST.Declaration | undefined;
+	switch (declaration?.kind) {
+		case SyntaxKind.Constructor:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.Parameter:
+		case SyntaxKind.PropertyDeclaration:
+		case SyntaxKind.SetAccessor:
+			// Decorators are included in modifiers, before any modifier keywords
+			return declaration.modifiers?.find(
+				(modifier) => modifier.kind !== SyntaxKind.Decorator,
+			)?.kind;
+		default:
+			return undefined;
+	}
 }
 
 // TODO: Use a util like getStaticValue
@@ -130,9 +148,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								node.argumentExpression.text,
 					);
 
-			const modifierKind = getModifiers(
-				propertySymbol?.getDeclarations()?.[0],
-			)?.[0]?.kind;
+			const modifierKind = getFirstModifierKind(
+				propertySymbol?.declarations[0]?.resolve(),
+			);
 
 			return {
 				inaccessible:
@@ -167,7 +185,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (
 							typeChecker
 								.getIndexInfosOfType(objectType)
-								.some((info) => info.keyType.flags & ts.TypeFlags.StringLike)
+								.some((info) => info.keyType.flags & TypeFlags.StringLike)
 						) {
 							return;
 						}

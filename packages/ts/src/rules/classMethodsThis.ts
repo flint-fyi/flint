@@ -1,11 +1,7 @@
-import { SyntaxKind, type NodeArray } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
-import {
-	forEachChild,
-	typescriptLanguage,
-	type AST,
-} from "@flint.fyi/typescript-language";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -25,7 +21,8 @@ function classImplementsSomething(
 ): boolean {
 	return (
 		classNode.heritageClauses?.some(
-			(clause) => clause.token === SyntaxKind.ImplementsKeyword,
+			(clause: AST.HeritageClause) =>
+				clause.token === SyntaxKind.ImplementsKeyword,
 		) ?? false
 	);
 }
@@ -56,7 +53,7 @@ function containsThis(node: AST.AnyNode): boolean {
 			return true;
 
 		default:
-			return forEachChild(node, containsThis) ?? false;
+			return node.forEachChild(containsThis) ?? false;
 	}
 }
 
@@ -97,7 +94,7 @@ function getMemberDisplayName(
 }
 
 function hasModifier(
-	modifiers: NodeArray<AST.ModifierLike> | undefined,
+	modifiers: readonly AST.ModifierLike[] | undefined,
 	kind: SyntaxKind,
 ): boolean {
 	return modifiers?.some((modifier) => modifier.kind === kind) ?? false;
@@ -115,9 +112,9 @@ function isPublicMember(member: ClassMember): boolean {
 
 	if (
 		modifiers.some(
-			(m) =>
-				m.kind === SyntaxKind.PrivateKeyword ||
-				m.kind === SyntaxKind.ProtectedKeyword,
+			(modifier: AST.ModifierLike) =>
+				modifier.kind === SyntaxKind.PrivateKeyword ||
+				modifier.kind === SyntaxKind.ProtectedKeyword,
 		)
 	) {
 		return false;

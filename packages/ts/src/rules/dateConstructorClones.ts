@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	isGlobalDeclarationOfName,
@@ -10,7 +10,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isDateType(node: AST.Expression, typeChecker: Checker) {
-	return typeChecker.getTypeAtLocation(node).getSymbol()?.getName() === "Date";
+	return typeChecker.getTypeAtLocation(node).getSymbol()?.name === "Date";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

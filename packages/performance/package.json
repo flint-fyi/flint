@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/performance",
-	"version": "0.5.1",
+	"version": "0.5.0",
 	"description": "[Experimental] A Flint plugin for performant code.",
 	"homepage": "https://flint.fyi/rules/performance",
 	"repository": {
@@ -27,8 +27,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"ts-api-utils": "catalog:prod",
-		"typescript": "catalog:prod"
+		"typescript-native": "catalog:dev"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

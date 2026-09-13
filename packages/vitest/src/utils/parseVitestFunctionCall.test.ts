@@ -1,9 +1,20 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { API } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
 import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
+
+const files = new Map<string, string>();
+const api = new API({
+	cwd: "/repo",
+	fs: {
+		fileExists: (fileName) => files.has(fileName),
+		readFile: (fileName) => files.get(fileName) ?? null,
+	},
+});
+let fileIndex = 0;
 
 const knownVitestFunctionNames = [
 	"afterAll",
@@ -18,24 +29,28 @@ const knownVitestFunctionNames = [
 const unknownVitestFunctionNames = ["foo", "expect", "vi", "tests"];
 
 function parseCallExpression(source: string): AST.CallExpression {
-	const sourceFile = ts.createSourceFile(
-		"parseVitestFunctionCall.test.ts",
-		`${source};`,
-		ts.ScriptTarget.ESNext,
-		true,
-		ts.ScriptKind.TS,
-	);
+	const fileName = `/repo/parseVitestFunctionCall-${String(fileIndex++)}.ts`;
+	files.set(fileName, `${source};`);
+	const program = api.createProgram([fileName], {
+		compilerOptions: { noLib: true },
+	});
+	const sourceFile = program.getSourceFile(fileName);
+	if (!sourceFile) {
+		throw new Error(`Could not parse call expression: ${source}`);
+	}
+
 	const statement = sourceFile.statements[0];
 	if (statement?.kind !== SyntaxKind.ExpressionStatement) {
 		throw new Error(`Could not parse call expression: ${source}`);
 	}
 
-	const expression = (statement as ts.ExpressionStatement).expression;
+	const expression = (statement as unknown as AST.ExpressionStatement)
+		.expression;
 	if (expression.kind !== SyntaxKind.CallExpression) {
 		throw new Error(`Could not parse call expression: ${source}`);
 	}
 
-	return expression as AST.CallExpression;
+	return expression;
 }
 
 describe(parseVitestFunctionCall, () => {

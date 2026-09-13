@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -49,14 +49,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const reportNode =
-				node.kind === SyntaxKind.NewExpression
-					? node.getChildAt(0, sourceFile)
-					: node.expression;
+			const range = getTSNodeRange(node.expression, sourceFile);
+			if (node.kind === SyntaxKind.NewExpression) {
+				range.begin = node.getStart(sourceFile);
+				range.end = range.begin + "new".length;
+			}
 
 			context.report({
 				message: "preferObjectLiteral",
-				range: getTSNodeRange(reportNode, sourceFile),
+				range,
 			});
 		}
 

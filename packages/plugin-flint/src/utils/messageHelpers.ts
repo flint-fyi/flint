@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -25,11 +25,9 @@ export function findMessagesProperty(
 		);
 	});
 
-	if (messagesProperty?.kind === SyntaxKind.PropertyAssignment) {
-		return messagesProperty;
-	}
-
-	return undefined;
+	return messagesProperty?.kind === SyntaxKind.PropertyAssignment
+		? messagesProperty
+		: undefined;
 }
 
 export function* forEachMessageString(

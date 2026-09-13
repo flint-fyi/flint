@@ -24,8 +24,7 @@
 		"konami-emoji-blast": "catalog:site",
 		"markdown-it": "catalog:site",
 		"react": "catalog:site",
-		"starlight-package-managers": "catalog:site",
-		"typescript": "catalog:dev"
+		"starlight-package-managers": "catalog:site"
 	},
 	"devDependencies": {
 		"@astrojs/check": "catalog:site",
@@ -45,7 +44,8 @@
 		"starlight-blog": "catalog:site",
 		"starlight-links-validator": "catalog:site",
 		"starlight-sidebar-topics": "catalog:site",
-		"zod": "catalog:site"
+		"typescript": "catalog:dev",
+		"zod": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=26.1.0"

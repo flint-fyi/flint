@@ -1,0 +1,44 @@
+{
+	"name": "@flint.fyi/content-mapper",
+	"version": "0.3.0",
+	"description": "[Experimental] Content-mapper protocol and transform helpers for Flint.",
+	"homepage": "https://flint.fyi",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/content-mapper"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
+	},
+	"sideEffects": true,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"dist/"
+	],
+	"scripts": {
+		"test": "vitest --project content-mapper"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^"
+	},
+	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=26.1.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./dist/index.mjs"
+		}
+	}
+}

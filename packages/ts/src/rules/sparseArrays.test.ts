@@ -15,6 +15,16 @@ const array = [1, , 3];
 		},
 		{
 			code: `
+const values = [1, /* comma, in comment */ , 3];
+`,
+			snapshot: `
+const values = [1, /* comma, in comment */ , 3];
+                                           ~
+                                           Sparse arrays with "holes" (empty slots) are misleading and behave differently from \`undefined\` values.
+`,
+		},
+		{
+			code: `
 const array = [, 2, 3];
 `,
 			snapshot: `

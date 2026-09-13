@@ -1,10 +1,6 @@
-import { SyntaxKind } from "typescript";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 
-import {
-	getTSNodeRange,
-	typescriptLanguage,
-	type AST,
-} from "@flint.fyi/typescript-language";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -26,10 +22,28 @@ function alwaysTerminates(node: AST.Statement): boolean {
 	}
 }
 
-function findElseKeyword(node: AST.IfStatement, sourceFile: AST.SourceFile) {
-	return node
-		.getChildren(sourceFile)
-		.find((child) => child.kind === SyntaxKind.ElseKeyword);
+function getElseKeywordRange(
+	node: AST.IfStatement,
+	sourceFile: AST.SourceFile,
+) {
+	if (!node.elseStatement) {
+		return undefined;
+	}
+
+	const begin = node.thenStatement.getEnd();
+	const scanner = createScanner(
+		true,
+		sourceFile.languageVariant,
+		sourceFile.text,
+		begin,
+		node.elseStatement.getStart(sourceFile) - begin,
+	);
+
+	if (scanner.scan() !== SyntaxKind.ElseKeyword) {
+		return undefined;
+	}
+
+	return { begin: scanner.getTokenStart(), end: scanner.getTokenEnd() };
 }
 
 function hasNestedIfThatTerminates(node: AST.Statement): boolean {
@@ -119,14 +133,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const elseKeyword = findElseKeyword(lastIfNode, sourceFile);
-					if (!elseKeyword) {
+					const elseKeywordRange = getElseKeywordRange(lastIfNode, sourceFile);
+					if (!elseKeywordRange) {
 						return;
 					}
 
 					context.report({
 						message: "unnecessaryElse",
-						range: getTSNodeRange(elseKeyword, sourceFile),
+						range: elseKeywordRange,
 					});
 				},
 			},

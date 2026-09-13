@@ -70,7 +70,7 @@ ruleCreator.createRule(typescriptLanguage, {
 		{
 			code: `
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { reportSourceCode } from "@flint.fyi/volar-language";
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import { ruleCreator } from "../ruleCreator";
 
 ruleCreator.createRule(typescriptLanguage, {
@@ -101,7 +101,7 @@ ruleCreator.createRule(typescriptLanguage, {
 `,
 			snapshot: `
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { reportSourceCode } from "@flint.fyi/volar-language";
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import { ruleCreator } from "../ruleCreator";
 
 ruleCreator.createRule(typescriptLanguage, {
@@ -162,7 +162,7 @@ ruleCreator.createRule(typescriptLanguage, {
 `,
 		`
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { reportSourceCode } from "@flint.fyi/volar-language";
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import { ruleCreator } from "../ruleCreator";
 
 ruleCreator.createRule(typescriptLanguage, {
@@ -188,7 +188,7 @@ ruleCreator.createRule(typescriptLanguage, {
 `,
 		`
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { reportSourceCode as reportFromSourceCode } from "@flint.fyi/volar-language";
+import { reportSourceCode as reportFromSourceCode } from "@flint.fyi/content-mapper";
 import { ruleCreator } from "../ruleCreator";
 
 ruleCreator.createRule(typescriptLanguage, {
@@ -214,7 +214,7 @@ ruleCreator.createRule(typescriptLanguage, {
 `,
 		`
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import * as volarLanguage from "@flint.fyi/volar-language";
+import * as contentMapper from "@flint.fyi/content-mapper";
 import { ruleCreator } from "../ruleCreator";
 
 ruleCreator.createRule(typescriptLanguage, {
@@ -230,7 +230,7 @@ ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		volarLanguage.reportSourceCode(context, {
+		contentMapper.reportSourceCode(context, {
 			message: "messagesId",
 			range: { begin: 0, end: 0 },
 		});
@@ -240,7 +240,7 @@ ruleCreator.createRule(typescriptLanguage, {
 `,
 		`
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { reportSourceCode } from "@flint.fyi/volar-language";
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import { ruleCreator } from "../ruleCreator";
 
 ruleCreator.createRule(typescriptLanguage, {

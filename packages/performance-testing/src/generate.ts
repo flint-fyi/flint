@@ -6,9 +6,14 @@ import { debugForFile } from "debug-for-file";
 import { createTestCaseSlug } from "./createTestCaseSlug.ts";
 import { createPackageFile } from "./creators/files/createPackageFile.ts";
 import { writeCaseFiles } from "./creators/writeCaseFiles.ts";
+import {
+	createNativeScenarioFiles,
+	nativeScenarios,
+} from "./nativeScenarios.ts";
 import { prepareConsumer } from "./prepareConsumer.ts";
 import { testCaseEntries, testCasesPath, type TestCase } from "./testCases.ts";
 import { writeFile } from "./writing/writeFile.ts";
+import { writeStructure } from "./writing/writeStructure.ts";
 
 const log = debugForFile(import.meta.filename);
 
@@ -38,6 +43,7 @@ await fs.rm(testCasesPath, { force: true, recursive: true });
 await prepareConsumer(
 	path.resolve(import.meta.dirname, "../../.."),
 	path.resolve(testCasesPath),
+	["@flint.fyi/astro", "@flint.fyi/svelte", "@flint.fyi/vue", "flint"],
 );
 
 for (const files of testCaseEntries[0].values) {
@@ -45,6 +51,12 @@ for (const files of testCaseEntries[0].values) {
 		// flint-disable-next-line performance/loopAwaits
 		await createCase({ files, rules });
 	}
+}
+
+for (const scenario of nativeScenarios) {
+	const directory = path.join(testCasesPath, `native-${scenario.slug}`);
+	// flint-disable-next-line performance/loopAwaits
+	await writeStructure(directory, createNativeScenarioFiles(scenario));
 }
 
 log("Seeded cases.");

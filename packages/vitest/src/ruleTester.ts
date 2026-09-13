@@ -1,4 +1,4 @@
-import { describe, it } from "vitest";
+import { afterAll, describe, it } from "vitest";
 
 import { RuleTester } from "@flint.fyi/rule-tester";
 import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
@@ -7,6 +7,7 @@ export function createRuleTester(
 	additionalFiles: Record<string, string> = {},
 ): RuleTester {
 	return new RuleTester({
+		afterAll,
 		defaults: {
 			fileName: "file.ts",
 			files: {

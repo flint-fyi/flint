@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -7,7 +7,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
+function isNonArrowFunctionBoundary(node: Node): "quit" | boolean {
 	if (node.kind === SyntaxKind.ArrowFunction) {
 		return "quit";
 	}
@@ -66,7 +66,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// TODO: This might get simpler when we have scope analysis.
 					// https://github.com/JoshuaKGoldberg/flint/issues/400
-					if (!ts.findAncestor(node, isNonArrowFunctionBoundary)) {
+					let current = node.parent;
+					let boundary: "quit" | boolean;
+					while (!(boundary = isNonArrowFunctionBoundary(current))) {
+						if (current.kind === SyntaxKind.SourceFile) {
+							return;
+						}
+						current = current.parent;
+					}
+					if (boundary === "quit") {
 						return;
 					}
 
@@ -74,15 +82,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						!symbol ||
-						symbol
-							.getDeclarations()
-							?.some(
-								(declaration) =>
-									declaration.kind === SyntaxKind.Parameter ||
-									declaration.kind === SyntaxKind.VariableDeclaration ||
-									declaration.kind === SyntaxKind.PropertyDeclaration ||
-									declaration.kind === SyntaxKind.BindingElement,
-							)
+						symbol.declarations.some(
+							(declarationHandle: (typeof symbol.declarations)[number]) => {
+								const declaration = declarationHandle.resolve();
+								return (
+									!!declaration &&
+									(declaration.kind === SyntaxKind.Parameter ||
+										declaration.kind === SyntaxKind.VariableDeclaration ||
+										declaration.kind === SyntaxKind.PropertyDeclaration ||
+										declaration.kind === SyntaxKind.BindingElement)
+								);
+							},
+						)
 					) {
 						return;
 					}

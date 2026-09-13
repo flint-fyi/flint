@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/nuxt",
-	"version": "0.4.1",
+	"version": "0.4.0",
 	"description": "[Experimental] A Flint plugin for Nuxt code.",
 	"homepage": "https://flint.fyi/rules/nuxt",
 	"repository": {
@@ -25,8 +25,7 @@
 		"test": "vitest --project nuxt"
 	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:^",
-		"typescript": "catalog:prod"
+		"@flint.fyi/core": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

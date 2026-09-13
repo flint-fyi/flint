@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.23.1",
+	"version": "0.23.0",
 	"description": "[Experimental] Command-line interface for Flint.",
 	"homepage": "https://flint.fyi/cli",
 	"repository": {
@@ -34,7 +34,6 @@
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
 		"text-table-fast": "catalog:prod",
-		"typescript": "catalog:prod",
 		"wrap-ansi": "catalog:prod"
 	},
 	"devDependencies": {

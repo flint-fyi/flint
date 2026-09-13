@@ -1,5 +1,8 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import {
+	createScanner,
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -25,7 +28,7 @@ function containsSuperCall(node: AST.AnyNode): boolean {
 		return true;
 	}
 
-	if (tsutils.isFunctionScopeBoundary(node)) {
+	if (isFunctionLikeDeclaration(node)) {
 		return false;
 	}
 
@@ -78,19 +81,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const hasSuperCall = containsSuperCall(constructor.body);
 
 			if (isDerivedClass && !hasSuperCall) {
-				const constructorKeyword = constructor
-					.getChildren(sourceFile)
-					.find((child) => child.kind === SyntaxKind.Constructor);
+				const scanner = createScanner(
+					true,
+					sourceFile.languageVariant,
+					sourceFile.text,
+					constructor.getStart(sourceFile),
+					constructor.getEnd() - constructor.getStart(sourceFile),
+				);
+				let tokenKind: SyntaxKind;
+				do {
+					tokenKind = scanner.scan();
+				} while (
+					tokenKind !== SyntaxKind.ConstructorKeyword &&
+					tokenKind !== SyntaxKind.EndOfFile
+				);
+				if (tokenKind !== SyntaxKind.ConstructorKeyword) {
+					return;
+				}
 
 				context.report({
 					message: "missingSuperCall",
 					range: {
-						begin:
-							constructorKeyword?.getStart(sourceFile) ??
-							constructor.getStart(sourceFile),
-						end:
-							constructorKeyword?.getEnd() ??
-							constructor.getStart(sourceFile) + 11,
+						begin: scanner.getTokenStart(),
+						end: scanner.getTokenEnd(),
 					},
 				});
 			}
@@ -118,7 +131,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (tsutils.isFunctionScopeBoundary(node)) {
+			if (isFunctionLikeDeclaration(node)) {
 				return;
 			}
 

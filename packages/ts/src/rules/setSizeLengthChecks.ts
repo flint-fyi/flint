@@ -1,4 +1,5 @@
-import { NodeFlags, SyntaxKind, type Program } from "typescript";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -43,12 +44,14 @@ function isSetExpression(
 		return false;
 	}
 
-	const symbol = typeChecker.getSymbolAtLocation(unwrapped);
-	if (symbol?.valueDeclaration?.kind !== SyntaxKind.VariableDeclaration) {
+	const valueDeclaration = typeChecker
+		.getSymbolAtLocation(unwrapped)
+		?.valueDeclaration?.resolve() as AST.Declaration | undefined;
+	if (valueDeclaration?.kind !== SyntaxKind.VariableDeclaration) {
 		return false;
 	}
 
-	const declaration = symbol.valueDeclaration as AST.VariableDeclaration;
+	const declaration = valueDeclaration;
 
 	if (
 		declaration.parent.kind !== SyntaxKind.VariableDeclarationList ||
