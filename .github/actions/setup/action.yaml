@@ -7,6 +7,7 @@ inputs:
     description: Cache the pnpm store
     required: false
     default: true
+  # renovate: datasource=node-version depName=node versioning=node
   node-version:
     description: The Node.js version to use
     required: false
