@@ -25,7 +25,7 @@ catalogs:
     "@ianvs/prettier-plugin-sort-imports": 4.7.1
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
-    "@types/node": 26.5.0
+    "@types/node": 26.5.1
     "@types/omit-empty": 1.0.4
     "@types/picomatch": 4.0.3
     "@vitest/coverage-v8": 5.0.0
@@ -34,7 +34,7 @@ catalogs:
     console-table-without-index: 0.1.1
     debug-for-file: 0.4.2
     eslint: 10.10.0
-    eslint-plugin-jsdoc: 64.3.6
+    eslint-plugin-jsdoc: 64.3.9
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-n: 18.3.0
     eslint-plugin-package-json: 1.8.0
@@ -45,7 +45,7 @@ catalogs:
     husky: 9.1.7
     jiti: 2.7.0
     knip: 6.35.1
-    lint-staged: 17.5.0
+    lint-staged: 17.5.1
     pkg-pr-new: 0.0.88
     prettier: 3.8.1
     prettier-plugin-astro: 1.0.0
@@ -63,10 +63,10 @@ catalogs:
     vitest-ansi-serializer: 0.3.1
     vue: 3.5.42
     yaml-unist-parser: 3.2.0
-    zod: 4.5.4
+    zod: 4.6.1
 
   comparisons:
-    "@biomejs/biome": 2.5.12
+    "@biomejs/biome": 2.5.13
     "@eslint-community/eslint-plugin-eslint-comments": 4.8.0
     "@eslint/json": 2.1.0
     "@eslint/markdown": 8.0.3
@@ -80,7 +80,7 @@ catalogs:
     eslint-plugin-astro: 3.1.0
     eslint-plugin-eslint-plugin: 7.6.2
     eslint-plugin-import: 2.32.0
-    eslint-plugin-jsdoc: 64.3.6
+    eslint-plugin-jsdoc: 64.3.9
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.3.0
@@ -165,8 +165,8 @@ catalogs:
     "@astrojs/starlight": 0.42.0
     "@expressive-code/core": 0.44.2
     "@konami-emoji-blast/astro": 0.3.0
-    "@types/react": 19.2.18
-    "@types/react-dom": 19.2.7
+    "@types/react": 19.3.0
+    "@types/react-dom": 19.3.0
     astro: 7.3.2
     astro-og-canvas: 0.13.1
     canvaskit-wasm: 0.42.0
@@ -175,8 +175,8 @@ catalogs:
     expressive-code-twoslash: 0.6.1
     konami-emoji-blast: 0.7.0
     markdown-it: 15.0.1
-    react: 19.2.8
-    react-dom: 19.2.8
+    react: 19.3.0
+    react-dom: 19.3.0
     remark-add-twoslash: 0.0.1
     remark-custom-heading-id: 2.0.0
     sharp: 0.35.4
@@ -184,7 +184,7 @@ catalogs:
     starlight-links-validator: 0.26.0
     starlight-package-managers: 0.12.0
     starlight-sidebar-topics: 0.9.0
-    zod: 4.5.4
+    zod: 4.6.1
 
 dedupePeers: true
 
