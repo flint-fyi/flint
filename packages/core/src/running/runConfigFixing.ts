@@ -79,8 +79,14 @@ export async function runConfigFixing(
 		changed = changed.union(new Set(fixedFilePaths));
 
 		if (iteration >= maximumIterations) {
-			log("Passed maximum iterations of %d, halting.", maximumIterations);
-			return { ...lintResults, changed };
+			log("Reached maximum iterations of %d, verifying.", maximumIterations);
+			// flint-disable-next-line performance/loopAwaits
+			const finalLintResults = await runConfig(configDefinition, host, {
+				cacheLocation,
+				ignoreCache: true,
+				skipLanguageReports,
+			});
+			return { ...finalLintResults, changed };
 		}
 	}
 }
