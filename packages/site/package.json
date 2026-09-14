@@ -45,7 +45,7 @@
 		"starlight-blog": "catalog:site",
 		"starlight-links-validator": "catalog:site",
 		"starlight-sidebar-topics": "catalog:site",
-		"zod": "catalog:dev"
+		"zod": "catalog:site"
 	},
 	"engines": {
 		"node": ">=26.1.0"

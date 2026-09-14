@@ -7,6 +7,7 @@ inputs:
     description: Cache the pnpm store
     required: false
     default: true
+  # renovate: datasource=node-version depName=node versioning=node
   node-version:
     description: The Node.js version to use
     required: false
@@ -22,7 +23,7 @@ runs:
       if: ${{ inputs.skip-checkout == 'false' }}
       with:
         persist-credentials: false
-    - uses: pnpm/setup@84cb39b217b10273981911c288cd62326dc7c6d2 # v2.0.2
+    - uses: pnpm/setup@703c52620218391530e48b9e8870d5c0082e1b9b # v2.1.0
       env:
         HUSKY: 0
       with:

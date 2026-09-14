@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/json-language",
-	"version": "0.20.0",
+	"version": "0.20.1",
 	"description": "[Experimental] JSON language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -26,7 +26,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@humanwhocodes/momoa": "^3.3.10"
+		"@humanwhocodes/momoa": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

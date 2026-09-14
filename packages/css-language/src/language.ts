@@ -1,6 +1,11 @@
 import { parse, walk, type CssNode } from "css-tree";
 
-import { createLanguage, type Language } from "@flint.fyi/core";
+import {
+	createLanguage,
+	groupFileVisitors,
+	runFileVisitorSubscriptions,
+	type Language,
+} from "@flint.fyi/core";
 
 import type { CssNodeVisitors } from "./nodes.ts";
 
@@ -31,20 +36,28 @@ export const cssLanguage: Language<CssNodeVisitors, CssFileServices> =
 				},
 			};
 		},
-		runFileVisitors: (file, options, runtime) => {
-			if (!runtime.visitors) {
-				return;
-			}
-
-			const { visitors } = runtime;
-			const visitorServices = { options, ...file.services };
+		runFileVisitors: (file, fileVisitors) => {
+			const { enter, exit } = groupFileVisitors<CssNode, CssFileServices>(
+				fileVisitors,
+			);
 
 			walk(file.services.root, {
-				// @ts-expect-error -- The intersection AnPlusB & Atrule & AtrulePrelude &...was reduced to `never` because property `type` has conflicting types in some constituents.
-				enter: (node: CssNode) => visitors[node.type]?.(node, visitorServices),
-				leave: (node: CssNode) =>
-					// @ts-expect-error -- The intersection AnPlusB & Atrule & AtrulePrelude &...was reduced to `never` because property `type` has conflicting types in some constituents.
-					visitors[`${node.type}:exit`]?.(node, visitorServices),
+				...(enter && {
+					enter: (node: CssNode) => {
+						const entering = enter.get(node.type);
+						if (entering !== undefined) {
+							runFileVisitorSubscriptions(entering, node);
+						}
+					},
+				}),
+				...(exit && {
+					leave: (node: CssNode) => {
+						const exiting = exit.get(node.type);
+						if (exiting !== undefined) {
+							runFileVisitorSubscriptions(exiting, node);
+						}
+					},
+				}),
 			});
 		},
 	});

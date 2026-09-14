@@ -10,6 +10,7 @@ permissions: {}
 
 jobs:
   publish:
+    if: github.event.repository.fork != true
     name: Publish Package Previews
     runs-on: ubuntu-latest
     steps:

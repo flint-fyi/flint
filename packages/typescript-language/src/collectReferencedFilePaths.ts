@@ -1,11 +1,9 @@
 import * as path from "node:path";
 
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
-
-import { nullThrows } from "@flint.fyi/utils";
+import ts, { SyntaxKind } from "typescript";
 
 import type * as AST from "./types/ast.ts";
+import { forEachChild } from "./utils/forEachChild.ts";
 
 export function collectReferencedFilePaths(
 	program: ts.Program,
@@ -25,18 +23,21 @@ export function collectReferencedFilePaths(
 
 		if (resolved.resolvedModule?.isExternalLibraryImport === false) {
 			return path.relative(
-				process.cwd(),
+				program.getCurrentDirectory(),
 				resolved.resolvedModule.resolvedFileName,
 			);
 		}
 		return undefined;
 	}
 
-	function visit(node: ts.Node) {
+	function visit(node: AST.AnyNode) {
 		let path: string | undefined;
 
 		if (isImportDeclaration(node)) {
 			// import { x } from "./foo";
+			path = node.moduleSpecifier.text;
+		} else if (isExportDeclaration(node)) {
+			// export { x } from "./foo"; or export * from "./foo";
 			path = node.moduleSpecifier.text;
 		} else if (isImportCall(node)) {
 			// const x = import("./foo")
@@ -54,7 +55,7 @@ export function collectReferencedFilePaths(
 			modulePaths.add(resolvedPath);
 		}
 
-		ts.forEachChild(node, visit);
+		forEachChild(node, visit);
 	}
 
 	visit(sourceFile);
@@ -62,42 +63,48 @@ export function collectReferencedFilePaths(
 	return Array.from(modulePaths);
 }
 
-function isAwaitImportCall(node: ts.Node): node is AST.AwaitExpression & {
-	expression: ts.CallExpression & { arguments: [ts.StringLiteral] };
+function isAwaitImportCall(node: AST.AnyNode): node is AST.AwaitExpression & {
+	expression: AST.CallExpression & { arguments: [AST.StringLiteral] };
 } {
-	return ts.isAwaitExpression(node) && isImportCall(node.expression);
+	return (
+		node.kind === SyntaxKind.AwaitExpression && isImportCall(node.expression)
+	);
+}
+
+function isExportDeclaration(
+	node: AST.AnyNode,
+): node is AST.ExportDeclaration & { moduleSpecifier: AST.StringLiteral } {
+	return (
+		node.kind === SyntaxKind.ExportDeclaration &&
+		node.moduleSpecifier?.kind === SyntaxKind.StringLiteral
+	);
 }
 
 function isImportCall(
-	node: ts.Node,
-): node is ts.CallExpression & { arguments: [ts.StringLiteral] } {
+	node: AST.AnyNode,
+): node is AST.CallExpression & { arguments: [AST.StringLiteral] } {
 	return (
-		ts.isCallExpression(node) &&
-		tsutils.isImportExpression(node.expression) &&
-		!!node.arguments.length &&
-		ts.isStringLiteral(
-			nullThrows(
-				node.arguments[0],
-				"First argument is expected to be present by prior length check",
-			),
-		)
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.ImportKeyword &&
+		node.arguments[0]?.kind === SyntaxKind.StringLiteral
 	);
 }
 
 function isImportDeclaration(
-	node: ts.Node,
+	node: AST.AnyNode,
 ): node is AST.ImportDeclaration & { moduleSpecifier: AST.StringLiteral } {
 	return (
-		ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)
+		node.kind === SyntaxKind.ImportDeclaration &&
+		node.moduleSpecifier.kind === SyntaxKind.StringLiteral
 	);
 }
 
-function isImportTypeNode(node: ts.Node): node is ts.ImportTypeNode & {
-	argument: ts.LiteralTypeNode & { literal: ts.StringLiteral };
+function isImportTypeNode(node: AST.AnyNode): node is AST.ImportTypeNode & {
+	argument: AST.LiteralTypeNode & { literal: AST.StringLiteral };
 } {
 	return (
-		ts.isImportTypeNode(node) &&
-		ts.isLiteralTypeNode(node.argument) &&
-		ts.isStringLiteral(node.argument.literal)
+		node.kind === SyntaxKind.ImportType &&
+		node.argument.kind === SyntaxKind.LiteralType &&
+		node.argument.literal.kind === SyntaxKind.StringLiteral
 	);
 }

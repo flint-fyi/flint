@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/plugin-flint",
-	"version": "0.8.0",
+	"version": "0.8.1",
 	"description": "[Experimental] A Flint plugin for linting Flint plugins.",
 	"homepage": "https://flint.fyi/rules/flint",
 	"repository": {
@@ -28,7 +28,7 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"typescript": "^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

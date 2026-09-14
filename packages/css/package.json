@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/css",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "[Experimental] A Flint plugin for CSS code.",
 	"homepage": "https://flint.fyi/rules/css",
 	"repository": {
@@ -27,7 +27,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/css-language": "workspace:^",
-		"typescript": "^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

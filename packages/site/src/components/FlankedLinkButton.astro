@@ -21,8 +21,12 @@ interface Props {
 		align-items: center;
 		display: flex;
 		flex-direction: row;
-		gap: 2rem;
+		gap: 1.5rem;
 		width: 100%;
+	}
+
+	.flanked-link-button-area :global(a) {
+		border-radius: 0.5rem;
 	}
 
 	a {
@@ -33,7 +37,7 @@ interface Props {
 	.hr {
 		background: var(--sl-color-gray-5);
 		display: block;
-		height: 2px;
+		height: 1px;
 		width: 100%;
 	}
 

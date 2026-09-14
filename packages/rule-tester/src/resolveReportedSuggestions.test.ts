@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { resolveReportedSuggestions } from "./resolveReportedSuggestions.ts";
+import type { TestSuggestion } from "./types.ts";
 
 const mockReport = {
 	message: { primary: "", secondary: [], suggestions: [] },
@@ -55,15 +56,14 @@ describe("resolveReportedSuggestions", () => {
 		]);
 	});
 
-	it("throws when given a test case with no suggestions", () => {
+	it("throws when an own-file suggestion is expected to target other files", () => {
 		const report = {
 			...mockReport,
 			suggestions: [
 				{
-					files: {
-						"file.ts": [{ range: { begin: 0, end: 3 }, text: "def" }],
-					},
 					id: "suggestion-report",
+					range: { begin: 0, end: 3 },
+					text: "def",
 				},
 			],
 		};
@@ -73,13 +73,15 @@ describe("resolveReportedSuggestions", () => {
 				...mockTestCaseNormalized,
 				suggestions: [
 					{
+						files: {
+							"file.ts": [{ original: "abc", updated: "def" }],
+						},
 						id: "suggestion-result",
-						updated: "...",
 					},
 				],
 			}),
 		).toThrowErrorMatchingInlineSnapshot(
-			`[Error: This test case describes suggestions across files, but the rule is only reporting changes to its own file.]`,
+			`[Error: This test case describes a suggestion across files, but the rule is only reporting changes to its own file.]`,
 		);
 	});
 
@@ -107,9 +109,108 @@ describe("resolveReportedSuggestions", () => {
 				],
 			}),
 		).toThrowErrorMatchingInlineSnapshot(
-			`[Error: This test case describes suggestions across files, but the rule is only reporting changes to its own file.]`,
+			`[Error: This test case describes a suggestion to its own file, but the rule is reporting changes across files.]`,
 		);
 	});
+
+	it.each([["expected.ts", "unexpected.ts"], ["unexpected.ts"], []])(
+		"rejects mismatched target paths: %j",
+		(...filePaths) => {
+			expect(() =>
+				resolveReportedSuggestions(
+					[
+						{
+							...mockReport,
+							suggestions: [
+								{
+									files: Object.fromEntries(
+										filePaths.map((filePath) => [filePath, []]),
+									),
+									id: "suggestion",
+								},
+							],
+						},
+					],
+					{
+						...mockTestCaseNormalized,
+						suggestions: [
+							{
+								files: { "expected.ts": [{ original: "abc", updated: "abc" }] },
+								id: "suggestion",
+							},
+						],
+					},
+				),
+			).toThrow(
+				"Reported suggestion target paths must exactly match expected target paths.",
+			);
+		},
+	);
+
+	it("pairs cross-file suggestions by flattened report order, even with identical ids", () => {
+		const suggestions: TestSuggestion[] = [
+			{
+				files: { "first.ts": [{ original: "abc", updated: "first" }] },
+				id: "suggestion",
+			},
+			{
+				files: { "second.ts": [{ original: "xyz", updated: "second" }] },
+				id: "suggestion",
+			},
+		];
+
+		const result = resolveReportedSuggestions(
+			["first", "second"].map((text) => ({
+				...mockReport,
+				suggestions: [
+					{
+						files: { [`${text}.ts`]: [{ range: { begin: 0, end: 3 }, text }] },
+						id: "suggestion",
+					},
+				],
+			})),
+			{ ...mockTestCaseNormalized, suggestions },
+		);
+
+		expect(result).toEqual(suggestions);
+	});
+
+	it.each([false, true])(
+		"accepts mixed suggestion variants (own-file first: %s)",
+		(ownFileFirst) => {
+			const ownFileReported = {
+				id: "own",
+				range: { begin: 0, end: 3 },
+				text: "own",
+			};
+			const crossFileReported = {
+				files: { "other.ts": [{ range: { begin: 0, end: 3 }, text: "other" }] },
+				id: "cross",
+			};
+			const ownFileExpected = { id: "own", updated: "own" };
+			const crossFileExpected = {
+				files: { "other.ts": [{ original: "abc", updated: "other" }] },
+				id: "cross",
+			};
+			const suggestions = ownFileFirst
+				? [ownFileExpected, crossFileExpected]
+				: [crossFileExpected, ownFileExpected];
+
+			const result = resolveReportedSuggestions(
+				[
+					{
+						...mockReport,
+						suggestions: ownFileFirst
+							? [ownFileReported, crossFileReported]
+							: [crossFileReported, ownFileReported],
+					},
+				],
+				{ ...mockTestCaseNormalized, suggestions },
+			);
+
+			expect(result).toEqual(suggestions);
+		},
+	);
 
 	it("returns id and a files object when given multi-file suggestions with a single file", () => {
 		const report = {

@@ -62,6 +62,103 @@ describe("createDiskBackedLinterHost", () => {
 		expect(host.fileTypeSync(missingPath)).toEqual(undefined);
 	});
 
+	it.each(["missing/file.txt", "file.txt/child.txt"])(
+		"returns undefined for file type of %s",
+		(relativePath) => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			fs.writeFileSync(path.join(integrationRoot, "file.txt"), "hello");
+
+			expect(
+				host.fileTypeSync(path.join(integrationRoot, relativePath)),
+			).toBeUndefined();
+		},
+	);
+
+	it.each(["EACCES", "EIO"])(
+		"preserves %s errors when checking file types and resolving symlinks",
+		async (code) => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const directoryPath = path.join(integrationRoot, "dir");
+			fs.mkdirSync(directoryPath);
+			fs.symlinkSync(
+				directoryPath,
+				path.join(integrationRoot, "link"),
+				"junction",
+			);
+			const error = Object.assign(new Error("Cannot stat entry"), { code });
+			using asynchronousStat = vi
+				.spyOn(fs.promises, "stat")
+				.mockRejectedValue(error);
+			using synchronousStat = vi
+				.spyOn(fs, "statSync")
+				.mockImplementation(() => {
+					throw error;
+				});
+
+			expect(() => host.fileTypeSync(directoryPath)).toThrow(error);
+			expect(() => host.readDirectorySync(integrationRoot)).toThrow(error);
+			await expect(host.readDirectory(integrationRoot)).rejects.toBe(error);
+			expect(asynchronousStat).toHaveBeenCalledWith(
+				path.join(integrationRoot, "link"),
+				{ throwIfNoEntry: false },
+			);
+			expect(synchronousStat).toHaveBeenCalledWith(
+				path.join(integrationRoot, "link"),
+				{ throwIfNoEntry: false },
+			);
+		},
+	);
+
+	describe("file touch times", () => {
+		it("returns the modification time of an existing file", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = path.join(integrationRoot, "file.txt");
+			const touchTime = new Date("2025-01-02T03:04:05.000Z");
+			fs.writeFileSync(filePath, "hello");
+			fs.utimesSync(filePath, touchTime, touchTime);
+
+			await expect(host.getFileTouchTime(filePath)).resolves.toBe(
+				touchTime.getTime(),
+			);
+			expect(host.getFileTouchTimeSync(filePath)).toBe(touchTime.getTime());
+		});
+
+		it.each(["missing.txt", "missing/file.txt", "file.txt/child.txt"])(
+			"returns undefined for missing path %s",
+			async (relativePath) => {
+				const host = createDiskBackedLinterHost(integrationRoot);
+				fs.writeFileSync(path.join(integrationRoot, "file.txt"), "hello");
+				const filePath = path.join(integrationRoot, relativePath);
+
+				await expect(host.getFileTouchTime(filePath)).resolves.toBeUndefined();
+				expect(host.getFileTouchTimeSync(filePath)).toBeUndefined();
+			},
+		);
+
+		it.each(["EACCES", "EIO"])("preserves %s errors", async (code) => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = path.join(integrationRoot, "file.txt");
+			const error = Object.assign(new Error("Cannot stat file"), { code });
+			using asynchronousStat = vi
+				.spyOn(fs.promises, "stat")
+				.mockRejectedValue(error);
+			using synchronousStat = vi
+				.spyOn(fs, "statSync")
+				.mockImplementation(() => {
+					throw error;
+				});
+
+			await expect(host.getFileTouchTime(filePath)).rejects.toBe(error);
+			expect(() => host.getFileTouchTimeSync(filePath)).toThrow(error);
+			expect(asynchronousStat).toHaveBeenCalledWith(filePath, {
+				throwIfNoEntry: false,
+			});
+			expect(synchronousStat).toHaveBeenCalledWith(filePath, {
+				throwIfNoEntry: false,
+			});
+		});
+	});
+
 	it("finds the repository root from a nested file", () => {
 		const repositoryRoot = path.join(integrationRoot, "repo");
 		const packageDirectory = path.join(repositoryRoot, "packages/core");

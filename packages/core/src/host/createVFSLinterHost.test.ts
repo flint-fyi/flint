@@ -55,6 +55,61 @@ describe(createVFSLinterHost, () => {
 		expect(host.getRepositoryRoot()).toBeUndefined();
 	});
 
+	describe("file touch times", () => {
+		it("returns undefined for missing files with or without a base host", async () => {
+			const baseHost = createVFSLinterHost({ cwd: "/root" });
+			const host = createVFSLinterHost({ baseHost });
+
+			expect(
+				await baseHost.getFileTouchTime("/root/missing.ts"),
+			).toBeUndefined();
+			expect(baseHost.getFileTouchTimeSync("/root/missing.ts")).toBeUndefined();
+			expect(await host.getFileTouchTime("/root/missing.ts")).toBeUndefined();
+			expect(host.getFileTouchTimeSync("/root/missing.ts")).toBeUndefined();
+		});
+
+		it("inherits timestamps using the matching base-host method", async () => {
+			const baseHost = createVFSLinterHost({ cwd: "/root" });
+			const host = createVFSLinterHost({ baseHost });
+			baseHost.vfsUpsertFile("/root/file.ts", "base content");
+			const touchTime = baseHost.getFileTouchTimeSync("/root/file.ts");
+			const asynchronousLookup = vi.spyOn(baseHost, "getFileTouchTime");
+			const synchronousLookup = vi.spyOn(baseHost, "getFileTouchTimeSync");
+
+			expect(await host.getFileTouchTime("/root/file.ts")).toBe(touchTime);
+			expect(asynchronousLookup).toHaveBeenCalledWith("/root/file.ts");
+			expect(synchronousLookup).not.toHaveBeenCalled();
+			expect(host.getFileTouchTimeSync("/root/file.ts")).toBe(touchTime);
+			expect(synchronousLookup).toHaveBeenCalledWith("/root/file.ts");
+		});
+
+		it.each([true, false])(
+			"prefers overlay timestamps and reveals base timestamps after deletion (caseSensitive: %s)",
+			async (caseSensitive) => {
+				const baseHost = createVFSLinterHost({ caseSensitive, cwd: "/root" });
+				const host = createVFSLinterHost({ baseHost });
+				baseHost.vfsUpsertFile("/root/file.ts", "base content");
+				const baseTouchTime = baseHost.getFileTouchTimeSync("/root/file.ts");
+				using now = vi.spyOn(Date, "now").mockReturnValue(0);
+				host.vfsUpsertFile("/root/file.ts", "overlay content");
+				const filePath = caseSensitive ? "/root/file.ts" : "/ROOT/FILE.ts";
+				const asynchronousLookup = vi.spyOn(baseHost, "getFileTouchTime");
+				const synchronousLookup = vi.spyOn(baseHost, "getFileTouchTimeSync");
+
+				expect(now).toHaveBeenCalled();
+				expect(await host.getFileTouchTime(filePath)).toBe(0);
+				expect(host.getFileTouchTimeSync(filePath)).toBe(0);
+				expect(asynchronousLookup).not.toHaveBeenCalled();
+				expect(synchronousLookup).not.toHaveBeenCalled();
+
+				host.vfsDeleteFile(filePath);
+
+				expect(await host.getFileTouchTime(filePath)).toBe(baseTouchTime);
+				expect(host.getFileTouchTimeSync(filePath)).toBe(baseTouchTime);
+			},
+		);
+	});
+
 	describe("stat", () => {
 		it("existing file", () => {
 			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
@@ -167,6 +222,33 @@ describe(createVFSLinterHost, () => {
 	});
 
 	describe("readDirectory", () => {
+		it.each([false, true])(
+			"merges differently cased entries with caseSensitive=%s",
+			(caseSensitive) => {
+				const baseHost = createVFSLinterHost({ caseSensitive, cwd: "/root" });
+				baseHost.vfsUpsertFile("/root/file.ts", "base");
+				baseHost.vfsUpsertFile("/root/sub/base.ts", "base");
+				const host = createVFSLinterHost({ baseHost });
+				host.vfsUpsertFile("/root/File.ts", "overlay");
+				host.vfsUpsertFile("/root/Sub/first.ts", "overlay");
+				host.vfsUpsertFile("/root/sub/second.ts", "overlay");
+
+				expect(host.readDirectorySync("/root")).toEqual([
+					{ name: "File.ts", type: "file" },
+					{ name: "Sub", type: "directory" },
+					...(caseSensitive
+						? [
+								{ name: "sub", type: "directory" },
+								{ name: "file.ts", type: "file" },
+							]
+						: []),
+				]);
+				expect(host.readFileSync("/root/file.ts")).toBe(
+					caseSensitive ? "base" : "overlay",
+				);
+			},
+		);
+
 		it("skips non-matching files when reading a directory", () => {
 			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 			host.vfsUpsertFile("/root/other/file.txt", "content");
@@ -717,6 +799,46 @@ describe(createVFSLinterHost, () => {
 	});
 
 	describe("glob", () => {
+		it.each([false, true])(
+			"uses cwd identity while preserving display paths with caseSensitive=%s",
+			async (caseSensitive) => {
+				const baseHost = createVFSLinterHost({ caseSensitive, cwd: "/Root" });
+				baseHost.vfsUpsertFile("/Root/src/file.ts", "base");
+				baseHost.vfsUpsertFile("/Root/Base.ts", "base");
+				const host = createVFSLinterHost({ baseHost });
+				host.vfsUpsertFile("/Root/Src/File.ts", "overlay");
+				host.vfsUpsertFile("/ROOT-sibling/Outside.ts", "");
+				host.vfsUpsertFile("/ROOT2/Outside.ts", "");
+
+				await Promise.all(
+					["/ROOT", "/ROOT/"].map(async (cwd) => {
+						await expect(
+							host.glob(["**/*.ts"], { cwd, exclude: [] }),
+						).resolves.toEqual(caseSensitive ? [] : ["Src/File.ts", "Base.ts"]);
+					}),
+				);
+				await expect(
+					host.glob(["**/*.ts"], { cwd: "/Root", exclude: [] }),
+				).resolves.toEqual(
+					caseSensitive
+						? ["Src/File.ts", "src/file.ts", "Base.ts"]
+						: ["Src/File.ts", "Base.ts"],
+				);
+			},
+		);
+
+		it.each(["/", "C:/"])(
+			"preserves root cwd containment for %s",
+			async (cwd) => {
+				const host = createVFSLinterHost({ caseSensitive: false, cwd });
+				host.vfsUpsertFile(`${cwd}Src/File.ts`, "");
+
+				await expect(
+					host.glob(["**/*.ts"], { cwd, exclude: [] }),
+				).resolves.toEqual(["Src/File.ts"]);
+			},
+		);
+
 		it("returns overlay paths relative to options.cwd", async () => {
 			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 			host.vfsUpsertFile("/root/src/file.ts", "");

@@ -1,8 +1,6 @@
 import * as tsutils from "ts-api-utils";
 import {
-	isFunctionLike,
-	isInterfaceDeclaration,
-	isPropertyAccessExpression,
+	SyntaxKind,
 	TypeFlags,
 	type Program,
 	type Type,
@@ -52,12 +50,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
-			return declarations.some(
-				(declaration) =>
-					isInterfaceDeclaration(declaration) &&
-					declaration.name.text === "Promise" &&
-					declarationIncludesGlobal(declaration, program),
-			);
+			return declarations.some((declaration) => {
+				const node = declaration as AST.AnyNode;
+				return (
+					node.kind === SyntaxKind.InterfaceDeclaration &&
+					node.name.text === "Promise" &&
+					declarationIncludesGlobal(declaration, program)
+				);
+			});
 		}
 
 		function isCatchOrThenCallback(
@@ -65,7 +65,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: Checker,
 			program: Program,
 		): "catch" | "then" | undefined {
-			if (!isPropertyAccessExpression(node.expression)) {
+			if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 				return undefined;
 			}
 
@@ -91,7 +91,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 			typeChecker: TypeChecker,
 		) {
-			if (!isFunctionLike(callback) || !callback.parameters.length) {
+			if (
+				(callback.kind !== SyntaxKind.ArrowFunction &&
+					callback.kind !== SyntaxKind.FunctionExpression) ||
+				!callback.parameters.length
+			) {
 				return;
 			}
 

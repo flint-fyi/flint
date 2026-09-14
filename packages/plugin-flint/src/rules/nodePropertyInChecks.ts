@@ -24,7 +24,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"TypeScript AST nodes have complex prototype chains that can lead to unexpected results with `in` checks.",
 			],
 			suggestions: [
-				"Access the property directly or use a type guard function like `ts.isXXX()` instead.",
+				"Access the property directly or compare `node.kind` to the matching `SyntaxKind` instead.",
 			],
 		},
 	},
