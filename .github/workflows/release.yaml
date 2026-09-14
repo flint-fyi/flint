@@ -79,6 +79,7 @@ jobs:
           publish-plan-artifact-id: ${{ needs.select-mode.outputs.publish-plan-artifact-id }}
 
   publish:
+    environment: Release
     name: Publish Packages
     needs: pack
     runs-on: ubuntu-latest
