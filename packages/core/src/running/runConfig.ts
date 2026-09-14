@@ -1,10 +1,9 @@
+import { readFromCache } from "../cache/readFromCache.ts";
 import { writeToCache } from "../cache/writeToCache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
-import { collectFilesAndOptions } from "./collectFilesAndOptions.ts";
-import { finalizeFileResults } from "./finalizeFileResults.ts";
-import { runRules } from "./runRules.ts";
+import { LintSession } from "./LintSession.ts";
 
 export interface RunConfigOptions {
 	cacheLocation?: string | undefined;
@@ -26,49 +25,29 @@ export async function runConfig(
 	const cacheLocationOverride =
 		cacheLocationFromCli || configDefinition.cacheLocation;
 
-	// 1. Based on the original config definition, collect:
-	//   - The full list of all file paths to be linted
-	//   - Any cached results amongst those file paths
-	//   - The language (virtual) file representations
-	//   - For each rule, the options it'll run with on each of its files
-	const { allFilePaths, cached, languageFilesByFilePath, rulesOptionsByFile } =
-		await collectFilesAndOptions(
-			configDefinition,
-			host,
-			ignoreCache,
-			cacheLocationOverride,
-		);
+	using session = await LintSession.create(configDefinition, host);
 
-	using files = new DisposableStack();
+	const cached = ignoreCache
+		? undefined
+		: await readFromCache(
+				host,
+				session.allFilePaths,
+				configDefinition.filePath,
+				cacheLocationOverride,
+			);
 
-	for (const languageAndFiles of languageFilesByFilePath.values()) {
-		for (const { file } of languageAndFiles) {
-			files.use(file);
-		}
+	const lintedResults = await session.lintFiles(
+		cached
+			? session.allFilePaths.difference(new Set(cached.keys()))
+			: session.allFilePaths,
+		{ skipLanguageReports: skipLanguageReports ?? false },
+	);
+
+	const allFileResults = new Map(lintedResults);
+	for (const filePath of lintedResults.keys()) {
+		cached?.delete(filePath);
 	}
 
-	// 2. Walk each file once, running all of its rules and storing their reports
-	const reportsByFilePath = await runRules(
-		languageFilesByFilePath,
-		rulesOptionsByFile,
-		host,
-	);
-
-	// 3. For each file path, finalize output using each of its language files
-	const allFileResults = new Map(
-		Array.from(languageFilesByFilePath).map(([filePath, languageAndFiles]) => [
-			filePath,
-			finalizeFileResults(
-				filePath,
-				languageAndFiles,
-				reportsByFilePath.get(filePath),
-				host,
-				skipLanguageReports,
-			),
-		]),
-	);
-
-	// 4. Merge cached file results into allFileResults
 	if (cached) {
 		for (const [filePath, cachedStorage] of cached) {
 			allFileResults.set(filePath, {
@@ -79,13 +58,11 @@ export async function runConfig(
 		}
 	}
 
-	// 5. Write the results to cache, then return them! We did it!
-	const ruleCount = rulesOptionsByFile.size;
 	const lintResults: LintResults = {
-		allFilePaths,
+		allFilePaths: session.allFilePaths,
 		allFileResults,
 		cached,
-		ruleCount,
+		ruleCount: session.ruleCount,
 	};
 
 	if (!skipCacheWrite) {

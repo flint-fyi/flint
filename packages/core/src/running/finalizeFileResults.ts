@@ -57,7 +57,7 @@ export function finalizeFileResults(
 		if (cacheImpacts?.dependencies) {
 			for (const dependency of cacheImpacts.dependencies) {
 				const normalized = pathKey(
-					resolve(dependency),
+					resolve(host.getCurrentDirectory(), dependency),
 					host.isCaseSensitiveFS(),
 				);
 				if (!fileDependencies.has(normalized)) {
