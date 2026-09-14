@@ -1230,6 +1230,34 @@ importers:
         specifier: catalog:dev
         version: 5.0.0(@types/node@26.5.1)(@vitest/coverage-v8@5.0.0)(vite@8.2.2)
 
+  packages/lsp:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/ts-patch':
+        specifier: workspace:^
+        version: link:../ts-patch
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
+      vscode-languageserver:
+        specifier: ^9.0.1
+        version: 9.0.1
+      vscode-languageserver-textdocument:
+        specifier: ^1.0.12
+        version: 1.0.14
+    devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
+      tsdown:
+        specifier: catalog:dev
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@6.0.3)
+      vitest:
+        specifier: catalog:dev
+        version: 5.0.0(@types/node@26.4.1)(@vitest/coverage-v8@5.0.0)(vite@8.2.2)
+
   packages/markdown-language:
     dependencies:
       '@flint.fyi/core':
