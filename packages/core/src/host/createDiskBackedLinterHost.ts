@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import path from "node:path";
 
 import { findRootSync } from "@altano/repository-tools/findRootSync.js";
+import { dirname, join, resolve } from "pathe";
 import { glob as tinyglobby } from "tinyglobby";
 
 import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
@@ -86,7 +86,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 									?.isDirectory()
 							) {
 								changedPath = normalizePath(
-									path.resolve(normalizedWatchPath, filename),
+									resolve(normalizedWatchPath, filename),
 								);
 							}
 							if (statAndEmitIfChanged(changedPath)) {
@@ -99,7 +99,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 							statAndEmitIfChanged(
 								filename == null
 									? null
-									: normalizePath(path.resolve(normalizedWatchPath, filename)),
+									: normalizePath(resolve(normalizedWatchPath, filename)),
 							)
 						) {
 							return;
@@ -203,10 +203,9 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const result = await Promise.all(
 				dirents.map(async (entry): Promise<[] | LinterHostDirectoryEntry> => {
 					const stat = entry.isSymbolicLink()
-						? await fs.promises.stat(
-								path.join(directoryPathAbsolute, entry.name),
-								{ throwIfNoEntry: false },
-							)
+						? await fs.promises.stat(join(directoryPathAbsolute, entry.name), {
+								throwIfNoEntry: false,
+							})
 						: entry;
 					if (stat?.isDirectory()) {
 						return { name: entry.name, type: "directory" };
@@ -228,7 +227,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 			for (const entry of dirents) {
 				const stat = entry.isSymbolicLink()
-					? fs.statSync(path.join(directoryPathAbsolute, entry.name), {
+					? fs.statSync(join(directoryPathAbsolute, entry.name), {
 							throwIfNoEntry: false,
 						})
 					: entry;
@@ -308,14 +307,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		async writeFile(filePathAbsolute, content) {
 			// Create missing parent directories so a single writeFile call always
 			// succeeds, with no separate mkdir step for callers.
-			await fs.promises.mkdir(path.dirname(filePathAbsolute), {
+			await fs.promises.mkdir(dirname(filePathAbsolute), {
 				recursive: true,
 			});
 
 			await fs.promises.writeFile(filePathAbsolute, content, "utf8");
 		},
 		writeFileSync(filePathAbsolute, content) {
-			fs.mkdirSync(path.dirname(filePathAbsolute), { recursive: true });
+			fs.mkdirSync(dirname(filePathAbsolute), { recursive: true });
 			fs.writeFileSync(filePathAbsolute, content, "utf8");
 		},
 	};
