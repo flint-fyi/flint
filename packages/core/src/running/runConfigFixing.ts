@@ -7,7 +7,7 @@ import type { LinterHost } from "../types/host.ts";
 import type { LintResultsWithChanges } from "../types/linting.ts";
 import { runConfig } from "./runConfig.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 const maximumIterations = 10;
 

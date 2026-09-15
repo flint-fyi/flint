@@ -10,7 +10,7 @@ import { prepareConsumer } from "./prepareConsumer.ts";
 import { testCaseEntries, testCasesPath, type TestCase } from "./testCases.ts";
 import { writeFile } from "./writing/writeFile.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 async function createCase(testCase: TestCase) {
 	const testCaseSlug = createTestCaseSlug({
