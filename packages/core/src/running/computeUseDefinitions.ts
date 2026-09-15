@@ -1,6 +1,5 @@
-import path from "node:path/posix";
-
 import { debugForFile } from "debug-for-file";
+import { join } from "pathe";
 
 import { commonlyIgnoredGlobs } from "../host/watcher.ts";
 import type {
@@ -46,7 +45,7 @@ export async function computeUseDefinitions(
 
 			const found = new Set<string>();
 			for (const filePath of matches) {
-				const filePathAbsolute = path.join(cwd, filePath);
+				const filePathAbsolute = join(cwd, filePath);
 
 				if (isNotIgnored(filePathAbsolute)) {
 					found.add(filePathAbsolute);

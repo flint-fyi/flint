@@ -1006,6 +1006,9 @@ importers:
       omit-empty:
         specifier: catalog:prod
         version: 1.0.0
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
       picomatch:
         specifier: catalog:prod
         version: 4.0.7
@@ -1715,6 +1718,9 @@ importers:
       cached-factory:
         specifier: catalog:prod
         version: 0.3.0
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1853,6 +1859,9 @@ importers:
       cspell-lib:
         specifier: catalog:prod
         version: 10.3.0
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1927,6 +1936,9 @@ importers:
       '@volar/language-core':
         specifier: catalog:prod
         version: 2.4.28
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
       svelte:
         specifier: catalog:prod
         version: 5.57.0(@typescript-eslint/types@8.70.0)
@@ -1974,6 +1986,9 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
       regexp-ast-analysis:
         specifier: catalog:prod
         version: 0.7.1
@@ -2053,6 +2068,10 @@ importers:
         version: 5.0.0(@types/node@26.5.1)(@vitest/coverage-v8@5.0.0)(vite@8.3.0)
 
   packages/utils:
+    dependencies:
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -2220,6 +2239,9 @@ importers:
       '@flint.fyi/yaml-language':
         specifier: workspace:^
         version: link:../yaml-language
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^

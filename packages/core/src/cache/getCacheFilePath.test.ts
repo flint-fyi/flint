@@ -1,5 +1,4 @@
-import { join } from "node:path";
-
+import { join } from "pathe";
 import { describe, expect, it } from "vitest";
 
 import { getCacheFilePath } from "./getCacheFilePath.ts";

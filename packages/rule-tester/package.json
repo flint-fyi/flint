@@ -27,7 +27,8 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"cached-factory": "catalog:prod"
+		"cached-factory": "catalog:prod",
+		"pathe": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

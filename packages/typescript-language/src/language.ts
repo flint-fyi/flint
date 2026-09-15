@@ -1,7 +1,6 @@
-import path from "node:path";
-
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
+import { extname } from "pathe";
 import { getPreEmitDiagnostics, type Program } from "typescript";
 
 import {
@@ -112,7 +111,7 @@ export const typescriptLanguage: Language<
 				`Could not retrieve source file for: ${data.filePathAbsolute}`,
 			);
 
-			const fileExtension = path.extname(data.filePathAbsolute);
+			const fileExtension = extname(data.filePathAbsolute);
 			if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
 				return {
 					...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
@@ -199,7 +198,7 @@ const fileExtToFlintPlugin: Record<string, string> = {
 };
 
 export function throwUnknownLanguageExtension(filename: string): never {
-	const pluginName = fileExtToFlintPlugin[path.extname(filename)];
+	const pluginName = fileExtToFlintPlugin[extname(filename)];
 	const message = pluginName
 		? `Did you install & import ${pluginName}?`
 		: "Unknown extension.";

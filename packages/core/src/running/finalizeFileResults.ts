@@ -1,6 +1,5 @@
-import { resolve } from "node:path";
-
 import { debugForFile } from "debug-for-file";
+import { resolve } from "pathe";
 
 import { pathKey } from "@flint.fyi/utils";
 

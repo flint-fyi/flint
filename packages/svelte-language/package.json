@@ -32,6 +32,7 @@
 		"@flint.fyi/volar-language": "workspace:^",
 		"@jridgewell/sourcemap-codec": "catalog:prod",
 		"@volar/language-core": "catalog:prod",
+		"pathe": "catalog:prod",
 		"svelte": "catalog:prod",
 		"svelte2tsx": "catalog:prod",
 		"typescript": "catalog:prod"
