@@ -60,6 +60,7 @@ export interface Language<
 	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
+		host: LinterHost,
 	): LanguageFileCacheImpacts;
 	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
 	runFileVisitors(
@@ -94,6 +95,7 @@ export interface LanguageDefinition<
 	): LanguageFileFactoryDefinition<FileServices>;
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
+		host: LinterHost,
 	): LanguageFileCacheImpacts;
 	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
 	orderFilePaths?(filePaths: readonly string[], host: LinterHost): string[];
