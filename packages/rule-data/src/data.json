@@ -26778,7 +26778,8 @@
 		],
 		"flint": {
 			"name": "restrictedGlobals",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

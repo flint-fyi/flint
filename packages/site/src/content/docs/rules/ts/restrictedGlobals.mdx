@@ -1,0 +1,77 @@
+---
+description: "Disallows references to specified global variables."
+title: "restrictedGlobals"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="restrictedGlobals" />
+
+Global variables can expose APIs that a project does not intend to use.
+This rule uses the TypeScript checker to report configured names only when they resolve to global runtime values from the project's active typings.
+Local and imported bindings, unresolved names, and references used only as types are not reported.
+
+Access through a global object, such as `globalThis.Array` or `window.event`, is not checked because the configured restriction applies to direct identifier references.
+
+## Options
+
+### `deny`
+
+> Type: `string[]`
+> Default: `[]`
+
+Global variable names whose resolved runtime references are disallowed.
+
+```ts
+ts.rules({
+	restrictedGlobals: {
+		deny: ["Array", "event"],
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = Array.from(new Set([1, 2, 3]));
+```
+
+```ts
+function handle() {
+	event.preventDefault();
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function collect(Array: ArrayConstructor) {
+	return Array.from(new Set([1, 2, 3]));
+}
+```
+
+```ts
+const values = globalThis.Array.from(new Set([1, 2, 3]));
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+Do not use this rule when the project permits every global supplied by its configured TypeScript libraries, or when another tool enforces the same restrictions before linting.
+
+## Further Reading
+
+- [MDN: Global object](https://developer.mozilla.org/en-US/docs/Glossary/Global_object)
+- [TypeScript: `lib` TSConfig option](https://www.typescriptlang.org/tsconfig/lib.html)
+- [MDN: `Window.event`](https://developer.mozilla.org/en-US/docs/Web/API/Window/event)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="restrictedGlobals" />
