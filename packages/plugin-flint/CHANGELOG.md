@@ -1,5 +1,16 @@
 # @flint.fyi/plugin-flint
 
+## 0.8.2
+
+### Patch Changes
+
+- [#3434](https://github.com/flint-fyi/flint/pull/3434) [`c8001cd`](https://github.com/flint-fyi/flint/commit/c8001cdd903fd11b9999706de8033ba9727151a6) - Suggest comparing `node.kind` to a `SyntaxKind` instead of calling `ts.isXXX()` in `nodePropertyInChecks`.
+
+- [#3369](https://github.com/flint-fyi/flint/pull/3369) [`bd0fc45`](https://github.com/flint-fyi/flint/commit/bd0fc450f491adcda039c7cde2b01041dfcc2a4a) - Detect duplicate invalid test cases declared with `String.raw` snapshots.
+- Updated dependencies [[`9372aeb`](https://github.com/flint-fyi/flint/commit/9372aeb77826b628a7d6d6013786bcbb85fd5a4b), [`6a34cee`](https://github.com/flint-fyi/flint/commit/6a34cee256df6c575793bd9ab8b094ed06e0efe4), [`a32109c`](https://github.com/flint-fyi/flint/commit/a32109c1ef55226efd1c05b853a9651c4d4ece6b), [`fb6ceba`](https://github.com/flint-fyi/flint/commit/fb6ceba45d56c32294e27afff078736ac8e12e07), [`8950424`](https://github.com/flint-fyi/flint/commit/8950424bd54371e56344eff50f752aba1e5752a3), [`07f1ca7`](https://github.com/flint-fyi/flint/commit/07f1ca70461eff08d4bd096ca5d14f2f82dffc68), [`f02543b`](https://github.com/flint-fyi/flint/commit/f02543b8a418ae793b1b0ead1542db899486e7aa)]:
+  - @flint.fyi/typescript-language@0.21.0
+  - @flint.fyi/core@0.27.0
+
 ## 0.8.1
 
 ### Patch Changes
