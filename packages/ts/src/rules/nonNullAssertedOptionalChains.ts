@@ -57,7 +57,7 @@ function isNonNullExpressionContinued(node: AST.NonNullExpression): boolean {
 }
 
 function isOptionalChainRoot(node: AST.AnyNode): boolean {
-	let current: AST.AnyNode = node;
+	let current = node;
 	while (true) {
 		if (
 			current.kind === SyntaxKind.NonNullExpression ||
