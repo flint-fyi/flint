@@ -1,3 +1,17 @@
+/* eslint perfectionist/sort-objects: ["error", {
+	customGroups: [
+		{
+			groupName: "flint",
+			elementNamePattern: "^flint$",
+		},
+		{
+			groupName: "notes",
+			elementNamePattern: "^notes$",
+		},
+	],
+	groups: ["flint", "unknown", "notes"],
+}] */
+
 import { z } from "zod/v4";
 
 type FlintPlugin =
@@ -141,16 +155,16 @@ type AlternateLinterDetails = Partial<
 
 const ruleDetailsSchema: z.ZodType<RuleDetails> = z
 	.object({
+		flint: flintRuleReferenceSchema,
 		biome: z.array(linterRuleReferenceSchema).exactOptional(),
 		deno: z.array(linterRuleReferenceSchema).exactOptional(),
 		eslint: z.array(linterRuleReferenceSchema).exactOptional(),
-		flint: flintRuleReferenceSchema,
 		markdownlint: z.array(linterRuleReferenceSchema).exactOptional(),
-		notes: z.string().exactOptional(),
 		oxlint: z.array(linterRuleReferenceSchema).exactOptional(),
 		stylelint: z.array(linterRuleReferenceSchema).exactOptional(),
+		notes: z.string().exactOptional(),
 	})
 	.strict();
 
-export const ruleDataSchema: z.ZodArray<z.ZodType<RuleDetails>> =
+export const ruleDataSchema: z.ZodType<RuleDetails[]> =
 	z.array(ruleDetailsSchema);
