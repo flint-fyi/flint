@@ -1,0 +1,91 @@
+---
+description: "Reports template expressions that can be simplified without changing their values."
+title: "unnecessaryTemplateExpressions"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTemplateExpressions" />
+
+Template interpolations add value when they convert or combine dynamic values.
+Static values can instead be written directly in the template, while a template that only wraps a string-valued expression can use that expression directly.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const message = `Count: ${1}`;
+```
+
+```ts
+declare const name: string;
+const displayName = `${name}`;
+```
+
+```ts
+type Route = `/${"settings"}`;
+```
+
+```ts
+declare const segment: string;
+const route = `/${`settings/${segment}`}`;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const message = `Count: 1`;
+```
+
+```ts
+declare const name: string;
+const displayName = name;
+```
+
+```ts
+type Route = `/settings`;
+```
+
+```ts
+declare const segment: string;
+const route = `/settings/${segment}`;
+```
+
+Dynamic interpolations and tagged templates preserve runtime behavior and are not reported.
+
+```ts
+declare const count: number;
+const message = `Count: ${count}`;
+```
+
+```ts
+declare function html(parts: TemplateStringsArray, value: number): string;
+const markup = html`<span>${1}</span>`;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Generated code or snapshot fixtures may intentionally preserve interpolation boundaries to match another tool's output.
+Disable this rule for those files when changing the source shape would make the fixture less representative.
+
+## Further Reading
+
+- [MDN: Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+- [TypeScript Handbook: Template Literal Types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTemplateExpressions" />
