@@ -29128,7 +29128,8 @@
 		"flint": {
 			"name": "unnecessaryQualifiers",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

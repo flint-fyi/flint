@@ -1,0 +1,82 @@
+---
+description: "Reports unnecessary namespace and enum qualifiers."
+title: "unnecessaryQualifiers"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryQualifiers" />
+
+Members of a namespace or enum are available by their unqualified names within that namespace or enum.
+Repeating the namespace or enum name adds text without changing which symbol TypeScript resolves.
+
+This rule uses TypeScript's type information to report a qualifier only when the unqualified name resolves to the same member.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+namespace Store {
+	export interface Item {}
+	let item: Store.Item;
+}
+```
+
+```ts
+enum State {
+	Ready,
+	Current = State.Ready,
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+namespace Store {
+	export interface Item {}
+	let item: Item;
+}
+```
+
+```ts
+enum State {
+	Ready,
+	Current = Ready,
+}
+```
+
+```ts
+namespace First {
+	export const value = 1;
+}
+namespace Second {
+	First.value;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+You may disable this rule when explicit qualification is preferred to make a member's origin clear to readers.
+
+## Further Reading
+
+- [TypeScript Handbook: Namespaces](https://www.typescriptlang.org/docs/handbook/namespaces.html)
+- [TypeScript Handbook: Enums](https://www.typescriptlang.org/docs/handbook/enums.html)
+- [TypeScript Handbook: Declaration Merging and Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryQualifiers" />
