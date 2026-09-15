@@ -13,11 +13,12 @@ describe("typescript", () => {
 			"<dim>Linting with <cyan><bold>flint.config.ts</bold></fg><dim>...</fg>
 
 			<underline><cwd>/fixtures/src/with-issues.ts</underline>
-			<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+			<dim>  2:2</fg>  Debugger statements should not be used in production code.           <yellow>ts/debuggerStatements</fg>
+			<dim>  8:7</fg>  Accessing the 'parse' property on this type or value is restricted.  <yellow>ts/restrictedProperties</fg>
 
-			<red>✖ Found <bold>1 report</bold> across <bold>1 file</bold>.</fg>
+			<red>✖ Found <bold>2 reports</bold> across <bold>1 file</bold>.</fg>
 			<red></fg>
-			<dim>Finished in <time> on 2 files with 138 rules.</fg>
+			<dim>Finished in <time> on 2 files with 139 rules.</fg>
 			<dim></fg>"
 		`);
 	});
