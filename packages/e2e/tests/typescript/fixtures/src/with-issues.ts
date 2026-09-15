@@ -6,3 +6,11 @@ export function debug(value: unknown): void {
 export function calculate(a: number, b: number): number {
 	return a + b;
 }
+
+export async function loadSomething() {
+	try {
+		return Promise.resolve("loaded");
+	} catch {
+		return "fallback";
+	}
+}

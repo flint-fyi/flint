@@ -1,0 +1,80 @@
+---
+description: "Reports missing awaits that affect returned-promise handling and unnecessary awaits on non-thenable return values."
+title: "returnAwaitPromises"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="returnAwaitPromises" />
+
+An async function normally adopts a returned promise after its surrounding `try` statement or active `using` resources have completed.
+Awaiting the promise first lets a rejection reach the active `catch` or `finally` and keeps resources alive until settlement.
+This rule requires that await only when the returned value is definitely thenable and reports awaits of definitely non-thenable return values.
+It preserves ordinary promise returns, ordinary `return await`, and uncertain types such as `any`, `unknown`, open generic constraints, and mixed unions.
+Async generators are excluded because their return completion already awaits its value.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+async function read() {
+	try {
+		return fetch("/data");
+	} catch (error) {
+		console.error(error);
+	}
+}
+```
+
+```ts
+async function count() {
+	return await 1;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+async function read() {
+	try {
+		return await fetch("/data");
+	} catch (error) {
+		console.error(error);
+	}
+}
+```
+
+```ts
+async function read() {
+	return fetch("/data");
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+You might not want to use this rule if your code intentionally allows returned promise rejections to bypass surrounding `catch` blocks.
+You might also avoid it while migrating code that depends on the existing microtask timing of `return await` on non-thenable values.
+
+## Further Reading
+
+- [MDN: await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await)
+- [MDN: async function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
+- [MDN: try...catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+- [TypeScript: `using` declarations](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="returnAwaitPromises" />
