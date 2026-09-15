@@ -293,6 +293,7 @@ import unnecessaryMathClamps from "./rules/unnecessaryMathClamps.ts";
 import unnecessaryNumericFractions from "./rules/unnecessaryNumericFractions.ts";
 import unnecessaryRenames from "./rules/unnecessaryRenames.ts";
 import unnecessaryTernaries from "./rules/unnecessaryTernaries.ts";
+import unnecessaryTypeConversions from "./rules/unnecessaryTypeConversions.ts";
 import unnecessaryUseStricts from "./rules/unnecessaryUseStricts.ts";
 import unsafeNegations from "./rules/unsafeNegations.ts";
 import variableDeletions from "./rules/variableDeletions.ts";
@@ -605,6 +606,7 @@ export const ts = createPlugin({
 		unnecessaryNumericFractions,
 		unnecessaryRenames,
 		unnecessaryTernaries,
+		unnecessaryTypeConversions,
 		unnecessaryUseStricts,
 		unsafeNegations,
 		variableDeletions,
