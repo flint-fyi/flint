@@ -29,18 +29,18 @@ export function createTypeScriptServerHost(
 			}
 		}
 
-		return { directories: directories.sort(), files: files.sort() };
+		return { directories: directories.toSorted(), files: files.toSorted() };
 	}
 
 	return {
 		args: [],
 		// https://github.com/microsoft/vscode/blob/main/extensions/typescript-language-features/web/src/serverHost.ts#L86-L88
 		clearImmediate(immediate: NodeJS.Timeout | number) {
-			clearTimeout(immediate);
+			globalThis.clearTimeout(immediate);
 		},
 		// https://github.com/microsoft/vscode/blob/main/extensions/typescript-language-features/web/src/serverHost.ts#L80-L82
 		clearTimeout(timeout: NodeJS.Timeout | number) {
-			clearTimeout(timeout);
+			globalThis.clearTimeout(timeout);
 		},
 		createDirectory() {
 			serverHostMethodNotImplemented("createDirectory");
@@ -98,7 +98,7 @@ export function createTypeScriptServerHost(
 		resolvePath,
 		// https://github.com/microsoft/vscode/blob/main/extensions/typescript-language-features/web/src/serverHost.ts#L83-L85
 		setImmediate(callback: (...args: unknown[]) => void, ...args: unknown[]) {
-			return setTimeout(callback, 0, ...args);
+			return globalThis.setTimeout(callback, 0, ...args);
 		},
 		// https://github.com/microsoft/vscode/blob/main/extensions/typescript-language-features/web/src/serverHost.ts#L77-L79
 		setTimeout(
@@ -106,7 +106,7 @@ export function createTypeScriptServerHost(
 			ms: number,
 			...args: unknown[]
 		) {
-			return setTimeout(callback, ms, ...args);
+			return globalThis.setTimeout(callback, ms, ...args);
 		},
 		useCaseSensitiveFileNames,
 		watchDirectory(directoryPath, callback, recursive = false) {
