@@ -1,0 +1,145 @@
+---
+description: "Disallows references to specified types and values in type positions."
+title: "restrictedTypes"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="restrictedTypes" />
+
+Some projects need to prevent type-level dependencies on particular declarations.
+This rule resolves references with TypeScript and restricts them by their final declaration name and source.
+Imported names, re-exported names, namespace-qualified references, import types, heritage clauses, and `typeof` type queries are supported.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// With restrictions: [{ specifier: { from: "lib", name: "Date" } }]
+type Timestamp = Date;
+```
+
+```ts
+// With restrictions: [{ specifier: { from: "package", name: "Legacy", package: "models" } }]
+import type { Legacy as LocalModel } from "models";
+
+type Model = LocalModel;
+```
+
+```ts
+// With restrictions: [{ specifier: { from: "file", path: "./internal.ts" } }]
+type InternalModule = import("./internal");
+```
+
+```ts
+// With restrictions: [{ specifier: { from: "package", name: "legacyValue", package: "models" } }]
+import { legacyValue as localValue } from "models";
+
+type Model = typeof localValue;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// A primitive keyword is not a declaration reference.
+type Identifier = string;
+```
+
+```ts
+// With restrictions: [{ specifier: { from: "package", name: "Legacy", package: "models" } }]
+import type { Legacy } from "modern-models";
+
+type PublicModel = Legacy;
+```
+
+```ts
+// Structural similarity does not transfer declaration identity.
+interface PublicModel {
+	id: string;
+}
+```
+
+```ts
+// Runtime uses are not type-position references.
+// With restrictions: [{ specifier: { from: "package", name: "LegacyModel", package: "models" } }]
+import { LegacyModel } from "models";
+
+export const model = new LegacyModel();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `restrictions`
+
+- Type: `Array<Restriction>`
+- Default: `[]`
+
+Each entry has an optional `message` string and a required `specifier`.
+Entries are checked in array order, and only the first match controls the message for a reference.
+
+| Field       | Type                   | Description                                      |
+| ----------- | ---------------------- | ------------------------------------------------ |
+| `message`   | `string?`              | Adds project-specific context to the diagnostic. |
+| `specifier` | `TypeOrValueSpecifier` | Identifies the declaration and its provenance.   |
+
+`TypeOrValueSpecifier` supports these variants:
+
+| Variant   | Fields                     | Description                                                |
+| --------- | -------------------------- | ---------------------------------------------------------- |
+| `file`    | `from`, `name?`, `path?`   | Matches declarations from a file or all matching files.    |
+| `lib`     | `from`, `name?`            | Matches declarations supplied by TypeScript library files. |
+| `package` | `from`, `name?`, `package` | Matches declarations supplied by an npm package.           |
+
+The optional `name` may be a string or an array of strings.
+When present, it matches the final declaration name rather than an imported local alias.
+When omitted, the restriction matches every declaration from the selected source.
+
+```jsonc
+{
+	"restrictions": [
+		{
+			"message": "Use Temporal.Instant for new timestamps.",
+			"specifier": { "from": "lib", "name": "Date" },
+		},
+		{
+			"specifier": {
+				"from": "package",
+				"name": ["LegacyRequest", "LegacyResponse"],
+				"package": "legacy-api",
+			},
+		},
+		{
+			"specifier": { "from": "file", "path": "./src/internal.ts" },
+		},
+	],
+}
+```
+
+The rule reports direct references and does not rewrite code because choosing a replacement requires project-specific type semantics.
+It does not match primitive keywords, `{}`, `[]`, generic-instantiation text patterns, structural equivalents, or later uses of a local type alias.
+
+## When Not To Use It
+
+Do not use this rule when declaration provenance is not available to TypeScript or when a project intentionally permits interchangeable declarations regardless of their source.
+Use a syntax-oriented rule instead when restrictions need to target primitive keywords or structural spellings such as `{}` and `[]`.
+Projects without restricted type dependencies can leave the rule disabled instead of maintaining an empty configuration.
+
+## Further Reading
+
+- [Everyday Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html)
+- [The `typeof` Type Operator](https://www.typescriptlang.org/docs/handbook/2/typeof-types.html)
+- [Modules](https://www.typescriptlang.org/docs/handbook/2/modules.html)
+- [Declaration Merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="restrictedTypes" />
