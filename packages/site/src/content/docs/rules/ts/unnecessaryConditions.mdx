@@ -1,0 +1,75 @@
+---
+description: "Reports conditions whose outcomes are statically known."
+title: "unnecessaryConditions"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryConditions" />
+
+This checker-backed rule uses TypeScript's flow-narrowed types to find truthiness, nullability, comparisons, switch cases, optional chains, logical assignments, and built-in Array predicate callbacks whose results are known.
+It requires `strictNullChecks` so that the checker can distinguish nullish values from other values.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const label: string;
+
+if (label) {
+	console.log(label);
+}
+```
+
+```ts
+const settings = { theme: "dark" };
+const theme = settings?.theme;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const label: string | undefined;
+
+if (label) {
+	console.log(label);
+}
+```
+
+```ts
+declare const settings: { theme: string } | undefined;
+const theme = settings?.theme;
+```
+
+</TabItem>
+</Tabs>
+
+Optional-chain diagnostics offer a suggestion that removes only the unnecessary `?.` token.
+The rule does not apply an unconditional fix because preserving evaluation and control-flow intent can require a larger edit.
+
+## Options
+
+This rule has no options.
+
+## When Not To Use It
+
+Do not use this rule in projects that cannot enable `strictNullChecks` or whose generated declarations do not accurately describe runtime nullability.
+The rule intentionally does not inspect arbitrary assertion calls or user-defined type-predicate calls, and it does not infer that unrelated object interfaces can never overlap.
+When `noUncheckedIndexedAccess` is disabled, it conservatively retains checks on array elements, dynamic tuple indexes, and index-signature accesses because those reads can produce `undefined` at runtime.
+
+## Rule Equivalents
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryConditions" />
+
+## Further Reading
+
+- [MDN: Truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy)
+- [MDN: Falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
+- [MDN: Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
+- [TypeScript: Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
