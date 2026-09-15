@@ -17,7 +17,7 @@ import { parseOptions } from "./parseOptions.ts";
 import { processRuleReport } from "./processRuleReport.ts";
 import type { LanguageAndFile } from "./types.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 interface RuleState {
 	optionsByFilePath: Map<string, object>;

@@ -25,7 +25,7 @@ import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 interface GlobalLanguageState {
 	packageVersion: string;

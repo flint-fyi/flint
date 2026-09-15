@@ -12,7 +12,7 @@ import { flatten } from "../utils/arrays.ts";
 import { createGitignoreFilter } from "./createGitignoreFilter.ts";
 import { resolveUseFilesGlobs } from "./resolveUseFilesGlobs.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export interface ComputedUseDefinitions {
 	allFilePaths: Set<string>;
