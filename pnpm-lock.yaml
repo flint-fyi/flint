@@ -454,8 +454,8 @@ catalogs:
       specifier: 3.5.42
       version: 3.5.42
     yaml-unist-parser:
-      specifier: 3.2.0
-      version: 3.2.0
+      specifier: 3.2.1
+      version: 3.2.1
   prod:
     '@altano/repository-tools':
       specifier: ^2.1.1
@@ -2257,7 +2257,7 @@ importers:
         version: 5.0.0(@types/node@26.5.1)(@vitest/coverage-v8@5.0.0)(vite@8.3.0)
       yaml-unist-parser:
         specifier: catalog:dev
-        version: 3.2.0
+        version: 3.2.1
 
   packages/yaml-language:
     dependencies:
@@ -8353,10 +8353,6 @@ packages:
   yaml-language-server@1.23.0:
     resolution: {integrity: sha512-3qVyCOexLCWw06PQa5kRPwvMWMZ/eZeCRWUvgD6a0OkqL/4iCnxy2WumbWifa937Uo5xhyWJ0uxlU39ljhNh7A==}
     hasBin: true
-
-  yaml-unist-parser@3.2.0:
-    resolution: {integrity: sha512-1WJ0TpBq12nsw7B9kp/XRDfgaDwS+oH/bvkqte722MgEqT7pYx5i/1UveiJSpxTHbmLWs/dexGJRgVcxe6K5fg==}
-    engines: {node: '>= 14'}
 
   yaml-unist-parser@3.2.1:
     resolution: {integrity: sha512-YGPcxHGikNhfGu0v2UZUXYIAZGDOLdPuK2cFsgko5xnfDRSi0guKTVv3IQGAjPWwok8Rsr2ybB3WGHUd8/tFfg==}
@@ -15412,10 +15408,6 @@ snapshots:
       vscode-languageserver-types: 3.18.3
       vscode-uri: 3.2.0
       yaml: 2.8.3
-
-  yaml-unist-parser@3.2.0:
-    dependencies:
-      yaml: 2.9.1
 
   yaml-unist-parser@3.2.1:
     dependencies:
