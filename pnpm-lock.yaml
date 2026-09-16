@@ -684,8 +684,8 @@ catalogs:
       specifier: 0.9.0
       version: 0.9.0
     zod:
-      specifier: 4.6.2
-      version: 4.6.2
+      specifier: 4.6.4
+      version: 4.6.4
 
 overrides:
   read-package-up: 12.0.0
@@ -1824,7 +1824,7 @@ importers:
         version: 0.9.0(@astrojs/starlight@0.42.0)(astro@7.3.2)
       zod:
         specifier: catalog:site
-        version: 4.6.2
+        version: 4.6.4
 
   packages/solid:
     dependencies:
@@ -8409,9 +8409,6 @@ packages:
     engines: {node: '>=18.0.0'}
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
-
-  zod@4.6.2:
-    resolution: {integrity: sha512-lh5RCAGFa1Cm2hjtNwLQhSs/AsqdWnTQaBER9fEwN/88pSh7KOtJavtBx/0VlkN/uFd61SwYmljLMDAsHlvzBQ==}
 
   zod@4.6.4:
     resolution: {integrity: sha512-AXSD6hvGdvRjajG/l1cC+d6IrhH+sjmPKtYeQdJIK8MFJl3LyClzS+o/YsVC+zQZPupAaeH5skwwm8YqYH7BqA==}
@@ -15480,8 +15477,6 @@ snapshots:
   zod-validation-error@4.0.2(zod@4.6.4):
     dependencies:
       zod: 4.6.4
-
-  zod@4.6.2: {}
 
   zod@4.6.4: {}
 
