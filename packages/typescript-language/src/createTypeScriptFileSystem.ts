@@ -5,10 +5,12 @@ import type { FileSystem } from "typescript-native/unstable/fs";
 import type { LinterHost } from "@flint.fyi/core";
 import { getPathInsideDirectory } from "@flint.fyi/utils";
 
+import { createVirtualFiles, type VirtualFiles } from "./createVirtualFiles.ts";
+
 export function createTypeScriptFileSystem(
 	host: LinterHost,
 	onFileAccess?: (fileName: string) => void,
-	virtualFiles: ReadonlyMap<string, string> = new Map(),
+	virtualFiles: VirtualFiles = createVirtualFiles(),
 ): FileSystem {
 	const getVirtualAccessibleEntries = (
 		directoryName: string,

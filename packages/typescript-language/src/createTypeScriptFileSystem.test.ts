@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { createVFSLinterHost } from "@flint.fyi/core";
 
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
+import { createVirtualFiles } from "./createVirtualFiles.ts";
 
 describe(createTypeScriptFileSystem, () => {
 	it("reads file contents and reports definite absence", () => {
@@ -77,7 +78,7 @@ describe(createTypeScriptFileSystem, () => {
 		const fileSystem = createTypeScriptFileSystem(
 			host,
 			undefined,
-			new Map([[virtualFilePath, '{"extends":"/repo/tsconfig.json"}']]),
+			virtualFilesOf([[virtualFilePath, '{"extends":"/repo/tsconfig.json"}']]),
 		);
 
 		expect(fileSystem.fileExists?.(virtualFilePath)).toBe(true);
@@ -93,7 +94,7 @@ describe(createTypeScriptFileSystem, () => {
 		const fileSystem = createTypeScriptFileSystem(
 			host,
 			undefined,
-			new Map([["/repo/.cache/overlays/tsconfig.json", "{}"]]),
+			virtualFilesOf([["/repo/.cache/overlays/tsconfig.json", "{}"]]),
 		);
 
 		expect(fileSystem.directoryExists?.("/repo/.cache")).toBe(true);
@@ -108,3 +109,11 @@ describe(createTypeScriptFileSystem, () => {
 		});
 	});
 });
+
+function virtualFilesOf(entries: [string, string][]) {
+	const virtualFiles = createVirtualFiles();
+	for (const [filePath, contents] of entries) {
+		virtualFiles.set(filePath, contents);
+	}
+	return virtualFiles;
+}

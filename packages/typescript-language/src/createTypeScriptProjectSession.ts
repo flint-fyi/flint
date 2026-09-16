@@ -16,6 +16,7 @@ import {
 } from "./contentMappers.ts";
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 import { createTypeScriptOverlayConfig } from "./createTypeScriptOverlayConfig.ts";
+import { createVirtualFiles } from "./createVirtualFiles.ts";
 
 export interface TypeScriptProjectChanges {
 	changed?: string[];
@@ -57,7 +58,7 @@ export function createTypeScriptProjectSession(
 	const openedMappedFilePaths = new Set<string>();
 	const openedOverlayPaths = new Set<string>();
 	const overlayPathByAuthoredConfigPath = new Map<string, string>();
-	const virtualFiles = new Map<string, string>();
+	const virtualFiles = createVirtualFiles();
 	// Memoizes parsed configs for a single update cycle so resolving a mapped
 	// file's owning project does not re-parse the same configs for every file.
 	let parsedConfigCache = new Map<string, ParsedCommandLine | undefined>();
