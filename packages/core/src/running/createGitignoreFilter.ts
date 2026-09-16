@@ -1,6 +1,5 @@
-import path from "node:path";
-
 import ignore from "ignore";
+import { dirname, join, relative } from "pathe";
 
 import type { LinterHost } from "../types/host.ts";
 
@@ -16,7 +15,7 @@ export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 		}
 
 		let matcher: ignore.Ignore | undefined;
-		const gitignorePath = path.posix.join(directory, ".gitignore");
+		const gitignorePath = join(directory, ".gitignore");
 		if (host.fileTypeSync(gitignorePath) === "file") {
 			const content = host.readFileSync(gitignorePath);
 			if (content !== undefined) {
@@ -29,14 +28,13 @@ export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 	}
 
 	function isPathIgnored(pathAbsolute: string, isDirectory: boolean) {
-		let directory = path.posix.dirname(pathAbsolute);
+		let directory = dirname(pathAbsolute);
 		while (directory.startsWith(cwd)) {
 			const matcher = matcherForDirectory(directory);
 			if (matcher) {
-				const relative =
-					path.posix.relative(directory, pathAbsolute) +
-					(isDirectory ? "/" : "");
-				const result = matcher.test(relative);
+				const relativePath =
+					relative(directory, pathAbsolute) + (isDirectory ? "/" : "");
+				const result = matcher.test(relativePath);
 				if (result.ignored || result.unignored) {
 					return result.ignored;
 				}
@@ -44,7 +42,7 @@ export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 			if (directory === cwd) {
 				break;
 			}
-			directory = path.posix.dirname(directory);
+			directory = dirname(directory);
 		}
 		return false;
 	}
@@ -56,7 +54,7 @@ export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 			if (isPathIgnored(current, isDirectory)) {
 				return false;
 			}
-			current = path.posix.dirname(current);
+			current = dirname(current);
 			isDirectory = true;
 		}
 		return true;

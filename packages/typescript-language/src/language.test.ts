@@ -4,7 +4,11 @@ import { describe, expect, it } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
 
-import { typescriptLanguage, visitTypeScriptNodes } from "./language.ts";
+import {
+	throwUnknownLanguageExtension,
+	typescriptLanguage,
+	visitTypeScriptNodes,
+} from "./language.ts";
 import type * as AST from "./types/ast.ts";
 
 describe("typescriptLanguage file lifecycle", () => {
@@ -217,5 +221,19 @@ describe("visitTypeScriptNodes", () => {
 			"Identifier:exit",
 			"SourceFile:exit",
 		]);
+	});
+});
+
+describe(throwUnknownLanguageExtension, () => {
+	it("suggests the matching Flint plugin", () => {
+		expect(() => throwUnknownLanguageExtension("file.vue")).toThrow(
+			"Cannot process file.vue. Did you install & import @flint.fyi/vue?",
+		);
+	});
+
+	it("reports an unknown extension", () => {
+		expect(() => throwUnknownLanguageExtension("file.unknown")).toThrow(
+			"Cannot process file.unknown. Unknown extension.",
+		);
 	});
 });

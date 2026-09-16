@@ -26,7 +26,8 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/yaml-language": "workspace:^"
+		"@flint.fyi/yaml-language": "workspace:^",
+		"pathe": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

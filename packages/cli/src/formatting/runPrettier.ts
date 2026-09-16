@@ -10,7 +10,7 @@ import type {
 	LintResultsMaybeWithChanges,
 } from "@flint.fyi/core";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function runPrettier(
 	host: LinterHost,

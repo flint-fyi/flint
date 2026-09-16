@@ -8,7 +8,7 @@ import type { LinterHost } from "../types/host.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function readFromCache(
 	host: LinterHost,

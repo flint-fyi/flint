@@ -17,7 +17,7 @@ catalogs:
     "@changesets/cli": 3.0.2
     "@emnapi/core": 1.11.3
     "@emnapi/runtime": 1.11.3
-    "@eslint-community/eslint-plugin-eslint-comments": 4.8.0
+    "@eslint-community/eslint-plugin-eslint-comments": 4.8.1
     "@eslint/json": 2.1.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.3
@@ -34,10 +34,10 @@ catalogs:
     console-table-without-index: 0.1.1
     debug-for-file: 0.4.2
     eslint: 10.10.0
-    eslint-plugin-jsdoc: 64.3.9
+    eslint-plugin-jsdoc: 64.3.10
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-n: 18.3.0
-    eslint-plugin-package-json: 1.8.0
+    eslint-plugin-package-json: 1.8.1
     eslint-plugin-perfectionist: 5.11.0
     eslint-plugin-regexp: 3.3.0
     eslint-plugin-yml: 3.8.1
@@ -62,15 +62,14 @@ catalogs:
     vitest: 5.0.0
     vitest-ansi-serializer: 0.3.1
     vue: 3.5.42
-    yaml-unist-parser: 3.2.0
-    zod: 4.6.1
+    yaml-unist-parser: 3.2.1
 
   comparisons:
     "@biomejs/biome": 2.5.13
-    "@eslint-community/eslint-plugin-eslint-comments": 4.8.0
+    "@eslint-community/eslint-plugin-eslint-comments": 4.8.1
     "@eslint/json": 2.1.0
     "@eslint/markdown": 8.0.3
-    "@next/eslint-plugin-next": 16.3.4
+    "@next/eslint-plugin-next": 16.3.5
     "@nuxt/eslint-plugin": 1.17.0
     "@types/eslint-plugin-jsx-a11y": 6.10.1
     "@types/eslint-plugin-promise": 7.3.0
@@ -80,11 +79,11 @@ catalogs:
     eslint-plugin-astro: 3.1.0
     eslint-plugin-eslint-plugin: 7.6.2
     eslint-plugin-import: 2.32.0
-    eslint-plugin-jsdoc: 64.3.9
+    eslint-plugin-jsdoc: 64.3.10
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.3.0
-    eslint-plugin-package-json: 1.8.0
+    eslint-plugin-package-json: 1.8.1
     eslint-plugin-perfectionist: 5.11.0
     eslint-plugin-promise: 7.3.0
     eslint-plugin-react: 7.37.5
@@ -147,7 +146,7 @@ catalogs:
     tinyglobby: ^0.2.17
     ts-api-utils: ^2.4.0
     typescript: ^6.0.3
-    typescript-native: "npm:typescript@^7.1.0-dev.20260830.1"
+    typescript-native: npm:typescript@7.1.0-dev.20260830.1
     unist-util-visit: ^5.0.0
     vize: 0.387.0
     wrap-ansi: ^10.0.0
@@ -175,7 +174,7 @@ catalogs:
     expressive-code: 0.44.2
     expressive-code-twoslash: 0.6.1
     konami-emoji-blast: 0.7.0
-    markdown-it: 15.0.1
+    markdown-it: 15.0.2
     react: 19.3.0
     react-dom: 19.3.0
     remark-add-twoslash: 0.0.1
@@ -185,7 +184,7 @@ catalogs:
     starlight-links-validator: 0.26.0
     starlight-package-managers: 0.12.0
     starlight-sidebar-topics: 0.9.0
-    zod: 4.6.1
+    zod: 4.6.2
 
 dedupePeers: true
 

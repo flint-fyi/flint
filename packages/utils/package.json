@@ -24,6 +24,9 @@
 	"scripts": {
 		"test": "vitest --project utils"
 	},
+	"dependencies": {
+		"pathe": "catalog:prod"
+	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",

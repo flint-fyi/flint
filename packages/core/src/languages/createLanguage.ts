@@ -7,7 +7,7 @@ import type {
 } from "../types/languages.ts";
 import { makeDisposable } from "./makeDisposable.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export function createLanguage<
 	AstNodesByName,

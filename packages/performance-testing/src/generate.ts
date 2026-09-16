@@ -15,7 +15,7 @@ import { testCaseEntries, testCasesPath, type TestCase } from "./testCases.ts";
 import { writeFile } from "./writing/writeFile.ts";
 import { writeStructure } from "./writing/writeStructure.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 async function createCase(testCase: TestCase) {
 	const testCaseSlug = createTestCaseSlug({

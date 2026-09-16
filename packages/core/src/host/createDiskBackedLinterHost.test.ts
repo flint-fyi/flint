@@ -99,11 +99,11 @@ describe("createDiskBackedLinterHost", () => {
 			expect(() => host.readDirectorySync(integrationRoot)).toThrow(error);
 			await expect(host.readDirectory(integrationRoot)).rejects.toBe(error);
 			expect(asynchronousStat).toHaveBeenCalledWith(
-				path.join(integrationRoot, "link"),
+				normalizePath(path.join(integrationRoot, "link")),
 				{ throwIfNoEntry: false },
 			);
 			expect(synchronousStat).toHaveBeenCalledWith(
-				path.join(integrationRoot, "link"),
+				normalizePath(path.join(integrationRoot, "link")),
 				{ throwIfNoEntry: false },
 			);
 		},

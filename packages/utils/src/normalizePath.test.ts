@@ -32,6 +32,12 @@ describe("normalizePath", () => {
 
 		expect(normalized).toEqual("C:/");
 	});
+
+	it("uppercases Windows drive letter", () => {
+		const normalized = normalizePath("c:\\foo\\bar");
+
+		expect(normalized).toEqual("C:/foo/bar");
+	});
 });
 
 describe("pathKey", () => {
