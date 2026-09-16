@@ -1,17 +1,20 @@
+import path from "node:path";
 import { stdin, stdout } from "node:process";
+import url from "node:url";
 
-import type {
-	ContentMapperProject,
-	JsonRpcResponse,
-	MappedDiagnosticDirective,
-	MappedOutput,
-	OpenProjectParams,
-	OptionDiagnostic,
-	PositionEncoding,
-	RunContentMapperOptions,
-	SpanMapping,
-	TransformParams,
-	TransformResult,
+import {
+	TRANSFORM_FAILURE_CODE,
+	type ContentMapperProject,
+	type JsonRpcResponse,
+	type MappedDiagnosticDirective,
+	type MappedOutput,
+	type OpenProjectParams,
+	type OptionDiagnostic,
+	type PositionEncoding,
+	type RunContentMapperOptions,
+	type SpanMapping,
+	type TransformParams,
+	type TransformResult,
 } from "./protocol.ts";
 
 interface JsonRpcRequest {
@@ -24,12 +27,27 @@ interface JsonRpcRequest {
 const MAXIMUM_HEADER_BYTES = 8 * 1024;
 const CONTENT_LENGTH_MARKER = "content-length:";
 
+/**
+ * Whether the module at `moduleUrl` is what this process was started to run.
+ *
+ * Content mappers are exec'd directly, but their modules are also imported by
+ * thin wrapper packages (`@flint.fyi/vue` re-exporting `@flint.fyi/vue-language`)
+ * that are themselves the exec'd entry. Each entry guards on its own URL so
+ * only the one actually being run starts a server.
+ */
+export function isModuleEntry(moduleUrl: string): boolean {
+	return (
+		!!process.argv[1] &&
+		path.resolve(process.argv[1]) === url.fileURLToPath(moduleUrl)
+	);
+}
+
 export async function runContentMapper({
 	diagnosticSource,
 	input = stdin,
 	openProject,
 	output = stdout,
-	transformFailureCode = 1,
+	transformFailureCode = TRANSFORM_FAILURE_CODE,
 }: RunContentMapperOptions): Promise<void> {
 	const projects = new Map<string, ContentMapperProject>();
 	let positionEncoding: PositionEncoding = "utf-16";
@@ -332,6 +350,18 @@ export async function runContentMapper({
 			[...projects.values()].map(async (project) => await project.close?.()),
 		);
 		projects.clear();
+	}
+}
+
+export async function runContentMapperEntry(
+	moduleUrl: string,
+	options: RunContentMapperOptions,
+): Promise<void> {
+	if (
+		process.argv[1] &&
+		path.resolve(process.argv[1]) === url.fileURLToPath(moduleUrl)
+	) {
+		await runContentMapper(options);
 	}
 }
 

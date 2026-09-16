@@ -67,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ElementAccessExpression(
 					node,
-					{ typeChecker, sourceFile }: TypeScriptFileServices,
+					{ sourceFile, typeChecker }: TypeScriptFileServices,
 				) {
 					if (
 						node.expression.kind === SyntaxKind.Identifier &&

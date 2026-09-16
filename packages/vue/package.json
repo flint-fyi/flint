@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/vue",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "[Experimental] Vue.js language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/vue",
 	"repository": {
@@ -30,7 +30,7 @@
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",
 		"@vue/compiler-dom": "catalog:prod",
-		"typescript-native": "catalog:dev"
+		"typescript-native": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

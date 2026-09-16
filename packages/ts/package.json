@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.23.1",
+	"version": "0.23.2",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/ts",
 	"repository": {
@@ -31,7 +31,7 @@
 		"@flint.fyi/utils": "workspace:^",
 		"regexp-ast-analysis": "catalog:prod",
 		"scslre": "catalog:prod",
-		"typescript-native": "catalog:dev",
+		"typescript-native": "catalog:prod",
 		"zod": "catalog:prod"
 	},
 	"devDependencies": {

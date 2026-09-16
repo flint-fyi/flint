@@ -1,5 +1,6 @@
 import type { Program } from "typescript-native/unstable/sync";
 
+import type { LinterHost } from "@flint.fyi/core";
 import {
 	declarationIncludesGlobal,
 	type AST,
@@ -16,6 +17,7 @@ export function matchesSpecifier(
 	declarations: AST.Declaration[],
 	specifier: TypeOrValueSpecifier,
 	program: Program,
+	host: LinterHost,
 ): boolean {
 	const names = getSpecifierNames(specifier);
 	if (
@@ -32,7 +34,7 @@ export function matchesSpecifier(
 			case "lib":
 				return declarationIncludesGlobal(declaration, program);
 			case "package":
-				return isFromPackage(declaration, specifier.package, program);
+				return isFromPackage(declaration, specifier.package, program, host);
 		}
 	});
 }

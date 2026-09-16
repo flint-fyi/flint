@@ -2,7 +2,7 @@ import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
 import { SymbolFlags, type Program } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
-import type { CharacterReportRange } from "@flint.fyi/core";
+import type { CharacterReportRange, LinterHost } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -148,6 +148,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			source: string,
 			range: CharacterReportRange,
 			program: Program,
+			host: LinterHost,
 		) {
 			for (const restriction of restrictions) {
 				if (restriction.allowTypeImports && isTypeOnly) {
@@ -160,6 +161,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						declarations,
 						restriction.specifier,
 						program,
+						host,
 					)
 				) {
 					context.report({
@@ -184,6 +186,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			topLevelTypeOnly: boolean,
 			range: CharacterReportRange,
 			program: Program,
+			host: LinterHost,
 		) {
 			for (const restriction of restrictions) {
 				if (restriction.allowTypeImports && topLevelTypeOnly) {
@@ -201,6 +204,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								name: undefined,
 							},
 							program,
+							host,
 						)
 					) {
 						context.report({
@@ -221,6 +225,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						moduleDeclarations,
 						restriction.specifier,
 						program,
+						host,
 					)
 				) {
 					context.report({
@@ -241,7 +246,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ExportDeclaration: (
 					node,
-					{ options, program, sourceFile, typeChecker },
+					{ host, options, program, sourceFile, typeChecker },
 				) => {
 					if (node.moduleSpecifier?.kind !== SyntaxKind.StringLiteral) {
 						return;
@@ -273,6 +278,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								source,
 								range,
 								program,
+								host,
 							);
 						}
 					} else {
@@ -291,12 +297,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							topLevelTypeOnly,
 							range,
 							program,
+							host,
 						);
 					}
 				},
 				ImportDeclaration: (
 					node,
-					{ options, program, sourceFile, typeChecker },
+					{ host, options, program, sourceFile, typeChecker },
 				) => {
 					if (node.moduleSpecifier.kind !== SyntaxKind.StringLiteral) {
 						return;
@@ -321,6 +328,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									moduleDeclarations,
 									restriction.specifier,
 									program,
+									host,
 								)
 							) {
 								context.report({
@@ -356,6 +364,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								source,
 								range,
 								program,
+								host,
 							);
 						}
 					}
@@ -387,6 +396,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								source,
 								range,
 								program,
+								host,
 							);
 						}
 
@@ -408,6 +418,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						topLevelTypeOnly,
 						range,
 						program,
+						host,
 					);
 				},
 			},

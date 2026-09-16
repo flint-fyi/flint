@@ -1,16 +1,14 @@
-#!/usr/bin/env node
-import path from "node:path";
-import url from "node:url";
-
 import { parse } from "@astrojs/compiler/sync";
 import type { ElementNode, ParentNode } from "@astrojs/compiler/types";
 import { astro2tsx } from "@astrojs/ts-plugin/dist/astro2tsx.js";
 
 import {
 	createContentMapperTransform,
+	isModuleEntry,
 	runContentMapper,
 	type ContentMapperProject,
 	type ContentMapperTransformSource,
+	type RunContentMapperOptions,
 	type TransformParams,
 	type TransformResult,
 } from "@flint.fyi/content-mapper";
@@ -190,23 +188,16 @@ function normalizeAstroMappings(
 	}));
 }
 
-/**
- * Starts the Astro content-mapper JSON-RPC server over stdio.
- *
- * Thin wrapper packages (`@flint.fyi/astro`) re-export this module and are
- * themselves the exec'd entry, so the `argv[1] === import.meta.url` guard below
- * can never match for them. They call this directly instead.
- */
+const contentMapperOptions = {
+	diagnosticSource: "astro",
+	openProject: openAstroProject,
+} satisfies RunContentMapperOptions;
+
+/** Starts the Astro content-mapper JSON-RPC server over stdio. */
 export async function runAstroContentMapper(): Promise<void> {
-	await runContentMapper({
-		diagnosticSource: "astro",
-		openProject: openAstroProject,
-	});
+	await runContentMapper(contentMapperOptions);
 }
 
-if (
-	process.argv[1] &&
-	path.resolve(process.argv[1]) === url.fileURLToPath(import.meta.url)
-) {
-	await runAstroContentMapper();
+if (isModuleEntry(import.meta.url)) {
+	await runContentMapper(contentMapperOptions);
 }

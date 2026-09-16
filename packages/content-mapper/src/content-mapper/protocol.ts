@@ -64,6 +64,15 @@ export interface OptionDiagnostic {
 
 export type PositionEncoding = "utf-8" | "utf-16";
 
+/**
+ * Diagnostic code reported when a content mapper's transform throws.
+ *
+ * The protocol only carries TypeScript's numeric codes, so mappers whose
+ * underlying compiler uses string codes report this and keep the original code
+ * in the message text.
+ */
+export const TRANSFORM_FAILURE_CODE = 1;
+
 export interface RunContentMapperOptions {
 	diagnosticSource: string;
 	input?: Readable;

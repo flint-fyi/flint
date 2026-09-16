@@ -121,10 +121,12 @@ export default ruleCreator.createRule(vueLanguage, {
 									return false;
 								}
 								const typedDeclaration = declaration as AST.Declaration;
+								// `AST.Declaration` members type `name` as always present, but
+								// anonymous declarations (a default-exported function, say)
+								// carry the property with value `undefined`.
 								const declarationName =
-									"name" in typedDeclaration
-										? typedDeclaration.name
-										: typedDeclaration;
+									(typedDeclaration as { name?: AST.AnyNode }).name ??
+									typedDeclaration;
 								const declarationSourceFile = declarationName.getSourceFile();
 								const declarationMap = declarationSourceFile.spanMap;
 								if (!declarationMap) {

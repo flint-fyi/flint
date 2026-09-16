@@ -3,6 +3,7 @@ import path from "node:path";
 import type { FileSystem } from "typescript-native/unstable/fs";
 
 import type { LinterHost } from "@flint.fyi/core";
+import { getPathInsideDirectory } from "@flint.fyi/utils";
 
 export function createTypeScriptFileSystem(
 	host: LinterHost,
@@ -15,13 +16,8 @@ export function createTypeScriptFileSystem(
 		const directories = new Set<string>();
 		const files = new Set<string>();
 		for (const fileName of virtualFiles.keys()) {
-			const relativePath = path.relative(directoryName, fileName);
-			if (
-				!relativePath ||
-				relativePath === ".." ||
-				relativePath.startsWith(`..${path.sep}`) ||
-				path.isAbsolute(relativePath)
-			) {
+			const relativePath = getPathInsideDirectory(directoryName, fileName);
+			if (!relativePath) {
 				continue;
 			}
 			const separatorIndex = relativePath.indexOf(path.sep);
@@ -44,13 +40,7 @@ export function createTypeScriptFileSystem(
 			}
 
 			for (const fileName of virtualFiles.keys()) {
-				const relativePath = path.relative(directoryName, fileName);
-				if (
-					relativePath &&
-					relativePath !== ".." &&
-					!relativePath.startsWith(`..${path.sep}`) &&
-					!path.isAbsolute(relativePath)
-				) {
+				if (getPathInsideDirectory(directoryName, fileName)) {
 					return true;
 				}
 			}

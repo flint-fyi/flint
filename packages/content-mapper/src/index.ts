@@ -17,5 +17,9 @@ export type {
 	TransformParams,
 	TransformResult,
 } from "./content-mapper/protocol.ts";
-export { runContentMapper } from "./content-mapper/runContentMapper.ts";
+export { TRANSFORM_FAILURE_CODE } from "./content-mapper/protocol.ts";
+export {
+	isModuleEntry,
+	runContentMapper,
+} from "./content-mapper/runContentMapper.ts";
 export { reportSourceCode } from "./language.ts";

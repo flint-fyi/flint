@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/typescript-language",
-	"version": "0.20.0",
+	"version": "0.20.1",
 	"description": "[Experimental] TypeScript language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -32,7 +32,7 @@
 		"cached-factory": "catalog:prod",
 		"debug-for-file": "catalog:prod",
 		"pathe": "catalog:prod",
-		"typescript-native": "catalog:dev"
+		"typescript-native": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

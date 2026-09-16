@@ -8,6 +8,7 @@ import {
 } from "typescript-native/unstable/sync";
 
 import type { LinterHost } from "@flint.fyi/core";
+import { isUnderDirectory } from "@flint.fyi/utils";
 
 import {
 	getTypeScriptContentMapperRegistrations,
@@ -233,8 +234,6 @@ export function createTypeScriptProjectSession(
 		parsedConfigCache.set(configFilePath, parsed);
 		return parsed;
 	};
-	const isUnderDirectory = (directory: string, candidate: string): boolean =>
-		candidate === directory || candidate.startsWith(`${directory}/`);
 	const countFilesUnder = (
 		fileNames: readonly string[],
 		directory: string,

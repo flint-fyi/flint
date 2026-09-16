@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/svelte-language",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "[Experimental] Svelte language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -33,7 +33,7 @@
 		"@jridgewell/sourcemap-codec": "catalog:prod",
 		"svelte": "catalog:prod",
 		"svelte2tsx": "catalog:prod",
-		"typescript": "catalog:dev"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

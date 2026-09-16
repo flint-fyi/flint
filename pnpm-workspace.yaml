@@ -147,6 +147,7 @@ catalogs:
     tinyglobby: ^0.2.17
     ts-api-utils: ^2.4.0
     typescript: ^6.0.3
+    typescript-native: "npm:typescript@^7.1.0-dev.20260830.1"
     unist-util-visit: ^5.0.0
     vize: 0.387.0
     wrap-ansi: ^10.0.0

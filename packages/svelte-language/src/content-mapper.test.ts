@@ -111,10 +111,19 @@ describe("openSvelteProject", () => {
 });
 
 describe(createSvelteFileContext, () => {
-	it("provides an empty context when Svelte cannot parse the source", () => {
-		const context = createSvelteFileContext("<script>let =</script>");
+	it("reports the parse failure when Svelte cannot parse the source", () => {
+		const context = createSvelteFileContext(
+			"component.svelte",
+			"<script>let =</script>",
+		);
 
 		expect(context.services.svelte.ast.fragment.nodes).toEqual([]);
 		expect(context.directives).toEqual([]);
+		expect(context.languageReports).toEqual([
+			expect.objectContaining({
+				source: "svelte",
+				text: expect.stringContaining("component.svelte") as string,
+			}),
+		]);
 	});
 });

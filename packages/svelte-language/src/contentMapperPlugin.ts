@@ -3,20 +3,21 @@ import path from "node:path";
 import url from "node:url";
 
 import { decode } from "@jridgewell/sourcemap-codec";
-import type { CompileError } from "svelte/compiler";
 import { svelte2tsx } from "svelte2tsx";
 
 import {
 	createContentMapperTransform,
+	TRANSFORM_FAILURE_CODE,
 	type MapperDiagnostic,
 	type TransformParams,
 	type TransformResult,
 } from "@flint.fyi/content-mapper";
 import {
 	getPositionOfColumnAndLine,
-	type LanguageReport,
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
+
+import { errorToLanguageReport } from "./errorToLanguageReport.ts";
 
 const sveltePath = path.dirname(
 	url.fileURLToPath(import.meta.resolve("svelte/package.json")),
@@ -73,43 +74,20 @@ export function transformSvelte(
 	}
 }
 
-function errorToLanguageReport(
-	fileName: string,
-	error: unknown,
-): LanguageReport {
-	if (typeof error !== "object" || error == null) {
-		return { source: "svelte", text: `${fileName} - Unknown error` };
-	}
-	const svelteError = isSvelteCompileError(error) ? error : undefined;
-	const location = svelteError?.start
-		? `:${svelteError.start.line}:${svelteError.start.column}`
-		: "";
-	return {
-		...(typeof svelteError?.code === "string"
-			? { code: svelteError.code }
-			: {}),
-		...(svelteError?.start && {
-			range: {
-				begin: svelteError.start.character,
-				end: svelteError.end?.character ?? svelteError.start.character,
-			},
-		}),
-		source: "svelte",
-		text: `${fileName}${location} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
-	};
-}
-
 function errorToMapperDiagnostic(
 	error: unknown,
 	contentLength: number,
 ): MapperDiagnostic {
 	const report = errorToLanguageReport("", error);
+	const messageText = report.text.replace(/^(?::\d+:\d+)? - /, "");
+	// Svelte's string codes have no home in the protocol's numeric `code`, so
+	// keep them in the message and report the generic transform-failure code.
 	return {
-		...(typeof report.code === "number" ? { code: report.code } : {}),
+		code: TRANSFORM_FAILURE_CODE,
 		length: report.range
 			? report.range.end - report.range.begin
 			: contentLength,
-		messageText: report.text.replace(/^(?::\d+:\d+)? - /, ""),
+		messageText: report.code ? `${messageText} (${report.code})` : messageText,
 		start: report.range?.begin ?? 0,
 	};
 }
@@ -125,15 +103,6 @@ function globalTypeFiles(): string[] {
 	}
 	files.push("svelte-jsx-v4.d.ts");
 	return files.map((file) => path.resolve(svelte2tsxPath, file));
-}
-
-function isSvelteCompileError(error: object): error is CompileError {
-	return (
-		"start" in error &&
-		typeof error.start === "object" &&
-		error.start !== null &&
-		"character" in error.start
-	);
 }
 
 function sourceMapMappings(

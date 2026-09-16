@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/content-mapper",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "[Experimental] Content-mapper protocol and transform helpers for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {

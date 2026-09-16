@@ -5,10 +5,13 @@ import type {
 	Snapshot,
 } from "typescript-native/unstable/sync";
 
+import type { LinterHost } from "@flint.fyi/core";
+
 import type * as AST from "./ast.ts";
 import type { Checker } from "./checker.ts";
 
 export interface TypeScriptFileServices {
+	host: LinterHost;
 	program: Program;
 	project: Project;
 	snapshot: Snapshot;

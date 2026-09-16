@@ -1,4 +1,5 @@
 export {
+	createContentMapperRegistrar,
 	registerTypeScriptContentMapper,
 	type TypeScriptContentMapperRegistration,
 } from "./contentMappers.ts";

@@ -12,8 +12,13 @@ import {
 	createVFSLinterHost,
 } from "@flint.fyi/core";
 
-import { vueLanguage } from "./index.ts";
+import { registerVueTypeScriptContentMapper, vueLanguage } from "./index.ts";
 import { createVueFileContext } from "./language.ts";
+
+// This package is not linked into its own node_modules, so TypeScript cannot
+// resolve `@flint.fyi/vue-language` (the default) from here. `vize` — which
+// ships the mapper these tests exercise — is a dependency, so name it directly.
+registerVueTypeScriptContentMapper("vize");
 
 function createVueFile(sourceText: string) {
 	const currentDirectory = import.meta.dirname;
