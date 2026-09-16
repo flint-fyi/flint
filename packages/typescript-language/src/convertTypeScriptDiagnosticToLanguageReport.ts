@@ -26,11 +26,12 @@ export interface TSDiagnosticRelatedInformation {
 
 export function convertTypeScriptDiagnosticToLanguageReport(
 	diagnostic: TSDiagnostic,
+	currentDirectory: string,
 ): LanguageReport {
 	return {
 		code: `TS${diagnostic.code}`,
 		source: "typescript",
-		text: formatReport(diagnostic),
+		text: formatReport(diagnostic, currentDirectory),
 		...(diagnostic.file !== undefined &&
 			diagnostic.start !== undefined && {
 				range: {
@@ -45,11 +46,15 @@ function color(text: string, formatStyle: string) {
 	return formatStyle + text + resetEscapeSequence;
 }
 
-function formatReport(diagnostic: TSDiagnostic) {
+function formatReport(diagnostic: TSDiagnostic, currentDirectory: string) {
 	let output = "";
 
 	if (diagnostic.file !== undefined) {
-		output += formatLocation(diagnostic.file, diagnostic.start!);
+		output += formatLocation(
+			diagnostic.file,
+			diagnostic.start!,
+			currentDirectory,
+		);
 		output += " - ";
 	}
 	output += color(`TS${diagnostic.code}`, COLOR.Grey);
@@ -76,7 +81,7 @@ function formatReport(diagnostic: TSDiagnostic) {
 			const indent = "  ";
 			if (file) {
 				output += "\n";
-				output += " " + formatLocation(file, start!);
+				output += " " + formatLocation(file, start!, currentDirectory);
 				output += formatCodeSpan(file, start!, length!, indent, COLOR.Cyan);
 			}
 			output += "\n";
@@ -99,12 +104,11 @@ const COLOR = {
 	Yellow: "\u001B[93m",
 };
 
-function displayFilename(name: string) {
+function displayFilename(name: string, currentDirectory: string) {
 	if (name.startsWith("./")) {
 		return name.slice(2);
 	}
-	// TODO: use LinterHost.getCurrentDirectory()
-	return name.slice(process.cwd().length + 1);
+	return name.slice(currentDirectory.length + 1);
 }
 
 function formatCodeSpan(
@@ -181,9 +185,10 @@ function formatCodeSpan(
 function formatLocation(
 	file: SourceFileWithLineMapAndFileName,
 	start: number,
+	currentDirectory: string,
 ): string {
 	const { column, line } = getColumnAndLineOfPosition(file, start);
-	const relativeFileName = displayFilename(file.fileName);
+	const relativeFileName = displayFilename(file.fileName, currentDirectory);
 	let output = "";
 	output += color(relativeFileName, COLOR.Cyan);
 	output += ":";
