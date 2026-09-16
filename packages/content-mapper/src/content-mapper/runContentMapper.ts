@@ -353,18 +353,6 @@ export async function runContentMapper({
 	}
 }
 
-export async function runContentMapperEntry(
-	moduleUrl: string,
-	options: RunContentMapperOptions,
-): Promise<void> {
-	if (
-		process.argv[1] &&
-		path.resolve(process.argv[1]) === url.fileURLToPath(moduleUrl)
-	) {
-		await runContentMapper(options);
-	}
-}
-
 function encodeOutput(
 	result: MappedOutput,
 	originalText: string,

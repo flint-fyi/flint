@@ -18,7 +18,15 @@ import { normalizeOutput, runFlint, type RunFlintResult } from "../utils.ts";
 const sourceDirectory = import.meta.dirname;
 let fixtureDirectory: string;
 
+// These tests install Flint from tarballs, so they only run in the CI job that
+// packs the workspace first. Every other `--project e2e` run skips them rather
+// than failing on the missing directory.
+const packDirectory = process.env.FLINT_E2E_PACK_DIR;
+
 beforeAll(async () => {
+	if (!packDirectory) {
+		return;
+	}
 	fixtureDirectory = await mkdtemp(
 		path.join(tmpdir(), "flint-typescript-native-"),
 	);
@@ -27,10 +35,6 @@ beforeAll(async () => {
 		recursive: true,
 	});
 
-	const packDirectory = process.env.FLINT_E2E_PACK_DIR;
-	if (!packDirectory) {
-		throw new Error("FLINT_E2E_PACK_DIR must point to packed Flint packages");
-	}
 	const tarballs = (await readdir(packDirectory))
 		.filter((fileName) => fileName.endsWith(".tgz"))
 		.map((fileName) => path.join(packDirectory, fileName));
@@ -72,10 +76,12 @@ beforeAll(async () => {
 }, 120_000);
 
 afterAll(async () => {
-	await rm(fixtureDirectory, { force: true, recursive: true });
+	if (fixtureDirectory) {
+		await rm(fixtureDirectory, { force: true, recursive: true });
+	}
 });
 
-describe("packed TypeScript native integration", () => {
+describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 	it("lints configured, inferred, referenced, Astro, Svelte, and Vue sources", async () => {
 		const { exitCode, stderr, stdout } = await runFlint(fixtureDirectory);
 		const output = normalizeOutput(`${stdout}\n${stderr}`, fixtureDirectory);

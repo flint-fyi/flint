@@ -28,7 +28,6 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"typescript": "catalog:prod",
 		"typescript-native": "catalog:prod"
 	},
 	"devDependencies": {
@@ -36,6 +35,7 @@
 		"@flint.fyi/content-mapper": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
+		"typescript": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {
