@@ -2,7 +2,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
+import { RuleCreator } from "../rules/RuleCreator.ts";
 import { runConfig } from "./runConfig.ts";
+
+const ruleCreator = new RuleCreator({
+	docs: (ruleId) => `https://example.com/${ruleId}`,
+	pluginId: "test",
+	presets: [],
+});
 
 describe(runConfig, () => {
 	afterEach(() => {
@@ -26,7 +33,7 @@ describe(runConfig, () => {
 				{
 					files: ["global.d.ts"],
 					rules: [
-						language.createRule({
+						ruleCreator.createRule(language, {
 							about: { description: "Check cached files", id: "test" },
 							messages: {},
 							setup: () => ({ visitors: {} }),
@@ -81,7 +88,7 @@ describe(runConfig, () => {
 					}
 				},
 			});
-			const rule = language.createRule({
+			const rule = ruleCreator.createRule(language, {
 				about: { description: "Report the global declaration", id: "test" },
 				messages: {
 					global: {
