@@ -5,6 +5,7 @@ import {
 	createEphemeralLinterHost,
 	findConfigFileName,
 } from "@flint.fyi/core";
+import { buildIssueUrl, FlintAssertionError } from "@flint.fyi/utils";
 
 import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
@@ -78,37 +79,50 @@ export async function runCli(args: string[]): Promise<number> {
 		return 0;
 	}
 
-	const host = createDiskBackedLinterHost(process.cwd());
-	const cwd = host.getCurrentDirectory();
-	const configFileName = await findConfigFileName(host);
-	if (!configFileName) {
-		console.error(`No flint.config.* file found in ${cwd}.`);
-		console.error(
-			"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
+	try {
+		const host = createDiskBackedLinterHost(process.cwd());
+		const cwd = host.getCurrentDirectory();
+		const configFileName = await findConfigFileName(host);
+		if (!configFileName) {
+			console.error(`No flint.config.* file found in ${cwd}.`);
+			console.error(
+				"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
+			);
+			console.error(
+				`In the meantime, why not join \u001B]8;;https://flint.fyi/discord\u0007flint.fyi/discord\u001B]8;;\u0007 and chat with us? ❤️`,
+			);
+			return 2;
+		}
+
+		const getRenderer = await createRendererFactory(
+			host,
+			configFileName,
+			values,
 		);
-		console.error(
-			`In the meantime, why not join \u001B]8;;https://flint.fyi/discord\u0007flint.fyi/discord\u001B]8;;\u0007 and chat with us? ❤️`,
+
+		if (values.watch) {
+			await runCliWatch(host, configFileName, getRenderer, values);
+			console.log("👋 Thanks for using Flint!");
+			return 0;
+		}
+
+		const renderer = getRenderer();
+		const { exitCode } = await runCliOnce(
+			createEphemeralLinterHost(host),
+			configFileName,
+			renderer,
+			values,
 		);
-		return 2;
+
+		renderer.dispose?.();
+
+		return exitCode;
+	} catch (error) {
+		if (error instanceof FlintAssertionError) {
+			console.error(error.stack);
+			console.error(`\nPlease report it here: ${buildIssueUrl(error, args)}`);
+			return 1;
+		}
+		throw error;
 	}
-
-	const getRenderer = await createRendererFactory(host, configFileName, values);
-
-	if (values.watch) {
-		await runCliWatch(host, configFileName, getRenderer, values);
-		console.log("👋 Thanks for using Flint!");
-		return 0;
-	}
-
-	const renderer = getRenderer();
-	const { exitCode } = await runCliOnce(
-		createEphemeralLinterHost(host),
-		configFileName,
-		renderer,
-		values,
-	);
-
-	renderer.dispose?.();
-
-	return exitCode;
 }
