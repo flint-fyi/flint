@@ -96,6 +96,7 @@ describe(writeToCache, () => {
 
 		expect(await roundTrip(reports, languageReports)).toEqual({
 			dependencies: [dependencyPath],
+			invalidatesCache: false,
 			languageReports,
 			reports,
 			timestamp: expect.any(Number),
@@ -116,6 +117,7 @@ describe(writeToCache, () => {
 
 		expect(await roundTrip(reports)).toEqual({
 			dependencies: [dependencyPath],
+			invalidatesCache: false,
 			reports: [
 				{
 					about,

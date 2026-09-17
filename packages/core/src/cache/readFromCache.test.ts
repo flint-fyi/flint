@@ -29,7 +29,6 @@ function createHostWithCache(
 			"package.json": cacheWriteTime,
 		},
 		files: cachedFiles,
-		globalInvalidations: [],
 	};
 
 	host.vfsUpsertFile(cacheFilePath, JSON.stringify(storage));
@@ -62,6 +61,7 @@ describe(readFromCache, () => {
 			},
 			{
 				[filePath]: {
+					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},
@@ -83,6 +83,7 @@ describe(readFromCache, () => {
 			{
 				[filePath]: {
 					dependencies: [dependencyPath],
+					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},
@@ -104,6 +105,7 @@ describe(readFromCache, () => {
 			{
 				[filePath]: {
 					dependencies: [dependencyPath],
+					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},
@@ -124,6 +126,7 @@ describe(readFromCache, () => {
 			{
 				[filePath]: {
 					dependencies: [dependencyPath],
+					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},
@@ -147,10 +150,12 @@ describe(readFromCache, () => {
 			{
 				[dependentPath]: {
 					dependencies: [dependencyPath, filePath],
+					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 				[filePath]: {
 					dependencies: [dependencyPath],
+					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},

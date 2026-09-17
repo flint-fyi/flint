@@ -4,7 +4,6 @@ import type { FileReport } from "./reports.ts";
 export interface CacheStorage {
 	configs: Record<string, number>;
 	files: Record<string, FileCacheStorage>;
-	globalInvalidations: GlobalInvalidation[];
 }
 
 export interface FileCacheImpacts {
@@ -12,6 +11,7 @@ export interface FileCacheImpacts {
 }
 
 export interface FileCacheStorage extends FileCacheImpacts {
+	invalidatesCache: boolean;
 	languageReports?: LanguageReport[];
 
 	/**
@@ -23,9 +23,4 @@ export interface FileCacheStorage extends FileCacheImpacts {
 	 * Unix milliseconds (`Date.now()`) of the last time the file was linted.
 	 */
 	timestamp: number;
-}
-
-export interface GlobalInvalidation {
-	filePath: string;
-	touchTime: number;
 }

@@ -45,7 +45,7 @@ describe(collectLanguageFilesByFilePath, () => {
 			setup: () => ({}),
 		});
 		const cached = new Map<string, FileCacheStorage>([
-			["/root/c.ts", { timestamp: 0 }],
+			["/root/c.ts", { invalidatesCache: false, timestamp: 0 }],
 		]);
 		const rulesOptionsByFile = new Map<AnyRule, Map<string, unknown>>([
 			[
