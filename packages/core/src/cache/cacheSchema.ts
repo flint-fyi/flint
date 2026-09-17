@@ -2,11 +2,7 @@
 import z from "zod/v4";
 
 import type { BaseAbout } from "../types/about.ts";
-import type {
-	CacheStorage,
-	FileCacheStorage,
-	GlobalInvalidation,
-} from "../types/cache.ts";
+import type { CacheStorage, FileCacheStorage } from "../types/cache.ts";
 import type {
 	Fix,
 	Suggestion,
@@ -98,20 +94,15 @@ const languageReportSchema: z.ZodType<LanguageReport> = z.object({
 
 const fileCacheStorageSchema: z.ZodType<FileCacheStorage> = z.object({
 	dependencies: z.array(z.string()).exactOptional(),
+	invalidatesCache: z.boolean(),
 	languageReports: z.array(languageReportSchema).exactOptional(),
 	reports: z.array(fileReportSchema).exactOptional(),
 	timestamp: z.number(),
 });
 
-const globalInvalidation: z.ZodType<GlobalInvalidation> = z.object({
-	filePath: z.string(),
-	touchTime: z.number(),
-});
-
 const cacheStorageSchemaObject: z.ZodType<CacheStorage> = z.object({
 	configs: z.record(z.string(), z.number()),
 	files: z.record(z.string(), fileCacheStorageSchema),
-	globalInvalidations: z.array(globalInvalidation),
 });
 
 export const cacheStorageSchema: z.ZodCodec<
