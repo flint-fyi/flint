@@ -100,7 +100,7 @@ type VolarBasedLanguageCreateFile<FileServices extends object> = (
 	directives?: ExtractedDirective[];
 	extraContext?: FileServices;
 	firstStatementPosition: number;
-	getLanguageReports?: () => LanguageReports;
+	getLanguageReports?: (currentDirectory: string) => LanguageReports;
 	reports?: FileReport[];
 };
 
@@ -371,23 +371,26 @@ setVolarCreateFile((data, program, sourceFile) => {
 				}
 			},
 			// TODO: cache
-			getLanguageReports() {
+			getLanguageReports(currentDirectory) {
 				return [
 					...getPreEmitDiagnostics(program, sourceFile).map((diagnostic) =>
-						convertTypeScriptDiagnosticToLanguageReport({
-							...diagnostic,
-							// For some unknown reason, Volar doesn't set file.text to sourceText
-							// when preventLeadingOffset is true, so we have to do it ourselves
-							// https://github.com/volarjs/volar.js/blob/4a9d25d797d08d9c149bebf0f52ac5e172f4757d/packages/typescript/lib/node/transform.ts#L102
-							file: diagnostic.file
-								? {
-										fileName: diagnostic.file.fileName,
-										text: sourceText,
-									}
-								: diagnostic.file,
-						}),
+						convertTypeScriptDiagnosticToLanguageReport(
+							{
+								...diagnostic,
+								// For some unknown reason, Volar doesn't set file.text to sourceText
+								// when preventLeadingOffset is true, so we have to do it ourselves
+								// https://github.com/volarjs/volar.js/blob/4a9d25d797d08d9c149bebf0f52ac5e172f4757d/packages/typescript/lib/node/transform.ts#L102
+								file: diagnostic.file
+									? {
+											fileName: diagnostic.file.fileName,
+											text: sourceText,
+										}
+									: diagnostic.file,
+							},
+							currentDirectory,
+						),
 					),
-					...(getLanguageReports?.() ?? []),
+					...(getLanguageReports?.(currentDirectory) ?? []),
 				];
 			},
 		},
