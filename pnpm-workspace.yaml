@@ -164,7 +164,7 @@ catalogs:
     "@types/react": 19.3.0
     "@types/react-dom": 19.3.0
     astro: 7.3.2
-    astro-og-canvas: 0.13.1
+    astro-og-canvas: 0.13.2
     canvaskit-wasm: 0.42.0
     clsx: 2.1.1
     expressive-code: 0.44.2
