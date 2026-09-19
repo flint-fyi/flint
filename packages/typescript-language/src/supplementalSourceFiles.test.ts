@@ -59,7 +59,11 @@ describe("supplemental source files", () => {
 				filePathAbsolute: `${process.cwd()}/Component.astro`,
 				sourceText: "01234567890123456789",
 			},
-			services: { program, sourceFile: canonical },
+			services: {
+				program,
+				project: { configFileName: "/project/tsconfig.json" },
+				sourceFile: canonical,
+			},
 		} as never);
 
 		expect(reports).toHaveLength(1);

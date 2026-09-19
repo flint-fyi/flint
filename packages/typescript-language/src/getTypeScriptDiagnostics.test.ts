@@ -49,7 +49,7 @@ function createProgram(diagnostics: readonly Diagnostic[]): Program {
 		getCompilerOptions: () => ({}),
 		getConfigFileParsingDiagnostics: () => diagnostics,
 		getGlobalDiagnostics: () => [],
-		getProgramDiagnostics: () => [],
+		getProgramDiagnostics: () => diagnostics,
 		getSemanticDiagnostics: () => [],
 		getSyntacticDiagnostics: () => [],
 	} as unknown as Program;
@@ -154,6 +154,20 @@ describe("getTypeScriptDiagnostics", () => {
 		expect(
 			getTypeScriptDiagnostics(createProgram([second, first]), fileName),
 		).toEqual([first, second]);
+	});
+
+	it("omits configuration diagnostics when they are not included", () => {
+		const configuration = createDiagnostic("Configuration", "Detail");
+		const program = createProgram([configuration]);
+
+		expect(
+			getTypeScriptDiagnostics(program, fileName, {
+				includeConfigurationDiagnostics: false,
+			}),
+		).toEqual([]);
+		expect(getTypeScriptDiagnostics(program, fileName)).toEqual([
+			configuration,
+		]);
 	});
 
 	it("returns diagnostics sorted and deduplicated", () => {

@@ -35,6 +35,7 @@ import {
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
+import { isInferredProject } from "./isInferredProject.ts";
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
@@ -488,6 +489,11 @@ export const typescriptLanguage: Language<
 			for (const diagnostic of getTypeScriptDiagnostics(
 				file.services.program,
 				sourceFile.fileName,
+				{
+					includeConfigurationDiagnostics: !isInferredProject(
+						file.services.project,
+					),
+				},
 			)) {
 				const mappedDiagnostic = mapDiagnosticToAuthoredSource(
 					diagnostic,

@@ -1,12 +1,29 @@
 import type { Diagnostic, Program } from "typescript-native/unstable/sync";
 
+export interface GetTypeScriptDiagnosticsOptions {
+	/**
+	 * Whether to include diagnostics about the program's configuration, rather
+	 * than about the file itself. A file with no tsconfig lands in TypeScript's
+	 * inferred project, whose synthesized compiler options are not the user's
+	 * and can report errors (such as TS5096) that nothing in the file can fix.
+	 */
+	includeConfigurationDiagnostics?: boolean;
+}
+
 export function getTypeScriptDiagnostics(
 	program: Program,
 	fileName: string,
+	{
+		includeConfigurationDiagnostics = true,
+	}: GetTypeScriptDiagnosticsOptions = {},
 ): readonly Diagnostic[] {
 	const diagnostics = [
-		...program.getConfigFileParsingDiagnostics(),
-		...program.getProgramDiagnostics(),
+		...(includeConfigurationDiagnostics
+			? [
+					...program.getConfigFileParsingDiagnostics(),
+					...program.getProgramDiagnostics(),
+				]
+			: []),
 		...program.getSyntacticDiagnostics(fileName),
 		...program.getGlobalDiagnostics(),
 		...program.getSemanticDiagnostics(fileName),
