@@ -1,9 +1,10 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	getFirstTokenInRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -35,19 +36,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const scanner = createScanner(
-						true,
-						sourceFile.languageVariant,
-						sourceFile.text,
-						node.getStart(sourceFile),
-					);
-					scanner.scan();
 					context.report({
 						message: "noSparseArray",
-						range: {
-							begin: scanner.getTokenStart(),
-							end: scanner.getTokenEnd(),
-						},
+						range: nullThrows(
+							getFirstTokenInRange(sourceFile, node.getStart(sourceFile)),
+							"An array literal is expected to start with a token",
+						),
 					});
 				},
 			},

@@ -1,7 +1,7 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	findTokenInRange,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -65,7 +65,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					);
 
 					const argumentsText = sourceFile.text.slice(
-						openParenthesisToken.getEnd(),
+						openParenthesisToken.end,
 						// The call expression always ends with its closing parenthesis
 						node.getEnd() - 1,
 					);
@@ -95,26 +95,13 @@ function findToken(
 ) {
 	// Scanning starts after the callee, which may itself contain parentheses,
 	// such as the call in `getObject().hasOwnProperty("key")`
-	const scanStart = node.expression.getEnd();
-	const scanner = createScanner(
-		true,
-		sourceFile.languageVariant,
-		sourceFile.text,
-		scanStart,
-		node.getEnd() - scanStart,
-	);
-
-	while (scanner.scan() !== SyntaxKind.EndOfFile) {
-		if (scanner.getToken() === token) {
-			return {
-				getEnd: () => scanner.getTokenEnd(),
-				getStart: () => scanner.getTokenStart(),
-			};
-		}
-	}
-
 	return nullThrows(
-		undefined,
+		findTokenInRange(
+			sourceFile,
+			token,
+			node.expression.getEnd(),
+			node.getEnd(),
+		),
 		"Token is expected to be present by the find call",
 	);
 }

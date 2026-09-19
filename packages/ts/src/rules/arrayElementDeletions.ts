@@ -1,7 +1,7 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	findTokenInRange,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -15,40 +15,18 @@ function buildSpliceReplacement(
 	elementAccess: AST.ElementAccessExpression,
 	sourceFile: AST.SourceFile,
 ): string {
-	const openingScanner = createScanner(
-		true,
-		sourceFile.languageVariant,
-		sourceFile.text,
-		elementAccess.expression.getEnd(),
-	);
-	let tokenKind: SyntaxKind;
-	do {
-		tokenKind = openingScanner.scan();
-	} while (
-		tokenKind !== SyntaxKind.OpenBracketToken &&
-		tokenKind !== SyntaxKind.EndOfFile
-	);
 	const openBracket =
-		tokenKind === SyntaxKind.OpenBracketToken
-			? openingScanner.getTokenStart()
-			: elementAccess.expression.getEnd();
-
-	const closingScanner = createScanner(
-		true,
-		sourceFile.languageVariant,
-		sourceFile.text,
-		elementAccess.argumentExpression.getEnd(),
-	);
-	do {
-		tokenKind = closingScanner.scan();
-	} while (
-		tokenKind !== SyntaxKind.CloseBracketToken &&
-		tokenKind !== SyntaxKind.EndOfFile
-	);
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.OpenBracketToken,
+			elementAccess.expression.getEnd(),
+		)?.begin ?? elementAccess.expression.getEnd();
 	const closeBracket =
-		tokenKind === SyntaxKind.CloseBracketToken
-			? closingScanner.getTokenStart()
-			: elementAccess.argumentExpression.getEnd();
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.CloseBracketToken,
+			elementAccess.argumentExpression.getEnd(),
+		)?.begin ?? elementAccess.argumentExpression.getEnd();
 
 	const before = sourceFile.text.slice(
 		node.getStart(sourceFile) + "delete".length,

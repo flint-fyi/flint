@@ -1,7 +1,7 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	getFirstTokenInRange,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -64,21 +64,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const scanner = createScanner(
-						true,
-						sourceFile.languageVariant,
-						sourceFile.text,
+					const comma = getFirstTokenInRange(
+						sourceFile,
 						begin,
-						node.importClause.namedBindings.getStart(sourceFile) - begin,
+						node.importClause.namedBindings.getStart(sourceFile),
 					);
-					if (scanner.scan() !== SyntaxKind.CommaToken) {
+					if (comma?.kind !== SyntaxKind.CommaToken) {
 						return;
 					}
 
 					context.report({
 						fix: {
 							range: {
-								begin: scanner.getTokenStart(),
+								begin: comma.begin,
 								end: node.importClause.namedBindings.getEnd(),
 							},
 							text: "",

@@ -4,7 +4,7 @@ import {
 } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	findTokenInRange,
 	forEachChild,
 	typescriptLanguage,
 	type AST,
@@ -81,30 +81,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const hasSuperCall = containsSuperCall(constructor.body);
 
 			if (isDerivedClass && !hasSuperCall) {
-				const scanner = createScanner(
-					true,
-					sourceFile.languageVariant,
-					sourceFile.text,
+				const constructorKeyword = findTokenInRange(
+					sourceFile,
+					SyntaxKind.ConstructorKeyword,
 					constructor.getStart(sourceFile),
-					constructor.getEnd() - constructor.getStart(sourceFile),
+					constructor.getEnd(),
 				);
-				let tokenKind: SyntaxKind;
-				do {
-					tokenKind = scanner.scan();
-				} while (
-					tokenKind !== SyntaxKind.ConstructorKeyword &&
-					tokenKind !== SyntaxKind.EndOfFile
-				);
-				if (tokenKind !== SyntaxKind.ConstructorKeyword) {
+				if (!constructorKeyword) {
 					return;
 				}
 
 				context.report({
 					message: "missingSuperCall",
-					range: {
-						begin: scanner.getTokenStart(),
-						end: scanner.getTokenEnd(),
-					},
+					range: constructorKeyword,
 				});
 			}
 

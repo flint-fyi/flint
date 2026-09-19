@@ -50,8 +50,10 @@ export { collectComments, type Comment } from "./utils/collectComments.ts";
 export { createRuleTesterTSConfig } from "./utils/createRuleTesterTSConfig.ts";
 export { createScanner } from "./utils/createScanner.ts";
 export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts";
+export { findTokenInRange, type TokenRange } from "./utils/findTokenInRange.ts";
 export { forEachChild } from "./utils/forEachChild.ts";
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
+export { getFirstTokenInRange } from "./utils/getFirstTokenInRange.ts";
 export { getModifyingReferences } from "./utils/getModifyingReferences.ts";
 export {
 	getStaticNumberValue,

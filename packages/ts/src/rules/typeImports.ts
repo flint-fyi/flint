@@ -3,7 +3,7 @@ import { SymbolFlags, type Symbol } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
 import {
-	createScanner,
+	findTokenInRange,
 	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
@@ -174,33 +174,25 @@ function getTypeKeywordFixRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 }
 
 function getTypeKeywordRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
-	const nodeStart = node.getStart(sourceFile);
-	const scanner = createScanner(
-		true,
-		sourceFile.languageVariant,
-		sourceFile.text,
-		nodeStart,
-		node.getEnd() - nodeStart,
+	const typeKeyword = findTokenInRange(
+		sourceFile,
+		SyntaxKind.TypeKeyword,
+		node.getStart(sourceFile),
+		node.getEnd(),
 	);
-
-	while (scanner.scan() !== SyntaxKind.EndOfFile) {
-		if (scanner.getToken() === SyntaxKind.TypeKeyword) {
-			const range = {
-				begin: scanner.getTokenStart(),
-				end: scanner.getTokenEnd(),
-			};
-			if (
-				node.kind === SyntaxKind.ImportSpecifier &&
-				sourceFile.text[range.end] === " "
-			) {
-				range.end += 1;
-			}
-
-			return range;
-		}
+	if (!typeKeyword) {
+		return getTSNodeRange(node, sourceFile);
 	}
 
-	return getTSNodeRange(node, sourceFile);
+	const range = { begin: typeKeyword.begin, end: typeKeyword.end };
+	if (
+		node.kind === SyntaxKind.ImportSpecifier &&
+		sourceFile.text[range.end] === " "
+	) {
+		range.end += 1;
+	}
+
+	return range;
 }
 
 function isInImportDeclaration(node: AST.AnyNode) {

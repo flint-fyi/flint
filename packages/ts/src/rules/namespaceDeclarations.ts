@@ -2,9 +2,10 @@ import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
-	createScanner,
+	getFirstTokenInRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -69,21 +70,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const begin = node.getStart(sourceFile);
-					const scanner = createScanner(
-						true,
-						sourceFile.languageVariant,
-						sourceFile.text,
-						begin,
-						node.getEnd() - begin,
-					);
-					scanner.scan();
-
 					context.report({
 						message: "preferModules",
-						range: {
-							begin: scanner.getTokenStart(),
-							end: scanner.getTokenEnd(),
-						},
+						range: nullThrows(
+							getFirstTokenInRange(sourceFile, begin, node.getEnd()),
+							"A namespace declaration is expected to start with a token",
+						),
 					});
 				},
 			},

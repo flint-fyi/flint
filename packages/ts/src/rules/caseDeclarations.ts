@@ -1,7 +1,7 @@
 import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	findTokenInRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -62,28 +62,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const statementStart = statement.getStart(sourceFile);
-				const scanner = createScanner(
-					true,
-					sourceFile.languageVariant,
-					sourceFile.text,
-					statementStart,
-					statement.getEnd() - statementStart,
+				const declarationRange = findTokenInRange(
+					sourceFile,
+					declarationKind,
+					statement.getStart(sourceFile),
+					statement.getEnd(),
 				);
-				let tokenKind: SyntaxKind;
-				do {
-					tokenKind = scanner.scan();
-				} while (
-					tokenKind !== declarationKind &&
-					tokenKind !== SyntaxKind.EndOfFile
-				);
-				if (tokenKind !== declarationKind) {
-					continue;
+				if (declarationRange) {
+					return declarationRange;
 				}
-				return {
-					begin: scanner.getTokenStart(),
-					end: scanner.getTokenEnd(),
-				};
 			}
 
 			return undefined;

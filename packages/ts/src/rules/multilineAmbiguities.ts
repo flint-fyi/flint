@@ -1,7 +1,7 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	findTokenInRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
@@ -133,21 +133,7 @@ function findChildToken(
 	sourceFile: AST.SourceFile,
 	begin: number,
 ) {
-	const scanner = createScanner(
-		true,
-		sourceFile.languageVariant,
-		sourceFile.text,
-		begin,
-		node.getEnd() - begin,
-	);
-	let tokenKind = scanner.scan();
-	while (tokenKind !== SyntaxKind.EndOfFile) {
-		if (tokenKind === kind) {
-			return { begin: scanner.getTokenStart(), end: scanner.getTokenEnd() };
-		}
-		tokenKind = scanner.scan();
-	}
-	return undefined;
+	return findTokenInRange(sourceFile, kind, begin, node.getEnd());
 }
 
 function getExpressionEnd(

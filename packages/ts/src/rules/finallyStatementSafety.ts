@@ -1,10 +1,11 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	getFirstTokenInRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -45,21 +46,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							statement.kind === SyntaxKind.ContinueStatement
 						) {
 							const statementStart = statement.getStart(sourceFile);
-							const scanner = createScanner(
-								true,
-								sourceFile.languageVariant,
-								sourceFile.text,
-								statementStart,
-								statement.getEnd() - statementStart,
-							);
-							scanner.scan();
-
 							context.report({
 								message: "unsafeFinally",
-								range: {
-									begin: scanner.getTokenStart(),
-									end: scanner.getTokenEnd(),
-								},
+								range: nullThrows(
+									getFirstTokenInRange(
+										sourceFile,
+										statementStart,
+										statement.getEnd(),
+									),
+									"A statement is expected to start with a token",
+								),
 							});
 						}
 

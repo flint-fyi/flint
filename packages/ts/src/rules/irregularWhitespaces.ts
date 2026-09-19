@@ -2,7 +2,7 @@ import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
-	createScanner,
+	collectComments,
 	forEachChild,
 	typescriptLanguage,
 	type AST,
@@ -135,23 +135,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					collectExcludedRanges(node);
 
 					if (options.skipComments) {
-						const scanner = createScanner(
-							false,
-							sourceFile.languageVariant,
-							text,
-						);
-						let kind = scanner.scan();
-						while (kind !== SyntaxKind.EndOfFile) {
-							if (
-								kind === SyntaxKind.SingleLineCommentTrivia ||
-								kind === SyntaxKind.MultiLineCommentTrivia
-							) {
-								excludedRanges.push({
-									end: scanner.getTokenEnd(),
-									start: scanner.getTokenStart(),
-								});
-							}
-							kind = scanner.scan();
+						for (const comment of collectComments(sourceFile)) {
+							excludedRanges.push({ end: comment.end, start: comment.pos });
 						}
 					}
 

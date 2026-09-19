@@ -1,8 +1,7 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
-import type { CharacterReportRange } from "@flint.fyi/core";
 import {
-	createScanner,
+	findTokenInRange,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -38,28 +37,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const nodeStart = node.getStart(sourceFile);
-					const scanner = createScanner(
-						true,
-						sourceFile.languageVariant,
-						sourceFile.text,
-						nodeStart,
-						node.type.getStart(sourceFile) - nodeStart,
-					);
-					let typeKeywordRange: CharacterReportRange | undefined;
-					while (scanner.scan() !== SyntaxKind.EndOfFile) {
-						if (scanner.getToken() === SyntaxKind.TypeKeyword) {
-							typeKeywordRange = {
-								begin: scanner.getTokenStart(),
-								end: scanner.getTokenEnd(),
-							};
-							break;
-						}
-					}
-
 					context.report({
 						message: "preferInterface",
-						range: typeKeywordRange ?? getTSNodeRange(node, sourceFile),
+						range:
+							findTokenInRange(
+								sourceFile,
+								SyntaxKind.TypeKeyword,
+								node.getStart(sourceFile),
+								node.type.getStart(sourceFile),
+							) ?? getTSNodeRange(node, sourceFile),
 					});
 				},
 			},

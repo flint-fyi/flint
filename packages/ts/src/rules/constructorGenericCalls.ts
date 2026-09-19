@@ -6,11 +6,12 @@ import {
 import { z } from "zod/v4";
 
 import {
-	createScanner,
+	findTokenInRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -31,31 +32,27 @@ function getTypeArgumentsRange(
 	precedingNode: AST.Node,
 	sourceFile: AST.SourceFile,
 ) {
-	const openingScanner = createScanner(
-		true,
-		sourceFile.languageVariant,
-		sourceFile.text,
-		precedingNode.getEnd(),
-		typeArguments.pos - precedingNode.getEnd(),
+	const opening = nullThrows(
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.LessThanToken,
+			precedingNode.getEnd(),
+			typeArguments.pos,
+		),
+		"Type arguments are expected to open with a less-than token",
 	);
-	let tokenKind: SyntaxKind;
-	do {
-		tokenKind = openingScanner.scan();
-	} while (tokenKind !== SyntaxKind.LessThanToken);
-
-	const closingScanner = createScanner(
-		false,
-		sourceFile.languageVariant,
-		sourceFile.text,
-		typeArguments.end,
+	const closing = nullThrows(
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.GreaterThanToken,
+			typeArguments.end,
+		),
+		"Type arguments are expected to close with a greater-than token",
 	);
-	do {
-		tokenKind = closingScanner.scan();
-	} while (tokenKind !== SyntaxKind.GreaterThanToken);
 
 	return {
-		begin: openingScanner.getTokenStart(),
-		end: closingScanner.getTokenEnd(),
+		begin: opening.begin,
+		end: closing.end,
 	};
 }
 

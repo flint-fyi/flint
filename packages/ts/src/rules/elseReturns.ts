@@ -1,7 +1,7 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	createScanner,
+	getFirstTokenInRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
@@ -35,19 +35,13 @@ function getElseKeywordRange(
 	}
 
 	const begin = node.thenStatement.getEnd();
-	const scanner = createScanner(
-		true,
-		sourceFile.languageVariant,
-		sourceFile.text,
+	const elseKeyword = getFirstTokenInRange(
+		sourceFile,
 		begin,
-		node.elseStatement.getStart(sourceFile) - begin,
+		node.elseStatement.getStart(sourceFile),
 	);
 
-	if (scanner.scan() !== SyntaxKind.ElseKeyword) {
-		return undefined;
-	}
-
-	return { begin: scanner.getTokenStart(), end: scanner.getTokenEnd() };
+	return elseKeyword?.kind === SyntaxKind.ElseKeyword ? elseKeyword : undefined;
 }
 
 function hasNestedIfThatTerminates(node: AST.Statement): boolean {
