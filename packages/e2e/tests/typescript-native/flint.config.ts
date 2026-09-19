@@ -6,7 +6,15 @@ import { defineConfig, type Config } from "flint";
 
 const config: Config = defineConfig({
 	use: [
-		{ files: ["fixtures/**/*.{js,ts}"], rules: ts.presets.logical },
+		{
+			files: [
+				"fixtures/**/*.{js,ts}",
+				"fixtures/**/*.astro",
+				"fixtures/**/*.svelte",
+				"fixtures/**/*.vue",
+			],
+			rules: ts.presets.logical,
+		},
 		{ files: "fixtures/**/*.astro", rules: astro.presets.logical },
 		{ files: "fixtures/**/*.svelte", rules: svelte.presets.logical },
 		{ files: "fixtures/**/*.vue", rules: vue.presets.logical },
