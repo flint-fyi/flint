@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import path from "node:path";
+
+import path from "pathe";
 
 import type { TypeScriptContentMapperRegistration } from "./contentMappers.ts";
 

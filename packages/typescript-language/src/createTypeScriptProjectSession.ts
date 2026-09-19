@@ -1,5 +1,4 @@
-import path from "node:path";
-
+import path from "pathe";
 import {
 	API,
 	type ParsedCommandLine,
