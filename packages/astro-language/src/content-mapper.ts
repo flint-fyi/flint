@@ -9,7 +9,6 @@ import {
 	SpanMappingKind,
 	type ContentMapperProject,
 	type ContentMapperTransformSource,
-	type RunContentMapperOptions,
 	type TransformParams,
 	type TransformResult,
 } from "@flint.fyi/content-mapper";
@@ -191,19 +190,17 @@ function normalizeAstroMappings(
 	}));
 }
 
-const contentMapperOptions = {
-	diagnosticSource: "astro",
-	openProject: openAstroProject,
-} satisfies RunContentMapperOptions;
-
 /** Starts the Astro content-mapper JSON-RPC server over stdio. */
 export async function runAstroContentMapper(): Promise<void> {
-	await runContentMapper(contentMapperOptions);
+	await runContentMapper({
+		diagnosticSource: "astro",
+		openProject: openAstroProject,
+	});
 }
 
 if (isModuleEntry(import.meta.url)) {
 	// This is the process entry point when TypeScript spawns the mapper, so
 	// nothing imports it and there is nothing for the await to delay.
 	// flint-disable-next-line ts/topLevelAwaits
-	await runContentMapper(contentMapperOptions);
+	await runAstroContentMapper();
 }

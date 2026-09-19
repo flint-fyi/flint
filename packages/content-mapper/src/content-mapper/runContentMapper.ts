@@ -47,7 +47,6 @@ export async function runContentMapper({
 	input = stdin,
 	openProject,
 	output = stdout,
-	transformFailureCode = TRANSFORM_FAILURE_CODE,
 }: RunContentMapperOptions): Promise<void> {
 	const projects = new Map<string, ContentMapperProject>();
 	let positionEncoding: PositionEncoding = "utf-16";
@@ -241,7 +240,7 @@ export async function runContentMapper({
 				result: {
 					diagnostics: [
 						{
-							code: transformFailureCode,
+							code: TRANSFORM_FAILURE_CODE,
 							length:
 								positionEncoding === "utf-8"
 									? Buffer.byteLength(content)

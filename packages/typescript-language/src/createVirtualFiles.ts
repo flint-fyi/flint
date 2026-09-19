@@ -17,15 +17,20 @@ export interface VirtualFiles {
 
 export function createVirtualFiles(): VirtualFiles {
 	const contentsByPath = new Map<string, string>();
+	// TypeScript only ever asks with `/`-spelled paths, and it asks on every
+	// file-existence probe during program construction, so normalizing is worth
+	// skipping unless the caller actually handed over a Windows spelling.
+	const key = (filePath: string) =>
+		filePath.includes("\\") ? normalizePath(filePath) : filePath;
 	return {
 		delete: (filePath) => {
-			contentsByPath.delete(normalizePath(filePath));
+			contentsByPath.delete(key(filePath));
 		},
-		get: (filePath) => contentsByPath.get(normalizePath(filePath)),
-		has: (filePath) => contentsByPath.has(normalizePath(filePath)),
+		get: (filePath) => contentsByPath.get(key(filePath)),
+		has: (filePath) => contentsByPath.has(key(filePath)),
 		keys: () => contentsByPath.keys(),
 		set: (filePath, contents) => {
-			contentsByPath.set(normalizePath(filePath), contents);
+			contentsByPath.set(key(filePath), contents);
 		},
 	};
 }

@@ -330,7 +330,6 @@ export const typescriptLanguage: Language<
 				return cachedSourceFile;
 			};
 			const services: TypeScriptFileServices = {
-				host,
 				get program() {
 					return getProject().program;
 				},

@@ -25,8 +25,10 @@ const packDirectory = process.env.FLINT_E2E_PACK_DIR;
 
 describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 	beforeAll(async () => {
+		// `skipIf` above already guarantees this; assert so the suite fails loudly
+		// rather than silently doing nothing if it ever runs without the packs.
 		if (!packDirectory) {
-			return;
+			throw new Error("FLINT_E2E_PACK_DIR must point to packed Flint packages");
 		}
 		fixtureDirectory = await mkdtemp(
 			path.join(tmpdir(), "flint-typescript-native-"),
@@ -77,9 +79,7 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 	}, 120_000);
 
 	afterAll(async () => {
-		if (fixtureDirectory) {
-			await rm(fixtureDirectory, { force: true, recursive: true });
-		}
+		await rm(fixtureDirectory, { force: true, recursive: true });
 	});
 
 	it("lints configured, inferred, referenced, Astro, Svelte, and Vue sources", async () => {
