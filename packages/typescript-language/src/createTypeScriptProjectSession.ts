@@ -574,7 +574,7 @@ function aggregateCleanupFailures(
 ): AggregateError {
 	const cleanupErrors: unknown[] =
 		cleanupError instanceof AggregateError
-			? Array.from<unknown>(cleanupError.errors)
+			? (cleanupError.errors as unknown[])
 			: [cleanupError];
 	return new AggregateError([initialError, ...cleanupErrors], message, {
 		cause: initialError,

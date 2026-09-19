@@ -161,8 +161,9 @@ describe("getTypeScriptDiagnostics", () => {
 
 	it("omits configuration diagnostics when they are not included", () => {
 		const configuration = createDiagnostic("Configuration", "Detail");
-		const global: Diagnostic = { ...configuration };
-		delete global.fileName;
+		const global = Object.fromEntries(
+			Object.entries(configuration).filter(([key]) => key !== "fileName"),
+		) as Diagnostic;
 		const program = createProgram([configuration], [global]);
 
 		expect(

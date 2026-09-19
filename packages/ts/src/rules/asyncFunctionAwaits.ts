@@ -131,8 +131,7 @@ function isCallback(
 	const declaration = parameter.valueDeclaration?.resolve();
 	if (
 		declaration?.kind === SyntaxKind.Parameter &&
-		"dotDotDotToken" in declaration &&
-		declaration.dotDotDotToken
+		(declaration as AST.ParameterDeclaration).dotDotDotToken
 	) {
 		if (typeof type.getNumberIndexType !== "function") {
 			return false;

@@ -315,17 +315,19 @@ export const typescriptLanguage: Language<
 					cachedProject = undefined;
 					cachedSourceFile = undefined;
 				}
-				return (cachedProject ??= nullThrows(
+				cachedProject ??= nullThrows(
 					currentSessionState.session.getProjectForFile(data.filePathAbsolute),
 					`Could not find project for file: ${data.filePathAbsolute}`,
-				));
+				);
+				return cachedProject;
 			};
 			const getSourceFile = (): AST.SourceFile => {
 				const project = getProject();
-				return (cachedSourceFile ??= nullThrows(
+				cachedSourceFile ??= nullThrows(
 					project.program.getSourceFile(data.filePathAbsolute),
 					`Could not retrieve source file for: ${data.filePathAbsolute}`,
-				) as AST.SourceFile);
+				) as AST.SourceFile;
+				return cachedSourceFile;
 			};
 			const services: TypeScriptFileServices = {
 				host,
@@ -561,15 +563,13 @@ export const typescriptLanguage: Language<
 							}));
 				createNodeVisitorsForFile(sourceFileVisitors)?.visit(sourceFile);
 			} finally {
+				// Only mapped files had their adjusters swapped above, so only those
+				// need them restored.
 				if (adjustFixRange) {
 					file.adjustFixRange = adjustFixRange;
-				} else {
-					delete file.adjustFixRange;
 				}
 				if (adjustReportRange) {
 					file.adjustReportRange = adjustReportRange;
-				} else {
-					delete file.adjustReportRange;
 				}
 			}
 		}

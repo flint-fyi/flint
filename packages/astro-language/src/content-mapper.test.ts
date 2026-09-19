@@ -42,11 +42,8 @@ describe(transformAstro, () => {
 		expect(result.extension).toBe(".tsx");
 		expect(result.text).toContain("const title: string");
 		expect(result.mappings?.length).toBeGreaterThan(0);
-		expect(result.supplemental).toEqual([
-			expect.objectContaining({
-				extension: ".ts",
-				text: "const client: number = 1;",
-			}),
+		expect(result.supplemental).toMatchObject([
+			{ extension: ".ts", text: "const client: number = 1;" },
 		]);
 		expect(result.supplemental?.[0]?.mappings).toEqual([
 			[0, 25, content.indexOf("const client"), 25, 0],
@@ -60,8 +57,6 @@ describe(transformAstro, () => {
 			projectHandle: "project",
 		});
 
-		expect(result.diagnostics).toEqual([
-			expect.objectContaining({ length: 8, start: 5 }),
-		]);
+		expect(result.diagnostics).toMatchObject([{ length: 8, start: 5 }]);
 	});
 });

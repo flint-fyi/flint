@@ -66,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// TODO: This might get simpler when we have scope analysis.
 					// https://github.com/JoshuaKGoldberg/flint/issues/400
-					let current = node.parent;
+					let current = parent;
 					let boundary: "quit" | boolean;
 					while (!(boundary = isNonArrowFunctionBoundary(current))) {
 						if (current.kind === SyntaxKind.SourceFile) {

@@ -18,12 +18,12 @@ export function collectAccessorPairs(
 ): Map<string, AccessorPair> {
 	const pairs = new Map<string, AccessorPair>();
 
-	members.forEach((member, index) => {
+	for (const [index, member] of members.entries()) {
 		if (
 			member.kind !== SyntaxKind.GetAccessor &&
 			member.kind !== SyntaxKind.SetAccessor
 		) {
-			return;
+			continue;
 		}
 
 		const name = getPropertyName(member, sourceFile);
@@ -40,7 +40,7 @@ export function collectAccessorPairs(
 		} else {
 			pair.setter = entry;
 		}
-	});
+	}
 
 	return pairs;
 }

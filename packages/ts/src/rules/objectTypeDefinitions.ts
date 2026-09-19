@@ -1,5 +1,6 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
+import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	createScanner,
 	getTSNodeRange,
@@ -45,7 +46,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						nodeStart,
 						node.type.getStart(sourceFile) - nodeStart,
 					);
-					let typeKeywordRange;
+					let typeKeywordRange: CharacterReportRange | undefined;
 					while (scanner.scan() !== SyntaxKind.EndOfFile) {
 						if (scanner.getToken() === SyntaxKind.TypeKeyword) {
 							typeKeywordRange = {

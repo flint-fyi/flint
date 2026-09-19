@@ -6,12 +6,23 @@ import {
 	createContentMapperTransform,
 	type ContentMapperTransformSource,
 } from "./createContentMapperTransform.ts";
-import type {
-	JsonRpcResponse,
-	RunContentMapperOptions,
-	TransformResult,
+import {
+	SpanMappingFeature,
+	type JsonRpcResponse,
+	type RunContentMapperOptions,
+	type TransformResult,
 } from "./protocol.ts";
 import { runContentMapper } from "./runContentMapper.ts";
+
+const NAVIGATION_FEATURES =
+	SpanMappingFeature.Definition |
+	SpanMappingFeature.TypeDefinition |
+	SpanMappingFeature.Implementation |
+	SpanMappingFeature.References |
+	SpanMappingFeature.DocumentHighlights |
+	SpanMappingFeature.Rename |
+	SpanMappingFeature.CallHierarchy |
+	SpanMappingFeature.CodeActions;
 
 interface ContentMapperServer {
 	completion: Promise<void>;
@@ -80,6 +91,8 @@ async function nextResponse(output: PassThrough): Promise<JsonRpcResponse> {
 			state.bytes = state.bytes.subarray(bodyEnd);
 			return response;
 		}
+		// Responses arrive one at a time, so waiting for each is inherently serial.
+		// flint-disable-next-line performance/loopAwaits
 		await new Promise<void>((resolve, reject) => {
 			const timeout = setTimeout(() => {
 				reject(new Error("Timed out waiting for content mapper response"));
@@ -234,6 +247,7 @@ describe("runContentMapper", () => {
 					}),
 				),
 			);
+			// flint-disable-next-line performance/loopAwaits
 			await nextResponse(output);
 		}
 		input.write(
@@ -799,6 +813,7 @@ describe("content mapper protocol", () => {
 			{ id: true, jsonrpc: "2.0", method: "missing" },
 		]) {
 			server.input.write(frame(invalid));
+			// flint-disable-next-line performance/loopAwaits
 			expect(await nextResponse(server.output)).toMatchObject({
 				error: { code: -32_600 },
 				id: null,
@@ -942,130 +957,137 @@ describe("content mapper protocol", () => {
 	});
 });
 
-test("createContentMapperTransform flattens mapped ranges and excludes scaffolding", () => {
-	const source = "éfoo BAR";
-	const generated = "éfoo baz(); BAR";
-	const transform = createContentMapperTransform({
-		extension: ".ts",
-		mappings: [
-			{ generatedOffsets: [0, 12], lengths: [4, 3], sourceOffsets: [0, 5] },
-			{
-				generatedLengths: [3],
-				generatedOffsets: [5],
-				lengths: [0],
-				sourceOffsets: [4],
-			},
-		] as unknown as ContentMapperTransformSource["mappings"],
-		text: generated,
-	});
-	expect(
-		transform({ content: source, fileName: "/a.vue", projectHandle: "a" }),
-	).toEqual({
-		extension: ".ts",
-		mappings: [
-			[0, 4, 0, 4, 0],
-			[5, 3, 4, 0, 1],
-			[12, 3, 5, 3, 0],
-		],
-		text: generated,
-	});
-});
-
-test("createContentMapperTransform preserves feature masks and validates mappings", () => {
-	const transform = createContentMapperTransform({
-		extension: ".ts",
-		mappings: [
-			{
-				data: {
-					completion: true,
-					format: true,
-					navigation: true,
-					semantic: true,
-					structure: true,
-					verification: true,
+describe("createContentMapperTransform", () => {
+	test("flattens mapped ranges and excludes scaffolding", () => {
+		const source = "éfoo BAR";
+		const generated = "éfoo baz(); BAR";
+		const transform = createContentMapperTransform({
+			extension: ".ts",
+			mappings: [
+				{ generatedOffsets: [0, 12], lengths: [4, 3], sourceOffsets: [0, 5] },
+				{
+					generatedLengths: [3],
+					generatedOffsets: [5],
+					lengths: [0],
+					sourceOffsets: [4],
 				},
-				generatedOffsets: [0],
-				lengths: [1],
-				sourceOffsets: [0],
-			},
-			{
-				data: {},
-				generatedOffsets: [1],
-				lengths: [1],
-				sourceOffsets: [1],
-			},
-		],
-		text: "ab",
+			] as unknown as ContentMapperTransformSource["mappings"],
+			text: generated,
+		});
+		expect(
+			transform({ content: source, fileName: "/a.vue", projectHandle: "a" }),
+		).toEqual({
+			extension: ".ts",
+			mappings: [
+				[0, 4, 0, 4, 0],
+				[5, 3, 4, 0, 1],
+				[12, 3, 5, 3, 0],
+			],
+			text: generated,
+		});
 	});
-	expect(
-		transform({ content: "ab", fileName: "a", projectHandle: "a" }),
-	).toEqual({
-		extension: ".ts",
-		mappings: [
-			[0, 1, 0, 1, 0],
-			[1, 1, 1, 1, 0, 0],
-		],
-		text: "ab",
-	});
-	expect(() =>
-		createContentMapperTransform({
+
+	test("preserves feature masks and validates mappings", () => {
+		const transform = createContentMapperTransform({
 			extension: ".ts",
 			mappings: [
 				{
-					data: {},
-					generatedOffsets: [0, 1],
+					data: {
+						completion: true,
+						format: true,
+						navigation: true,
+						semantic: true,
+						structure: true,
+						verification: true,
+					},
+					generatedOffsets: [0],
 					lengths: [1],
-					sourceOffsets: [0, 1],
+					sourceOffsets: [0],
+				},
+				{
+					data: {},
+					generatedOffsets: [1],
+					lengths: [1],
+					sourceOffsets: [1],
 				},
 			],
 			text: "ab",
-		})({ content: "ab", fileName: "a", projectHandle: "a" }),
-	).toThrow(/parallel arrays/);
-});
-
-test.each([
-	[
-		"semantic highlight false",
-		{ semantic: { shouldHighlight: (): boolean => false } },
-		(1 << 0) | (1 << 12) | (1 << 19),
-	],
-	[
-		"semantic highlight true",
-		{ semantic: { shouldHighlight: (): boolean => true } },
-		(1 << 0) | (1 << 12) | (1 << 13) | (1 << 19),
-	],
-	[
-		"navigation highlight false",
-		{ navigation: { shouldHighlight: (): boolean => false } },
-		0b1111111_1000 & ~(1 << 7),
-	],
-	[
-		"navigation highlight true",
-		{ navigation: { shouldHighlight: (): boolean => true } },
-		0b1111111_1000,
-	],
-	[
-		"navigation rename false",
-		{ navigation: { shouldRename: (): boolean => false } },
-		0b1111111_1000 & ~(1 << 8),
-	],
-	[
-		"navigation rename true",
-		{ navigation: { shouldRename: (): boolean => true } },
-		0b1111111_1000,
-	],
-] as const)("preserves %s callback semantics", (_name, data, expected) => {
-	const transform = createContentMapperTransform({
-		extension: ".ts",
-		mappings: [
-			{ data, generatedOffsets: [0], lengths: [1], sourceOffsets: [0] },
-		],
-		text: "a",
+		});
+		expect(
+			transform({ content: "ab", fileName: "a", projectHandle: "a" }),
+		).toEqual({
+			extension: ".ts",
+			mappings: [
+				[0, 1, 0, 1, 0],
+				[1, 1, 1, 1, 0, 0],
+			],
+			text: "ab",
+		});
+		expect(() =>
+			createContentMapperTransform({
+				extension: ".ts",
+				mappings: [
+					{
+						data: {},
+						generatedOffsets: [0, 1],
+						lengths: [1],
+						sourceOffsets: [0, 1],
+					},
+				],
+				text: "ab",
+			})({ content: "ab", fileName: "a", projectHandle: "a" }),
+		).toThrow(/parallel arrays/);
 	});
-	expect(
-		transform({ content: "a", fileName: "a", projectHandle: "a" }),
-	).toMatchObject({
-		mappings: [[0, 1, 0, 1, 0, expected]],
+
+	test.each([
+		[
+			"semantic highlight false",
+			{ semantic: { shouldHighlight: (): boolean => false } },
+			SpanMappingFeature.Hover |
+				SpanMappingFeature.InlayHints |
+				SpanMappingFeature.CodeLens,
+		],
+		[
+			"semantic highlight true",
+			{ semantic: { shouldHighlight: (): boolean => true } },
+			SpanMappingFeature.Hover |
+				SpanMappingFeature.InlayHints |
+				SpanMappingFeature.SemanticTokens |
+				SpanMappingFeature.CodeLens,
+		],
+		[
+			"navigation highlight false",
+			{ navigation: { shouldHighlight: (): boolean => false } },
+			NAVIGATION_FEATURES & ~SpanMappingFeature.DocumentHighlights,
+		],
+		[
+			"navigation highlight true",
+			{ navigation: { shouldHighlight: (): boolean => true } },
+			NAVIGATION_FEATURES,
+		],
+		[
+			"navigation rename false",
+			{ navigation: { shouldRename: (): boolean => false } },
+			NAVIGATION_FEATURES & ~SpanMappingFeature.Rename,
+		],
+		[
+			"navigation rename true",
+			{ navigation: { shouldRename: (): boolean => true } },
+			NAVIGATION_FEATURES,
+		],
+	] as const)("preserves %s callback semantics", (_name, data, expected) => {
+		const transform = createContentMapperTransform({
+			extension: ".ts",
+			mappings: [
+				{ data, generatedOffsets: [0], lengths: [1], sourceOffsets: [0] },
+			],
+			text: "a",
+		});
+		expect(
+			transform({ content: "a", fileName: "a", projectHandle: "a" }),
+		).toMatchObject({
+			mappings: [[0, 1, 0, 1, 0, expected]],
+		});
 	});
 });
 
@@ -1232,7 +1254,17 @@ describe("createContentMapperTransform mapping validation", () => {
 		expect(result.mappings).toEqual([
 			[0, 1, 0, 1, 0],
 			[1, 1, 1, 1, 0, 0],
-			[2, 1, 2, 1, 0, (1 << 0) | (1 << 12) | (1 << 13) | (1 << 19)],
+			[
+				2,
+				1,
+				2,
+				1,
+				0,
+				SpanMappingFeature.Hover |
+					SpanMappingFeature.InlayHints |
+					SpanMappingFeature.SemanticTokens |
+					SpanMappingFeature.CodeLens,
+			],
 		]);
 	});
 });

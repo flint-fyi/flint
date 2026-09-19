@@ -215,55 +215,54 @@ export async function runContentMapper({
 			await write({ id, jsonrpc: "2.0", result: null });
 			return;
 		}
-		{
-			const content = getString(request.params, "content");
-			const fileName = getString(request.params, "fileName");
-			if (content === undefined || fileName === undefined) {
-				await write(
-					responseError(id, -32_602, "transform requires content and fileName"),
-				);
-				return;
-			}
-			let response: JsonRpcResponse;
-			try {
-				const result = await project.transform(
-					request.params as unknown as TransformParams,
-				);
-				response = {
-					id,
-					jsonrpc: "2.0",
-					result:
-						positionEncoding === "utf-8"
-							? encodeResult(result, content)
-							: result,
-				};
-			} catch (error) {
-				response = {
-					id,
-					jsonrpc: "2.0",
-					result: {
-						diagnostics: [
-							{
-								code: transformFailureCode,
-								length:
-									positionEncoding === "utf-8"
-										? Buffer.byteLength(content)
-										: content.length,
-								messageText:
-									error instanceof Error ? error.message : String(error),
-								start: 0,
-							},
-						],
-						extension: ".ts",
-						text: "",
-					},
-				};
-			}
-			await write(response);
+		const content = getString(request.params, "content");
+		const fileName = getString(request.params, "fileName");
+		if (content === undefined || fileName === undefined) {
+			await write(
+				responseError(id, -32_602, "transform requires content and fileName"),
+			);
 			return;
 		}
+		let response: JsonRpcResponse;
+		try {
+			const result = await project.transform(
+				request.params as unknown as TransformParams,
+			);
+			response = {
+				id,
+				jsonrpc: "2.0",
+				result:
+					positionEncoding === "utf-8" ? encodeResult(result, content) : result,
+			};
+		} catch (error) {
+			response = {
+				id,
+				jsonrpc: "2.0",
+				result: {
+					diagnostics: [
+						{
+							code: transformFailureCode,
+							length:
+								positionEncoding === "utf-8"
+									? Buffer.byteLength(content)
+									: content.length,
+							messageText:
+								error instanceof Error ? error.message : String(error),
+							start: 0,
+						},
+					],
+					extension: ".ts",
+					text: "",
+				},
+			};
+		}
+		await write(response);
+		return;
 	};
 	try {
+		// The protocol is a sequential request stream over stdio: each frame must
+		// be handled before the next, so the awaits below are inherently serial.
+		// flint-disable-lines-begin performance/loopAwaits
 		for await (const chunk of input) {
 			pending = Buffer.concat([
 				pending,
@@ -344,6 +343,7 @@ export async function runContentMapper({
 				await dispatch(request as unknown as JsonRpcRequest);
 			}
 		}
+		// flint-disable-lines-end performance/loopAwaits
 		if (pending.length) {
 			await write(
 				responseError(null, -32_700, "Incomplete content mapper frame"),

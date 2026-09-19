@@ -126,8 +126,8 @@ describe(createTypeScriptProjectSession, () => {
 		const snapshot = session.update({ openProjects: [appConfigFilePath] });
 		const [project] = snapshot.getProjects();
 
-		expect(project?.parsedCommandLine.projectReferences).toEqual([
-			expect.objectContaining({ path: "/repo/packages/core" }),
+		expect(project?.parsedCommandLine.projectReferences).toMatchObject([
+			{ path: "/repo/packages/core" },
 		]);
 	});
 
@@ -223,7 +223,7 @@ describe(createTypeScriptProjectSession, () => {
 		const firstSnapshot = session.update({ openProjects: [configFilePath] });
 		expect(
 			firstSnapshot.getProjects()[0]?.parsedCommandLine.projectReferences,
-		).toEqual([expect.objectContaining({ path: "/repo/first" })]);
+		).toMatchObject([{ path: "/repo/first" }]);
 		host.vfsUpsertFile(
 			configFilePath,
 			JSON.stringify({ files: [], references: [{ path: "./second" }] }),
@@ -237,7 +237,7 @@ describe(createTypeScriptProjectSession, () => {
 				.find((project) =>
 					project.configFileName.includes("typescript-overlays"),
 				)?.parsedCommandLine.projectReferences,
-		).toEqual([expect.objectContaining({ path: "/repo/second" })]);
+		).toMatchObject([{ path: "/repo/second" }]);
 	});
 
 	it("uses default lookup when no registered extension applies", () => {

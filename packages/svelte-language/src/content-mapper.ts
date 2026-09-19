@@ -116,5 +116,8 @@ export async function runSvelteContentMapper(): Promise<void> {
 }
 
 if (isModuleEntry(import.meta.url)) {
+	// This is the process entry point when TypeScript spawns the mapper, so
+	// nothing imports it and there is nothing for the await to delay.
+	// flint-disable-next-line ts/topLevelAwaits
 	await runContentMapper(contentMapperOptions);
 }

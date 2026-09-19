@@ -41,9 +41,7 @@ vi.mock("typescript-native/unstable/sync", () => ({
 			mocks.fileSystems.push(options.fs);
 		}
 
-		parseConfigFile() {
-			return { fileNames: [] };
-		}
+		parseConfigFile = () => ({ fileNames: [] });
 
 		readConfigFile(fileName: string) {
 			mocks.parsedConfigPaths.push(fileName);
@@ -114,7 +112,7 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		}
 
 		expect(caught).toBeInstanceOf(AggregateError);
-		expect((caught as AggregateError).errors).toEqual([
+		expect((caught as AggregateError).errors as unknown[]).toEqual([
 			snapshotError,
 			closeError,
 		]);
@@ -177,7 +175,7 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		}
 
 		expect(caught).toBeInstanceOf(AggregateError);
-		expect((caught as AggregateError).errors).toEqual([
+		expect((caught as AggregateError).errors as unknown[]).toEqual([
 			snapshotError,
 			closeError,
 		]);
@@ -237,7 +235,7 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		}
 
 		expect(caught).toBeInstanceOf(AggregateError);
-		expect((caught as AggregateError).errors).toEqual([
+		expect((caught as AggregateError).errors as unknown[]).toEqual([
 			previousError,
 			replacementError,
 			closeError,

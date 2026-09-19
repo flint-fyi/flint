@@ -241,7 +241,11 @@ describe("typescriptLanguage failed file lifecycle", () => {
 
 		expect(caught).toBeInstanceOf(AggregateError);
 		const aggregate = caught as AggregateError;
-		expect(aggregate.errors).toEqual([updateError, snapshotError, closeError]);
+		expect(aggregate.errors as unknown[]).toEqual([
+			updateError,
+			snapshotError,
+			closeError,
+		]);
 		expect(aggregate.cause).toBe(updateError);
 	});
 

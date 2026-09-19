@@ -23,65 +23,65 @@ let fixtureDirectory: string;
 // than failing on the missing directory.
 const packDirectory = process.env.FLINT_E2E_PACK_DIR;
 
-beforeAll(async () => {
-	if (!packDirectory) {
-		return;
-	}
-	fixtureDirectory = await mkdtemp(
-		path.join(tmpdir(), "flint-typescript-native-"),
-	);
-	await cp(sourceDirectory, fixtureDirectory, {
-		filter: (source) => !source.endsWith(".test.ts"),
-		recursive: true,
-	});
-
-	const tarballs = (await readdir(packDirectory))
-		.filter((fileName) => fileName.endsWith(".tgz"))
-		.map((fileName) => path.join(packDirectory, fileName));
-	const packedPackages = Object.fromEntries(
-		tarballs.map((tarball) => {
-			const fileName = path.basename(tarball);
-			const packageName = fileName.startsWith("flint.fyi-")
-				? `@flint.fyi/${fileName.slice("flint.fyi-".length).replace(/-\d[^/]*\.tgz$/, "")}`
-				: "flint";
-			return [packageName, pathToFileURL(tarball).href];
-		}),
-	);
-	await writeFile(
-		path.join(fixtureDirectory, "pnpm-workspace.yaml"),
-		JSON.stringify({ overrides: packedPackages }),
-	);
-	await writeFile(
-		path.join(fixtureDirectory, "package.json"),
-		JSON.stringify({
-			dependencies: {
-				"@flint.fyi/astro": packedPackages["@flint.fyi/astro"],
-				"@flint.fyi/svelte": packedPackages["@flint.fyi/svelte"],
-				"@flint.fyi/ts": packedPackages["@flint.fyi/ts"],
-				"@flint.fyi/vue": packedPackages["@flint.fyi/vue"],
-				flint: packedPackages.flint,
-				"prettier-plugin-astro": "0.14.1",
-				"prettier-plugin-svelte": "^3.4.0",
-				svelte: "5.56.10",
-				typescript: "npm:@typescript/typescript6@6.0.2",
-				"typescript-native": "npm:typescript@7.1.0-dev.20260830.1",
-			},
-			private: true,
-			type: "module",
-		}),
-	);
-	await execa("pnpm", ["install"], {
-		cwd: fixtureDirectory,
-	});
-}, 120_000);
-
-afterAll(async () => {
-	if (fixtureDirectory) {
-		await rm(fixtureDirectory, { force: true, recursive: true });
-	}
-});
-
 describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
+	beforeAll(async () => {
+		if (!packDirectory) {
+			return;
+		}
+		fixtureDirectory = await mkdtemp(
+			path.join(tmpdir(), "flint-typescript-native-"),
+		);
+		await cp(sourceDirectory, fixtureDirectory, {
+			filter: (source) => !source.endsWith(".test.ts"),
+			recursive: true,
+		});
+
+		const tarballs = (await readdir(packDirectory))
+			.filter((fileName) => fileName.endsWith(".tgz"))
+			.map((fileName) => path.join(packDirectory, fileName));
+		const packedPackages = Object.fromEntries(
+			tarballs.map((tarball) => {
+				const fileName = path.basename(tarball);
+				const packageName = fileName.startsWith("flint.fyi-")
+					? `@flint.fyi/${fileName.slice("flint.fyi-".length).replace(/-\d[^/]*\.tgz$/, "")}`
+					: "flint";
+				return [packageName, pathToFileURL(tarball).href];
+			}),
+		);
+		await writeFile(
+			path.join(fixtureDirectory, "pnpm-workspace.yaml"),
+			JSON.stringify({ overrides: packedPackages }),
+		);
+		await writeFile(
+			path.join(fixtureDirectory, "package.json"),
+			JSON.stringify({
+				dependencies: {
+					"@flint.fyi/astro": packedPackages["@flint.fyi/astro"],
+					"@flint.fyi/svelte": packedPackages["@flint.fyi/svelte"],
+					"@flint.fyi/ts": packedPackages["@flint.fyi/ts"],
+					"@flint.fyi/vue": packedPackages["@flint.fyi/vue"],
+					flint: packedPackages.flint,
+					"prettier-plugin-astro": "0.14.1",
+					"prettier-plugin-svelte": "^3.4.0",
+					svelte: "5.56.10",
+					typescript: "npm:@typescript/typescript6@6.0.2",
+					"typescript-native": "npm:typescript@7.1.0-dev.20260830.1",
+				},
+				private: true,
+				type: "module",
+			}),
+		);
+		await execa("pnpm", ["install"], {
+			cwd: fixtureDirectory,
+		});
+	}, 120_000);
+
+	afterAll(async () => {
+		if (fixtureDirectory) {
+			await rm(fixtureDirectory, { force: true, recursive: true });
+		}
+	});
+
 	it("lints configured, inferred, referenced, Astro, Svelte, and Vue sources", async () => {
 		const { exitCode, stderr, stdout } = await runFlint(fixtureDirectory);
 		const output = normalizeOutput(`${stdout}\n${stderr}`, fixtureDirectory);

@@ -52,9 +52,7 @@ describe("transformSvelte", () => {
 			projectHandle: "project",
 		});
 
-		expect(result.diagnostics).toEqual([
-			expect.objectContaining({ length: 1, start: 0 }),
-		]);
+		expect(result.diagnostics).toMatchObject([{ length: 1, start: 0 }]);
 	});
 
 	it("preserves svelte2tsx global type imports", () => {
@@ -119,11 +117,11 @@ describe(createSvelteFileContext, () => {
 
 		expect(context.services.svelte.ast.fragment.nodes).toEqual([]);
 		expect(context.directives).toEqual([]);
-		expect(context.languageReports).toEqual([
-			expect.objectContaining({
+		expect(context.languageReports).toMatchObject([
+			{
 				source: "svelte",
 				text: expect.stringContaining("component.svelte") as string,
-			}),
+			},
 		]);
 	});
 });
