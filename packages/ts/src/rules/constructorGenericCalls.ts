@@ -1,5 +1,4 @@
 import {
-	createScanner,
 	SyntaxKind,
 	type NodeArray,
 	type TypeNode,
@@ -7,6 +6,7 @@ import {
 import { z } from "zod/v4";
 
 import {
+	createScanner,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,

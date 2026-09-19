@@ -1,7 +1,10 @@
-import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	createScanner,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

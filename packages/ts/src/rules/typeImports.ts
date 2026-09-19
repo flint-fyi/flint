@@ -1,12 +1,9 @@
-import {
-	createScanner,
-	isTypeNode,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { isTypeNode, SyntaxKind } from "typescript-native/unstable/ast";
 import { SymbolFlags, type Symbol } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
 import {
+	createScanner,
 	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,

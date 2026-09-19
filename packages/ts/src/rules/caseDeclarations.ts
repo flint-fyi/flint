@@ -1,10 +1,7 @@
-import {
-	createScanner,
-	NodeFlags,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
+	createScanner,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,

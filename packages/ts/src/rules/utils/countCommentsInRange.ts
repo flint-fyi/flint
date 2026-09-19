@@ -1,7 +1,7 @@
 import { LanguageVariant, SyntaxKind } from "typescript-native/unstable/ast";
-import { createScanner } from "typescript-native/unstable/ast/scanner";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
+import { createScanner } from "@flint.fyi/typescript-language";
 
 export function countCommentsInRange(
 	sourceText: string,

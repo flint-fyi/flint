@@ -1,6 +1,10 @@
-import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
-import { forEachChild, type AST } from "@flint.fyi/typescript-language";
+import {
+	createScanner,
+	forEachChild,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 export interface Comment {
 	end: number;

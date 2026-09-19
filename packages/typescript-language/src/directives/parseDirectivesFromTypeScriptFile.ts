@@ -1,8 +1,4 @@
-import {
-	createScanner,
-	LanguageVariant,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
+import { LanguageVariant, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	DirectivesCollector,
@@ -13,6 +9,7 @@ import { nullThrows } from "@flint.fyi/utils";
 
 import { normalizeRange } from "../normalizeRange.ts";
 import type * as AST from "../types/ast.ts";
+import { createScanner } from "../utils/createScanner.ts";
 
 export interface ExtractedDirective {
 	range: NormalizedReportRangeObject;

@@ -1,10 +1,10 @@
 import {
-	createScanner,
 	isFunctionLikeDeclaration,
 	SyntaxKind,
 } from "typescript-native/unstable/ast";
 
 import {
+	createScanner,
 	forEachChild,
 	typescriptLanguage,
 	type AST,
