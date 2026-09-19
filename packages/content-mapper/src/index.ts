@@ -17,7 +17,12 @@ export type {
 	TransformParams,
 	TransformResult,
 } from "./content-mapper/protocol.ts";
-export { TRANSFORM_FAILURE_CODE } from "./content-mapper/protocol.ts";
+export {
+	SPAN_MAPPING_FEATURE_ALL,
+	SpanMappingFeature,
+	SpanMappingKind,
+	TRANSFORM_FAILURE_CODE,
+} from "./content-mapper/protocol.ts";
 export {
 	isModuleEntry,
 	runContentMapper,

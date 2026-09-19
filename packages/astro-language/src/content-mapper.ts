@@ -6,6 +6,7 @@ import {
 	createContentMapperTransform,
 	isModuleEntry,
 	runContentMapper,
+	SpanMappingKind,
 	type ContentMapperProject,
 	type ContentMapperTransformSource,
 	type RunContentMapperOptions,
@@ -79,7 +80,9 @@ export function transformAstro(params: TransformParams): TransformResult {
 		}),
 		supplemental: collectScripts(ast).map(({ end, start }) => ({
 			extension: ".ts",
-			mappings: [[0, end - start, start, end - start, 0]],
+			mappings: [
+				[0, end - start, start, end - start, SpanMappingKind.Verbatim],
+			],
 			text: params.content.slice(start, end),
 		})),
 	};

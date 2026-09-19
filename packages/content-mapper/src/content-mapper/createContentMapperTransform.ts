@@ -1,9 +1,12 @@
 import type { CodeInformation, CodeMapping } from "@volar/language-core";
 
-import type {
-	SpanMapping,
-	TransformParams,
-	TransformResult,
+import {
+	SPAN_MAPPING_FEATURE_ALL,
+	SpanMappingFeature,
+	SpanMappingKind,
+	type SpanMapping,
+	type TransformParams,
+	type TransformResult,
 } from "./protocol.ts";
 
 export interface ContentMapperTransformSource {
@@ -66,21 +69,24 @@ export function createContentMapperTransform({
 						virtualLength === originalLength &&
 						text.slice(generatedStart, generatedStart + virtualLength) ===
 							content.slice(originalStart, originalStart + originalLength);
+					const kind = isExact
+						? SpanMappingKind.Verbatim
+						: SpanMappingKind.Atom;
 					const features = featuresFor(mapping.data);
-					return features === FEATURE_ALL
+					return features === SPAN_MAPPING_FEATURE_ALL
 						? [
 								generatedStart,
 								virtualLength,
 								originalStart,
 								originalLength,
-								isExact ? 0 : 1,
+								kind,
 							]
 						: [
 								generatedStart,
 								virtualLength,
 								originalStart,
 								originalLength,
-								isExact ? 0 : 1,
+								kind,
 								features,
 							];
 				});
@@ -92,7 +98,8 @@ export function createContentMapperTransform({
 					left[2] - right[2] ||
 					left[3] - right[3] ||
 					left[4] - right[4] ||
-					(left[5] ?? FEATURE_ALL) - (right[5] ?? FEATURE_ALL),
+					(left[5] ?? SPAN_MAPPING_FEATURE_ALL) -
+						(right[5] ?? SPAN_MAPPING_FEATURE_ALL),
 			);
 		const nonOverlapping: SpanMapping[] = [];
 		for (const mapping of flattened) {
@@ -124,44 +131,73 @@ export function createContentMapperTransform({
 	};
 }
 
-const FEATURE_ALL = (1 << 20) - 1;
+/**
+ * The TypeScript span-mapping features each Volar {@link CodeInformation}
+ * capability enables. Volar's flags are coarser than TypeScript's, so each one
+ * fans out to every operation it covers.
+ */
+const SEMANTIC_FEATURES =
+	SpanMappingFeature.Hover |
+	SpanMappingFeature.InlayHints |
+	SpanMappingFeature.SemanticTokens |
+	SpanMappingFeature.CodeLens;
+const COMPLETION_FEATURES =
+	SpanMappingFeature.SignatureHelp |
+	SpanMappingFeature.Completion |
+	SpanMappingFeature.AutoInsert;
+const NAVIGATION_FEATURES =
+	SpanMappingFeature.Definition |
+	SpanMappingFeature.TypeDefinition |
+	SpanMappingFeature.Implementation |
+	SpanMappingFeature.References |
+	SpanMappingFeature.DocumentHighlights |
+	SpanMappingFeature.Rename |
+	SpanMappingFeature.CallHierarchy |
+	SpanMappingFeature.CodeActions;
+const VERIFICATION_FEATURES = SpanMappingFeature.CodeActions;
+const FORMAT_FEATURES = SpanMappingFeature.Formatting;
+const STRUCTURE_FEATURES =
+	SpanMappingFeature.FoldingRanges |
+	SpanMappingFeature.SelectionRanges |
+	SpanMappingFeature.LinkedEditing |
+	SpanMappingFeature.DocumentSymbols;
 
 function featuresFor(data: CodeInformation | undefined): number {
 	if (!data) {
-		return FEATURE_ALL;
+		return SPAN_MAPPING_FEATURE_ALL;
 	}
 	let features = 0;
 	if (data.semantic) {
-		features |= (1 << 0) | (1 << 12) | (1 << 13) | (1 << 19);
+		features |= SEMANTIC_FEATURES;
 		if (
 			typeof data.semantic === "object" &&
 			data.semantic.shouldHighlight?.() === false
 		) {
-			features &= ~(1 << 13);
+			features &= ~SpanMappingFeature.SemanticTokens;
 		}
 	}
 	if (data.completion) {
-		features |= (1 << 1) | (1 << 2) | (1 << 17);
+		features |= COMPLETION_FEATURES;
 	}
 	if (data.navigation) {
-		features |= 0b1111111_1000;
+		features |= NAVIGATION_FEATURES;
 		if (typeof data.navigation === "object") {
 			if (data.navigation.shouldHighlight?.() === false) {
-				features &= ~(1 << 7);
+				features &= ~SpanMappingFeature.DocumentHighlights;
 			}
 			if (data.navigation.shouldRename?.() === false) {
-				features &= ~(1 << 8);
+				features &= ~SpanMappingFeature.Rename;
 			}
 		}
 	}
 	if (data.verification) {
-		features |= 1 << 10;
+		features |= VERIFICATION_FEATURES;
 	}
 	if (data.format) {
-		features |= 1 << 11;
+		features |= FORMAT_FEATURES;
 	}
 	if (data.structure) {
-		features |= (1 << 14) | (1 << 15) | (1 << 16) | (1 << 18);
+		features |= STRUCTURE_FEATURES;
 	}
 	return features;
 }
