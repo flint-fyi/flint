@@ -63,7 +63,7 @@ catalogs:
     yaml-unist-parser: 3.2.1
 
   comparisons:
-    "@biomejs/biome": 2.5.13
+    "@biomejs/biome": 2.5.14
     "@eslint-community/eslint-plugin-eslint-comments": 4.8.1
     "@eslint/json": 2.1.0
     "@eslint/markdown": 8.0.3
