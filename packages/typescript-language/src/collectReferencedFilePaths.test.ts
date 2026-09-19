@@ -61,9 +61,11 @@ describe(collectReferencedFilePaths, () => {
 		expect(sourceFile).toBeDefined();
 		expect(
 			new Set(
-				collectReferencedFilePaths(program, sourceFile as AST.SourceFile).map(
-					(filePath) => path.basename(filePath, ".ts"),
-				),
+				collectReferencedFilePaths(
+					program,
+					sourceFile as AST.SourceFile,
+					ts.sys,
+				).map((filePath) => path.basename(filePath, ".ts")),
 			),
 		).toEqual(new Set(dependencyNames));
 	});

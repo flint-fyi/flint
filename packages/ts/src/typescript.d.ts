@@ -6,6 +6,7 @@ declare module "typescript" {
 		 * Maps from a SourceFile's `.path` to the name of the package it was imported with.
 		 */
 		readonly sourceFileToPackageName: ReadonlyMap<Path, string>;
+		useCaseSensitiveFileNames(): boolean;
 	}
 
 	interface SourceFile extends Declaration, LocalsContainer {
