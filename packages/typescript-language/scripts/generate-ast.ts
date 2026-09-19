@@ -531,9 +531,6 @@ lines.push(
 		nativeNodeDeclaration.replace("interface Node ", "interface NodeBase "),
 	),
 	"export type Token<TKind extends TokenSyntaxKind = TokenSyntaxKind> = TKind extends TokenSyntaxKind ? TokenNode<TKind> : never;",
-);
-
-lines.push(
 	"",
 	"export interface SyntaxKindNamesByKind {",
 	...[...canonicalSyntaxKindNames.values()].map(

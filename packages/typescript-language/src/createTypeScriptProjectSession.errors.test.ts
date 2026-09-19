@@ -41,7 +41,12 @@ vi.mock("typescript-native/unstable/sync", () => ({
 			mocks.fileSystems.push(options.fs);
 		}
 
-		parseConfigFile = () => ({ fileNames: [] });
+		// Mirrors an instance method of the native API, which callers invoke on
+		// the instance, so it can't be static even though this stub ignores state.
+		// flint-disable-next-line ts/classMethodsThis
+		parseConfigFile() {
+			return { fileNames: [] };
+		}
 
 		readConfigFile(fileName: string) {
 			mocks.parsedConfigPaths.push(fileName);
