@@ -284,7 +284,7 @@ function getRegexInfoFromExpression(
 
 	if (unwrapped.kind === SyntaxKind.Identifier) {
 		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
-		if (symbol && symbol.declarations.length) {
+		if (symbol?.declarations.length) {
 			for (const declarationHandle of symbol.declarations) {
 				const declaration = declarationHandle.resolve() as
 					| AST.Declaration
