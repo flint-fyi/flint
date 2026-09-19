@@ -25,7 +25,13 @@ export function getTypeScriptDiagnostics(
 				]
 			: []),
 		...program.getSyntacticDiagnostics(fileName),
-		...program.getGlobalDiagnostics(),
+		// Global diagnostics also carry option errors, which are the only kind
+		// with no file to attach to.
+		...program
+			.getGlobalDiagnostics()
+			.filter(
+				(diagnostic) => includeConfigurationDiagnostics || diagnostic.fileName,
+			),
 		...program.getSemanticDiagnostics(fileName),
 	];
 
