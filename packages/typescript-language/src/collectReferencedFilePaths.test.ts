@@ -70,7 +70,7 @@ it("uses typeChecker-resolved declarations for supported module resolution forms
 			program,
 			program.getProject().checker,
 			sourceFile,
-		).sort(),
+		).toSorted(),
 	).toEqual(
 		[
 			"/repo/src/aliased.ts",

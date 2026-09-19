@@ -262,7 +262,7 @@ export const typescriptLanguage: Language<
 				!currentSessionState.openFiles.includes(data.filePathAbsolute);
 			if (!alreadyPrepared) {
 				const restartingOpenFiles =
-					currentSessionState.openFiles.length > 0 &&
+					currentSessionState.openFiles.length &&
 					currentSessionState.activeFiles === 0;
 				if (restartingOpenFiles) {
 					try {
@@ -419,7 +419,7 @@ export const typescriptLanguage: Language<
 		}
 
 		function prepareFiles(filePathsAbsolute: readonly string[]) {
-			if (disposed || failed || filePathsAbsolute.length === 0) {
+			if (disposed || failed || !filePathsAbsolute.length) {
 				return;
 			}
 			const currentSessionState = (sessionState ??= {
@@ -433,7 +433,7 @@ export const typescriptLanguage: Language<
 			const newFilePaths = filePathsAbsolute.filter(
 				(filePath) => !alreadyOpen.has(filePath),
 			);
-			if (newFilePaths.length === 0) {
+			if (!newFilePaths.length) {
 				currentSessionState.prepared = true;
 				return;
 			}

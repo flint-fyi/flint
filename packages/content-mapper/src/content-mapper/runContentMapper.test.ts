@@ -64,7 +64,7 @@ async function nextResponse(output: PassThrough): Promise<JsonRpcResponse> {
 			headerEnd < 0
 				? undefined
 				: Number(
-						/Content-Length: (\d+)/i.exec(
+						/content-length: (\d+)/i.exec(
 							state.bytes.subarray(0, headerEnd).toString(),
 						)?.[1],
 					);
@@ -247,11 +247,11 @@ describe("runContentMapper", () => {
 		);
 		expect((await nextResponse(output)).result).toMatchObject({ text: "b" });
 		input.write(frame(request(4, "missing", {})));
-		expect((await nextResponse(output)).error?.code).toBe(-32601);
+		expect((await nextResponse(output)).error?.code).toBe(-32_601);
 		input.write(frame(request(5, "transform", { projectHandle: "missing" })));
-		expect((await nextResponse(output)).error?.code).toBe(-32602);
+		expect((await nextResponse(output)).error?.code).toBe(-32_602);
 		input.write(Buffer.from("Content-Length: 1\r\n\r\n{"));
-		expect((await nextResponse(output)).error?.code).toBe(-32700);
+		expect((await nextResponse(output)).error?.code).toBe(-32_700);
 		input.end();
 		await completion;
 	});
@@ -607,7 +607,7 @@ describe("content mapper protocol", () => {
 				response = await nextResponse(server.output);
 			}
 			expect(response).toMatchObject({
-				error: { code: -32603, message: `${failure} failed` },
+				error: { code: -32_603, message: `${failure} failed` },
 				id: failure === "close" ? "close-id" : 2,
 			});
 			expect(close).toHaveBeenCalledTimes(failure === "open" ? 0 : 1);
@@ -634,7 +634,7 @@ describe("content mapper protocol", () => {
 				),
 			]),
 		);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32700);
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
 		expect((await nextResponse(server.output)).id).toBe(1);
 		server.input.write(
 			Buffer.concat([
@@ -642,7 +642,7 @@ describe("content mapper protocol", () => {
 				frame(request("valid", "missing", {})),
 			]),
 		);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32700);
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
 		expect(await nextResponse(server.output)).toMatchObject({ id: "valid" });
 		server.input.end();
 		await server.completion;
@@ -657,7 +657,7 @@ describe("content mapper protocol", () => {
 			openProject: vi.fn(),
 		});
 		server.input.end(bytes);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32700);
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
 		await server.completion;
 	});
 
@@ -669,7 +669,7 @@ describe("content mapper protocol", () => {
 				openProject: vi.fn(),
 			});
 			server.input.end(`Content-Length: ${length}\r\n\r\n`);
-			expect((await nextResponse(server.output)).error?.code).toBe(-32700);
+			expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
 			await server.completion;
 		},
 	);
@@ -681,7 +681,7 @@ describe("content mapper protocol", () => {
 		});
 		server.input.write("x".repeat(8193));
 		expect((await nextResponse(server.output)).error).toMatchObject({
-			code: -32700,
+			code: -32_700,
 		});
 		server.input.write(
 			frame(
@@ -716,7 +716,7 @@ describe("content mapper protocol", () => {
 				),
 			]),
 		);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32700);
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
 		server.input.end(validFrame.subarray(markerSplit));
 		expect((await nextResponse(server.output)).id).toBe(1);
 		await server.completion;
@@ -738,7 +738,7 @@ describe("content mapper protocol", () => {
 				),
 			]),
 		);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32700);
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
 		expect((await nextResponse(server.output)).id).toBe(1);
 		await server.completion;
 	});
@@ -769,7 +769,7 @@ describe("content mapper protocol", () => {
 			} else {
 				server.input.end(Buffer.concat([prefix, lowercaseFrame]));
 			}
-			expect((await nextResponse(server.output)).error?.code).toBe(-32700);
+			expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
 			expect((await nextResponse(server.output)).id).toBe(1);
 			await server.completion;
 		},
@@ -800,7 +800,7 @@ describe("content mapper protocol", () => {
 		]) {
 			server.input.write(frame(invalid));
 			expect(await nextResponse(server.output)).toMatchObject({
-				error: { code: -32600 },
+				error: { code: -32_600 },
 				id: null,
 			});
 		}
@@ -814,7 +814,7 @@ describe("content mapper protocol", () => {
 			]),
 		);
 		expect(await nextResponse(server.output)).toMatchObject({
-			error: { code: -32600 },
+			error: { code: -32_600 },
 			id: null,
 		});
 		server.input.end();

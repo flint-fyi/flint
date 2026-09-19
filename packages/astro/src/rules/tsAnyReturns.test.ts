@@ -10,18 +10,22 @@ const myComponentFixture = {
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `<script>
+			code: `
+<script>
 function client() {
 	return 1 as any
 }
-</script>`,
-			snapshot: `<script>
+</script>
+`,
+			snapshot: `
+<script>
 function client() {
 	return 1 as any
 	~~~~~~~~~~~~~~~
 	Unsafe return of a value of type \`any\`.
 }
-</script>`,
+</script>
+`,
 		},
 		{
 			code: `

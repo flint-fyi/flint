@@ -79,7 +79,7 @@ export async function runContentMapper({
 		if (request.method === "initialize") {
 			if (initialized) {
 				await write(
-					responseError(id, -32600, "Content mapper is already initialized"),
+					responseError(id, -32_600, "Content mapper is already initialized"),
 				);
 				return;
 			}
@@ -89,7 +89,7 @@ export async function runContentMapper({
 					request.params.protocolVersion !== 1)
 			) {
 				await write(
-					responseError(id, -32602, "initialize requires protocolVersion 1"),
+					responseError(id, -32_602, "initialize requires protocolVersion 1"),
 				);
 				return;
 			}
@@ -104,7 +104,7 @@ export async function runContentMapper({
 				await write(
 					responseError(
 						id,
-						-32602,
+						-32_602,
 						"initialize requires utf-8 or utf-16 position support",
 					),
 				);
@@ -121,7 +121,7 @@ export async function runContentMapper({
 		}
 		if (!initialized) {
 			await write(
-				responseError(id, -32600, "Content mapper is not initialized"),
+				responseError(id, -32_600, "Content mapper is not initialized"),
 			);
 			return;
 		}
@@ -131,13 +131,13 @@ export async function runContentMapper({
 			request.method !== "transform"
 		) {
 			await write(
-				responseError(id, -32601, `Unknown method: ${request.method}`),
+				responseError(id, -32_601, `Unknown method: ${request.method}`),
 			);
 			return;
 		}
 		if (!isRecord(request.params)) {
 			await write(
-				responseError(id, -32602, `${request.method} requires object params`),
+				responseError(id, -32_602, `${request.method} requires object params`),
 			);
 			return;
 		}
@@ -153,7 +153,7 @@ export async function runContentMapper({
 				await write(
 					responseError(
 						id,
-						-32602,
+						-32_602,
 						"openProject requires a unique projectHandle, configFileName, and compilerOptions",
 					),
 				);
@@ -198,7 +198,7 @@ export async function runContentMapper({
 			await write(
 				responseError(
 					id,
-					-32602,
+					-32_602,
 					`Unknown project handle: ${projectHandle ?? "<missing>"}`,
 				),
 			);
@@ -220,7 +220,7 @@ export async function runContentMapper({
 			const fileName = getString(request.params, "fileName");
 			if (content === undefined || fileName === undefined) {
 				await write(
-					responseError(id, -32602, "transform requires content and fileName"),
+					responseError(id, -32_602, "transform requires content and fileName"),
 				);
 				return;
 			}
@@ -274,7 +274,11 @@ export async function runContentMapper({
 				if (headerEnd < 0) {
 					if (pending.byteLength > MAXIMUM_HEADER_BYTES) {
 						await write(
-							responseError(null, -32700, "Content mapper header is too large"),
+							responseError(
+								null,
+								-32_700,
+								"Content mapper header is too large",
+							),
 						);
 						pending = trailingHeaderMarkerPrefix(pending);
 					}
@@ -282,7 +286,7 @@ export async function runContentMapper({
 				}
 				if (headerEnd > MAXIMUM_HEADER_BYTES) {
 					await write(
-						responseError(null, -32700, "Content mapper header is too large"),
+						responseError(null, -32_700, "Content mapper header is too large"),
 					);
 					const nextHeader = pending
 						.toString("latin1")
@@ -295,11 +299,11 @@ export async function runContentMapper({
 					continue;
 				}
 				const header = pending.subarray(0, headerEnd).toString();
-				const match = /^Content-Length: (\d+)$/im.exec(header);
+				const match = /^content-length: (\d+)$/im.exec(header);
 				const bodyLength = match ? Number(match[1]) : 0;
 				if (!match || bodyLength <= 0 || bodyLength > 16 * 1024 * 1024) {
 					await write(
-						responseError(null, -32700, "Missing Content-Length header"),
+						responseError(null, -32_700, "Missing Content-Length header"),
 					);
 					pending = pending.subarray(headerEnd + 4);
 					continue;
@@ -319,7 +323,7 @@ export async function runContentMapper({
 					await write(
 						responseError(
 							null,
-							-32700,
+							-32_700,
 							error instanceof Error ? error.message : "Invalid JSON",
 						),
 					);
@@ -334,7 +338,7 @@ export async function runContentMapper({
 						(typeof request.id === "number" && Number.isFinite(request.id))
 					)
 				) {
-					await write(responseError(null, -32600, "Invalid JSON-RPC request"));
+					await write(responseError(null, -32_600, "Invalid JSON-RPC request"));
 					continue;
 				}
 				await dispatch(request as unknown as JsonRpcRequest);
@@ -342,7 +346,7 @@ export async function runContentMapper({
 		}
 		if (pending.length) {
 			await write(
-				responseError(null, -32700, "Incomplete content mapper frame"),
+				responseError(null, -32_700, "Incomplete content mapper frame"),
 			);
 		}
 	} finally {
@@ -449,7 +453,7 @@ function internalError(
 ): JsonRpcResponse {
 	return responseError(
 		id,
-		-32603,
+		-32_603,
 		error instanceof Error ? error.message : String(error),
 	);
 }

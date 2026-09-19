@@ -64,10 +64,14 @@ console.log("hello");
 `,
 		},
 		{
-			code: `const value = /* tslint:disable */ 1;`,
-			snapshot: `const value = /* tslint:disable */ 1;
+			code: `
+const value = /* tslint:disable */ 1;
+`,
+			snapshot: `
+const value = /* tslint:disable */ 1;
               ~~~~~~~~~~~~~~~~~~~~
-              TSLint is deprecated and its comments are no longer necessary.`,
+              TSLint is deprecated and its comments are no longer necessary.
+`,
 		},
 		{
 			code: `

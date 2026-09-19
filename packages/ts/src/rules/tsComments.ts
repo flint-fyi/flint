@@ -4,10 +4,13 @@ import type {
 	MessageForContext,
 	ReportInterpolationData,
 } from "@flint.fyi/core";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	collectComments,
+	typescriptLanguage,
+	type Comment,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { iterateComments, type Comment } from "./utils/iterateComments.ts";
 
 const directiveConfigSchema = z.union([
 	z.literal(true),
@@ -179,7 +182,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					for (const comment of iterateComments(node)) {
+					for (const comment of collectComments(node)) {
 						const match = tsDirectiveRegex.exec(comment.text);
 						if (!match) {
 							continue;

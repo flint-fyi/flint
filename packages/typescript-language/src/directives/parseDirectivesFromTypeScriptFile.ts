@@ -1,4 +1,4 @@
-import { LanguageVariant, SyntaxKind } from "typescript-native/unstable/ast";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	DirectivesCollector,
@@ -9,6 +9,7 @@ import { nullThrows } from "@flint.fyi/utils";
 
 import { normalizeRange } from "../normalizeRange.ts";
 import type * as AST from "../types/ast.ts";
+import { collectComments } from "../utils/collectComments.ts";
 import { createScanner } from "../utils/createScanner.ts";
 
 export interface ExtractedDirective {
@@ -21,46 +22,16 @@ export function extractDirectivesFromTypeScriptFile(
 	sourceFile: AST.SourceFile,
 ): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
-	const jsxTextRanges = collectJsxTextRanges(sourceFile);
 
-	const scanner = createScanner(
-		false,
-		sourceFile.languageVariant,
-		sourceFile.text,
-	);
-	for (
-		let kind = scanner.scan();
-		kind !== SyntaxKind.EndOfFile;
-		kind = scanner.scan()
-	) {
-		if (
-			kind !== SyntaxKind.SingleLineCommentTrivia &&
-			kind !== SyntaxKind.MultiLineCommentTrivia
-		) {
-			continue;
-		}
-		const sourceRange = {
-			end: scanner.getTokenEnd(),
-			pos: scanner.getTokenStart(),
-		};
-		const jsxTextRange = jsxTextRanges.find(
-			(range) => sourceRange.pos >= range.pos && sourceRange.pos < range.end,
-		);
-		if (jsxTextRange) {
-			// `//` and `/*` sequences inside JSX text are not comment trivia.
-			// Skip past the JSX text so its contents are not parsed as directives.
-			scanner.resetTokenState(jsxTextRange.end);
-			continue;
-		}
-		const commentText = sourceFile.text.slice(sourceRange.pos, sourceRange.end);
-		const match = /^\/\/\s*flint-(\S+)(?:\s+(.+))?/.exec(commentText);
+	for (const comment of collectComments(sourceFile)) {
+		const match = /^\/\/\s*flint-(\S+)(?:\s+(.+))?/.exec(comment.text);
 		if (!match) {
 			continue;
 		}
 
 		const commentRange = {
-			begin: sourceRange.pos,
-			end: sourceRange.end,
+			begin: comment.pos,
+			end: comment.end,
 		};
 
 		let range = normalizeRange(commentRange, sourceFile);
@@ -95,28 +66,6 @@ export function parseDirectivesFromTypeScriptFile(
 	}
 
 	return collector.collect();
-}
-
-function collectJsxTextRanges(
-	sourceFile: AST.SourceFile,
-): { end: number; pos: number }[] {
-	if (sourceFile.languageVariant !== LanguageVariant.JSX) {
-		return [];
-	}
-
-	const ranges: { end: number; pos: number }[] = [];
-
-	function visit(node: AST.Node) {
-		if (node.kind === SyntaxKind.JsxText) {
-			ranges.push({ end: node.end, pos: node.pos });
-		} else {
-			node.forEachChild(visit);
-		}
-	}
-
-	sourceFile.forEachChild(visit);
-
-	return ranges;
 }
 
 function computeNextCodeLine(

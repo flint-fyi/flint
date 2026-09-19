@@ -1,10 +1,8 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
 
-import {
-	createScanner,
-	forEachChild,
-	type AST,
-} from "@flint.fyi/typescript-language";
+import type * as AST from "../types/ast.ts";
+import { createScanner } from "./createScanner.ts";
+import { forEachChild } from "./forEachChild.ts";
 
 export interface Comment {
 	end: number;
@@ -12,7 +10,16 @@ export interface Comment {
 	text: string;
 }
 
-export function iterateComments(sourceFile: AST.SourceFile): Comment[] {
+/**
+ * Collects every comment in a source file, in source order.
+ *
+ * A scanner on its own can't tokenize a whole file: template literals with
+ * substitutions, regular expression literals, and JSX text all depend on the
+ * parser to tell the scanner how to continue, and scanning them as ordinary
+ * tokens garbles everything after them. Those tokens are already nodes in the
+ * AST, so the text is scanned around them instead.
+ */
+export function collectComments(sourceFile: AST.SourceFile): Comment[] {
 	const comments: Comment[] = [];
 	const excludedRanges: { end: number; pos: number }[] = [];
 	function collectExcludedRanges(node: AST.AnyNode): void {

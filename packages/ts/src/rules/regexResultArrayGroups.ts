@@ -284,26 +284,24 @@ function getRegexInfoFromExpression(
 
 	if (unwrapped.kind === SyntaxKind.Identifier) {
 		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
-		if (symbol) {
-			if (symbol.declarations.length) {
-				for (const declarationHandle of symbol.declarations) {
-					const declaration = declarationHandle.resolve() as
-						| AST.Declaration
-						| undefined;
-					if (!declaration) {
-						continue;
-					}
-					if (
-						declaration.kind === SyntaxKind.VariableDeclaration &&
-						declaration.initializer
-					) {
-						return getRegexInfoFromExpression(
-							declaration.initializer,
-							typeChecker,
-							program,
-							sourceFile,
-						);
-					}
+		if (symbol && symbol.declarations.length) {
+			for (const declarationHandle of symbol.declarations) {
+				const declaration = declarationHandle.resolve() as
+					| AST.Declaration
+					| undefined;
+				if (!declaration) {
+					continue;
+				}
+				if (
+					declaration.kind === SyntaxKind.VariableDeclaration &&
+					declaration.initializer
+				) {
+					return getRegexInfoFromExpression(
+						declaration.initializer,
+						typeChecker,
+						program,
+						sourceFile,
+					);
 				}
 			}
 		}

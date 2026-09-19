@@ -256,7 +256,7 @@ function tokenAt(tokens: TokenData[], index: number): TokenData {
 	return token;
 }
 
-for (const fileName of fs.readdirSync(astDirectory).sort()) {
+for (const fileName of fs.readdirSync(astDirectory).toSorted()) {
 	if (fileName !== "ast.d.ts" && fileName !== "ast.generated.d.ts") {
 		continue;
 	}
@@ -425,7 +425,7 @@ function membersFor(base: string): string[] {
 			members.push(...genericVariants);
 		}
 	}
-	return members.sort();
+	return members.toSorted();
 }
 
 const exportedNames = new Set([...interfaces.keys(), ...aliases.keys()]);
@@ -572,7 +572,7 @@ for (const [name, members] of compatibilityAliases) {
 	lines.push(
 		`export type ${name} =`,
 		...members
-			.sort()
+			.toSorted()
 			.map(
 				(member, index) =>
 					`\t| ${member}${index === members.length - 1 ? ";" : ""}`,

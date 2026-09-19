@@ -145,7 +145,7 @@ function isCallback(
 	}
 
 	return getUnionConstituents(type).some(
-		(constituent) => constituent.getCallSignatures().length !== 0,
+		(constituent) => !!constituent.getCallSignatures().length,
 	);
 }
 

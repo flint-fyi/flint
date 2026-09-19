@@ -1,7 +1,9 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	collectComments,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { iterateComments } from "./utils/iterateComments.ts";
 
 const tslintDirectiveRegex =
 	/^\s*\/?tslint:(?:enable|disable)(?:-(?:line|next-line))?(?::|\s|$)/i;
@@ -29,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				SourceFile: (node) => {
-					const comments = iterateComments(node);
+					const comments = collectComments(node);
 
 					for (const { end, pos, text } of comments) {
 						const commentContent = text

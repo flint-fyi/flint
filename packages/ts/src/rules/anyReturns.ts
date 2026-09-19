@@ -183,7 +183,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							awaitedSignatureReturnTypes.some((awaitedType) =>
 								isTypeFlagSet(awaitedType, TypeFlags.Unknown),
 							) ||
-							(awaitedReturnNodeTypes.length > 0 &&
+							(awaitedReturnNodeTypes.length &&
 								awaitedReturnNodeTypes.length ===
 									awaitedSignatureReturnTypes.length &&
 								awaitedReturnNodeTypes.every((awaitedType) =>

@@ -34,7 +34,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 		).toEqual({
 			code: "TS1234",
 			source: "typescript",
-			text: "\u001b[90mTS1234\u001b[0m: Parent\n  Child\n    Grandchild",
+			text: "\u001B[90mTS1234\u001B[0m: Parent\n  Child\n    Grandchild",
 		});
 	});
 
@@ -85,7 +85,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 			code: "TS1234",
 			range: { begin: 2, end: 44 },
 			source: "typescript",
-			text: "\u001b[96msource.ts\u001b[0m:\u001b[93m1\u001b[0m:\u001b[93m3\u001b[0m - \u001b[90mTS1234\u001b[0m: Top message\n  Nested detail\n    Deep detail\n\u001b[7m  1\u001b[0m   first\n\u001b[7m   \u001b[0m \u001b[91m  ~~~~~\u001b[0m\n\u001b[7m  2\u001b[0m second\n\u001b[7m   \u001b[0m \u001b[91m~~~~~~\u001b[0m\n\u001b[7m...\u001b[0m \n\u001b[7m  5\u001b[0m fifth\n\u001b[7m   \u001b[0m \u001b[91m~~~~~\u001b[0m\n\u001b[7m  6\u001b[0m last\n\u001b[7m   \u001b[0m \u001b[91m~~~~\u001b[0m\n\n \u001b[96mrelated.ts\u001b[0m:\u001b[93m1\u001b[0m:\u001b[93m1\u001b[0m\n  \u001b[7m1\u001b[0m value\n  \u001b[7m \u001b[0m \u001b[96m~~~~~\u001b[0m\n  Related detail",
+			text: "\u001B[96msource.ts\u001B[0m:\u001B[93m1\u001B[0m:\u001B[93m3\u001B[0m - \u001B[90mTS1234\u001B[0m: Top message\n  Nested detail\n    Deep detail\n\u001B[7m  1\u001B[0m   first\n\u001B[7m   \u001B[0m \u001B[91m  ~~~~~\u001B[0m\n\u001B[7m  2\u001B[0m second\n\u001B[7m   \u001B[0m \u001B[91m~~~~~~\u001B[0m\n\u001B[7m...\u001B[0m \n\u001B[7m  5\u001B[0m fifth\n\u001B[7m   \u001B[0m \u001B[91m~~~~~\u001B[0m\n\u001B[7m  6\u001B[0m last\n\u001B[7m   \u001B[0m \u001B[91m~~~~\u001B[0m\n\n \u001B[96mrelated.ts\u001B[0m:\u001B[93m1\u001B[0m:\u001B[93m1\u001B[0m\n  \u001B[7m1\u001B[0m value\n  \u001B[7m \u001B[0m \u001B[96m~~~~~\u001B[0m\n  Related detail",
 		});
 	});
 
@@ -101,7 +101,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 		).toEqual({
 			code: "TS9999",
 			source: "typescript",
-			text: "\u001b[90mTS9999\u001b[0m: Global error",
+			text: "\u001B[90mTS9999\u001B[0m: Global error",
 		});
 	});
 });
