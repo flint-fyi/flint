@@ -1,10 +1,13 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
+import { SymbolFlags, type Program } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
-import type { CharacterReportRange } from "@flint.fyi/core";
+import type { CharacterReportRange, LinterHost } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
 
 import { getSpecifierNames } from "../type-utils/getSpecifierNames.ts";
@@ -28,28 +31,44 @@ const restrictionSchema = z.object({
 
 type Restriction = z.infer<typeof restrictionSchema>;
 
-function resolveModuleDeclarations(
-	moduleSpecifier: ts.Expression,
-	typeChecker: ts.TypeChecker,
-) {
-	const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
-	return symbol?.getDeclarations();
+function resolveDeclarations(
+	declarationHandles: readonly { resolve(): Node | undefined }[] | undefined,
+): AST.Declaration[] | undefined {
+	if (!declarationHandles) {
+		return undefined;
+	}
+
+	const declarations: AST.Declaration[] = [];
+	for (const declarationHandle of declarationHandles) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return undefined;
+		}
+		declarations.push(declaration as AST.Declaration);
+	}
+	return declarations;
 }
 
-function resolveSymbolDeclarations(
-	nameNode: ts.Node,
-	typeChecker: ts.TypeChecker,
+function resolveModuleDeclarations(
+	moduleSpecifier: AST.Expression,
+	typeChecker: Checker,
 ) {
+	return resolveDeclarations(
+		typeChecker.getSymbolAtLocation(moduleSpecifier)?.declarations,
+	);
+}
+
+function resolveSymbolDeclarations(nameNode: Node, typeChecker: Checker) {
 	let symbol = typeChecker.getSymbolAtLocation(nameNode);
 	if (!symbol) {
 		return undefined;
 	}
 
-	if (symbol.flags & ts.SymbolFlags.Alias) {
+	if (symbol.flags & SymbolFlags.Alias) {
 		symbol = typeChecker.getAliasedSymbol(symbol);
 	}
 
-	return symbol.getDeclarations();
+	return resolveDeclarations(symbol.declarations);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -123,12 +142,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNamedRestrictions(
 			restrictions: Restriction[],
-			declarations: ts.Declaration[],
+			declarations: AST.Declaration[],
 			importedName: string,
 			isTypeOnly: boolean,
 			source: string,
 			range: CharacterReportRange,
-			program: ts.Program,
+			program: Program,
+			host: LinterHost,
 		) {
 			for (const restriction of restrictions) {
 				if (restriction.allowTypeImports && isTypeOnly) {
@@ -141,6 +161,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						declarations,
 						restriction.specifier,
 						program,
+						host,
 					)
 				) {
 					context.report({
@@ -160,11 +181,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkWildcardRestrictions(
 			restrictions: Restriction[],
-			moduleDeclarations: ts.Declaration[],
+			moduleDeclarations: AST.Declaration[],
 			source: string,
 			topLevelTypeOnly: boolean,
 			range: CharacterReportRange,
-			program: ts.Program,
+			program: Program,
+			host: LinterHost,
 		) {
 			for (const restriction of restrictions) {
 				if (restriction.allowTypeImports && topLevelTypeOnly) {
@@ -182,6 +204,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								name: undefined,
 							},
 							program,
+							host,
 						)
 					) {
 						context.report({
@@ -202,6 +225,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						moduleDeclarations,
 						restriction.specifier,
 						program,
+						host,
 					)
 				) {
 					context.report({
@@ -222,7 +246,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ExportDeclaration: (
 					node,
-					{ options, program, sourceFile, typeChecker },
+					{ host, options, program, sourceFile, typeChecker },
 				) => {
 					if (node.moduleSpecifier?.kind !== SyntaxKind.StringLiteral) {
 						return;
@@ -254,6 +278,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								source,
 								range,
 								program,
+								host,
 							);
 						}
 					} else {
@@ -272,12 +297,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							topLevelTypeOnly,
 							range,
 							program,
+							host,
 						);
 					}
 				},
 				ImportDeclaration: (
 					node,
-					{ options, program, sourceFile, typeChecker },
+					{ host, options, program, sourceFile, typeChecker },
 				) => {
 					if (node.moduleSpecifier.kind !== SyntaxKind.StringLiteral) {
 						return;
@@ -302,6 +328,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									moduleDeclarations,
 									restriction.specifier,
 									program,
+									host,
 								)
 							) {
 								context.report({
@@ -337,6 +364,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								source,
 								range,
 								program,
+								host,
 							);
 						}
 					}
@@ -368,6 +396,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								source,
 								range,
 								program,
+								host,
 							);
 						}
 
@@ -389,6 +418,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						topLevelTypeOnly,
 						range,
 						program,
+						host,
 					);
 				},
 			},

@@ -1,4 +1,4 @@
-import type { Type } from "typescript";
+import type { Type } from "typescript-native/unstable/sync";
 
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 

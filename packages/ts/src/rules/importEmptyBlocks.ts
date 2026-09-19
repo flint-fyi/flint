@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -58,18 +58,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 
-					const commaToken = node.importClause
-						.getChildren(sourceFile)
-						.find((child) => child.kind === SyntaxKind.CommaToken);
+					const begin = node.importClause.name?.getEnd();
+					if (begin === undefined) {
+						return;
+					}
 
-					if (!commaToken) {
+					const scanner = createScanner(
+						true,
+						sourceFile.languageVariant,
+						sourceFile.text,
+						begin,
+						node.importClause.namedBindings.getStart(sourceFile) - begin,
+					);
+					if (scanner.scan() !== SyntaxKind.CommaToken) {
 						return;
 					}
 
 					context.report({
 						fix: {
 							range: {
-								begin: commaToken.getStart(sourceFile),
+								begin: scanner.getTokenStart(),
 								end: node.importClause.namedBindings.getEnd(),
 							},
 							text: "",

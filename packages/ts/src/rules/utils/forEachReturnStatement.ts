@@ -1,15 +1,17 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+
+import type { AST } from "@flint.fyi/typescript-language";
 
 // Copied from typescript https://github.com/microsoft/TypeScript/blob/42b0e3c4630c129ca39ce0df9fff5f0d1b4dd348/src/compiler/utilities.ts#L1335
 // Warning: This has the same semantics as the forEach family of functions,
 //          in that traversal terminates in the event that 'visitor' supplies a truthy value.
 export function forEachReturnStatement<T>(
-	body: ts.Block,
-	visitor: (statement: ts.ReturnStatement) => T,
+	body: AST.Block,
+	visitor: (statement: AST.ReturnStatement) => T,
 ): T | undefined {
 	return traverse(body);
 
-	function traverse(node: ts.Node): T | undefined {
+	function traverse(node: AST.Node): T | undefined {
 		switch (node.kind) {
 			case SyntaxKind.Block:
 			case SyntaxKind.CaseBlock:
@@ -26,10 +28,10 @@ export function forEachReturnStatement<T>(
 			case SyntaxKind.TryStatement:
 			case SyntaxKind.WhileStatement:
 			case SyntaxKind.WithStatement:
-				return ts.forEachChild(node, traverse);
+				return node.forEachChild(traverse);
 
 			case SyntaxKind.ReturnStatement:
-				return visitor(node as ts.ReturnStatement);
+				return visitor(node);
 		}
 
 		return undefined;

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -16,8 +16,9 @@ function isLocalExportsVariable(
 ) {
 	return typeChecker
 		.getSymbolAtLocation(node)
-		?.getDeclarations()
-		?.some((declaration) => declaration.getSourceFile() === sourceFile);
+		?.declarations.some(
+			(declaration) => declaration.resolve()?.getSourceFile() === sourceFile,
+		);
 }
 
 function isModuleExportsAccess(node: AST.Expression) {
@@ -30,9 +31,7 @@ function isModuleExportsAccess(node: AST.Expression) {
 	);
 }
 
-function isModuleExportsAccessAssignment(
-	node: AST.Expression | AST.ExpressionParent,
-) {
+function isModuleExportsAccessAssignment(node: AST.AnyNode) {
 	return (
 		node.kind === SyntaxKind.BinaryExpression &&
 		node.operatorToken.kind === SyntaxKind.EqualsToken &&

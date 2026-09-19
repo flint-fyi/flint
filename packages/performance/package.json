@@ -27,8 +27,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"ts-api-utils": "catalog:prod",
-		"typescript": "catalog:prod"
+		"typescript-native": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

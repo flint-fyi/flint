@@ -1,8 +1,12 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	getLeadingCommentRanges,
+	getTokenAtPosition,
+	getTrailingCommentRanges,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import type { PluginRuleAbout, Rule } from "@flint.fyi/core";
 import {
-	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -53,7 +57,7 @@ export function createStatementPaddingRule(
 				node: AST.AnyNode,
 				sourceFile: AST.SourceFile,
 			) {
-				const leadingComments = ts.getLeadingCommentRanges(
+				const leadingComments = getLeadingCommentRanges(
 					sourceFile.text,
 					node.getFullStart(),
 				);
@@ -65,21 +69,22 @@ export function createStatementPaddingRule(
 				node: AST.AnyNode,
 				sourceFile: AST.SourceFile,
 			) {
-				const firstToken = node.getFirstToken(sourceFile);
+				const firstToken = getTokenAtPosition(
+					sourceFile,
+					node.getStart(sourceFile),
+				);
 
-				return firstToken
-					? {
-							begin: firstToken.getStart(sourceFile),
-							end: firstToken.getEnd(),
-						}
-					: getTSNodeRange(node, sourceFile);
+				return {
+					begin: firstToken.getStart(sourceFile),
+					end: firstToken.getEnd(),
+				};
 			}
 
 			function getNodeTrailingContentEnd(
 				node: AST.AnyNode,
 				sourceFile: AST.SourceFile,
 			) {
-				const trailingComments = ts.getTrailingCommentRanges(
+				const trailingComments = getTrailingCommentRanges(
 					sourceFile.text,
 					node.getEnd(),
 				);

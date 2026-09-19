@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { createScanner, SyntaxKind } from "typescript-native/unstable/ast";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
@@ -40,18 +40,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							statement.kind === SyntaxKind.BreakStatement ||
 							statement.kind === SyntaxKind.ContinueStatement
 						) {
-							const firstToken = statement.getFirstToken(sourceFile);
-							if (!firstToken) {
-								return;
-							}
+							const statementStart = statement.getStart(sourceFile);
+							const scanner = createScanner(
+								true,
+								sourceFile.languageVariant,
+								sourceFile.text,
+								statementStart,
+								statement.getEnd() - statementStart,
+							);
+							scanner.scan();
 
 							context.report({
 								message: "unsafeFinally",
 								range: {
-									begin: statement.getStart(sourceFile),
-									end:
-										statement.getStart(sourceFile) +
-										firstToken.getText().length,
+									begin: scanner.getTokenStart(),
+									end: scanner.getTokenEnd(),
 								},
 							});
 						}
@@ -64,9 +67,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								checkStatement(statement.elseStatement);
 							}
 						} else if (statement.kind === SyntaxKind.SwitchStatement) {
-							statement.caseBlock.clauses.forEach((clause) => {
-								clause.statements.forEach(checkStatement);
-							});
+							statement.caseBlock.clauses.forEach(
+								(clause: AST.CaseOrDefaultClause) => {
+									clause.statements.forEach(checkStatement);
+								},
+							);
 						} else if (statement.kind === SyntaxKind.LabeledStatement) {
 							checkStatement(statement.statement);
 						}

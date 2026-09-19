@@ -26,8 +26,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/css-language": "workspace:^",
-		"typescript": "catalog:prod"
+		"@flint.fyi/css-language": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

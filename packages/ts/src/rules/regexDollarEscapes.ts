@@ -1,4 +1,5 @@
-import { SyntaxKind, TypeFlags } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	typescriptLanguage,
@@ -74,7 +75,7 @@ function isRegExpArgument(argument: AST.Expression, typeChecker: Checker) {
 
 	const type = typeChecker.getTypeAtLocation(argument);
 	const symbol = type.getSymbol();
-	return symbol?.getName() === "RegExp";
+	return symbol?.name === "RegExp";
 }
 
 function isStringType(node: AST.Expression, typeChecker: Checker) {

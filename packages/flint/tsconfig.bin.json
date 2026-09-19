@@ -9,5 +9,5 @@
 		"types": ["node"]
 	},
 	"include": ["bin"],
-	"references": [{ "path": "../cli" }, { "path": "../ts-patch" }]
+	"references": [{ "path": "../cli" }]
 }

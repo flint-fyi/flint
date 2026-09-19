@@ -1,4 +1,4 @@
-import { SyntaxKind, type NodeArray } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -9,12 +9,12 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasDefaultModifier(
-	modifiers: NodeArray<AST.ModifierLike> | undefined,
+	modifiers: readonly AST.ModifierLike[] | undefined,
 ) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.DefaultKeyword);
 }
 
-function hasExportModifier(modifiers: NodeArray<AST.ModifierLike> | undefined) {
+function hasExportModifier(modifiers: readonly AST.ModifierLike[] | undefined) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.ExportKeyword);
 }
 

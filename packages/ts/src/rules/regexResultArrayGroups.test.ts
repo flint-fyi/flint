@@ -380,5 +380,12 @@ while (match = regex.exec("text") as any) {
     const value = match[1];
 }
 `,
+		`
+function RegExp() {
+    return /a(?<foo>b)c/;
+}
+const result = RegExp().exec("abc")!;
+const value = result[1];
+`,
 	],
 });

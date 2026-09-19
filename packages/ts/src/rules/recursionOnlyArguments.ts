@@ -1,5 +1,8 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import {
+	isClassLikeDeclaration,
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getScopeManager,
@@ -71,20 +74,29 @@ function isRecursiveCall(
 		return false;
 	}
 
-	for (
-		let current: AST.AnyNode | undefined = callExpression.parent;
-		current;
-		current = current.parent as AST.AnyNode | undefined
-	) {
+	for (let current = callExpression.parent; ; current = current.parent) {
 		if (current === functionNode) {
 			return true;
 		}
-		if (tsutils.isFunctionScopeBoundary(current)) {
+		if (
+			isFunctionLikeDeclaration(current) ||
+			isClassLikeDeclaration(current) ||
+			current.kind === SyntaxKind.EnumDeclaration ||
+			current.kind === SyntaxKind.ModuleDeclaration ||
+			current.kind === SyntaxKind.CallSignature ||
+			current.kind === SyntaxKind.ConstructorType ||
+			current.kind === SyntaxKind.ConstructSignature ||
+			current.kind === SyntaxKind.FunctionType ||
+			current.kind === SyntaxKind.MethodSignature ||
+			(current.kind === SyntaxKind.SourceFile &&
+				current.externalModuleIndicator !== undefined)
+		) {
+			return false;
+		}
+		if (current.kind === SyntaxKind.SourceFile) {
 			return false;
 		}
 	}
-
-	return false;
 }
 
 function isReferenceOnlyUsedInRecursion(
@@ -104,7 +116,7 @@ function isReferenceOnlyUsedInRecursion(
 	}
 
 	const argumentIndex = parent.arguments.findIndex(
-		(argument) => argument === reference,
+		(argument: AST.Expression) => argument === reference,
 	);
 
 	return argumentIndex === parameterIndex;
