@@ -25,7 +25,8 @@
 		"test": "vitest --project content-mapper"
 	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:^"
+		"@flint.fyi/core": "workspace:^",
+		"@volar/language-core": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

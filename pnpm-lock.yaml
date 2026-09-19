@@ -490,6 +490,9 @@ catalogs:
     '@types/unist':
       specifier: ^3.0.3
       version: 3.0.3
+    '@volar/language-core':
+      specifier: 2.4.28
+      version: 2.4.28
     '@vue/compiler-dom':
       specifier: ^3.5.0
       version: 3.5.42
@@ -976,6 +979,9 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
+      '@volar/language-core':
+        specifier: catalog:prod
+        version: 2.4.28
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^

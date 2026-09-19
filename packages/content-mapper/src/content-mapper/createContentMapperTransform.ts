@@ -1,13 +1,11 @@
+import type { CodeInformation, CodeMapping } from "@volar/language-core";
+
 import type {
 	SpanMapping,
 	TransformParams,
 	TransformResult,
 } from "./protocol.ts";
 
-// Locally-declared shape of the Volar-style code mappings that embedded-language
-// tools (e.g. astro2tsx) emit. Inlined here so this package carries no `@volar/*`
-// runtime or type dependency; the field set mirrors `@volar/language-core`'s
-// `CodeMapping`/`CodeInformation` for the members this transform actually reads.
 export interface ContentMapperTransformSource {
 	extension: string;
 	mappings: Pick<
@@ -19,37 +17,6 @@ export interface ContentMapperTransformSource {
 		| "sourceOffsets"
 	>[];
 	text: string;
-}
-
-interface CodeInformation {
-	completion?: boolean | { isAdditional?: boolean; onlyImport?: boolean };
-	format?: boolean;
-	navigation?:
-		| boolean
-		| {
-				resolveRenameEditText?(newText: string): string;
-				resolveRenameNewName?(newName: string): string;
-				shouldHighlight?(): boolean;
-				shouldRename?(): boolean;
-		  };
-	semantic?: boolean | { shouldHighlight?(): boolean };
-	structure?: boolean;
-	verification?:
-		| boolean
-		| {
-				shouldReport?(
-					source: string | undefined,
-					code: number | string | undefined,
-				): boolean;
-		  };
-}
-
-interface CodeMapping {
-	data: CodeInformation;
-	generatedLengths?: number[];
-	generatedOffsets: number[];
-	lengths: number[];
-	sourceOffsets: number[];
 }
 
 export function createContentMapperTransform({
