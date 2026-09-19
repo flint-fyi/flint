@@ -1,5 +1,22 @@
 # @flint/rule-tester
 
+## 0.20.0
+
+### Minor Changes
+
+- [#3405](https://github.com/flint-fyi/flint/pull/3405) [`2e2b815`](https://github.com/flint-fyi/flint/commit/2e2b8151c33b58462b13dfaacb1d1fa772901762) - Reject incomplete or mismatched cross-file suggestion expectations that were previously accepted.
+  Each expected suggestion must match the corresponding reported suggestion in flattened report order, including its own-file or cross-file variant and exact target-path set.
+  Update tests to list every reported target path, remove paths that the corresponding suggestion does not target, and keep each suggestion's expectations separate.
+  Mixed own-file and cross-file suggestions are now supported in the same test case.
+
+- [#3363](https://github.com/flint-fyi/flint/pull/3363) [`8a37984`](https://github.com/flint-fyi/flint/commit/8a379847d35915d5ac08b51169748fa5d6a7975e) - Reject test cases that repeat an earlier test case's code, fileName, files, and options.
+
+### Patch Changes
+
+- [#3135](https://github.com/flint-fyi/flint/pull/3135) [`fb6ceba`](https://github.com/flint-fyi/flint/commit/fb6ceba45d56c32294e27afff078736ac8e12e07) - Add `withRepositoryRoot` to compose a known repository root onto a host, and use it so disk-backed rule testers resolve `getRepositoryRoot()`.
+- Updated dependencies [[`6a34cee`](https://github.com/flint-fyi/flint/commit/6a34cee256df6c575793bd9ab8b094ed06e0efe4), [`a32109c`](https://github.com/flint-fyi/flint/commit/a32109c1ef55226efd1c05b853a9651c4d4ece6b), [`fb6ceba`](https://github.com/flint-fyi/flint/commit/fb6ceba45d56c32294e27afff078736ac8e12e07), [`8950424`](https://github.com/flint-fyi/flint/commit/8950424bd54371e56344eff50f752aba1e5752a3), [`07f1ca7`](https://github.com/flint-fyi/flint/commit/07f1ca70461eff08d4bd096ca5d14f2f82dffc68), [`f02543b`](https://github.com/flint-fyi/flint/commit/f02543b8a418ae793b1b0ead1542db899486e7aa)]:
+  - @flint.fyi/core@0.27.0
+
 ## 0.19.1
 
 ### Patch Changes
