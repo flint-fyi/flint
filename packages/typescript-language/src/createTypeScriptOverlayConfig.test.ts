@@ -25,7 +25,7 @@ describe(createTypeScriptOverlayConfig, () => {
 		);
 
 		expect(overlay.filePath).toMatch(
-			/^\/repo\/node_modules\/\.cache\/flint\/typescript-overlays\//,
+			/^\/repo\/node_modules\/flint-typescript-overlays\//,
 		);
 		expect(JSON.parse(overlay.sourceText)).toEqual({
 			contentMappers: [

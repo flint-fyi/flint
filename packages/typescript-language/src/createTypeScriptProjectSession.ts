@@ -55,6 +55,7 @@ export function createTypeScriptProjectSession(
 	const authoredConfigPaths = new Set<string>();
 	const authoredConfigPathsToOpen = new Set<string>();
 	let mappedExtensions = new Set<string>();
+	const openedFilePaths = new Set<string>();
 	const openedMappedFilePaths = new Set<string>();
 	const openedOverlayPaths = new Set<string>();
 	const overlayPathByAuthoredConfigPath = new Map<string, string>();
@@ -164,7 +165,7 @@ export function createTypeScriptProjectSession(
 	const updateOverlay = (
 		authoredConfigFilePath: string,
 		registrations: TypeScriptContentMapperRegistration[],
-		mappedFilePaths: string[],
+		openFilePaths: string[],
 	): string => {
 		const authoredSourceText = host.readFileSync(authoredConfigFilePath);
 		if (authoredSourceText === undefined) {
@@ -194,7 +195,7 @@ export function createTypeScriptProjectSession(
 			registrations,
 			[
 				...api.parseConfigFile(authoredConfigFilePath).fileNames,
-				...mappedFilePaths,
+				...openFilePaths,
 			],
 		);
 		virtualFiles.set(overlay.filePath, overlay.sourceText);
@@ -326,15 +327,23 @@ export function createTypeScriptProjectSession(
 	return {
 		getProjectForFile(filePath) {
 			assertActive();
-			if (!mappedExtensions.has(path.extname(filePath))) {
+			const mapped = mappedExtensions.has(path.extname(filePath));
+			if (!mapped && !overlayPathByAuthoredConfigPath.size) {
 				return snapshot.getDefaultProjectForFile(filePath);
 			}
 			const configFilePath = findConfigFile(filePath);
-			if (!configFilePath) {
-				return undefined;
+			const overlayPath =
+				configFilePath && overlayPathByAuthoredConfigPath.get(configFilePath);
+			const overlayProject = overlayPath && snapshot.getProject(overlayPath);
+			if (mapped) {
+				return overlayProject || undefined;
 			}
-			const overlayPath = overlayPathByAuthoredConfigPath.get(configFilePath);
-			return overlayPath ? snapshot.getProject(overlayPath) : undefined;
+			// An open file under a config with an overlay is one of the overlay's
+			// root files (see update), so the overlay project is the one that is
+			// guaranteed to contain it.
+			return overlayProject && overlayProject.program.getSourceFile(filePath)
+				? overlayProject
+				: snapshot.getDefaultProjectForFile(filePath);
 		},
 		getSnapshot() {
 			assertActive();
@@ -363,19 +372,40 @@ export function createTypeScriptProjectSession(
 					detectedChanged.push(filePath);
 				}
 			}
-			const changedFilePaths = new Set([
-				...(changed ?? []),
-				...detectedChanged,
+			// Callers flag a file they open as changed without knowing whether the
+			// native session has seen it. A file it has never touched is new to it,
+			// and must be reported as created so that projects whose file sets come
+			// from include globs re-scan their directories and pick it up.
+			const changedFilePaths = new Set(detectedChanged);
+			const createdFilePaths = new Set([
+				...(created ?? []),
+				...detectedCreated,
 			]);
+			for (const filePath of changed ?? []) {
+				if (observedTouchTimeByFilePath.has(filePath)) {
+					changedFilePaths.add(filePath);
+				} else {
+					createdFilePaths.add(filePath);
+				}
+			}
 			const registrations = getTypeScriptContentMapperRegistrations();
 			mappedExtensions = new Set(
 				registrations.flatMap((registration) => registration.extensions),
 			);
+			// Callers re-open every file they have opened before, including ones
+			// that have since been deleted. Opening a missing file would make it a
+			// missing root of its overlay, reported as an error on every other file.
+			const existingOpenFiles = openFiles?.filter(
+				(filePath) => host.fileTypeSync(filePath) === "file",
+			);
+			const nextOpenedFilePaths = new Set(openedFilePaths);
 			const nextOpenedMappedFilePaths = new Set(openedMappedFilePaths);
 			for (const filePath of closeFiles ?? []) {
+				nextOpenedFilePaths.delete(filePath);
 				nextOpenedMappedFilePaths.delete(filePath);
 			}
-			for (const filePath of openFiles ?? []) {
+			for (const filePath of existingOpenFiles ?? []) {
+				nextOpenedFilePaths.add(filePath);
 				if (mappedExtensions.has(path.extname(filePath))) {
 					nextOpenedMappedFilePaths.add(filePath);
 				}
@@ -384,19 +414,23 @@ export function createTypeScriptProjectSession(
 				.filter((filePath) => mappedExtensions.has(path.extname(filePath)))
 				.map(findConfigFile)
 				.filter((configFilePath): configFilePath is string => !!configFilePath);
-			const mappedFilePathsByConfigFilePath = new Map<string, string[]>();
-			for (const filePath of nextOpenedMappedFilePaths) {
-				if (!mappedExtensions.has(path.extname(filePath))) {
-					continue;
-				}
+			// Every open file under a config with an overlay is listed as one of the
+			// overlay's root files, not just the mapped ones. The native session
+			// races between reloading a config's include globs for a newly created
+			// file and placing that file in a project when another project extends
+			// the same config, and can leave the file in its inferred project.
+			// Listing the file explicitly makes the overlay contain it regardless.
+			const mappedConfigFilePathSet = new Set(mappedConfigFilePaths);
+			const openFilePathsByConfigFilePath = new Map<string, string[]>();
+			for (const filePath of nextOpenedFilePaths) {
 				const configFilePath = findConfigFile(filePath);
-				if (!configFilePath) {
+				if (!configFilePath || !mappedConfigFilePathSet.has(configFilePath)) {
 					continue;
 				}
-				const mappedFilePaths =
-					mappedFilePathsByConfigFilePath.get(configFilePath) ?? [];
-				mappedFilePaths.push(filePath);
-				mappedFilePathsByConfigFilePath.set(configFilePath, mappedFilePaths);
+				const openFilePaths =
+					openFilePathsByConfigFilePath.get(configFilePath) ?? [];
+				openFilePaths.push(filePath);
+				openFilePathsByConfigFilePath.set(configFilePath, openFilePaths);
 			}
 			const closeProjects: string[] = [];
 			const overlaysToMarkOpened = new Set<string>();
@@ -433,7 +467,7 @@ export function createTypeScriptProjectSession(
 						const overlayPath = updateOverlay(
 							configFilePath,
 							registrations,
-							mappedFilePathsByConfigFilePath.get(configFilePath) ?? [],
+							openFilePathsByConfigFilePath.get(configFilePath) ?? [],
 						);
 						if (!previousOverlaySourceTextByPath.has(overlayPath)) {
 							previousOverlaySourceTextByPath.set(
@@ -494,15 +528,15 @@ export function createTypeScriptProjectSession(
 					...(changedFilePaths.size && {
 						changed: [...changedFilePaths],
 					}),
-					...((created ?? detectedCreated.length) && {
-						created: [...new Set([...(created ?? []), ...detectedCreated])],
+					...(createdFilePaths.size && {
+						created: [...createdFilePaths],
 					}),
 					...((deleted ?? detectedDeleted.length) && {
 						deleted: [...new Set([...(deleted ?? []), ...detectedDeleted])],
 					}),
 				},
 				...(closeFiles && { closeFiles }),
-				...(openFiles && { openFiles }),
+				...(existingOpenFiles?.length && { openFiles: existingOpenFiles }),
 				...(projectsToOpen?.length && {
 					openProjects: [...new Set(projectsToOpen)],
 				}),
@@ -519,6 +553,10 @@ export function createTypeScriptProjectSession(
 			}
 			for (const overlayPath of overlaysToMarkOpened) {
 				openedOverlayPaths.add(overlayPath);
+			}
+			openedFilePaths.clear();
+			for (const filePath of nextOpenedFilePaths) {
+				openedFilePaths.add(filePath);
 			}
 			openedMappedFilePaths.clear();
 			for (const filePath of nextOpenedMappedFilePaths) {

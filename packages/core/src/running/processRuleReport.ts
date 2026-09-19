@@ -27,37 +27,33 @@ export function processRuleReport(
 			return null;
 		}
 		range = adjustedRange;
-		fix &&= nullIfEmpty(
-			fix
-				.map((fix) => {
-					const range = adjustFixRange(fix.range);
-					return (
-						range && {
-							...fix,
-							range,
-						}
-					);
-				})
-				.filter((f) => f != null),
-		);
-
-		suggestions &&= nullIfEmpty(
-			suggestions
-				.map((s) => {
-					if ("files" in s) {
-						// TODO: support cross-file suggestions
-						return null;
+		fix &&= fix
+			.map((fix) => {
+				const range = adjustFixRange(fix.range);
+				return (
+					range && {
+						...fix,
+						range,
 					}
-					const range = adjustFixRange(s.range);
-					return (
-						range && {
-							...s,
-							range,
-						}
-					);
-				})
-				.filter((s) => s != null),
-		);
+				);
+			})
+			.filter((f) => f != null);
+
+		suggestions &&= suggestions
+			.map((s) => {
+				if ("files" in s) {
+					// TODO: support cross-file suggestions
+					return null;
+				}
+				const range = adjustFixRange(s.range);
+				return (
+					range && {
+						...s,
+						range,
+					}
+				);
+			})
+			.filter((s) => s != null);
 	}
 
 	return {
@@ -82,13 +78,4 @@ export function processRuleReport(
 		},
 		suggestions,
 	};
-}
-
-/**
- * Collapses an emptied array back to `undefined` so a report whose fixes or
- * suggestions all failed to map is not treated as having an (empty) change,
- * which would otherwise rewrite the file unchanged and re-trigger fix passes.
- */
-function nullIfEmpty<T>(values: T[]): T[] | undefined {
-	return values.length ? values : undefined;
 }

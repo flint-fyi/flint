@@ -59,7 +59,7 @@ describe(createTypeScriptProjectSession, () => {
 		const [project] = snapshot.getProjects();
 
 		expect(project?.configFileName).toMatch(
-			/^\/repo\/node_modules\/\.cache\/flint\/typescript-overlays\//,
+			/^\/repo\/node_modules\/flint-typescript-overlays\//,
 		);
 		expect(project?.program.getSourceFile(indexFilePath)?.text).toBe(
 			"export const value = 1;",

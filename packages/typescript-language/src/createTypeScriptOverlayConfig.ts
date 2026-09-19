@@ -52,9 +52,14 @@ export function createTypeScriptOverlayConfig(
 		.slice(0, 16);
 
 	return {
+		// The overlay is a virtual file that is never written to disk, so this
+		// path only has to be somewhere TypeScript will read and watch it. It
+		// deliberately avoids `node_modules/.cache`: TypeScript ignores change
+		// notifications for any path under a dot-directory inside node_modules,
+		// which would leave a project on a stale overlay after it changes.
 		filePath: path.join(
 			currentDirectory,
-			"node_modules/.cache/flint/typescript-overlays",
+			"node_modules/flint-typescript-overlays",
 			`${hash}.json`,
 		),
 		sourceText: JSON.stringify({
