@@ -8,7 +8,6 @@ import {
 	runContentMapper,
 	type ContentMapperProject,
 	type ContentMapperTransformSource,
-	type RunContentMapperOptions,
 	type TransformParams,
 	type TransformResult,
 } from "@flint.fyi/content-mapper";
@@ -188,16 +187,14 @@ function normalizeAstroMappings(
 	}));
 }
 
-const contentMapperOptions = {
-	diagnosticSource: "astro",
-	openProject: openAstroProject,
-} satisfies RunContentMapperOptions;
-
 /** Starts the Astro content-mapper JSON-RPC server over stdio. */
 export async function runAstroContentMapper(): Promise<void> {
-	await runContentMapper(contentMapperOptions);
+	await runContentMapper({
+		diagnosticSource: "astro",
+		openProject: openAstroProject,
+	});
 }
 
 if (isModuleEntry(import.meta.url)) {
-	await runContentMapper(contentMapperOptions);
+	await runAstroContentMapper();
 }

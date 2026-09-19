@@ -10,7 +10,6 @@ import {
 	type ContentMapperProject,
 	type OpenProjectParams,
 	type OptionDiagnostic,
-	type RunContentMapperOptions,
 	type TransformParams,
 	type TransformResult,
 } from "@flint.fyi/content-mapper";
@@ -105,16 +104,14 @@ function validateOptions(options: unknown): OptionDiagnostic[] {
 	}));
 }
 
-const contentMapperOptions = {
-	diagnosticSource: "svelte",
-	openProject: openSvelteProject,
-} satisfies RunContentMapperOptions;
-
 /** Starts the Svelte content-mapper JSON-RPC server over stdio. */
 export async function runSvelteContentMapper(): Promise<void> {
-	await runContentMapper(contentMapperOptions);
+	await runContentMapper({
+		diagnosticSource: "svelte",
+		openProject: openSvelteProject,
+	});
 }
 
 if (isModuleEntry(import.meta.url)) {
-	await runContentMapper(contentMapperOptions);
+	await runSvelteContentMapper();
 }

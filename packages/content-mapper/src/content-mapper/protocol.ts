@@ -80,7 +80,6 @@ export interface RunContentMapperOptions {
 		params: OpenProjectParams,
 	) => ContentMapperProject | Promise<ContentMapperProject>;
 	output?: Writable;
-	transformFailureCode?: number;
 }
 
 export type SpanMapping = [

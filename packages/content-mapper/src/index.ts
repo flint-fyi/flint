@@ -2,22 +2,22 @@ export {
 	type ContentMapperTransformSource,
 	createContentMapperTransform,
 } from "./content-mapper/createContentMapperTransform.ts";
-export type {
-	ContentMapperProject,
-	ContentMapperTransform,
-	DiagnosticDirectives,
-	MappedDiagnosticDirective,
-	MappedOutput,
-	MapperDiagnostic,
-	OpenProjectParams,
-	OptionDiagnostic,
-	PositionEncoding,
-	RunContentMapperOptions,
-	SpanMapping,
-	TransformParams,
-	TransformResult,
+export {
+	type ContentMapperProject,
+	type ContentMapperTransform,
+	type DiagnosticDirectives,
+	type MappedDiagnosticDirective,
+	type MappedOutput,
+	type MapperDiagnostic,
+	type OpenProjectParams,
+	type OptionDiagnostic,
+	type PositionEncoding,
+	type RunContentMapperOptions,
+	type SpanMapping,
+	TRANSFORM_FAILURE_CODE,
+	type TransformParams,
+	type TransformResult,
 } from "./content-mapper/protocol.ts";
-export { TRANSFORM_FAILURE_CODE } from "./content-mapper/protocol.ts";
 export {
 	isModuleEntry,
 	runContentMapper,

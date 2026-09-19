@@ -17,7 +17,7 @@ import {
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
 
-import { errorToLanguageReport } from "./errorToLanguageReport.ts";
+import { errorToSvelteFailure } from "./errorToLanguageReport.ts";
 
 const sveltePath = path.dirname(
 	url.fileURLToPath(import.meta.resolve("svelte/package.json")),
@@ -78,17 +78,18 @@ function errorToMapperDiagnostic(
 	error: unknown,
 	contentLength: number,
 ): MapperDiagnostic {
-	const report = errorToLanguageReport("", error);
-	const messageText = report.text.replace(/^(?::\d+:\d+)? - /, "");
+	const failure = errorToSvelteFailure(error);
 	// Svelte's string codes have no home in the protocol's numeric `code`, so
 	// keep them in the message and report the generic transform-failure code.
 	return {
 		code: TRANSFORM_FAILURE_CODE,
-		length: report.range
-			? report.range.end - report.range.begin
+		length: failure.range
+			? failure.range.end - failure.range.begin
 			: contentLength,
-		messageText: report.code ? `${messageText} (${report.code})` : messageText,
-		start: report.range?.begin ?? 0,
+		messageText: failure.code
+			? `${failure.message} (${failure.code})`
+			: failure.message,
+		start: failure.range?.begin ?? 0,
 	};
 }
 

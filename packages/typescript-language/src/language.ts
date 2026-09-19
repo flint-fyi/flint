@@ -327,7 +327,6 @@ export const typescriptLanguage: Language<
 				) as AST.SourceFile);
 			};
 			const services: TypeScriptFileServices = {
-				host,
 				get program() {
 					return getProject().program;
 				},
