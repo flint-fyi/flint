@@ -27,6 +27,7 @@
 	"dependencies": {
 		"@altano/repository-tools": "catalog:prod",
 		"@flint.fyi/utils": "workspace:^",
+		"@standard-schema/spec": "catalog:prod",
 		"cached-factory": "catalog:prod",
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",

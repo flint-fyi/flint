@@ -47,7 +47,7 @@ catalogs:
     lint-staged: 17.5.1
     pkg-pr-new: 0.0.88
     prettier: 3.8.1
-    prettier-plugin-astro: 1.0.0
+    prettier-plugin-astro: 1.0.1
     prettier-plugin-curly: 0.4.1
     prettier-plugin-packagejson: 3.0.2
     prettier-plugin-sentences-per-line: 0.2.4
@@ -73,7 +73,7 @@ catalogs:
     "@typescript-eslint/eslint-plugin": 8.70.0
     "@vitest/eslint-plugin": 1.6.27
     eslint: 10.10.0
-    eslint-plugin-astro: 3.2.0
+    eslint-plugin-astro: 3.2.1
     eslint-plugin-eslint-plugin: 7.6.2
     eslint-plugin-import: 2.32.0
     eslint-plugin-jsdoc: 64.5.2
@@ -105,6 +105,7 @@ catalogs:
     "@humanwhocodes/momoa": ^3.3.10
     "@jridgewell/sourcemap-codec": ^1.5.5
     "@shikijs/cli": ^4.0.0
+    "@standard-schema/spec": ^1.1.0
     "@types/css-tree": 3.2.0
     "@types/mdast": ^4.0.4
     "@types/unist": ^3.0.3
