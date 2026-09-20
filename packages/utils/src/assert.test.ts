@@ -49,7 +49,7 @@ describe("addFlintAssertionContext", () => {
 
 	it("enriches errors without a stack", () => {
 		const error = new FlintAssertionError("MSG");
-		delete error.stack;
+		error.stack = undefined;
 
 		addFlintAssertionContext(error, []);
 
