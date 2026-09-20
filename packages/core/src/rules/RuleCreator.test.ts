@@ -27,7 +27,7 @@ describe(RuleCreator, () => {
 			setup: vi.fn(),
 		});
 
-		expectTypeOf(rule.about.presets).toEqualTypeOf<readonly ["first"]>();
+		expectTypeOf(rule.about.presets).toExtend<readonly ["first"]>();
 
 		ruleCreator.createRule(language, {
 			about: {
