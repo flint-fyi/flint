@@ -249,6 +249,39 @@ describe(createTypeScriptProjectSession, () => {
 		);
 	});
 
+	it("resolves files outside every configured project to the inferred project", () => {
+		const host = createHost();
+		const looseFilePath = "/repo/loose.ts";
+		host.vfsUpsertFile(looseFilePath, "export const loose = 1;");
+		using session = createTypeScriptProjectSession(host);
+		const snapshot = session.update({
+			openFiles: [indexFilePath, looseFilePath],
+		});
+
+		expect(session.getProjectForFile(indexFilePath)?.configFileName).toBe(
+			configFilePath,
+		);
+		expect(session.getProjectForFile(looseFilePath)).toBe(
+			snapshot.getDefaultProjectForFile(looseFilePath),
+		);
+		expect(session.getProjectForFile(looseFilePath)?.configFileName).toBe(
+			"/dev/null/inferred",
+		);
+	});
+
+	it("keeps answering existence probes for hosts that may shadow the disk", () => {
+		const host = createHost();
+		// Files only the host knows about have to reach TypeScript through the
+		// delegated file system: it cannot find them on disk.
+		host.vfsUpsertFile("/repo/src/other.ts", "export const other = 2;");
+		using session = createTypeScriptProjectSession(host);
+		const snapshot = session.update({ openProjects: [configFilePath] });
+
+		expect(
+			snapshot.getProject(configFilePath)?.program.getSourceFileNames(),
+		).toEqual(["/repo/src/index.ts", "/repo/src/other.ts"]);
+	});
+
 	it("replaces snapshots and propagates changed files", () => {
 		const host = createHost();
 		using session = createTypeScriptProjectSession(host);

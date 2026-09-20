@@ -66,6 +66,29 @@ describe(createTypeScriptFileSystem, () => {
 		});
 	});
 
+	it("answers only reads when probes are disabled", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile("/repo/src/index.ts", "export {};");
+		const virtualFilePath = "/repo/node_modules/overlays/tsconfig.json";
+		const accessed: string[] = [];
+		const fileSystem = createTypeScriptFileSystem(
+			host,
+			(fileName) => accessed.push(fileName),
+			virtualFilesOf([[virtualFilePath, "{}"]]),
+			{ probes: false },
+		);
+
+		expect(Object.keys(fileSystem)).toEqual(["readFile"]);
+		expect(fileSystem.readFile?.("/repo/src/index.ts")).toBe("export {};");
+		expect(fileSystem.readFile?.(virtualFilePath)).toBe("{}");
+		expect(fileSystem.readFile?.("/repo/missing.ts")).toBeNull();
+		expect(accessed).toEqual([
+			"/repo/src/index.ts",
+			virtualFilePath,
+			"/repo/missing.ts",
+		]);
+	});
+
 	it("does not override native realpath handling", () => {
 		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
 

@@ -7,11 +7,33 @@ import { getPathInsideDirectory } from "@flint.fyi/utils";
 
 import { createVirtualFiles, type VirtualFiles } from "./createVirtualFiles.ts";
 
+export interface TypeScriptFileSystemOptions {
+	/**
+	 * Whether to answer TypeScript's existence checks and directory listings
+	 * as well as its file reads. Only a host that may report files the disk
+	 * does not hold needs that: every answer is a synchronous round trip out
+	 * of the native process, and TypeScript probes each ancestor directory of
+	 * every opened file for a config, which adds up to thousands of probes
+	 * per lint pass. Flint's own virtual files only ever need reads.
+	 */
+	probes?: boolean;
+}
+
 export function createTypeScriptFileSystem(
 	host: LinterHost,
 	onFileAccess?: (fileName: string) => void,
 	virtualFiles: VirtualFiles = createVirtualFiles(),
+	{ probes = true }: TypeScriptFileSystemOptions = {},
 ): FileSystem {
+	const readFile: FileSystem["readFile"] = (fileName) => {
+		onFileAccess?.(fileName);
+		return virtualFiles.get(fileName) ?? host.readFileSync(fileName) ?? null;
+	};
+
+	if (!probes) {
+		return { readFile };
+	}
+
 	const getVirtualAccessibleEntries = (
 		directoryName: string,
 	): { directories: Set<string>; files: Set<string> } => {
@@ -82,9 +104,6 @@ export function createTypeScriptFileSystem(
 				files: [...files],
 			};
 		},
-		readFile: (fileName) => {
-			onFileAccess?.(fileName);
-			return virtualFiles.get(fileName) ?? host.readFileSync(fileName) ?? null;
-		},
+		readFile,
 	};
 }

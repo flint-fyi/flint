@@ -49,6 +49,16 @@ describe(createVFSLinterHost, () => {
 		expect(host.isCaseSensitiveFS()).toEqual(true);
 	});
 
+	it("never claims to be a direct view of the disk, even over a base host that is", () => {
+		const baseHost = {
+			...createVFSLinterHost({ caseSensitive: true, cwd: "/root" }),
+			isDiskBacked: true,
+		};
+		const host = createVFSLinterHost({ baseHost });
+
+		expect(host.isDiskBacked).toBeUndefined();
+	});
+
 	it("does not find repository roots", () => {
 		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 
