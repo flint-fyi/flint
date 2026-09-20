@@ -377,9 +377,10 @@ setVolarCreateFile((data, program, sourceFile) => {
 						convertTypeScriptDiagnosticToLanguageReport(
 							{
 								...diagnostic,
-								// For some unknown reason, Volar doesn't set file.text to sourceText
-								// when preventLeadingOffset is true, so we have to do it ourselves
-								// https://github.com/volarjs/volar.js/blob/4a9d25d797d08d9c149bebf0f52ac5e172f4757d/packages/typescript/lib/node/transform.ts#L102
+								// Volar only patches diagnostic.file.text with the original source when the
+								// generated code has a leading offset (a length-preserving in-place swap).
+								// We set preventLeadingOffset, so we supply the source text ourselves.
+								// https://github.com/volarjs/volar.js/blob/4a9d25d797d08d9c149bebf0f52ac5e172f4757d/packages/typescript/lib/node/transform.ts#L96-L107
 								file: diagnostic.file
 									? {
 											fileName: diagnostic.file.fileName,
