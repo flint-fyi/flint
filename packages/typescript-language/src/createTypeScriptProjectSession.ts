@@ -16,6 +16,7 @@ import {
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 import { createTypeScriptOverlayConfig } from "./createTypeScriptOverlayConfig.ts";
 import { createVirtualFiles } from "./createVirtualFiles.ts";
+import { createDefaultProjectResolver } from "./resolveDefaultProjectForFile.ts";
 
 export interface TypeScriptProjectChanges {
 	changed?: string[];
@@ -78,6 +79,9 @@ export function createTypeScriptProjectSession(
 		),
 		runExternalCode: true,
 	});
+	const resolveDefaultProject = createDefaultProjectResolver((fileName) =>
+		api.getCanonicalFileName(fileName),
+	);
 	let snapshot: Snapshot;
 	try {
 		snapshot = api.updateSnapshot();
@@ -327,7 +331,7 @@ export function createTypeScriptProjectSession(
 			assertActive();
 			const mapped = mappedExtensions.has(path.extname(filePath));
 			if (!mapped && !overlayPathByAuthoredConfigPath.size) {
-				return snapshot.getDefaultProjectForFile(filePath);
+				return resolveDefaultProject(snapshot, filePath);
 			}
 			const configFilePath = findConfigFile(filePath);
 			const overlayPath =
@@ -343,7 +347,7 @@ export function createTypeScriptProjectSession(
 			// project instead.
 			return overlayProject && overlayProject.program.getSourceFile(filePath)
 				? overlayProject
-				: snapshot.getDefaultProjectForFile(filePath);
+				: resolveDefaultProject(snapshot, filePath);
 		},
 		getSnapshot() {
 			assertActive();
