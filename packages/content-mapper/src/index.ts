@@ -23,8 +23,5 @@ export {
 	SpanMappingFeature,
 	SpanMappingKind,
 } from "./content-mapper/protocol.ts";
-export {
-	isModuleEntry,
-	runContentMapper,
-} from "./content-mapper/runContentMapper.ts";
+export { runContentMapper } from "./content-mapper/runContentMapper.ts";
 export { reportSourceCode } from "./language.ts";

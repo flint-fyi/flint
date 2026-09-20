@@ -1,6 +1,4 @@
-import path from "node:path";
 import { stdin, stdout } from "node:process";
-import url from "node:url";
 
 import {
 	TRANSFORM_FAILURE_CODE,
@@ -26,21 +24,6 @@ interface JsonRpcRequest {
 
 const MAXIMUM_HEADER_BYTES = 8 * 1024;
 const CONTENT_LENGTH_MARKER = "content-length:";
-
-/**
- * Whether the module at `moduleUrl` is what this process was started to run.
- *
- * Content mappers are exec'd directly, but their modules are also imported by
- * thin wrapper packages (`@flint.fyi/vue` re-exporting `@flint.fyi/vue-language`)
- * that are themselves the exec'd entry. Each entry guards on its own URL so
- * only the one actually being run starts a server.
- */
-export function isModuleEntry(moduleUrl: string): boolean {
-	return (
-		!!process.argv[1] &&
-		path.resolve(process.argv[1]) === url.fileURLToPath(moduleUrl)
-	);
-}
 
 export async function runContentMapper({
 	diagnosticSource,

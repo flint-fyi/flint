@@ -4,7 +4,6 @@ import { astro2tsx } from "@astrojs/ts-plugin/dist/astro2tsx.js";
 
 import {
 	createContentMapperTransform,
-	isModuleEntry,
 	runContentMapper,
 	SpanMappingKind,
 	type ContentMapperProject,
@@ -198,7 +197,10 @@ export async function runAstroContentMapper(): Promise<void> {
 	});
 }
 
-if (isModuleEntry(import.meta.url)) {
+// Thin wrapper packages (`@flint.fyi/astro` re-exporting `@flint.fyi/astro-language`)
+// import this module as their own exec'd entry, so only start a server when
+// this module itself is the entry.
+if (import.meta.main) {
 	// This is the process entry point when TypeScript spawns the mapper, so
 	// nothing imports it and there is nothing for the await to delay.
 	// flint-disable-next-line ts/topLevelAwaits

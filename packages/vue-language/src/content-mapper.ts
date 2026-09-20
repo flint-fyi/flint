@@ -1,6 +1,3 @@
-import path from "node:path";
-import url from "node:url";
-
 /**
  * Runs Vue's content mapper by handing this process over to `vize`.
  *
@@ -15,13 +12,9 @@ export async function runVueContentMapper(): Promise<void> {
 	await import(new URL("../bin/vize", import.meta.resolve("vize")).href);
 }
 
-// Deliberately not `isModuleEntry` from `@flint.fyi/content-mapper`: importing
-// that package pulls its stdio server into this process, and vize's CLI needs
-// stdin untouched.
-if (
-	process.argv[1] &&
-	path.resolve(process.argv[1]) === url.fileURLToPath(import.meta.url)
-) {
+// `@flint.fyi/vue` re-exports this module as its own exec'd entry, so only
+// hand the process to vize when this module itself is the entry.
+if (import.meta.main) {
 	// This is the process entry point when TypeScript spawns the mapper, so
 	// nothing imports it and there is nothing for the await to delay.
 	// flint-disable-next-line ts/topLevelAwaits

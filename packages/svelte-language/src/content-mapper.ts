@@ -5,7 +5,6 @@ import path from "node:path";
 import url from "node:url";
 
 import {
-	isModuleEntry,
 	runContentMapper,
 	type ContentMapperProject,
 	type OpenProjectParams,
@@ -112,7 +111,10 @@ export async function runSvelteContentMapper(): Promise<void> {
 	});
 }
 
-if (isModuleEntry(import.meta.url)) {
+// Thin wrapper packages (`@flint.fyi/svelte` re-exporting `@flint.fyi/svelte-language`)
+// import this module as their own exec'd entry, so only start a server when
+// this module itself is the entry.
+if (import.meta.main) {
 	// This is the process entry point when TypeScript spawns the mapper, so
 	// nothing imports it and there is nothing for the await to delay.
 	// flint-disable-next-line ts/topLevelAwaits
