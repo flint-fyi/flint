@@ -33,9 +33,10 @@ export interface ConfigDefinition {
 	cacheLocation?: string;
 
 	/**
+	 * Path to another config that this one should extend from
 	 * @see https://github.com/flint-fyi/flint/issues/64
 	 */
-	from?: string;
+	extends?: string;
 
 	/**
 	 * A list of glob patterns to ignore from linting.
