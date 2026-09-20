@@ -1,6 +1,5 @@
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
-import omitEmpty from "omit-empty";
 
 import type { CacheStorage, GlobalInvalidation } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -8,7 +7,7 @@ import type { LintResults } from "../types/linting.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function writeToCache(
 	host: LinterHost,
@@ -50,9 +49,13 @@ export async function writeToCache(
 					([filePath, fileResults]) => [
 						filePath,
 						{
-							...omitEmpty({
+							...(fileResults.dependencies.size && {
 								dependencies: Array.from(fileResults.dependencies).sort(),
+							}),
+							...(fileResults.languageReports.length && {
 								languageReports: fileResults.languageReports,
+							}),
+							...(fileResults.reports.length && {
 								reports: fileResults.reports,
 							}),
 							timestamp,

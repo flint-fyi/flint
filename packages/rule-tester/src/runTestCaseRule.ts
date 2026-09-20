@@ -96,7 +96,7 @@ export async function runTestCaseRule<
 
 	return {
 		languageReports: collectLanguageReports
-			? (rule.language.getLanguageReports?.(file) ?? [])
+			? (rule.language.getLanguageReports?.(file, linterHost) ?? [])
 			: [],
 		reports: reports.toSorted(
 			(a, b) =>

@@ -10,7 +10,7 @@ import type { LanguageReport } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { LanguageAndFile } from "./types.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export interface FinalizedFileResults {
 	dependencies: Set<string>;
@@ -72,7 +72,7 @@ export function finalizeFileResults(
 				language.about.name,
 				filePath,
 			);
-			languageReports.push(...language.getLanguageReports(file));
+			languageReports.push(...language.getLanguageReports(file, host));
 			log(
 				"Retrieved %s language reports for file %s",
 				language.about.name,
