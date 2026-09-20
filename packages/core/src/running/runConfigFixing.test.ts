@@ -85,7 +85,10 @@ describe(runConfigFixing, () => {
 		expect(visit).toHaveBeenCalledTimes(1);
 		expect(results.changed).toEqual(new Set());
 		expect(host.readFileSync(filePath)).toBe("abc");
-		expect(writeFile).not.toHaveBeenCalled();
+		expect(writeFile).toHaveBeenCalledExactlyOnceWith(
+			cacheLocation,
+			expect.any(String),
+		);
 		expect(
 			results.allFileResults.get(filePath)?.reports.map((report) => report.fix),
 		).toEqual([[]]);
@@ -102,7 +105,10 @@ describe(runConfigFixing, () => {
 		expect(visit).toHaveBeenCalledTimes(1);
 		expect(results.changed).toEqual(new Set());
 		expect(host.readFileSync(filePath)).toBe("abc");
-		expect(writeFile).not.toHaveBeenCalled();
+		expect(writeFile).toHaveBeenCalledExactlyOnceWith(
+			cacheLocation,
+			expect.any(String),
+		);
 		expect(
 			results.allFileResults.get(filePath)?.reports.map((report) => report.fix),
 		).toEqual([[]]);
