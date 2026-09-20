@@ -25,6 +25,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		// Whether a symbol is deprecated never changes within a lint run, and
+		// finding out re-reads its JSDoc and walks its alias chain, so each
+		// answer is kept for the (many) later references to the same symbol.
+		const jsDocDeprecationBySymbol = new WeakMap<ts.Symbol, boolean>();
+		const aliasChainDeprecationBySymbol = new WeakMap<ts.Symbol, boolean>();
+		const aliasChainTargetDeprecationBySymbol = new WeakMap<
+			ts.Symbol,
+			boolean
+		>();
+
 		function getJsDocDeprecation(
 			symbol: ts.Signature | ts.Symbol | undefined,
 			typeChecker: ts.TypeChecker,
@@ -33,6 +43,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
+			if (!("getDeclarations" in symbol)) {
+				return getJsDocDeprecationUncached(symbol, typeChecker);
+			}
+
+			let deprecated = jsDocDeprecationBySymbol.get(symbol);
+			if (deprecated === undefined) {
+				deprecated = getJsDocDeprecationUncached(symbol, typeChecker);
+				jsDocDeprecationBySymbol.set(symbol, deprecated);
+			}
+			return deprecated;
+		}
+
+		function getJsDocDeprecationUncached(
+			symbol: ts.Signature | ts.Symbol,
+			typeChecker: ts.TypeChecker,
+		) {
 			let jsDocTags: ts.JSDocTagInfo[] | undefined;
 			try {
 				jsDocTags = symbol.getJsDocTags(typeChecker);
@@ -63,6 +89,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
+			const cache = checkAliasedSymbol
+				? aliasChainTargetDeprecationBySymbol
+				: aliasChainDeprecationBySymbol;
+			let deprecated = cache.get(symbol);
+			if (deprecated === undefined) {
+				deprecated = searchForDeprecationInAliasesChainUncached(
+					symbol,
+					typeChecker,
+					checkAliasedSymbol,
+				);
+				cache.set(symbol, deprecated);
+			}
+			return deprecated;
+		}
+
+		function searchForDeprecationInAliasesChainUncached(
+			symbol: ts.Symbol,
+			typeChecker: ts.TypeChecker,
+			checkAliasedSymbol: boolean,
+		) {
 			if (!(symbol.flags & ts.SymbolFlags.Alias)) {
 				return !!(
 					checkAliasedSymbol &&
