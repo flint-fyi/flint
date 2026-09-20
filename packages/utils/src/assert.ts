@@ -8,15 +8,38 @@ export class FlintAssertionError extends Error {
 	}
 }
 
+export function addFlintAssertionContext(
+	error: unknown,
+	processArguments: string[],
+): unknown {
+	if (!(error instanceof FlintAssertionError)) {
+		return error;
+	}
+
+	const originalHeader = `${error.name}: ${error.message}`;
+	error.message += ` Please report it here: ${buildIssueUrl(error, processArguments)}`;
+	if (error.stack?.startsWith(originalHeader)) {
+		error.stack =
+			`${error.name}: ${error.message}` +
+			error.stack.slice(originalHeader.length);
+	}
+	return error;
+}
+
 export function assert(x: unknown, message: string): asserts x {
 	if (!x) {
 		throw new FlintAssertionError(message);
 	}
 }
 
-export function buildIssueUrl(
+export function nullThrows<T>(x: T, message: string): NonNullable<T> {
+	assert(x != null, message);
+	return x;
+}
+
+function buildIssueUrl(
 	error: FlintAssertionError,
-	processArguments?: string[],
+	processArguments: string[],
 ): string {
 	const issueUrl = new URL("https://github.com/flint-fyi/flint/issues/new");
 	issueUrl.searchParams.set("template", "04-general-bug.yaml");
@@ -40,22 +63,15 @@ export function buildIssueUrl(
 
 	issueUrl.searchParams.set("title", `🐛 Bug: ${error.assertionMessage}`);
 	issueUrl.searchParams.set("actual", body);
-	if (processArguments) {
-		issueUrl.searchParams.set(
-			"additional_info",
-			[
-				"Process arguments:",
-				"",
-				"`" + (processArguments.join(" ") || "<none>") + "`",
-			].join("\n"),
-		);
-	}
+	issueUrl.searchParams.set(
+		"additional_info",
+		[
+			"Process arguments:",
+			"",
+			"`" + (processArguments.join(" ") || "<none>") + "`",
+		].join("\n"),
+	);
 	return issueUrl.toString();
-}
-
-export function nullThrows<T>(x: T, message: string): NonNullable<T> {
-	assert(x != null, message);
-	return x;
 }
 
 /** @internal */

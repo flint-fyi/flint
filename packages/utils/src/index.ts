@@ -1,6 +1,6 @@
 export {
+	addFlintAssertionContext,
 	assert,
-	buildIssueUrl,
 	FlintAssertionError,
 	nullThrows,
 } from "./assert.ts";
