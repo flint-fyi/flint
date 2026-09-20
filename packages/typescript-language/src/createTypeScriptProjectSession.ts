@@ -76,9 +76,7 @@ export function createTypeScriptProjectSession(
 				);
 			},
 			virtualFiles,
-			// A host that mirrors the disk gains nothing from answering
-			// TypeScript's existence probes itself; TypeScript can ask the disk.
-			{ probes: !host.isDiskBacked },
+			{ diskBacked: !!host.isDiskBacked },
 		),
 		runExternalCode: true,
 	});

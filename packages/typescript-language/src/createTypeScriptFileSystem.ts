@@ -9,29 +9,33 @@ import { createVirtualFiles, type VirtualFiles } from "./createVirtualFiles.ts";
 
 export interface TypeScriptFileSystemOptions {
 	/**
-	 * Whether to answer TypeScript's existence checks and directory listings
-	 * as well as its file reads. Only a host that may report files the disk
-	 * does not hold needs that: every answer is a synchronous round trip out
-	 * of the native process, and TypeScript probes each ancestor directory of
-	 * every opened file for a config, which adds up to thousands of probes
-	 * per lint pass. Flint's own virtual files only ever need reads.
+	 * Whether the host is a direct view of the disk. TypeScript can then read
+	 * the disk itself: only Flint's virtual files are served, and the rest of
+	 * the file system is not delegated at all. Every delegated answer is a
+	 * synchronous round trip out of the native process — TypeScript probes
+	 * each ancestor directory of every opened file for a config, and shipping
+	 * file contents through the channel costs a read and a serialization per
+	 * file — so a host that can be bypassed is.
 	 */
-	probes?: boolean;
+	diskBacked?: boolean;
 }
 
 export function createTypeScriptFileSystem(
 	host: LinterHost,
 	onFileAccess?: (fileName: string) => void,
 	virtualFiles: VirtualFiles = createVirtualFiles(),
-	{ probes = true }: TypeScriptFileSystemOptions = {},
+	{ diskBacked = false }: TypeScriptFileSystemOptions = {},
 ): FileSystem {
-	const readFile: FileSystem["readFile"] = (fileName) => {
-		onFileAccess?.(fileName);
-		return virtualFiles.get(fileName) ?? host.readFileSync(fileName) ?? null;
-	};
-
-	if (!probes) {
-		return { readFile };
+	if (diskBacked) {
+		return {
+			// Reads are still delegated so every file TypeScript touches is
+			// observed for change detection, but `undefined` for anything not
+			// virtual sends TypeScript to the disk for the contents.
+			readFile: (fileName) => {
+				onFileAccess?.(fileName);
+				return virtualFiles.get(fileName);
+			},
+		};
 	}
 
 	const getVirtualAccessibleEntries = (
@@ -104,6 +108,9 @@ export function createTypeScriptFileSystem(
 				files: [...files],
 			};
 		},
-		readFile,
+		readFile: (fileName) => {
+			onFileAccess?.(fileName);
+			return virtualFiles.get(fileName) ?? host.readFileSync(fileName) ?? null;
+		},
 	};
 }
