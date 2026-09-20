@@ -1,6 +1,7 @@
 import { CachedFactory } from "cached-factory";
+import { resolve } from "pathe";
 
-import { makeAbsolute, nullThrows } from "@flint.fyi/utils";
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -32,7 +33,7 @@ export function collectLanguageFilesByFilePath(
 		return new CachedFactory((filePath: string) =>
 			fileFactory.createFile({
 				filePath,
-				filePathAbsolute: makeAbsolute(filePath),
+				filePathAbsolute: resolve(host.getCurrentDirectory(), filePath),
 				sourceText: nullThrows(
 					// TODO: switch to read this async
 					host.readFileSync(filePath),

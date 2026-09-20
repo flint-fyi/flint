@@ -108,12 +108,11 @@ export const vueLanguage: VolarLanguage<VueServices> = createVolarBasedLanguage(
 					firstStatementPosition:
 						sfcAst.children.find((c) => c.type !== NodeTypes.COMMENT)?.loc.start
 							.offset ?? sourceText.length,
-					getLanguageReports() {
+					getLanguageReports(currentDirectory) {
 						return vueParsingErrorsToLanguageReports(
 							sourceFile.fileName.startsWith("./")
 								? sourceFile.fileName.slice(2)
-								: // TODO: use LinterHost.getCurrentDirectory()
-									sourceFile.fileName.slice(process.cwd().length + 1),
+								: sourceFile.fileName.slice(currentDirectory.length + 1),
 							virtualCode.vueSfc?.errors ?? [],
 						);
 					},
