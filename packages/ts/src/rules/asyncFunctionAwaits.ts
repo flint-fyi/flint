@@ -4,6 +4,7 @@ import type { Checker, Symbol, Type } from "typescript-native/unstable/sync";
 import {
 	forEachChild,
 	getTSNodeRange,
+	getTypeProperty,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -180,7 +181,7 @@ function isThenableType(typeChecker: Checker, node: AST.AnyNode): boolean {
 	for (const constituent of getUnionConstituents(
 		typeChecker.getApparentType(typeChecker.getTypeAtLocation(node)),
 	)) {
-		const then = constituent.getProperty("then");
+		const then = getTypeProperty(constituent, "then");
 		if (!then) {
 			continue;
 		}

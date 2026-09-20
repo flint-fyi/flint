@@ -11,6 +11,7 @@ import {
 
 import {
 	getTSNodeRange,
+	getTypeProperty,
 	typescriptLanguage,
 	type AST,
 	type Checker,
@@ -145,9 +146,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					return !!parent.heritageClauses?.some((heritageClause) =>
 						heritageClause.types.some((heritageType) => {
-							const baseProperty = typeChecker
-								.getTypeAtLocation(heritageType)
-								.getProperty(name.text);
+							const baseProperty = getTypeProperty(
+								typeChecker.getTypeAtLocation(heritageType),
+								name.text,
+							);
 							return (
 								baseProperty?.declarations.length === 1 &&
 								isDeprecatedFromDeclarations(baseProperty)
@@ -433,7 +435,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const property = objectType.getProperty(propertyName);
+			const property = getTypeProperty(objectType, propertyName);
 			if (
 				property &&
 				(getJsDocDeprecation(property, typeChecker) ||
@@ -478,7 +480,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const parentPropertyName =
 							declarationOrPattern.propertyName ?? declarationOrPattern.name;
 						if (parentPropertyName?.kind === SyntaxKind.Identifier) {
-							const prop = parentType.getProperty(parentPropertyName.text);
+							const prop = getTypeProperty(parentType, parentPropertyName.text);
 							if (prop) {
 								objectType = typeChecker.getTypeOfSymbolAtLocation(
 									prop,
@@ -491,7 +493,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (objectType) {
-				const property = objectType.getProperty(propertyName.text);
+				const property = getTypeProperty(objectType, propertyName.text);
 				if (
 					property &&
 					(getJsDocDeprecation(property, typeChecker) ||

@@ -2,6 +2,7 @@ import { SyntaxKind } from "typescript-native/unstable/ast";
 import type { Type, TypeReference } from "typescript-native/unstable/sync";
 
 import {
+	getTypeProperty,
 	typescriptLanguage,
 	type AST,
 	type Checker,
@@ -209,7 +210,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const propertySymbol = senderType.getProperty(key);
+				const propertySymbol = getTypeProperty(senderType, key);
 				if (!propertySymbol) {
 					continue;
 				}
@@ -470,7 +471,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const propertySymbol = contextualType.getProperty(key);
+					const propertySymbol = getTypeProperty(contextualType, key);
 					if (!propertySymbol) {
 						return;
 					}
@@ -528,7 +529,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const propertySymbol = contextualType.getProperty(
+					const propertySymbol = getTypeProperty(
+						contextualType,
 						(node.name as AST.Identifier).text,
 					);
 					if (!propertySymbol) {

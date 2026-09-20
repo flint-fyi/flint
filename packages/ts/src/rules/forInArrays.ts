@@ -1,6 +1,7 @@
 import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
+	getTypeProperty,
 	typescriptLanguage,
 	type Checker,
 } from "@flint.fyi/typescript-language";
@@ -31,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function hasNumberLikeLength(type: Type, typeChecker: Checker): boolean {
-			const lengthProperty = type.getProperty("length");
+			const lengthProperty = getTypeProperty(type, "length");
 
 			if (lengthProperty == null) {
 				return false;

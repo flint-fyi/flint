@@ -28,8 +28,8 @@ import { assert, nullThrows } from "@flint.fyi/utils";
 import packageJson from "../package.json" with { type: "json" };
 import { getTypeScriptContentMapperRegistrations } from "./contentMappers.ts";
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+import { createCachedChecker } from "./createCachedChecker.ts";
 import { createNodeVisitorsForFile } from "./createNodeVisitorsForFile.ts";
-import { createPrefetchingChecker } from "./createPrefetchingChecker.ts";
 import {
 	createTypeScriptProjectSession,
 	type TypeScriptProjectSession,
@@ -350,7 +350,7 @@ export const typescriptLanguage: Language<
 					return getSourceFile().spanMap;
 				},
 				get typeChecker() {
-					cachedTypeChecker ??= createPrefetchingChecker(
+					cachedTypeChecker ??= createCachedChecker(
 						getProject().checker,
 						getSourceFile(),
 					);

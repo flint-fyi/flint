@@ -5,7 +5,7 @@ import {
 	type TypeReference,
 } from "typescript-native/unstable/sync";
 
-import type { Checker } from "@flint.fyi/typescript-language";
+import { getTypeProperty, type Checker } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 
 export const AnyType = {
@@ -87,7 +87,7 @@ function getAwaitedTypesWorker(
 	let hasThenableConstituent = false;
 	for (const constituent of getTypeConstituents(type)) {
 		const apparentConstituent = typeChecker.getApparentType(constituent);
-		const thenSymbol = apparentConstituent.getProperty("then");
+		const thenSymbol = getTypeProperty(apparentConstituent, "then");
 		if (!thenSymbol) {
 			awaitedTypes.push(constituent);
 			continue;

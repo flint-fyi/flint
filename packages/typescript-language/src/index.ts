@@ -61,6 +61,7 @@ export {
 	getStaticValue,
 	type StaticValue,
 } from "./utils/getStaticValue.ts";
+export { getTypeProperty } from "./utils/getTypeProperty.ts";
 export { hasSameTokens } from "./utils/hasSameTokens.ts";
 export {
 	type BuiltInArrayMethodNode,
