@@ -240,8 +240,8 @@ catalogs:
       specifier: 10.10.0
       version: 10.10.0
     eslint-plugin-astro:
-      specifier: 3.2.0
-      version: 3.2.0
+      specifier: 3.2.1
+      version: 3.2.1
     eslint-plugin-eslint-plugin:
       specifier: 7.6.2
       version: 7.6.2
@@ -1639,7 +1639,7 @@ importers:
         version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-astro:
         specifier: catalog:comparisons
-        version: 3.2.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(@typescript-eslint/parser@8.70.0)(eslint-plugin-jsx-a11y@6.10.2)(eslint@10.10.0)(supports-color@10.2.2)(typescript-eslint@8.70.0)
+        version: 3.2.1(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(@typescript-eslint/parser@8.70.0)(eslint-plugin-jsx-a11y@6.10.2)(eslint@10.10.0)(supports-color@10.2.2)(typescript-eslint@8.70.0)
       eslint-plugin-eslint-plugin:
         specifier: catalog:comparisons
         version: 7.6.2(eslint@10.10.0)
@@ -5348,8 +5348,8 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
 
-  eslint-plugin-astro@3.2.0:
-    resolution: {integrity: sha512-Vs2mtVv1gpIq88ZnEPfctnR6ejEDvJEhbPHFVxYz/fkDZNi+B1sK4+acqBSMawhcE8K5VocaVrBy3RQ60S9oXA==}
+  eslint-plugin-astro@3.2.1:
+    resolution: {integrity: sha512-IgU7LIkpEg0r6bQGwc3Ck5jHgkUk3rOrEfRhUxDtMx/M0GD3SG/turMtvwj989KRR12Wt1l89faZ5ynjvVL7hg==}
     engines: {node: ^22.22.3 || ^24.16.0 || >=26.3.0}
     peerDependencies:
       '@typescript-eslint/parser': '>=8.61.0'
@@ -11498,7 +11498,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-astro@3.2.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(@typescript-eslint/parser@8.70.0)(eslint-plugin-jsx-a11y@6.10.2)(eslint@10.10.0)(supports-color@10.2.2)(typescript-eslint@8.70.0):
+  eslint-plugin-astro@3.2.1(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(@typescript-eslint/parser@8.70.0)(eslint-plugin-jsx-a11y@6.10.2)(eslint@10.10.0)(supports-color@10.2.2)(typescript-eslint@8.70.0):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.10.0)
       '@jridgewell/sourcemap-codec': 1.6.0
@@ -11509,6 +11509,7 @@ snapshots:
       globals: 17.12.0
       postcss: 8.5.28
       postcss-selector-parser: 7.1.6
+      synckit: 0.11.13
     optionalDependencies:
       '@typescript-eslint/parser': 8.70.0(eslint@10.10.0)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@10.10.0)
