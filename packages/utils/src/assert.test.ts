@@ -49,7 +49,8 @@ describe("addFlintAssertionContext", () => {
 
 	it("enriches errors without a stack", () => {
 		const error = new FlintAssertionError("MSG");
-		error.stack = undefined;
+		// flint-disable-next-line performance/deletes -- exactOptionalPropertyTypes prevents assigning undefined to Error.stack.
+		delete error.stack;
 
 		addFlintAssertionContext(error, []);
 
