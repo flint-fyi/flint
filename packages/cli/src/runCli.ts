@@ -1,6 +1,6 @@
 import { parseArgs } from "node:util";
 
-import { buildIssueUrl, FlintAssertionError } from "@flint.fyi/utils";
+import { addFlintAssertionContext } from "@flint.fyi/utils";
 
 import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
@@ -71,11 +71,6 @@ export async function runCli(args: string[]): Promise<number> {
 		return 0;
 	}
 
-	function printFlintAssertionError(error: FlintAssertionError): void {
-		console.error(error.stack);
-		console.error(`\nPlease report it here: ${buildIssueUrl(error, args)}`);
-	}
-
 	try {
 		const [
 			{ createEphemeralLinterHost, findConfigFileName },
@@ -109,13 +104,7 @@ export async function runCli(args: string[]): Promise<number> {
 
 		if (values.watch) {
 			const { runCliWatch } = await import("./runCliWatch.ts");
-			await runCliWatch(
-				host,
-				configFileName,
-				getRenderer,
-				values,
-				printFlintAssertionError,
-			);
+			await runCliWatch(host, configFileName, getRenderer, values, args);
 			console.log("👋 Thanks for using Flint!");
 			return 0;
 		}
@@ -135,10 +124,6 @@ export async function runCli(args: string[]): Promise<number> {
 			renderer.dispose?.();
 		}
 	} catch (error) {
-		if (error instanceof FlintAssertionError) {
-			printFlintAssertionError(error);
-			return 1;
-		}
-		throw error;
+		throw addFlintAssertionContext(error, args);
 	}
 }

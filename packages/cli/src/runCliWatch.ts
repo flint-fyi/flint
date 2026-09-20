@@ -7,7 +7,7 @@ import {
 	type LinterHost,
 	type LintResults,
 } from "@flint.fyi/core";
-import { FlintAssertionError, pathKey } from "@flint.fyi/utils";
+import { addFlintAssertionContext, pathKey } from "@flint.fyi/utils";
 
 import type { OptionsValues } from "./options.ts";
 import type { Renderer } from "./renderers/types.ts";
@@ -20,7 +20,7 @@ export async function runCliWatch(
 	configFileName: string,
 	getRenderer: () => Renderer,
 	values: OptionsValues,
-	onFlintAssertionError: (error: FlintAssertionError) => void,
+	args: string[],
 ): Promise<void> {
 	const cwd = host.getCurrentDirectory();
 	const isCaseSensitiveFS = host.isCaseSensitiveFS();
@@ -47,12 +47,10 @@ export async function runCliWatch(
 					}
 				},
 				(error: unknown) => {
-					if (error instanceof FlintAssertionError) {
-						onFlintAssertionError(error);
-						return;
-					}
-
-					log("Error during lint run: %o", error);
+					log(
+						"Error during lint run: %o",
+						addFlintAssertionContext(error, args),
+					);
 				},
 			);
 
