@@ -275,6 +275,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				case SyntaxKind.ImportClause:
 				case SyntaxKind.ImportSpecifier:
+				case SyntaxKind.NamespaceExport:
 				case SyntaxKind.NamespaceImport:
 					return true;
 

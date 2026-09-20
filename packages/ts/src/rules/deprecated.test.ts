@@ -1018,6 +1018,12 @@ const c = a[2];
 	],
 	valid: [
 		"function active() {} active();",
+		{
+			code: `export * as deprecatedModule from "./deprecated-module";`,
+			files: {
+				"deprecated-module.ts": `/** @deprecated */ export const value = 1;`,
+			},
+		},
 		"class Active { method() { this.method(); } }",
 		`/** @deprecated */
 function unused() {}
