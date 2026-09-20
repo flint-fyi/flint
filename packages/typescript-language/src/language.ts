@@ -6,6 +6,7 @@ import {
 	type Node as NativeNode,
 } from "typescript-native/unstable/ast";
 import type {
+	Checker,
 	Diagnostic,
 	Program,
 	Project,
@@ -28,6 +29,7 @@ import packageJson from "../package.json" with { type: "json" };
 import { getTypeScriptContentMapperRegistrations } from "./contentMappers.ts";
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 import { createNodeVisitorsForFile } from "./createNodeVisitorsForFile.ts";
+import { createPrefetchingChecker } from "./createPrefetchingChecker.ts";
 import {
 	createTypeScriptProjectSession,
 	type TypeScriptProjectSession,
@@ -302,6 +304,7 @@ export const typescriptLanguage: Language<
 			let cachedSnapshot: Snapshot | undefined;
 			let cachedProject: Project | undefined;
 			let cachedSourceFile: AST.SourceFile | undefined;
+			let cachedTypeChecker: Checker | undefined;
 			const getSnapshot = (): Snapshot => {
 				if (currentSessionState.disposed) {
 					throw new Error("TypeScript project session has been disposed.");
@@ -314,6 +317,7 @@ export const typescriptLanguage: Language<
 					cachedSnapshot = snapshot;
 					cachedProject = undefined;
 					cachedSourceFile = undefined;
+					cachedTypeChecker = undefined;
 				}
 				cachedProject ??= nullThrows(
 					currentSessionState.session.getProjectForFile(data.filePathAbsolute),
@@ -346,7 +350,11 @@ export const typescriptLanguage: Language<
 					return getSourceFile().spanMap;
 				},
 				get typeChecker() {
-					return getProject().checker;
+					cachedTypeChecker ??= createPrefetchingChecker(
+						getProject().checker,
+						getSourceFile(),
+					);
+					return cachedTypeChecker;
 				},
 			};
 			const dispose = (): void => {
