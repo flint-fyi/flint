@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/core",
-	"version": "0.26.0",
+	"version": "0.27.0",
 	"description": "[Experimental] Core building blocks for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -31,6 +31,7 @@
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
 		"omit-empty": "catalog:prod",
+		"pathe": "catalog:prod",
 		"picomatch": "catalog:prod",
 		"tinyglobby": "catalog:prod",
 		"zod": "catalog:prod"

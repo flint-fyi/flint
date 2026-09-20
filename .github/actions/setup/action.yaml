@@ -7,10 +7,11 @@ inputs:
     description: Cache the pnpm store
     required: false
     default: true
+  # renovate: datasource=node-version depName=node versioning=node
   node-version:
     description: The Node.js version to use
     required: false
-    default: 26.7.0
+    default: 26.8.2
   skip-checkout:
     description: Skip the checkout step if the repo is already checked out
     default: false

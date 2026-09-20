@@ -1,4 +1,3 @@
-import path from "node:path";
 import url from "node:url";
 
 import { decode } from "@jridgewell/sourcemap-codec";
@@ -8,6 +7,7 @@ import {
 	type LanguagePlugin,
 	type VirtualCode,
 } from "@volar/language-core";
+import { dirname } from "pathe";
 import type { CompileError } from "svelte/compiler";
 import { internalHelpers, svelte2tsx } from "svelte2tsx";
 import type ts from "typescript";
@@ -19,10 +19,10 @@ import {
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
 
-const sveltePath = path.dirname(
+const sveltePath = dirname(
 	url.fileURLToPath(import.meta.resolve("svelte/package.json")),
 );
-const svelte2tsxPath = path.dirname(
+const svelte2tsxPath = dirname(
 	url.fileURLToPath(import.meta.resolve("svelte2tsx/package.json")),
 );
 
@@ -32,7 +32,7 @@ export function volarLanguagePlugin(
 ): LanguagePlugin<string> {
 	const cwd =
 		typeof options.options.configFilePath === "string"
-			? path.dirname(options.options.configFilePath)
+			? dirname(options.options.configFilePath)
 			: (options.host ?? typescript.sys).getCurrentDirectory();
 	return {
 		createVirtualCode(fileName, languageId, snapshot) {

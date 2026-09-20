@@ -1,6 +1,5 @@
-import { resolve } from "node:path";
-
 import { debugForFile } from "debug-for-file";
+import { resolve } from "pathe";
 
 import { pathKey } from "@flint.fyi/utils";
 
@@ -11,7 +10,7 @@ import type { LanguageReport } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { LanguageAndFile } from "./types.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export interface FinalizedFileResults {
 	dependencies: Set<string>;
