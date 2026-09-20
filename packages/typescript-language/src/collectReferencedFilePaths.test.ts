@@ -1,7 +1,7 @@
 import path from "node:path";
 
 import { API, JsxEmit } from "typescript-native/unstable/sync";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { nullThrows } from "@flint.fyi/utils";
 
@@ -81,6 +81,57 @@ describe(collectReferencedFilePaths, () => {
 				"/repo/src/types.d.mts",
 			].map((fileName) => path.relative(process.cwd(), fileName)),
 		);
+
+		program.dispose();
+	});
+
+	it("reports root files without asking the native process about them", () => {
+		const files = new Map([
+			["/repo/src/index.ts", 'export * from "./root";\nimport "./loose";'],
+			["/repo/src/loose.ts", "export {};"],
+			["/repo/src/root.ts", "export const root = 1;"],
+		]);
+		const api = new API({
+			cwd: "/repo",
+			fs: {
+				directoryExists: (directoryName) =>
+					[...files].some(([fileName]) =>
+						fileName.startsWith(`${directoryName}/`),
+					),
+				fileExists: (fileName) => files.has(fileName),
+				readFile: (fileName) => files.get(fileName) ?? null,
+			},
+		});
+		const program = api.createProgram(
+			["/repo/src/index.ts", "/repo/src/root.ts"],
+			{
+				compilerOptions: { noLib: true },
+			},
+		);
+		const sourceFile = nullThrows(
+			program.getSourceFile("/repo/src/index.ts"),
+			"Expected the program source file.",
+		) as unknown as AST.SourceFile;
+		// The program's methods are lazily defined getters, which `vi.spyOn`
+		// cannot replace, so observe calls through an inheriting object instead.
+		const metadataSpy = vi.fn(program.getSourceFileMetadataByPath);
+		const observed = Object.create(program, {
+			getSourceFileMetadataByPath: { value: metadataSpy },
+		}) as typeof program;
+
+		expect(
+			collectReferencedFilePaths(
+				observed,
+				program.getProject().checker,
+				sourceFile,
+			).toSorted(),
+		).toEqual(
+			["/repo/src/loose.ts", "/repo/src/root.ts"].map((fileName) =>
+				path.relative(process.cwd(), fileName),
+			),
+		);
+		// Only the file that is not a root needed its metadata.
+		expect(metadataSpy).toHaveBeenCalledExactlyOnceWith("/repo/src/loose.ts");
 
 		program.dispose();
 	});

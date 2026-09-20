@@ -6,12 +6,19 @@ import type { Checker, Program } from "typescript-native/unstable/sync";
 import type * as AST from "./types/ast.ts";
 import { forEachChild } from "./utils/forEachChild.ts";
 
+// A program's root files, keyed by the canonical path its node handles carry.
+// Roots are the files a config names directly, so none of them was found by
+// searching node_modules: they can be reported as dependencies without
+// asking the native process about them, or fetching their trees.
+const rootFileNamesByProgram = new WeakMap<Program, Map<string, string>>();
+
 export function collectReferencedFilePaths(
 	program: Program,
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
 ): string[] {
 	const modulePaths = new Set<string>();
+	const rootFileNamesByPath = getRootFileNamesByPath(program);
 
 	function addModuleSpecifier(moduleSpecifier: AST.StringLiteral): void {
 		const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
@@ -20,12 +27,21 @@ export function collectReferencedFilePaths(
 		}
 
 		for (const declarationHandle of symbol.declarations) {
-			const declaration = declarationHandle.resolve();
-			const declarationSourceFile = declaration?.getSourceFile();
+			const rootFileName = rootFileNamesByPath.get(declarationHandle.path);
+			if (rootFileName !== undefined) {
+				modulePaths.add(path.relative(process.cwd(), rootFileName));
+				continue;
+			}
 			if (
-				declarationSourceFile &&
-				!program.isSourceFileFromExternalLibrary(declarationSourceFile)
+				program.getSourceFileMetadataByPath(declarationHandle.path)
+					?.isFromExternalLibrary !== false
 			) {
+				continue;
+			}
+			const declarationSourceFile = declarationHandle
+				.resolve()
+				?.getSourceFile();
+			if (declarationSourceFile) {
 				modulePaths.add(
 					path.relative(process.cwd(), declarationSourceFile.fileName),
 				);
@@ -89,4 +105,20 @@ function getModuleSpecifierNode(
 	}
 
 	return undefined;
+}
+
+function getRootFileNamesByPath(program: Program): Map<string, string> {
+	let rootFileNamesByPath = rootFileNamesByProgram.get(program);
+	if (!rootFileNamesByPath) {
+		rootFileNamesByPath = new Map(
+			program
+				.getProject()
+				.parsedCommandLine.fileNames.map((fileName) => [
+					program.getCanonicalFileName(fileName),
+					fileName,
+				]),
+		);
+		rootFileNamesByProgram.set(program, rootFileNamesByPath);
+	}
+	return rootFileNamesByPath;
 }
