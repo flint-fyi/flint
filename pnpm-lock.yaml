@@ -351,9 +351,6 @@ catalogs:
     '@types/node':
       specifier: 26.6.1
       version: 26.6.1
-    '@types/omit-empty':
-      specifier: 1.0.4
-      version: 1.0.4
     '@types/picomatch':
       specifier: 4.0.3
       version: 4.0.3
@@ -556,9 +553,6 @@ catalogs:
     micromark-extension-gfm:
       specifier: ^3.0.0
       version: 3.0.0
-    omit-empty:
-      specifier: ^1.0.0
-      version: 1.0.0
     package-json-validator:
       specifier: ^1.5.1
       version: 1.6.1
@@ -1009,9 +1003,6 @@ importers:
       ignore:
         specifier: catalog:prod
         version: 7.0.9
-      omit-empty:
-        specifier: catalog:prod
-        version: 1.0.0
       pathe:
         specifier: catalog:prod
         version: 2.0.3
@@ -1028,9 +1019,6 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
-      '@types/omit-empty':
-        specifier: catalog:dev
-        version: 1.0.4
       '@types/picomatch':
         specifier: catalog:dev
         version: 4.0.3
@@ -4265,9 +4253,6 @@ packages:
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
-  '@types/omit-empty@1.0.4':
-    resolution: {integrity: sha512-MyclmBmRRCfEuawCDfg4YeN6T7/guBZqbkGSJiy7xXkIDDZLJRCfLdptkXMFEfAC+2lxzVRCgjWCe46s0D7ZkQ==}
-
   '@types/picomatch@4.0.3':
     resolution: {integrity: sha512-iG0T6+nYJ9FAPmx9SsUlnwcq1ZVRuCXcVEvWnntoPlrOpwtSTKNDC9uVAxTsC3PUvJ+99n4RpAcNgBbHX3JSnQ==}
 
@@ -6322,10 +6307,6 @@ packages:
   keyv@5.6.0:
     resolution: {integrity: sha512-CYDD3SOtsHtyXeEORYRx2qBtpDJFjRTGXUtmNEMGyzYOKj1TE3tycdlho7kA1Ufx9OYWZzg52QFBGALTirzDSw==}
 
-  kind-of@6.0.3:
-    resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
-    engines: {node: '>=0.10.0'}
-
   kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
@@ -6834,10 +6815,6 @@ packages:
 
   ohash@2.0.12:
     resolution: {integrity: sha512-65S/5gk9YSsaRjcyf7Nfa6h/d3E8/1gslpXfI4W7Dxn/oap8IKRuNT5VXkLQ1YFKIEg4apRY4Pj6aiwFzrDdmw==}
-
-  omit-empty@1.0.0:
-    resolution: {integrity: sha512-eaWd8kwqDyChgf7IYVyfZf2b9b9JOIhpAow4cegg8CVx29U2mZKgCvpfvOSeJctmRTqjGWTZeO2Us58ebDtQ4A==}
-    engines: {node: '>=4'}
 
   onetime@7.0.0:
     resolution: {integrity: sha512-VXJjc87FScF88uafS3JllDgvAm+c/Slfz06lorj2uAY34rlUu0Nt+v8wreiImcrgAjjIHp1rXpTDlLOGw29WwQ==}
@@ -10237,8 +10214,6 @@ snapshots:
 
   '@types/normalize-package-data@2.4.4': {}
 
-  '@types/omit-empty@1.0.4': {}
-
   '@types/picomatch@4.0.3': {}
 
   '@types/react-dom@19.3.0(@types/react@19.3.0)':
@@ -12762,8 +12737,6 @@ snapshots:
     dependencies:
       '@keyv/serialize': 1.1.1
 
-  kind-of@6.0.3: {}
-
   kleur@4.1.5: {}
 
   klona@2.0.6: {}
@@ -13589,10 +13562,6 @@ snapshots:
       ufo: 1.6.4
 
   ohash@2.0.12: {}
-
-  omit-empty@1.0.0:
-    dependencies:
-      kind-of: 6.0.3
 
   onetime@7.0.0:
     dependencies:

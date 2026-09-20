@@ -31,7 +31,6 @@
 		"cached-factory": "catalog:prod",
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
-		"omit-empty": "catalog:prod",
 		"pathe": "catalog:prod",
 		"picomatch": "catalog:prod",
 		"tinyglobby": "catalog:prod",
@@ -39,7 +38,6 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
-		"@types/omit-empty": "catalog:dev",
 		"@types/picomatch": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
