@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getScopeManager,
@@ -177,6 +177,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const properties = new Map<string, null | string>();
 					for (const element of node.name.elements) {
+						if (!element.name) {
+							continue;
+						}
+
 						if (element.propertyName) {
 							if (element.propertyName.kind === SyntaxKind.Identifier) {
 								if (

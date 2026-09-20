@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticStringValue,
@@ -87,12 +87,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const attributeName = getStaticStringValue(
-						nullThrows(
-							node.arguments[0],
-							"First argument is expected to be present by prior length check",
-						),
+					const firstArgument = nullThrows(
+						node.arguments[0],
+						"First argument is expected to be present by prior length check",
 					);
+
+					const attributeName = getStaticStringValue(firstArgument);
 					if (!attributeName) {
 						return;
 					}

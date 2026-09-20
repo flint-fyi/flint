@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getModifyingReferences,
@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				identifiers.push(name);
 			} else {
 				for (const element of name.elements) {
-					if (element.kind === SyntaxKind.BindingElement) {
+					if (element.name) {
 						identifiers.push(...collectBindingElements(element.name));
 					}
 				}

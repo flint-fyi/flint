@@ -1,11 +1,8 @@
-import {
-	getLeadingCommentRanges,
-	getTrailingCommentRanges,
-	SyntaxKind,
-} from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
+	collectComments,
 	forEachChild,
 	typescriptLanguage,
 	type AST,
@@ -138,32 +135,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					collectExcludedRanges(node);
 
 					if (options.skipComments) {
-						const commentRanges = [...(getLeadingCommentRanges(text, 0) ?? [])];
-
-						function collectCommentRanges(astNode: AST.AnyNode) {
-							const leading = getLeadingCommentRanges(
-								text,
-								astNode.getFullStart(),
-							);
-							if (leading) {
-								commentRanges.push(...leading);
-							}
-
-							const trailing = getTrailingCommentRanges(text, astNode.getEnd());
-							if (trailing) {
-								commentRanges.push(...trailing);
-							}
-
-							forEachChild(astNode, collectCommentRanges);
-						}
-
-						collectCommentRanges(node);
-
-						for (const range of commentRanges) {
-							excludedRanges.push({
-								end: range.end,
-								start: range.pos,
-							});
+						for (const comment of collectComments(sourceFile)) {
+							excludedRanges.push({ end: comment.end, start: comment.pos });
 						}
 					}
 

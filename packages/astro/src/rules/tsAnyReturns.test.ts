@@ -11,6 +11,24 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+<script>
+function client() {
+	return 1 as any
+}
+</script>
+`,
+			snapshot: `
+<script>
+function client() {
+	return 1 as any
+	~~~~~~~~~~~~~~~
+	Unsafe return of a value of type \`any\`.
+}
+</script>
+`,
+		},
+		{
+			code: `
 ---
 function foo() {
 	return 1 as any

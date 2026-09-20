@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { FileChange } from "@flint.fyi/core";
 import {
@@ -37,25 +37,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const testCase of describedCases.valid) {
 						const caseNode = testCase.nodes.case;
+						if (caseNode.kind !== SyntaxKind.ObjectLiteralExpression) {
+							continue;
+						}
+
+						const property = caseNode.properties[0];
 						if (
-							caseNode.kind === SyntaxKind.ObjectLiteralExpression &&
 							caseNode.properties.length === 1 &&
-							caseNode.properties[0]?.name?.kind === SyntaxKind.Identifier &&
-							caseNode.properties[0].name.text === "code"
+							property &&
+							(property.kind === SyntaxKind.PropertyAssignment ||
+								property.kind === SyntaxKind.ShorthandPropertyAssignment) &&
+							property.name.kind === SyntaxKind.Identifier &&
+							property.name.text === "code"
 						) {
-							let fix: FileChange | undefined;
-							if (
-								caseNode.properties[0].kind === SyntaxKind.PropertyAssignment
-							) {
-								fix = {
-									range: getTSNodeRange(caseNode, sourceFile),
-									text: caseNode.properties[0].initializer.getText(sourceFile),
-								};
-							}
+							const fix: FileChange | undefined =
+								property.kind === SyntaxKind.PropertyAssignment
+									? {
+											range: getTSNodeRange(caseNode, sourceFile),
+											text: property.initializer.getText(sourceFile),
+										}
+									: undefined;
 							context.report({
 								fix,
 								message: "testShorthands",
-								range: getTSNodeRange(caseNode.properties[0], sourceFile),
+								range: getTSNodeRange(property, sourceFile),
 							});
 						}
 					}

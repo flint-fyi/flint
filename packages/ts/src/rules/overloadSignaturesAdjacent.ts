@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -149,10 +149,11 @@ function isSameMethod(method1: Method, method2: Method | undefined) {
 	);
 }
 
-function isStatic(node: ts.Node) {
-	return (
-		ts.canHaveModifiers(node) &&
-		!!node.modifiers?.some((mod) => mod.kind === SyntaxKind.StaticKeyword)
+function isStatic(
+	node: AST.MethodDeclaration | AST.MethodSignatureDeclaration,
+): boolean {
+	return !!(node as AST.MethodDeclaration & AST.ModifiersBase).modifiers?.some(
+		(modifier: AST.ModifierLike) => modifier.kind === SyntaxKind.StaticKeyword,
 	);
 }
 

@@ -1,6 +1,7 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
+	findTokenInRange,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -14,25 +15,25 @@ function buildSpliceReplacement(
 	elementAccess: AST.ElementAccessExpression,
 	sourceFile: AST.SourceFile,
 ): string {
-	const children = elementAccess.getChildren(sourceFile);
-	const openBracket = children.find(
-		(child) => child.kind === SyntaxKind.OpenBracketToken,
-	);
-	const closeBracket = children.find(
-		(child) => child.kind === SyntaxKind.CloseBracketToken,
-	);
+	const openBracket =
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.OpenBracketToken,
+			elementAccess.expression.getEnd(),
+		)?.begin ?? elementAccess.expression.getEnd();
+	const closeBracket =
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.CloseBracketToken,
+			elementAccess.argumentExpression.getEnd(),
+		)?.begin ?? elementAccess.argumentExpression.getEnd();
 
 	const before = sourceFile.text.slice(
 		node.getStart(sourceFile) + "delete".length,
-		openBracket?.getStart(sourceFile) ?? elementAccess.expression.getEnd(),
+		openBracket,
 	);
 
-	const keyText = sourceFile.text.slice(
-		openBracket?.getEnd() ??
-			elementAccess.argumentExpression.getStart(sourceFile),
-		closeBracket?.getStart(sourceFile) ??
-			elementAccess.argumentExpression.getEnd(),
-	);
+	const keyText = sourceFile.text.slice(openBracket + 1, closeBracket);
 
 	return `${before}.splice(${keyText}, 1)`;
 }

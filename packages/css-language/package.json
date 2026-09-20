@@ -27,8 +27,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@types/css-tree": "catalog:prod",
-		"css-tree": "catalog:prod",
-		"typescript": "catalog:prod"
+		"css-tree": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

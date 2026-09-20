@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	DirectivesCollector,
@@ -10,6 +9,8 @@ import { nullThrows } from "@flint.fyi/utils";
 
 import { normalizeRange } from "../normalizeRange.ts";
 import type * as AST from "../types/ast.ts";
+import { collectComments } from "../utils/collectComments.ts";
+import { createScanner } from "../utils/createScanner.ts";
 
 export interface ExtractedDirective {
 	range: NormalizedReportRangeObject;
@@ -22,16 +23,15 @@ export function extractDirectivesFromTypeScriptFile(
 ): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
 
-	tsutils.forEachComment(sourceFile, (fullText, sourceRange) => {
-		const commentText = fullText.slice(sourceRange.pos, sourceRange.end);
-		const match = /^\/\/\s*flint-(\S+)(?:\s+(.+))?/.exec(commentText);
+	for (const comment of collectComments(sourceFile)) {
+		const match = /^\/\/\s*flint-(\S+)(?:\s+(.+))?/.exec(comment.text);
 		if (!match) {
-			return;
+			continue;
 		}
 
 		const commentRange = {
-			begin: sourceRange.pos,
-			end: sourceRange.end,
+			begin: comment.pos,
+			end: comment.end,
 		};
 
 		let range = normalizeRange(commentRange, sourceFile);
@@ -47,7 +47,7 @@ export function extractDirectivesFromTypeScriptFile(
 		}
 
 		directives.push({ range, selection, type });
-	});
+	}
 
 	return directives;
 }
@@ -80,19 +80,17 @@ function computeNextCodeLine(
 	}
 
 	// Skip comments and whitespace to find the first token on the next line
-	const scanner = ts.createScanner(
-		sourceFile.languageVersion,
+	const scanner = createScanner(
 		true,
 		sourceFile.languageVariant,
 		sourceFile.text,
-		undefined,
 		nextLineStart,
 	);
 
 	const kind = scanner.scan();
 
 	// Reaching the end of the file means there are no more lines
-	if (kind === SyntaxKind.EndOfFileToken) {
+	if (kind === SyntaxKind.EndOfFile) {
 		return undefined;
 	}
 

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.type !== undefined ||
 						node.name.kind !== SyntaxKind.Identifier ||
 						node.parent.kind === SyntaxKind.CatchClause ||
-						node.parent.flags & ts.NodeFlags.Const ||
+						node.parent.flags & NodeFlags.Const ||
 						node.parent.parent.kind === SyntaxKind.ForInStatement ||
 						node.parent.parent.kind === SyntaxKind.ForOfStatement
 					) {

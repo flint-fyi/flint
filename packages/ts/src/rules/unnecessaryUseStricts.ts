@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -29,7 +29,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				SourceFile(node, { sourceFile }) {
-					if (!ts.isExternalModule(sourceFile)) {
+					if (!sourceFile.externalModuleIndicator) {
 						return;
 					}
 

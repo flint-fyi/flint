@@ -1,7 +1,10 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import {
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
+	findTokenInRange,
 	forEachChild,
 	typescriptLanguage,
 	type AST,
@@ -25,7 +28,7 @@ function containsSuperCall(node: AST.AnyNode): boolean {
 		return true;
 	}
 
-	if (tsutils.isFunctionScopeBoundary(node)) {
+	if (isFunctionLikeDeclaration(node)) {
 		return false;
 	}
 
@@ -78,20 +81,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const hasSuperCall = containsSuperCall(constructor.body);
 
 			if (isDerivedClass && !hasSuperCall) {
-				const constructorKeyword = constructor
-					.getChildren(sourceFile)
-					.find((child) => child.kind === SyntaxKind.Constructor);
+				const constructorKeyword = findTokenInRange(
+					sourceFile,
+					SyntaxKind.ConstructorKeyword,
+					constructor.getStart(sourceFile),
+					constructor.getEnd(),
+				);
+				if (!constructorKeyword) {
+					return;
+				}
 
 				context.report({
 					message: "missingSuperCall",
-					range: {
-						begin:
-							constructorKeyword?.getStart(sourceFile) ??
-							constructor.getStart(sourceFile),
-						end:
-							constructorKeyword?.getEnd() ??
-							constructor.getStart(sourceFile) + 11,
-					},
+					range: constructorKeyword,
 				});
 			}
 
@@ -118,7 +120,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (tsutils.isFunctionScopeBoundary(node)) {
+			if (isFunctionLikeDeclaration(node)) {
 				return;
 			}
 

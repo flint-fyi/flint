@@ -1,5 +1,4 @@
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -10,14 +9,12 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasDefaultModifier(
-	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
+	modifiers: NodeArray<AST.ModifierLike> | undefined,
 ) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.DefaultKeyword);
 }
 
-function hasExportModifier(
-	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
-) {
+function hasExportModifier(modifiers: NodeArray<AST.ModifierLike> | undefined) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.ExportKeyword);
 }
 
@@ -40,9 +37,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				SourceFile: (node, { sourceFile }) => {
-					const exportedNames = new Map<string, ts.Node>();
+					const exportedNames = new Map<string, AST.AnyNode>();
 
-					function checkAndReportDuplicate(name: string, node: ts.Node) {
+					function checkAndReportDuplicate(name: string, node: AST.AnyNode) {
 						const existing = exportedNames.get(name);
 						if (existing) {
 							context.report({

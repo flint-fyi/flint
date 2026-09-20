@@ -34,7 +34,6 @@
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
 		"text-table-fast": "catalog:prod",
-		"typescript": "catalog:prod",
 		"wrap-ansi": "catalog:prod"
 	},
 	"devDependencies": {

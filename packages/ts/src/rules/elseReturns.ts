@@ -1,7 +1,7 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
-	getTSNodeRange,
+	getFirstTokenInRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
@@ -26,10 +26,22 @@ function alwaysTerminates(node: AST.Statement): boolean {
 	}
 }
 
-function findElseKeyword(node: AST.IfStatement, sourceFile: AST.SourceFile) {
-	return node
-		.getChildren(sourceFile)
-		.find((child) => child.kind === SyntaxKind.ElseKeyword);
+function getElseKeywordRange(
+	node: AST.IfStatement,
+	sourceFile: AST.SourceFile,
+) {
+	if (!node.elseStatement) {
+		return undefined;
+	}
+
+	const begin = node.thenStatement.getEnd();
+	const elseKeyword = getFirstTokenInRange(
+		sourceFile,
+		begin,
+		node.elseStatement.getStart(sourceFile),
+	);
+
+	return elseKeyword?.kind === SyntaxKind.ElseKeyword ? elseKeyword : undefined;
 }
 
 function hasNestedIfThatTerminates(node: AST.Statement): boolean {
@@ -119,14 +131,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const elseKeyword = findElseKeyword(lastIfNode, sourceFile);
-					if (!elseKeyword) {
+					const elseKeywordRange = getElseKeywordRange(lastIfNode, sourceFile);
+					if (!elseKeywordRange) {
 						return;
 					}
 
 					context.report({
 						message: "unnecessaryElse",
-						range: getTSNodeRange(elseKeyword, sourceFile),
+						range: elseKeywordRange,
 					});
 				},
 			},

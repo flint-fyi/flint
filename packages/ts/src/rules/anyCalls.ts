@@ -1,5 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -11,6 +11,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isBuiltinSymbolLike } from "./utils/isBuiltinSymbolLike.ts";
+import { isIntrinsicErrorType } from "./utils/typePredicates.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -59,8 +60,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const type = getConstrainedTypeAtLocation(node, typeChecker);
 
-			if (tsutils.isTypeFlagSet(type, TypeFlags.Any)) {
-				if (tsutils.isIntrinsicErrorType(type)) {
+			if (type.flags & TypeFlags.Any) {
+				if (isIntrinsicErrorType(type)) {
 					return;
 				}
 				context.report({
@@ -83,8 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				callSignatures.length &&
 				(!allowVoid ||
 					callSignatures.some(
-						(signature) =>
-							!tsutils.isIntrinsicVoidType(signature.getReturnType()),
+						(signature) => !(signature.getReturnType().flags & TypeFlags.Void),
 					))
 			) {
 				return;

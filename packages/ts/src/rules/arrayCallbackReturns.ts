@@ -1,5 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import {
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -109,7 +111,7 @@ function hasReturnWithValue(block: AST.Block): boolean {
 			return;
 		}
 
-		if (tsutils.isFunctionScopeBoundary(node)) {
+		if (isFunctionLikeDeclaration(node)) {
 			return;
 		}
 

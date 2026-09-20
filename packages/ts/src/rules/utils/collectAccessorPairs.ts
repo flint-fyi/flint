@@ -1,5 +1,4 @@
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -14,17 +13,17 @@ export interface AccessorPair {
 }
 
 export function collectAccessorPairs(
-	members: ts.NodeArray<AST.AnyNode>,
+	members: readonly AST.AnyNode[],
 	sourceFile: AST.SourceFile,
 ): Map<string, AccessorPair> {
 	const pairs = new Map<string, AccessorPair>();
 
-	members.forEach((member, index) => {
+	for (const [index, member] of members.entries()) {
 		if (
 			member.kind !== SyntaxKind.GetAccessor &&
 			member.kind !== SyntaxKind.SetAccessor
 		) {
-			return;
+			continue;
 		}
 
 		const name = getPropertyName(member, sourceFile);
@@ -41,7 +40,7 @@ export function collectAccessorPairs(
 		} else {
 			pair.setter = entry;
 		}
-	});
+	}
 
 	return pairs;
 }

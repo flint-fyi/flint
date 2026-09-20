@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getDeclarationsIfGlobal,
@@ -32,10 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isKeyboardEvent(
-			expression: AST.LeftHandSideExpression,
-			typeChecker: Checker,
-		) {
+		function isKeyboardEvent(expression: AST.Node, typeChecker: Checker) {
 			return (
 				typeChecker.getTypeAtLocation(expression).getSymbol()?.name ===
 				"KeyboardEvent"
@@ -55,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const declaration = nullThrows(
 				declarations[0],
 				"Declaration is expected to be present by the length check",
-			) as AST.AnyNode;
+			);
 
 			return (
 				declaration.parent.kind === SyntaxKind.InterfaceDeclaration &&

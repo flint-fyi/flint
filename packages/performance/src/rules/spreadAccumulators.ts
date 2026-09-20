@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	forEachChild,
@@ -32,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function getIdentifierName(node: AST.AnyNode) {
+		function getIdentifierName(node: AST.AnyNode): string | undefined {
 			return node.kind === SyntaxKind.Identifier ? node.text : undefined;
 		}
 
@@ -56,7 +55,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkAssignmentInLoop(
 			node: AST.AnyNode,
 			sourceFile: AST.SourceFile,
-		) {
+		): void {
 			if (
 				node.kind === SyntaxKind.BinaryExpression &&
 				node.operatorToken.kind === SyntaxKind.EqualsToken
@@ -71,7 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					child.kind === SyntaxKind.ForOfStatement ||
 					child.kind === SyntaxKind.ForStatement ||
 					child.kind === SyntaxKind.WhileStatement ||
-					tsutils.isFunctionScopeBoundary(child)
+					isFunctionScopeBoundary(child)
 				) {
 					return;
 				}
@@ -82,7 +81,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkBinaryEqualsExpression(
 			node: AST.BinaryExpression,
 			sourceFile: AST.SourceFile,
-		) {
+		): void {
 			const leftName = getIdentifierName(node.left);
 			if (!leftName || !hasSpreadOfIdentifier(node.right, leftName)) {
 				return;
@@ -93,12 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const firstToken = spreadNode.getFirstToken(sourceFile);
-			if (firstToken?.kind !== SyntaxKind.DotDotDotToken) {
-				return;
-			}
-
-			const start = firstToken.getStart(sourceFile);
+			const start = spreadNode.getStart(sourceFile);
 			context.report({
 				message: "noAccumulatingSpread",
 				range: {
@@ -138,7 +132,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.ForStatement
 				| AST.WhileStatement,
 			{ sourceFile }: TypeScriptFileServices,
-		) {
+		): void {
 			checkAssignmentInLoop(node.statement, sourceFile);
 		}
 
@@ -153,3 +147,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
+
+function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.CallSignature:
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression:
+		case SyntaxKind.Constructor:
+		case SyntaxKind.ConstructorType:
+		case SyntaxKind.ConstructSignature:
+		case SyntaxKind.EnumDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionType:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.MethodSignature:
+		case SyntaxKind.ModuleDeclaration:
+		case SyntaxKind.SetAccessor:
+			return true;
+		case SyntaxKind.SourceFile:
+			return !!node.externalModuleIndicator;
+		default:
+			return false;
+	}
+}

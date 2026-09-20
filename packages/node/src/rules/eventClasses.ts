@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -47,11 +47,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return false;
 				}
 
-				if (
-					isImportFromNodeEvents(
-						declaration.parent.parent.parent.moduleSpecifier,
-					)
-				) {
+				const importDeclaration = declaration.parent.parent
+					.parent as AST.ImportDeclaration;
+				if (isImportFromNodeEvents(importDeclaration.moduleSpecifier)) {
 					return true;
 				}
 			}
@@ -73,11 +71,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			identifier: AST.Identifier,
 			typeChecker: Checker,
 		) {
-			return (
-				typeChecker.getSymbolAtLocation(identifier)?.getDeclarations() as
-					| AST.AnyNode[]
-					| undefined
-			)?.some(isDeclarationEventEmitter);
+			return typeChecker
+				.getSymbolAtLocation(identifier)
+				?.declarations.some((declaration) => {
+					const resolved = declaration.resolve() as AST.AnyNode | undefined;
+					return !!resolved && isDeclarationEventEmitter(resolved);
+				});
 		}
 
 		function checkExpression(
@@ -112,6 +111,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						for (const type of heritageClause.types) {
+							if (type.kind !== SyntaxKind.ExpressionWithTypeArguments) {
+								continue;
+							}
+
 							checkExpression(type.expression, sourceFile, typeChecker);
 						}
 					}

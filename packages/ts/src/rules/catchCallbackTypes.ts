@@ -1,17 +1,15 @@
-import * as tsutils from "ts-api-utils";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import {
-	SyntaxKind,
 	TypeFlags,
+	type Checker,
 	type Program,
 	type Type,
-	type TypeChecker,
-} from "typescript";
+} from "typescript-native/unstable/sync";
 
 import {
 	declarationIncludesGlobal,
 	typescriptLanguage,
 	type AST,
-	type Checker,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -41,23 +39,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isGlobalPromiseType(type: Type, program: Program): boolean {
 			const symbol = type.getSymbol();
-			if (symbol?.getName() !== "Promise") {
+			if (symbol?.name !== "Promise") {
 				return false;
 			}
 
-			const declarations = symbol.getDeclarations();
-			if (!declarations) {
+			const declarations = symbol.declarations
+				.map((declaration) => declaration.resolve())
+				.filter((declaration): declaration is AST.Declaration => !!declaration);
+			if (!declarations.length) {
 				return false;
 			}
 
-			return declarations.some((declaration) => {
-				const node = declaration as AST.AnyNode;
-				return (
-					node.kind === SyntaxKind.InterfaceDeclaration &&
-					node.name.text === "Promise" &&
-					declarationIncludesGlobal(declaration, program)
-				);
-			});
+			return declarations.some(
+				(declaration) =>
+					declaration.kind === SyntaxKind.InterfaceDeclaration &&
+					declaration.name.text === "Promise" &&
+					declarationIncludesGlobal(declaration, program),
+			);
 		}
 
 		function isCatchOrThenCallback(
@@ -89,8 +87,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkCallbackParameter(
 			callback: AST.Expression,
 			sourceFile: AST.SourceFile,
-			typeChecker: TypeChecker,
-		) {
+			typeChecker: Checker,
+		): void {
 			if (
 				(callback.kind !== SyntaxKind.ArrowFunction &&
 					callback.kind !== SyntaxKind.FunctionExpression) ||
@@ -103,11 +101,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const firstParameter = callback.parameters[0]!;
 
 			if (firstParameter.type) {
-				const paramType = typeChecker.getTypeFromTypeNode(firstParameter.type);
+				const parameterType = typeChecker.getTypeFromTypeNode(
+					firstParameter.type,
+				);
 
 				if (
-					tsutils.isTypeFlagSet(paramType, TypeFlags.Unknown) ||
-					!tsutils.isTypeFlagSet(paramType, TypeFlags.Any)
+					(parameterType.flags & TypeFlags.Unknown) !== 0 ||
+					(parameterType.flags & TypeFlags.Any) === 0
 				) {
 					return;
 				}
