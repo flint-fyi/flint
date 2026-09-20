@@ -35,6 +35,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		// Whether a symbol is deprecated never changes within a lint run, and
+		// finding out costs checker round trips, so each answer is kept for the
+		// (many) later references to the same symbol.
+		const jsDocDeprecationBySymbol = new WeakMap<Symbol, boolean>();
+		const aliasChainDeprecationBySymbol = new WeakMap<Symbol, boolean>();
+		const aliasChainTargetDeprecationBySymbol = new WeakMap<Symbol, boolean>();
+
 		function getJsDocDeprecation(
 			symbol: Signature | Symbol | undefined,
 			typeChecker: Checker,
@@ -44,16 +51,35 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if ("getReturnType" in symbol) {
-				const declaration = symbol.declaration?.resolve() as
-					| AST.Declaration
-					| undefined;
-				return (
-					!!declaration &&
-					(hasDeprecationTag(declaration) ||
-						hasInheritedDeprecationTag(declaration, typeChecker))
-				);
+				return getSignatureJsDocDeprecation(symbol, typeChecker);
 			}
 
+			let deprecated = jsDocDeprecationBySymbol.get(symbol);
+			if (deprecated === undefined) {
+				deprecated = getSymbolJsDocDeprecation(symbol, typeChecker);
+				jsDocDeprecationBySymbol.set(symbol, deprecated);
+			}
+			return deprecated;
+		}
+
+		function getSignatureJsDocDeprecation(
+			signature: Signature,
+			typeChecker: Checker,
+		): boolean {
+			const declaration = signature.declaration?.resolve() as
+				| AST.Declaration
+				| undefined;
+			return (
+				!!declaration &&
+				(hasDeprecationTag(declaration) ||
+					hasInheritedDeprecationTag(declaration, typeChecker))
+			);
+		}
+
+		function getSymbolJsDocDeprecation(
+			symbol: Symbol,
+			typeChecker: Checker,
+		): boolean {
 			let jsDocTags: readonly JSDocTagInfo[];
 			try {
 				jsDocTags = symbol.getJsDocTags(typeChecker);
@@ -153,6 +179,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
+			const cache = checkAliasedSymbol
+				? aliasChainTargetDeprecationBySymbol
+				: aliasChainDeprecationBySymbol;
+			let deprecated = cache.get(symbol);
+			if (deprecated === undefined) {
+				deprecated = searchForDeprecationInAliasesChainUncached(
+					symbol,
+					typeChecker,
+					checkAliasedSymbol,
+				);
+				cache.set(symbol, deprecated);
+			}
+			return deprecated;
+		}
+
+		function searchForDeprecationInAliasesChainUncached(
+			symbol: Symbol,
+			typeChecker: Checker,
+			checkAliasedSymbol: boolean,
+		) {
 			if (!(symbol.flags & SymbolFlags.Alias)) {
 				return !!(
 					checkAliasedSymbol &&
