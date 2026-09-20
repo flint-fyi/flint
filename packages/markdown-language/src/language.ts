@@ -4,14 +4,15 @@ import { gfmFromMarkdown } from "mdast-util-gfm";
 import { gfm } from "micromark-extension-gfm";
 import type { Node } from "unist";
 
-import { createLanguage, type Language } from "@flint.fyi/core";
+import {
+	createLanguage,
+	groupFileVisitors,
+	runFileVisitorSubscriptions,
+	type Language,
+} from "@flint.fyi/core";
 
 import { parseDirectivesFromMarkdownFile } from "./directives/parseDirectivesFromMarkdownFile.ts";
-import type {
-	MarkdownNodesByName,
-	MarkdownNodeVisitors,
-	WithPosition,
-} from "./nodes.ts";
+import type { MarkdownNodeVisitors, WithPosition } from "./nodes.ts";
 
 export interface MarkdownFileServices {
 	root: WithPosition<mdast.Root>;
@@ -44,19 +45,16 @@ export const markdownLanguage: Language<
 			},
 		};
 	},
-	runFileVisitors: (file, options, runtime) => {
-		if (!runtime.visitors) {
-			return;
-		}
-
-		const { visitors } = runtime;
-		const visitorServices = { options, ...file.services };
+	runFileVisitors: (file, fileVisitors) => {
+		const { enter, exit } = groupFileVisitors<Node, MarkdownFileServices>(
+			fileVisitors,
+		);
 
 		const visit = (node: Node) => {
-			const key = node.type as keyof MarkdownNodesByName;
-
-			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-			visitors[key]?.(node, visitorServices);
+			const entering = enter?.get(node.type);
+			if (entering !== undefined) {
+				runFileVisitorSubscriptions(entering, node);
+			}
 
 			if ("children" in node && Array.isArray(node.children)) {
 				for (const child of node.children as Node[]) {
@@ -64,8 +62,10 @@ export const markdownLanguage: Language<
 				}
 			}
 
-			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-			visitors[`${key}:exit`]?.(node, visitorServices);
+			const exiting = exit?.get(node.type);
+			if (exiting !== undefined) {
+				runFileVisitorSubscriptions(exiting, node);
+			}
 		};
 
 		visit(file.services.root);

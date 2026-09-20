@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import path from "node:path";
 
 import type { CachedFactory } from "cached-factory";
+import { resolve } from "pathe";
 
 import {
 	processRuleReport,
@@ -40,7 +40,7 @@ export async function runTestCaseRule<
 	{ collectLanguageReports = false }: RunTestCaseRuleOptions = {},
 ): Promise<{ languageReports: LanguageReport[]; reports: FileReport[] }> {
 	const filePathAbsolute = normalizePath(
-		path.resolve(linterHost.getCurrentDirectory(), fileName),
+		resolve(linterHost.getCurrentDirectory(), fileName),
 	);
 	const caseSensitive = linterHost.isCaseSensitiveFS();
 	const targetKey = pathKey(filePathAbsolute, caseSensitive);
@@ -51,7 +51,7 @@ export async function runTestCaseRule<
 	}
 	for (const [name, content] of Object.entries(files ?? {})) {
 		const filePath = normalizePath(
-			path.resolve(linterHost.getCurrentDirectory(), name),
+			resolve(linterHost.getCurrentDirectory(), name),
 		);
 		assert.notEqual(
 			filePath,
@@ -82,7 +82,15 @@ export async function runTestCaseRule<
 	});
 
 	if (ruleRuntime) {
-		rule.language.runFileVisitors(file, options, ruleRuntime);
+		if (ruleRuntime.visitors) {
+			rule.language.runFileVisitors(file, [
+				{
+					services: { options, ...file.services },
+					visitors: ruleRuntime.visitors,
+				},
+			]);
+		}
+
 		await ruleRuntime.teardown?.();
 	}
 

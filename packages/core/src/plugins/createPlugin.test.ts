@@ -3,6 +3,8 @@ import z from "zod/v4";
 
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
+import type { AnyLanguage } from "../types/languages.ts";
+import type { RuleCreatorAbout } from "../types/rules.ts";
 import { createPlugin } from "./createPlugin.ts";
 
 const stubLanguage = createLanguage({
@@ -59,6 +61,28 @@ describe(createPlugin, () => {
 		it("does not type unused presets", () => {
 			expectTypeOf(plugin.presets).not.toHaveProperty("third");
 		});
+
+		// eslint-disable-next-line vitest/expect-expect
+		it("types rule about properties exactly", () => {
+			ruleCreator.createRule(stubLanguage, {
+				about: {
+					description: "",
+					id: "withInvalidPresetProperty",
+					// @ts-expect-error -- Rule about metadata must use presets, not preset.
+					preset: "first",
+				},
+				messages: stubMessages,
+				setup: vi.fn(),
+			});
+		});
+
+		it("rejects pluginId in rule about metadata", () => {
+			expectTypeOf({
+				description: "",
+				id: "withPluginIdProperty",
+				pluginId: "stub",
+			}).not.toExtend<RuleCreatorAbout>();
+		});
 	});
 
 	describe("rules", () => {
@@ -87,6 +111,10 @@ describe(createPlugin, () => {
 
 			// @ts-expect-error -- Rule option values must match the rule's schema.
 			plugin.rules({ withOptionalOption: { value: 123 } });
+		});
+
+		it("erases language internals from public rules", () => {
+			expectTypeOf(ruleStandalone.language).toEqualTypeOf<AnyLanguage>();
 		});
 	});
 });

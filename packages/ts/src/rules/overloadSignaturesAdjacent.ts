@@ -117,11 +117,11 @@ function getMethodDisplayName(method: Method) {
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 function getNameFromPropertyName(
-	name: ts.PropertyName,
+	name: AST.PropertyName,
 ): undefined | { name: string; type: "computed" | "normal" | "quoted" } {
 	switch (name.kind) {
 		case SyntaxKind.ComputedPropertyName:
-			if (ts.isStringLiteral(name.expression)) {
+			if (name.expression.kind === SyntaxKind.StringLiteral) {
 				return { name: name.expression.text, type: "quoted" };
 			}
 			return undefined;

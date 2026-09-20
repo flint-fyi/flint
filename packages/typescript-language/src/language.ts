@@ -1,48 +1,31 @@
-import path from "node:path";
-
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
-import {
-	getPreEmitDiagnostics,
-	SyntaxKind,
-	type Node,
-	type Program,
-} from "typescript";
+import { extname } from "pathe";
+import { getPreEmitDiagnostics, type Program } from "typescript";
 
 import {
 	createLanguage,
-	type AnyOptionalSchema,
 	type FileAboutData,
-	type InferredOutputObject,
+	type FileVisitors,
 	type Language,
-	type LanguageFile,
 	type LanguageFileDefinition,
 	type LanguageReports,
-	type RuleRuntime,
 } from "@flint.fyi/core";
 import { assert, nullThrows } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+import { createNodeVisitorsForFile } from "./createNodeVisitorsForFile.ts";
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
-import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
-import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
+import type { TypeScriptNodeVisitors } from "./nodes.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
+import type { TypeScriptFileServices } from "./types/services.ts";
 
-export interface TypeScriptFileServices {
-	program: Program;
-	sourceFile: AST.SourceFile;
-	typeChecker: Checker;
-}
-
-const log = debugForFile(import.meta.filename);
-
-export const NodeSyntaxKinds: typeof SyntaxKind =
-	getFirstEnumValues(SyntaxKind);
+const log = debugForFile(import.meta.url);
 
 interface GlobalLanguageState {
 	packageVersion: string;
@@ -59,9 +42,10 @@ type VolarLanguageFileDefinition =
 		__volarServices: {
 			getLanguageReports(): LanguageReports;
 			runVisitors(
-				file: LanguageFile<TypeScriptFileServices>,
-				options: InferredOutputObject<AnyOptionalSchema | undefined>,
-				runtime: RuleRuntime<TypeScriptNodeVisitors, TypeScriptFileServices>,
+				fileVisitors: readonly FileVisitors<
+					TypeScriptNodeVisitors,
+					TypeScriptFileServices
+				>[],
 			): void;
 		};
 	};
@@ -127,7 +111,7 @@ export const typescriptLanguage: Language<
 				`Could not retrieve source file for: ${data.filePathAbsolute}`,
 			);
 
-			const fileExtension = path.extname(data.filePathAbsolute);
+			const fileExtension = extname(data.filePathAbsolute);
 			if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
 				return {
 					...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
@@ -177,36 +161,15 @@ export const typescriptLanguage: Language<
 		).map(convertTypeScriptDiagnosticToLanguageReport);
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
-	runFileVisitors(file, options, runtime) {
-		if (!runtime.visitors) {
-			return;
-		}
-
+	runFileVisitors(file, fileVisitors) {
 		if ("__volarServices" in file) {
 			(file as VolarLanguageFileDefinition).__volarServices.runVisitors(
-				file,
-				options,
-				runtime,
+				fileVisitors,
 			);
 			return;
 		}
 
-		const { visitors } = runtime;
-		const visitorServices = { options, ...file.services };
-
-		const visit = (node: Node) => {
-			const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
-
-			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-			visitors[key]?.(node, visitorServices);
-
-			node.forEachChild(visit);
-
-			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-			visitors[`${key}:exit`]?.(node, visitorServices);
-		};
-
-		visit(file.services.sourceFile);
+		createNodeVisitorsForFile(fileVisitors)?.visit(file.services.sourceFile);
 	},
 });
 
@@ -235,7 +198,7 @@ const fileExtToFlintPlugin: Record<string, string> = {
 };
 
 export function throwUnknownLanguageExtension(filename: string): never {
-	const pluginName = fileExtToFlintPlugin[path.extname(filename)];
+	const pluginName = fileExtToFlintPlugin[extname(filename)];
 	const message = pluginName
 		? `Did you install & import ${pluginName}?`
 		: "Unknown extension.";

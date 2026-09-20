@@ -1,5 +1,6 @@
 import * as vue from "@vue/compiler-dom";
-import ts from "typescript";
+import type ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
@@ -195,7 +196,7 @@ export default ruleCreator.createRule(vueLanguage, {
 							if (
 								currentBegin >= valueRange.begin &&
 								currentEnd <= valueRange.end &&
-								ts.isIdentifier(current)
+								current.kind === SyntaxKind.Identifier
 							) {
 								const symbol =
 									services.typeChecker.getSymbolAtLocation(current);

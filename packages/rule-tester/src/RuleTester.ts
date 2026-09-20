@@ -1,14 +1,15 @@
 import assert from "node:assert/strict";
-import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 
 import { CachedFactory } from "cached-factory";
+import { resolve } from "pathe";
 
 import {
 	createDiskBackedLinterHost,
 	createEphemeralLinterHost,
 	createVFSLinterHost,
 	parseOptions,
+	withRepositoryRoot,
 	type AnyLanguage,
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
@@ -79,15 +80,20 @@ export class RuleTester {
 		scope = globalThis,
 		skip,
 	}: RuleTesterOptions = {}) {
+		const virtualRoot =
+			diskBackedFSRoot == null
+				? undefined
+				: resolve(
+						process.cwd(),
+						diskBackedFSRoot,
+						"_flint-rule-tester-virtual",
+					);
 		let baseHost =
-			diskBackedFSRoot != null
+			virtualRoot != null
 				? createEphemeralLinterHost(
-						createDiskBackedLinterHost(
-							path.resolve(
-								process.cwd(),
-								diskBackedFSRoot,
-								"_flint-rule-tester-virtual",
-							),
+						withRepositoryRoot(
+							createDiskBackedLinterHost(virtualRoot),
+							virtualRoot,
 						),
 					)
 				: undefined;
@@ -97,7 +103,7 @@ export class RuleTester {
 				baseHost == null ? { cwd: process.cwd() } : { baseHost },
 			);
 			for (const [name, content] of Object.entries(defaultFiles)) {
-				const filePath = path.resolve(vfs.getCurrentDirectory(), name);
+				const filePath = resolve(vfs.getCurrentDirectory(), name);
 				vfs.vfsUpsertFile(filePath, content);
 			}
 			baseHost = vfs;

@@ -1,7 +1,5 @@
-import * as path from "node:path";
+import { isAbsolute, resolve } from "pathe";
 
 export function makeAbsolute(filePath: string): string {
-	return path.isAbsolute(filePath)
-		? filePath
-		: path.resolve(process.cwd(), filePath);
+	return isAbsolute(filePath) ? filePath : resolve(process.cwd(), filePath);
 }

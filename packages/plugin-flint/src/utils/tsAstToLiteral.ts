@@ -4,14 +4,14 @@
 // Changing from the switch to manual ifs is due to:
 // https://github.com/Microsoft/TypeScript/issues/56275
 
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
 export function tsAstToLiteral(node: AST.ArrayLiteralExpression): unknown[];
 export function tsAstToLiteral(node: AST.ObjectLiteralExpression): object;
-export function tsAstToLiteral(node: ts.Node): unknown;
-export function tsAstToLiteral(node: ts.Node): unknown {
+export function tsAstToLiteral(node: AST.AnyNode): unknown;
+export function tsAstToLiteral(node: AST.AnyNode): unknown {
 	switch (node.kind) {
 		case SyntaxKind.FalseKeyword:
 			return false;
@@ -21,35 +21,37 @@ export function tsAstToLiteral(node: ts.Node): unknown {
 			return true;
 	}
 
-	if (ts.isArrayLiteralExpression(node)) {
+	if (node.kind === SyntaxKind.ArrayLiteralExpression) {
 		return node.elements
 			.filter((element) => element.kind !== SyntaxKind.SpreadElement)
 			.map((element) => tsAstToLiteral(element));
 	}
 
-	if (ts.isNumericLiteral(node)) {
+	if (node.kind === SyntaxKind.NumericLiteral) {
 		return parseFloat(node.text);
 	}
 
-	if (ts.isObjectLiteralExpression(node)) {
+	if (node.kind === SyntaxKind.ObjectLiteralExpression) {
 		return Object.fromEntries(
 			node.properties
 				.filter(
 					(
 						property,
-					): property is ts.PropertyAssignment & { name: ts.Identifier } =>
-						ts.isPropertyAssignment(property) &&
+					): property is AST.PropertyAssignment & {
+						name: AST.Identifier | AST.StringLiteral;
+					} =>
+						property.kind === SyntaxKind.PropertyAssignment &&
 						(property.name.kind === SyntaxKind.Identifier ||
 							property.name.kind === SyntaxKind.StringLiteral),
 				)
 				.map((property) => [
-					property.name.escapedText || property.name.text,
+					property.name.text,
 					tsAstToLiteral(property.initializer),
 				]),
 		);
 	}
 
-	if (ts.isStringLiteral(node)) {
+	if (node.kind === SyntaxKind.StringLiteral) {
 		return node.text;
 	}
 

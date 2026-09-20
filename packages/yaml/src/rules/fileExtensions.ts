@@ -1,4 +1,4 @@
-import path from "node:path";
+import { extname } from "pathe";
 
 import { yamlLanguage } from "@flint.fyi/yaml-language";
 
@@ -24,7 +24,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 		return {
 			visitors: {
 				root: (node, { filePath }) => {
-					const extension = path.extname(filePath);
+					const extension = extname(filePath);
 
 					if (extension.toLowerCase() !== ".yml") {
 						return;

@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import path from "node:path";
 
 import { findRootSync } from "@altano/repository-tools/findRootSync.js";
+import { dirname, join, resolve } from "pathe";
 import { glob as tinyglobby } from "tinyglobby";
 
 import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
@@ -86,7 +86,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 									?.isDirectory()
 							) {
 								changedPath = normalizePath(
-									path.resolve(normalizedWatchPath, filename),
+									resolve(normalizedWatchPath, filename),
 								);
 							}
 							if (statAndEmitIfChanged(changedPath)) {
@@ -99,7 +99,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 							statAndEmitIfChanged(
 								filename == null
 									? null
-									: normalizePath(path.resolve(normalizedWatchPath, filename)),
+									: normalizePath(resolve(normalizedWatchPath, filename)),
 							)
 						) {
 							return;
@@ -162,16 +162,12 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 	return {
 		fileTypeSync(pathAbsolute) {
-			try {
-				const stat = fs.statSync(pathAbsolute);
-				if (stat.isDirectory()) {
-					return "directory";
-				}
-				if (stat.isFile()) {
-					return "file";
-				}
-			} catch {
-				// Fall through to undefined.
+			const stat = fs.statSync(pathAbsolute, { throwIfNoEntry: false });
+			if (stat?.isDirectory()) {
+				return "directory";
+			}
+			if (stat?.isFile()) {
+				return "file";
 			}
 			return undefined;
 		},
@@ -179,11 +175,11 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return cwd;
 		},
 		async getFileTouchTime(filePath) {
-			const stat = await fs.promises.stat(filePath);
-			return stat.mtimeMs;
+			const stat = await fs.promises.stat(filePath, { throwIfNoEntry: false });
+			return stat?.mtimeMs;
 		},
 		getFileTouchTimeSync(filePath) {
-			return fs.statSync(filePath).mtimeMs;
+			return fs.statSync(filePath, { throwIfNoEntry: false })?.mtimeMs;
 		},
 		getRepositoryRoot() {
 			return repositoryRoot;
@@ -206,19 +202,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 			const result = await Promise.all(
 				dirents.map(async (entry): Promise<[] | LinterHostDirectoryEntry> => {
-					let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
-					if (entry.isSymbolicLink()) {
-						try {
-							stat = await fs.promises.stat(
-								path.join(directoryPathAbsolute, entry.name),
-							);
-						} catch {
-							return [];
-						}
-					}
-					if (stat.isDirectory()) {
+					const stat = entry.isSymbolicLink()
+						? await fs.promises.stat(join(directoryPathAbsolute, entry.name), {
+								throwIfNoEntry: false,
+							})
+						: entry;
+					if (stat?.isDirectory()) {
 						return { name: entry.name, type: "directory" };
-					} else if (stat.isFile()) {
+					} else if (stat?.isFile()) {
 						return { name: entry.name, type: "file" };
 					}
 
@@ -235,17 +226,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			});
 
 			for (const entry of dirents) {
-				let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
-				if (entry.isSymbolicLink()) {
-					try {
-						stat = fs.statSync(path.join(directoryPathAbsolute, entry.name));
-					} catch {
-						continue;
-					}
-				}
-				if (stat.isDirectory()) {
+				const stat = entry.isSymbolicLink()
+					? fs.statSync(join(directoryPathAbsolute, entry.name), {
+							throwIfNoEntry: false,
+						})
+					: entry;
+				if (stat?.isDirectory()) {
 					result.push({ name: entry.name, type: "directory" });
-				} else if (stat.isFile()) {
+				} else if (stat?.isFile()) {
 					result.push({ name: entry.name, type: "file" });
 				}
 			}
@@ -319,14 +307,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		async writeFile(filePathAbsolute, content) {
 			// Create missing parent directories so a single writeFile call always
 			// succeeds, with no separate mkdir step for callers.
-			await fs.promises.mkdir(path.dirname(filePathAbsolute), {
+			await fs.promises.mkdir(dirname(filePathAbsolute), {
 				recursive: true,
 			});
 
 			await fs.promises.writeFile(filePathAbsolute, content, "utf8");
 		},
 		writeFileSync(filePathAbsolute, content) {
-			fs.mkdirSync(path.dirname(filePathAbsolute), { recursive: true });
+			fs.mkdirSync(dirname(filePathAbsolute), { recursive: true });
 			fs.writeFileSync(filePathAbsolute, content, "utf8");
 		},
 	};

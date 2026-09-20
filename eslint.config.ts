@@ -77,6 +77,7 @@ const config: ConfigObject[] = defineConfig(
 			"@typescript-eslint/consistent-type-exports": "error",
 			"@typescript-eslint/consistent-type-imports": "error",
 			"@typescript-eslint/explicit-module-boundary-types": "error",
+			"@typescript-eslint/no-generated-empty-object-type": "off",
 			"@typescript-eslint/no-import-type-side-effects": "error",
 			"@typescript-eslint/no-restricted-types": [
 				"error",

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/yaml",
-	"version": "0.17.1",
+	"version": "0.17.2",
 	"description": "[Experimental] YAML language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/yaml",
 	"repository": {
@@ -26,7 +26,8 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/yaml-language": "workspace:^"
+		"@flint.fyi/yaml-language": "workspace:^",
+		"pathe": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

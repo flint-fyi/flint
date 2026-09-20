@@ -104,9 +104,9 @@ function isDescendantOf(node: AST.AnyNode, potentialAncestor: ts.Node) {
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
 function isNodeInsideReturnType(node: AST.AnyNode) {
-	let current = node.parent as AST.AnyNode | undefined;
+	let current = node.parent;
 
-	while (current) {
+	while (current.kind !== SyntaxKind.SourceFile) {
 		if (
 			current.kind === SyntaxKind.FunctionDeclaration ||
 			current.kind === SyntaxKind.FunctionExpression ||
@@ -121,8 +121,7 @@ function isNodeInsideReturnType(node: AST.AnyNode) {
 			return !!current.type && isDescendantOf(node, current.type);
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as AST.AnyNode | undefined;
+		current = current.parent;
 	}
 
 	return false;

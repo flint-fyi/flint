@@ -25,24 +25,18 @@ There are two steps involved:
 
 ### Finding an Issue
 
-With the exception of very small typos, all changes to this repository generally need to correspond to an [unassigned open issue marked as `status: accepting prs` and not `ai assigned` on the issue tracker](https://github.com/flint-fyi/flint/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22status%3A%20accepting%20prs%22%20-label%3A%22ai%20assigned%22%20no%3Aassignee).
+With the exception of very small typos, all changes to this repository generally need to correspond to an [unassigned open issue marked as `status: accepting prs`](https://github.com/flint-fyi/flint/issues?q=is%3Aissue+is%3Aopen+label%3A%22status%3A+accepting+prs%22+no%3Aassignee+).
 If this is your first time contributing, consider searching for [unassigned issues that also have the `good first issue` label](https://github.com/flint-fyi/flint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+label%3A%22status%3A+accepting+prs%22+no%3Aassignee+).
-If the issue you'd like to fix isn't found on the [issue tracker](https://github.com/flint-fyi/flint/issues), see [Reporting Issues](#reporting-issues) for filing your own (please do!).
-
-#### Issue Claiming
-
-We don't use any kind of issue claiming system.
-We've found in the past that they result in accidental ["licked cookie"](https://devblogs.microsoft.com/oldnewthing/20091201-00/?p=15843) situations where contributors claim an issue but run out of time or energy trying before sending a PR.
-
-If an unassigned issue has been marked as `status: accepting prs` and an open PR does not exist, feel free to send a PR.
-Please don't post comments asking for permission or stating you will work on an issue.
+If the issue you'd like to address hasn't been logged yet, see [Reporting Issues](#reporting-issues) for filing your own (please do!).
 
 ### Sending a Pull Request
 
 Once you've identified an open issue accepting PRs that doesn't yet have a PR sent, you're free to send a pull request.
 Be sure to fill out the pull request template's requested information -- otherwise your PR will likely be closed.
+This includes checking all the checkboxes and providing a meaningful description _in your own words_.
+See our guidelines on [Contributing with AI](/project/contributing-with-ai) for more about those expectations.
 
-PRs are also expected to have a title that adheres to [conventional commits](https://www.conventionalcommits.org/en/v1.0.0).
+PRs are also expected to have a title that adheres to the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0) format.
 Only PR titles need to be in that format, not individual commits.
 Don't worry if you get this wrong: you can always change the PR title after sending it.
 Check [previously merged PRs](https://github.com/flint-fyi/flint/pulls?q=is%3Apr+is%3Amerged+-label%3Adependencies+) for reference.
@@ -56,12 +50,14 @@ This will allow our release automation to version packages appropriately when th
 
 If you don't think your PR is ready for review, [set it as a draft](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft).
 Draft PRs won't be reviewed.
+Once the PR is ready for us to review, mark it as ready.
 
 #### Granular PRs
 
-Please keep pull requests single-purpose: in other words, don't attempt to solve multiple unrelated problems in one pull request.
-Send one PR per area of concern.
+Please keep pull requests single-purpose.
+In other words, don't attempt to solve multiple unrelated problems in one pull request.
 Multi-purpose pull requests are harder and slower to review, block all changes from being merged until the whole pull request is reviewed, and are difficult to name well with semantic PR titles.
+We also want to ensure each meaningful change has its own entry in our changelog.
 
 #### Pull Request Reviews
 
@@ -89,7 +85,7 @@ Please try not to force-push commits to PRs that have already been reviewed.
 Doing so makes it harder to review the changes.
 We squash merge all commits so there's no need to try to preserve Git history within a PR branch.
 
-Once you've addressed all reviewer feedback by making code changes and/or responding to discussion threads, [re-request review](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews#re-requesting-a-review) from each team member whose feedback you addressed.
+Once you've addressed all reviewer feedback, [re-request review](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews#re-requesting-a-review) from each team member whose feedback you addressed.
 
 Once all feedback is addressed and the PR is approved, we'll ensure the branch is up to date with `main` and merge it for you.
 

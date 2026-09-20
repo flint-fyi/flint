@@ -338,11 +338,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return undefined;
 			}
 
-			const lastParamDeclaration = lastParam.declarations?.[0];
+			const lastParamDeclaration = lastParam.declarations?.[0] as
+				| AST.AnyNode
+				| undefined;
 
 			if (
-				lastParamDeclaration &&
-				ts.isParameter(lastParamDeclaration) &&
+				lastParamDeclaration?.kind === SyntaxKind.Parameter &&
 				lastParamDeclaration.dotDotDotToken
 			) {
 				if (index < parameters.length - 1) {
