@@ -79,6 +79,11 @@ export async function runCli(args: string[]): Promise<number> {
 		return 0;
 	}
 
+	function printFlintAssertionError(error: FlintAssertionError): void {
+		console.error(error.stack);
+		console.error(`\nPlease report it here: ${buildIssueUrl(error, args)}`);
+	}
+
 	try {
 		const host = createDiskBackedLinterHost(process.cwd());
 		const cwd = host.getCurrentDirectory();
@@ -101,26 +106,33 @@ export async function runCli(args: string[]): Promise<number> {
 		);
 
 		if (values.watch) {
-			await runCliWatch(host, configFileName, getRenderer, values);
+			await runCliWatch(
+				host,
+				configFileName,
+				getRenderer,
+				values,
+				printFlintAssertionError,
+			);
 			console.log("👋 Thanks for using Flint!");
 			return 0;
 		}
 
 		const renderer = getRenderer();
-		const { exitCode } = await runCliOnce(
-			createEphemeralLinterHost(host),
-			configFileName,
-			renderer,
-			values,
-		);
+		try {
+			const { exitCode } = await runCliOnce(
+				createEphemeralLinterHost(host),
+				configFileName,
+				renderer,
+				values,
+			);
 
-		renderer.dispose?.();
-
-		return exitCode;
+			return exitCode;
+		} finally {
+			renderer.dispose?.();
+		}
 	} catch (error) {
 		if (error instanceof FlintAssertionError) {
-			console.error(error.stack);
-			console.error(`\nPlease report it here: ${buildIssueUrl(error, args)}`);
+			printFlintAssertionError(error);
 			return 1;
 		}
 		throw error;
