@@ -468,22 +468,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.kind === SyntaxKind.Identifier &&
 							!isInImportDeclaration(node)
 						) {
-							const symbol = getReferencedSymbol(typeChecker, node);
-							const importedSpecifier = importedSpecifiers.find(
-								(specifier) =>
-									specifier.local.text === node.text &&
-									(!specifier.symbol || specifier.symbol.id === symbol?.id),
+							// Resolving a symbol costs a checker query, so only resolve
+							// identifiers that share a name with an import in the first place.
+							const candidates = importedSpecifiers.filter(
+								(specifier) => specifier.local.text === node.text,
 							);
+							if (candidates.length) {
+								const symbol = getReferencedSymbol(typeChecker, node);
+								const importedSpecifier = candidates.find(
+									(specifier) =>
+										!specifier.symbol || specifier.symbol.id === symbol?.id,
+								);
 
-							if (importedSpecifier) {
-								references.get(importedSpecifier)?.push(node);
+								if (importedSpecifier) {
+									references.get(importedSpecifier)?.push(node);
+								}
 							}
 						}
 
 						forEachChild(node, collectReferences);
 					}
 
-					collectReferences(node);
+					if (importedSpecifiers.length) {
+						collectReferences(node);
+					}
 
 					for (const statement of node.statements) {
 						if (
