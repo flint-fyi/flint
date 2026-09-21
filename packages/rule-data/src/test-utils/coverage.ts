@@ -2,6 +2,7 @@ import type { Rule } from "eslint";
 import { builtinRules } from "eslint/use-at-your-own-risk";
 
 import { findBiomeRulesInFlint, getBiomeLintRules } from "./biome.ts";
+import { findDenoRulesInFlint, getDenoLintRules } from "./deno.ts";
 import {
 	findESLintRulesInCore,
 	findESLintRulesInPlugin,
@@ -125,6 +126,16 @@ function collectBiomeCoverage(): RuleCoverage {
 	);
 }
 
+async function collectDenoCoverage(): Promise<RuleCoverage> {
+	return compareRuleCoverage(
+		(await getDenoLintRules()).map((name) => ({
+			name,
+			url: `https://docs.deno.com/lint/rules/${name}`,
+		})),
+		findDenoRulesInFlint().map((rule) => rule.name),
+	);
+}
+
 function collectESLintCoreCoverage(): RuleCoverage {
 	return compareRuleCoverage(
 		// builtinRules is marked as deprecated since it's in "use-at-your-own-risk", not actually deprecated
@@ -179,6 +190,7 @@ export const ruleCoverageSources: RuleCoverageSource[] = [
 		linter: pluginName,
 	})),
 	{ collect: collectBiomeCoverage, linter: "Biome" },
+	{ collect: collectDenoCoverage, linter: "deno-lint" },
 	{ collect: collectMarkdownlintCoverage, linter: "Markdownlint" },
 	{ collect: collectOxlintCoverage, linter: "Oxlint" },
 ].sort((a, b) => a.linter.localeCompare(b.linter));
