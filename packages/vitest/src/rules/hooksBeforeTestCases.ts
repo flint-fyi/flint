@@ -22,7 +22,7 @@ const hookFunctionNamesSet = new Set([
 	"beforeEach",
 ]);
 
-const exemptModifiers = ["extend", "scoped"];
+const exemptModifiers = new Set(["extend", "scoped"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const { name, segments, targetNode } = vitestFunction;
 
 					const hasExemptModifier = segments.some((segment) =>
-						exemptModifiers.includes(segment),
+						exemptModifiers.has(segment),
 					);
 
 					if (testCaseFunctionNamesSet.has(name) && !hasExemptModifier) {

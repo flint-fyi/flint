@@ -153,7 +153,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const firstToken = node.getFirstToken(sourceFile) as
 							| AST.AnyNode
 							| undefined;
-						keyword = firstToken?.kind === SyntaxKind.Identifier ? firstToken.text : "(";
+						keyword =
+							firstToken?.kind === SyntaxKind.Identifier
+								? firstToken.text
+								: "(";
 					}
 
 					context.report({

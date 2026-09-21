@@ -242,7 +242,7 @@ function getRegexInfoFromExpression(
 		if (construction) {
 			return {
 				flags: construction.flags,
-				pattern: construction.pattern.replaceAll('\\\\', "\\"),
+				pattern: construction.pattern.replaceAll("\\\\", "\\"),
 			};
 		}
 	}

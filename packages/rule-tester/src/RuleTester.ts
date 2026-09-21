@@ -215,7 +215,10 @@ export class RuleTester {
 			: this.#testerOptions.it;
 
 		if (testCase.skip) {
-			test = "skip" in test && typeof test.skip === "function" ? (test.skip as TesterSetupIt) : this.#testerOptions.skip;
+			test =
+				"skip" in test && typeof test.skip === "function"
+					? (test.skip as TesterSetupIt)
+					: this.#testerOptions.skip;
 		}
 
 		test(

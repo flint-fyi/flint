@@ -80,10 +80,10 @@ export function compareRuleCoverage(
 	return {
 		missing: available
 			.filter((rule) => !coveredNames.has(rule.name))
-			.sort((a, b) => a.name.localeCompare(b.name)),
+			.toSorted((a, b) => a.name.localeCompare(b.name)),
 		stale: Array.from(coveredNames)
 			.filter((name) => !availableNames.has(name))
-			.sort(),
+			.toSorted(),
 	};
 }
 
@@ -181,4 +181,4 @@ export const ruleCoverageSources: RuleCoverageSource[] = [
 	{ collect: collectBiomeCoverage, linter: "Biome" },
 	{ collect: collectMarkdownlintCoverage, linter: "Markdownlint" },
 	{ collect: collectOxlintCoverage, linter: "Oxlint" },
-].sort((a, b) => a.linter.localeCompare(b.linter));
+].toSorted((a, b) => a.linter.localeCompare(b.linter));
