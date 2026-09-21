@@ -124,6 +124,7 @@ catalogs:
     debug-for-file: ^0.4.0
     detect-indent: ^7.0.2
     detect-newline: ^4.0.1
+    formatly: ^0.9.0
     github-slugger: ^2.0.0
     ignore: ^7.0.5
     language-tags: ^2.1.0
@@ -149,7 +150,6 @@ catalogs:
     zod: ^4.5.4
 
   peer:
-    prettier: ^3.7.4
     typescript: ^6.0.3
     vitest: ">=0.30.0"
 
@@ -186,6 +186,9 @@ dedupePeers: true
 disallowWorkspaceCycles: true
 
 engineStrict: true
+
+minimumReleaseAgeExclude:
+  - formatly@0.9.0
 
 nodeVersion: 26.3.0
 

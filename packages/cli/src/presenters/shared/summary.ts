@@ -49,7 +49,7 @@ export function* presentSummary(
 				[
 					"✳ Cleaned ",
 					chalk.bold(pluralize(formattingResults.dirty.size, "file")),
-					"'s formatting with Prettier (--fix):\n",
+					"'s formatting (--fix):\n",
 				].join(""),
 			);
 		} else {
@@ -57,7 +57,7 @@ export function* presentSummary(
 				[
 					"✳ Found ",
 					chalk.bold(pluralize(formattingResults.dirty.size, "file")),
-					" with Prettier formatting differences (add ",
+					" with formatting differences (add ",
 					chalk.bold("--fix"),
 					" to rewrite):\n",
 				].join(""),

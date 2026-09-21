@@ -41,11 +41,7 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
-		"prettier": "catalog:dev",
 		"tsdown": "catalog:dev"
-	},
-	"peerDependencies": {
-		"prettier": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"

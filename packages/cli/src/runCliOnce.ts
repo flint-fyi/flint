@@ -13,7 +13,7 @@ import {
 	type LintResults,
 } from "@flint.fyi/core";
 
-import { runPrettier } from "./formatting/runPrettier.ts";
+import { runFormatting } from "./formatting/runFormatting.ts";
 import type { OptionsValues } from "./options.ts";
 import type { Renderer } from "./renderers/types.ts";
 
@@ -83,7 +83,7 @@ export async function runCliOnce(
 
 	let formattingResults: FormattingResults | undefined;
 	if (!skipFormatting) {
-		formattingResults = await runPrettier(host, lintResults, values.fix);
+		formattingResults = await runFormatting(host, lintResults, values.fix);
 	}
 
 	const duration = performance.now() - startTime;

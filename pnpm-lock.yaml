@@ -535,6 +535,9 @@ catalogs:
     detect-newline:
       specifier: ^4.0.1
       version: 4.0.1
+    formatly:
+      specifier: ^0.9.0
+      version: 0.9.0
     github-slugger:
       specifier: ^2.0.0
       version: 2.0.0
@@ -960,9 +963,9 @@ importers:
       debug-for-file:
         specifier: catalog:prod
         version: 0.4.2(supports-color@10.2.2)
-      ignore:
+      formatly:
         specifier: catalog:prod
-        version: 7.0.9
+        version: 0.9.0
       text-table-fast:
         specifier: catalog:prod
         version: 0.1.0
@@ -1139,9 +1142,6 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
-      prettier:
-        specifier: catalog:dev
-        version: 3.8.1
       tsdown:
         specifier: catalog:dev
         version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
@@ -5748,6 +5748,11 @@ packages:
 
   formatly@0.7.1:
     resolution: {integrity: sha512-ESuCEJE0SGgabl9q+zABI8LhJDmF+8nhpuqDzuM48HfJ9QTD5o6PqFJDFZY7w6f8xsh5lixuj5nJsQNvYOWvKQ==}
+    engines: {node: '>=18.3.0'}
+    hasBin: true
+
+  formatly@0.9.0:
+    resolution: {integrity: sha512-1V1oE6EHLrJH6IVp16rl4o5ApS1jkX72MxqeQ4HSX6JFcQmkawEtQpukXnat8w4lxi4O563CDvkbG4B0jGovVA==}
     engines: {node: '>=18.3.0'}
     hasBin: true
 
@@ -12114,6 +12119,11 @@ snapshots:
   format@0.2.2: {}
 
   formatly@0.7.1:
+    dependencies:
+      fd-package-json: 2.0.0
+      package-manager-detector: 1.8.0
+
+  formatly@0.9.0:
     dependencies:
       fd-package-json: 2.0.0
       package-manager-detector: 1.8.0
