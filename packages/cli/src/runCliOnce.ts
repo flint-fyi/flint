@@ -13,7 +13,6 @@ import {
 	type LintResults,
 } from "@flint.fyi/core";
 
-import { runPrettier } from "./formatting/runPrettier.ts";
 import type { OptionsValues } from "./options.ts";
 import type { Renderer } from "./renderers/types.ts";
 
@@ -30,6 +29,7 @@ export async function runCliOnce(
 	renderer: Renderer,
 	values: OptionsValues,
 ): Promise<CliResult> {
+	await import("@flint.fyi/ts-patch/install-patch");
 	const { default: config } = (await import(
 		pathToFileURL(path.join(host.getCurrentDirectory(), configFileName)).href
 	)) as {
@@ -83,6 +83,7 @@ export async function runCliOnce(
 
 	let formattingResults: FormattingResults | undefined;
 	if (!skipFormatting) {
+		const { runPrettier } = await import("./formatting/runPrettier.ts");
 		formattingResults = await runPrettier(host, lintResults, values.fix);
 	}
 
