@@ -37,19 +37,31 @@ export interface RuleTesterDefaults {
 	fileName?: string;
 	files?: Record<string, string>;
 }
-export interface RuleTesterOptions {
+
+export type RuleTesterOptions =
+	| RuleTesterOptionsDiskBacked
+	| RuleTesterOptionsVirtual;
+
+export interface RuleTesterOptionsBase {
 	assertNoLanguageReports?: boolean;
 	defaults?: RuleTesterDefaults;
 	describe?: TesterSetupDescribe;
-	diskBackedFSRoot?: string;
 	it?: TesterSetupIt;
 	only?: TesterSetupIt;
 	scope?: Record<string, unknown>;
 	skip?: TesterSetupIt;
+}
+
+export interface RuleTesterOptionsDiskBacked extends RuleTesterOptionsBase {
+	diskBackedFSRoot: string;
+	virtualFSRoot?: never;
+}
+
+export interface RuleTesterOptionsVirtual extends RuleTesterOptionsBase {
+	diskBackedFSRoot?: never;
 
 	/**
 	 * Working directory for an in-memory host. Defaults to the process cwd.
-	 * Cannot be combined with diskBackedFSRoot.
 	 */
 	virtualFSRoot?: string;
 }
@@ -77,9 +89,7 @@ type TestCaseUniqueProperties = Pick<
 export class RuleTester {
 	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
 	#linterHost: VFSLinterHost;
-	#testerOptions: Required<
-		Omit<RuleTesterOptions, "diskBackedFSRoot" | "virtualFSRoot">
-	>;
+	#testerOptions: Required<RuleTesterOptionsBase>;
 
 	constructor({
 		assertNoLanguageReports = true,
@@ -92,11 +102,6 @@ export class RuleTester {
 		skip,
 		virtualFSRoot,
 	}: RuleTesterOptions = {}) {
-		if (diskBackedFSRoot != null && virtualFSRoot != null) {
-			throw new TypeError(
-				"RuleTester cannot combine virtualFSRoot with diskBackedFSRoot.",
-			);
-		}
 		const cwd = resolve(virtualFSRoot ?? process.cwd());
 		const virtualRoot =
 			diskBackedFSRoot == null

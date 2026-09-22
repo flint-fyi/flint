@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, expectTypeOf, it, vi } from "vitest";
 
 import {
 	createLanguage,
@@ -231,11 +231,16 @@ Another language report.`,
 		},
 	);
 
-	it("rejects combining disk and virtual roots", () => {
-		expect(
-			() =>
-				new RuleTester({ diskBackedFSRoot: "fixtures", virtualFSRoot: "/" }),
-		).toThrow("RuleTester cannot combine virtualFSRoot with diskBackedFSRoot.");
+	it("types filesystem roots as mutually exclusive options", () => {
+		expectTypeOf({}).toExtend<RuleTesterOptions>();
+		expectTypeOf({
+			diskBackedFSRoot: "fixtures",
+		}).toExtend<RuleTesterOptions>();
+		expectTypeOf({ virtualFSRoot: "/" }).toExtend<RuleTesterOptions>();
+		expectTypeOf({
+			diskBackedFSRoot: "fixtures",
+			virtualFSRoot: "/",
+		}).not.toExtend<RuleTesterOptions>();
 	});
 });
 

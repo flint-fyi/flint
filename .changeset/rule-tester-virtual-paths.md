@@ -6,4 +6,5 @@
 Resolve expected cross-file suggestion paths against the test host's current directory, so fixtures can use relative path literals.
 Rules must report absolute target paths; relative reported targets are no longer accepted.
 Add `virtualFSRoot` to set the working directory for in-memory tests independently of the process cwd.
+Make disk-backed and virtual filesystem roots mutually exclusive in `RuleTesterOptions`.
 Target CSpell dictionary suggestions at the absolute configuration path used to read the dictionary.
