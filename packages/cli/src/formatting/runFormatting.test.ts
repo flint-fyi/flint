@@ -1,4 +1,5 @@
-import { mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -119,10 +120,15 @@ describe(runFormatting, () => {
 		onTestFinished(async () => {
 			await rm(root, { force: true, recursive: true });
 		});
+		const require = createRequire(import.meta.url);
+		await mkdir(path.join(root, "node_modules"));
 		await symlink(
-			path.resolve(import.meta.dirname, "../../node_modules"),
-			path.join(root, "node_modules"),
+			path.dirname(require.resolve("prettier/package.json")),
+			path.join(root, "node_modules/prettier"),
 			"junction",
+		);
+		expect(createRequire(path.join(root, "index.js")).resolve("prettier")).toBe(
+			require.resolve("prettier"),
 		);
 		await writeFile(path.join(root, ".prettierrc.json"), '{"semi":false}');
 		await writeFile(path.join(root, ".prettierignore"), "ignored.ts\n");
