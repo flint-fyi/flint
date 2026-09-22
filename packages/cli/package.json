@@ -42,6 +42,8 @@
 		"@flint.fyi/build": "workspace:^",
 		"@shikijs/cli": "catalog:dev",
 		"prettier": "catalog:dev",
+		"rollup": "catalog:dev",
+		"rollup-plugin-license": "catalog:dev",
 		"shiki": "catalog:dev",
 		"tsdown": "catalog:dev"
 	},

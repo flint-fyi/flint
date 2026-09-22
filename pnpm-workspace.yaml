@@ -53,6 +53,8 @@ catalogs:
     prettier-plugin-packagejson: 3.0.2
     prettier-plugin-sentences-per-line: 0.2.4
     prettier-plugin-sh: 0.19.0
+    rollup: 4.63.4
+    rollup-plugin-license: 3.7.1
     shiki: 4.4.3
     svelte: 5.57.0
     tsdown: 0.23.0

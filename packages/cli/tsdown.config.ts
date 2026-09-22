@@ -1,6 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import license from "rollup-plugin-license";
 import { defineConfig, type UserConfig } from "tsdown";
 
 import { base } from "@flint.fyi/build/tsdown";
@@ -14,6 +15,12 @@ const config: UserConfig = defineConfig({
 	clean: true,
 	deps: { alwaysBundle: [/^@shikijs\//, /^shiki(?:\/|$)/, "ansis"] },
 	plugins: [
+		license({
+			thirdParty: {
+				multipleVersions: true,
+				output: fileURLToPath(new URL("./dist/licenses.txt", import.meta.url)),
+			},
+		}),
 		{
 			name: "typescript-nord-only",
 			resolveId(source, importer): string | undefined {
