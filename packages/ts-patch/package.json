@@ -23,7 +23,8 @@
 	"exports": {
 		".": "./src/index.ts",
 		"./install-patch": "./src/install-patch.ts",
-		"./install-patch-hooks": "./src/install-patch-hooks.ts"
+		"./install-patch-hooks": "./src/install-patch-hooks.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -44,7 +45,8 @@
 		"exports": {
 			".": "./dist/index.mjs",
 			"./install-patch": "./dist/install-patch.mjs",
-			"./install-patch-hooks": "./dist/install-patch-hooks.mjs"
+			"./install-patch-hooks": "./dist/install-patch-hooks.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }
