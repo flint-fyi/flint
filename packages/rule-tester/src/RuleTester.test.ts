@@ -5,12 +5,15 @@ import { describe, expect, it, vi } from "vitest";
 import {
 	createLanguage,
 	RuleCreator,
+	type AnyLanguageFile,
 	type LanguageReports,
+	type LinterHost,
 	type RuleReport,
 } from "@flint.fyi/core";
 
 import {
 	RuleTester,
+	type RuleTesterOptions,
 	type TestCases,
 	type TesterSetupDescribe,
 	type TesterSetupIt,
@@ -153,14 +156,99 @@ Another language report.`,
 			"Reported suggestion target paths must exactly match expected target paths.",
 		);
 	});
+
+	it.each([
+		["/", "/src/file.ts", "/dictionary.json"],
+		["/project", "/project/src/file.ts", "/project/dictionary.json"],
+		["C:/project", "C:/project/src/file.ts", "C:/project/dictionary.json"],
+	])(
+		"roots files and suggestion expectations at %s",
+		async (root, sourcePath, dictionaryPath) => {
+			const getLanguageReports = vi.fn(
+				(file: AnyLanguageFile, host: LinterHost) => {
+					expect(host.getCurrentDirectory()).toBe(root);
+					expect(file.about.filePathAbsolute).toBe(sourcePath);
+					expect(host.readFileSync(sourcePath)).toBe("abc");
+					expect(host.readFileSync(dictionaryPath)).toBe("case");
+					expect(host.readFileSync(`${root}/default.json`)).toBe(
+						root === "/" ? undefined : "default",
+					);
+					return [];
+				},
+			);
+			await expect(
+				createTestSetup({
+					getLanguageReports,
+					report: {
+						message: "",
+						range: { begin: 0, end: 1 },
+						suggestions: [
+							{
+								files: {
+									[dictionaryPath]: [
+										{ range: { begin: 0, end: 4 }, text: "next" },
+									],
+								},
+								id: "dictionary",
+							},
+						],
+					},
+					testCases: {
+						invalid: [
+							{
+								code: "abc",
+								fileName: "src/file.ts",
+								files: { "dictionary.json": "case" },
+								snapshot: "abc\n~\n",
+								suggestions: [
+									{
+										files: {
+											"dictionary.json": [
+												{ original: "case", updated: "next" },
+											],
+										},
+										id: "dictionary",
+									},
+								],
+							},
+						],
+						valid: [],
+					},
+					testerOptions: {
+						...(root !== "/" && {
+							defaults: {
+								files: {
+									"default.json": "default",
+									"dictionary.json": "default",
+								},
+							},
+						}),
+						virtualFSRoot: root,
+					},
+				})(),
+			).resolves.toBeUndefined();
+			expect(getLanguageReports).toHaveBeenCalledOnce();
+		},
+	);
+
+	it("rejects combining disk and virtual roots", () => {
+		expect(
+			() =>
+				new RuleTester({ diskBackedFSRoot: "fixtures", virtualFSRoot: "/" }),
+		).toThrow("RuleTester cannot combine virtualFSRoot with diskBackedFSRoot.");
+	});
 });
 
 interface TestSetupOptions {
 	assertNoLanguageReports?: boolean;
-	getLanguageReports?: () => LanguageReports;
+	getLanguageReports?: (
+		file: AnyLanguageFile,
+		host: LinterHost,
+	) => LanguageReports;
 	it?: TesterSetupIt;
 	report?: RuleReport<"">;
 	testCases?: TestCases<undefined>;
+	testerOptions?: RuleTesterOptions;
 }
 
 function createTestSetup(options: TestSetupOptions): () => Promise<void> {
@@ -175,6 +263,7 @@ function createTestSetups({
 	it: registerTest,
 	report,
 	testCases = { invalid: [], valid: [""] },
+	testerOptions,
 }: TestSetupOptions): (() => Promise<void>)[] {
 	const testSetups: (() => Promise<void>)[] = [];
 	const collectTest: TesterSetupIt = (_description, setup): void => {
@@ -207,6 +296,7 @@ function createTestSetups({
 	});
 
 	new RuleTester({
+		...testerOptions,
 		...(assertNoLanguageReports === undefined
 			? {}
 			: { assertNoLanguageReports }),

@@ -44,6 +44,10 @@ export interface TestSuggestionForFile {
 }
 
 export interface TestSuggestionForFiles {
+	/**
+	 * Expected edits keyed by paths relative to the test host's cwd, or absolute paths.
+	 * Rules must report the corresponding absolute target paths.
+	 */
 	files: Record<string, TestSuggestionFileCase[]>;
 	id: string;
 }

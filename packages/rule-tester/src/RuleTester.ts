@@ -46,6 +46,12 @@ export interface RuleTesterOptions {
 	only?: TesterSetupIt;
 	scope?: Record<string, unknown>;
 	skip?: TesterSetupIt;
+
+	/**
+	 * Working directory for an in-memory host. Defaults to the process cwd.
+	 * Cannot be combined with diskBackedFSRoot.
+	 */
+	virtualFSRoot?: string;
 }
 
 export interface TestCases<Options extends object | undefined> {
@@ -71,7 +77,9 @@ type TestCaseUniqueProperties = Pick<
 export class RuleTester {
 	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
 	#linterHost: VFSLinterHost;
-	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
+	#testerOptions: Required<
+		Omit<RuleTesterOptions, "diskBackedFSRoot" | "virtualFSRoot">
+	>;
 
 	constructor({
 		assertNoLanguageReports = true,
@@ -82,7 +90,14 @@ export class RuleTester {
 		only,
 		scope = globalThis,
 		skip,
+		virtualFSRoot,
 	}: RuleTesterOptions = {}) {
+		if (diskBackedFSRoot != null && virtualFSRoot != null) {
+			throw new TypeError(
+				"RuleTester cannot combine virtualFSRoot with diskBackedFSRoot.",
+			);
+		}
+		const cwd = resolve(virtualFSRoot ?? process.cwd());
 		const virtualRoot =
 			diskBackedFSRoot == null
 				? undefined
@@ -104,7 +119,7 @@ export class RuleTester {
 		if (Object.keys(defaultFiles).length) {
 			const vfs = createVFSLinterHost(
 				baseHost == null
-					? { caseSensitive: isFileSystemCaseSensitive(), cwd: process.cwd() }
+					? { caseSensitive: isFileSystemCaseSensitive(), cwd }
 					: { baseHost },
 			);
 			for (const [name, content] of Object.entries(defaultFiles)) {
@@ -117,7 +132,7 @@ export class RuleTester {
 		// by per-test-case `files`
 		this.#linterHost = createVFSLinterHost(
 			baseHost == null
-				? { caseSensitive: isFileSystemCaseSensitive(), cwd: process.cwd() }
+				? { caseSensitive: isFileSystemCaseSensitive(), cwd }
 				: { baseHost },
 		);
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
@@ -207,6 +222,7 @@ export class RuleTester {
 			const actualSuggestions = resolveReportedSuggestions(
 				reports,
 				testCaseNormalized,
+				this.#linterHost.getCurrentDirectory(),
 			);
 			assert.deepStrictEqual(actualSuggestions, testCase.suggestions);
 		});
