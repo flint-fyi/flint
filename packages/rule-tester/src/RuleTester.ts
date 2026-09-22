@@ -102,44 +102,35 @@ export class RuleTester {
 		skip,
 		virtualFSRoot,
 	}: RuleTesterOptions = {}) {
-		const cwd = resolve(virtualFSRoot ?? process.cwd());
-		const virtualRoot =
-			diskBackedFSRoot == null
-				? undefined
-				: resolve(
-						process.cwd(),
-						diskBackedFSRoot,
-						"_flint-rule-tester-virtual",
-					);
-		let baseHost =
-			virtualRoot != null
-				? createEphemeralLinterHost(
-						withRepositoryRoot(
-							createDiskBackedLinterHost(virtualRoot),
-							virtualRoot,
-						),
-					)
-				: undefined;
+		let host: VFSLinterHost;
+		if (diskBackedFSRoot === undefined) {
+			host = createVFSLinterHost({
+				caseSensitive: isFileSystemCaseSensitive(),
+				cwd: resolve(virtualFSRoot ?? process.cwd()),
+			});
+		} else {
+			const cwd = resolve(
+				process.cwd(),
+				diskBackedFSRoot,
+				"_flint-rule-tester-virtual",
+			);
+			host = createVFSLinterHost({
+				baseHost: createEphemeralLinterHost(
+					withRepositoryRoot(createDiskBackedLinterHost(cwd), cwd),
+				),
+			});
+		}
+
 		const { files: defaultFiles = {} } = defaults;
 		if (Object.keys(defaultFiles).length) {
-			const vfs = createVFSLinterHost(
-				baseHost == null
-					? { caseSensitive: isFileSystemCaseSensitive(), cwd }
-					: { baseHost },
-			);
 			for (const [name, content] of Object.entries(defaultFiles)) {
-				const filePath = resolve(vfs.getCurrentDirectory(), name);
-				vfs.vfsUpsertFile(filePath, content);
+				const filePath = resolve(host.getCurrentDirectory(), name);
+				host.vfsUpsertFile(filePath, content);
 			}
-			baseHost = vfs;
+			// Keep per-test-case files from overwriting the defaults.
+			host = createVFSLinterHost({ baseHost: host });
 		}
-		// another overlay to prevent `defaultFiles` from being overwritten
-		// by per-test-case `files`
-		this.#linterHost = createVFSLinterHost(
-			baseHost == null
-				? { caseSensitive: isFileSystemCaseSensitive(), cwd }
-				: { baseHost },
-		);
+		this.#linterHost = host;
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
 		);
