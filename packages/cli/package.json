@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@shikijs/cli": "catalog:prod",
 		"chalk": "catalog:prod",

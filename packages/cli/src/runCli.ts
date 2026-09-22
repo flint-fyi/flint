@@ -1,16 +1,7 @@
 import { parseArgs } from "node:util";
 
-import {
-	createDiskBackedLinterHost,
-	createEphemeralLinterHost,
-	findConfigFileName,
-} from "@flint.fyi/core";
-
 import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
-import { createRendererFactory } from "./renderers/createRendererFactory.ts";
-import { runCliOnce } from "./runCliOnce.ts";
-import { runCliWatch } from "./runCliWatch.ts";
 
 export async function runCli(args: string[]): Promise<number> {
 	const { values } = parseArgs({
@@ -78,6 +69,12 @@ export async function runCli(args: string[]): Promise<number> {
 		return 0;
 	}
 
+	const {
+		createDiskBackedLinterHost,
+		createEphemeralLinterHost,
+		findConfigFileName,
+	} = await import("@flint.fyi/core");
+
 	const host = createDiskBackedLinterHost(process.cwd());
 	const cwd = host.getCurrentDirectory();
 	const configFileName = await findConfigFileName(host);
@@ -92,14 +89,18 @@ export async function runCli(args: string[]): Promise<number> {
 		return 2;
 	}
 
+	const { createRendererFactory } =
+		await import("./renderers/createRendererFactory.ts");
 	const getRenderer = await createRendererFactory(host, configFileName, values);
 
 	if (values.watch) {
+		const { runCliWatch } = await import("./runCliWatch.ts");
 		await runCliWatch(host, configFileName, getRenderer, values);
 		console.log("👋 Thanks for using Flint!");
 		return 0;
 	}
 
+	const { runCliOnce } = await import("./runCliOnce.ts");
 	const renderer = getRenderer();
 	const { exitCode } = await runCliOnce(
 		createEphemeralLinterHost(host),

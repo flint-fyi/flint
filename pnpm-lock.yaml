@@ -942,6 +942,9 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
+      '@flint.fyi/ts-patch':
+        specifier: workspace:^
+        version: link:../ts-patch
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
