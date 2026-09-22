@@ -1,10 +1,7 @@
 import { parseArgs } from "node:util";
 
-import {
-	createDiskBackedLinterHost,
-	createEphemeralLinterHost,
-	findConfigFileName,
-} from "@flint.fyi/core";
+import { createEphemeralLinterHost, findConfigFileName } from "@flint.fyi/core";
+import { createDiskBackedLinterHost } from "@flint.fyi/core/node";
 
 import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
