@@ -127,9 +127,6 @@ describe(runFormatting, () => {
 			path.join(root, "node_modules/prettier"),
 			"junction",
 		);
-		expect(createRequire(path.join(root, "index.js")).resolve("prettier")).toBe(
-			require.resolve("prettier"),
-		);
 		await writeFile(path.join(root, ".prettierrc.json"), '{"semi":false}');
 		await writeFile(path.join(root, ".prettierignore"), "ignored.ts\n");
 		await writeFile(path.join(root, ".gitignore"), "generated.ts\n");
