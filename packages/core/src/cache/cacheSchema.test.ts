@@ -13,10 +13,10 @@ describe("cacheStorageSchema decoding", () => {
 			},
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					timestamp: 1_234_567_890,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
@@ -55,6 +55,7 @@ describe("cacheStorageSchema decoding", () => {
 			configs: {},
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					timestamp: "not-a-number",
 				},
 			},
@@ -74,11 +75,11 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
+					invalidatesCache: false,
 					languageReports: [{ text: "Error" }],
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
@@ -92,6 +93,7 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
+					invalidatesCache: false,
 					languageReports: [
 						{ code: "TS1234", source: "typescript", text: "Error message" },
 					],
@@ -112,7 +114,6 @@ describe("cacheStorageSchema decoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
@@ -138,6 +139,7 @@ describe("cacheStorageSchema decoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -165,7 +167,6 @@ describe("cacheStorageSchema decoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
@@ -178,6 +179,7 @@ describe("cacheStorageSchema decoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -235,6 +237,7 @@ describe("cacheStorageSchema decoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -267,6 +270,7 @@ describe("cacheStorageSchema decoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -305,10 +309,10 @@ describe("cacheStorageSchema", () => {
 			},
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					timestamp: 1_234_567_890,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const encoded = z.encode(cacheStorageSchema, validCache);
@@ -322,10 +326,10 @@ describe("cacheStorageSchema", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 		const json = JSON.stringify(validCache);
 
@@ -382,6 +386,7 @@ describe("cacheStorageSchema", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
+					invalidatesCache: true,
 					languageReports: [
 						{ code: "TS1234", source: "typescript", text: "Error message" },
 					],
@@ -402,7 +407,6 @@ describe("cacheStorageSchema", () => {
 					timestamp: 1_234_567_890,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const encoded = z.encode(cacheStorageSchema, original);
@@ -418,6 +422,7 @@ describe("toSerializableCacheStorage encoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -444,7 +449,6 @@ describe("toSerializableCacheStorage encoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.decode(
@@ -468,6 +472,7 @@ describe("toSerializableCacheStorage encoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -485,7 +490,6 @@ describe("toSerializableCacheStorage encoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.decode(
@@ -503,10 +507,10 @@ describe("toSerializableCacheStorage encoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.decode(
@@ -522,6 +526,7 @@ describe("toSerializableCacheStorage encoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
+					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -547,7 +552,6 @@ describe("toSerializableCacheStorage encoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const serializable = z.decode(

@@ -73,19 +73,20 @@ export async function readFromCache(
 	const dependencyTouchTimes = new Map<string, number | undefined>();
 	const filePathsToLint = new Set<string>();
 
-	for (const {
-		filePath,
-		touchTime: cachedTouchTime,
-	} of cache.globalInvalidations) {
+	for (const [filePath, fileCached] of cached) {
+		if (!fileCached.invalidatesCache) {
+			continue;
+		}
+
 		// flint-disable-next-line performance/loopAwaits
 		const currentTouchTime = await host.getFileTouchTime(filePath);
-		if (currentTouchTime == null || currentTouchTime > cachedTouchTime) {
+		if (currentTouchTime == null || currentTouchTime > fileCached.timestamp) {
 			log(
 				"Linting all %d file(s) because cache-invalidating file %s has changed (current: %d, cached: %d)",
 				allFilePaths.size,
 				filePath,
 				currentTouchTime,
-				cachedTouchTime,
+				fileCached.timestamp,
 			);
 			return undefined;
 		}
