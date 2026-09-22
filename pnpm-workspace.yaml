@@ -33,7 +33,7 @@ catalogs:
     console-table-without-index: 0.1.1
     debug-for-file: 0.4.2
     eslint: 10.11.0
-    eslint-plugin-jsdoc: 64.5.3
+    eslint-plugin-jsdoc: 64.5.4
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-n: 18.3.0
     eslint-plugin-package-json: 1.9.0
@@ -76,7 +76,7 @@ catalogs:
     eslint-plugin-astro: 3.2.1
     eslint-plugin-eslint-plugin: 7.6.2
     eslint-plugin-import: 2.32.0
-    eslint-plugin-jsdoc: 64.5.3
+    eslint-plugin-jsdoc: 64.5.4
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.3.0
