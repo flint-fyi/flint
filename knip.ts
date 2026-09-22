@@ -24,7 +24,6 @@ const config: KnipConfig = {
 			ignoreDependencies: ["@shikijs/cli!"],
 			project: [
 				"src/**/*.ts!",
-				"!src/fixtures/renderShikiReports.ts!",
 				// Only tsdown's Shiki import substitution reaches this module.
 				"!src/presenters/detailed/shiki.ts!",
 			],
