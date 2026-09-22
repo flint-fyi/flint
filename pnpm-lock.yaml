@@ -342,6 +342,9 @@ catalogs:
     '@ianvs/prettier-plugin-sort-imports':
       specifier: 4.7.1
       version: 4.7.1
+    '@shikijs/cli':
+      specifier: 4.4.3
+      version: 4.4.3
     '@types/language-tags':
       specifier: 1.0.4
       version: 1.0.4
@@ -429,6 +432,9 @@ catalogs:
     prettier-plugin-sh:
       specifier: 0.19.0
       version: 0.19.0
+    shiki:
+      specifier: 4.4.3
+      version: 4.4.3
     svelte:
       specifier: 5.57.0
       version: 5.57.0
@@ -475,9 +481,6 @@ catalogs:
     '@jridgewell/sourcemap-codec':
       specifier: ^1.5.5
       version: 1.6.0
-    '@shikijs/cli':
-      specifier: ^4.0.0
-      version: 4.4.3
     '@standard-schema/spec':
       specifier: ^1.1.0
       version: 1.1.0
@@ -948,9 +951,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@shikijs/cli':
-        specifier: catalog:prod
-        version: 4.4.3
       chalk:
         specifier: catalog:prod
         version: 6.0.0
@@ -979,9 +979,15 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
+      '@shikijs/cli':
+        specifier: catalog:dev
+        version: 4.4.3
       prettier:
         specifier: catalog:dev
         version: 3.8.1
+      shiki:
+        specifier: catalog:dev
+        version: 4.4.3
       tsdown:
         specifier: catalog:dev
         version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)

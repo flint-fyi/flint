@@ -19,6 +19,16 @@ const config: KnipConfig = {
 			ignoreDependencies: ["tsdown!"],
 			project: ["src/**/*.ts!"],
 		},
+		"packages/cli": {
+			// The published CLI bundles this build dependency.
+			ignoreDependencies: ["@shikijs/cli!"],
+			project: [
+				"src/**/*.ts!",
+				"!src/fixtures/renderShikiReports.ts!",
+				// Only tsdown's Shiki import substitution reaches this module.
+				"!src/presenters/detailed/shiki.ts!",
+			],
+		},
 		"packages/css": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},

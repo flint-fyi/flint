@@ -19,7 +19,8 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"dist/"
+		"dist/",
+		"THIRD_PARTY_NOTICES.md"
 	],
 	"scripts": {
 		"test": "vitest --project cli"
@@ -28,7 +29,6 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@shikijs/cli": "catalog:prod",
 		"chalk": "catalog:prod",
 		"cli-cursor": "catalog:prod",
 		"debounce": "catalog:prod",
@@ -40,7 +40,9 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
+		"@shikijs/cli": "catalog:dev",
 		"prettier": "catalog:dev",
+		"shiki": "catalog:dev",
 		"tsdown": "catalog:dev"
 	},
 	"peerDependencies": {
@@ -54,5 +56,28 @@
 		"exports": {
 			".": "./dist/index.mjs"
 		}
+	},
+	"inlinedDependencies": {
+		"@shikijs/cli": "4.4.3",
+		"@shikijs/core": "4.4.3",
+		"@shikijs/engine-oniguruma": "4.4.3",
+		"@shikijs/langs": "4.4.3",
+		"@shikijs/primitive": "4.4.3",
+		"@shikijs/themes": "4.4.3",
+		"@shikijs/types": "4.4.3",
+		"@shikijs/vscode-textmate": "10.0.2",
+		"ansis": "4.4.0",
+		"ccount": "2.0.1",
+		"character-entities-html4": "2.1.0",
+		"character-entities-legacy": "3.0.0",
+		"comma-separated-tokens": "2.0.3",
+		"hast-util-to-html": "9.0.5",
+		"hast-util-whitespace": "3.0.0",
+		"html-void-elements": "3.0.0",
+		"property-information": "7.2.0",
+		"shiki": "4.4.3",
+		"space-separated-tokens": "2.0.2",
+		"stringify-entities": "4.0.4",
+		"zwitch": "2.0.4"
 	}
 }

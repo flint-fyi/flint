@@ -23,6 +23,7 @@ catalogs:
     "@eslint/markdown": 8.0.3
     "@humanwhocodes/momoa": 3.3.13
     "@ianvs/prettier-plugin-sort-imports": 4.7.1
+    "@shikijs/cli": 4.4.3
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
     "@types/node": 26.6.1
@@ -52,6 +53,7 @@ catalogs:
     prettier-plugin-packagejson: 3.0.2
     prettier-plugin-sentences-per-line: 0.2.4
     prettier-plugin-sh: 0.19.0
+    shiki: 4.4.3
     svelte: 5.57.0
     tsdown: 0.23.0
     typescript: 6.0.3
@@ -104,7 +106,6 @@ catalogs:
     "@eslint-community/regexpp": ^4.12.2
     "@humanwhocodes/momoa": ^3.3.10
     "@jridgewell/sourcemap-codec": ^1.5.5
-    "@shikijs/cli": ^4.0.0
     "@standard-schema/spec": ^1.1.0
     "@types/css-tree": 3.2.0
     "@types/mdast": ^4.0.4
