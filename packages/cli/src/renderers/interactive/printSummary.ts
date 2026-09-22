@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 import { hasFix, type FileResults } from "@flint.fyi/core";
 
@@ -19,14 +19,15 @@ export function printSummary(
 		),
 	};
 
-	return chalk.red(
+	return styleText(
+		"red",
 		[
 			"\u2716 Found ",
-			chalk.bold(pluralize(counts.all, "report")),
+			styleText("bold", pluralize(counts.all, "report")),
 			" across ",
-			chalk.bold(pluralize(counts.files, "file")),
+			styleText("bold", pluralize(counts.files, "file")),
 			...(counts.fixable
-				? [" (", chalk.bold(`${counts.fixable} fixable with --fix`), ")"]
+				? [" (", styleText("bold", `${counts.fixable} fixable with --fix`), ")"]
 				: []),
 			".",
 		].join(""),

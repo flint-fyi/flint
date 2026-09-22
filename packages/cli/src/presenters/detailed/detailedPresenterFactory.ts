@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 import { hasFix } from "@flint.fyi/core";
 
@@ -26,10 +26,10 @@ export const detailedPresenterFactory: PresenterFactory = {
 
 				const width = process.stdout.columns - indenter.length;
 
-				yield chalk.gray("╭");
-				yield chalk.hex(ColorCodes.filePathPrefix)("./");
+				yield styleText("gray", "╭");
+				yield styleText(ColorCodes.filePathPrefix, "./");
 				yield* wrapIfNeeded(
-					chalk.bold.hex(ColorCodes.filePath),
+					(text) => styleText("bold", styleText(ColorCodes.filePath, text)),
 					file.filePath,
 					width,
 				);
@@ -51,7 +51,7 @@ export const detailedPresenterFactory: PresenterFactory = {
 				}
 
 				yield `\n${indenter}\n`;
-				yield chalk.gray(`╰${"─".repeat(Math.min(widest, width))}`);
+				yield styleText("gray", `╰${"─".repeat(Math.min(widest, width))}`);
 				yield "\n";
 			},
 			*summarize(summaryContext) {
