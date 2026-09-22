@@ -8,11 +8,11 @@ import {
 	ruleCoverageSources,
 } from "./coverage.ts";
 
-afterEach(() => {
-	vi.restoreAllMocks();
-});
-
 describe(collectRuleCoverageReports, () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
 	it("collects one report per source, preserving source order", async () => {
 		vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
 			Response.json({

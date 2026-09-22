@@ -2,11 +2,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { getDenoLintRules } from "./deno.ts";
 
-afterEach(() => {
-	vi.restoreAllMocks();
-});
-
 describe(getDenoLintRules, () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
 	it("extracts built-in rules without treating custom rule patterns as rules", async () => {
 		vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
 			Response.json({
