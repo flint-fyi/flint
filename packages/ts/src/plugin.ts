@@ -143,7 +143,6 @@ import nonNullableTypeAssertions from "./rules/nonNullableTypeAssertions.ts";
 import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoalesces.ts";
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
-import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
 import nullishCheckStyle from "./rules/nullishCheckStyle.ts";
 import nullishCoalescingOperators from "./rules/nullishCoalescingOperators.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
@@ -454,7 +453,6 @@ export const ts = createPlugin({
 		nonNullAssertedNullishCoalesces,
 		nonNullAssertedOptionalChains,
 		nonNullAssertionPlacement,
-		nonOctalDecimalEscapes,
 		nullishCheckStyle,
 		nullishCoalescingOperators,
 		numberMethodRanges,
