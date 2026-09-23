@@ -20,7 +20,7 @@
 		"./package.json": "./package.json"
 	},
 	"bin": {
-		"flint": "src/bin/index.ts"
+		"flint": "./src/bin/index.ts"
 	},
 	"files": [
 		"dist/"
@@ -52,7 +52,7 @@
 	},
 	"publishConfig": {
 		"bin": {
-			"flint": "dist/bin/index.mjs"
+			"flint": "./dist/bin/index.mjs"
 		},
 		"exports": {
 			".": "./dist/index.mjs",
