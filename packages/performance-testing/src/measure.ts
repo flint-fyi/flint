@@ -19,7 +19,7 @@ const eslintCommand = `node ${path.resolve(
 
 // --cache-ignore stops Hyperfine's repeated runs from measuring a warm Flint
 // cache against ESLint runs that have none.
-const flintCommand = `node ${path.resolve(testCasesPath, "node_modules/flint/bin/index.js")} --cache-ignore --skip-formatting --skip-language-reports`;
+const flintCommand = `node ${path.resolve(testCasesPath, "node_modules/flint/src/bin/index.ts")} --cache-ignore --skip-formatting --skip-language-reports`;
 
 for (const files of testCaseEntries[0].values) {
 	for (const rules of testCaseEntries[1].values) {

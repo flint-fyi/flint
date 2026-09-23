@@ -16,8 +16,8 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsdown",
-		"flint": "node packages/flint/bin/index.js",
-		"flint:cache-ignore": "node packages/flint/bin/index.js --cache-ignore",
+		"flint": "flint",
+		"flint:cache-ignore": "flint --cache-ignore",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
 		"lint:knip:prod": "knip --strict",

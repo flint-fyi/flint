@@ -20,11 +20,10 @@
 		"./package.json": "./package.json"
 	},
 	"bin": {
-		"flint": "bin/index.js"
+		"flint": "src/bin/index.ts"
 	},
 	"files": [
-		"dist/",
-		"!lib/bin/**"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project flint"
@@ -52,6 +51,9 @@
 		"node": ">=26.1.0"
 	},
 	"publishConfig": {
+		"bin": {
+			"flint": "dist/bin/index.mjs"
+		},
 		"exports": {
 			".": "./dist/index.mjs",
 			"./package.json": "./package.json"
