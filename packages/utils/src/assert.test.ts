@@ -1,6 +1,68 @@
 import { describe, expect, it } from "vitest";
 
-import { assert, nullThrows, sanitizeStackTrace } from "./assert.ts";
+import {
+	assert,
+	buildIssueUrl,
+	FlintAssertionError,
+	nullThrows,
+	sanitizeStackTrace,
+} from "./assert.ts";
+
+describe("FlintAssertionError", () => {
+	it("prefixes the message and keeps the assertion message", () => {
+		const error = new FlintAssertionError("MSG");
+
+		expect(error.message).toBe("Flint bug: MSG.");
+		expect(error.assertionMessage).toBe("MSG");
+		expect(error.name).toBe("FlintAssertionError");
+		expect(error.stack).toMatch(/^FlintAssertionError: Flint bug: MSG\./);
+	});
+});
+
+describe("buildIssueUrl", () => {
+	it("uses the assertion message for the title", () => {
+		const issueUrl = new URL(buildIssueUrl(new FlintAssertionError("MSG")));
+
+		expect(issueUrl.searchParams.get("title")).toBe("🐛 Bug: MSG");
+	});
+
+	it("omits process arguments when none are given", () => {
+		const issueUrl = new URL(buildIssueUrl(new FlintAssertionError("MSG")));
+
+		expect(issueUrl.searchParams.has("additional_info")).toBe(false);
+	});
+
+	it("includes process arguments when given", () => {
+		const issueUrl = new URL(
+			buildIssueUrl(new FlintAssertionError("MSG"), ["--fix", "--watch"]),
+		);
+
+		expect(issueUrl.searchParams.get("additional_info")).toBe(
+			"Process arguments:\n\n`--fix --watch`",
+		);
+	});
+
+	it("reports <none> for an empty argument list", () => {
+		const issueUrl = new URL(buildIssueUrl(new FlintAssertionError("MSG"), []));
+
+		expect(issueUrl.searchParams.get("additional_info")).toBe(
+			"Process arguments:\n\n`<none>`",
+		);
+	});
+
+	it("censors file paths in the stack trace", () => {
+		const error = new FlintAssertionError("MSG");
+		error.stack =
+			"Error: Boom\n    at doThing (/home/me/proj/src/index.ts:10:5)";
+
+		const issueUrl = new URL(buildIssueUrl(error));
+
+		expect(issueUrl.searchParams.get("actual")).toContain(
+			"<censored filename>",
+		);
+		expect(issueUrl.searchParams.get("actual")).not.toContain("/home/me");
+	});
+});
 
 describe("assert", () => {
 	it("throws on null", () => {
