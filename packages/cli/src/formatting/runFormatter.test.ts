@@ -12,11 +12,11 @@ import {
 	type LintResultsMaybeWithChanges,
 } from "@flint.fyi/core";
 
-import { runFormatting } from "./runFormatting.ts";
+import { runFormatter } from "./runFormatter.ts";
 
 vi.mock("formatly", () => ({ resolveFormatter: vi.fn() }));
 
-describe(runFormatting, () => {
+describe(runFormatter, () => {
 	beforeEach(() => {
 		vi.mocked(resolveFormatter).mockReset();
 	});
@@ -26,7 +26,7 @@ describe(runFormatting, () => {
 		host.vfsUpsertFile("/root/index.ts", "const value=1;");
 
 		expect(
-			await runFormatting(host, createLintResults("/root/index.ts"), false),
+			await runFormatter(host, createLintResults("/root/index.ts"), false),
 		).toBeUndefined();
 		expect(await host.readFile("/root/index.ts")).toBe("const value=1;");
 	});
@@ -49,7 +49,7 @@ describe(runFormatting, () => {
 			});
 
 			expect(
-				await runFormatting(
+				await runFormatter(
 					host,
 					{
 						...createLintResults(
@@ -93,7 +93,7 @@ describe(runFormatting, () => {
 		});
 
 		await expect(
-			runFormatting(host, createLintResults("/root/index.ts"), true),
+			runFormatter(host, createLintResults("/root/index.ts"), true),
 		).rejects.toBe(error);
 		expect(await host.readFile("/root/index.ts")).toBe("const invalid =");
 	});
@@ -107,7 +107,7 @@ describe(runFormatting, () => {
 			});
 			vi.spyOn(host, "getRepositoryRoot").mockReturnValue(repositoryRoot);
 
-			await runFormatting(host, createLintResults(), false);
+			await runFormatter(host, createLintResults(), false);
 
 			expect(resolveFormatter).toHaveBeenCalledExactlyOnceWith(
 				repositoryRoot ?? "/root/packages/project",
@@ -146,7 +146,7 @@ describe(runFormatting, () => {
 		host.vfsUpsertFile(generated, "const invalid =");
 
 		expect(
-			await runFormatting(
+			await runFormatter(
 				host,
 				createLintResults(included, ignored, generated),
 				true,

@@ -187,9 +187,6 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-minimumReleaseAgeExclude:
-  - formatly@0.9.0
-
 nodeVersion: 26.3.0
 
 overrides:
