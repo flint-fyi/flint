@@ -9,7 +9,7 @@ import type {
 
 const log = debugForFile(import.meta.url);
 
-export async function runFormatting(
+export async function runFormatter(
 	host: LinterHost,
 	lintResults: LintResultsMaybeWithChanges,
 	fix: boolean | undefined,
