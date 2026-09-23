@@ -1,16 +1,3 @@
-/* eslint perfectionist/sort-objects: ["error", {
-	customGroups: [
-		{
-			groupName: "root",
-			elementNamePattern: "^$",
-		},
-		{
-			groupName: "flint",
-			elementNamePattern: "^flint$",
-		},
-	],
-	groups: ["root", "flint", "unknown"],
-}] */
 import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";

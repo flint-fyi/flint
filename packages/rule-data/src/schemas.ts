@@ -1,17 +1,3 @@
-/* eslint perfectionist/sort-objects: ["error", {
-	customGroups: [
-		{
-			groupName: "flint",
-			elementNamePattern: "^flint$",
-		},
-		{
-			groupName: "notes",
-			elementNamePattern: "^notes$",
-		},
-	],
-	groups: ["flint", "unknown", "notes"],
-}] */
-
 import { z } from "zod/v4";
 
 type FlintPlugin =
