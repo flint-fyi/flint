@@ -8,6 +8,7 @@ ruleTester.describe(rule, {
 			code: `
                 incorect
 `,
+			fileName: "src/example.txt",
 			snapshot: `
                 incorect
                 ~~~~~~~~
@@ -73,6 +74,7 @@ ruleTester.describe(rule, {
                 incorect
             
 `,
+			fileName: "src/example.txt",
 			files: { "cspell.json": '{"words":["existing"]}' },
 			snapshot: `
                 incorect
@@ -281,5 +283,20 @@ ruleTester.describe(rule, {
 			],
 		},
 	],
-	valid: ["", "known", "known-word", "knownWord"],
+	valid: [
+		"",
+		"known",
+		"known-word",
+		"knownWord",
+		{
+			code: "incorect",
+			fileName: "src/example.txt",
+			files: { "cspell.json": '{"words":["incorect"]}' },
+		},
+		{
+			code: "incorect",
+			fileName: "src/example.txt",
+			files: { "cspell.json": '{"words":["existing","incorect"]}' },
+		},
+	],
 });

@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 
+import { resolve } from "pathe";
+
 import {
 	applyChangesToText,
 	isSuggestionForFiles,
@@ -19,6 +21,7 @@ import type {
 export function resolveReportedSuggestions(
 	reports: NormalizedReport[],
 	testCaseNormalized: InvalidTestCase & TestCaseNormalized,
+	cwd: string,
 ): TestSuggestion[] | undefined {
 	const suggestionsReported = reports
 		.flatMap((report) => report.suggestions)
@@ -35,6 +38,7 @@ export function resolveReportedSuggestions(
 				files: resolveReportedSuggestionForFiles(
 					suggestionReported,
 					suggestionExpected,
+					cwd,
 				),
 				id: suggestionReported.id,
 			};
@@ -59,6 +63,7 @@ export function resolveReportedSuggestions(
 function resolveReportedSuggestionForFiles(
 	suggestionReported: SuggestionForFiles,
 	suggestionExpected: TestSuggestion | undefined,
+	cwd: string,
 ): Record<string, TestSuggestionFileCase[]> {
 	if (!suggestionExpected) {
 		return {};
@@ -72,14 +77,16 @@ function resolveReportedSuggestionForFiles(
 
 	assert.deepStrictEqual(
 		Object.keys(suggestionReported.files).sort(),
-		Object.keys(suggestionExpected.files).sort(),
+		Object.keys(suggestionExpected.files)
+			.map((filePath) => resolve(cwd, filePath))
+			.sort(),
 		"Reported suggestion target paths must exactly match expected target paths.",
 	);
 
 	return Object.fromEntries(
 		Object.entries(suggestionExpected.files).map(
 			([filePath, suggestionCasesExpected]) => {
-				const changes = suggestionReported.files[filePath];
+				const changes = suggestionReported.files[resolve(cwd, filePath)];
 				assert.ok(
 					changes,
 					`Expected reported suggestion "${suggestionReported.id}" to provide changes for target "${filePath}".`,

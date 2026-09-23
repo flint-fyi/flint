@@ -37,15 +37,33 @@ export interface RuleTesterDefaults {
 	fileName?: string;
 	files?: Record<string, string>;
 }
-export interface RuleTesterOptions {
+
+export type RuleTesterOptions =
+	| RuleTesterOptionsDiskBacked
+	| RuleTesterOptionsVirtual;
+
+export interface RuleTesterOptionsBase {
 	assertNoLanguageReports?: boolean;
 	defaults?: RuleTesterDefaults;
 	describe?: TesterSetupDescribe;
-	diskBackedFSRoot?: string;
 	it?: TesterSetupIt;
 	only?: TesterSetupIt;
 	scope?: Record<string, unknown>;
 	skip?: TesterSetupIt;
+}
+
+export interface RuleTesterOptionsDiskBacked extends RuleTesterOptionsBase {
+	diskBackedFSRoot: string;
+	virtualFSRoot?: never;
+}
+
+export interface RuleTesterOptionsVirtual extends RuleTesterOptionsBase {
+	diskBackedFSRoot?: never;
+
+	/**
+	 * Working directory for an in-memory host. Defaults to the process cwd.
+	 */
+	virtualFSRoot?: string;
 }
 
 export interface TestCases<Options extends object | undefined> {
@@ -71,7 +89,7 @@ type TestCaseUniqueProperties = Pick<
 export class RuleTester {
 	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
 	#linterHost: VFSLinterHost;
-	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
+	#testerOptions: Required<RuleTesterOptionsBase>;
 
 	constructor({
 		assertNoLanguageReports = true,
@@ -82,44 +100,37 @@ export class RuleTester {
 		only,
 		scope = globalThis,
 		skip,
+		virtualFSRoot,
 	}: RuleTesterOptions = {}) {
-		const virtualRoot =
-			diskBackedFSRoot == null
-				? undefined
-				: resolve(
-						process.cwd(),
-						diskBackedFSRoot,
-						"_flint-rule-tester-virtual",
-					);
-		let baseHost =
-			virtualRoot != null
-				? createEphemeralLinterHost(
-						withRepositoryRoot(
-							createDiskBackedLinterHost(virtualRoot),
-							virtualRoot,
-						),
-					)
-				: undefined;
+		let host: VFSLinterHost;
+		if (diskBackedFSRoot === undefined) {
+			host = createVFSLinterHost({
+				caseSensitive: isFileSystemCaseSensitive(),
+				cwd: resolve(virtualFSRoot ?? process.cwd()),
+			});
+		} else {
+			const cwd = resolve(
+				process.cwd(),
+				diskBackedFSRoot,
+				"_flint-rule-tester-virtual",
+			);
+			host = createVFSLinterHost({
+				baseHost: createEphemeralLinterHost(
+					withRepositoryRoot(createDiskBackedLinterHost(cwd), cwd),
+				),
+			});
+		}
+
 		const { files: defaultFiles = {} } = defaults;
 		if (Object.keys(defaultFiles).length) {
-			const vfs = createVFSLinterHost(
-				baseHost == null
-					? { caseSensitive: isFileSystemCaseSensitive(), cwd: process.cwd() }
-					: { baseHost },
-			);
 			for (const [name, content] of Object.entries(defaultFiles)) {
-				const filePath = resolve(vfs.getCurrentDirectory(), name);
-				vfs.vfsUpsertFile(filePath, content);
+				const filePath = resolve(host.getCurrentDirectory(), name);
+				host.vfsUpsertFile(filePath, content);
 			}
-			baseHost = vfs;
+			// Keep per-test-case files from overwriting the defaults.
+			host = createVFSLinterHost({ baseHost: host });
 		}
-		// another overlay to prevent `defaultFiles` from being overwritten
-		// by per-test-case `files`
-		this.#linterHost = createVFSLinterHost(
-			baseHost == null
-				? { caseSensitive: isFileSystemCaseSensitive(), cwd: process.cwd() }
-				: { baseHost },
-		);
+		this.#linterHost = host;
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
 		);
@@ -207,6 +218,7 @@ export class RuleTester {
 			const actualSuggestions = resolveReportedSuggestions(
 				reports,
 				testCaseNormalized,
+				this.#linterHost.getCurrentDirectory(),
 			);
 			assert.deepStrictEqual(actualSuggestions, testCase.suggestions);
 		});
