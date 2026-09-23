@@ -5,10 +5,8 @@ import { CachedFactory } from "cached-factory";
 import { resolve } from "pathe";
 
 import {
-	createDiskBackedLinterHost,
 	createEphemeralLinterHost,
 	createVFSLinterHost,
-	isFileSystemCaseSensitive,
 	parseOptions,
 	withRepositoryRoot,
 	type AnyLanguage,
@@ -20,6 +18,10 @@ import {
 	type RuleAbout,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
+import {
+	createDiskBackedLinterHost,
+	isFileSystemCaseSensitive,
+} from "@flint.fyi/core/node";
 
 import { createOutput } from "./createOutput.ts";
 import { createReportSnapshot } from "./createReportSnapshot.ts";
