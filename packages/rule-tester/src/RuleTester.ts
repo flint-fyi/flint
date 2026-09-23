@@ -8,6 +8,7 @@ import {
 	createDiskBackedLinterHost,
 	createEphemeralLinterHost,
 	createVFSLinterHost,
+	isFileSystemCaseSensitive,
 	parseOptions,
 	withRepositoryRoot,
 	type AnyLanguage,
@@ -100,7 +101,9 @@ export class RuleTester {
 		const { files: defaultFiles = {} } = defaults;
 		if (Object.keys(defaultFiles).length) {
 			const vfs = createVFSLinterHost(
-				baseHost == null ? { cwd: process.cwd() } : { baseHost },
+				baseHost == null
+					? { caseSensitive: isFileSystemCaseSensitive(), cwd: process.cwd() }
+					: { baseHost },
 			);
 			for (const [name, content] of Object.entries(defaultFiles)) {
 				const filePath = resolve(vfs.getCurrentDirectory(), name);
@@ -111,7 +114,9 @@ export class RuleTester {
 		// another overlay to prevent `defaultFiles` from being overwritten
 		// by per-test-case `files`
 		this.#linterHost = createVFSLinterHost(
-			baseHost == null ? { cwd: process.cwd() } : { baseHost },
+			baseHost == null
+				? { caseSensitive: isFileSystemCaseSensitive(), cwd: process.cwd() }
+				: { baseHost },
 		);
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
