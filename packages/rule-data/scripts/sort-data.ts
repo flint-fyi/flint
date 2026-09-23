@@ -9,7 +9,7 @@
 			elementNamePattern: "^flint$",
 		},
 	],
-	groups: ["root" ,"flint", "unknown"],
+	groups: ["root", "flint", "unknown"],
 }] */
 import fs from "node:fs/promises";
 import path from "node:path";
