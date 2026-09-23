@@ -43,7 +43,7 @@ export function finalizeFileResults(
 			directivesFilterer.add(file.directives);
 		}
 
-		const cacheImpacts = language.getFileCacheImpacts?.(file);
+		const cacheImpacts = language.getFileCacheImpacts?.(file, host);
 
 		if (cacheImpacts?.invalidatesCache) {
 			invalidatesCache = true;

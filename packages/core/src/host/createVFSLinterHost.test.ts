@@ -502,6 +502,44 @@ describe(createVFSLinterHost, () => {
 			expect(onEvent).not.toHaveBeenCalled();
 		});
 
+		it("reports editing when an overlay shadows a base host file", () => {
+			const baseHost = createVFSLinterHost({
+				caseSensitive: true,
+				cwd: "/root",
+			});
+			const host = createVFSLinterHost({ baseHost });
+			const onEvent = vi.fn();
+
+			baseHost.vfsUpsertFile("/root/file.txt", "base content");
+			using _ = host.watchFileSync("/root/file.txt", onEvent, {
+				ignoredPaths: [],
+			});
+
+			host.vfsUpsertFile("/root/file.txt", "overlay content");
+
+			expect(onEvent).toHaveBeenCalledExactlyOnceWith("changed");
+		});
+
+		it("reports editing when removing an overlay reveals a base host file", () => {
+			const baseHost = createVFSLinterHost({
+				caseSensitive: true,
+				cwd: "/root",
+			});
+			const host = createVFSLinterHost({ baseHost });
+			const onEvent = vi.fn();
+
+			baseHost.vfsUpsertFile("/root/file.txt", "base content");
+			host.vfsUpsertFile("/root/file.txt", "overlay content");
+			using _ = host.watchFileSync("/root/file.txt", onEvent, {
+				ignoredPaths: [],
+			});
+
+			host.vfsDeleteFile("/root/file.txt");
+
+			expect(onEvent).toHaveBeenCalledExactlyOnceWith("changed");
+			expect(host.readFileSync("/root/file.txt")).toBe("base content");
+		});
+
 		it("propagates base host events", () => {
 			const baseHost = createVFSLinterHost({
 				caseSensitive: true,
