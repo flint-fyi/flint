@@ -24,8 +24,8 @@ export async function renderCliResults(
 
 	let formattingResults: FormattingResults | undefined;
 	if (!skipFormatting) {
-		const { runFormatting } = await import("./formatting/runFormatting.ts");
-		formattingResults = await runFormatting(
+		const { runFormatter } = await import("./formatting/runFormatter.ts");
+		formattingResults = await runFormatter(
 			host,
 			lintResults,
 			values.fix,

@@ -225,8 +225,8 @@ Whether to skip formatting after linting.
 
 <PackageManagers args="--skip-formatting" pkg="flint" type="dlx" />
 
-By default, Flint uses [Formatly](https://github.com/JoshuaKGoldberg/formatly) to detect and run your project's formatter after linting.
-Formatly supports Biome, Deno, dprint, Oxfmt, and Prettier.
+By default, Flint runs your project's formatter after linting to ensure the output matches your project's formatting rules.
+We support Biome, Deno, dprint, Oxfmt, and Prettier.
 Flint checks formatting without writing files unless `--fix` is provided, and skips formatting when no formatter is detected.
 By passing in `--skip-formatting`, you can disable that execution of the formatter.
 You may wish to do this for performance and/or if you run your formatter separately from Flint.
