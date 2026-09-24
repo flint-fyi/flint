@@ -139,7 +139,7 @@ catalogs:
     sort-package-json: ^4.0.0
     svelte: ^5.0.0
     svelte2tsx: ^0.7.55
-    text-table-fast: ^0.1.0
+    text-table-fast: ^0.2.0
     tinyglobby: ^0.2.17
     ts-api-utils: ^2.4.0
     typescript: ^6.0.3
