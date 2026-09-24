@@ -361,8 +361,8 @@ catalogs:
       specifier: 1.6.27
       version: 1.6.27
     console-fail-test:
-      specifier: 0.6.1
-      version: 0.6.1
+      specifier: 0.9.0
+      version: 0.9.0
     console-table-without-index:
       specifier: 0.1.1
       version: 0.1.1
@@ -749,7 +749,7 @@ importers:
         version: 1.6.27(@typescript-eslint/eslint-plugin@8.70.0)(eslint@10.11.0)(supports-color@10.2.2)(typescript@6.0.3)(vitest@5.0.1)
       console-fail-test:
         specifier: catalog:dev
-        version: 0.6.1
+        version: 0.9.0
       eslint:
         specifier: catalog:dev
         version: 10.11.0(jiti@2.7.0)(supports-color@10.2.2)
@@ -4953,8 +4953,8 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  console-fail-test@0.6.1:
-    resolution: {integrity: sha512-KxgTskG1eCVCKB6f3XuM3lkzuM+0ASGCPVLIJU8r6Lv6lzCCk4FEoYkHJubEnUKzqHAQNVl1lw5UOyufTTILjg==}
+  console-fail-test@0.9.0:
+    resolution: {integrity: sha512-gfU573adULCDbMQHMpqq5BcbJzR9htXF9n82ZglwIUqDVkJh+6yz6JErlu++5n3G7afZy5qi5FCr3HWwBb5i7Q==}
     engines: {node: '>=20.19.0'}
 
   console-table-without-index@0.1.1:
@@ -11019,7 +11019,7 @@ snapshots:
 
   concat-map@0.0.1: {}
 
-  console-fail-test@0.6.1: {}
+  console-fail-test@0.9.0: {}
 
   console-table-without-index@0.1.1:
     dependencies:
