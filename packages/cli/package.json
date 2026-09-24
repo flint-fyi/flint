@@ -33,7 +33,7 @@
 		"cli-cursor": "catalog:prod",
 		"debounce": "catalog:prod",
 		"debug-for-file": "catalog:prod",
-		"ignore": "catalog:prod",
+		"formatly": "catalog:prod",
 		"text-table-fast": "catalog:prod",
 		"typescript": "catalog:prod",
 		"wrap-ansi": "catalog:prod"
@@ -42,9 +42,6 @@
 		"@flint.fyi/build": "workspace:^",
 		"prettier": "catalog:dev",
 		"tsdown": "catalog:dev"
-	},
-	"peerDependencies": {
-		"prettier": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"
