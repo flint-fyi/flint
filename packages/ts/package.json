@@ -29,6 +29,7 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
+		"cached-factory": "catalog:prod",
 		"pathe": "catalog:prod",
 		"regexp-ast-analysis": "catalog:prod",
 		"scslre": "catalog:prod",

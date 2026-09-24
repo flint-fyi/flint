@@ -1,3 +1,4 @@
+import { WeakCachedFactory } from "cached-factory";
 import ts, { SyntaxKind } from "typescript";
 
 import {
@@ -25,15 +26,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		// Whether a symbol is deprecated never changes within a lint run, and
-		// finding out re-reads its JSDoc and walks its alias chain, so each
-		// answer is kept for the (many) later references to the same symbol.
-		const jsDocDeprecationBySymbol = new WeakMap<ts.Symbol, boolean>();
-		const aliasChainDeprecationBySymbol = new WeakMap<ts.Symbol, boolean>();
-		const aliasChainTargetDeprecationBySymbol = new WeakMap<
-			ts.Symbol,
-			boolean
-		>();
+		const jsDocDeprecationByTypeChecker = new WeakCachedFactory(
+			(typeChecker: ts.TypeChecker) =>
+				new WeakCachedFactory((symbol: ts.Signature | ts.Symbol) =>
+					getJsDocDeprecationUncached(symbol, typeChecker),
+				),
+		);
+		const aliasChainDeprecationByTypeChecker = new WeakCachedFactory(
+			(typeChecker: ts.TypeChecker) =>
+				new WeakCachedFactory((symbol: ts.Symbol) =>
+					searchForDeprecationInAliasesChainUncached(
+						symbol,
+						typeChecker,
+						false,
+					),
+				),
+		);
+		const aliasChainTargetDeprecationByTypeChecker = new WeakCachedFactory(
+			(typeChecker: ts.TypeChecker) =>
+				new WeakCachedFactory((symbol: ts.Symbol) =>
+					searchForDeprecationInAliasesChainUncached(symbol, typeChecker, true),
+				),
+		);
 
 		function getJsDocDeprecation(
 			symbol: ts.Signature | ts.Symbol | undefined,
@@ -43,16 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
-			if (!("getDeclarations" in symbol)) {
-				return getJsDocDeprecationUncached(symbol, typeChecker);
-			}
-
-			let deprecated = jsDocDeprecationBySymbol.get(symbol);
-			if (deprecated === undefined) {
-				deprecated = getJsDocDeprecationUncached(symbol, typeChecker);
-				jsDocDeprecationBySymbol.set(symbol, deprecated);
-			}
-			return deprecated;
+			return jsDocDeprecationByTypeChecker.get(typeChecker).get(symbol);
 		}
 
 		function getJsDocDeprecationUncached(
@@ -89,19 +94,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
-			const cache = checkAliasedSymbol
-				? aliasChainTargetDeprecationBySymbol
-				: aliasChainDeprecationBySymbol;
-			let deprecated = cache.get(symbol);
-			if (deprecated === undefined) {
-				deprecated = searchForDeprecationInAliasesChainUncached(
-					symbol,
-					typeChecker,
-					checkAliasedSymbol,
-				);
-				cache.set(symbol, deprecated);
-			}
-			return deprecated;
+			return (
+				checkAliasedSymbol
+					? aliasChainTargetDeprecationByTypeChecker
+					: aliasChainDeprecationByTypeChecker
+			)
+				.get(typeChecker)
+				.get(symbol);
 		}
 
 		function searchForDeprecationInAliasesChainUncached(
