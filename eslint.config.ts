@@ -152,20 +152,14 @@ const config: ConfigObject[] = defineConfig(
 			"perfectionist/sort-imports": "off",
 			"perfectionist/sort-named-imports": "off",
 
-			// `Symbol.dispose` and `Symbol.asyncDispose` are standard ES2026
-			// (explicit resource management, shipped in Node 24) but the rule's
-			// static builtin list has no ignore option and hasn't caught up.
+			// TODO: Remove after upgrading Unicorn to >=74; expiring-todo-comments cannot resolve catalog:dev.
+			// Fixed in Unicorn 74: https://github.com/sindresorhus/eslint-plugin-unicorn/pull/3631
 			"unicorn/no-nonstandard-builtin-properties": "off",
-
-			// Language plugins intentionally register extensions and enforce
-			// single-instance invariants at module load time.
-			"unicorn/no-top-level-side-effects": "off",
 
 			// Too opinionated.
 			"unicorn/prefer-await": "off",
 
-			// Conflicts with Prettier: Prettier lowercases hex digits
-			// (0xff) while this rule wants uppercase (0xFF).
+			// Leave numeric literal formatting to Prettier; Unicorn defaults to uppercase hex digits.
 			"unicorn/number-literal-case": "off",
 
 			// Conflicts with Flint's own ts/regexLetterCasing which
@@ -191,6 +185,13 @@ const config: ConfigObject[] = defineConfig(
 		},
 		settings: {
 			perfectionist: { partitionByComment: true, type: "natural" },
+		},
+	},
+	{
+		files: ["packages/*-language/src/language.ts"],
+		rules: {
+			// Language entry points register extensions and enforce single-instance invariants.
+			"unicorn/no-top-level-side-effects": "off",
 		},
 	},
 	{
