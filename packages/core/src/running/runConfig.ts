@@ -56,7 +56,7 @@ export async function runConfig(
 
 	// 3. For each file path, finalize output using each of its language files
 	const allFileResults = new Map(
-		Array.from(languageFilesByFilePath).map(([filePath, languageAndFiles]) => [
+		Array.from(languageFilesByFilePath, ([filePath, languageAndFiles]) => [
 			filePath,
 			finalizeFileResults(
 				filePath,

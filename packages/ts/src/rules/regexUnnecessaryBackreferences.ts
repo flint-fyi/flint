@@ -83,7 +83,7 @@ function getUselessProblem(
 		return "backward";
 	}
 
-	return undefined;
+	return;
 }
 
 function isLookbehind(node: RegExpAST.Node) {

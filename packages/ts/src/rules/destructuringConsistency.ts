@@ -125,9 +125,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const variableName =
-						destructured.destructuredProperties.get(propertyName);
-
 					if (
 						(node.parent.kind === SyntaxKind.CallExpression &&
 							node.parent.expression === node) ||
@@ -136,6 +133,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
+					const variableName =
+						destructured.destructuredProperties.get(propertyName);
 					const range = getTSNodeRange(node, sourceFile);
 					const expression = node.getText(sourceFile);
 

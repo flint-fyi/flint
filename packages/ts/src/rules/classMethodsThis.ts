@@ -113,17 +113,11 @@ function isPublicMember(member: ClassMember): boolean {
 		return true;
 	}
 
-	if (
-		modifiers.some(
-			(m) =>
-				m.kind === SyntaxKind.PrivateKeyword ||
-				m.kind === SyntaxKind.ProtectedKeyword,
-		)
-	) {
-		return false;
-	}
-
-	return true;
+	return !modifiers.some(
+		(m) =>
+			m.kind === SyntaxKind.PrivateKeyword ||
+			m.kind === SyntaxKind.ProtectedKeyword,
+	);
 }
 
 function shouldSkipMember(

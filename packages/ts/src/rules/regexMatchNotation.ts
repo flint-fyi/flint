@@ -76,16 +76,16 @@ function isMatchAnyCharacterClass(
 		} else if (
 			element.type === "CharacterClassRange" &&
 			element.min.value === 0 &&
-			(element.max.value === 0xffff ||
-				element.max.value === 0x10ffff ||
-				(flags.unicode && element.max.value >= 0x10ffff))
+			(element.max.value === 0xff_ff ||
+				element.max.value === 0x10_ff_ff ||
+				(flags.unicode && element.max.value >= 0x10_ff_ff))
 		) {
 			return true;
 		}
 	}
 
 	for (const positive of positiveElements) {
-		const matchingNegative = negativeElements.find(
+		const matchingNegative = negativeElements.some(
 			(negative) => negative.kind === positive.kind,
 		);
 		if (matchingNegative) {
@@ -107,11 +107,7 @@ function isMatchAnyCharacterClass(
 
 	const hasWord = positiveElements.some((e) => e.kind === "word");
 	const hasNonWord = negativeElements.some((e) => e.kind === "word");
-	if (hasWord && hasNonWord) {
-		return true;
-	}
-
-	return false;
+	return hasWord && hasNonWord;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -151,22 +147,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitRegExpAST(regexpAst, {
 				onCharacterClassEnter(ccNode) {
 					if (
-						isMatchAnyCharacterClass(ccNode, flagsInfo) &&
-						ccNode.raw !== allowedNotation
+						!isMatchAnyCharacterClass(ccNode, flagsInfo) ||
+						ccNode.raw === allowedNotation
 					) {
-						const preferred = flagsInfo.dotAll ? "." : allowedNotation;
-						context.report({
-							data: {
-								preferred,
-								raw: ccNode.raw,
-							},
-							message: "unexpected",
-							range: {
-								begin: patternStart + ccNode.start,
-								end: patternStart + ccNode.end,
-							},
-						});
+						return;
 					}
+
+					const preferred = flagsInfo.dotAll ? "." : allowedNotation;
+					context.report({
+						data: {
+							preferred,
+							raw: ccNode.raw,
+						},
+						message: "unexpected",
+						range: {
+							begin: patternStart + ccNode.start,
+							end: patternStart + ccNode.end,
+						},
+					});
 				},
 			});
 		}

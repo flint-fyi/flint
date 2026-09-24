@@ -70,7 +70,7 @@ export const interactiveRendererFactory: RendererFactory = {
 				}
 
 				function onKeyPress(chunk: string, key: { name: string }) {
-					if (chunk === "\x03" || key.name === "q") {
+					if (chunk === "\u{3}" || key.name === "q") {
 						dispose();
 						quit();
 						resolve();
@@ -85,11 +85,10 @@ export const interactiveRendererFactory: RendererFactory = {
 				}
 
 				function queueRerender() {
-					if (currentTask) {
-						currentTask = currentTask.then(() => rerender());
-					} else {
-						currentTask = rerender();
-					}
+					currentTask = (async () => {
+						await currentTask;
+						await rerender();
+					})();
 				}
 			});
 

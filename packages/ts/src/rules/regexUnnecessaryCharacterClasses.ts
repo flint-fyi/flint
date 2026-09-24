@@ -26,7 +26,7 @@ function canUnwrapSingleElement(characterClass: CharacterClass) {
 		case "Character":
 			return (
 				element.raw !== "=" &&
-				element.raw !== "\\b" &&
+				element.raw !== String.raw`\b` &&
 				!/^\\[1-9]\d*$/.test(element.raw)
 			);
 
@@ -110,7 +110,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const patternEscaped = construction.pattern.replaceAll("\\\\", "\\");
 			const unnecessaryClasses = findUnnecessaryCharacterClasses(
 				patternEscaped,
 				construction.flags,

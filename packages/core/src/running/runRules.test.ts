@@ -31,7 +31,7 @@ function createFile(
 		about: { filePath, filePathAbsolute: filePath, sourceText: "node" },
 		services: { marker },
 		[Symbol.dispose]() {
-			return undefined;
+			return;
 		},
 	};
 
@@ -81,7 +81,7 @@ describe(runRules, () => {
 							message: "message",
 							range: { begin: 0, end: 1 },
 						});
-						return undefined;
+						return;
 					},
 					visitors: {
 						Node(_node, services) {
@@ -114,7 +114,7 @@ describe(runRules, () => {
 		const setupOnlyRule = ruleCreator.createRule(language, {
 			about: { description: "", id: "setupOnly" },
 			messages,
-			setup: () => undefined,
+			setup: vi.fn(),
 		});
 		const otherLanguage = createLanguage({
 			about: { name: "other" },
@@ -192,7 +192,7 @@ describe(runRules, () => {
 							message: "message",
 							range: { begin: 0, end: 0 },
 						});
-						return undefined;
+						return;
 					},
 				};
 			},

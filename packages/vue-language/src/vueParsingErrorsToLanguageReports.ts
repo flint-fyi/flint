@@ -12,9 +12,9 @@ export function vueParsingErrorsToLanguageReports(
 		if ("code" in error) {
 			code += error.code.toString();
 			loc =
-				error.loc != null
-					? `:${error.loc.start.line}:${error.loc.start.column}`
-					: "";
+				error.loc == null
+					? ""
+					: `:${error.loc.start.line}:${error.loc.start.column}`;
 		}
 		return {
 			code,

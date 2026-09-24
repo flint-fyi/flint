@@ -124,10 +124,10 @@ for (let index = 10; index >= 0; index += step) { }
 		`for (let index = 10; index > 0; index -= 1) { }`,
 		`for (let index = 0; index < 10; index += 2) { }`,
 		`for (let index = 10; index > 0; index -= 2) { }`,
-		`
+		String.raw`
 declare const text: string;
 
-for (let i = 10; i >= 0 && text[i] === "\\\\"; i--) { }
+for (let i = 10; i >= 0 && text[i] === "\\"; i--) { }
 `,
 	],
 });

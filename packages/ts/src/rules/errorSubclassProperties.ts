@@ -20,7 +20,12 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 	}
 
 	if (!constructor) {
-		return undefined;
+		return;
+	}
+
+	const body = constructor.body;
+	if (!body) {
+		return;
 	}
 
 	let hasSuperCall = false;
@@ -31,11 +36,6 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 	let superCallNode: AST.CallExpression | undefined;
 	let nameAssignmentNode: AST.BinaryExpression | undefined;
 	let messageAssignmentNode: AST.BinaryExpression | undefined;
-
-	const body = constructor.body;
-	if (!body) {
-		return undefined;
-	}
 
 	for (const statement of body.statements) {
 		if (statement.kind !== SyntaxKind.ExpressionStatement) {

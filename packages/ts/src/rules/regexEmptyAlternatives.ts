@@ -20,11 +20,9 @@ function findEmptyAlternativesInGroup(
 		["?!", "?:", "?="].includes(pattern.slice(groupStart, groupStart + 2)) ||
 		["?<!", "?<="].includes(pattern.slice(groupStart, groupStart + 3))
 	) {
-		if (pattern.slice(groupStart, groupStart + 3).startsWith("?<")) {
-			contentStart = groupStart + 3;
-		} else {
-			contentStart = groupStart + 2;
-		}
+		contentStart =
+			groupStart +
+			(pattern.slice(groupStart, groupStart + 3).startsWith("?<") ? 3 : 2);
 	} else if (pattern[groupStart] === "?" && pattern[groupStart + 1] === "<") {
 		const closeAngle = pattern.indexOf(">", groupStart + 2);
 		if (closeAngle !== -1 && closeAngle < groupEnd) {

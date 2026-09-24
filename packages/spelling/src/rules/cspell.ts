@@ -51,10 +51,10 @@ export default ruleCreator.createRule(textLanguage, {
 		const cspellJsonPath = resolve(cwd, "cspell.json");
 
 		const configTextPromise = context.host.readFile(cspellJsonPath);
-		const configPromise = configTextPromise.then(
-			(configText) =>
-				(parseJsonSafe(configText) as CSpellConfigLike | undefined) ?? {},
-		);
+		const configPromise = (async () => {
+			const configText = await configTextPromise;
+			return (parseJsonSafe(configText) as CSpellConfigLike | undefined) ?? {};
+		})();
 
 		return {
 			dependencies: ["cspell.json"],
@@ -157,9 +157,13 @@ export default ruleCreator.createRule(textLanguage, {
 			visitors: {
 				file: (text, { filePath, filePathAbsolute }) => {
 					fileTasks.push({
-						documentValidatorTask: configPromise.then((config) =>
-							createDocumentValidator(cwd, filePathAbsolute, text, config),
-						),
+						documentValidatorTask: (async () =>
+							createDocumentValidator(
+								cwd,
+								filePathAbsolute,
+								text,
+								await configPromise,
+							))(),
 						filePath,
 						text,
 					});

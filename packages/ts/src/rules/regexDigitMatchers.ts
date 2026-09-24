@@ -121,10 +121,10 @@ function findIssues(pattern: string, flags: string): Issue[] {
 				if (charCount >= 4 && group.nodes.length > 1) {
 					const newText = `${group.min.raw}-${group.max.raw}`;
 
-					const nodeRanges: { end: number; start: number }[] = [];
-					for (const node of group.nodes) {
-						nodeRanges.push({ end: node.end, start: node.start });
-					}
+					const nodeRanges: { end: number; start: number }[] = Array.from(
+						group.nodes,
+						(node) => ({ end: node.end, start: node.start }),
+					);
 					nodeRanges.sort((a, b) => a.start - b.start);
 
 					const mergedRanges: { end: number; start: number }[] = [];
@@ -229,18 +229,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const { pattern, start } = construction;
-			const unescapedPattern = pattern.replace(/\\\\/g, "\\");
+			const unescapedPattern = pattern.replaceAll("\\\\", "\\");
 			const issues = findIssues(unescapedPattern, construction.flags);
 
 			function mapPositionToSource(pos: number): number {
 				let sourcePos = 0;
 				let patternPos = 0;
 				while (patternPos < pos && sourcePos < pattern.length) {
-					if (pattern[sourcePos] === "\\" && pattern[sourcePos + 1] === "\\") {
-						sourcePos += 2;
-					} else {
-						sourcePos += 1;
-					}
+					sourcePos +=
+						pattern[sourcePos] === "\\" && pattern[sourcePos + 1] === "\\"
+							? 2
+							: 1;
 					patternPos += 1;
 				}
 				return sourcePos;
@@ -257,14 +256,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				context.report({
 					data: {
-						range: issue.newText.replace(/\\/g, "\\\\"),
+						range: issue.newText.replaceAll("\\", "\\\\"),
 					},
 					fix: adjustedRanges.map((range, index) => ({
 						range: {
 							begin: start + 1 + range.start,
 							end: start + 1 + range.end,
 						},
-						text: index === 0 ? issue.newText.replace(/\\/g, "\\\\") : "",
+						text: index === 0 ? issue.newText.replaceAll("\\", "\\\\") : "",
 					})),
 					message: "preferRange",
 					range: {

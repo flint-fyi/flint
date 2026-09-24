@@ -22,7 +22,7 @@ export function printSummary(
 	return styleText(
 		"red",
 		[
-			"\u2716 Found ",
+			"\u{2716} Found ",
 			styleText("bold", pluralize(counts.all, "report")),
 			" across ",
 			styleText("bold", pluralize(counts.files, "file")),

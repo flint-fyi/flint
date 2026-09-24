@@ -45,23 +45,23 @@ export async function writeToCache(
 		},
 		files: {
 			...Object.fromEntries(
-				Array.from(lintResults.allFileResults).map(
-					([filePath, fileResults]) => [
-						filePath,
-						{
-							...(fileResults.dependencies.size && {
-								dependencies: Array.from(fileResults.dependencies).sort(),
-							}),
-							...(fileResults.languageReports.length && {
-								languageReports: fileResults.languageReports,
-							}),
-							...(fileResults.reports.length && {
-								reports: fileResults.reports,
-							}),
-							timestamp,
-						},
-					],
-				),
+				Array.from(lintResults.allFileResults, ([filePath, fileResults]) => [
+					filePath,
+					{
+						...(fileResults.dependencies.size && {
+							dependencies: Array.from(fileResults.dependencies).toSorted(
+								(a, b) => a.localeCompare(b, "en-US"),
+							),
+						}),
+						...(fileResults.languageReports.length && {
+							languageReports: fileResults.languageReports,
+						}),
+						...(fileResults.reports.length && {
+							reports: fileResults.reports,
+						}),
+						timestamp,
+					},
+				]),
 			),
 			...(lintResults.cached &&
 				Object.fromEntries(

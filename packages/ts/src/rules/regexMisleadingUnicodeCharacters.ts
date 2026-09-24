@@ -148,9 +148,9 @@ function* findZeroWidthJoins(
 		if (
 			previous &&
 			next &&
-			char.value === 0x200d &&
-			previous.value !== 0x200d &&
-			next.value !== 0x200d
+			char.value === 0x20_0d &&
+			previous.value !== 0x20_0d &&
+			next.value !== 0x20_0d
 		) {
 			if (sequence) {
 				if (sequence.at(-1) === previous) {
@@ -192,15 +192,15 @@ function isCombiningCharacter(codePoint: number) {
 }
 
 function isEmojiModifier(code: number) {
-	return code >= 0x1f3fb && code <= 0x1f3ff;
+	return code >= 0x1_f3_fb && code <= 0x1_f3_ff;
 }
 
 function isRegionalIndicatorSymbol(code: number) {
-	return code >= 0x1f1e6 && code <= 0x1f1ff;
+	return code >= 0x1_f1_e6 && code <= 0x1_f1_ff;
 }
 
 function isSurrogatePair(lead: number, tail: number) {
-	return lead >= 0xd800 && lead < 0xdc00 && tail >= 0xdc00 && tail < 0xe000;
+	return lead >= 0xd8_00 && lead < 0xdc_00 && tail >= 0xdc_00 && tail < 0xe0_00;
 }
 
 function isUnicodeCodePointEscape(char: RegExpAST.Character) {

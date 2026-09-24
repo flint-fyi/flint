@@ -114,7 +114,7 @@ export function createStatementPaddingRule(
 					sourceFile.getLineAndCharacterOfPosition(nextStart).line;
 
 				if (nextLine - previousLine > 1) {
-					return undefined;
+					return;
 				}
 
 				return {
@@ -178,7 +178,7 @@ export function getStatementRootName(
 ): string | undefined {
 	const expression = getStatementExpression(statement);
 	if (!expression) {
-		return undefined;
+		return;
 	}
 
 	if (expression.kind === SyntaxKind.AwaitExpression) {

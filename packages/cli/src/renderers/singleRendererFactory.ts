@@ -19,7 +19,7 @@ export const singleRendererFactory: RendererFactory = {
 						.entries()
 						.map(async ([filePath, fileResults]) => {
 							if (!fileResults.reports.length) {
-								return undefined;
+								return;
 							}
 
 							// TODO: Can we re-use the sourcefile representation?

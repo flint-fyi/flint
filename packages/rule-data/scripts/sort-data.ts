@@ -55,17 +55,15 @@ async function main() {
 
 	const sorted = serialize(dataSorted);
 
-	if (original !== sorted) {
-		if (check) {
-			console.log(`File unsorted: ${dataFilePath}`);
-
-			process.exitCode = 1;
-		} else {
-			console.log(`Writing to: ${dataFilePath}`);
-			await fs.writeFile(dataFilePath, sorted);
-		}
-	} else {
+	if (original === sorted) {
 		console.log(`File sorted correctly: ${dataFilePath}`);
+	} else if (check) {
+		console.log(`File unsorted: ${dataFilePath}`);
+
+		process.exitCode = 1;
+	} else {
+		console.log(`Writing to: ${dataFilePath}`);
+		await fs.writeFile(dataFilePath, sorted);
 	}
 }
 
