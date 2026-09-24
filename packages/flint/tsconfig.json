@@ -4,7 +4,7 @@
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.src.json",
 		"rootDir": "src/",
 		"outDir": "lib/",
-		"types": []
+		"types": ["node"]
 	},
 	"include": ["src"],
 	"references": [
