@@ -1,12 +1,12 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 export function printControls(file: number, files: number): string {
 	return [
 		" ".repeat(3),
-		chalk.hex(file === 0 ? "#aaaaaa" : "#dddddd")("[<] previous file"),
+		styleText(file === 0 ? "#aaaaaa" : "#dddddd", "[<] previous file"),
 		"  ",
-		chalk.hex(file === files - 1 ? "#aaaaaa" : "#dddddd")("[>] next file"),
+		styleText(file === files - 1 ? "#aaaaaa" : "#dddddd", "[>] next file"),
 		"  ",
-		chalk.hex("#aaaaaa")("[q] quit"),
+		styleText("#aaaaaa", "[q] quit"),
 	].join("");
 }

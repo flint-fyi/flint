@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 import { pluralize } from "../pluralize.ts";
 import type { PresenterSummarizeContext } from "../types.ts";
@@ -14,27 +14,33 @@ export function* presentSummary(
 	{ duration, formattingResults, lintResults }: PresenterSummarizeContext,
 ): Generator<string, void, void> {
 	if (lintResults.changed?.size) {
-		yield chalk.green(
+		yield styleText(
+			"green",
 			[
 				"✔ Fixed ",
-				chalk.bold(pluralize(lintResults.changed.size, "file")),
+				styleText("bold", pluralize(lintResults.changed.size, "file")),
 				" automatically (--fix).\n\n",
 			].join(""),
 		);
 	}
 
 	if (counts.all === 0) {
-		yield chalk.green("No linting issues found.\n");
+		yield styleText("green", "No linting issues found.\n");
 	} else {
 		yield "\n";
-		yield chalk.red(
+		yield styleText(
+			"red",
 			[
 				"\u{2716} Found ",
-				chalk.bold(pluralize(counts.all, "report")),
+				styleText("bold", pluralize(counts.all, "report")),
 				" across ",
-				chalk.bold(pluralize(counts.files, "file")),
+				styleText("bold", pluralize(counts.files, "file")),
 				...(counts.fixable
-					? [" (", chalk.bold(`${counts.fixable} fixable with --fix`), ")"]
+					? [
+							" (",
+							styleText("bold", `${counts.fixable} fixable with --fix`),
+							")",
+						]
 					: []),
 				".\n",
 			].join(""),
@@ -45,32 +51,35 @@ export function* presentSummary(
 		yield "\n";
 
 		if (formattingResults.written) {
-			yield chalk.blue(
+			yield styleText(
+				"blue",
 				[
 					"✳ Cleaned ",
-					chalk.bold(pluralize(formattingResults.dirty.size, "file")),
+					styleText("bold", pluralize(formattingResults.dirty.size, "file")),
 					"'s formatting with Prettier (--fix):\n",
 				].join(""),
 			);
 		} else {
-			yield chalk.blue(
+			yield styleText(
+				"blue",
 				[
 					"✳ Found ",
-					chalk.bold(pluralize(formattingResults.dirty.size, "file")),
+					styleText("bold", pluralize(formattingResults.dirty.size, "file")),
 					" with Prettier formatting differences (add ",
-					chalk.bold("--fix"),
+					styleText("bold", "--fix"),
 					" to rewrite):\n",
 				].join(""),
 			);
 		}
 
 		for (const dirtyFile of formattingResults.dirty) {
-			yield `  ${chalk.gray(dirtyFile)}\n`;
+			yield `  ${styleText("gray", dirtyFile)}\n`;
 		}
 	}
 
 	yield "\n";
-	yield chalk.gray(
+	yield styleText(
+		"gray",
 		`Finished in ${formatDuration(duration)} on ${pluralize(lintResults.allFilePaths.size, "file")} with ${pluralize(lintResults.ruleCount, "rule")}.\n`,
 	);
 }

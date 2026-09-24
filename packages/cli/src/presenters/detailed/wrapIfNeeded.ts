@@ -1,20 +1,13 @@
-// eslint-disable-next-line unicorn/import-style -- only the ChalkInstance type is needed; a default value import would be unused
-import type { ChalkInstance } from "chalk";
 import wrapAnsi from "wrap-ansi";
 
 import { indenter } from "./constants.ts";
 
 export function wrapIfNeeded(
-	lineFormat: ChalkInstance,
+	formatLine: (text: string) => string,
 	text: string,
 	width: number,
 ): string {
 	const lines = wrapAnsi(text, width).split("\n");
 
-	return [
-		lineFormat(lines[0]),
-		...lines.slice(1).map((line) => lineFormat(line)),
-	]
-		.join("\n")
-		.replaceAll(`\n`, `\n${indenter} `);
+	return lines.map(formatLine).join("\n").replaceAll(`\n`, `\n${indenter} `);
 }

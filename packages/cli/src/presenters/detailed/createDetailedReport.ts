@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 import { formatReport, type FileReport } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
@@ -15,17 +15,19 @@ export async function* createDetailedReport(
 ): AsyncGenerator<string, void, void> {
 	yield indenter;
 	yield wrapIfNeeded(
-		chalk.hex(ColorCodes.primaryMessage),
+		(text) => styleText(ColorCodes.primaryMessage, text),
 		[
-			chalk.hex(ColorCodes.ruleBracket)("["),
-			chalk
-				.hex(ColorCodes.reportAboutId)
-				.bold(
+			styleText(ColorCodes.ruleBracket, "["),
+			styleText(
+				ColorCodes.reportAboutId,
+				styleText(
+					"bold",
 					report.about.url
 						? formatUrl(report.about.url, report.about.id)
 						: report.about.id,
 				),
-			chalk.hex(ColorCodes.ruleBracket)("]"),
+			),
+			styleText(ColorCodes.ruleBracket, "]"),
 			" ",
 			formatReport(report.data, report.message.primary),
 		].join(""),
@@ -39,7 +41,7 @@ export async function* createDetailedReport(
 	yield indenter;
 	yield " ";
 	yield wrapIfNeeded(
-		chalk.hex(ColorCodes.secondaryMessage).italic,
+		(text) => styleText(ColorCodes.secondaryMessage, styleText("italic", text)),
 		formatReport(report.data, report.message.secondary.join(`\n`)),
 		width,
 	);
@@ -47,13 +49,13 @@ export async function* createDetailedReport(
 
 	if (report.message.suggestions.length > 1) {
 		yield indenter;
-		yield chalk.hex(ColorCodes.suggestionTextHighlight)(" Suggestions:");
+		yield styleText(ColorCodes.suggestionTextHighlight, " Suggestions:");
 		yield "\n";
 		yield* report.message.suggestions
 			.map((suggestion) =>
 				[
 					indenter,
-					chalk.hex(ColorCodes.suggestionMessage)("  • "),
+					styleText(ColorCodes.suggestionMessage, "  • "),
 					formatSuggestion(report.data, suggestion),
 				].join(""),
 			)
@@ -61,7 +63,7 @@ export async function* createDetailedReport(
 	} else {
 		yield `${indenter} `;
 		yield wrapIfNeeded(
-			chalk.hex(ColorCodes.suggestionTextHighlight),
+			(text) => styleText(ColorCodes.suggestionTextHighlight, text),
 			`  Suggestion: ${formatSuggestion(report.data, nullThrows(report.message.suggestions[0], `Report ${report.about.id} message should have at least one suggestion`))}`,
 			width,
 		);
@@ -69,11 +71,13 @@ export async function* createDetailedReport(
 
 	if (report.about.url) {
 		yield `\n${indenter}\n${indenter} `;
-		yield chalk
-			.hex(ColorCodes.ruleUrl)
-			.italic(
+		yield styleText(
+			ColorCodes.ruleUrl,
+			styleText(
+				"italic",
 				`→ ${formatUrl(report.about.url, report.about.url.replace(/^https:\/\//, ""))}`,
-			);
+			),
+		);
 	}
 }
 

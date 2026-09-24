@@ -11,7 +11,7 @@ describe("cspell", () => {
 		expect(exitCode).toBe(1);
 		// cspell:disable
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
-			"<dim>Linting with <cyan><bold>flint.config.ts</bold></fg><dim>...</fg>
+			"<dim>Linting with <cyan><bold>flint.config.ts</bold><dim>...</fg>
 
 			<underline><cwd>/fixtures/CONTRIBUTING.md</underline>
 			<dim>  3:50</fg>   Forbidden or unknown word: "projet".      <yellow>spelling/cspell</fg>
@@ -26,10 +26,10 @@ describe("cspell", () => {
 			<dim>  10:19</fg>  Forbidden or unknown word: "diference".   <yellow>spelling/cspell</fg>
 			<dim>  12:17</fg>  Forbidden or unknown word: "diffarence".  <yellow>spelling/cspell</fg>
 
-			<red>✖ Found <bold>7 reports</bold> across <bold>3 files</bold>.</fg>
-			<red></fg>
-			<dim>Finished in <time> on 4 files with 1 rule.</fg>
-			<dim></fg>"
+			<red>✖ Found <bold>7 reports</bold> across <bold>3 files</bold>.
+			</fg>
+			<dim>Finished in <time> on 4 files with 1 rule.
+			</fg>"
 		`);
 		// cspell:enable
 	});

@@ -16,7 +16,6 @@ import type {
 	LinterHostFileWatcherEvent,
 	VFSLinterHost,
 } from "../types/host.ts";
-import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
 
 export type CreateVFSLinterHostOpts =
 	| {
@@ -26,7 +25,7 @@ export type CreateVFSLinterHostOpts =
 	  }
 	| {
 			baseHost?: never;
-			caseSensitive?: boolean | undefined;
+			caseSensitive: boolean;
 			cwd: string;
 	  };
 
@@ -53,7 +52,7 @@ export function createVFSLinterHost(
 	let baseHost: LinterHost | undefined;
 	let caseSensitiveFS: boolean;
 	if (opts.baseHost == null) {
-		caseSensitiveFS = opts.caseSensitive ?? isFileSystemCaseSensitive();
+		caseSensitiveFS = opts.caseSensitive;
 		cwd = normalizePath(opts.cwd);
 	} else {
 		baseHost = opts.baseHost;

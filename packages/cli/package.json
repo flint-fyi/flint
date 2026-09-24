@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -28,7 +29,6 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@shikijs/cli": "catalog:prod",
-		"chalk": "catalog:prod",
 		"cli-cursor": "catalog:prod",
 		"debounce": "catalog:prod",
 		"debug-for-file": "catalog:prod",
@@ -51,7 +51,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

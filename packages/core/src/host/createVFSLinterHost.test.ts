@@ -57,7 +57,10 @@ describe(createVFSLinterHost, () => {
 
 	describe("file touch times", () => {
 		it("returns undefined for missing files with or without a base host", async () => {
-			const baseHost = createVFSLinterHost({ cwd: "/root" });
+			const baseHost = createVFSLinterHost({
+				caseSensitive: true,
+				cwd: "/root",
+			});
 			const host = createVFSLinterHost({ baseHost });
 
 			expect(
@@ -69,7 +72,10 @@ describe(createVFSLinterHost, () => {
 		});
 
 		it("inherits timestamps using the matching base-host method", async () => {
-			const baseHost = createVFSLinterHost({ cwd: "/root" });
+			const baseHost = createVFSLinterHost({
+				caseSensitive: true,
+				cwd: "/root",
+			});
 			const host = createVFSLinterHost({ baseHost });
 			baseHost.vfsUpsertFile("/root/file.ts", "base content");
 			const touchTime = baseHost.getFileTouchTimeSync("/root/file.ts");
