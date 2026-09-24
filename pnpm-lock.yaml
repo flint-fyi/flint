@@ -581,8 +581,8 @@ catalogs:
       specifier: ^0.7.55
       version: 0.7.61
     text-table-fast:
-      specifier: ^0.1.0
-      version: 0.1.0
+      specifier: ^0.2.0
+      version: 0.2.0
     tinyglobby:
       specifier: ^0.2.17
       version: 0.2.17
@@ -965,7 +965,7 @@ importers:
         version: 7.0.9
       text-table-fast:
         specifier: catalog:prod
-        version: 0.1.0
+        version: 0.2.0
       typescript:
         specifier: catalog:prod
         version: 6.0.3
@@ -7642,8 +7642,8 @@ packages:
     resolution: {integrity: sha512-qFAy10MTMwjzjU8U16YS4YoZD+NQLHzLssFMNqgravjbvIPNiqkGFR4yjhJfmY9R5OFU7+yHxc6y+uGHkKwLRA==}
     engines: {node: '>=20'}
 
-  text-table-fast@0.1.0:
-    resolution: {integrity: sha512-Oq4da1awNnp6yoj4lgfDrIvXPE3vqjwwK7NudaV0Ei+Y51cvAEZ66Ef64CqPayJjn55NshAtSoQ9elX7QroiaA==}
+  text-table-fast@0.2.0:
+    resolution: {integrity: sha512-V96TO0YbfywiN66JdA4IO8T11hlyWkhCafCfyavupoDRtc7u0IrE87YE6I/QoRmjmObDqeraB+8iSfSXf+lXMQ==}
     engines: {node: '>=18'}
 
   tiny-inflate@1.0.3:
@@ -14652,7 +14652,7 @@ snapshots:
       ansi-escapes: 7.3.0
       supports-hyperlinks: 4.5.0
 
-  text-table-fast@0.1.0: {}
+  text-table-fast@0.2.0: {}
 
   tiny-inflate@1.0.3: {}
 
