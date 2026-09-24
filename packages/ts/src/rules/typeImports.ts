@@ -458,8 +458,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.kind === SyntaxKind.Identifier &&
 							!isInImportDeclaration(node)
 						) {
-							// Resolving a symbol asks the checker, so only resolve
-							// identifiers that share a name with an import in the first place.
 							const candidates = importedSpecifiers.filter(
 								(specifier) => specifier.local.text === node.text,
 							);
