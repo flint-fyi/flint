@@ -23658,8 +23658,7 @@
 		"flint": {
 			"name": "nonOctalDecimalEscapes",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"status": "skipped"
 		},
 		"biome": [
 			{
@@ -23678,7 +23677,8 @@
 				"name": "eslint/no-nonoctal-decimal-escape",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-nonoctal-decimal-escape.html"
 			}
-		]
+		],
+		"notes": "Handled by TypeScript."
 	},
 	{
 		"flint": {

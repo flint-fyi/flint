@@ -25,7 +25,7 @@ describe("directives", () => {
 
 			<red>✖ Found <bold>4 reports</bold> across <bold>3 files</bold>.
 			</fg>
-			<dim>Finished in <time> on 4 files with 139 rules.
+			<dim>Finished in <time> on 4 files with 138 rules.
 			</fg>"
 		`);
 		// cspell:enable

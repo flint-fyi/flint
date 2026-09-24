@@ -170,12 +170,6 @@ const config: ConfigObject[] = defineConfig(
 			// prefers the more succinct \xa0 over \u{a0}.
 			"unicorn/prefer-unicode-code-point-escapes": "off",
 
-			// Test files for escape-related rules intentionally use \\ in
-			// regular template literals so the source contains literal
-			// backslashes; converting to String.raw exposes \8/\9 escapes
-			// that trigger ts/nonOctalDecimalEscapes on the test itself.
-			"unicorn/prefer-string-raw": "off",
-
 			// Use the type-aware version.
 			"@typescript-eslint/require-array-sort-compare": [
 				"error",

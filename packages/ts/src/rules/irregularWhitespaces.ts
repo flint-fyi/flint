@@ -51,7 +51,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary:
 				"Irregular whitespace characters can cause unexpected behavior and display issues.",
 			secondary: [
-				"Irregular whitespace includes characters like non-breaking spaces (\\u00A0), zero-width spaces (\\u200B), and various Unicode space characters.",
+				String.raw`Irregular whitespace includes characters like non-breaking spaces (\u00A0), zero-width spaces (\u200B), and various Unicode space characters.`,
 				"These characters are often invisible or look like regular spaces, but may be interpreted differently by tools and parsers.",
 				"They can be accidentally introduced through copy-paste from external sources.",
 			],
