@@ -155,6 +155,34 @@ const config: ConfigObject[] = defineConfig(
 		},
 	},
 	{
+		files: [
+			"packages/rule-data/scripts/sort-data.ts",
+			"packages/rule-data/src/schemas.ts",
+		],
+		rules: {
+			"perfectionist/sort-objects": [
+				"error",
+				{
+					customGroups: [
+						{
+							elementNamePattern: "^$",
+							groupName: "root",
+						},
+						{
+							elementNamePattern: "^flint$",
+							groupName: "flint",
+						},
+						{
+							elementNamePattern: "^notes$",
+							groupName: "notes",
+						},
+					],
+					groups: ["root", "flint", "unknown", "notes"],
+				},
+			],
+		},
+	},
+	{
 		files: ["packages/core/**/*.ts"],
 		ignores: ["packages/core/**/*.test.ts"],
 		rules: {
