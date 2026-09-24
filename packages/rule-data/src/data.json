@@ -23672,13 +23672,13 @@
 				"url": "https://eslint.org/docs/latest/rules/no-nonoctal-decimal-escape"
 			}
 		],
-		"notes": "Handled by TypeScript.",
 		"oxlint": [
 			{
 				"name": "eslint/no-nonoctal-decimal-escape",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-nonoctal-decimal-escape.html"
 			}
-		]
+		],
+		"notes": "Handled by TypeScript."
 	},
 	{
 		"flint": {
