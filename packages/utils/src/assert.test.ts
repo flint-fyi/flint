@@ -1,6 +1,99 @@
 import { describe, expect, it } from "vitest";
 
-import { assert, nullThrows, sanitizeStackTrace } from "./assert.ts";
+import {
+	addFlintAssertionContext,
+	assert,
+	FlintAssertionError,
+	nullThrows,
+	sanitizeStackTrace,
+} from "./assert.ts";
+
+describe("FlintAssertionError", () => {
+	it("prefixes the message and keeps the assertion message", () => {
+		const error = new FlintAssertionError("MSG");
+
+		expect(error.message).toBe("Flint bug: MSG.");
+		expect(error.assertionMessage).toBe("MSG");
+		expect(error.name).toBe("FlintAssertionError");
+		expect(error.stack).toMatch(/^FlintAssertionError: Flint bug: MSG\./);
+	});
+});
+
+describe("addFlintAssertionContext", () => {
+	it("enriches the same error while preserving cached stack frames", () => {
+		const error = new FlintAssertionError("First line\nSecond line");
+		const originalStack = nullThrows(error.stack, "Expected a stack");
+		const originalHeader = `${error.name}: ${error.message}`;
+
+		expect(addFlintAssertionContext(error, ["--fix", "--watch"])).toBe(error);
+		expect(error.stack).toBe(
+			`${error.name}: ${error.message}` +
+				originalStack.slice(originalHeader.length),
+		);
+		const issueUrl = new URL(
+			nullThrows(
+				error.message.split("Please report it here: ")[1],
+				"Expected a report URL",
+			),
+		);
+		expect(issueUrl.searchParams.get("title")).toBe(
+			"🐛 Bug: First line\nSecond line",
+		);
+		expect(issueUrl.searchParams.get("additional_info")).toBe(
+			"Process arguments:\n\n`--fix --watch`",
+		);
+		expect(issueUrl.searchParams.get("actual")).not.toContain(
+			"Please report it here:",
+		);
+	});
+
+	it("enriches errors without a stack", () => {
+		const error = new FlintAssertionError("MSG");
+		// flint-disable-next-line performance/deletes -- exactOptionalPropertyTypes prevents assigning undefined to Error.stack.
+		delete error.stack;
+
+		addFlintAssertionContext(error, []);
+
+		expect(error.message).toContain(
+			"Please report it here: https://github.com/",
+		);
+		expect(error.stack).toBeUndefined();
+	});
+
+	it("leaves ordinary errors unchanged", () => {
+		const error = new Error("ordinary error");
+		const originalStack = error.stack;
+
+		expect(addFlintAssertionContext(error, ["--fix"])).toBe(error);
+		expect(error.message).toBe("ordinary error");
+		expect(error.stack).toBe(originalStack);
+	});
+
+	it.each(["thrown string", undefined])(
+		"leaves non-assertion failures unchanged: %s",
+		(error) => {
+			expect(addFlintAssertionContext(error, ["--fix"])).toBe(error);
+		},
+	);
+
+	it("reports <none> for an empty argument list", () => {
+		const error = new FlintAssertionError("MSG");
+		addFlintAssertionContext(error, []);
+
+		expect(decodeURIComponent(error.message)).toContain("`<none>`");
+	});
+
+	it("censors file paths in the stack trace", () => {
+		const error = new FlintAssertionError("MSG");
+		error.stack =
+			"Error: Boom\n    at doThing (/home/me/proj/src/index.ts:10:5)";
+
+		addFlintAssertionContext(error, []);
+
+		expect(decodeURIComponent(error.message)).toContain("<censored+filename>");
+		expect(decodeURIComponent(error.message)).not.toContain("/home/me");
+	});
+});
 
 describe("assert", () => {
 	it("throws on null", () => {
