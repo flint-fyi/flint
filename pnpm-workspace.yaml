@@ -115,7 +115,6 @@ catalogs:
     "@vue/compiler-dom": ^3.5.0
     "@vue/language-core": 3.3.11
     cached-factory: ^0.3.0
-    chalk: ^6.0.0
     change-case: ^5.4.4
     cli-cursor: ^5.0.0
     cspell-lib: ^10.0.0

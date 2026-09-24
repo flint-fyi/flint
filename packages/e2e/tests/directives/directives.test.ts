@@ -11,7 +11,7 @@ describe("directives", () => {
 		expect(exitCode).toBe(1);
 		// cspell:disable
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
-			"<dim>Linting with <cyan><bold>flint.config.ts</bold></fg><dim>...</fg>
+			"<dim>Linting with <cyan><bold>flint.config.ts</bold><dim>...</fg>
 
 			<underline><cwd>/fixtures/src/empty-line-boundary.ts</underline>
 			<dim>  1:1</fg>  The flint-disable-next-line comment directive selecting "spelling/cspell" did not match any reports.  <yellow>commentDirectiveUnused</fg>
@@ -23,10 +23,10 @@ describe("directives", () => {
 			<underline><cwd>/fixtures/src/unsuppressed-comment.ts</underline>
 			<dim>  1:4</fg>  Forbidden or unknown word: "functon".  <yellow>spelling/cspell</fg>
 
-			<red>✖ Found <bold>4 reports</bold> across <bold>3 files</bold>.</fg>
-			<red></fg>
-			<dim>Finished in <time> on 4 files with 139 rules.</fg>
-			<dim></fg>"
+			<red>✖ Found <bold>4 reports</bold> across <bold>3 files</bold>.
+			</fg>
+			<dim>Finished in <time> on 4 files with 139 rules.
+			</fg>"
 		`);
 		// cspell:enable
 	});
