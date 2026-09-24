@@ -424,8 +424,8 @@ catalogs:
       specifier: 3.0.2
       version: 3.0.2
     prettier-plugin-sentences-per-line:
-      specifier: 0.2.4
-      version: 0.2.4
+      specifier: 0.2.5
+      version: 0.2.5
     prettier-plugin-sh:
       specifier: 0.19.0
       version: 0.19.0
@@ -803,7 +803,7 @@ importers:
         version: 3.0.2(prettier@3.8.1)
       prettier-plugin-sentences-per-line:
         specifier: catalog:dev
-        version: 0.2.4(prettier@3.8.1)
+        version: 0.2.5(prettier@3.8.1)
       prettier-plugin-sh:
         specifier: catalog:dev
         version: 0.19.0(prettier@3.8.1)
@@ -7026,8 +7026,8 @@ packages:
       prettier:
         optional: true
 
-  prettier-plugin-sentences-per-line@0.2.4:
-    resolution: {integrity: sha512-1SSPJxwvekA6wVb4VqJYcVZw39Ak7Oy/IKd4qCGG48hO7oWg/DF0EWPo4PrEROy2LWLl3/U570NM7SurMKQNSA==}
+  prettier-plugin-sentences-per-line@0.2.5:
+    resolution: {integrity: sha512-vvUaFbXexU1eV1EjER5Dmb9sTnBiLrtomKQpMya50MorB5Ab2ANQrt43f1wv1ZY5zDT/OhD43fxOw9Yehai+mw==}
     peerDependencies:
       prettier: ^3
 
@@ -7344,8 +7344,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  sentences-per-line@0.5.3:
-    resolution: {integrity: sha512-pXuRJ4bKjxEaRVi7ZbwJBF2THPShuLHvWjw9yCtyn5qNqgAfZ/sqPHJu9HS72TffLQwIFX+aSP61HuGGz+7Aww==}
+  sentences-per-line@0.5.6:
+    resolution: {integrity: sha512-Nr8nl/K1oqxcSX5jle3/dDlQyej1DYzhoSTbWRMNECV/NTl5KTIjxhgElmn167PEAqgMEdaXMRQo7kaGbXUS5Q==}
     engines: {node: '>=22.14.0'}
 
   set-function-length@1.2.2:
@@ -13826,10 +13826,10 @@ snapshots:
     optionalDependencies:
       prettier: 3.8.1
 
-  prettier-plugin-sentences-per-line@0.2.4(prettier@3.8.1):
+  prettier-plugin-sentences-per-line@0.2.5(prettier@3.8.1):
     dependencies:
       prettier: 3.8.1
-      sentences-per-line: 0.5.3
+      sentences-per-line: 0.5.6
 
   prettier-plugin-sh@0.19.0(prettier@3.8.1):
     dependencies:
@@ -14233,7 +14233,7 @@ snapshots:
 
   semver@7.8.5: {}
 
-  sentences-per-line@0.5.3: {}
+  sentences-per-line@0.5.6: {}
 
   set-function-length@1.2.2:
     dependencies:
