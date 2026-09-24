@@ -57,15 +57,13 @@ async function main() {
 
 	if (original === sorted) {
 		console.log(`File sorted correctly: ${dataFilePath}`);
-	} else {
-		if (check) {
-			console.log(`File unsorted: ${dataFilePath}`);
+	} else if (check) {
+		console.log(`File unsorted: ${dataFilePath}`);
 
-			process.exitCode = 1;
-		} else {
-			console.log(`Writing to: ${dataFilePath}`);
-			await fs.writeFile(dataFilePath, sorted);
-		}
+		process.exitCode = 1;
+	} else {
+		console.log(`Writing to: ${dataFilePath}`);
+		await fs.writeFile(dataFilePath, sorted);
 	}
 }
 
