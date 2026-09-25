@@ -1,4 +1,3 @@
-/.husky
 packages/*/.astro
 packages/*/dist
 packages/*/lib

@@ -7,6 +7,10 @@ const config: KnipConfig = {
 	workspaces: {
 		".": {
 			entry: ["*.config.{js,ts}"],
+			ignoreDependencies: [
+				// Invoked by the Git hook configured in .gitconfig.
+				"nano-staged",
+			],
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
 		},
 		"packages/astro": {
