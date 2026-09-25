@@ -1983,6 +1983,9 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      cached-factory:
+        specifier: catalog:prod
+        version: 0.3.0
       pathe:
         specifier: catalog:prod
         version: 2.0.3
