@@ -547,9 +547,15 @@ catalogs:
     mdast-util-from-markdown:
       specifier: ^2.0.2
       version: 2.0.3
+    mdast-util-frontmatter:
+      specifier: ^2.0.1
+      version: 2.0.1
     mdast-util-gfm:
       specifier: ^3.1.0
       version: 3.1.0
+    micromark-extension-frontmatter:
+      specifier: ^2.0.0
+      version: 2.0.0
     micromark-extension-gfm:
       specifier: ^3.0.0
       version: 3.0.0
@@ -1247,9 +1253,15 @@ importers:
       mdast-util-from-markdown:
         specifier: catalog:prod
         version: 2.0.3(supports-color@10.2.2)
+      mdast-util-frontmatter:
+        specifier: catalog:prod
+        version: 2.0.1(supports-color@10.2.2)
       mdast-util-gfm:
         specifier: catalog:prod
         version: 3.1.0(supports-color@10.2.2)
+      micromark-extension-frontmatter:
+        specifier: catalog:prod
+        version: 2.0.0
       micromark-extension-gfm:
         specifier: catalog:prod
         version: 3.0.0

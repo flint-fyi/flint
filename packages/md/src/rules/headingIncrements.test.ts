@@ -25,5 +25,11 @@ This heading level 3 skips more than one level from the previous heading level o
 
 ## Heading 2
 `,
+		`---
+title: Example
+---
+
+#### Heading 4
+`,
 	],
 });
