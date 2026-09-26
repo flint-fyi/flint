@@ -6,10 +6,12 @@ export class FlintAssertionError extends Error {
 		// flint-disable-next-line ts/errorSubclassProperties
 		this.message = `Flint bug: ${message}. Please report it here: ${issueUrl}`;
 		this.name = "FlintAssertionError";
-		if (this.stack) {
-			const [, ...rest] = this.stack.split("\n");
-			this.stack = [`FlintAssertionError: ${this.message}`, ...rest].join("\n");
+		if (!this.stack) {
+			return;
 		}
+
+		const [, ...rest] = this.stack.split("\n");
+		this.stack = [`FlintAssertionError: ${this.message}`, ...rest].join("\n");
 	}
 }
 

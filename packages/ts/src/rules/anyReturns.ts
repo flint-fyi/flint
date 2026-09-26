@@ -218,28 +218,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const signature = functionType.getCallSignatures().at(0);
-			if (signature) {
-				const functionReturnType = signature.getReturnType();
-				const result = isUnsafeAssignment(
-					returnNodeType,
-					functionReturnType,
-					returnNode,
-				);
-				if (!result) {
-					return;
-				}
-
-				const { receiver, sender } = result;
-				context.report({
-					data: {
-						receiver: typeChecker.typeToString(receiver),
-						sender: typeChecker.typeToString(sender),
-					},
-					message: "unsafeReturnAssignment",
-					range: getTSNodeRange(reportingNode, sourceFile),
-				});
+			if (!signature) {
 				return;
 			}
+
+			const functionReturnType = signature.getReturnType();
+			const result = isUnsafeAssignment(
+				returnNodeType,
+				functionReturnType,
+				returnNode,
+			);
+			if (!result) {
+				return;
+			}
+
+			const { receiver, sender } = result;
+			context.report({
+				data: {
+					receiver: typeChecker.typeToString(receiver),
+					sender: typeChecker.typeToString(sender),
+				},
+				message: "unsafeReturnAssignment",
+				range: getTSNodeRange(reportingNode, sourceFile),
+			});
 		}
 
 		return {

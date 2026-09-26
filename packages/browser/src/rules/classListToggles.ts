@@ -151,40 +151,44 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						(thenCall.method === "add" && elseCall.method === "remove") ||
-						(thenCall.method === "remove" && elseCall.method === "add")
+						!(
+							(thenCall.method === "add" && elseCall.method === "remove") ||
+							(thenCall.method === "remove" && elseCall.method === "add")
+						)
 					) {
-						const thenInfo = getObjectAndClassName(thenBlockStatement);
-						if (!thenInfo) {
-							return;
-						}
-
-						const elseInfo = getObjectAndClassName(elseBlockStatement);
-						if (thenInfo.object !== elseInfo?.object) {
-							return;
-						}
-
-						const condition = node.expression;
-						const conditionText = condition.getText(sourceFile);
-						const className = thenCall.className;
-						const toggleSecondArg =
-							thenCall.method === "add" ? conditionText : `!(${conditionText})`;
-
-						const ifStart = node.getStart(sourceFile);
-						const ifEnd = node.getEnd();
-
-						context.report({
-							fix: {
-								range: {
-									begin: ifStart,
-									end: ifEnd,
-								},
-								text: `${thenInfo.object}.classList.toggle("${className}", ${toggleSecondArg});`,
-							},
-							message: "preferToggle",
-							range: getTSNodeRange(thenCall.methodNode, sourceFile),
-						});
+						return;
 					}
+
+					const thenInfo = getObjectAndClassName(thenBlockStatement);
+					if (!thenInfo) {
+						return;
+					}
+
+					const elseInfo = getObjectAndClassName(elseBlockStatement);
+					if (thenInfo.object !== elseInfo?.object) {
+						return;
+					}
+
+					const condition = node.expression;
+					const conditionText = condition.getText(sourceFile);
+					const className = thenCall.className;
+					const toggleSecondArg =
+						thenCall.method === "add" ? conditionText : `!(${conditionText})`;
+
+					const ifStart = node.getStart(sourceFile);
+					const ifEnd = node.getEnd();
+
+					context.report({
+						fix: {
+							range: {
+								begin: ifStart,
+								end: ifEnd,
+							},
+							text: `${thenInfo.object}.classList.toggle("${className}", ${toggleSecondArg});`,
+						},
+						message: "preferToggle",
+						range: getTSNodeRange(thenCall.methodNode, sourceFile),
+					});
 				},
 			},
 		};

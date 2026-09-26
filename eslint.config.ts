@@ -152,12 +152,9 @@ const config: ConfigObject[] = defineConfig(
 			"perfectionist/sort-imports": "off",
 			"perfectionist/sort-named-imports": "off",
 
-			// TODO: Remove after upgrading Unicorn to >=74; expiring-todo-comments cannot resolve catalog:dev.
-			// Fixed in Unicorn 74: https://github.com/sindresorhus/eslint-plugin-unicorn/pull/3631
-			"unicorn/no-nonstandard-builtin-properties": "off",
-
 			// Too opinionated.
 			"unicorn/prefer-await": "off",
+			"unicorn/prefer-ternary": "off",
 
 			// Leave numeric literal formatting to Prettier; Unicorn defaults to uppercase hex digits.
 			"unicorn/number-literal-case": "off",
