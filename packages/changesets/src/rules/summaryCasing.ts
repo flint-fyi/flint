@@ -19,7 +19,8 @@ export default ruleCreator.createRule(markdownLanguage, {
 	},
 	messages: {
 		lowercaseStart: {
-			primary: "This changeset summary starts with a lowercase letter.",
+			primary:
+				"This changeset summary starts with a lowercase letter, but for consistency should be uppercase.",
 			secondary: [
 				"Changesets copies each summary into the CHANGELOG.md of every package it releases.",
 				"Starting every summary with the same letter case makes changelog entries consistent to read.",
@@ -28,7 +29,8 @@ export default ruleCreator.createRule(markdownLanguage, {
 			suggestions: ["Uppercase the first letter of the summary."],
 		},
 		uppercaseStart: {
-			primary: "This changeset summary starts with an uppercase letter.",
+			primary:
+				"This changeset summary starts with an uppercase letter, but for consistency should be lowercase.",
 			secondary: [
 				"Changesets copies each summary into the CHANGELOG.md of every package it releases.",
 				"Starting every summary with the same letter case makes changelog entries consistent to read.",

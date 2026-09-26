@@ -24,7 +24,7 @@ Added a new option.
 
 feat: Added a new option.
 ~~~~~~
-This changeset summary starts with a conventional commit prefix.
+This changeset summary unnecessarily starts with a conventional commit prefix.
 `,
 		},
 		{
@@ -46,7 +46,7 @@ Fixed a crash (in rare cases): a detail.
 
 fix(core)!: Fixed a crash (in rare cases): a detail.
 ~~~~~~~~~~~~
-This changeset summary starts with a conventional commit prefix.
+This changeset summary unnecessarily starts with a conventional commit prefix.
 `,
 		},
 		{
@@ -68,7 +68,7 @@ Updated dependencies.
 
 CHORE: Updated dependencies.
 ~~~~~~~
-This changeset summary starts with a conventional commit prefix.
+This changeset summary unnecessarily starts with a conventional commit prefix.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ This changeset summary starts with a conventional commit prefix.
 `,
 			snapshot: `---
 ~~~
-This changeset has no summary.
+This changeset has no summary to inform changelog generation.
 "example": patch
 ~~~~~~~~~~~~~~~~
 ---

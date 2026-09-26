@@ -24,7 +24,7 @@ Added a new option.
 
 Added a new option
                  ~
-                 This changeset summary does not end with punctuation.
+                 This changeset summary does not end with punctuation as preferred for consistency.
 `,
 		},
 		{
@@ -49,7 +49,7 @@ Added a new
 Added a new
 \`option\`
        ~
-       This changeset summary does not end with punctuation.
+       This changeset summary does not end with punctuation as preferred for consistency.
 `,
 		},
 		{
@@ -75,7 +75,7 @@ Added the following options.
 
 Added the following options
                           ~
-                          This changeset summary does not end with punctuation.
+                          This changeset summary does not end with punctuation as preferred for consistency.
 
 - \`first\`
 `,
@@ -100,7 +100,7 @@ Added a new option
 
 Added a new option.
                   ~
-                  This changeset summary ends with punctuation.
+                  This changeset summary ends with punctuation, but for consistency should not.
 `,
 		},
 		{
@@ -123,7 +123,7 @@ Added more options
 
 Added more options...
                   ~~~
-                  This changeset summary ends with punctuation.
+                  This changeset summary ends with punctuation, but for consistency should not.
 `,
 		},
 	],

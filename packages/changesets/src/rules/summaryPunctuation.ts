@@ -14,7 +14,8 @@ export default ruleCreator.createRule(markdownLanguage, {
 	},
 	messages: {
 		missingPunctuation: {
-			primary: "This changeset summary does not end with punctuation.",
+			primary:
+				"This changeset summary does not end with punctuation as preferred for consistency.",
 			secondary: [
 				"Changesets copies each summary into the CHANGELOG.md of every package it releases.",
 				"Ending every summary the same way makes changelog entries consistent to read.",
@@ -23,7 +24,8 @@ export default ruleCreator.createRule(markdownLanguage, {
 			suggestions: ["Add a period to the end of the summary."],
 		},
 		unnecessaryPunctuation: {
-			primary: "This changeset summary ends with punctuation.",
+			primary:
+				"This changeset summary ends with punctuation, but for consistency should not.",
 			secondary: [
 				"Changesets copies each summary into the CHANGELOG.md of every package it releases.",
 				"Ending every summary the same way makes changelog entries consistent to read.",

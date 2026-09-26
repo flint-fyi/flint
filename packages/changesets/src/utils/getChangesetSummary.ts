@@ -7,11 +7,6 @@ export interface ChangesetSummary {
 	nodes: WithPosition<RootContent>[];
 }
 
-/**
- * Retrieves the frontmatter and the summary nodes after it from a changeset file.
- * Files without frontmatter, such as a README.md, are not changesets.
- * Changesets with empty frontmatter are created by `changeset add --empty` and have no summary.
- */
 export function getChangesetSummary(
 	root: WithPosition<Root>,
 ): ChangesetSummary | undefined {

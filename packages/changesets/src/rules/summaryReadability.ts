@@ -14,7 +14,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	messages: {
 		conventionalPrefix: {
 			primary:
-				"This changeset summary starts with a conventional commit prefix.",
+				"This changeset summary unnecessarily starts with a conventional commit prefix.",
 			secondary: [
 				"Changesets copies each summary into the CHANGELOG.md of every package it releases.",
 				"Prefixes such as `feat:` or `fix(core):` label commits for tooling, not changes for the package's users.",
@@ -23,7 +23,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 			suggestions: ["Remove the conventional commit prefix."],
 		},
 		missingSummary: {
-			primary: "This changeset has no summary.",
+			primary: "This changeset has no summary to inform changelog generation.",
 			secondary: [
 				"Changesets copies each summary into the CHANGELOG.md of every package it releases.",
 				"A changeset without a summary creates a changelog entry that doesn't describe its change.",

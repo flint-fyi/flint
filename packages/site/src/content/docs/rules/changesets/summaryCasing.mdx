@@ -16,11 +16,6 @@ Starting every summary with the same letter case makes those changelog entries c
 This rule checks the first letter of a changeset's summary, after any conventional commit prefix.
 By default, it reports summaries that start with a lowercase letter.
 
-Summaries whose first word contains an uppercase letter after its first character, such as `createPlugin` or `TypeScript`, are not reported, because changing their first letter would change an identifier or a name.
-Summaries that start with inline code, a link, or other formatting are also not reported.
-
-This rule provides a suggestion rather than a fix, because the first word of a summary can be a name whose case must not change.
-
 ## Examples
 
 <Tabs>

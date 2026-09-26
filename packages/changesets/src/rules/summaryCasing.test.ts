@@ -18,7 +18,7 @@ added a new option.
 
 added a new option.
 ~
-This changeset summary starts with a lowercase letter.
+This changeset summary starts with a lowercase letter, but for consistency should be uppercase.
 `,
 			suggestions: [
 				{
@@ -45,7 +45,7 @@ fix: added a new option.
 
 fix: added a new option.
      ~
-     This changeset summary starts with a lowercase letter.
+     This changeset summary starts with a lowercase letter, but for consistency should be uppercase.
 `,
 			suggestions: [
 				{
@@ -73,7 +73,7 @@ Added a new option.
 
 Added a new option.
 ~
-This changeset summary starts with an uppercase letter.
+This changeset summary starts with an uppercase letter, but for consistency should be lowercase.
 `,
 			suggestions: [
 				{
