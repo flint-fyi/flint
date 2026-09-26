@@ -84,20 +84,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					property.name.text.toLowerCase() === "tabindex",
 			);
 
-			if (!hasTabIndex) {
-				const ariaProperty = attributes.properties.find(
-					(property) =>
-						property.kind === SyntaxKind.JsxAttribute &&
-						property.name.kind === SyntaxKind.Identifier &&
-						property.name.text === "aria-activedescendant",
-				);
+			if (hasTabIndex) {
+				return;
+			}
 
-				if (ariaProperty?.kind === SyntaxKind.JsxAttribute) {
-					context.report({
-						message: "missingTabIndex",
-						range: getTSNodeRange(ariaProperty, sourceFile),
-					});
-				}
+			const ariaProperty = attributes.properties.find(
+				(property) =>
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
+					property.name.text === "aria-activedescendant",
+			);
+
+			if (ariaProperty?.kind === SyntaxKind.JsxAttribute) {
+				context.report({
+					message: "missingTabIndex",
+					range: getTSNodeRange(ariaProperty, sourceFile),
+				});
 			}
 		}
 

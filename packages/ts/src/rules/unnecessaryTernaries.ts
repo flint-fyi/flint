@@ -108,23 +108,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// !condition ? alternate : condition
 					if (
-						condition.kind === SyntaxKind.PrefixUnaryExpression &&
-						condition.operator === SyntaxKind.ExclamationToken &&
-						hasSameTokens(condition.operand, whenFalse, sourceFile)
+						condition.kind !== SyntaxKind.PrefixUnaryExpression ||
+						condition.operator !== SyntaxKind.ExclamationToken ||
+						!hasSameTokens(condition.operand, whenFalse, sourceFile)
 					) {
-						const range = getTSNodeRange(node, sourceFile);
-						const operandText = getNodeText(condition.operand, sourceFile);
-						const alternateText = getNodeText(whenTrue, sourceFile);
-
-						context.report({
-							fix: {
-								range,
-								text: `${operandText} || ${alternateText}`,
-							},
-							message: "unnecessaryLogicalTernary",
-							range,
-						});
+						return;
 					}
+
+					const range = getTSNodeRange(node, sourceFile);
+					const operandText = getNodeText(condition.operand, sourceFile);
+					const alternateText = getNodeText(whenTrue, sourceFile);
+
+					context.report({
+						fix: {
+							range,
+							text: `${operandText} || ${alternateText}`,
+						},
+						message: "unnecessaryLogicalTernary",
+						range,
+					});
 				},
 			},
 		};

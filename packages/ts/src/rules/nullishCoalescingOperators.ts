@@ -103,20 +103,15 @@ function analyzeConditionalForNullish(
 		condition.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken
 	) {
 		const leftIsComparison =
-			condition.left.kind === SyntaxKind.BinaryExpression
-				? isNullLikeComparison(condition.left)
-				: false;
+			condition.left.kind === SyntaxKind.BinaryExpression &&
+			isNullLikeComparison(condition.left);
 		const rightIsComparison =
-			condition.right.kind === SyntaxKind.BinaryExpression
-				? isNullLikeComparison(condition.right)
-				: false;
+			condition.right.kind === SyntaxKind.BinaryExpression &&
+			isNullLikeComparison(condition.right);
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left as AST.BinaryExpression;
-			const rightComp = condition.right as AST.BinaryExpression;
-
-			const leftValue = extractValueFromComparison(leftComp).value;
-			const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(condition.left).value;
+			const rightValue = extractValueFromComparison(condition.right).value;
 
 			if (
 				leftValue &&
@@ -139,20 +134,15 @@ function analyzeConditionalForNullish(
 		condition.operatorToken.kind === SyntaxKind.BarBarToken
 	) {
 		const leftIsComparison =
-			condition.left.kind === SyntaxKind.BinaryExpression
-				? isNullLikeComparison(condition.left)
-				: false;
+			condition.left.kind === SyntaxKind.BinaryExpression &&
+			isNullLikeComparison(condition.left);
 		const rightIsComparison =
-			condition.right.kind === SyntaxKind.BinaryExpression
-				? isNullLikeComparison(condition.right)
-				: false;
+			condition.right.kind === SyntaxKind.BinaryExpression &&
+			isNullLikeComparison(condition.right);
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left as AST.BinaryExpression;
-			const rightComp = condition.right as AST.BinaryExpression;
-
-			const leftValue = extractValueFromComparison(leftComp).value;
-			const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(condition.left).value;
+			const rightValue = extractValueFromComparison(condition.right).value;
 
 			if (
 				leftValue &&

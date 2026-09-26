@@ -79,27 +79,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				roleProperty?.kind === SyntaxKind.JsxAttribute &&
-				roleProperty.initializer?.kind === SyntaxKind.StringLiteral &&
-				roleProperty.initializer.text === implicitRole
+				roleProperty?.kind !== SyntaxKind.JsxAttribute ||
+				roleProperty.initializer?.kind !== SyntaxKind.StringLiteral ||
+				roleProperty.initializer.text !== implicitRole
 			) {
-				const range = getTSNodeRange(roleProperty, sourceFile);
-				context.report({
-					data: {
-						element,
-						role: roleProperty.initializer.text,
-					},
-					message: "redundantRole",
-					range,
-					suggestions: [
-						{
-							id: "removeRole",
-							range,
-							text: "",
-						},
-					],
-				});
+				return;
 			}
+
+			const range = getTSNodeRange(roleProperty, sourceFile);
+			context.report({
+				data: {
+					element,
+					role: roleProperty.initializer.text,
+				},
+				message: "redundantRole",
+				range,
+				suggestions: [
+					{
+						id: "removeRole",
+						range,
+						text: "",
+					},
+				],
+			});
 		}
 
 		return {

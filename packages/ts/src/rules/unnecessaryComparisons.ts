@@ -452,29 +452,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					// Case 3: OR chains - check for redundant double comparisons
-					if (node.operatorToken.kind === SyntaxKind.BarBarToken) {
-						const comparisons = collectComparisonsFromChain(
-							node,
-							SyntaxKind.BarBarToken,
-						);
-
-						if (comparisons.length >= 2) {
-							const redundant = checkRedundantOrComparison(
-								comparisons,
-								sourceFile,
-							);
-							if (redundant) {
-								context.report({
-									data: {
-										suggestion: redundant.suggestion,
-									},
-									message: "redundantComparison",
-									range: getTSNodeRange(node, sourceFile),
-								});
-								return;
-							}
-						}
+					if (node.operatorToken.kind !== SyntaxKind.BarBarToken) {
+						return;
 					}
+
+					const comparisons = collectComparisonsFromChain(
+						node,
+						SyntaxKind.BarBarToken,
+					);
+
+					if (comparisons.length < 2) {
+						return;
+					}
+
+					const redundant = checkRedundantOrComparison(comparisons, sourceFile);
+					if (!redundant) {
+						return;
+					}
+
+					context.report({
+						data: {
+							suggestion: redundant.suggestion,
+						},
+						message: "redundantComparison",
+						range: getTSNodeRange(node, sourceFile),
+					});
 				},
 			},
 		};

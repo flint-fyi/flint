@@ -46,28 +46,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const isLooseComparison = operator === "==" || operator === "!=";
 
-					if (isLooseComparison) {
-						const strictOperator = toStrictOperator(operator);
-						const operatorRange = getTSNodeRange(
-							node.operatorToken,
-							sourceFile,
-						);
-						context.report({
-							data: {
-								looseOperator: operator,
-								strictOperator,
-							},
-							message: "preferStrictEquality",
-							range: operatorRange,
-							suggestions: [
-								{
-									id: "useStrictOperator",
-									range: operatorRange,
-									text: strictOperator,
-								},
-							],
-						});
+					if (!isLooseComparison) {
+						return;
 					}
+
+					const strictOperator = toStrictOperator(operator);
+					const operatorRange = getTSNodeRange(node.operatorToken, sourceFile);
+					context.report({
+						data: {
+							looseOperator: operator,
+							strictOperator,
+						},
+						message: "preferStrictEquality",
+						range: operatorRange,
+						suggestions: [
+							{
+								id: "useStrictOperator",
+								range: operatorRange,
+								text: strictOperator,
+							},
+						],
+					});
 				},
 			},
 		};

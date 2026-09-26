@@ -23,13 +23,15 @@ function getCharacterClassesIfSimplified(pattern: RegExpAST.Pattern) {
 
 			const elements = charClass.elements;
 			if (
-				hasMatchingCasePair(elements) &&
-				!isHexSubset(elements) &&
-				!isFullAlphabetMatch(elements)
+				!hasMatchingCasePair(elements) ||
+				isHexSubset(elements) ||
+				isFullAlphabetMatch(elements)
 			) {
-				characterClasses.push(charClass);
-				simplified = true;
+				return;
 			}
+
+			characterClasses.push(charClass);
+			simplified = true;
 		},
 	});
 

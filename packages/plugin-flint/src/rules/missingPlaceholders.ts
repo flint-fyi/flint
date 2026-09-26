@@ -154,12 +154,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				CallExpression(node, { sourceFile, typeChecker }) {
 					if (isRuleCreatorCreateRule(node, typeChecker)) {
 						checkMessageInCreateRule(node);
-						return;
-					}
-
-					if (isRuleContextReport(node, typeChecker)) {
+					} else if (isRuleContextReport(node, typeChecker)) {
 						populateMessageInCreateRule(node, sourceFile);
-						return;
 					}
 				},
 				"SourceFile:exit"() {
