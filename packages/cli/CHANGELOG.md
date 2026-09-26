@@ -1,5 +1,19 @@
 # @flint/cli
 
+## 0.23.3
+
+### Patch Changes
+
+- [#3520](https://github.com/flint-fyi/flint/pull/3520) [`686b071`](https://github.com/flint-fyi/flint/commit/686b0716fcea63a23f31b595e6a47dbf136ec03b) - Defer linting dependencies until needed so `--help` and `--version` avoid loading the lint engine and TypeScript.
+  Load the TypeScript patch immediately before user configs, and load watch mode, interactive rendering, and formatting only when selected.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
+- [#3535](https://github.com/flint-fyi/flint/pull/3535) [`9c5e8da`](https://github.com/flint-fyi/flint/commit/9c5e8da73049db7737878e7f2f8eb1ad207f6804) - Replace Chalk with Node.js native terminal styling.
+  Report colors retain their RGB values without low-color downconversion, and terminal styling now honors `NO_COLOR` and `NODE_DISABLE_COLORS`.
+- Updated dependencies [[`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39), [`12ad54b`](https://github.com/flint-fyi/flint/commit/12ad54bb504f1c54d215f9b6041fe8a79c263faf), [`c049ab9`](https://github.com/flint-fyi/flint/commit/c049ab9a74c48b2a3c75c2aac26ca33b99a3d6a3), [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f), [`2df6b52`](https://github.com/flint-fyi/flint/commit/2df6b526d4d503e1f2649a092486c7d540d8adda), [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db)]:
+  - @flint.fyi/core@0.28.0
+
 ## 0.23.2
 
 ### Patch Changes
