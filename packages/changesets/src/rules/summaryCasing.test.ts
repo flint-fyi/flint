@@ -87,8 +87,72 @@ added a new option.
 				},
 			],
 		},
+		{
+			code: `---
+"example": patch
+---
+
+deps: updated dependencies.
+`,
+			options: { types: ["deps"] },
+			snapshot: `---
+"example": patch
+---
+
+deps: updated dependencies.
+      ~
+      This changeset summary starts with a lowercase letter, but for consistency should be uppercase.
+`,
+			suggestions: [
+				{
+					id: "uppercaseFirstLetter",
+					updated: `---
+"example": patch
+---
+
+deps: Updated dependencies.
+`,
+				},
+			],
+		},
+		{
+			code: `---
+"example": patch
+---
+
+deps: Updated dependencies.
+`,
+			snapshot: `---
+"example": patch
+---
+
+deps: Updated dependencies.
+~
+This changeset summary starts with a lowercase letter, but for consistency should be uppercase.
+`,
+			suggestions: [
+				{
+					id: "uppercaseFirstLetter",
+					updated: `---
+"example": patch
+---
+
+Deps: Updated dependencies.
+`,
+				},
+			],
+		},
 	],
 	valid: [
+		{
+			code: `---
+"example": patch
+---
+
+deps: Updated dependencies.
+`,
+			options: { types: ["deps"] },
+		},
 		`---
 "example": patch
 ---

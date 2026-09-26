@@ -102,6 +102,48 @@ JSON files are now supported.
 </TabItem>
 </Tabs>
 
+### `types`
+
+> Type: `string[]`
+>
+> Default: the `DEFAULT_COMMIT_TYPES` of [`conventional-changelog-conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits)
+
+Conventional commit types whose prefixes are skipped before checking the first letter.
+This should match the `types` option of [`summaryReadability`](/rules/changesets/summaryreadability) if you configure both.
+
+```ts
+changesets.rules({
+	summaryCasing: {
+		types: ["deps", "feat", "fix"],
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": patch
+---
+
+deps: updated dependencies.
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": patch
+---
+
+deps: Updated dependencies.
+```
+
+</TabItem>
+</Tabs>
+
 ## When Not To Use It
 
 If your project's changesets are written by many contributors and you don't review changelog entries for consistency, this rule may produce reports that nobody acts on.

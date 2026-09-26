@@ -7,7 +7,10 @@ import {
 } from "@flint.fyi/markdown-language";
 
 import { getChangesetSummary } from "../utils/getChangesetSummary.ts";
-import { getConventionalPrefix } from "../utils/getConventionalPrefix.ts";
+import {
+	defaultConventionalTypes,
+	getConventionalPrefix,
+} from "../utils/getConventionalPrefix.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(markdownLanguage, {
@@ -46,6 +49,12 @@ export default ruleCreator.createRule(markdownLanguage, {
 			.describe(
 				"Which letter case the first letter of changeset summaries must be.",
 			),
+		types: z
+			.array(z.string())
+			.default(defaultConventionalTypes)
+			.describe(
+				"Conventional commit types whose prefixes are skipped before checking the first letter.",
+			),
 	},
 	setup(context) {
 		return {
@@ -58,7 +67,8 @@ export default ruleCreator.createRule(markdownLanguage, {
 
 					const begin =
 						paragraph.position.start.offset +
-						(getConventionalPrefix(paragraph, sourceText)?.length ?? 0);
+						(getConventionalPrefix(paragraph, sourceText, options.types)
+							?.length ?? 0);
 
 					const child = (
 						paragraph.children as WithPosition<PhrasingContent>[]
