@@ -24,6 +24,7 @@
 						"enum": [
 							"astro",
 							"browser",
+							"changesets",
 							"css",
 							"drizzle",
 							"flint",

@@ -1,0 +1,125 @@
+---
+description: "Reports changeset summaries that don't match the configured ending punctuation."
+title: "summaryPunctuation"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="changesets" rule="summaryPunctuation" />
+
+Changesets copies the summary of each changeset into the `CHANGELOG.md` of every package it releases.
+Ending every summary the same way makes those changelog entries consistent to read.
+
+This rule checks the end of the first paragraph of a changeset's summary.
+By default, it reports summaries that don't end with a period, exclamation mark, or question mark, and adds a period when run with `--fix`.
+A first paragraph that ends with a colon and is followed by more content, such as a list, is not reported.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": minor
+---
+
+Added a new option
+```
+
+```md
+---
+"example-package": minor
+---
+
+Added the following options
+
+- `first`
+- `second`
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": minor
+---
+
+Added a new option.
+```
+
+```md
+---
+"example-package": minor
+---
+
+Added the following options:
+
+- `first`
+- `second`
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `punctuation`
+
+> Type: `"always" | "never"`
+>
+> Default: `"always"`
+
+Whether changeset summaries must end with punctuation.
+With `"never"`, this rule reports trailing periods, exclamation marks, question marks, and ellipses, and removes them when run with `--fix`.
+
+```ts
+changesets.rules({
+	summaryPunctuation: {
+		punctuation: "never",
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": minor
+---
+
+Added a new option.
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": minor
+---
+
+Added a new option
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your project's changesets are written by many contributors and you don't review changelog entries for consistency, this rule may produce reports that nobody acts on.
+You might prefer to leave this rule disabled until your project reviews changelog formatting.
+
+## Further Reading
+
+- [Changesets: Adding a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md)
+- [Keep a Changelog](https://keepachangelog.com/en/1.1.0)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="changesets" ruleId="summaryPunctuation" />

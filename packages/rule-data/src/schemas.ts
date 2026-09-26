@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 type FlintPlugin =
 	| "astro"
 	| "browser"
+	| "changesets"
 	| "css"
 	| "drizzle"
 	| "flint"
@@ -32,6 +33,7 @@ type FlintPlugin =
 const flintRulePluginSchema: z.ZodType<FlintPlugin> = z.union([
 	z.literal("astro"),
 	z.literal("browser"),
+	z.literal("changesets"),
 	z.literal("css"),
 	z.literal("drizzle"),
 	z.literal("flint"),

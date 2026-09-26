@@ -7,7 +7,7 @@ const config: KnipConfig = {
 	workspaces: {
 		".": {
 			entry: ["*.config.{js,ts}"],
-			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
+			project: ["*.config.{js,ts}"],
 		},
 		"packages/astro": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
@@ -18,6 +18,9 @@ const config: KnipConfig = {
 		"packages/build": {
 			ignoreDependencies: ["tsdown!"],
 			project: ["src/**/*.ts!"],
+		},
+		"packages/changesets": {
+			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/css": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],

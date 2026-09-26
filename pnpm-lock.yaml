@@ -723,6 +723,9 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:packages/build
+      '@flint.fyi/changesets':
+        specifier: workspace:^
+        version: link:packages/changesets
       '@flint.fyi/node':
         specifier: workspace:^
         version: link:packages/node
@@ -945,6 +948,34 @@ importers:
       tsdown:
         specifier: catalog:dev
         version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+
+  packages/changesets:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/markdown-language':
+        specifier: workspace:^
+        version: link:../markdown-language
+      zod:
+        specifier: catalog:prod
+        version: 4.6.5
+    devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
+      '@types/mdast':
+        specifier: catalog:dev
+        version: 4.0.4
+      tsdown:
+        specifier: catalog:dev
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+      vitest:
+        specifier: catalog:dev
+        version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
 
   packages/cli:
     dependencies:
@@ -1561,6 +1592,9 @@ importers:
       '@flint.fyi/browser':
         specifier: workspace:^
         version: link:../browser
+      '@flint.fyi/changesets':
+        specifier: workspace:^
+        version: link:../changesets
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core

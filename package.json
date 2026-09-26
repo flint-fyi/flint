@@ -35,6 +35,7 @@
 		"@eslint/json": "catalog:dev",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/build": "workspace:^",
+		"@flint.fyi/changesets": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
 		"@flint.fyi/performance": "workspace:^",
 		"@flint.fyi/plugin-flint": "workspace:^",

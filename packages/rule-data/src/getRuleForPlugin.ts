@@ -1,5 +1,6 @@
 import { astro } from "@flint.fyi/astro";
 import { browser } from "@flint.fyi/browser";
+import { changesets } from "@flint.fyi/changesets";
 import type { AnyRule } from "@flint.fyi/core";
 import { css } from "@flint.fyi/css";
 import { json } from "@flint.fyi/json";
@@ -17,6 +18,7 @@ import { yaml } from "@flint.fyi/yaml";
 const plugins = {
 	astro,
 	browser,
+	changesets,
 	css,
 	flint,
 	json,

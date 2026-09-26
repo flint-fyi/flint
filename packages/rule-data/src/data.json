@@ -1108,6 +1108,30 @@
 	},
 	{
 		"flint": {
+			"name": "summaryCasing",
+			"plugin": "changesets",
+			"preset": "stylistic",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "summaryPunctuation",
+			"plugin": "changesets",
+			"preset": "stylistic",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "summaryReadability",
+			"plugin": "changesets",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
 			"name": "alphaValueNotations",
 			"plugin": "css",
 			"preset": "stylistic"

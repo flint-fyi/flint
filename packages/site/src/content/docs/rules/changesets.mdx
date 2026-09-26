@@ -1,0 +1,74 @@
+---
+description: "Changesets linting rules provided by Flint."
+title: "Changesets Plugin"
+---
+
+import PluginTop from "~/components/PluginTop.astro";
+import { RulesTable } from "~/components/RulesTable.tsx";
+
+<PluginTop pluginId="changesets" />
+
+See the [Changesets documentation](https://github.com/changesets/changesets) for more details on how changesets are created and released.
+
+## Presets
+
+Flint's Changesets plugin provides the following presets:
+
+| Preset                        | Recommended | Description                                                               |
+| ----------------------------- | ----------- | ------------------------------------------------------------------------- |
+| **[`logical`](#logical)**     | ✅ Always   | Rules that ensure changeset summaries describe changes for package users. |
+| **[`stylistic`](#stylistic)** | ✅ Always   | Rules that enforce consistent formatting of changeset summaries.          |
+
+```ts title="flint.config.ts"
+import { changesets } from "@flint.fyi/changesets";
+import { defineConfig } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: changesets.files.all,
+			rules: [changesets.presets.logical, changesets.presets.stylistic],
+		},
+	],
+});
+```
+
+### `logical`
+
+Rules that ensure changeset summaries describe changes for the users of released packages.
+
+```ts title="flint.config.ts"
+import { changesets } from "@flint.fyi/changesets";
+import { defineConfig } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: changesets.files.all,
+			rules: changesets.presets.logical,
+		},
+	],
+});
+```
+
+### `stylistic`
+
+Rules that enforce consistent letter casing and punctuation in changeset summaries.
+
+```ts title="flint.config.ts"
+import { changesets } from "@flint.fyi/changesets";
+import { defineConfig } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: changesets.files.all,
+			rules: changesets.presets.stylistic,
+		},
+	],
+});
+```
+
+## Rules
+
+<RulesTable implementing plugin="changesets" />
