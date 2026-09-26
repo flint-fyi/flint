@@ -18,6 +18,7 @@ import type { MarkdownNodeVisitors, WithPosition } from "./nodes.ts";
 
 export interface MarkdownFileServices {
 	root: WithPosition<mdast.Root>;
+	sourceText: string;
 }
 
 export const markdownLanguage: Language<
@@ -42,7 +43,7 @@ export const markdownLanguage: Language<
 				return {
 					...parseDirectivesFromMarkdownFile(root, data.sourceText),
 					about: data,
-					services: { root },
+					services: { root, sourceText: data.sourceText },
 				};
 			},
 		};
