@@ -200,6 +200,46 @@ Another language report.`,
 			expect(getLanguageReports).toHaveBeenCalledOnce();
 		},
 	);
+
+	it("applies absolute suggestion targets using relative expectations", async () => {
+		await expect(
+			createTestSetup({
+				report: {
+					message: "",
+					range: { begin: 0, end: 1 },
+					suggestions: [
+						{
+							files: {
+								"/dictionary.json": [
+									{ range: { begin: 0, end: 4 }, text: "next" },
+								],
+							},
+							id: "dictionary",
+						},
+					],
+				},
+				testCases: {
+					invalid: [
+						{
+							code: "abc",
+							fileName: "src/file.ts",
+							files: { "dictionary.json": "case" },
+							snapshot: "abc\n~\n",
+							suggestions: [
+								{
+									files: {
+										"dictionary.json": [{ original: "case", updated: "next" }],
+									},
+									id: "dictionary",
+								},
+							],
+						},
+					],
+					valid: [],
+				},
+			})(),
+		).resolves.toBeUndefined();
+	});
 });
 
 interface TestSetupOptions {
