@@ -36,9 +36,9 @@ const pluginDataById = {
 	},
 	changesets: {
 		colors: {
-			flame: "#F5A524",
-			heart: "#E5484D",
-			squiggly: "#1F2937",
+			flame: "#0088CC",
+			heart: "#66CCFF",
+			squiggly: "#001B33",
 		},
 		description:
 			"Rules for Changesets, a tool for managing versioning and changelogs with a focus on multi-package repositories.",
