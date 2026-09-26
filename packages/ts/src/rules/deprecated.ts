@@ -353,21 +353,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (objectType) {
-				const property = objectType.getProperty(propertyName.text);
-				if (
-					property &&
-					(getJsDocDeprecation(property, typeChecker) ||
-						isDeprecatedFromDeclarations(property))
-				) {
-					const reportNode = node.propertyName ?? node.name;
-					if (reportNode.kind === SyntaxKind.Identifier) {
-						context.report({
-							message: "deprecated",
-							range: getTSNodeRange(reportNode, sourceFile),
-						});
-					}
-				}
+			if (!objectType) {
+				return;
+			}
+
+			const property = objectType.getProperty(propertyName.text);
+			if (
+				!property ||
+				(!getJsDocDeprecation(property, typeChecker) &&
+					!isDeprecatedFromDeclarations(property))
+			) {
+				return;
+			}
+
+			const reportNode = node.propertyName ?? node.name;
+			if (reportNode.kind === SyntaxKind.Identifier) {
+				context.report({
+					message: "deprecated",
+					range: getTSNodeRange(reportNode, sourceFile),
+				});
 			}
 		}
 

@@ -249,25 +249,29 @@ function checkPatternWithRegexpp(
 				return;
 			}
 
-			if (cNode.raw.startsWith("\\")) {
-				const identity = cNode.raw.slice(1);
-				const syntaxChars = insideCharClass
-					? CHARACTER_CLASS_SYNTAX_CHARACTERS
-					: SYNTAX_CHARACTERS;
-
-				if (
-					cNode.value === identity.codePointAt(0) &&
-					!syntaxChars.has(identity)
-				) {
-					issues.push({
-						data: { escaped: identity },
-						end: cNode.end,
-						message: "uselessEscape",
-						start: cNode.start,
-					});
-					reported = true;
-				}
+			if (!cNode.raw.startsWith("\\")) {
+				return;
 			}
+
+			const identity = cNode.raw.slice(1);
+			const syntaxChars = insideCharClass
+				? CHARACTER_CLASS_SYNTAX_CHARACTERS
+				: SYNTAX_CHARACTERS;
+
+			if (
+				cNode.value !== identity.codePointAt(0) ||
+				syntaxChars.has(identity)
+			) {
+				return;
+			}
+
+			issues.push({
+				data: { escaped: identity },
+				end: cNode.end,
+				message: "uselessEscape",
+				start: cNode.start,
+			});
+			reported = true;
 		},
 		onQuantifierEnter(quantifierNode) {
 			if (quantifierNode.element.type !== "Assertion") {

@@ -144,44 +144,48 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// Check for fileURLToPath(new URL('.', import.meta.url))
 					// Check for fileURLToPath(import.meta.url)
 					// This must be checked last to avoid double-reporting when inside path.dirname()
-					if (isFileURLToPathCall(node)) {
-						const firstArg = nullThrows(
-							node.arguments[0],
-							"fileURLToPath should have one argument",
-						);
-						if (
-							isNewURLWithDot(firstArg) &&
-							isImportMetaUrl(
-								nullThrows(
-									firstArg.arguments[1],
-									"new URL should have second argument",
-								),
-							)
-						) {
-							context.report({
-								message: "preferImportMetaDirname",
-								range: getTSNodeRange(node, sourceFile),
-							});
-							return;
-						}
-
-						if (isImportMetaUrl(firstArg)) {
-							// Don't report if this is inside a path.dirname call
-							if (
-								node.parent.kind === SyntaxKind.CallExpression &&
-								isPathDirnameCall(node.parent) &&
-								node.parent.arguments[0] === node
-							) {
-								return;
-							}
-
-							context.report({
-								message: "preferImportMetaFilename",
-								range: getTSNodeRange(node, sourceFile),
-							});
-							return;
-						}
+					if (!isFileURLToPathCall(node)) {
+						return;
 					}
+
+					const firstArg = nullThrows(
+						node.arguments[0],
+						"fileURLToPath should have one argument",
+					);
+					if (
+						isNewURLWithDot(firstArg) &&
+						isImportMetaUrl(
+							nullThrows(
+								firstArg.arguments[1],
+								"new URL should have second argument",
+							),
+						)
+					) {
+						context.report({
+							message: "preferImportMetaDirname",
+							range: getTSNodeRange(node, sourceFile),
+						});
+						return;
+					}
+
+					if (!isImportMetaUrl(firstArg)) {
+						return;
+					}
+
+					// Don't report if this is inside a path.dirname call
+					if (
+						node.parent.kind === SyntaxKind.CallExpression &&
+						isPathDirnameCall(node.parent) &&
+						node.parent.arguments[0] === node
+					) {
+						return;
+					}
+
+					context.report({
+						message: "preferImportMetaFilename",
+						range: getTSNodeRange(node, sourceFile),
+					});
+					return;
 				},
 			},
 		};

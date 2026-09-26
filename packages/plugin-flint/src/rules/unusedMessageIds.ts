@@ -166,10 +166,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (isVolarReportSourceCodeCall(node, typeChecker)) {
-						detectMessageIdUsage(node, 1);
+					if (!isVolarReportSourceCodeCall(node, typeChecker)) {
 						return;
 					}
+
+					detectMessageIdUsage(node, 1);
+					return;
 				},
 				"SourceFile:exit"() {
 					if (!unusedMessageIds.size) {

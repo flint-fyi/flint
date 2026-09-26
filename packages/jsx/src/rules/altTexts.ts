@@ -101,20 +101,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				properties.kind === SyntaxKind.JsxAttribute &&
-				properties.initializer?.kind === SyntaxKind.JsxExpression
+				properties.kind !== SyntaxKind.JsxAttribute ||
+				properties.initializer?.kind !== SyntaxKind.JsxExpression
 			) {
-				const { expression } = properties.initializer;
-				if (
-					expression?.kind === SyntaxKind.Identifier &&
-					expression.text === "undefined"
-				) {
-					context.report({
-						data: { element: elementName },
-						message: "missingAlt",
-						range: getTSNodeRange(tagName, sourceFile),
-					});
-				}
+				return;
+			}
+
+			const { expression } = properties.initializer;
+			if (
+				expression?.kind === SyntaxKind.Identifier &&
+				expression.text === "undefined"
+			) {
+				context.report({
+					data: { element: elementName },
+					message: "missingAlt",
+					range: getTSNodeRange(tagName, sourceFile),
+				});
 			}
 		}
 

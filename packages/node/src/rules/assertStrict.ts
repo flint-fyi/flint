@@ -55,24 +55,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (node.importClause) {
-						if (
-							node.importClause.namedBindings?.kind === SyntaxKind.NamedImports
-						) {
-							for (const element of node.importClause.namedBindings.elements) {
-								const importedName =
-									element.propertyName?.text ?? element.name.text;
-								if (importedName === "strict") {
-									return;
-								}
+					if (!node.importClause) {
+						return;
+					}
+
+					if (
+						node.importClause.namedBindings?.kind === SyntaxKind.NamedImports
+					) {
+						for (const element of node.importClause.namedBindings.elements) {
+							const importedName =
+								element.propertyName?.text ?? element.name.text;
+							if (importedName === "strict") {
+								return;
 							}
 						}
-
-						context.report({
-							message: "preferStrictAssert",
-							range: getTSNodeRange(node.moduleSpecifier, sourceFile),
-						});
 					}
+
+					context.report({
+						message: "preferStrictAssert",
+						range: getTSNodeRange(node.moduleSpecifier, sourceFile),
+					});
 				},
 				ImportEqualsDeclaration(node, { sourceFile }) {
 					if (

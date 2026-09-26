@@ -160,36 +160,38 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					if (node.operatorToken.kind === SyntaxKind.BarBarToken) {
-						const { left, right } = node;
+					if (node.operatorToken.kind !== SyntaxKind.BarBarToken) {
+						return;
+					}
 
-						if (left.kind !== SyntaxKind.BinaryExpression) {
-							return;
-						}
+					const { left, right } = node;
 
-						const zeroCheck = isLengthZeroCheck(left);
-						if (!zeroCheck) {
-							return;
-						}
+					if (left.kind !== SyntaxKind.BinaryExpression) {
+						return;
+					}
 
-						const everyArrayExpr = isSomeOrEveryCall(right, "every");
-						if (
-							everyArrayExpr &&
-							haveSameArrayExpression(
-								zeroCheck.arrayExpression,
-								everyArrayExpr,
-								sourceFile,
-							)
-						) {
-							context.report({
-								fix: {
-									range: getTSNodeRange(node, sourceFile),
-									text: right.getText(sourceFile),
-								},
-								message: "unnecessaryLengthCheckEvery",
-								range: getTSNodeRange(left, sourceFile),
-							});
-						}
+					const zeroCheck = isLengthZeroCheck(left);
+					if (!zeroCheck) {
+						return;
+					}
+
+					const everyArrayExpr = isSomeOrEveryCall(right, "every");
+					if (
+						everyArrayExpr &&
+						haveSameArrayExpression(
+							zeroCheck.arrayExpression,
+							everyArrayExpr,
+							sourceFile,
+						)
+					) {
+						context.report({
+							fix: {
+								range: getTSNodeRange(node, sourceFile),
+								text: right.getText(sourceFile),
+							},
+							message: "unnecessaryLengthCheckEvery",
+							range: getTSNodeRange(left, sourceFile),
+						});
 					}
 				},
 			},

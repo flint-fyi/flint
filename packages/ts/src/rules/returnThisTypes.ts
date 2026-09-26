@@ -120,10 +120,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				if (tsutils.isUnionType(type) && type.types.includes(classType)) {
-					hasReturnClassType = true;
-					return true;
+				if (!(tsutils.isUnionType(type) && type.types.includes(classType))) {
+					return;
 				}
+
+				hasReturnClassType = true;
+				return true;
 			});
 
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

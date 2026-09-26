@@ -69,16 +69,18 @@ export async function* createDetailedReport(
 		);
 	}
 
-	if (report.about.url) {
-		yield `\n${indenter}\n${indenter} `;
-		yield styleText(
-			ColorCodes.ruleUrl,
-			styleText(
-				"italic",
-				`→ ${formatUrl(report.about.url, report.about.url.replace(/^https:\/\//, ""))}`,
-			),
-		);
+	if (!report.about.url) {
+		return;
 	}
+
+	yield `\n${indenter}\n${indenter} `;
+	yield styleText(
+		ColorCodes.ruleUrl,
+		styleText(
+			"italic",
+			`→ ${formatUrl(report.about.url, report.about.url.replace(/^https:\/\//, ""))}`,
+		),
+	);
 }
 
 function formatUrl(url: string, text: string) {

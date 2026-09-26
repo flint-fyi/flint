@@ -157,10 +157,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (isRuleContextReport(node, typeChecker)) {
-						populateMessageInCreateRule(node, sourceFile);
+					if (!isRuleContextReport(node, typeChecker)) {
 						return;
 					}
+
+					populateMessageInCreateRule(node, sourceFile);
+					return;
 				},
 				"SourceFile:exit"() {
 					messagePlaceholders.clear();

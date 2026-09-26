@@ -164,48 +164,50 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					visitRegExpAST(regexpAst, {
 						onCharacterClassEnter(ccNode) {
 							const result = processCharacterClass(ccNode);
-							if (result) {
-								const sortedNodes = [...result.nodes].toSorted(
-									(a, b) => a.start - b.start,
-								);
+							if (!result) {
+								return;
+							}
 
-								const firstNode = sortedNodes[0];
-								const lastNode = sortedNodes.at(-1);
+							const sortedNodes = [...result.nodes].toSorted(
+								(a, b) => a.start - b.start,
+							);
 
-								if (!firstNode || !lastNode) {
-									return;
-								}
+							const firstNode = sortedNodes[0];
+							const lastNode = sortedNodes.at(-1);
 
-								const fixRanges: { begin: number; end: number }[] = [];
+							if (!firstNode || !lastNode) {
+								return;
+							}
 
-								for (const currentNode of sortedNodes) {
-									const begin = nodeStart + patternOffset + currentNode.start;
-									const end = nodeStart + patternOffset + currentNode.end;
+							const fixRanges: { begin: number; end: number }[] = [];
 
-									if (fixRanges.length) {
-										const lastRange = fixRanges.at(-1);
-										if (lastRange && lastRange.end >= begin) {
-											lastRange.end = Math.max(lastRange.end, end);
-										} else {
-											fixRanges.push({ begin, end });
-										}
+							for (const currentNode of sortedNodes) {
+								const begin = nodeStart + patternOffset + currentNode.start;
+								const end = nodeStart + patternOffset + currentNode.end;
+
+								if (fixRanges.length) {
+									const lastRange = fixRanges.at(-1);
+									if (lastRange && lastRange.end >= begin) {
+										lastRange.end = Math.max(lastRange.end, end);
 									} else {
 										fixRanges.push({ begin, end });
 									}
+								} else {
+									fixRanges.push({ begin, end });
 								}
-
-								context.report({
-									data: {
-										range: result.newRange,
-									},
-									fix: fixRanges.map((range, index) => ({
-										range,
-										text: index === 0 ? result.newRange : "",
-									})),
-									message: "preferRange",
-									range: getTSNodeRange(node, sourceFile),
-								});
 							}
+
+							context.report({
+								data: {
+									range: result.newRange,
+								},
+								fix: fixRanges.map((range, index) => ({
+									range,
+									text: index === 0 ? result.newRange : "",
+								})),
+								message: "preferRange",
+								range: getTSNodeRange(node, sourceFile),
+							});
 						},
 					});
 				},
