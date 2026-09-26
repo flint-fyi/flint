@@ -35,6 +35,7 @@ export interface RuleTesterDefaults {
 	fileName?: string;
 	files?: Record<string, string>;
 }
+
 export interface RuleTesterOptions {
 	assertNoLanguageReports?: boolean;
 	defaults?: RuleTesterDefaults;
@@ -81,43 +82,35 @@ export class RuleTester {
 		scope = globalThis,
 		skip,
 	}: RuleTesterOptions = {}) {
-		const virtualRoot =
-			diskBackedFSRoot == null
-				? undefined
-				: resolve(
-						process.cwd(),
-						diskBackedFSRoot,
-						"_flint-rule-tester-virtual",
-					);
-		let baseHost =
-			virtualRoot == null
-				? undefined
-				: createEphemeralLinterHost(
-						withRepositoryRoot(
-							createDiskBackedLinterHost(virtualRoot),
-							virtualRoot,
-						),
-					);
+		let host: VFSLinterHost;
+		if (diskBackedFSRoot === undefined) {
+			host = createVFSLinterHost({
+				caseSensitive: isFileSystemCaseSensitive(),
+				cwd: "/",
+			});
+		} else {
+			const cwd = resolve(
+				process.cwd(),
+				diskBackedFSRoot,
+				"_flint-rule-tester-virtual",
+			);
+			host = createVFSLinterHost({
+				baseHost: createEphemeralLinterHost(
+					withRepositoryRoot(createDiskBackedLinterHost(cwd), cwd),
+				),
+			});
+		}
+
 		const { files: defaultFiles = {} } = defaults;
 		if (Object.keys(defaultFiles).length) {
-			const vfs = createVFSLinterHost(
-				baseHost == null
-					? { caseSensitive: isFileSystemCaseSensitive(), cwd: process.cwd() }
-					: { baseHost },
-			);
 			for (const [name, content] of Object.entries(defaultFiles)) {
-				const filePath = resolve(vfs.getCurrentDirectory(), name);
-				vfs.vfsUpsertFile(filePath, content);
+				const filePath = resolve(host.getCurrentDirectory(), name);
+				host.vfsUpsertFile(filePath, content);
 			}
-			baseHost = vfs;
+			// Keep per-test-case files from overwriting the defaults.
+			host = createVFSLinterHost({ baseHost: host });
 		}
-		// another overlay to prevent `defaultFiles` from being overwritten
-		// by per-test-case `files`
-		this.#linterHost = createVFSLinterHost(
-			baseHost == null
-				? { caseSensitive: isFileSystemCaseSensitive(), cwd: process.cwd() }
-				: { baseHost },
-		);
+		this.#linterHost = host;
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
 		);

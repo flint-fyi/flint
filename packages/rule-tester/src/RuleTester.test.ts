@@ -5,12 +5,15 @@ import { describe, expect, it, vi } from "vitest";
 import {
 	createLanguage,
 	RuleCreator,
+	type AnyLanguageFile,
 	type LanguageReports,
+	type LinterHost,
 	type RuleReport,
 } from "@flint.fyi/core";
 
 import {
 	RuleTester,
+	type RuleTesterOptions,
 	type TestCases,
 	type TesterSetupDescribe,
 	type TesterSetupIt,
@@ -153,14 +156,62 @@ Another language report.`,
 			"Reported suggestion target paths must exactly match expected target paths.",
 		);
 	});
+
+	it.each([false, true])(
+		"roots virtual files at / with defaults: %s",
+		async (withDefaults) => {
+			const getLanguageReports = vi.fn(
+				(file: AnyLanguageFile, host: LinterHost) => {
+					expect(host.getCurrentDirectory()).toBe("/");
+					expect(file.about.filePathAbsolute).toBe("/src/file.ts");
+					expect(host.readFileSync("/src/file.ts")).toBe("abc");
+					expect(host.readFileSync("/dictionary.json")).toBe("case");
+					expect(host.readFileSync("/default.json")).toBe(
+						withDefaults ? "default" : undefined,
+					);
+					return [];
+				},
+			);
+			await expect(
+				createTestSetup({
+					getLanguageReports,
+					testCases: {
+						invalid: [],
+						valid: [
+							{
+								code: "abc",
+								fileName: "src/file.ts",
+								files: { "dictionary.json": "case" },
+							},
+						],
+					},
+					testerOptions: {
+						...(withDefaults && {
+							defaults: {
+								files: {
+									"default.json": "default",
+									"dictionary.json": "default",
+								},
+							},
+						}),
+					},
+				})(),
+			).resolves.toBeUndefined();
+			expect(getLanguageReports).toHaveBeenCalledOnce();
+		},
+	);
 });
 
 interface TestSetupOptions {
 	assertNoLanguageReports?: boolean;
-	getLanguageReports?: () => LanguageReports;
+	getLanguageReports?: (
+		file: AnyLanguageFile,
+		host: LinterHost,
+	) => LanguageReports;
 	it?: TesterSetupIt;
 	report?: RuleReport<"">;
 	testCases?: TestCases<undefined>;
+	testerOptions?: RuleTesterOptions;
 }
 
 function createTestSetup(options: TestSetupOptions): () => Promise<void> {
@@ -175,6 +226,7 @@ function createTestSetups({
 	it: registerTest,
 	report,
 	testCases = { invalid: [], valid: [""] },
+	testerOptions,
 }: TestSetupOptions): (() => Promise<void>)[] {
 	const testSetups: (() => Promise<void>)[] = [];
 	const collectTest: TesterSetupIt = (_description, setup): void => {
@@ -207,6 +259,7 @@ function createTestSetups({
 	});
 
 	new RuleTester({
+		...testerOptions,
 		...(assertNoLanguageReports === undefined
 			? {}
 			: { assertNoLanguageReports }),
