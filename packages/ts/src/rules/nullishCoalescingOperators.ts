@@ -110,11 +110,8 @@ function analyzeConditionalForNullish(
 			isNullLikeComparison(condition.right);
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left;
-			const rightComp = condition.right;
-
-			const leftValue = extractValueFromComparison(leftComp).value;
-			const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(condition.left).value;
+			const rightValue = extractValueFromComparison(condition.right).value;
 
 			if (
 				leftValue &&
@@ -144,11 +141,8 @@ function analyzeConditionalForNullish(
 			isNullLikeComparison(condition.right);
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left;
-			const rightComp = condition.right;
-
-			const leftValue = extractValueFromComparison(leftComp).value;
-			const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(condition.left).value;
+			const rightValue = extractValueFromComparison(condition.right).value;
 
 			if (
 				leftValue &&

@@ -158,20 +158,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				CallExpression(node, { sourceFile, typeChecker }) {
 					if (isRuleCreatorCreateRule(node, typeChecker)) {
 						collectMessageIds(node, sourceFile);
-						return;
-					}
-
-					if (isRuleContextReport(node, typeChecker)) {
+					} else if (isRuleContextReport(node, typeChecker)) {
 						detectMessageIdUsage(node, 0);
-						return;
+					} else if (isVolarReportSourceCodeCall(node, typeChecker)) {
+						detectMessageIdUsage(node, 1);
 					}
-
-					if (!isVolarReportSourceCodeCall(node, typeChecker)) {
-						return;
-					}
-
-					detectMessageIdUsage(node, 1);
-					return;
 				},
 				"SourceFile:exit"() {
 					if (!unusedMessageIds.size) {
