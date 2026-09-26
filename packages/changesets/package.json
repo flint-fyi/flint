@@ -28,6 +28,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/markdown-language": "workspace:^",
+		"conventional-changelog-conventionalcommits": "catalog:prod",
 		"zod": "catalog:prod"
 	},
 	"devDependencies": {

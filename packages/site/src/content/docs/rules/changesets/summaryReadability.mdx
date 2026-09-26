@@ -75,6 +75,50 @@ Fixed a crash on empty files.
 </TabItem>
 </Tabs>
 
+## Options
+
+### `types`
+
+> Type: `string[]`
+>
+> Default: the `DEFAULT_COMMIT_TYPES` of [`conventional-changelog-conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits)
+
+Conventional commit types whose prefixes should be reported.
+Words not in this list, such as `Note:`, are not reported as prefixes.
+
+```ts
+changesets.rules({
+	summaryReadability: {
+		types: ["deps", "feat", "fix"],
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": patch
+---
+
+deps: Updated dependencies.
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": patch
+---
+
+Updated dependencies.
+```
+
+</TabItem>
+</Tabs>
+
 ## When Not To Use It
 
 If your project publishes changelogs that are generated from conventional commit messages rather than from changeset summaries, the prefixes may be read by your release tooling.

@@ -75,6 +75,51 @@ This changeset summary unnecessarily starts with a conventional commit prefix.
 			code: `---
 "example": patch
 ---
+
+feature: Added a new option.
+`,
+			output: `---
+"example": patch
+---
+
+Added a new option.
+`,
+			snapshot: `---
+"example": patch
+---
+
+feature: Added a new option.
+~~~~~~~~~
+This changeset summary unnecessarily starts with a conventional commit prefix.
+`,
+		},
+		{
+			code: `---
+"example": patch
+---
+
+deps: Updated dependencies.
+`,
+			options: { types: ["deps"] },
+			output: `---
+"example": patch
+---
+
+Updated dependencies.
+`,
+			snapshot: `---
+"example": patch
+---
+
+deps: Updated dependencies.
+~~~~~~
+This changeset summary unnecessarily starts with a conventional commit prefix.
+`,
+		},
+		{
+			code: `---
+"example": patch
+---
 `,
 			snapshot: `---
 ~~~
@@ -107,6 +152,27 @@ Fixed \`feat: \` prefixes being parsed.
 
 feat: Removed the old option.
 `,
+		`---
+"example": patch
+---
+
+Note: Added a new option.
+`,
+		`---
+"example": patch
+---
+
+deps: Updated dependencies.
+`,
+		{
+			code: `---
+"example": patch
+---
+
+feat: Added a new option.
+`,
+			options: { types: ["deps"] },
+		},
 		`---
 ---
 `,

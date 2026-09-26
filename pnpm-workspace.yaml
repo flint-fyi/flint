@@ -118,6 +118,7 @@ catalogs:
     cached-factory: ^0.3.0
     change-case: ^5.4.4
     cli-cursor: ^5.0.0
+    conventional-changelog-conventionalcommits: ^10.4.0
     cspell-lib: ^10.0.0
     css-tree: ^3.2.1
     debounce: ^3.0.0

@@ -1,7 +1,12 @@
+import z from "zod/v4";
+
 import { markdownLanguage } from "@flint.fyi/markdown-language";
 
 import { getChangesetSummary } from "../utils/getChangesetSummary.ts";
-import { getConventionalPrefix } from "../utils/getConventionalPrefix.ts";
+import {
+	defaultConventionalTypes,
+	getConventionalPrefix,
+} from "../utils/getConventionalPrefix.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(markdownLanguage, {
@@ -33,10 +38,16 @@ export default ruleCreator.createRule(markdownLanguage, {
 			],
 		},
 	},
+	options: {
+		types: z
+			.array(z.string())
+			.default(defaultConventionalTypes)
+			.describe("Conventional commit types whose prefixes should be reported."),
+	},
 	setup(context) {
 		return {
 			visitors: {
-				root: (node, { sourceText }) => {
+				root: (node, { options, sourceText }) => {
 					const summary = getChangesetSummary(node);
 					if (!summary) {
 						return;
@@ -58,7 +69,11 @@ export default ruleCreator.createRule(markdownLanguage, {
 						return;
 					}
 
-					const prefix = getConventionalPrefix(firstNode, sourceText);
+					const prefix = getConventionalPrefix(
+						firstNode,
+						sourceText,
+						options.types,
+					);
 					if (!prefix) {
 						return;
 					}
