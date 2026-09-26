@@ -1,5 +1,11 @@
 # @flint.fyi/ts-patch
 
+## 0.17.1
+
+### Patch Changes
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
 ## 0.17.0
 
 ### Minor Changes
