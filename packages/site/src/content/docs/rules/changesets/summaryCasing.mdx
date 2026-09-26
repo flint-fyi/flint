@@ -106,7 +106,7 @@ JSON files are now supported.
 
 > Type: `string[]`
 >
-> Default: the `DEFAULT_COMMIT_TYPES` of [`conventional-changelog-conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits)
+> Default: `["build", "chore", "ci", "docs", "feat", "feature", "fix", "perf", "refactor", "revert", "style", "test"]`, the default types of [`conventional-changelog-conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits)
 
 Conventional commit types whose prefixes are skipped before checking the first letter.
 This should match the `types` option of [`summaryReadability`](/rules/changesets/summaryreadability) if you configure both.

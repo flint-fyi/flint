@@ -1,11 +1,22 @@
-import { DEFAULT_COMMIT_TYPES } from "conventional-changelog-conventionalcommits";
 import type { Paragraph } from "mdast";
 
 import type { WithPosition } from "@flint.fyi/markdown-language";
 
-export const defaultConventionalTypes = DEFAULT_COMMIT_TYPES.map(
-	({ type }) => type,
-);
+// Matches DEFAULT_COMMIT_TYPES from conventional-changelog-conventionalcommits.
+export const defaultConventionalTypes = [
+	"build",
+	"chore",
+	"ci",
+	"docs",
+	"feat",
+	"feature",
+	"fix",
+	"perf",
+	"refactor",
+	"revert",
+	"style",
+	"test",
+];
 
 export function getConventionalPrefix(
 	paragraph: WithPosition<Paragraph>,

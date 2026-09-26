@@ -517,9 +517,6 @@ catalogs:
     cli-cursor:
       specifier: ^5.0.0
       version: 5.0.0
-    conventional-changelog-conventionalcommits:
-      specifier: ^10.4.0
-      version: 10.4.0
     cspell-lib:
       specifier: ^10.0.0
       version: 10.3.3
@@ -960,9 +957,6 @@ importers:
       '@flint.fyi/markdown-language':
         specifier: workspace:^
         version: link:../markdown-language
-      conventional-changelog-conventionalcommits:
-        specifier: catalog:prod
-        version: 10.4.0
       zod:
         specifier: catalog:prod
         version: 4.6.5
@@ -2787,10 +2781,6 @@ packages:
   '@clack/prompts@1.8.1':
     resolution: {integrity: sha512-dlT1m5e/0yUL0kRNcQn7yGLVThkgbB0Ga/1AmfDDC/8ik6AIiSf2QLQO2zPYvefsHP0aFgxO93cVLCCfDp7kzQ==}
     engines: {node: '>= 20.12.0'}
-
-  '@conventional-changelog/template@1.4.0':
-    resolution: {integrity: sha512-aalGyl7dbB5PArRebDIX43ZvBlXrYm9uWzGJ26t+4SzJVPsOuvfILGGbw5X4yX7i50YEmJ8zvbiWnqH/AAnZqg==}
-    engines: {node: '>=22'}
 
   '@cspell/cspell-bundled-dicts@10.3.3':
     resolution: {integrity: sha512-aX40uWqTN44EM81R/Xj/NMIbgdtBM0ulKPTDKhVJYIbCJarISLoxaJkERs9dHB5AwrDZViC6BXcpVYnoRV1kXg==}
@@ -5004,10 +4994,6 @@ packages:
   console-table-without-index@0.1.1:
     resolution: {integrity: sha512-afFFu25d5aS/ME5RHJcfsyWQucijEqYTF9L/sqbNhioC5q9HTmm+MipswZJmcPnDXSFM7PmqK61Mq511/61iJg==}
     engines: {node: '>=18'}
-
-  conventional-changelog-conventionalcommits@10.4.0:
-    resolution: {integrity: sha512-Rriac6ZrAlVm6cy9Bz4NSp+WMHpwNXoPIYex+HjCgduAVUSbnew29DQjQw0C4g9u3HtSYzGiGY+pdBXAZo+4aA==}
-    engines: {node: '>=22'}
 
   convert-hrtime@5.0.0:
     resolution: {integrity: sha512-lOETlkIeYSJWcbbcvjRKGxVMXJR+8+OQb/mTPbA4ObPMytYIsUbuOE0Jzy60hjARYszq1id0j8KgVhC+WGZVTg==}
@@ -9045,8 +9031,6 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
 
-  '@conventional-changelog/template@1.4.0': {}
-
   '@cspell/cspell-bundled-dicts@10.3.3':
     dependencies:
       '@cspell/dict-ada': 4.1.1
@@ -11053,10 +11037,6 @@ snapshots:
   console-table-without-index@0.1.1:
     dependencies:
       not-a-log: 1.0.2
-
-  conventional-changelog-conventionalcommits@10.4.0:
-    dependencies:
-      '@conventional-changelog/template': 1.4.0
 
   convert-hrtime@5.0.0: {}
 
