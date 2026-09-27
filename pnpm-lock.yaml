@@ -687,7 +687,7 @@ catalogs:
 overrides:
   read-package-up: 12.0.0
   starlight-blog>satteri: 0.10.5
-  unicorn-magic: 0.4.0
+  unicorn-magic: 0.4.1
 
 importers:
 
@@ -7822,8 +7822,8 @@ packages:
     resolution: {integrity: sha512-/y4/bH9YNU5hi9NIrpOuvGXFcxrj3CMrV+/AYpowAYTpHn8gX/XPFjNy766FPoYY0miQhdW977JFWKGNhBdwyQ==}
     engines: {node: '>=22.19.0'}
 
-  unicorn-magic@0.4.0:
-    resolution: {integrity: sha512-wH590V9VNgYH9g3lH9wWjTrUoKsjLF6sGLjhR4sH1LWpLmCOH0Zf7PukhDA8BiS7KHe4oPNkcTHqYkj7SOGUOw==}
+  unicorn-magic@0.4.1:
+    resolution: {integrity: sha512-lzlXPoVB0Uy/FvTaUgX39RbixYiSKoc3JSoSf01+0c2B6FR3qdYIPN7Qjo/AV7n6sqLCk0509cT3LRj1oSZ1+A==}
     engines: {node: '>=20'}
 
   unified@11.0.5:
@@ -13513,7 +13513,7 @@ snapshots:
   npm-run-path@6.0.0:
     dependencies:
       path-key: 4.0.0
-      unicorn-magic: 0.4.0
+      unicorn-magic: 0.4.1
 
   nth-check@2.1.1:
     dependencies:
@@ -14809,7 +14809,7 @@ snapshots:
 
   undici@8.10.2: {}
 
-  unicorn-magic@0.4.0: {}
+  unicorn-magic@0.4.1: {}
 
   unified@11.0.5:
     dependencies:
