@@ -24,7 +24,7 @@
 	"dependencies": {
 		"@flint.fyi/rule-data": "workspace:^",
 		"console-table-without-index": "catalog:dev",
-		"debug-for-file": "catalog:prod",
+		"debug-for-file": "catalog:dev",
 		"eslint": "catalog:dev",
 		"execa": "catalog:dev",
 		"prettier": "catalog:dev"
