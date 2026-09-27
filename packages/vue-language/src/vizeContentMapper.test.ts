@@ -45,7 +45,7 @@ function createVueFile(sourceText: string) {
 		filePathAbsolute: filePath,
 		sourceText,
 	});
-	return { factory, file };
+	return { factory, file, host };
 }
 
 describe("Vize content mapper", () => {
@@ -147,13 +147,13 @@ describe("Vize content mapper", () => {
 	});
 
 	it("returns a mapped file for malformed templates", () => {
-		const { factory, file } = createVueFile(
+		const { factory, file, host } = createVueFile(
 			'<template><div v-for="item in items" :key="item"></template>',
 		);
 		try {
 			expect(file.services.sourceFile.text).not.toBe("");
 			expect(file.services.spanMap).toBeDefined();
-			expect(vueLanguage.getLanguageReports?.(file)).toContainEqual(
+			expect(vueLanguage.getLanguageReports?.(file, host)).toContainEqual(
 				expect.objectContaining({ source: "vue" }),
 			);
 		} finally {

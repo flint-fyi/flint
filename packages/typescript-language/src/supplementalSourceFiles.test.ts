@@ -1,6 +1,8 @@
 import { SpanMap, SpanMapKind } from "typescript-native/unstable/ast";
 import { describe, expect, it } from "vitest";
 
+import { createDiskBackedLinterHost } from "@flint.fyi/core";
+
 import { typescriptLanguage } from "./language.ts";
 
 describe("supplemental source files", () => {
@@ -54,17 +56,20 @@ describe("supplemental source files", () => {
 			getSyntacticDiagnostics: () => [],
 		};
 
-		const reports = typescriptLanguage.getLanguageReports?.({
-			about: {
-				filePathAbsolute: `${process.cwd()}/Component.astro`,
-				sourceText: "01234567890123456789",
-			},
-			services: {
-				program,
-				project: { configFileName: "/project/tsconfig.json" },
-				sourceFile: canonical,
-			},
-		} as never);
+		const reports = typescriptLanguage.getLanguageReports?.(
+			{
+				about: {
+					filePathAbsolute: `${process.cwd()}/Component.astro`,
+					sourceText: "01234567890123456789",
+				},
+				services: {
+					program,
+					project: { configFileName: "/project/tsconfig.json" },
+					sourceFile: canonical,
+				},
+			} as never,
+			createDiskBackedLinterHost(process.cwd()),
+		);
 
 		expect(reports).toHaveLength(1);
 		expect(reports?.[0]).toMatchObject({
