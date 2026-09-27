@@ -81,12 +81,12 @@ const reportInterpolationDataSchema: z.ZodType<ReportInterpolationData> =
 
 const fileReportSchema: z.ZodType<FileReport> = z.object({
 	about: baseAboutSchema,
-	data: reportInterpolationDataSchema.exactOptional(),
+	data: reportInterpolationDataSchema.optional(),
 	dependencies: z.array(z.string()).exactOptional(),
-	fix: z.array(fixSchema).exactOptional(),
+	fix: z.array(fixSchema).optional(),
 	message: reportMessageDataSchema,
 	range: normalizedReportRangeObjectSchema,
-	suggestions: z.array(suggestionSchema).exactOptional(),
+	suggestions: z.array(suggestionSchema).optional(),
 });
 
 const languageReportSchema: z.ZodType<LanguageReport> = z.object({

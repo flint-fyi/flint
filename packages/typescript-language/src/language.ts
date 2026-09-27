@@ -487,7 +487,8 @@ export const typescriptLanguage: Language<
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
-	getLanguageReports(file) {
+	getLanguageReports(file, host) {
+		const currentDirectory = host.getCurrentDirectory();
 		const reports: LanguageReports = [];
 		const reportKeys = new Set<string>();
 		const sourceFiles = getMappedSourceFiles(
@@ -512,8 +513,10 @@ export const typescriptLanguage: Language<
 				if (!mappedDiagnostic) {
 					continue;
 				}
-				const report =
-					convertTypeScriptDiagnosticToLanguageReport(mappedDiagnostic);
+				const report = convertTypeScriptDiagnosticToLanguageReport(
+					mappedDiagnostic,
+					currentDirectory,
+				);
 				const key = JSON.stringify([
 					mappedDiagnostic.category,
 					mappedDiagnostic.code,

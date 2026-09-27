@@ -6,6 +6,7 @@ export type TSDiagnostic = Diagnostic;
 
 export function convertTypeScriptDiagnosticToLanguageReport(
 	diagnostic: Diagnostic,
+	currentDirectory: string,
 ): LanguageReport {
 	return {
 		code: `TS${diagnostic.code}`,
@@ -13,7 +14,7 @@ export function convertTypeScriptDiagnosticToLanguageReport(
 			range: { begin: diagnostic.pos, end: diagnostic.end },
 		}),
 		source: "typescript",
-		text: formatReport(diagnostic),
+		text: formatReport(diagnostic, currentDirectory),
 	};
 }
 
@@ -30,11 +31,18 @@ function flattenMessage(diagnostic: Diagnostic, depth = 0): string {
 	return output;
 }
 
-function formatReport(diagnostic: Diagnostic): string {
+function formatReport(
+	diagnostic: Diagnostic,
+	currentDirectory: string,
+): string {
 	let output = "";
 
 	if (diagnostic.fileName !== undefined && diagnostic.startPosition) {
-		output += formatLocation(diagnostic.fileName, diagnostic.startPosition);
+		output += formatLocation(
+			diagnostic.fileName,
+			diagnostic.startPosition,
+			currentDirectory,
+		);
 		output += " - ";
 	}
 	output += color(`TS${diagnostic.code}`, COLOR.Grey);
@@ -58,7 +66,7 @@ function formatReport(diagnostic: Diagnostic): string {
 		output += "\n";
 		const indent = "  ";
 		if (related.fileName !== undefined && related.startPosition) {
-			output += `\n ${formatLocation(related.fileName, related.startPosition)}`;
+			output += `\n ${formatLocation(related.fileName, related.startPosition, currentDirectory)}`;
 			if (related.endPosition && related.sourceLines) {
 				output += formatCodeSpan(
 					related.startPosition,
@@ -86,11 +94,11 @@ const COLOR = {
 	Yellow: "\u001B[93m",
 };
 
-function displayFilename(name: string): string {
+function displayFilename(name: string, currentDirectory: string): string {
 	if (name.startsWith("./")) {
 		return name.slice(2);
 	}
-	return name.slice(process.cwd().length + 1);
+	return name.slice(currentDirectory.length + 1);
 }
 
 function formatCodeSpan(
@@ -145,8 +153,9 @@ function formatCodeSpan(
 function formatLocation(
 	fileName: string,
 	position: { character: number; line: number },
+	currentDirectory: string,
 ): string {
-	return `${color(displayFilename(fileName), COLOR.Cyan)}:${color(
+	return `${color(displayFilename(fileName, currentDirectory), COLOR.Cyan)}:${color(
 		`${position.line + 1}`,
 		COLOR.Yellow,
 	)}:${color(`${position.character + 1}`, COLOR.Yellow)}`;

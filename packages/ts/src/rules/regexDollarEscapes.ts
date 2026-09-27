@@ -26,11 +26,7 @@ function adjustPosition(
 	let unescapedIndex = 0;
 
 	while (unescapedIndex < unescapedPos && escapedIndex < escaped.length) {
-		if (escaped[escapedIndex] === "\\") {
-			escapedIndex += 2;
-		} else {
-			escapedIndex += 1;
-		}
+		escapedIndex += escaped[escapedIndex] === "\\" ? 2 : 1;
 		unescapedIndex += 1;
 	}
 
@@ -166,7 +162,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						context.report({
 							fix: {
 								range: { begin: reportStart, end: reportEnd },
-								text: quote === "`" ? "\\$\\$" : "$$",
+								text: quote === "`" ? String.raw`\$\$` : "$$",
 							},
 							message: "unescapedDollar",
 							range: {

@@ -68,7 +68,7 @@ function getMessageForBody(node: AST.CallExpression) {
 		node.expression.expression.kind !== SyntaxKind.Identifier ||
 		node.expression.expression.text !== "Promise"
 	) {
-		return undefined;
+		return;
 	}
 
 	switch (node.expression.name.text) {
@@ -77,7 +77,7 @@ function getMessageForBody(node: AST.CallExpression) {
 		case "resolve":
 			return "unnecessaryResolve";
 		default:
-			return undefined;
+			return;
 	}
 }
 

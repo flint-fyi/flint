@@ -43,7 +43,7 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 	}
 
 	if (!indexOfAndValue) {
-		return undefined;
+		return;
 	}
 
 	const [indexOfCall, comparedValue] = indexOfAndValue;
@@ -52,7 +52,7 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 		indexOfCall.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		!hasIncludesMethod(indexOfCall.expression.expression, typeChecker)
 	) {
-		return undefined;
+		return;
 	}
 
 	const kind = operatorToken.kind;

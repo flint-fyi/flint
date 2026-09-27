@@ -85,7 +85,7 @@ function getFilterCall(node: AST.Expression, typeChecker: Checker) {
 		!node.arguments.length ||
 		!isArrayType(node.expression.expression, typeChecker)
 	) {
-		return undefined;
+		return;
 	}
 
 	return {
@@ -102,7 +102,7 @@ function getFindIndexCall(node: AST.CallExpression, typeChecker: Checker) {
 		!node.arguments.length ||
 		!isArrayType(node.expression.expression, typeChecker)
 	) {
-		return undefined;
+		return;
 	}
 
 	return {

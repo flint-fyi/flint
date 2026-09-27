@@ -61,7 +61,7 @@ function resolveModuleDeclarations(
 function resolveSymbolDeclarations(nameNode: Node, typeChecker: Checker) {
 	let symbol = typeChecker.getSymbolAtLocation(nameNode);
 	if (!symbol) {
-		return undefined;
+		return;
 	}
 
 	if (symbol.flags & SymbolFlags.Alias) {

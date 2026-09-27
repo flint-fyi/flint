@@ -13,6 +13,7 @@ function hasCommentsInRange(
 	start: number,
 	end: number,
 ) {
+	// eslint-disable-next-line unicorn/prefer-set-has -- substring check on a string, not array membership
 	const text = sourceFile.text.slice(start, end);
 	return text.includes("//") || text.includes("/*");
 }

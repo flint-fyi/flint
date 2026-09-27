@@ -315,7 +315,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return current.parent.tag === current && current.parent;
 			}
 
-			return undefined;
+			return;
 		}
 
 		function getCallLikeDeprecation(

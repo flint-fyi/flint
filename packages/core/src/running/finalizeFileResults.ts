@@ -72,7 +72,7 @@ export function finalizeFileResults(
 				language.about.name,
 				filePath,
 			);
-			languageReports.push(...language.getLanguageReports(file));
+			languageReports.push(...language.getLanguageReports(file, host));
 			log(
 				"Retrieved %s language reports for file %s",
 				language.about.name,

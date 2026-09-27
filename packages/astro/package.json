@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/astro",
-	"version": "0.5.2",
+	"version": "0.5.3",
 	"description": "[Experimental] A Flint plugin for Astro code.",
 	"homepage": "https://flint.fyi/rules/astro",
 	"repository": {
@@ -17,7 +17,8 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
-		"./content-mapper": "./src/content-mapper.ts"
+		"./content-mapper": "./src/content-mapper.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -48,7 +49,8 @@
 		"access": "public",
 		"exports": {
 			".": "./dist/index.mjs",
-			"./content-mapper": "./dist/content-mapper.mjs"
+			"./content-mapper": "./dist/content-mapper.mjs",
+			"./package.json": "./package.json"
 		}
 	},
 	"typescript": {

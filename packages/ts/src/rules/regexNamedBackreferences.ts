@@ -39,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							if (
 								Array.isArray(backNode.resolved) ||
 								!backNode.resolved.name ||
-								backNode.raw.startsWith("\\k<")
+								backNode.raw.startsWith(String.raw`\k<`)
 							) {
 								return;
 							}
@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								},
 								fix: {
 									range,
-									text: `\\k<${backNode.resolved.name}>`,
+									text: String.raw`\k<${backNode.resolved.name}>`,
 								},
 								message: "preferNamed",
 								range,

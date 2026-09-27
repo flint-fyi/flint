@@ -6,6 +6,6 @@
 		"outDir": "lib/",
 		"types": ["node"]
 	},
-	"include": ["src"],
+	"include": ["src", "package.json"],
 	"references": [{ "path": "../core" }, { "path": "../utils" }]
 }

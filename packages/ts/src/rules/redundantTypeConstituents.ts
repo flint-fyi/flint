@@ -222,7 +222,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								context.report({
 									data: { container: "intersection", typeName },
 									message:
-										typeName !== "any" ? "errorTypeOverrides" : "overrides",
+										typeName === "any" ? "overrides" : "errorTypeOverrides",
 									range: getTSNodeRange(typeNode, sourceFile),
 								});
 								continue;

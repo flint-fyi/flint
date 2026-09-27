@@ -41,12 +41,12 @@ function getGroupInfo(regexpAst: RegExpAST.Pattern) {
 
 function getRegexPatternAndFlags(node: AST.Expression) {
 	if (node.kind !== SyntaxKind.RegularExpressionLiteral) {
-		return undefined;
+		return;
 	}
 
 	const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(node.text);
 	if (!match) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -99,7 +99,7 @@ function parseReplacementTokens(text: string) {
 					end: i + 3,
 					kind: "numeric",
 					raw: text.slice(i, i + 3),
-					reference: parseInt(next + secondDigit, 10),
+					reference: Number(next + secondDigit),
 					start: i,
 				});
 				i += 2;
@@ -108,7 +108,7 @@ function parseReplacementTokens(text: string) {
 					end: i + 2,
 					kind: "numeric",
 					raw: text.slice(i, i + 2),
-					reference: parseInt(next, 10),
+					reference: Number(next),
 					start: i,
 				});
 				i++;

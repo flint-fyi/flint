@@ -1,3 +1,5 @@
+import { stripVTControlCharacters } from "node:util";
+
 import type { Diagnostic } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
@@ -6,31 +8,34 @@ import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScript
 describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 	it("indents nested message-chain entries by two spaces per depth", () => {
 		expect(
-			convertTypeScriptDiagnosticToLanguageReport({
-				category: 1,
-				code: 1234,
-				end: 0,
-				messageChain: [
-					{
-						category: 1,
-						code: 1234,
-						end: 0,
-						messageChain: [
-							{
-								category: 1,
-								code: 1234,
-								end: 0,
-								pos: 0,
-								text: "Grandchild",
-							},
-						],
-						pos: 0,
-						text: "Child",
-					},
-				],
-				pos: 0,
-				text: "Parent",
-			}),
+			convertTypeScriptDiagnosticToLanguageReport(
+				{
+					category: 1,
+					code: 1234,
+					end: 0,
+					messageChain: [
+						{
+							category: 1,
+							code: 1234,
+							end: 0,
+							messageChain: [
+								{
+									category: 1,
+									code: 1234,
+									end: 0,
+									pos: 0,
+									text: "Grandchild",
+								},
+							],
+							pos: 0,
+							text: "Child",
+						},
+					],
+					pos: 0,
+					text: "Parent",
+				},
+				"/root",
+			),
 		).toEqual({
 			code: "TS1234",
 			source: "typescript",
@@ -44,7 +49,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 			code: 1234,
 			end: 44,
 			endPosition: { character: 7, line: 5 },
-			fileName: `${process.cwd()}/source.ts`,
+			fileName: "/root/source.ts",
 			messageChain: [
 				{
 					category: 1,
@@ -64,7 +69,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 					code: 1235,
 					end: 5,
 					endPosition: { character: 5, line: 0 },
-					fileName: `${process.cwd()}/related.ts`,
+					fileName: "/root/related.ts",
 					pos: 0,
 					sourceLines: [{ line: 0, text: "value   " }],
 					startPosition: { character: 0, line: 0 },
@@ -81,7 +86,9 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 			text: "Top message",
 		};
 
-		expect(convertTypeScriptDiagnosticToLanguageReport(diagnostic)).toEqual({
+		expect(
+			convertTypeScriptDiagnosticToLanguageReport(diagnostic, "/root"),
+		).toEqual({
 			code: "TS1234",
 			range: { begin: 2, end: 44 },
 			source: "typescript",
@@ -91,17 +98,39 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 
 	it("omits a range and source context for a global diagnostic", () => {
 		expect(
-			convertTypeScriptDiagnosticToLanguageReport({
-				category: 1,
-				code: 9999,
-				end: 0,
-				pos: 0,
-				text: "Global error",
-			}),
+			convertTypeScriptDiagnosticToLanguageReport(
+				{
+					category: 1,
+					code: 9999,
+					end: 0,
+					pos: 0,
+					text: "Global error",
+				},
+				"/root",
+			),
 		).toEqual({
 			code: "TS9999",
 			source: "typescript",
 			text: "\u001B[90mTS9999\u001B[0m: Global error",
 		});
+	});
+
+	it("displays the file location relative to the current directory", () => {
+		const report = convertTypeScriptDiagnosticToLanguageReport(
+			{
+				category: 1,
+				code: 1234,
+				end: 5,
+				fileName: "/root/src/a.ts",
+				pos: 4,
+				startPosition: { character: 4, line: 0 },
+				text: "TypeScript diagnostic",
+			},
+			"/root",
+		);
+
+		expect(stripVTControlCharacters(report.text)).toMatch(
+			/^src\/a\.ts:1:5 - TS1234/,
+		);
 	});
 });

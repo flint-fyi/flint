@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/vue",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"description": "[Experimental] Vue.js language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/vue",
 	"repository": {
@@ -17,7 +17,8 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
-		"./content-mapper": "./src/content-mapper.ts"
+		"./content-mapper": "./src/content-mapper.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -47,7 +48,8 @@
 		"access": "public",
 		"exports": {
 			".": "./dist/index.mjs",
-			"./content-mapper": "./dist/content-mapper.mjs"
+			"./content-mapper": "./dist/content-mapper.mjs",
+			"./package.json": "./package.json"
 		}
 	},
 	"typescript": {

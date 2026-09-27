@@ -210,7 +210,7 @@ function extractAssignmentFromIfStatement(node: AST.IfStatement) {
 		assignmentExpr?.kind !== SyntaxKind.BinaryExpression ||
 		assignmentExpr.operatorToken.kind !== SyntaxKind.EqualsToken
 	) {
-		return undefined;
+		return;
 	}
 
 	return { left: assignmentExpr.left, right: assignmentExpr.right };
@@ -569,7 +569,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					sourceFile,
 				);
 			}
-			return undefined;
+			return;
 		}
 
 		function createNullishNodesFix(
@@ -580,7 +580,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			test?: AST.AnyNode,
 		) {
 			const getText = (node: AST.AnyNode) =>
-				sourceFile.text.substring(node.getStart(sourceFile), node.getEnd());
+				sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 
 			let leftText = getText(consequent);
 
@@ -609,7 +609,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			range: CharacterReportRange,
 		) {
 			const getText = (node: AST.AnyNode) =>
-				sourceFile.text.substring(node.getStart(sourceFile), node.getEnd());
+				sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 
 			return { range, text: `${getText(left)} ??= ${getText(right)};` };
 		}

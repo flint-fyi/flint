@@ -2,8 +2,6 @@ import type { LinterHost } from "@flint.fyi/core";
 
 import type { OptionsValues } from "../options.ts";
 import { getPresenterFactory } from "../presenters/getPresenterFactory.ts";
-import { interactiveRendererFactory } from "./interactive/interactiveRendererFactory.ts";
-import { singleRendererFactory } from "./singleRendererFactory.ts";
 import type { Renderer } from "./types.ts";
 
 export type RendererFactory = () => Renderer;
@@ -15,8 +13,9 @@ export async function createRendererFactory(
 ): Promise<RendererFactory> {
 	const presenterFactory = await getPresenterFactory(values);
 	const rendererFactory = values.interactive
-		? interactiveRendererFactory
-		: singleRendererFactory;
+		? (await import("./interactive/interactiveRendererFactory.ts"))
+				.interactiveRendererFactory
+		: (await import("./singleRendererFactory.ts")).singleRendererFactory;
 
 	return () =>
 		rendererFactory.initialize(

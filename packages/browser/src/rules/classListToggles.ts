@@ -32,16 +32,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function getClassListMethodCall(node: AST.Statement) {
 			if (node.kind !== SyntaxKind.ExpressionStatement) {
-				return undefined;
+				return;
 			}
 
 			const expression = node.expression;
 			if (expression.kind !== SyntaxKind.CallExpression) {
-				return undefined;
+				return;
 			}
 
 			if (expression.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-				return undefined;
+				return;
 			}
 
 			const propertyAccess = expression.expression;
@@ -51,13 +51,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				method.kind !== SyntaxKind.Identifier ||
 				(method.text !== "add" && method.text !== "remove")
 			) {
-				return undefined;
+				return;
 			}
 
 			if (
 				propertyAccess.expression.kind !== SyntaxKind.PropertyAccessExpression
 			) {
-				return undefined;
+				return;
 			}
 
 			const classList = propertyAccess.expression;
@@ -65,7 +65,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				classList.name.kind !== SyntaxKind.Identifier ||
 				classList.name.text !== "classList"
 			) {
-				return undefined;
+				return;
 			}
 			if (classList.expression.kind !== SyntaxKind.Identifier) {
 				return undefined;
@@ -73,7 +73,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const args = expression.arguments;
 			if (args.length !== 1) {
-				return undefined;
+				return;
 			}
 
 			const arg = nullThrows(
@@ -81,7 +81,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Argument is expected to be present by earlier length check",
 			);
 			if (arg.kind !== SyntaxKind.StringLiteral) {
-				return undefined;
+				return;
 			}
 
 			return {

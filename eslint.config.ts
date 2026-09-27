@@ -9,6 +9,7 @@ import n from "eslint-plugin-n";
 import packageJson from "eslint-plugin-package-json/experimental";
 import perfectionist from "eslint-plugin-perfectionist";
 import * as regexp from "eslint-plugin-regexp";
+import unicorn from "eslint-plugin-unicorn";
 import yml from "eslint-plugin-yml";
 import { defineConfig, globalIgnores, type ConfigObject } from "eslint/config";
 import tseslint from "typescript-eslint";
@@ -16,7 +17,7 @@ import tseslint from "typescript-eslint";
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#importextensions-enforcing-extensions-are-not-used
 function banJsImportExtension() {
 	const message = `Unexpected use of .js file extension (.js) in import; please use .ts`;
-	const literalAttributeMatcher = `Literal[value=/\\..+\\.js$/]`;
+	const literalAttributeMatcher = String.raw`Literal[value=/\..+\.js$/]`;
 	return [
 		{
 			message,
@@ -63,6 +64,7 @@ const config: ConfigObject[] = defineConfig(
 			regexp.configs["flat/recommended"],
 			tseslint.configs.strictTypeChecked,
 			tseslint.configs.stylisticTypeChecked,
+			unicorn.configs.unopinionated,
 		],
 		files: ["**/*.{js,ts}"],
 		languageOptions: {
@@ -150,9 +152,69 @@ const config: ConfigObject[] = defineConfig(
 			// Covered by Prettier plugin
 			"perfectionist/sort-imports": "off",
 			"perfectionist/sort-named-imports": "off",
+
+			// TODO: Remove after upgrading Unicorn to >=74; expiring-todo-comments cannot resolve catalog:dev.
+			// Fixed in Unicorn 74: https://github.com/sindresorhus/eslint-plugin-unicorn/pull/3631
+			"unicorn/no-nonstandard-builtin-properties": "off",
+
+			// Too opinionated.
+			"unicorn/prefer-await": "off",
+
+			// Leave numeric literal formatting to Prettier; Unicorn defaults to uppercase hex digits.
+			"unicorn/number-literal-case": "off",
+
+			// Conflicts with Flint's own ts/regexLetterCasing which
+			// requires lowercase unicode escapes (\u{a0}) for consistency.
+			"unicorn/escape-case": "off",
+
+			// Conflicts with Flint's own ts/regexHexadecimalEscapes which
+			// prefers the more succinct \xa0 over \u{a0}.
+			"unicorn/prefer-unicode-code-point-escapes": "off",
+
+			// Use the type-aware version.
+			"@typescript-eslint/require-array-sort-compare": [
+				"error",
+				{ ignoreStringArrays: true },
+			],
+			"unicorn/require-array-sort-compare": "off",
 		},
 		settings: {
 			perfectionist: { partitionByComment: true, type: "natural" },
+		},
+	},
+	{
+		files: ["packages/*-language/src/language.ts"],
+		rules: {
+			// Language entry points register extensions and enforce single-instance invariants.
+			"unicorn/no-top-level-side-effects": "off",
+		},
+	},
+	{
+		files: [
+			"packages/rule-data/scripts/sort-data.ts",
+			"packages/rule-data/src/schemas.ts",
+		],
+		rules: {
+			"perfectionist/sort-objects": [
+				"error",
+				{
+					customGroups: [
+						{
+							elementNamePattern: "^$",
+							groupName: "root",
+						},
+						{
+							elementNamePattern: "^flint$",
+							groupName: "flint",
+						},
+						{
+							elementNamePattern: "^notes$",
+							groupName: "notes",
+						},
+					],
+					groups: ["root", "flint", "unknown", "notes"],
+				},
+			],
 		},
 	},
 	{

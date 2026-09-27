@@ -7,7 +7,7 @@ export function isTypeRecursive(
 	if (type.isUnionType() || type.isIntersectionType()) {
 		return type
 			.getTypes()
-			.some((subType) => isTypeRecursive(subType, predicate));
+			.some((subtype) => isTypeRecursive(subtype, predicate));
 	}
 
 	return predicate(type);

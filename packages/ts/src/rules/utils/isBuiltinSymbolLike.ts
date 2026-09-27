@@ -10,8 +10,8 @@ export function isBuiltinSymbolLike(
 	type: Type,
 	symbolName: string,
 ): boolean {
-	return isBuiltinSymbolLikeRecurser(program, type, (subType) => {
-		const symbol = subType.getSymbol();
+	return isBuiltinSymbolLikeRecurser(program, type, (subtype) => {
+		const symbol = subtype.getSymbol();
 		if (!symbol) {
 			return false;
 		}
@@ -27,8 +27,8 @@ export function isBuiltinSymbolLike(
 
 		if (
 			actualSymbolName === "Function" &&
-			subType.isObjectType() &&
-			subType.objectFlags & ObjectFlags.Anonymous
+			subtype.isObjectType() &&
+			subtype.objectFlags & ObjectFlags.Anonymous
 		) {
 			return false;
 		}
@@ -40,13 +40,13 @@ export function isBuiltinSymbolLike(
 function isBuiltinSymbolLikeRecurser(
 	program: Program,
 	type: Type,
-	predicate: (subType: Type) => boolean | undefined,
+	predicate: (subtype: Type) => boolean | undefined,
 ): boolean {
 	if (type.isUnionType() || type.isIntersectionType()) {
 		return type
 			.getTypes()
-			.some((subType) =>
-				isBuiltinSymbolLikeRecurser(program, subType, predicate),
+			.some((subtype) =>
+				isBuiltinSymbolLikeRecurser(program, subtype, predicate),
 			);
 	}
 

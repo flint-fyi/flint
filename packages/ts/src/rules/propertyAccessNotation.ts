@@ -94,7 +94,7 @@ function getPropertyKeyText(node: AST.ElementAccessExpression) {
 		case SyntaxKind.TrueKeyword:
 			return "true";
 		default:
-			return undefined;
+			return;
 	}
 }
 

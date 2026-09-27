@@ -97,7 +97,7 @@ function getPropertyKeyName(property: AST.ObjectLiteralElementLike) {
 		const { name } = property;
 		const text = getNameText(name);
 		if (!text) {
-			return undefined;
+			return;
 		}
 
 		const group =
@@ -110,5 +110,5 @@ function getPropertyKeyName(property: AST.ObjectLiteralElementLike) {
 		return { group, node: name, text } as const;
 	}
 
-	return undefined;
+	return;
 }

@@ -29,7 +29,7 @@ export async function getFlintArtifacts(
 					) as PackageData;
 				} catch (error) {
 					if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-						return undefined;
+						return;
 					}
 
 					throw error;
@@ -77,6 +77,6 @@ export async function getFlintArtifacts(
 	await Promise.all(packageNames.map(addArtifact));
 
 	return new Map(
-		[...artifacts].sort(([left], [right]) => left.localeCompare(right)),
+		[...artifacts].toSorted(([left], [right]) => left.localeCompare(right)),
 	);
 }

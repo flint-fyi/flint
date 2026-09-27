@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/yaml",
-	"version": "0.17.2",
+	"version": "0.17.3",
 	"description": "[Experimental] YAML language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/yaml",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -42,7 +43,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

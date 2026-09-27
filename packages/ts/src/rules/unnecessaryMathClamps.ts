@@ -28,7 +28,7 @@ function getMathMethodInfo(
 			(argument: AST.Expression) => argument.kind === SyntaxKind.SpreadElement,
 		)
 	) {
-		return undefined;
+		return;
 	}
 
 	if (isMathMethod(unwrapped.expression, "min", typeChecker, program)) {
@@ -47,7 +47,7 @@ function getMathMethodInfo(
 		};
 	}
 
-	return undefined;
+	return;
 }
 
 function isMathMethod(
@@ -163,7 +163,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 							const outerConstant = getStaticNumberValue(firstArgument);
 							const innerConstantFirst = getStaticNumberValue(innerFirstArg);
-							const innerConstantSecond = getStaticNumberValue(innerSecondArg);
 
 							// Incorrect pattern: Math.max(min, Math.min(max, x))
 							// where outer is max and inner is min, and min < max
@@ -186,6 +185,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								});
 								return;
 							}
+
+							const innerConstantSecond = getStaticNumberValue(innerSecondArg);
 
 							// Also check if arguments are flipped
 							if (

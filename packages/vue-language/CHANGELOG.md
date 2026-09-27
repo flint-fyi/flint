@@ -1,5 +1,13 @@
 # @flint.fyi/vue-language
 
+## 0.4.1
+
+### Patch Changes
+
+- [#3470](https://github.com/flint-fyi/flint/pull/3470) [`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39) - Use the host's current directory instead of `process.cwd()` for language report locations and file paths.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
 ## 0.4.0
 
 ### Minor Changes

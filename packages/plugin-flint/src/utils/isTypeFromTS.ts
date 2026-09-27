@@ -19,7 +19,7 @@ export function isTypeFromTS(
 
 		// `xx | ts[typeName]` or `xx & ts[typeName]`
 		if (type.isUnionType() || type.isIntersectionType()) {
-			return type.getTypes().some((subType) => check(subType));
+			return type.getTypes().some((subtype) => check(subtype));
 		}
 
 		const symbol = type.getSymbol();

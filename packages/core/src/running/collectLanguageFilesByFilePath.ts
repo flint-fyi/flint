@@ -1,6 +1,7 @@
 import { CachedFactory } from "cached-factory";
+import { resolve } from "pathe";
 
-import { makeAbsolute, nullThrows } from "@flint.fyi/utils";
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -34,7 +35,7 @@ export function collectLanguageFilesByFilePath(
 			resources.use(
 				fileFactory.createFile({
 					filePath,
-					filePathAbsolute: makeAbsolute(filePath),
+					filePathAbsolute: resolve(host.getCurrentDirectory(), filePath),
 					sourceText: nullThrows(
 						// TODO: switch to read this async
 						host.readFileSync(filePath),
@@ -68,7 +69,11 @@ export function collectLanguageFilesByFilePath(
 		// Give whole-program languages (e.g. TypeScript) the chance to open every
 		// file at once, so the per-file `createFile` calls below become cheap
 		// lookups against a stable program instead of rebuilding it per file.
-		fileFactory.prepareFiles?.(orderedFilePaths.map(makeAbsolute));
+		fileFactory.prepareFiles?.(
+			orderedFilePaths.map((filePath) =>
+				resolve(host.getCurrentDirectory(), filePath),
+			),
+		);
 
 		for (const filePath of orderedFilePaths) {
 			languageFilesByFilePath
@@ -78,10 +83,11 @@ export function collectLanguageFilesByFilePath(
 	}
 
 	return new Map(
-		Array.from(languageFilesByFilePath.entries()).map(
+		Array.from(
+			languageFilesByFilePath.entries(),
 			([filePath, filesByLanguage]) => [
 				filePath,
-				Array.from(filesByLanguage.entries()).map(([language, file]) => ({
+				Array.from(filesByLanguage, ([language, file]) => ({
 					file: nullThrows(
 						file,
 						"Language file is expected to be present by the map",

@@ -36,12 +36,12 @@ function getCapturingGroups(regexpAst: RegExpAST.Pattern) {
 
 function getRegexPatternAndFlags(node: AST.Expression) {
 	if (node.kind !== SyntaxKind.RegularExpressionLiteral) {
-		return undefined;
+		return;
 	}
 
 	const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(node.text);
 	if (!match) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -56,7 +56,7 @@ function parseReplacementReferences(replacementText: string) {
 
 	while ((match = pattern.exec(replacementText))) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const index = parseInt(match[1]!, 10);
+		const index = Number(match[1]!);
 		if (index > 0) {
 			references.push({
 				end: match.index + match[0].length,

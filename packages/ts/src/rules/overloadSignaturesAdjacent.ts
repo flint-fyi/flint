@@ -192,7 +192,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					isSameMethod(method, seenMethod),
 				);
 
-				if (indexOfSameMethod > -1 && !isSameMethod(method, lastMethod)) {
+				if (indexOfSameMethod !== -1 && !isSameMethod(method, lastMethod)) {
 					context.report({
 						data: { name: getMethodDisplayName(method) },
 						message: "overloadSignatureSeparated",
