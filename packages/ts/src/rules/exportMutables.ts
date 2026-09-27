@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -10,8 +10,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isMutableDeclaration(node: AST.VariableDeclarationList): boolean {
 	return (
-		(node.flags & ts.NodeFlags.Let) !== 0 ||
-		(node.flags & ts.NodeFlags.Const) === 0
+		(node.flags & NodeFlags.Let) !== 0 || (node.flags & NodeFlags.Const) === 0
 	);
 }
 

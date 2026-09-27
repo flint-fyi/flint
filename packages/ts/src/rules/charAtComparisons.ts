@@ -1,4 +1,5 @@
-import { SyntaxKind, TypeFlags, type Type } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import {
 	getStaticStringValue,
@@ -16,7 +17,10 @@ const comparisonOperators = new Set([
 	SyntaxKind.ExclamationEqualsToken,
 ]);
 
-function isStringCharAtCall(node: AST.Expression, typeChecker: Checker) {
+function isStringCharAtCall(
+	node: AST.Expression,
+	typeChecker: Checker,
+): boolean {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
@@ -25,7 +29,7 @@ function isStringCharAtCall(node: AST.Expression, typeChecker: Checker) {
 	);
 }
 
-function isStringType(type: Type) {
+function isStringType(type: Type): boolean {
 	return (type.flags & TypeFlags.StringLike) !== 0;
 }
 

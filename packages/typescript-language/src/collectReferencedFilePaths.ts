@@ -1,109 +1,124 @@
-import { relative } from "pathe";
-import ts, { SyntaxKind } from "typescript";
+import path from "node:path";
+
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Checker, Program } from "typescript-native/unstable/sync";
 
 import type * as AST from "./types/ast.ts";
 import { forEachChild } from "./utils/forEachChild.ts";
 
+// A program's root files, keyed by the canonical path its node handles carry.
+// Roots are the files a config names directly, so none of them was found by
+// searching node_modules: they can be reported as dependencies without
+// asking the native process about them, or fetching their trees.
+const rootFileNamesByProgram = new WeakMap<Program, Map<string, string>>();
+
 export function collectReferencedFilePaths(
-	program: ts.Program,
+	program: Program,
+	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
 ): string[] {
 	const modulePaths = new Set<string>();
+	const rootFileNamesByPath = getRootFileNamesByPath(program);
 
-	function resolveModulePath(moduleSpecifier: string): string | undefined {
-		const resolved = ts.resolveModuleName(
-			moduleSpecifier,
-			sourceFile.fileName,
-			program.getCompilerOptions(),
-			// TODO: Eventually, the file system should be abstracted
-			// https://github.com/flint-fyi/flint/issues/73
-			ts.sys,
-		);
-
-		if (resolved.resolvedModule?.isExternalLibraryImport === false) {
-			return relative(
-				program.getCurrentDirectory(),
-				resolved.resolvedModule.resolvedFileName,
-			);
+	function addModuleSpecifier(moduleSpecifier: AST.StringLiteral): void {
+		const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
+		if (!symbol) {
+			return;
 		}
-		return undefined;
+
+		for (const declarationHandle of symbol.declarations) {
+			const rootFileName = rootFileNamesByPath.get(declarationHandle.path);
+			if (rootFileName !== undefined) {
+				modulePaths.add(path.relative(process.cwd(), rootFileName));
+				continue;
+			}
+			if (
+				program.getSourceFileMetadataByPath(declarationHandle.path)
+					?.isFromExternalLibrary !== false
+			) {
+				continue;
+			}
+			const declarationSourceFile = declarationHandle
+				.resolve()
+				?.getSourceFile();
+			if (declarationSourceFile) {
+				modulePaths.add(
+					path.relative(process.cwd(), declarationSourceFile.fileName),
+				);
+			}
+		}
 	}
 
-	function visit(node: AST.AnyNode) {
-		let path: string | undefined;
-
-		if (isImportDeclaration(node)) {
-			// import { x } from "./foo";
-			path = node.moduleSpecifier.text;
-		} else if (isExportDeclaration(node)) {
-			// export { x } from "./foo"; or export * from "./foo";
-			path = node.moduleSpecifier.text;
-		} else if (isImportCall(node)) {
-			// const x = import("./foo")
-			path = node.arguments[0].text;
-		} else if (isAwaitImportCall(node)) {
-			// const x = await import("./foo")
-			path = node.expression.arguments[0].text;
-		} else if (isImportTypeNode(node)) {
-			// type T = import("./foo") or type T = typeof import("./foo");
-			path = node.argument.literal.text;
+	function visit(node: AST.AnyNode): void {
+		const moduleSpecifier = getModuleSpecifierNode(node);
+		if (moduleSpecifier !== undefined) {
+			addModuleSpecifier(moduleSpecifier);
 		}
-
-		const resolvedPath = path && resolveModulePath(path);
-		if (resolvedPath) {
-			modulePaths.add(resolvedPath);
-		}
-
 		forEachChild(node, visit);
 	}
 
 	visit(sourceFile);
-
-	return Array.from(modulePaths);
+	return [...modulePaths];
 }
 
-function isAwaitImportCall(node: AST.AnyNode): node is AST.AwaitExpression & {
-	expression: AST.CallExpression & { arguments: [AST.StringLiteral] };
-} {
-	return (
-		node.kind === SyntaxKind.AwaitExpression && isImportCall(node.expression)
-	);
-}
-
-function isExportDeclaration(
+function getModuleSpecifierNode(
 	node: AST.AnyNode,
-): node is AST.ExportDeclaration & { moduleSpecifier: AST.StringLiteral } {
-	return (
+): AST.StringLiteral | undefined {
+	if (
+		node.kind === SyntaxKind.ImportDeclaration &&
+		node.moduleSpecifier.kind === SyntaxKind.StringLiteral
+	) {
+		return node.moduleSpecifier;
+	}
+
+	// Re-exports (`export * from "y"`, `export { a } from "y"`) pull in another
+	// module just as imports do, so they must invalidate the cache too.
+	if (
 		node.kind === SyntaxKind.ExportDeclaration &&
 		node.moduleSpecifier?.kind === SyntaxKind.StringLiteral
-	);
-}
+	) {
+		return node.moduleSpecifier;
+	}
 
-function isImportCall(
-	node: AST.AnyNode,
-): node is AST.CallExpression & { arguments: [AST.StringLiteral] } {
-	return (
+	if (
+		node.kind === SyntaxKind.ImportEqualsDeclaration &&
+		node.moduleReference.kind === SyntaxKind.ExternalModuleReference &&
+		node.moduleReference.expression.kind === SyntaxKind.StringLiteral
+	) {
+		return node.moduleReference.expression;
+	}
+
+	if (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.ImportKeyword &&
 		node.arguments[0]?.kind === SyntaxKind.StringLiteral
-	);
-}
+	) {
+		return node.arguments[0];
+	}
 
-function isImportDeclaration(
-	node: AST.AnyNode,
-): node is AST.ImportDeclaration & { moduleSpecifier: AST.StringLiteral } {
-	return (
-		node.kind === SyntaxKind.ImportDeclaration &&
-		node.moduleSpecifier.kind === SyntaxKind.StringLiteral
-	);
-}
-
-function isImportTypeNode(node: AST.AnyNode): node is AST.ImportTypeNode & {
-	argument: AST.LiteralTypeNode & { literal: AST.StringLiteral };
-} {
-	return (
+	if (
 		node.kind === SyntaxKind.ImportType &&
 		node.argument.kind === SyntaxKind.LiteralType &&
 		node.argument.literal.kind === SyntaxKind.StringLiteral
-	);
+	) {
+		return node.argument.literal;
+	}
+
+	return undefined;
+}
+
+function getRootFileNamesByPath(program: Program): Map<string, string> {
+	let rootFileNamesByPath = rootFileNamesByProgram.get(program);
+	if (!rootFileNamesByPath) {
+		rootFileNamesByPath = new Map(
+			program
+				.getProject()
+				.parsedCommandLine.fileNames.map((fileName) => [
+					program.getCanonicalFileName(fileName),
+					fileName,
+				]),
+		);
+		rootFileNamesByProgram.set(program, rootFileNamesByPath);
+	}
+	return rootFileNamesByPath;
 }

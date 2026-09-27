@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	isGlobalDeclaration,
@@ -31,6 +32,9 @@ export function isErrorSubclass(
 		}
 
 		for (const type of clause.types) {
+			if (type.kind !== SyntaxKind.ExpressionWithTypeArguments) {
+				continue;
+			}
 			const typeName = type.expression;
 			if (
 				typeName.kind === SyntaxKind.Identifier &&

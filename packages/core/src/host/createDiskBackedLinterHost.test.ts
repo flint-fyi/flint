@@ -48,6 +48,12 @@ describe("createDiskBackedLinterHost", () => {
 		expect(host.getCurrentDirectory()).toEqual(normalizePath(integrationRoot));
 	});
 
+	it("declares itself a direct view of the disk", () => {
+		const host = createDiskBackedLinterHost(integrationRoot);
+
+		expect(host.isDiskBacked).toBe(true);
+	});
+
 	it("stats files and directories", () => {
 		const host = createDiskBackedLinterHost(integrationRoot);
 		const filePath = path.join(integrationRoot, "file.txt");

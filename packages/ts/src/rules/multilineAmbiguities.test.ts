@@ -195,6 +195,34 @@ const value = identifier // comment with [
 This ambiguous line break before brackets will be misinterpreted as a property access.
 `,
 		},
+		{
+			code: `
+declare function makeHandler<T extends (input: number) => void>(callback: T): T;
+const handler = makeHandler<(input: number) => void>
+((input: number) => {})
+`,
+			snapshot: `
+declare function makeHandler<T extends (input: number) => void>(callback: T): T;
+const handler = makeHandler<(input: number) => void>
+((input: number) => {})
+~~~~~~~~~~~~~~~~~~~~~~~
+This ambiguous line break before parentheses will be misinterpreted as a function call.
+`,
+		},
+		{
+			code: `
+declare function check<T>(value: boolean): T;
+const result = check<number>
+(1 > 0)
+`,
+			snapshot: `
+declare function check<T>(value: boolean): T;
+const result = check<number>
+(1 > 0)
+~~~~~~~
+This ambiguous line break before parentheses will be misinterpreted as a function call.
+`,
+		},
 	],
 	valid: [
 		`

@@ -113,6 +113,17 @@ class Example {
 		`class Example { otherProperty = ""; set name(value: string) { this.otherProperty = value; } }`,
 		`class Example { get name() { const fn = () => this.name; return ""; } }`,
 		`
+class Example {
+    get name(): string {
+        class Inner {
+            name = "";
+            other = this.name;
+        }
+        return new Inner().other;
+    }
+}
+`,
+		`
 declare const otherObj: { value: number };
 
 const obj = { get value() { return otherObj.value; } };

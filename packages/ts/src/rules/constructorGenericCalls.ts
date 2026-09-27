@@ -1,12 +1,17 @@
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
+import {
+	SyntaxKind,
+	type NodeArray,
+	type TypeNode,
+} from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
+	findTokenInRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -23,31 +28,40 @@ const builtInTypedArrays = new Set<string>([
 ]);
 
 function getTypeArgumentsRange(
-	parent: AST.AnyNode,
-	typeArguments: ts.NodeArray<ts.TypeNode>,
+	typeArguments: NodeArray<TypeNode>,
+	precedingNode: AST.Node,
 	sourceFile: AST.SourceFile,
 ) {
-	const children = parent.getChildren(sourceFile);
-	let begin = typeArguments.pos;
-	let end = typeArguments.end;
+	const opening = nullThrows(
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.LessThanToken,
+			precedingNode.getEnd(),
+			typeArguments.pos,
+		),
+		"Type arguments are expected to open with a less-than token",
+	);
+	const closing = nullThrows(
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.GreaterThanToken,
+			typeArguments.end,
+		),
+		"Type arguments are expected to close with a greater-than token",
+	);
 
-	for (const child of children) {
-		if (child.kind === SyntaxKind.LessThanToken) {
-			begin = child.getStart(sourceFile);
-		} else if (child.kind === SyntaxKind.GreaterThanToken) {
-			end = child.getEnd();
-		}
-	}
-
-	return { begin, end };
+	return {
+		begin: opening.begin,
+		end: closing.end,
+	};
 }
 
 function getTypeArgumentsText(
-	parent: AST.AnyNode,
-	typeArguments: ts.NodeArray<ts.TypeNode>,
+	typeArguments: NodeArray<TypeNode>,
+	precedingNode: AST.Node,
 	sourceFile: AST.SourceFile,
 ) {
-	const range = getTypeArgumentsRange(parent, typeArguments, sourceFile);
+	const range = getTypeArgumentsRange(typeArguments, precedingNode, sourceFile);
 	return sourceFile.text.slice(range.begin, range.end);
 }
 
@@ -120,15 +134,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (!typeAnnotation) {
 				if (style === "type-annotation" && initializer.typeArguments) {
 					const typeArgsText = getTypeArgumentsText(
-						initializer,
 						initializer.typeArguments,
+						initializer.expression,
 						sourceFile,
 					);
 					const identifierEnd = identifier.getEnd();
 					const typeAnnotationText = `${constructorName}${typeArgsText}`;
 					const typeArgumentsRange = getTypeArgumentsRange(
-						initializer,
 						initializer.typeArguments,
+						initializer.expression,
 						sourceFile,
 					);
 
@@ -169,13 +183,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				!initializer.typeArguments
 			) {
 				const typeArgsText = getTypeArgumentsText(
-					typeAnnotation,
 					typeAnnotation.typeArguments,
+					typeAnnotation.typeName,
 					sourceFile,
 				);
 				const typeArgsRange = getTypeArgumentsRange(
-					typeAnnotation,
 					typeAnnotation.typeArguments,
+					typeAnnotation.typeName,
 					sourceFile,
 				);
 
@@ -208,13 +222,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				initializer.typeArguments
 			) {
 				const typeArgumentsText = getTypeArgumentsText(
-					initializer,
 					initializer.typeArguments,
+					initializer.expression,
 					sourceFile,
 				);
 				const typeArgumentsRange = getTypeArgumentsRange(
-					initializer,
 					initializer.typeArguments,
+					initializer.expression,
 					sourceFile,
 				);
 				const newTypeAnnotation = `${typeAnnotation.typeName.text}${typeArgumentsText}`;

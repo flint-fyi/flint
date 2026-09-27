@@ -5,7 +5,7 @@ import {
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
 import type { CharacterClassElement } from "@eslint-community/regexpp/ast";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	isGlobalDeclarationOfName,

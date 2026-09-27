@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -16,11 +16,16 @@ const moduleIndicatorKinds = new Set([
 ]);
 
 function hasExportModifier(node: AST.Statement) {
-	return !!(
-		ts.canHaveModifiers(node) &&
-		ts
-			.getModifiers(node)
-			?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
+	if (!("modifiers" in node)) {
+		return false;
+	}
+
+	return (
+		Array.isArray(node.modifiers) &&
+		node.modifiers.some(
+			(modifier: AST.ModifierLike) =>
+				modifier.kind === SyntaxKind.ExportKeyword,
+		)
 	);
 }
 

@@ -1,5 +1,5 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -10,6 +10,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { isIntrinsicErrorType } from "./utils/typePredicates.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -65,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				typeChecker,
 			);
 
-			if (!tsutils.isTypeFlagSet(objectType, TypeFlags.Any)) {
+			if (!(objectType.flags & TypeFlags.Any)) {
 				return undefined;
 			}
 
@@ -122,7 +123,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: {
-					type: tsutils.isIntrinsicErrorType(objectType) ? "`error`" : "`any`",
+					type: isIntrinsicErrorType(objectType) ? "`error`" : "`any`",
 				},
 				message: "unsafeMemberAccess",
 				range: getTSNodeRange(reportNode, sourceFile),
@@ -146,10 +147,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const keyType = getConstrainedTypeAtLocation(keyNode, typeChecker);
 
-			if (tsutils.isTypeFlagSet(keyType, TypeFlags.Any)) {
+			if (keyType.flags & TypeFlags.Any) {
 				context.report({
 					data: {
-						type: tsutils.isIntrinsicErrorType(keyType) ? "`error`" : "`any`",
+						type: isIntrinsicErrorType(keyType) ? "`error`" : "`any`",
 					},
 					message: "unsafeComputedMemberAccess",
 					range: getTSNodeRange(keyNode, sourceFile),

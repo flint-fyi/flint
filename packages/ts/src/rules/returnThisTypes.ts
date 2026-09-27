@@ -1,10 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, type InterfaceType, type TypeChecker } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Type } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
@@ -79,21 +80,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isFunctionReturningThis(
 			functionNode: FunctionLike,
 			originalClassNode: ClassLikeDeclaration,
-			typeChecker: TypeChecker,
+			typeChecker: Checker,
 		) {
 			if (!functionNode.body || isThisSpecifiedInParameters(functionNode)) {
 				return false;
 			}
 
-			const classType = typeChecker.getTypeAtLocation(
-				originalClassNode,
-			) as InterfaceType;
+			const classType = typeChecker.getTypeAtLocation(originalClassNode);
 
 			if (functionNode.body.kind !== SyntaxKind.Block) {
-				return (
-					classType.thisType ===
-					typeChecker.getTypeAtLocation(functionNode.body)
-				);
+				const type = typeChecker.getTypeAtLocation(functionNode.body);
+				return type.isTypeParameter() && type.isThisType === true;
 			}
 
 			let hasReturnThis = false;
@@ -110,17 +107,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				const type = typeChecker.getTypeAtLocation(statement.expression);
-				if (classType === type) {
+				if (classType.id === type.id) {
 					hasReturnClassType = true;
 					return true;
 				}
 
-				if (classType.thisType === type) {
+				if (type.isTypeParameter() && type.isThisType) {
 					hasReturnThis = true;
 					return;
 				}
 
-				if (tsutils.isUnionType(type) && type.types.includes(classType)) {
+				if (
+					type.isUnionType() &&
+					type.getTypes().some((part: Type) => part.id === classType.id)
+				) {
 					hasReturnClassType = true;
 					return true;
 				}

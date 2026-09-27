@@ -1,7 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
+	forEachChild,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -30,8 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkForAwaitExpressions(
-			node: ts.Node,
-			loopNode: ts.Node,
+			node: AST.AnyNode,
 			sourceFile: AST.SourceFile,
 		): void {
 			if (node.kind === SyntaxKind.AwaitExpression) {
@@ -52,21 +51,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.kind === SyntaxKind.ForOfStatement ||
 				node.kind === SyntaxKind.ForStatement ||
 				node.kind === SyntaxKind.WhileStatement ||
-				tsutils.isFunctionScopeBoundary(node)
+				isFunctionScopeBoundary(node)
 			) {
 				return;
 			}
 
-			ts.forEachChild(node, (child) => {
-				checkForAwaitExpressions(child, loopNode, sourceFile);
+			forEachChild(node, (child) => {
+				checkForAwaitExpressions(child, sourceFile);
 			});
 		}
 
 		function checkNode(
-			node: ts.Node & { statement: ts.Node },
+			node: AST.IterationStatement,
 			{ sourceFile }: TypeScriptFileServices,
-		) {
-			checkForAwaitExpressions(node.statement, node, sourceFile);
+		): void {
+			checkForAwaitExpressions(node.statement, sourceFile);
 		}
 
 		return {
@@ -80,3 +79,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
+
+function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.CallSignature:
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression:
+		case SyntaxKind.Constructor:
+		case SyntaxKind.ConstructorType:
+		case SyntaxKind.ConstructSignature:
+		case SyntaxKind.EnumDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionType:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.MethodSignature:
+		case SyntaxKind.ModuleDeclaration:
+		case SyntaxKind.SetAccessor:
+			return true;
+		case SyntaxKind.SourceFile:
+			return !!node.externalModuleIndicator;
+		default:
+			return false;
+	}
+}

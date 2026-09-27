@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 
@@ -34,20 +34,24 @@ export function isInlineArrayCreation(node: AST.Expression): boolean {
 	}
 
 	if (node.kind === SyntaxKind.CallExpression) {
-		if (node.expression.kind === SyntaxKind.PropertyAccessExpression) {
-			const methodName = node.expression.name.text;
+		const callExpression = node;
+		if (
+			callExpression.expression.kind === SyntaxKind.PropertyAccessExpression
+		) {
+			const propertyAccess = callExpression.expression;
+			const methodName = propertyAccess.name.text;
 
 			if (
-				node.expression.expression.kind === SyntaxKind.Identifier &&
-				node.expression.expression.text === "Object" &&
+				propertyAccess.expression.kind === SyntaxKind.Identifier &&
+				propertyAccess.expression.text === "Object" &&
 				objectStaticMethods.has(methodName)
 			) {
 				return true;
 			}
 
 			if (
-				node.expression.expression.kind === SyntaxKind.Identifier &&
-				node.expression.expression.text === "Array" &&
+				propertyAccess.expression.kind === SyntaxKind.Identifier &&
+				propertyAccess.expression.text === "Array" &&
 				(methodName === "from" || methodName === "of")
 			) {
 				return true;
@@ -59,8 +63,8 @@ export function isInlineArrayCreation(node: AST.Expression): boolean {
 		}
 
 		if (
-			node.expression.kind === SyntaxKind.Identifier &&
-			node.expression.text === "Array" &&
+			callExpression.expression.kind === SyntaxKind.Identifier &&
+			callExpression.expression.text === "Array" &&
 			node.parent.kind === SyntaxKind.NewExpression
 		) {
 			return true;

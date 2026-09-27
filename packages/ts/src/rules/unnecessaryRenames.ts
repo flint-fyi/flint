@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
@@ -164,6 +164,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					checkObjectLiteralDestructuring(left, sourceFile);
 				},
 				BindingElement: (node, { sourceFile }) => {
+					if (!node.name) {
+						return;
+					}
+
 					if (
 						node.propertyName?.kind !== SyntaxKind.ComputedPropertyName &&
 						node.name.kind === SyntaxKind.Identifier &&

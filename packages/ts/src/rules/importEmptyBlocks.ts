@@ -1,6 +1,7 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
+	getFirstTokenInRange,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -58,18 +59,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 
-					const commaToken = node.importClause
-						.getChildren(sourceFile)
-						.find((child) => child.kind === SyntaxKind.CommaToken);
+					const begin = node.importClause.name?.getEnd();
+					if (begin === undefined) {
+						return;
+					}
 
-					if (!commaToken) {
+					const comma = getFirstTokenInRange(
+						sourceFile,
+						begin,
+						node.importClause.namedBindings.getStart(sourceFile),
+					);
+					if (comma?.kind !== SyntaxKind.CommaToken) {
 						return;
 					}
 
 					context.report({
 						fix: {
 							range: {
-								begin: commaToken.getStart(sourceFile),
+								begin: comma.begin,
 								end: node.importClause.namedBindings.getEnd(),
 							},
 							text: "",

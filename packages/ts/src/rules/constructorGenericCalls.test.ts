@@ -60,6 +60,19 @@ const value: Set<string> = new Set();
 		},
 		{
 			code: `
+const value: Map<string, number /* retained */ > = new Map();
+`,
+			output: `
+const value: Map = new Map<string, number /* retained */ >();
+`,
+			snapshot: `
+const value: Map<string, number /* retained */ > = new Map();
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                Prefer specifying the type argument on the constructor call instead of the type annotation.
+`,
+		},
+		{
+			code: `
 const value: Array<number> = new Array();
 `,
 			output: `
@@ -197,6 +210,20 @@ const value: Set<string> = new Set();
 			snapshot: `
 const value = new Set<string>();
                      ~~~~~~~~
+                     Prefer specifying the type argument on the type annotation instead of the constructor call.
+`,
+		},
+		{
+			code: `
+const value = new Map<string, number /* retained */ >();
+`,
+			options: { style: "type-annotation" },
+			output: `
+const value: Map<string, number /* retained */ > = new Map();
+`,
+			snapshot: `
+const value = new Map<string, number /* retained */ >();
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                      Prefer specifying the type argument on the type annotation instead of the constructor call.
 `,
 		},

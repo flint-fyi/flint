@@ -1,5 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -34,14 +36,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					if (!tsutils.isAssignmentKind(node.operatorToken.kind)) {
+					if (!isAssignmentOperator(node.operatorToken.kind)) {
 						return;
 					}
 
 					const rightSide = unwrapParenthesizedNode(node.right);
 					if (
 						rightSide.kind !== SyntaxKind.BinaryExpression ||
-						!tsutils.isAssignmentKind(rightSide.operatorToken.kind)
+						!isAssignmentOperator(rightSide.operatorToken.kind)
 					) {
 						return;
 					}

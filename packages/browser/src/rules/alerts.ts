@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function getCalleeNameAndNode(node: AST.LeftHandSideExpression) {
+		function getCalleeNameAndNode(node: AST.Node) {
 			if (node.kind === SyntaxKind.Identifier) {
 				return { name: node.text, node };
 			}

@@ -1,9 +1,13 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import {
+	ObjectFlags,
+	type Program,
+	type Symbol,
+	type Type,
+} from "typescript-native/unstable/sync";
 
 export function isBuiltinSymbolLike(
-	program: ts.Program,
-	type: ts.Type,
+	program: Program,
+	type: Type,
 	symbolName: string,
 ): boolean {
 	return isBuiltinSymbolLikeRecurser(program, type, (subtype) => {
@@ -12,7 +16,7 @@ export function isBuiltinSymbolLike(
 			return false;
 		}
 
-		const actualSymbolName = symbol.getName();
+		const actualSymbolName = symbol.name;
 
 		if (
 			actualSymbolName === symbolName &&
@@ -23,29 +27,31 @@ export function isBuiltinSymbolLike(
 
 		if (
 			actualSymbolName === "Function" &&
-			tsutils.isObjectType(subtype) &&
-			tsutils.isObjectFlagSet(subtype, ts.ObjectFlags.Anonymous)
+			subtype.isObjectType() &&
+			subtype.objectFlags & ObjectFlags.Anonymous
 		) {
 			return false;
 		}
 
-		return null;
+		return;
 	});
 }
 
 function isBuiltinSymbolLikeRecurser(
-	program: ts.Program,
-	type: ts.Type,
-	predicate: (subtype: ts.Type) => boolean | null,
+	program: Program,
+	type: Type,
+	predicate: (subtype: Type) => boolean | undefined,
 ): boolean {
-	if (type.isUnionOrIntersection()) {
-		return type.types.some((subtype) =>
-			isBuiltinSymbolLikeRecurser(program, subtype, predicate),
-		);
+	if (type.isUnionType() || type.isIntersectionType()) {
+		return type
+			.getTypes()
+			.some((subtype) =>
+				isBuiltinSymbolLikeRecurser(program, subtype, predicate),
+			);
 	}
 
 	const result = predicate(type);
-	if (result !== null) {
+	if (result !== undefined) {
 		return result;
 	}
 
@@ -59,9 +65,11 @@ function isBuiltinSymbolLikeRecurser(
 	return false;
 }
 
-function isSymbolFromDefaultLibrary(program: ts.Program, symbol: ts.Symbol) {
-	const declarations = symbol.getDeclarations();
-	if (!declarations?.length) {
+function isSymbolFromDefaultLibrary(program: Program, symbol: Symbol): boolean {
+	const declarations = symbol.declarations
+		.map((declaration) => declaration.resolve())
+		.filter((declaration) => declaration !== undefined);
+	if (!declarations.length) {
 		return false;
 	}
 

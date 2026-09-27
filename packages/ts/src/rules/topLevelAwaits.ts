@@ -1,20 +1,22 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function hasExportModifier(node: AST.Statement) {
-	return !!(
-		ts.canHaveModifiers(node) &&
-		ts
-			.getModifiers(node)
-			?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
+function hasExportModifier(node: AST.Statement): boolean {
+	return (
+		"modifiers" in node &&
+		Array.isArray(node.modifiers) &&
+		node.modifiers.some(
+			(modifier: AST.ModifierLike) =>
+				modifier.kind === SyntaxKind.ExportKeyword,
+		)
 	);
 }
 
 function isInsideFunction(node: AST.AnyNode): boolean {
-	let current = node.parent;
+	let current: AST.AnyNode | undefined = node.parent;
 
 	while (current.kind !== SyntaxKind.SourceFile) {
 		if (
@@ -28,7 +30,6 @@ function isInsideFunction(node: AST.AnyNode): boolean {
 		) {
 			return true;
 		}
-
 		current = current.parent;
 	}
 
@@ -76,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				SourceFile(node) {
 					fileHasExports = node.statements.some(
-						(statement) =>
+						(statement: AST.Statement) =>
 							hasExportModifier(statement) ||
 							statement.kind === SyntaxKind.ExportAssignment ||
 							statement.kind === SyntaxKind.ExportDeclaration,

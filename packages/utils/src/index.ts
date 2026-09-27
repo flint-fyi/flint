@@ -1,5 +1,9 @@
 export { assert, FlintAssertionError, nullThrows } from "./assert.ts";
 export { isTruthy } from "./isTruthy.ts";
+export {
+	getPathInsideDirectory,
+	isUnderDirectory,
+} from "./isUnderDirectory.ts";
 export { makeAbsolute } from "./makeAbsolute.ts";
 export {
 	dirnameKey,

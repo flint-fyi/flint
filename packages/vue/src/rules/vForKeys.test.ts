@@ -216,6 +216,24 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <template>
+	<div v-for="item in items" :key="item.id">
+		<div v-for="child in item.children" :key="item.id"></div>
+	</div>
+</template>
+`,
+			snapshot: `
+<template>
+	<div v-for="item in items" :key="item.id">
+		<div v-for="child in item.children" :key="item.id"></div>
+		                                          ~~~~~~~
+		                                          The :key on this v-for element does not reference the iteration variable.
+	</div>
+</template>
+`,
+		},
+		{
+			code: `
+<template>
 	<div
 		v-for="(item, key, i) in { foo: 'bar' }"o
 		:key="5"
@@ -441,6 +459,22 @@ ruleTester.describe(rule, {
 	<div
 		v-for="({ data }, i) in [{ data: { foo: '123' }}]"
 		:key="data.foo"
+	></div>
+</template>
+		`,
+		`
+<template>
+	<div
+		v-for="({ id = 0 }, index) in items"
+		:key="id ?? index"
+	></div>
+</template>
+		`,
+		`
+<template>
+	<div
+		v-for="親 in items"
+		:key="親.id"
 	></div>
 </template>
 		`,

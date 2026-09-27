@@ -21,6 +21,7 @@ export function processRuleReport(
 	let suggestions = ruleReport.suggestions;
 	const { adjustReportRange } = currentFile;
 	if (adjustReportRange != null) {
+		const adjustFixRange = currentFile.adjustFixRange ?? adjustReportRange;
 		const adjustedRange = adjustReportRange(ruleReport.range);
 		if (adjustedRange == null) {
 			return null;
@@ -28,7 +29,7 @@ export function processRuleReport(
 		range = adjustedRange;
 		fix &&= fix
 			.map((fix) => {
-				const range = adjustReportRange(fix.range);
+				const range = adjustFixRange(fix.range);
 				return (
 					range && {
 						...fix,
@@ -44,7 +45,7 @@ export function processRuleReport(
 					// TODO: support cross-file suggestions
 					return null;
 				}
-				const range = adjustReportRange(s.range);
+				const range = adjustFixRange(s.range);
 				return (
 					range && {
 						...s,

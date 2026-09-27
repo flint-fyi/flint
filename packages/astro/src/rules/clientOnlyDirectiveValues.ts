@@ -1,25 +1,20 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import { TypeFlags, type Type } from "typescript-native/unstable/sync";
 
 import { astroLanguage } from "@flint.fyi/astro-language";
-import { getTSNodeRange } from "@flint.fyi/typescript-language";
+import { getTSNodeRange, type Checker } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function typeCanBeClientOnlyValue(
-	type: ts.Type,
-	typeChecker: ts.TypeChecker,
-): boolean {
-	if (
-		type.flags &
-		(ts.TypeFlags.Any | ts.TypeFlags.StringLike | ts.TypeFlags.Unknown)
-	) {
+function typeCanBeClientOnlyValue(type: Type, typeChecker: Checker): boolean {
+	if (type.flags & (TypeFlags.Any | TypeFlags.StringLike | TypeFlags.Unknown)) {
 		return true;
 	}
 
-	if (type.isUnionOrIntersection()) {
-		return type.types.some((childType) =>
-			typeCanBeClientOnlyValue(childType, typeChecker),
-		);
+	if (type.isUnionType() || type.isIntersectionType()) {
+		return type
+			.getTypes()
+			.some((childType) => typeCanBeClientOnlyValue(childType, typeChecker));
 	}
 
 	const constraint = typeChecker.getBaseConstraintOfType(type);

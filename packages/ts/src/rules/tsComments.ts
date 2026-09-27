@@ -1,11 +1,14 @@
-import * as tsutils from "ts-api-utils";
 import { z } from "zod/v4";
 
 import type {
 	MessageForContext,
 	ReportInterpolationData,
 } from "@flint.fyi/core";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	collectComments,
+	typescriptLanguage,
+	type Comment,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -125,7 +128,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				SourceFile(node, { options }) {
 					function reportCommentDirective(
-						comment: tsutils.Comment,
+						comment: Comment,
 						directive: string,
 						data: ReportInterpolationData,
 						messageDefault: MessageForContext<typeof context>,
@@ -179,7 +182,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					for (const comment of tsutils.iterateComments(node)) {
+					for (const comment of collectComments(node)) {
 						const match = tsDirectiveRegex.exec(comment.text);
 						if (!match) {
 							continue;
@@ -197,7 +200,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					function checkComment(
-						comment: tsutils.Comment,
+						comment: Comment,
 						directive: SuppressionDirective,
 						description: string,
 					) {

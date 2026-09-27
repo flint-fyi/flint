@@ -6,7 +6,8 @@ declare module "@eslint-community/eslint-plugin-eslint-comments/configs" {
 
 		export const recommended: Linter.Config;
 
-		export default defaultExports;
+		// eslint-disable-next-line unicorn/no-named-default -- TypeScript 7 disallows `export default` inside namespaces
+		export { defaultExports as default };
 	}
 
 	export = Configs;

@@ -25,7 +25,7 @@
 		"@flint.fyi/rule-data": "workspace:^",
 		"console-table-without-index": "catalog:dev",
 		"debug-for-file": "catalog:dev",
-		"eslint": "catalog:comparisons",
+		"eslint": "catalog:dev",
 		"execa": "catalog:dev",
 		"prettier": "catalog:dev"
 	},
@@ -34,8 +34,7 @@
 		"eslint-plugin-import": "catalog:comparisons",
 		"eslint-plugin-regexp": "catalog:comparisons",
 		"eslint-plugin-unicorn": "catalog:comparisons",
-		"typescript": "catalog:dev",
-		"typescript-eslint": "catalog:comparisons",
+		"typescript-eslint": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {

@@ -1,27 +1,35 @@
-import { SyntaxKind, type Node, type Program } from "typescript";
-
-import type { Checker } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import type * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 
 /**
  * TODO: Use a scope analyzer (#400).
  */
 export function isGlobalDeclarationOfName(
-	node: Node,
+	node: AST.AnyNode,
 	name: string,
 	typeChecker: Checker,
 	program: Program,
 ): boolean {
-	const declarations = typeChecker.getSymbolAtLocation(node)?.getDeclarations();
-	if (!declarations) {
+	const declarationHandles =
+		typeChecker.getSymbolAtLocation(node)?.declarations;
+	if (!declarationHandles?.length) {
 		return false;
 	}
 
-	return declarations.every((tsDeclaration) => {
-		const declaration = tsDeclaration as AST.AnyNode;
+	const declarations: AST.Declaration[] = [];
+	for (const declarationHandle of declarationHandles) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return false;
+		}
+		declarations.push(declaration as AST.Declaration);
+	}
 
+	return declarations.every((declaration) => {
 		// Special case: a variable set to a known identifier. E.g.:
 		// const CustomFunction = Function;
 		if (
@@ -48,12 +56,12 @@ export function isGlobalDeclarationOfName(
 
 		return (
 			isDeclarationOfName(declaration, name) &&
-			declarationIncludesGlobal(tsDeclaration, program)
+			declarationIncludesGlobal(declaration, program)
 		);
 	});
 }
 
-function isDeclarationOfName(node: AST.AnyNode, name: string) {
+function isDeclarationOfName(node: AST.Declaration, name: string): boolean {
 	switch (node.kind) {
 		case SyntaxKind.ClassDeclaration:
 		case SyntaxKind.FunctionDeclaration:
@@ -62,8 +70,7 @@ function isDeclarationOfName(node: AST.AnyNode, name: string) {
 			return (
 				node.name?.kind === SyntaxKind.Identifier && node.name.text === name
 			);
-
-		default:
-			return false;
 	}
+
+	return false;
 }

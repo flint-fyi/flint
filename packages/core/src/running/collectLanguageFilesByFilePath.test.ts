@@ -18,6 +18,7 @@ const ruleCreator = new RuleCreator({
 
 describe(collectLanguageFilesByFilePath, () => {
 	it("orders uncached file creation per language", () => {
+		using resources = new DisposableStack();
 		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 		for (const filePath of ["/root/a.ts", "/root/b.ts", "/root/c.ts"]) {
 			host.vfsUpsertFile(filePath, "");
@@ -69,6 +70,7 @@ describe(collectLanguageFilesByFilePath, () => {
 			cached,
 			rulesOptionsByFile,
 			host,
+			resources,
 		);
 
 		expect(orderedFilePaths).toHaveBeenCalledWith(
@@ -78,6 +80,89 @@ describe(collectLanguageFilesByFilePath, () => {
 		expect(orderedCreated).toEqual(["/root/b.ts", "/root/a.ts"]);
 		expect(plainCreated).toEqual(["/root/b.ts", "/root/a.ts"]);
 		expect(filesByPath.has("/root/c.ts")).toBe(false);
+	});
+
+	it("disposes files before their factory exactly once", () => {
+		const events: string[] = [];
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		host.vfsUpsertFile("/root/index.ts", "");
+		const language = createLanguage({
+			about: { name: "disposable" },
+			createFileFactory: () => ({
+				createFile: (about) => ({
+					about,
+					services: {},
+					[Symbol.dispose]: () => events.push("file"),
+				}),
+				[Symbol.dispose]: () => events.push("factory"),
+			}),
+			runFileVisitors: vi.fn(),
+		});
+		const rule = ruleCreator.createRule(language, {
+			about: { description: "", id: "disposable" },
+			messages,
+			setup: () => ({}),
+		});
+		const resources = new DisposableStack();
+
+		collectLanguageFilesByFilePath(
+			undefined,
+			new Map([[rule, new Map([["/root/index.ts", {}]])]]),
+			host,
+			resources,
+		);
+		resources.dispose();
+		resources.dispose();
+
+		expect(events).toEqual(["file", "factory"]);
+	});
+
+	it("disposes created resources when collection fails", () => {
+		const events: string[] = [];
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		host.vfsUpsertFile("/root/first.ts", "");
+		host.vfsUpsertFile("/root/second.ts", "");
+		const language = createLanguage({
+			about: { name: "failing" },
+			createFileFactory: () => ({
+				createFile: (about) => {
+					if (about.filePath.endsWith("second.ts")) {
+						throw new Error("creation failed");
+					}
+					return {
+						about,
+						services: {},
+						[Symbol.dispose]: () => events.push("file"),
+					};
+				},
+				[Symbol.dispose]: () => events.push("factory"),
+			}),
+			runFileVisitors: vi.fn(),
+		});
+		const rule = ruleCreator.createRule(language, {
+			about: { description: "", id: "failing" },
+			messages,
+			setup: () => ({}),
+		});
+
+		expect(() => {
+			using resources = new DisposableStack();
+			collectLanguageFilesByFilePath(
+				undefined,
+				new Map([
+					[
+						rule,
+						new Map([
+							["/root/first.ts", {}],
+							["/root/second.ts", {}],
+						]),
+					],
+				]),
+				host,
+				resources,
+			);
+		}).toThrow("creation failed");
+		expect(events).toEqual(["file", "factory"]);
 	});
 });
 

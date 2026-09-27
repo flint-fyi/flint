@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -9,7 +9,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { isErrorSubclass } from "./utils/isErrorSubclass.ts";
 
-function isCaptureStackTraceCall(node: AST.AnyNode): boolean {
+function isCaptureStackTraceCall(node: AST.Node): boolean {
 	if (node.kind !== SyntaxKind.CallExpression) {
 		return false;
 	}
@@ -33,7 +33,6 @@ function isValidSecondArgument(
 	if (
 		node.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.kind === SyntaxKind.ThisKeyword &&
-		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "constructor"
 	) {
 		return true;

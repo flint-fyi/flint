@@ -1,4 +1,5 @@
-import { SyntaxKind, type NodeArray, type Program } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	getStaticStringValue,

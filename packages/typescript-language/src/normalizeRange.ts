@@ -1,5 +1,3 @@
-import type * as ts from "typescript";
-
 import {
 	getColumnAndLineOfPosition,
 	type CharacterReportRange,
@@ -9,11 +7,11 @@ import {
 import type * as AST from "./types/ast.ts";
 
 export function normalizeRange(
-	original: CharacterReportRange,
+	original: AST.AnyNode | CharacterReportRange,
 	sourceFile: AST.SourceFile,
 ): NormalizedReportRangeObject {
 	const onCharacters = isNode(original)
-		? { begin: original.getStart(sourceFile), end: original.getEnd() }
+		? { begin: original.getStart(sourceFile), end: original.end }
 		: original;
 
 	return {
@@ -22,6 +20,11 @@ export function normalizeRange(
 	};
 }
 
-function isNode(value: unknown): value is ts.Node {
-	return typeof value === "object" && value !== null && "kind" in value;
+function isNode(value: unknown): value is AST.AnyNode {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		"pos" in value &&
+		"kind" in value
+	);
 }

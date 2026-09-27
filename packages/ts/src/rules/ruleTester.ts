@@ -1,9 +1,10 @@
-import { describe, it } from "vitest";
+import { afterAll, describe, it } from "vitest";
 
 import { RuleTester } from "@flint.fyi/rule-tester";
 import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
 
 export const ruleTester = new RuleTester({
+	afterAll,
 	defaults: {
 		fileName: "file.ts",
 		files: createRuleTesterTSConfig(),
@@ -14,6 +15,7 @@ export const ruleTester = new RuleTester({
 });
 
 export const scriptRuleTester = new RuleTester({
+	afterAll,
 	defaults: {
 		fileName: "file.ts",
 		files: createRuleTesterTSConfig({
@@ -26,6 +28,7 @@ export const scriptRuleTester = new RuleTester({
 });
 
 export const domLibRuleTester = new RuleTester({
+	afterAll,
 	defaults: {
 		fileName: "file.ts",
 		files: createRuleTesterTSConfig({

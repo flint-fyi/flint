@@ -1,4 +1,7 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	isLiteralExpression,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -17,7 +20,7 @@ function isLiteralValue(node: AST.AnyNode) {
 		node.kind === SyntaxKind.TrueKeyword ||
 		node.kind === SyntaxKind.FalseKeyword ||
 		node.kind === SyntaxKind.NullKeyword ||
-		ts.isLiteralExpression(node)
+		isLiteralExpression(node)
 	);
 }
 

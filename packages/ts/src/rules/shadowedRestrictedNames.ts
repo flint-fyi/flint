@@ -1,4 +1,4 @@
-import { SyntaxKind, type NodeArray } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -59,7 +59,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				checkIdentifier(name, sourceFile);
 			} else {
 				for (const element of name.elements) {
-					if (element.kind === SyntaxKind.BindingElement) {
+					if (element.name) {
 						checkBindingName(element.name, sourceFile);
 					}
 				}

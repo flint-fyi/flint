@@ -1,18 +1,20 @@
-import ts, { SyntaxKind } from "typescript";
+import { ScriptKind, SyntaxKind } from "typescript-native/unstable/ast";
 import { describe, expect, it } from "vitest";
 
+import { createNativeSourceFile } from "../test/createNativeSourceFile.testUtils.ts";
 import type * as AST from "../types/ast.ts";
 import { forEachChild } from "../utils/forEachChild.ts";
 import { getScopeManager } from "./scopeManager.ts";
 
-function createSourceFile(sourceText: string, scriptKind = ts.ScriptKind.TS) {
-	return ts.createSourceFile(
-		"test.ts",
+function createSourceFile(sourceText: string, scriptKind = ScriptKind.TS) {
+	return createNativeSourceFile(
 		sourceText,
-		ts.ScriptTarget.ESNext,
-		true,
-		scriptKind,
-	) as AST.SourceFile;
+		scriptKind === ScriptKind.TSX
+			? ".tsx"
+			: scriptKind === ScriptKind.JSX
+				? ".jsx"
+				: ".ts",
+	);
 }
 
 function findFirstNode<TNode extends AST.AnyNode>(
@@ -209,7 +211,7 @@ describe(getScopeManager, () => {
 				return <input name="value" />;
 			}
 		`,
-			ts.ScriptKind.TSX,
+			ScriptKind.TSX,
 		);
 
 		const scopeManager = getScopeManager(sourceFile);

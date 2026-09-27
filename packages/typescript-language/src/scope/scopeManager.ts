@@ -1,5 +1,5 @@
 import { WeakCachedFactory } from "cached-factory";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 import { forEachChild } from "../utils/forEachChild.ts";
@@ -62,7 +62,7 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 
 		const variables: ScopeVariable[] = [];
 		for (const element of name.elements) {
-			if (element.kind !== SyntaxKind.OmittedExpression) {
+			if (element.name) {
 				variables.push(...addBindingName(scope, element.name, node, kind));
 			}
 		}
@@ -74,7 +74,10 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 		scope: ScopeInternal,
 		node: AST.ImportDeclaration,
 	) {
-		if (!node.importClause || node.importClause.isTypeOnly) {
+		if (
+			!node.importClause ||
+			node.importClause.phaseModifier === SyntaxKind.TypeKeyword
+		) {
 			return;
 		}
 

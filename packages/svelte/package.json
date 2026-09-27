@@ -17,6 +17,7 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
+		"./content-mapper": "./src/content-mapper.ts",
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -26,11 +27,10 @@
 		"test": "vitest --project svelte"
 	},
 	"dependencies": {
+		"@flint.fyi/content-mapper": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/svelte-language": "workspace:^",
-		"@flint.fyi/ts": "workspace:^",
-		"@flint.fyi/volar-language": "workspace:^",
-		"typescript": "catalog:prod"
+		"@flint.fyi/ts": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -47,7 +47,22 @@
 		"access": "public",
 		"exports": {
 			".": "./dist/index.mjs",
+			"./content-mapper": "./dist/content-mapper.mjs",
 			"./package.json": "./package.json"
+		}
+	},
+	"typescript": {
+		"contentMapper": {
+			"exec": [
+				"node",
+				"./dist/content-mapper.mjs"
+			],
+			"dynamicConfig": true,
+			"compilerOptions": [
+				"jsx",
+				"module",
+				"moduleResolution"
+			]
 		}
 	}
 }

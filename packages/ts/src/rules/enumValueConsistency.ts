@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { TypeFlags } from "typescript-native/unstable/sync";
 
 import {
 	getTSNodeRange,
@@ -18,13 +18,13 @@ const enumMemberKinds = {
 function getEnumMemberKind(member: AST.EnumMember, typeChecker: Checker) {
 	const type = typeChecker.getTypeAtLocation(member);
 
-	if (type.isNumberLiteral()) {
-		if ((type.flags & ts.TypeFlags.NumberLike) !== 0) {
+	if ((type.flags & TypeFlags.NumberLiteral) !== 0) {
+		if ((type.flags & TypeFlags.NumberLike) !== 0) {
 			return enumMemberKinds.Number;
 		}
 	} else if (
-		type.isStringLiteral() &&
-		(type.flags & ts.TypeFlags.StringLike) !== 0
+		(type.flags & TypeFlags.StringLiteral) !== 0 &&
+		(type.flags & TypeFlags.StringLike) !== 0
 	) {
 		return enumMemberKinds.String;
 	}

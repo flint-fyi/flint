@@ -1,8 +1,9 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getStaticNumberValue,
 	getTSNodeRange,
+	getTypeProperty,
 	typescriptLanguage,
 	type AST,
 	type Checker,
@@ -13,7 +14,7 @@ import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
 	const receiverType = getConstrainedTypeAtLocation(node, typeChecker);
-	const includesProperty = receiverType.getProperty("includes");
+	const includesProperty = getTypeProperty(receiverType, "includes");
 
 	return (
 		includesProperty &&

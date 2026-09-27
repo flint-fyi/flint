@@ -15,7 +15,6 @@
 		{ "path": "../md/tsconfig.src.json" },
 		{ "path": "../package-json/tsconfig.src.json" },
 		{ "path": "../ts/tsconfig.src.json" },
-		{ "path": "../ts-patch" },
 		{ "path": "../yaml/tsconfig.src.json" }
 	]
 }

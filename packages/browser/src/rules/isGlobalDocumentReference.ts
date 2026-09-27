@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	isGlobalDeclaration,
@@ -9,7 +10,7 @@ import {
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 export function isGlobalDocumentReference(
-	node: AST.Expression,
+	node: AST.Node,
 	typeChecker: Checker,
 	program: Program,
 ): boolean {

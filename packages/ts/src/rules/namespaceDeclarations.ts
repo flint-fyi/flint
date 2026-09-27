@@ -1,11 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, type ModifierLike, type NodeArray } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
-	getTSNodeRange,
+	getFirstTokenInRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -62,17 +62,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						allowDeclarations &&
-						tsutils.includesModifier(
-							node.modifiers as NodeArray<ModifierLike>,
-							SyntaxKind.DeclareKeyword,
+						node.modifiers?.some(
+							(modifier) => modifier.kind === SyntaxKind.DeclareKeyword,
 						)
 					) {
 						return;
 					}
 
+					const begin = node.getStart(sourceFile);
 					context.report({
 						message: "preferModules",
-						range: getTSNodeRange(node.getChildAt(0), sourceFile),
+						range: nullThrows(
+							getFirstTokenInRange(sourceFile, begin, node.getEnd()),
+							"A namespace declaration is expected to start with a token",
+						),
 					});
 				},
 			},

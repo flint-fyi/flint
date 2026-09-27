@@ -6,10 +6,6 @@
 		"outDir": "lib/",
 		"types": ["node"]
 	},
-	"include": ["src", "package.json"],
-	"references": [
-		{ "path": "../core" },
-		{ "path": "../ts-patch" },
-		{ "path": "../utils" }
-	]
+	"include": ["src"],
+	"references": [{ "path": "../core" }, { "path": "../utils" }]
 }

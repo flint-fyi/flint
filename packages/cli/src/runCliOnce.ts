@@ -29,7 +29,6 @@ export async function runCliOnce(
 	renderer: Renderer,
 	values: OptionsValues,
 ): Promise<CliResult> {
-	await import("@flint.fyi/ts-patch/install-patch");
 	const { default: config } = (await import(
 		pathToFileURL(path.join(host.getCurrentDirectory(), configFileName)).href
 	)) as {

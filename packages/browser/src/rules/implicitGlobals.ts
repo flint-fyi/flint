@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -55,7 +55,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.modifiers?.some(
 					(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
 				) ||
-				node.declarationList.flags & ts.NodeFlags.BlockScoped
+				node.declarationList.flags & NodeFlags.BlockScoped
 			) {
 				return;
 			}

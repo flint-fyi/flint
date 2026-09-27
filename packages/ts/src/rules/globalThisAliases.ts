@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
 import {
 	declarationIncludesGlobal,
@@ -22,8 +23,16 @@ function isOnlyGlobalDeclaration(
 		return false;
 	}
 
-	const declarations = symbol.getDeclarations();
-	if (!declarations?.length) {
+	const declarations: AST.Declaration[] = [];
+	for (const declarationHandle of symbol.declarations) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return false;
+		}
+		declarations.push(declaration as AST.Declaration);
+	}
+
+	if (!declarations.length) {
 		return false;
 	}
 

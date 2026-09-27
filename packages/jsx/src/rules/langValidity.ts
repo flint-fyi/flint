@@ -1,5 +1,5 @@
 import languageTags from "language-tags";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
