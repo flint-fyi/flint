@@ -183,10 +183,23 @@ const config: ConfigObject[] = defineConfig(
 		},
 	},
 	{
-		files: ["packages/*-language/src/language.ts"],
+		files: [
+			"packages/*-language/src/language.ts",
+			"packages/astro/src/plugin.ts",
+			"packages/svelte/src/plugin.ts",
+			"packages/typescript-language/src/contentMappers.ts",
+			"packages/vue/src/plugin.ts",
+		],
 		rules: {
-			// Language entry points register extensions and enforce single-instance invariants.
+			// Language entry points register extensions and content mappers, and enforce single-instance invariants.
 			"unicorn/no-top-level-side-effects": "off",
+		},
+	},
+	{
+		files: ["packages/content-mapper/src/content-mapper/**/*.ts"],
+		rules: {
+			// Position encodings are LSP-style protocol identifiers, not Node.js buffer encodings.
+			"unicorn/text-encoding-identifier-case": "off",
 		},
 	},
 	{

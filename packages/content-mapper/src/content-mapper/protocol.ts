@@ -101,6 +101,7 @@ export const SpanMappingFeature: Readonly<
 > = {
 	// Listed in bit order to match the upstream enum, not alphabetically.
 	/* eslint-disable perfectionist/sort-objects */
+	// eslint-disable-next-line unicorn/prefer-math-trunc -- keeps bit positions aligned
 	Hover: 1 << 0,
 	SignatureHelp: 1 << 1,
 	Completion: 1 << 2,

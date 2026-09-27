@@ -33,7 +33,7 @@ export function isBuiltinSymbolLike(
 			return false;
 		}
 
-		return undefined;
+		return;
 	});
 }
 

@@ -209,7 +209,7 @@ function getRegexFromMatchAllCall(
 
 	const objectType = typeChecker.getTypeAtLocation(node.expression.expression);
 	if (!(objectType.flags & TypeFlags.StringLike)) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -234,7 +234,7 @@ function getRegexFromMatchCall(
 
 	const objectType = typeChecker.getTypeAtLocation(node.expression.expression);
 	if (!(objectType.flags & TypeFlags.StringLike)) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

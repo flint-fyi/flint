@@ -52,12 +52,9 @@ export function createContentMapperTransform({
 					const virtualLength =
 						mapping.generatedLengths?.[index] ?? originalLength;
 					if (
-						![
-							generatedStart,
-							virtualLength,
-							originalStart,
-							originalLength,
-						].every((value) => Number.isInteger(value) && value >= 0) ||
+						[generatedStart, virtualLength, originalStart, originalLength].some(
+							(value) => !(Number.isInteger(value) && value >= 0),
+						) ||
 						generatedStart + virtualLength > text.length ||
 						originalStart + originalLength > content.length
 					) {
@@ -91,7 +88,7 @@ export function createContentMapperTransform({
 							];
 				});
 			})
-			.sort(
+			.toSorted(
 				(left, right) =>
 					left[0] - right[0] ||
 					Number(left[1] !== 0) - Number(right[1] !== 0) ||
@@ -111,7 +108,7 @@ export function createContentMapperTransform({
 			}
 			nonOverlapping.push(mapping);
 		}
-		const originalSorted = [...nonOverlapping].sort(
+		const originalSorted = nonOverlapping.toSorted(
 			(left, right) => left[2] - right[2] || left[3] - right[3],
 		);
 		let previous = originalSorted[0];

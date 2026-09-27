@@ -194,7 +194,7 @@ describe("visitTypeScriptNodes", () => {
 					forEachChild(childVisitor: (node: unknown) => void) {
 						childVisitor({
 							forEachChild(): undefined {
-								return undefined;
+								return;
 							},
 							kind: SyntaxKind.Identifier,
 						});

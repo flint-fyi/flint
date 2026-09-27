@@ -91,7 +91,7 @@ function computeNextCodeLine(
 
 	// Reaching the end of the file means there are no more lines
 	if (kind === SyntaxKind.EndOfFile) {
-		return undefined;
+		return;
 	}
 
 	const tokenPos = scanner.getTokenStart();

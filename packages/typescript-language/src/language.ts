@@ -110,9 +110,7 @@ function getMappedSourceFiles(
 	sourceFile: AST.SourceFile,
 ): AST.SourceFile[] {
 	const sourceFiles = [sourceFile];
-	for (const fileName of new Set(
-		sourceFile.supplementalSourceFileNames ?? [],
-	)) {
+	for (const fileName of new Set(sourceFile.supplementalSourceFileNames)) {
 		const supplementalSourceFile = program.getSourceFile(fileName);
 		if (supplementalSourceFile && supplementalSourceFile !== sourceFile) {
 			sourceFiles.push(supplementalSourceFile as AST.SourceFile);

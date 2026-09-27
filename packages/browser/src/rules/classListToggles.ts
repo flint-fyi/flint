@@ -68,7 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 			if (classList.expression.kind !== SyntaxKind.Identifier) {
-				return undefined;
+				return;
 			}
 
 			const args = expression.arguments;

@@ -32,7 +32,7 @@ export function createAstroFileContext(sourceText: string): {
 } {
 	const { ast } = parse(sourceText, { position: true });
 	const collector = new DirectivesCollector(
-		ast.children[0]?.position?.start.offset ?? sourceText.length,
+		ast.children.at(0)?.position?.start.offset ?? sourceText.length,
 	);
 	for (const directive of extractDirectives(ast)) {
 		collector.add(directive.range, directive.selection, directive.type);

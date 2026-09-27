@@ -31,7 +31,7 @@ function getElseKeywordRange(
 	sourceFile: AST.SourceFile,
 ) {
 	if (!node.elseStatement) {
-		return undefined;
+		return;
 	}
 
 	const begin = node.thenStatement.getEnd();

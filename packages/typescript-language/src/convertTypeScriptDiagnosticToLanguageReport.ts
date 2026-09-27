@@ -110,8 +110,8 @@ function formatCodeSpan(
 ): string {
 	const hasMoreThanFiveLines = endPosition.line - startPosition.line >= 4;
 	const gutterWidth = hasMoreThanFiveLines
-		? Math.max(ellipsis.length, `${endPosition.line + 1}`.length)
-		: `${endPosition.line + 1}`.length;
+		? Math.max(ellipsis.length, String(endPosition.line + 1).length)
+		: String(endPosition.line + 1).length;
 	let context = "";
 	let previousLine: number | undefined;
 
@@ -122,11 +122,11 @@ function formatCodeSpan(
 				gutterStyleSequence,
 			)}${gutterSeparator}`;
 		}
-		const lineContent = text.replace(/\t/g, " ").trimEnd();
+		const lineContent = text.replaceAll("\t", " ").trimEnd();
 		context += "\n";
 		context +=
 			indent +
-			color(`${line + 1}`.padStart(gutterWidth), gutterStyleSequence) +
+			color(String(line + 1).padStart(gutterWidth), gutterStyleSequence) +
 			gutterSeparator +
 			lineContent +
 			"\n";
@@ -155,8 +155,11 @@ function formatLocation(
 	position: { character: number; line: number },
 	currentDirectory: string,
 ): string {
-	return `${color(displayFilename(fileName, currentDirectory), COLOR.Cyan)}:${color(
-		`${position.line + 1}`,
-		COLOR.Yellow,
-	)}:${color(`${position.character + 1}`, COLOR.Yellow)}`;
+	let output = "";
+	output += color(displayFilename(fileName, currentDirectory), COLOR.Cyan);
+	output += ":";
+	output += color(String(position.line + 1), COLOR.Yellow);
+	output += ":";
+	output += color(String(position.character + 1), COLOR.Yellow);
+	return output;
 }

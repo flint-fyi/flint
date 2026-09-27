@@ -185,7 +185,7 @@ describe("getTypeScriptDiagnostics", () => {
 		}[];
 
 		expect(diagnostics).toEqual(
-			[...diagnostics].sort(
+			diagnostics.toSorted(
 				(left, right) =>
 					(left.fileName ?? "").localeCompare(right.fileName ?? "") ||
 					left.pos - right.pos ||

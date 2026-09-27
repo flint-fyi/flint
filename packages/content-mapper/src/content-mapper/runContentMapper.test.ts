@@ -72,7 +72,7 @@ async function nextResponse(output: PassThrough): Promise<JsonRpcResponse> {
 	for (;;) {
 		const headerEnd = state.bytes.indexOf("\r\n\r\n");
 		const length =
-			headerEnd < 0
+			headerEnd === -1
 				? undefined
 				: Number(
 						/content-length: (\d+)/i.exec(
@@ -80,7 +80,7 @@ async function nextResponse(output: PassThrough): Promise<JsonRpcResponse> {
 						)?.[1],
 					);
 		if (
-			headerEnd >= 0 &&
+			headerEnd !== -1 &&
 			length !== undefined &&
 			state.bytes.byteLength >= headerEnd + 4 + length
 		) {

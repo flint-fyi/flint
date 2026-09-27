@@ -22,7 +22,7 @@ export function reportSourceCode<T extends string>(
 		suggestions: report.suggestions
 			?.map((suggestion) => {
 				if (isSuggestionForFiles(suggestion)) {
-					return undefined;
+					return;
 				}
 				return {
 					...suggestion,

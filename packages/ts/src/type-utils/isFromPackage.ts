@@ -91,12 +91,12 @@ export function isFromPackage(
 	// Symlinked packages (pnpm workspaces, `npm link`) resolve to paths outside
 	// node_modules, so also compare against the resolved package.json's name
 	// rather than only names inferred from the directory path.
-	const packageNames = [
+	const packageNames = new Set([
 		getPackageNameFromDirectory(packageJsonDirectory),
 		getPackageNameFromPackageJson(packageJsonDirectory, host),
-	];
+	]);
 	return (
-		packageNames.includes(packageName) ||
-		packageNames.includes(`@types/${typesPackageName}`)
+		packageNames.has(packageName) ||
+		packageNames.has(`@types/${typesPackageName}`)
 	);
 }

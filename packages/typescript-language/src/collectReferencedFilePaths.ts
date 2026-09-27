@@ -1,4 +1,4 @@
-import * as path from "node:path";
+import path from "node:path";
 
 import { SyntaxKind } from "typescript-native/unstable/ast";
 import type { Checker, Program } from "typescript-native/unstable/sync";

@@ -438,10 +438,10 @@ export function createTypeScriptProjectSession(
 					overlayPath,
 					previousSourceText,
 				] of previousOverlaySourceTextByPath) {
-					if (previousSourceText !== undefined) {
-						virtualFiles.set(overlayPath, previousSourceText);
-					} else {
+					if (previousSourceText === undefined) {
 						virtualFiles.delete(overlayPath);
+					} else {
+						virtualFiles.set(overlayPath, previousSourceText);
 					}
 				}
 			};

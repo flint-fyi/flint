@@ -110,17 +110,11 @@ function isPublicMember(member: ClassMember): boolean {
 		return true;
 	}
 
-	if (
-		modifiers.some(
-			(modifier: AST.ModifierLike) =>
-				modifier.kind === SyntaxKind.PrivateKeyword ||
-				modifier.kind === SyntaxKind.ProtectedKeyword,
-		)
-	) {
-		return false;
-	}
-
-	return true;
+	return !modifiers.some(
+		(modifier: AST.ModifierLike) =>
+			modifier.kind === SyntaxKind.PrivateKeyword ||
+			modifier.kind === SyntaxKind.ProtectedKeyword,
+	);
 }
 
 function shouldSkipMember(

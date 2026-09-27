@@ -1,4 +1,4 @@
-import * as path from "node:path";
+import path from "node:path";
 
 const BACKSLASH = 92;
 const SLASH = 47;
@@ -18,8 +18,8 @@ export function isUnderDirectory(
 	// This runs once per file of a parsed config, so take the common case —
 	// both sides spelled the same way — without building a relative path.
 	if (candidate.startsWith(directory)) {
-		const next = candidate.charCodeAt(directory.length);
-		if (Number.isNaN(next) || next === SLASH || next === BACKSLASH) {
+		const next = candidate.codePointAt(directory.length);
+		if (next === undefined || next === SLASH || next === BACKSLASH) {
 			return true;
 		}
 	}

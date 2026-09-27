@@ -24,13 +24,13 @@ export function createTypeScriptOverlayConfig(
 		throw new Error("TypeScript config must be an object.");
 	}
 	const rawConfig = authoredConfig as { references?: unknown };
-	const configDirectory = path.dirname(authoredConfigFilePath);
 	if (
 		rawConfig.references !== undefined &&
 		!Array.isArray(rawConfig.references)
 	) {
 		throw new Error("TypeScript config references must be an array.");
 	}
+	const configDirectory = path.dirname(authoredConfigFilePath);
 	const references = rawConfig.references?.map((reference: unknown) => {
 		if (
 			typeof reference !== "object" ||

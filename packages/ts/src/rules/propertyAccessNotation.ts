@@ -77,7 +77,7 @@ function getFirstModifierKind(node: DeclarationBase | undefined) {
 				(modifier) => modifier.kind !== SyntaxKind.Decorator,
 			)?.kind;
 		default:
-			return undefined;
+			return;
 	}
 }
 

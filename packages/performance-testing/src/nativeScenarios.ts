@@ -79,7 +79,7 @@ export function createNativeScenarioFiles(scenario: NativeScenario): Structure {
 		if (scenario.slug === "changed") {
 			const indexFile = (files.src as Structure)["index.ts"];
 			if (!Array.isArray(indexFile)) {
-				throw new Error(
+				throw new TypeError(
 					"Expected the generated TypeScript index to be a file.",
 				);
 			}

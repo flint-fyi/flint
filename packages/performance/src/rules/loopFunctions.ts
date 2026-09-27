@@ -154,14 +154,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						keyword = "function";
 					} else if (node.kind === SyntaxKind.ArrowFunction) {
 						const firstParameter = node.parameters[0];
-						if (
+						keyword =
 							firstParameter?.name.kind === SyntaxKind.Identifier &&
 							firstParameter.name.getStart(sourceFile) === start
-						) {
-							keyword = firstParameter.name.text;
-						} else {
-							keyword = "(";
-						}
+								? firstParameter.name.text
+								: "(";
 					}
 
 					context.report({

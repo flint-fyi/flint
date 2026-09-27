@@ -55,10 +55,11 @@ function isObjectAssignPattern(
 		return false;
 	}
 
-	const accumulatorName = firstParameter.name.text;
 	if (callback.body.kind === SyntaxKind.Block) {
 		return false;
 	}
+
+	const accumulatorName = firstParameter.name.text;
 	const body = skipParentheses(callback.body);
 
 	if (
@@ -181,10 +182,11 @@ function isSpreadAccumulatorPattern(callback: AST.ArrowFunction) {
 		return false;
 	}
 
-	const accumulatorName = firstParam.name.text;
 	if (callback.body.kind === SyntaxKind.Block) {
 		return false;
 	}
+
+	const accumulatorName = firstParam.name.text;
 	const body = skipParentheses(callback.body);
 
 	if (

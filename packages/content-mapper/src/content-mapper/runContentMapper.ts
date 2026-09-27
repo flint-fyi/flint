@@ -252,7 +252,7 @@ export async function runContentMapper({
 			]);
 			while (true) {
 				const headerEnd = pending.indexOf("\r\n\r\n");
-				if (headerEnd < 0) {
+				if (headerEnd === -1) {
 					if (pending.byteLength > MAXIMUM_HEADER_BYTES) {
 						await write(
 							responseError(
@@ -441,11 +441,11 @@ function internalError(
 }
 
 function isHighSurrogate(code: number): boolean {
-	return code >= 0xd800 && code <= 0xdbff;
+	return code >= 0xd8_00 && code <= 0xdb_ff;
 }
 
 function isLowSurrogate(code: number): boolean {
-	return code >= 0xdc00 && code <= 0xdfff;
+	return code >= 0xdc_00 && code <= 0xdf_ff;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -483,7 +483,9 @@ function utf8Offset(text: string, offset: number): number {
 		offset > text.length ||
 		(offset > 0 &&
 			offset < text.length &&
+			// eslint-disable-next-line unicorn/prefer-code-point -- surrogate checks need UTF-16 code units
 			isHighSurrogate(text.charCodeAt(offset - 1)) &&
+			// eslint-disable-next-line unicorn/prefer-code-point -- surrogate checks need UTF-16 code units
 			isLowSurrogate(text.charCodeAt(offset)))
 	) {
 		throw new Error(`Invalid UTF-16 offset ${offset}`);

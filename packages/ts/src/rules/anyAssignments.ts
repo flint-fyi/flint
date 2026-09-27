@@ -184,11 +184,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				let key: string | undefined;
 				const propertyName = element.propertyName ?? element.name;
 				if (!propertyName) {
 					continue;
 				}
+
+				let key: string | undefined;
 
 				if (
 					propertyName.kind === SyntaxKind.Identifier ||

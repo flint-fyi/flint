@@ -88,7 +88,7 @@ export function orderTypeScriptFilePaths(
 		}),
 	);
 
-	return [...filePaths].sort((left, right) => {
+	return filePaths.toSorted((left, right) => {
 		const leftConfig = configKeyByFilePath.get(left) ?? "￿";
 		const rightConfig = configKeyByFilePath.get(right) ?? "￿";
 		if (leftConfig !== rightConfig) {

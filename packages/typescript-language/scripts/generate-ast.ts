@@ -131,10 +131,11 @@ function parseDeclarations(text: string): void {
 			continue;
 		}
 		const declarationKind = tokenAt(tokens, index + 1).text;
-		const name = tokenAt(tokens, index + 2).text;
 		if (declarationKind !== "interface" && declarationKind !== "type") {
 			continue;
 		}
+
+		const name = tokenAt(tokens, index + 2).text;
 
 		let cursor = index + 3;
 		let typeParameterConstraint: string | undefined;
@@ -471,13 +472,13 @@ function localDeclaration(name: string, declaration: string): string {
 			continue;
 		}
 		output = output.replaceAll(
-			new RegExp(`\\b${genericName}(?=<)`, "g"),
+			new RegExp(String.raw`\b${genericName}(?=<)`, "g"),
 			`${genericName}Node`,
 		);
 	}
 	for (const externalTypeName of externalTypeNames) {
 		output = output.replaceAll(
-			new RegExp(`\\b${externalTypeName}\\b`, "g"),
+			new RegExp(String.raw`\b${externalTypeName}\b`, "g"),
 			`NativeAST.${externalTypeName}`,
 		);
 	}
@@ -491,7 +492,7 @@ function localDeclaration(name: string, declaration: string): string {
 		for (const categoryName of categoryNames) {
 			const categoryBase = `${categoryName}Base`;
 			body = body.replaceAll(
-				new RegExp(`\\b${categoryBase}\\b`, "g"),
+				new RegExp(String.raw`\b${categoryBase}\b`, "g"),
 				categoryName,
 			);
 		}
@@ -506,7 +507,7 @@ function localDeclaration(name: string, declaration: string): string {
 	return output;
 }
 
-for (const name of [...exportedNames].sort()) {
+for (const name of [...exportedNames].toSorted()) {
 	if (
 		(categoryNames.has(name) &&
 			!interfaces.get(name)?.typeParameterConstraint) ||
@@ -548,19 +549,21 @@ for (const members of genericMembers.values()) {
 		}
 	}
 }
-for (const [kindName, member] of [...generatedKindAliases].sort()) {
+for (const [kindName, member] of [...generatedKindAliases].toSorted(
+	([left], [right]) => (left < right ? -1 : left > right ? 1 : 0),
+)) {
 	lines.push(`export type ${kindName} = ${member};`);
 }
 
 lines.push("export type AnyNode = Node;", "", "");
-for (const categoryName of [...categoryNames].sort()) {
+for (const categoryName of [...categoryNames].toSorted()) {
 	const base = categoryName === "Node" ? "NodeBase" : `${categoryName}Base`;
 	const members = genericMembers.get(categoryName) ?? membersFor(base);
 	if (categoryName === "Node") {
 		members.push("SourceFile");
 	}
 	lines.push(`export type ${categoryName} =`);
-	const uniqueMembers = [...new Set(members)].sort();
+	const uniqueMembers = [...new Set(members)].toSorted();
 	for (const [index, member] of uniqueMembers.entries()) {
 		lines.push(`\t| ${member}${index === uniqueMembers.length - 1 ? ";" : ""}`);
 	}

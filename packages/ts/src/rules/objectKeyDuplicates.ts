@@ -76,7 +76,7 @@ function getNameText(name: AST.PropertyName) {
 		return name.text;
 	}
 
-	return undefined;
+	return;
 }
 
 function getPropertyKeyName(property: AST.ObjectLiteralElementLike) {

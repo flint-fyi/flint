@@ -10,7 +10,10 @@ describe(hasSameTokens, () => {
 	it.each([
 		["regular expressions", "const a = /[/]/g; const b = /[/]/g;"],
 		["quote-equivalent strings", `const a = "value"; const b = 'value';`],
-		["escape-equivalent strings", `const a = "value"; const b = '\\x76alue';`],
+		[
+			"escape-equivalent strings",
+			String.raw`const a = "value"; const b = '\x76alue';`,
+		],
 		["template expressions", "const a = `x${value}y`; const b = `x${value}y`;"],
 		[
 			"JSX",

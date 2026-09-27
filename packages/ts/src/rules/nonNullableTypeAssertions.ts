@@ -30,7 +30,7 @@ function getTypesIfNotLoose(
 ) {
 	const type = typeChecker.getTypeAtLocation(node);
 	if ((type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0) {
-		return undefined;
+		return;
 	}
 
 	return type.isUnionType() ? type.getTypes() : [type];
@@ -76,14 +76,14 @@ function sameTypeWithoutNullish(
 	for (const assertedType of assertedTypes) {
 		if (
 			couldBeNullish(assertedType) ||
-			!nonNullishOriginalTypes.some((type) => type.id === assertedType.id)
+			nonNullishOriginalTypes.every((type) => type.id !== assertedType.id)
 		) {
 			return false;
 		}
 	}
 
 	for (const originalType of nonNullishOriginalTypes) {
-		if (!assertedTypes.some((type) => type.id === originalType.id)) {
+		if (assertedTypes.every((type) => type.id !== originalType.id)) {
 			return false;
 		}
 	}
