@@ -2,6 +2,8 @@ import type { Paragraph } from "mdast";
 
 import type { WithPosition } from "@flint.fyi/markdown-language";
 
+const conventionalPrefixPattern = /^(\w+)(?:\([^)]*\))?!?:[ \t]+/;
+
 // Matches DEFAULT_COMMIT_TYPES from conventional-changelog-conventionalcommits.
 export const defaultConventionalTypes = [
 	"build",
@@ -23,7 +25,7 @@ export function getConventionalPrefix(
 	sourceText: string,
 	types: readonly string[] = defaultConventionalTypes,
 ): string | undefined {
-	const match = /^(\w+)(?:\([^)]*\))?!?:[ \t]+/.exec(
+	const match = conventionalPrefixPattern.exec(
 		sourceText.slice(
 			paragraph.position.start.offset,
 			paragraph.position.end.offset,

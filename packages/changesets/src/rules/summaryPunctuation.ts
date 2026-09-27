@@ -5,6 +5,9 @@ import { markdownLanguage } from "@flint.fyi/markdown-language";
 import { getChangesetSummary } from "../utils/getChangesetSummary.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
+const endingPunctuationPattern = /[!.?…]$/u;
+const trailingPunctuationPattern = /[!.?…]+$/u;
+
 export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description:
@@ -61,7 +64,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 					);
 
 					if (options.punctuation === "never") {
-						const punctuation = /[!.?…]+$/u.exec(text)?.[0];
+						const punctuation = trailingPunctuationPattern.exec(text)?.[0];
 						if (!punctuation) {
 							return;
 						}
@@ -80,7 +83,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 					}
 
 					if (
-						/[!.?…]$/u.test(text) ||
+						endingPunctuationPattern.test(text) ||
 						(text.endsWith(":") && summary.nodes.length > 1)
 					) {
 						return;

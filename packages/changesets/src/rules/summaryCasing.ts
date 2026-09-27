@@ -13,6 +13,9 @@ import {
 } from "../utils/getConventionalPrefix.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
+const leadingWordPattern = /^[\p{L}\p{N}]+/u;
+const uppercaseLetterPattern = /\p{Lu}/u;
+
 export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description:
@@ -81,10 +84,10 @@ export default ruleCreator.createRule(markdownLanguage, {
 						return;
 					}
 
-					const word = /^[\p{L}\p{N}]+/u.exec(
+					const word = leadingWordPattern.exec(
 						sourceText.slice(begin, child.position.end.offset),
 					)?.[0];
-					if (!word || /\p{Lu}/u.test(word.slice(1))) {
+					if (!word || uppercaseLetterPattern.test(word.slice(1))) {
 						return;
 					}
 
