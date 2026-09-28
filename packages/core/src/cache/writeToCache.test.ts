@@ -20,7 +20,7 @@ const range = {
 async function roundTrip(
 	reports: FileReport[],
 	languageReports: LanguageReport[] = [],
-	invalidatesCache?: boolean,
+	isGlobalDependency?: boolean,
 ): Promise<FileCacheStorage | undefined> {
 	const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 	const allFilePaths = new Set([filePath]);
@@ -43,7 +43,7 @@ async function roundTrip(
 					filePath,
 					{
 						dependencies: new Set([dependencyPath]),
-						...(invalidatesCache !== undefined && { invalidatesCache }),
+						...(isGlobalDependency !== undefined && { isGlobalDependency }),
 						languageReports,
 						reports,
 					},
@@ -70,10 +70,10 @@ async function roundTrip(
 describe(writeToCache, () => {
 	it.each([undefined, false, true])(
 		"stores the global invalidation flag only when true: %s",
-		async (invalidatesCache) => {
-			expect(await roundTrip([], [], invalidatesCache)).toStrictEqual({
+		async (isGlobalDependency) => {
+			expect(await roundTrip([], [], isGlobalDependency)).toStrictEqual({
 				dependencies: [dependencyPath],
-				...(invalidatesCache && { invalidatesCache: true }),
+				...(isGlobalDependency && { isGlobalDependency: true }),
 				timestamp: expect.any(Number),
 			});
 		},

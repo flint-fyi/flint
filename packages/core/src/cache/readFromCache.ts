@@ -74,7 +74,7 @@ export async function readFromCache(
 	const filePathsToLint = new Set<string>();
 
 	for (const [filePath, fileCached] of cached) {
-		if (!fileCached.invalidatesCache) {
+		if (!fileCached.isGlobalDependency) {
 			continue;
 		}
 

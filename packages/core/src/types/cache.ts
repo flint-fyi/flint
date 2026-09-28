@@ -11,7 +11,7 @@ export interface FileCacheImpacts {
 }
 
 export interface FileCacheStorage extends FileCacheImpacts {
-	invalidatesCache?: true;
+	isGlobalDependency?: true;
 	languageReports?: LanguageReport[];
 
 	/**

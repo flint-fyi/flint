@@ -25,6 +25,6 @@ export function getTypeScriptFileCacheImpacts(
 				createTypeScriptServerHost(host),
 			),
 		],
-		invalidatesCache: containsGlobalDeclarations(file.services.sourceFile),
+		isGlobalDependency: containsGlobalDeclarations(file.services.sourceFile),
 	};
 }

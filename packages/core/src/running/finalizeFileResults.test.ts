@@ -26,7 +26,7 @@ describe(finalizeFileResults, () => {
 						"src/Dependency.ts",
 						absoluteDependency,
 					],
-					invalidatesCache: false,
+					isGlobalDependency: false,
 				}),
 				runFileVisitors: vi.fn(),
 			});

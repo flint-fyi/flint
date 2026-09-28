@@ -10,7 +10,7 @@ describe("cacheStorageSchema decoding", () => {
 			JSON.stringify({
 				configs: {},
 				files: {
-					"src/index.ts": { invalidatesCache: false, timestamp: 123 },
+					"src/index.ts": { isGlobalDependency: false, timestamp: 123 },
 				},
 			}),
 		);
@@ -389,7 +389,7 @@ describe("cacheStorageSchema", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
-					invalidatesCache: true,
+					isGlobalDependency: true,
 					languageReports: [
 						{ code: "TS1234", source: "typescript", text: "Error message" },
 					],

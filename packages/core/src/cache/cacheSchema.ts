@@ -94,7 +94,7 @@ const languageReportSchema: z.ZodType<LanguageReport> = z.object({
 
 const fileCacheStorageSchema: z.ZodType<FileCacheStorage> = z.object({
 	dependencies: z.array(z.string()).exactOptional(),
-	invalidatesCache: z.literal(true).exactOptional(),
+	isGlobalDependency: z.literal(true).exactOptional(),
 	languageReports: z.array(languageReportSchema).exactOptional(),
 	reports: z.array(fileReportSchema).exactOptional(),
 	timestamp: z.number(),

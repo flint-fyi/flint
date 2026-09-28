@@ -31,7 +31,7 @@ describe(runConfig, () => {
 				}),
 				getFileCacheImpacts: (file) => ({
 					dependencies: [],
-					invalidatesCache: file.about.filePath === globalPath,
+					isGlobalDependency: file.about.filePath === globalPath,
 				}),
 				runFileVisitors(file, fileVisitors): void {
 					visited.push(file.about.filePath);
