@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import { parse } from "@astrojs/compiler/sync";
 import type { ElementNode, ParentNode } from "@astrojs/compiler/types";
 import { astro2tsx } from "@astrojs/ts-plugin/dist/astro2tsx.js";
@@ -13,6 +16,12 @@ import {
 } from "@flint.fyi/content-mapper";
 import { getPositionOfColumnAndLine } from "@flint.fyi/core";
 
+// The type files Astro's language server adds to every program that contains
+// `.astro` files: the `Astro` global and the JSX namespace its elements use.
+// https://github.com/withastro/astro/blob/c0f33eda8adf6f8f2588688f6205b76a96a42466/packages/language-tools/language-server/src/core/index.ts#L31-L81
+const ambientTypeFileNames = ["env.d.ts", "astro-jsx.d.ts"];
+const ambientTypeFilesByDirectory = new Map<string, string[]>();
+
 export function openAstroProject(): ContentMapperProject {
 	return { transform: transformAstro };
 }
@@ -20,10 +29,10 @@ export function openAstroProject(): ContentMapperProject {
 export function transformAstro(params: TransformParams): TransformResult {
 	const { diagnostics: transformDiagnostics, virtualFile: serviceScript } =
 		astro2tsx(params.content, params.fileName);
-	const text = serviceScript.snapshot.getText(
-		0,
-		serviceScript.snapshot.getLength(),
-	);
+	// The imports go after the generated TSX so its mappings keep their offsets.
+	const text =
+		serviceScript.snapshot.getText(0, serviceScript.snapshot.getLength()) +
+		getAmbientTypeImports(params.fileName);
 	const { ast, diagnostics: parseDiagnostics } = parse(params.content, {
 		position: true,
 	});
@@ -86,6 +95,33 @@ export function transformAstro(params: TransformParams): TransformResult {
 	};
 }
 
+/**
+ * Walks up from a component's directory to the `astro` package installed for
+ * it, the same way `@astrojs/ts-plugin` does. Node's own resolution is not
+ * used because it also searches `NODE_PATH`, which package manager shims set
+ * to directories unrelated to the linted project.
+ */
+function findAstroPackageDirectory(directory: string): string | undefined {
+	let current = directory;
+	while (true) {
+		const candidate = path.join(current, "node_modules", "astro");
+		if (fs.existsSync(path.join(candidate, "package.json"))) {
+			return candidate;
+		}
+		const parent = path.dirname(current);
+		if (parent === current) {
+			return undefined;
+		}
+		current = parent;
+	}
+}
+
+/**
+ * Side-effect imports of Astro's ambient type files, from the `astro` package
+ * installed for the component's own directory. A project without `astro`
+ * installed gets no imports rather than a module-not-found error on every
+ * component.
+ */
 function collectScripts(node: ParentNode): { end: number; start: number }[] {
 	const scripts: { end: number; start: number }[] = [];
 	for (const child of node.children) {
@@ -108,6 +144,25 @@ function collectScripts(node: ParentNode): { end: number; start: number }[] {
 		}
 	}
 	return scripts;
+}
+
+function getAmbientTypeImports(fileName: string): string {
+	const directory = path.dirname(fileName);
+	let ambientTypeFiles = ambientTypeFilesByDirectory.get(directory);
+	if (!ambientTypeFiles) {
+		const astroDirectory = findAstroPackageDirectory(directory);
+		ambientTypeFiles = astroDirectory
+			? ambientTypeFileNames
+					.map((ambientTypeFileName) =>
+						path.join(astroDirectory, ambientTypeFileName),
+					)
+					.filter((ambientTypeFile) => fs.existsSync(ambientTypeFile))
+			: [];
+		ambientTypeFilesByDirectory.set(directory, ambientTypeFiles);
+	}
+	return ambientTypeFiles
+		.map((ambientTypeFile) => `\nimport ${JSON.stringify(ambientTypeFile)};`)
+		.join("");
 }
 
 function isJavaScriptScript(node: ElementNode): boolean {

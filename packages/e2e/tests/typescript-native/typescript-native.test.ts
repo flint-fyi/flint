@@ -3,6 +3,7 @@ import {
 	mkdtemp,
 	readdir,
 	readFile,
+	realpath,
 	rm,
 	writeFile,
 } from "node:fs/promises";
@@ -30,8 +31,10 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 		if (!packDirectory) {
 			throw new Error("FLINT_E2E_PACK_DIR must point to packed Flint packages");
 		}
-		fixtureDirectory = await mkdtemp(
-			path.join(tmpdir(), "flint-typescript-native-"),
+		// Flint prints real paths, so the temporary directory's symlinked spelling
+		// (macOS's `/var` for `/private/var`) would not match `<cwd>`.
+		fixtureDirectory = await realpath(
+			await mkdtemp(path.join(tmpdir(), "flint-typescript-native-")),
 		);
 		await cp(sourceDirectory, fixtureDirectory, {
 			filter: (source) => !source.endsWith(".test.ts"),
@@ -50,9 +53,20 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 				return [packageName, pathToFileURL(tarball).href];
 			}),
 		);
+		// Flint never runs Astro, so esbuild's install script (which only fetches
+		// its native binary) can be declined rather than making pnpm ask.
 		await writeFile(
 			path.join(fixtureDirectory, "pnpm-workspace.yaml"),
-			JSON.stringify({ overrides: packedPackages }),
+			[
+				"allowBuilds:",
+				"  esbuild: false",
+				"overrides:",
+				...Object.entries(packedPackages).map(
+					([packageName, tarballUrl]) =>
+						`  ${JSON.stringify(packageName)}: ${JSON.stringify(tarballUrl)}`,
+				),
+				"",
+			].join("\n"),
 		);
 		await writeFile(
 			path.join(fixtureDirectory, "package.json"),
@@ -62,6 +76,7 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 					"@flint.fyi/svelte": packedPackages["@flint.fyi/svelte"],
 					"@flint.fyi/ts": packedPackages["@flint.fyi/ts"],
 					"@flint.fyi/vue": packedPackages["@flint.fyi/vue"],
+					astro: "7.3.5",
 					flint: packedPackages.flint,
 					"prettier-plugin-astro": "0.14.1",
 					"prettier-plugin-svelte": "^3.4.0",
@@ -82,21 +97,51 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 		await rm(fixtureDirectory, { force: true, recursive: true });
 	});
 
-	it("lints configured, inferred, referenced, Astro, Svelte, and Vue sources", async () => {
+	it("reports rule and language reports in authored coordinates when linting configured, inferred, referenced, Astro, Svelte, and Vue sources", async () => {
 		const { exitCode, stderr, stdout } = await runFlint(fixtureDirectory);
-		const output = normalizeOutput(`${stdout}\n${stderr}`, fixtureDirectory);
 
 		expect(exitCode).toBe(1);
-		for (const fileName of [
-			"configured.ts",
-			"inferred.js",
-			"reference/referenced.ts",
-			"component.astro",
-			"component.svelte",
-			"component.vue",
-		]) {
-			expect(output).toContain(fileName);
-		}
+		expect(normalizeOutput(`${stdout}\n${stderr}`, fixtureDirectory))
+			.toMatchInlineSnapshot(`
+				"<dim>Linting with <cyan><bold>flint.config.ts</bold><dim>...</fg>
+
+				<underline><cwd>/fixtures/component.astro</underline>
+				<dim>  4:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+				<dim>  8:5</fg>  Void expressions should not be used as values.              <yellow>ts/misleadingVoidExpressions</fg>
+
+				<underline><cwd>/fixtures/component.svelte</underline>
+				<dim>  4:3</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+
+				<underline><cwd>/fixtures/component.vue</underline>
+				<dim>  4:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+
+				<underline><cwd>/fixtures/configured.ts</underline>
+				<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+
+				<underline><cwd>/fixtures/inferred.js</underline>
+				<dim>  3:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+
+				<underline><cwd>/fixtures/reference/referenced.ts</underline>
+				<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+
+				<red>✖ Found <bold>7 reports</bold> across <bold>6 files</bold>.
+				</fg>
+				<dim>Finished in <time> on 7 files with 140 rules.
+				</fg>
+				<yellow>⚠️  Additionally found 3 language reportss:</fg>
+
+				[96mfixtures/component.astro</>:[93m2</>:[93m7</> - <dim>TS2322</>: Type 'string' is not assignable to type 'number'.
+				[7m2</> const typed: number = "text";
+				[7m </> [91m      ~~~~~</>
+				[96mfixtures/component.svelte</>:[93m2</>:[93m8</> - <dim>TS2322</>: Type 'string' is not assignable to type 'number'.
+				[7m2</>  const typed: number = "text";
+				[7m </> [91m       ~~~~~</>
+				[96mfixtures/component.vue</>:[93m2</>:[93m7</> - <dim>TS2322</>: Type 'string' is not assignable to type 'number'.
+				[7m2</> const typed: number = "text";
+				[7m </> [91m      ~~~~~</>
+
+				"
+			`);
 	}, 60_000);
 
 	it("observes a changed file between runs", async () => {

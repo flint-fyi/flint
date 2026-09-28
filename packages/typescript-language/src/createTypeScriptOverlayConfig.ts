@@ -1,5 +1,3 @@
-import { createHash } from "node:crypto";
-
 import path from "pathe";
 
 import type { TypeScriptContentMapperRegistration } from "./contentMappers.ts";
@@ -10,7 +8,6 @@ export interface TypeScriptOverlayConfig {
 }
 
 export function createTypeScriptOverlayConfig(
-	currentDirectory: string,
 	authoredConfigFilePath: string,
 	authoredConfig: unknown,
 	registrations: TypeScriptContentMapperRegistration[],
@@ -47,21 +44,15 @@ export function createTypeScriptOverlayConfig(
 			path: path.resolve(configDirectory, reference.path),
 		};
 	});
-	const hash = createHash("sha256")
-		.update(authoredConfigFilePath)
-		.digest("hex")
-		.slice(0, 16);
-
 	return {
-		// The overlay is a virtual file that is never written to disk, so this
-		// path only has to be somewhere TypeScript will read and watch it. It
-		// deliberately avoids `node_modules/.cache`: TypeScript ignores change
-		// notifications for any path under a dot-directory inside node_modules,
-		// which would leave a project on a stale overlay after it changes.
+		// The overlay is a virtual file that is never written to disk. It sits
+		// beside the authored config because TypeScript treats the config it
+		// loads as the project's own: a composite project's default `rootDir` is
+		// that config's directory, and content mappers look for their own
+		// configs (such as `svelte.config.js`) starting from it.
 		filePath: path.join(
-			currentDirectory,
-			"node_modules/flint-typescript-overlays",
-			`${hash}.json`,
+			configDirectory,
+			`${path.basename(authoredConfigFilePath, ".json")}.flint-overlay.json`,
 		),
 		sourceText: JSON.stringify({
 			contentMappers: registrations.map(

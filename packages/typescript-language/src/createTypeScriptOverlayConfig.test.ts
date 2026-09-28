@@ -12,7 +12,6 @@ describe(createTypeScriptOverlayConfig, () => {
 		};
 
 		const overlay = createTypeScriptOverlayConfig(
-			"/repo",
 			configFilePath,
 			authoredConfig,
 			[
@@ -24,8 +23,8 @@ describe(createTypeScriptOverlayConfig, () => {
 			],
 		);
 
-		expect(overlay.filePath).toMatch(
-			/^\/repo\/node_modules\/flint-typescript-overlays\//,
+		expect(overlay.filePath).toBe(
+			"/repo/packages/app/tsconfig.flint-overlay.json",
 		);
 		expect(JSON.parse(overlay.sourceText)).toEqual({
 			contentMappers: [
@@ -39,14 +38,20 @@ describe(createTypeScriptOverlayConfig, () => {
 			references: [{ path: "/repo/packages/core" }, { path: "/shared/types" }],
 		});
 		expect(
-			createTypeScriptOverlayConfig("/repo", configFilePath, authoredConfig, [])
+			createTypeScriptOverlayConfig(configFilePath, authoredConfig, [])
 				.filePath,
 		).toBe(overlay.filePath);
 	});
 
+	it("names the overlay after the authored config when the config is not tsconfig.json", () => {
+		expect(
+			createTypeScriptOverlayConfig("/repo/tsconfig.build.json", {}, [])
+				.filePath,
+		).toBe("/repo/tsconfig.build.flint-overlay.json");
+	});
+
 	it("adds mapped files to solution-style configs", () => {
 		const overlay = createTypeScriptOverlayConfig(
-			"/repo",
 			"/repo/tsconfig.json",
 			{ files: [], references: [{ path: "./package" }] },
 			[],
@@ -64,7 +69,6 @@ describe(createTypeScriptOverlayConfig, () => {
 	it("rejects malformed references with an actionable config error", () => {
 		expect(() =>
 			createTypeScriptOverlayConfig(
-				"/repo",
 				"/repo/tsconfig.json",
 				{ references: {} },
 				[],
@@ -77,7 +81,6 @@ describe(createTypeScriptOverlayConfig, () => {
 		(authoredConfig) => {
 			expect(() =>
 				createTypeScriptOverlayConfig(
-					"/repo",
 					"/repo/tsconfig.json",
 					authoredConfig,
 					[],

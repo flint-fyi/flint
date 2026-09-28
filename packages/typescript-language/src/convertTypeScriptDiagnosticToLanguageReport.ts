@@ -9,15 +9,20 @@ export function convertTypeScriptDiagnosticToLanguageReport(
 	currentDirectory: string,
 ): LanguageReport {
 	return {
-		code: `TS${diagnostic.code}`,
+		code: getDiagnosticCode(diagnostic),
 		...(diagnostic.fileName !== undefined && {
 			range: { begin: diagnostic.pos, end: diagnostic.end },
 		}),
-		source: "typescript",
+		source: diagnostic.source || "typescript",
 		text: formatReport(diagnostic, currentDirectory),
 	};
 }
 
+/**
+ * Content mappers name themselves as the source of the diagnostics they
+ * report (`astro`, `svelte`), which TypeScript passes through in place of its
+ * own `TS` code prefix.
+ */
 function color(text: string, formatStyle: string): string {
 	return formatStyle + text + resetEscapeSequence;
 }
@@ -45,7 +50,7 @@ function formatReport(
 		);
 		output += " - ";
 	}
-	output += color(`TS${diagnostic.code}`, COLOR.Grey);
+	output += color(getDiagnosticCode(diagnostic), COLOR.Grey);
 	output += ": ";
 	output += flattenMessage(diagnostic);
 	if (
@@ -81,6 +86,10 @@ function formatReport(
 	}
 
 	return output;
+}
+
+function getDiagnosticCode(diagnostic: Diagnostic): string {
+	return `${diagnostic.source ? diagnostic.source.toUpperCase() : "TS"}${diagnostic.code}`;
 }
 
 const gutterStyleSequence = "\u001B[7m";

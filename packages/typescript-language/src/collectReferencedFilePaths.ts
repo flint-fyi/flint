@@ -19,6 +19,10 @@ export function collectReferencedFilePaths(
 ): string[] {
 	const modulePaths = new Set<string>();
 	const rootFileNamesByPath = getRootFileNamesByPath(program);
+	// Cache dependencies are keyed relative to the linted project, which the
+	// program was created for, rather than to wherever the process happens to
+	// be running.
+	const currentDirectory = program.getCurrentDirectory();
 
 	function addModuleSpecifier(moduleSpecifier: AST.StringLiteral): void {
 		const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
@@ -29,7 +33,7 @@ export function collectReferencedFilePaths(
 		for (const declarationHandle of symbol.declarations) {
 			const rootFileName = rootFileNamesByPath.get(declarationHandle.path);
 			if (rootFileName !== undefined) {
-				modulePaths.add(path.relative(process.cwd(), rootFileName));
+				modulePaths.add(path.relative(currentDirectory, rootFileName));
 				continue;
 			}
 			if (
@@ -43,7 +47,7 @@ export function collectReferencedFilePaths(
 				?.getSourceFile();
 			if (declarationSourceFile) {
 				modulePaths.add(
-					path.relative(process.cwd(), declarationSourceFile.fileName),
+					path.relative(currentDirectory, declarationSourceFile.fileName),
 				);
 			}
 		}

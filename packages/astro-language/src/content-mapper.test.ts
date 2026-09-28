@@ -1,8 +1,55 @@
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { transformAstro } from "./content-mapper.ts";
 
 describe(transformAstro, () => {
+	it("imports Astro's ambient type files when astro is installed for the component", async () => {
+		const projectDirectory = await mkdtemp(
+			path.join(tmpdir(), "flint-astro-mapper-"),
+		);
+		try {
+			const astroDirectory = path.join(projectDirectory, "node_modules/astro");
+			await mkdir(astroDirectory, { recursive: true });
+			await writeFile(
+				path.join(astroDirectory, "package.json"),
+				JSON.stringify({ name: "astro" }),
+			);
+			await writeFile(path.join(astroDirectory, "env.d.ts"), "");
+			await writeFile(path.join(astroDirectory, "astro-jsx.d.ts"), "");
+
+			const result = transformAstro({
+				content: "<div>Hello!</div>",
+				fileName: path.join(projectDirectory, "src/Component.astro"),
+				projectHandle: "project",
+			});
+
+			expect(result.text).toContain(
+				`import ${JSON.stringify(path.join(astroDirectory, "env.d.ts"))};`,
+			);
+			expect(result.text).toContain(
+				`import ${JSON.stringify(path.join(astroDirectory, "astro-jsx.d.ts"))};`,
+			);
+			expect(result.mappings?.[0]?.slice(1, 5)).toEqual([17, 0, 17, 0]);
+		} finally {
+			await rm(projectDirectory, { force: true, recursive: true });
+		}
+	});
+
+	it("omits Astro's ambient type files when astro is not installed for the component", () => {
+		const result = transformAstro({
+			content: "<div>Hello!</div>",
+			fileName: "/project/Component.astro",
+			projectHandle: "project",
+		});
+
+		expect(result.text).not.toContain("astro-jsx.d.ts");
+		expect(result.text).not.toContain("env.d.ts");
+	});
+
 	it("maps an authored template without overlapping original ranges", () => {
 		const result = transformAstro({
 			content: "<div>Hello!</div>",

@@ -192,7 +192,6 @@ export function createTypeScriptProjectSession(
 			);
 		}
 		const overlay = createTypeScriptOverlayConfig(
-			host.getCurrentDirectory(),
 			authoredConfigFilePath,
 			config,
 			registrations,
@@ -412,10 +411,6 @@ export function createTypeScriptProjectSession(
 					nextOpenedMappedFilePaths.add(filePath);
 				}
 			}
-			const mappedConfigFilePaths = [...nextOpenedMappedFilePaths]
-				.filter((filePath) => mappedExtensions.has(path.extname(filePath)))
-				.map(findConfigFile)
-				.filter((configFilePath): configFilePath is string => !!configFilePath);
 			const mappedFilePathsByConfigFilePath = new Map<string, string[]>();
 			for (const filePath of nextOpenedMappedFilePaths) {
 				const configFilePath = findConfigFile(filePath);
@@ -427,6 +422,7 @@ export function createTypeScriptProjectSession(
 				mappedFilePaths.push(filePath);
 				mappedFilePathsByConfigFilePath.set(configFilePath, mappedFilePaths);
 			}
+			const mappedConfigFilePaths = [...mappedFilePathsByConfigFilePath.keys()];
 			const closeProjects: string[] = [];
 			const overlaysToMarkOpened = new Set<string>();
 			const previousOverlaySourceTextByPath = new Map<

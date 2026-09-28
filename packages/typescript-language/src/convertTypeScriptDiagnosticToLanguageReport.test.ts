@@ -115,6 +115,27 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 		});
 	});
 
+	it("prefixes the code with the diagnostic's source when a content mapper reports it", () => {
+		const report = convertTypeScriptDiagnosticToLanguageReport(
+			{
+				category: 1,
+				code: 1006,
+				end: 5,
+				fileName: "/root/Component.astro",
+				pos: 0,
+				source: "astro",
+				startPosition: { character: 0, line: 0 },
+				text: "Unterminated attribute",
+			},
+			"/root",
+		);
+
+		expect(report).toMatchObject({ code: "ASTRO1006", source: "astro" });
+		expect(stripVTControlCharacters(report.text)).toBe(
+			"Component.astro:1:1 - ASTRO1006: Unterminated attribute",
+		);
+	});
+
 	it("displays the file location relative to the current directory", () => {
 		const report = convertTypeScriptDiagnosticToLanguageReport(
 			{

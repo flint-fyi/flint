@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
 
+import { registerTypeScriptContentMapper } from "./contentMappers.ts";
 import { typescriptLanguage } from "./language.ts";
 
 const mocks = vi.hoisted(() => ({
@@ -262,7 +263,7 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		expect(mocks.session[Symbol.dispose]).not.toHaveBeenCalled();
 	});
 
-	it("fails an unsupported extension without closing the session", () => {
+	it("fails an unsupported extension without opening a session", () => {
 		mockSnapshot({
 			"/repo/first.unknown": { fileName: "/repo/first.unknown" },
 		});
@@ -270,7 +271,80 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		expect(() =>
 			createFactory().createFile(fileData("/repo/first.unknown")),
 		).toThrow("Unknown extension");
-		expect(mocks.session.update).toHaveBeenCalledOnce();
-		expect(mocks.session[Symbol.dispose]).not.toHaveBeenCalled();
+		expect(mocks.createTypeScriptProjectSession).not.toHaveBeenCalled();
+		expect(mocks.session.update).not.toHaveBeenCalled();
+	});
+
+	it("suggests the matching Flint plugin when no mapper is registered for a framework extension", () => {
+		mockSnapshot({});
+		mocks.session.getProjectForFile.mockReturnValue(undefined);
+
+		expect(() =>
+			createFactory().createFile(fileData("/repo/Component.vue")),
+		).toThrow("Did you install & import @flint.fyi/vue?");
+		expect(mocks.createTypeScriptProjectSession).not.toHaveBeenCalled();
+	});
+
+	it("hands a mapper the file's source text when creating a mapped file", () => {
+		mockSnapshot({
+			"/repo/Component.mapped": { fileName: "/repo/Component.mapped" },
+		});
+		const createFile = vi.fn(() => ({}));
+		using unregister = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				createFile,
+				extensions: [".mapped"],
+				packageName: "mapped",
+			}),
+		};
+
+		createFactory().createFile(fileData("/repo/Component.mapped"));
+
+		expect(createFile).toHaveBeenCalledExactlyOnceWith(
+			expect.objectContaining({ sourceText: "export {};" }),
+		);
+	});
+
+	describe("mapped file range adjustment", () => {
+		function createMappedFile() {
+			mockSnapshot({
+				"/repo/Component.mapped": { fileName: "/repo/Component.mapped" },
+			});
+			using unregister = {
+				[Symbol.dispose]: registerTypeScriptContentMapper({
+					extensions: [".mapped"],
+					packageName: "mapped",
+				}),
+			};
+			return createFactory().createFile(fileData("/repo/Component.mapped"));
+		}
+
+		it("decodes an authored range without consulting the span map when begin is encoded as negative", () => {
+			const file = createMappedFile();
+
+			expect(file.adjustReportRange?.({ begin: -1 - 5, end: 8 })).toEqual({
+				begin: 5,
+				end: 8,
+			});
+			expect(file.adjustFixRange?.({ begin: -1 - 5, end: 8 })).toEqual({
+				begin: 5,
+				end: 8,
+			});
+		});
+
+		it("keeps an authored range at offset 0 when begin is encoded as negative", () => {
+			const file = createMappedFile();
+
+			expect(file.adjustReportRange?.({ begin: -1, end: 3 })).toEqual({
+				begin: 0,
+				end: 3,
+			});
+		});
+
+		it("drops a virtual range when the mapped file has no span map", () => {
+			const file = createMappedFile();
+
+			expect(file.adjustReportRange?.({ begin: 0, end: 3 })).toBeNull();
+		});
 	});
 });

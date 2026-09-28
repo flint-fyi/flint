@@ -3,6 +3,8 @@
 		"allowJs": true,
 		"checkJs": true,
 		"composite": true,
+		"jsx": "preserve",
+		"outDir": "dist",
 		"strict": true
 	},
 	"include": [

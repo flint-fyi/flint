@@ -79,8 +79,44 @@ describe(collectReferencedFilePaths, () => {
 				"/repo/src/directory/index.ts",
 				"/repo/src/substituted.ts",
 				"/repo/src/types.d.mts",
-			].map((fileName) => path.relative(process.cwd(), fileName)),
+			].map((fileName) => path.relative("/repo", fileName)),
 		);
+
+		program.dispose();
+	});
+
+	it("keys dependency paths on the program directory when it differs from the process directory", () => {
+		const files = new Map([
+			["/elsewhere/src/dependency.ts", "export const dependency = 1;"],
+			["/elsewhere/src/index.ts", 'import "./dependency";'],
+		]);
+		const api = new API({
+			cwd: "/elsewhere",
+			fs: {
+				directoryExists: (directoryName) =>
+					[...files].some(([fileName]) =>
+						fileName.startsWith(`${directoryName}/`),
+					),
+				fileExists: (fileName) => files.has(fileName),
+				readFile: (fileName) => files.get(fileName) ?? null,
+			},
+		});
+		const program = api.createProgram(["/elsewhere/src/index.ts"], {
+			compilerOptions: { noLib: true },
+		});
+		const sourceFile = nullThrows(
+			program.getSourceFile("/elsewhere/src/index.ts"),
+			"Expected the program source file.",
+		) as unknown as AST.SourceFile;
+
+		expect(process.cwd()).not.toBe("/elsewhere");
+		expect(
+			collectReferencedFilePaths(
+				program,
+				program.getProject().checker,
+				sourceFile,
+			),
+		).toEqual([path.join("src", "dependency.ts")]);
 
 		program.dispose();
 	});
@@ -127,7 +163,7 @@ describe(collectReferencedFilePaths, () => {
 			).toSorted(),
 		).toEqual(
 			["/repo/src/loose.ts", "/repo/src/root.ts"].map((fileName) =>
-				path.relative(process.cwd(), fileName),
+				path.relative("/repo", fileName),
 			),
 		);
 		// Only the file that is not a root needed its metadata.

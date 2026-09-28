@@ -27,6 +27,7 @@
 		"test": "vitest --project vue"
 	},
 	"dependencies": {
+		"@flint.fyi/content-mapper": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",

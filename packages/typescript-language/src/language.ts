@@ -86,8 +86,11 @@ function adjustMappedRange(
 	spanMap: SpanMap | undefined,
 	requireExact = false,
 ): CharacterReportRange | null {
+	// Rules that already report in authored coordinates (through
+	// `@flint.fyi/content-mapper`'s `reportSourceCode`) encode `begin` as
+	// `-1 - begin`, which unlike plain negation can represent offset 0.
 	if (range.begin < 0) {
-		return { begin: -range.begin, end: range.end };
+		return { begin: -1 - range.begin, end: range.end };
 	}
 	if (!spanMap) {
 		return null;
@@ -139,33 +142,56 @@ function mapDiagnosticToAuthoredSource(
 			...(relatedInformation && { relatedInformation }),
 		};
 	}
-	const range = adjustMappedRange(
-		{ begin: diagnostic.pos, end: diagnostic.end },
-		sourceFile.spanMap,
-	);
-	if (!range) {
+	// TypeScript already reports a content-mapped file's diagnostics in
+	// authored coordinates, with positions and context lines taken from the
+	// authored text, whenever its span map covers them. Diagnostics inside
+	// synthesized code that maps to nothing keep their virtual coordinates
+	// instead, and nothing in the response says which is which.
+	if (!isInAuthoredCoordinates(diagnostic, about.sourceText)) {
 		return undefined;
 	}
-	const startPosition = getColumnAndLineOfPosition(
-		about.sourceText,
-		range.begin,
-	);
-	const endPosition = getColumnAndLineOfPosition(about.sourceText, range.end);
 	return {
 		...diagnostic,
-		end: range.end,
-		endPosition: {
-			character: endPosition.column,
-			line: endPosition.line,
-		},
 		fileName: about.filePathAbsolute,
-		pos: range.begin,
 		...(relatedInformation && { relatedInformation }),
-		startPosition: {
-			character: startPosition.column,
-			line: startPosition.line,
-		},
 	};
+}
+
+/**
+ * Whether a content-mapped file's diagnostic is positioned in the authored
+ * text: its positions agree with the authored text's line map, and the
+ * context lines TypeScript attached are the authored text's lines. A
+ * diagnostic left in virtual coordinates fails at least one of those, because
+ * the virtual file's lines differ from the authored file's.
+ */
+function isInAuthoredCoordinates(
+	diagnostic: Diagnostic,
+	sourceText: string,
+): boolean {
+	const { end, endPosition, pos, sourceLines, startPosition } = diagnostic;
+	if (
+		!startPosition ||
+		!endPosition ||
+		!sourceLines ||
+		end > sourceText.length
+	) {
+		return false;
+	}
+	const start = getColumnAndLineOfPosition(sourceText, pos);
+	const finish = getColumnAndLineOfPosition(sourceText, end);
+	if (
+		start.line !== startPosition.line ||
+		start.column !== startPosition.character ||
+		finish.line !== endPosition.line ||
+		finish.column !== endPosition.character
+	) {
+		return false;
+	}
+	const lines = sourceText.split("\n");
+	return sourceLines.every(
+		({ line, text }) =>
+			text.replace(/\r?\n$/, "") === lines[line]?.replace(/\r$/, ""),
+	);
 }
 
 const stateSymbol = Symbol.for("@flint.fyi/typescript-language/state");
@@ -241,6 +267,19 @@ export const typescriptLanguage: Language<
 		function createFile(data: FileAboutData) {
 			if (disposed || failed) {
 				throw new Error("TypeScript project session has been disposed.");
+			}
+			const fileExtension = path.extname(data.filePathAbsolute);
+			const mapperRegistration = getTypeScriptContentMapperRegistrations().find(
+				(registration) => registration.extensions.includes(fileExtension),
+			);
+			// A file no registered mapper claims is refused before the native
+			// session is touched: opening it would only fail later with a project
+			// lookup error, hiding which plugin the user is missing.
+			if (
+				!typeScriptCoreSupportedExtensions.has(fileExtension) &&
+				!mapperRegistration
+			) {
+				throwUnknownLanguageExtension(data.filePathAbsolute);
 			}
 			const currentSessionState = (sessionState ??= {
 				activeFiles: 0,
@@ -364,50 +403,38 @@ export const typescriptLanguage: Language<
 			};
 			try {
 				const sourceFile = getSourceFile();
-				const fileExtension = path.extname(data.filePathAbsolute);
-				const mapperRegistration =
-					getTypeScriptContentMapperRegistrations().find((registration) =>
-						registration.extensions.includes(fileExtension),
-					);
-				if (
-					typeScriptCoreSupportedExtensions.has(fileExtension) ||
-					mapperRegistration
-				) {
-					const mapped = mapperRegistration?.createFile?.({
-						about: data,
-						services,
-						sourceFile,
-						sourceText: host.readFileSync(data.filePathAbsolute) ?? "",
-					});
-					if (mapped?.services) {
-						Object.assign(services, mapped.services);
-					}
-					const file = {
-						...(mapperRegistration
-							? {
-									...(mapped?.languageReports && {
-										__contentMapperLanguageReports: mapped.languageReports,
-									}),
-									...(mapped?.directives && { directives: mapped.directives }),
-									...(mapped?.reports && { reports: mapped.reports }),
-								}
-							: parseDirectivesFromTypeScriptFile(sourceFile)),
-						about: data,
-						...(mapperRegistration && {
-							adjustFixRange: (range: CharacterReportRange) =>
-								adjustMappedRange(range, sourceFile.spanMap, true),
-							adjustReportRange: (range: CharacterReportRange) =>
-								adjustMappedRange(range, sourceFile.spanMap),
-						}),
-						language: typescriptLanguage,
-						services,
-						[Symbol.dispose]: dispose,
-					};
-					currentSessionState.activeFiles += 1;
-					return file;
+				const mapped = mapperRegistration?.createFile?.({
+					about: data,
+					services,
+					sourceFile,
+					sourceText: data.sourceText,
+				});
+				if (mapped?.services) {
+					Object.assign(services, mapped.services);
 				}
-
-				throwUnknownLanguageExtension(data.filePathAbsolute);
+				const file = {
+					...(mapperRegistration
+						? {
+								...(mapped?.languageReports && {
+									__contentMapperLanguageReports: mapped.languageReports,
+								}),
+								...(mapped?.directives && { directives: mapped.directives }),
+								...(mapped?.reports && { reports: mapped.reports }),
+							}
+						: parseDirectivesFromTypeScriptFile(sourceFile)),
+					about: data,
+					...(mapperRegistration && {
+						adjustFixRange: (range: CharacterReportRange) =>
+							adjustMappedRange(range, sourceFile.spanMap, true),
+						adjustReportRange: (range: CharacterReportRange) =>
+							adjustMappedRange(range, sourceFile.spanMap),
+					}),
+					language: typescriptLanguage,
+					services,
+					[Symbol.dispose]: dispose,
+				};
+				currentSessionState.activeFiles += 1;
+				return file;
 			} catch (error) {
 				// A failure to prepare this one file (for example, a content-mapped
 				// file with no ancestor tsconfig) must not tear down the session that

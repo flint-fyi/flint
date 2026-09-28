@@ -2066,6 +2066,9 @@ importers:
 
   packages/vue:
     dependencies:
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core

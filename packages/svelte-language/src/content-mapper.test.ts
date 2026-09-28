@@ -1,3 +1,5 @@
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -89,6 +91,32 @@ describe("openSvelteProject", () => {
 		expect(first.configIdentity).toBeTruthy();
 		expect(second.configIdentity).toBe(first.configIdentity);
 		expect(first.watchedFiles?.every(path.isAbsolute)).toBe(true);
+	});
+
+	it("finds the Svelte config beside the authored tsconfig when opened through a Flint overlay", async () => {
+		const projectDirectory = await mkdtemp(
+			path.join(tmpdir(), "flint-svelte-mapper-"),
+		);
+		try {
+			const svelteConfigFileName = path.join(
+				projectDirectory,
+				"svelte.config.js",
+			);
+			await writeFile(svelteConfigFileName, "export default {};\n");
+
+			const project = await openSvelteProject({
+				compilerOptions: {},
+				configFileName: path.join(
+					projectDirectory,
+					"tsconfig.flint-overlay.json",
+				),
+				projectHandle: "overlay",
+			});
+
+			expect(project.watchedFiles).toEqual([svelteConfigFileName]);
+		} finally {
+			await rm(projectDirectory, { force: true, recursive: true });
+		}
 	});
 
 	it("reports invalid mapper options through protocol option diagnostics", async () => {

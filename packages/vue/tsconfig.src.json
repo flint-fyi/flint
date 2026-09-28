@@ -9,6 +9,7 @@
 	"include": ["src"],
 	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
 	"references": [
+		{ "path": "../content-mapper/tsconfig.src.json" },
 		{ "path": "../core/tsconfig.src.json" },
 		{ "path": "../ts/tsconfig.src.json" },
 		{ "path": "../typescript-language/tsconfig.src.json" },

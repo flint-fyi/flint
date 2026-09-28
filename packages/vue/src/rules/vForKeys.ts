@@ -7,6 +7,7 @@ import {
 	type ReadonlyTextRange,
 } from "typescript-native/unstable/ast";
 
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import type { CharacterReportRange } from "@flint.fyi/core";
 import type { AST } from "@flint.fyi/typescript-language";
 import { vueLanguage, type VueServices } from "@flint.fyi/vue-language";
@@ -59,10 +60,7 @@ export default ruleCreator.createRule(vueLanguage, {
 			message: "invalidKey" | "missingKey" | "staticKey",
 			range: CharacterReportRange,
 		): void => {
-			context.report({
-				message,
-				range: { begin: -range.begin, end: range.end },
-			});
+			reportSourceCode(context, { message, range });
 		};
 
 		return {

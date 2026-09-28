@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { createVFSLinterHost, type VFSLinterHost } from "@flint.fyi/core";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { registerTypeScriptContentMapper } from "./contentMappers.ts";
 import { createTypeScriptProjectSession } from "./createTypeScriptProjectSession.ts";
+import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 
 const configFilePath = "/repo/tsconfig.json";
 const indexFilePath = "/repo/src/index.ts";
@@ -58,14 +60,45 @@ describe(createTypeScriptProjectSession, () => {
 		const snapshot = session.update({ openProjects: [configFilePath] });
 		const [project] = snapshot.getProjects();
 
-		expect(project?.configFileName).toMatch(
-			/^\/repo\/node_modules\/flint-typescript-overlays\//,
-		);
+		expect(project?.configFileName).toBe("/repo/tsconfig.flint-overlay.json");
 		expect(project?.program.getSourceFile(indexFilePath)?.text).toBe(
 			"export const value = 1;",
 		);
 		expect(host.readFileSync(project?.configFileName ?? "")).toBeUndefined();
 		expect(host.readFileSync(configFilePath)).toBe(authoredConfig);
+	});
+
+	it("keeps a composite project's default rootDir at the authored config directory when opened through an overlay", () => {
+		const host = createHost();
+		host.vfsUpsertFile(
+			configFilePath,
+			JSON.stringify({
+				compilerOptions: {
+					composite: true,
+					noLib: true,
+					outDir: "dist",
+				},
+				include: ["src"],
+			}),
+		);
+		using unregister = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				extensions: [".vue"],
+				packageName: "unused-mapper",
+			}),
+		};
+		using session = createTypeScriptProjectSession(host);
+
+		const snapshot = session.update({ openProjects: [configFilePath] });
+		const [project] = snapshot.getProjects();
+
+		// TS6059: 'rootDir' is expected to contain all source files.
+		expect(
+			getTypeScriptDiagnostics(
+				nullThrows(project, "Expected the overlay project.").program,
+				indexFilePath,
+			).map((diagnostic) => diagnostic.code),
+		).not.toContain(6059);
 	});
 
 	it("parses JSONC natively and keeps inherited includes relative to the authored configs", () => {
@@ -143,7 +176,9 @@ describe(createTypeScriptProjectSession, () => {
 		const mappedSnapshot = session.update({ openProjects: [configFilePath] });
 		const mappedProject = session.getProjectForFile("/repo/src/component.vue");
 
-		expect(mappedProject?.configFileName).toMatch(/typescript-overlays/);
+		expect(mappedProject?.configFileName).toBe(
+			"/repo/tsconfig.flint-overlay.json",
+		);
 		expect(mappedProject?.program.getSourceFile(indexFilePath)?.text).toBe(
 			"export const value = 1;",
 		);
@@ -235,7 +270,7 @@ describe(createTypeScriptProjectSession, () => {
 			secondSnapshot
 				.getProjects()
 				.find((project) =>
-					project.configFileName.includes("typescript-overlays"),
+					project.configFileName.endsWith(".flint-overlay.json"),
 				)?.parsedCommandLine.projectReferences,
 		).toMatchObject([{ path: "/repo/second" }]);
 	});

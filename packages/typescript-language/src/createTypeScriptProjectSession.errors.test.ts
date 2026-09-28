@@ -300,10 +300,10 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 
 		const retryCalls = mocks.updateSnapshotCalls.slice(-2);
 		expect(retryCalls[0]).toMatchObject({
-			closeProjects: [expect.stringContaining("typescript-overlays")],
+			closeProjects: [expect.stringContaining(".flint-overlay.json")],
 		});
 		expect(retryCalls[1]).toMatchObject({
-			openProjects: [expect.stringContaining("typescript-overlays")],
+			openProjects: [expect.stringContaining(".flint-overlay.json")],
 		});
 		expect(
 			JSON.parse(mocks.openedProjectSourceTexts.at(-1) ?? ""),
@@ -343,7 +343,7 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		expect(() => session.update({})).not.toThrow();
 
 		expect(mocks.updateSnapshotCalls.at(-1)).toMatchObject({
-			openProjects: [expect.stringContaining("typescript-overlays")],
+			openProjects: [expect.stringContaining(".flint-overlay.json")],
 		});
 		expect(
 			JSON.parse(mocks.openedProjectSourceTexts.at(-1) ?? ""),
