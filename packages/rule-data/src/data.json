@@ -19107,8 +19107,7 @@
 	{
 		"flint": {
 			"name": "defaultExportStyles",
-			"plugin": "ts",
-			"preset": "stylistic"
+			"plugin": "ts"
 		},
 		"eslint": [
 			{
@@ -19645,7 +19644,8 @@
 		"flint": {
 			"name": "elseIfChains",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"strictness": "strict"
 		},
 		"eslint": [
 			{
@@ -23791,7 +23791,7 @@
 		"flint": {
 			"name": "mathRangeTernaries",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "stylistic"
 		},
 		"biome": [
 			{
