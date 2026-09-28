@@ -248,27 +248,6 @@ describe(LintSession, () => {
 		);
 	});
 
-	it("reruns every configured file for rules that require all files", async () => {
-		const filesSeenInTeardown: string[][] = [];
-		const visitedFilePaths: string[] = [];
-		const { configDefinition, host, root } = await createTestProject({
-			onTeardown: () => {
-				filesSeenInTeardown.push([...visitedFilePaths]);
-			},
-			requiresAllFiles: true,
-			visitedFilePaths,
-		});
-		using session = await LintSession.create(configDefinition, host);
-
-		await session.lintFiles([path.posix.join(root, "a.txt")]);
-
-		expect(
-			filesSeenInTeardown.map((filePaths) =>
-				filePaths.map((filePath) => path.basename(filePath)),
-			),
-		).toEqual([["a.txt", "b.txt", "c.txt"]]);
-	});
-
 	it("disposes language files and retained factories", async () => {
 		const factoryDispose = vi.fn();
 		const fileDispose = vi.fn();
@@ -300,20 +279,14 @@ async function createTestProject({
 	factoryDispose,
 	fileDispose,
 	invalidatingFileNames,
-	onTeardown,
 	orderedCreatedFilePaths,
 	orderFilePaths,
-	requiresAllFiles,
-	visitedFilePaths,
 }: {
 	factoryDispose?: () => void;
 	fileDispose?: () => void;
 	invalidatingFileNames?: Set<string>;
-	onTeardown?: () => void;
 	orderedCreatedFilePaths?: string[];
 	orderFilePaths?: (filePaths: readonly string[]) => string[];
-	requiresAllFiles?: boolean;
-	visitedFilePaths?: string[];
 } = {}) {
 	const root = normalizePath(
 		await mkdtemp(path.join(os.tmpdir(), "flint-lint-session-")),
@@ -380,17 +353,10 @@ async function createTestProject({
 				suggestions: [],
 			},
 		},
-		...(requiresAllFiles && { requiresAllFiles }),
 		setup(context) {
 			return {
-				...(onTeardown && {
-					teardown: () => {
-						onTeardown();
-					},
-				}),
 				visitors: {
-					Root(node, services) {
-						visitedFilePaths?.push(node.filePath);
+					Root(_node, services) {
 						if (typeof services.sourceText !== "string") {
 							throw new TypeError("Expected source text.");
 						}

@@ -162,29 +162,12 @@ export class LintSession implements Disposable {
 			return new Map();
 		}
 
-		this.#addFilesRequiredByRules(filePathsToLint);
-
 		return await this.#lintCollectedFiles(filePathsToLint, options);
 	}
 
 	[Symbol.dispose](): void {
 		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
 			fileFactory[Symbol.dispose]?.();
-		}
-	}
-
-	#addFilesRequiredByRules(filePaths: Set<string>): void {
-		for (const [rule, optionsByFile] of this.#rulesOptionsByFile) {
-			if (
-				!rule.requiresAllFiles ||
-				!filePaths.intersection(optionsByFile).size
-			) {
-				continue;
-			}
-
-			for (const filePath of optionsByFile.keys()) {
-				filePaths.add(filePath);
-			}
 		}
 	}
 

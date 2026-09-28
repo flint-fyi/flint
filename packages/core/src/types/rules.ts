@@ -98,8 +98,6 @@ export interface RuleDefinition<
 	about: About;
 	messages: Record<MessageId, ReportMessageData>;
 	options?: OptionalObjectSchema<OptionsSchema>;
-
-	requiresAllFiles?: boolean;
 	setup: RuleSetup<
 		AstNodesByName,
 		FileServices,

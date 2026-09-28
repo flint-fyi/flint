@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
@@ -18,39 +18,6 @@ interface TestServices {
 }
 
 describe(runConfig, () => {
-	afterEach(() => {
-		vi.useRealTimers();
-	});
-
-	it("keeps re-linted results for cached files required by a rule", async () => {
-		vi.useFakeTimers();
-		vi.setSystemTime(1000);
-		const project = createTestProject({ requiresAllFiles: true });
-
-		const firstResults = await runConfig(
-			project.configDefinition,
-			project.host,
-			{},
-		);
-		const firstBReports = firstResults.allFileResults.get(
-			project.bPath,
-		)?.languageReports;
-
-		vi.setSystemTime(2000);
-		project.host.vfsUpsertFile(project.aPath, "a2");
-
-		const secondResults = await runConfig(
-			project.configDefinition,
-			project.host,
-			{},
-		);
-
-		expect(secondResults.cached).toEqual(new Map());
-		expect(
-			secondResults.allFileResults.get(project.bPath)?.languageReports,
-		).not.toEqual(firstBReports);
-	});
-
 	it("counts only rules with matched files", async () => {
 		const project = createTestProject({ includeUnmatchedRule: true });
 
@@ -64,10 +31,8 @@ describe(runConfig, () => {
 
 function createTestProject({
 	includeUnmatchedRule,
-	requiresAllFiles,
 }: {
 	includeUnmatchedRule?: boolean;
-	requiresAllFiles?: boolean;
 } = {}) {
 	const root = "/root";
 	const aPath = path.posix.join(root, "a.txt");
@@ -107,7 +72,6 @@ function createTestProject({
 	const matchedRule = ruleCreator.createRule(language, {
 		about: { description: "Matched test rule.", id: "matched" },
 		messages: {},
-		...(requiresAllFiles && { requiresAllFiles }),
 		setup() {
 			return;
 		},
