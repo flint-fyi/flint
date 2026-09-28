@@ -7,52 +7,52 @@ importers:
     configDependencies: {}
     packageManagerDependencies:
       '@pnpm/exe':
-        specifier: 11.27.1
-        version: 11.27.1
+        specifier: 11.28.0
+        version: 11.28.0
       pnpm:
-        specifier: 11.27.1
-        version: 11.27.1
+        specifier: 11.28.0
+        version: 11.28.0
 
 packages:
 
-  '@pnpm/exe@11.27.1':
-    resolution: {integrity: sha512-jPZL1+kYXNqI6D9sWNKPq+t4nSJ4vvJePKJQd9aHpncdDyUudHGs0cl1IdzNTwWdqG2/+clY38zDgw0gs0lo8Q==}
+  '@pnpm/exe@11.28.0':
+    resolution: {integrity: sha512-9EeKZbafmcLKog7vc7OxtMX3o6xfNKmxRE+44HM3lcV5CIUgt6Magi+yNiaOHnHG2gcGcl9juNbSX+C4dQ8GvQ==}
     hasBin: true
 
-  '@pnpm/linux-arm64@11.27.1':
-    resolution: {integrity: sha512-IMsVyn3CGhI/dSgPbLjT+iWsRPBmVZY3aPWAE9L6VK5sj34w1jIVvHi4jlOgctqZnSRRnCD7EnX3lcIv0iEyVA==}
+  '@pnpm/linux-arm64@11.28.0':
+    resolution: {integrity: sha512-tTO4fo0umMwIkDbzuRsSGt7oJasLUJp7/DLVOPPZLvBPRf+rqXG3XsGugqDr0A7FYylHG2jgVMwUEzALZa2UzQ==}
     cpu: [arm64]
     os: [linux]
 
-  '@pnpm/linux-x64@11.27.1':
-    resolution: {integrity: sha512-Hc2FF/IJiieEl2Xcq5zOo41LwfeP772d+qQfYQ54ELSphF51OnawvpGFg9dX1G+JryL/ous6oaGkQH784VulAg==}
+  '@pnpm/linux-x64@11.28.0':
+    resolution: {integrity: sha512-6RAE5hSd880KY/+TmLGZGd0Mr/rgxi70pUxcG0DXOPfKSRLstLqultG/Fk0cZsxQIJiWIhrWDwhuHg5AYvTG+A==}
     cpu: [x64]
     os: [linux]
 
-  '@pnpm/linuxstatic-arm64@11.27.1':
-    resolution: {integrity: sha512-XhisRlgkJR1tGd7LaG8g3GdCkYqHeTyrsW3GG1pS5VY7r3awgdvafnQDh7vlS32s2Ww/kt8i4UuktuPjK6PxsA==}
+  '@pnpm/linuxstatic-arm64@11.28.0':
+    resolution: {integrity: sha512-NIHI12Qsbhz+8LYxz1QzhZeQnO+QBwwjyY/OTGfgK4R0YBq7Tk8e4dP6vlg6YHFfvK9km/K6BO8is84zeFE4Ag==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@pnpm/linuxstatic-x64@11.27.1':
-    resolution: {integrity: sha512-UbP3TpTWAC/cYHGVo7BsVSqKKobwfwBgQnp1o5dt6VhY05wKQcfU8jM/231gsWAqlP0nf9lI9OS0AJkTwKykZQ==}
+  '@pnpm/linuxstatic-x64@11.28.0':
+    resolution: {integrity: sha512-VLT3yqhg4bXTLhQtN+LOf+u/2HhO9BMu+wjIyiLpBCFDbDHCa92qKjEhx2IT8Dt9iZAiChmnBSZcOdZDXZYuOw==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@pnpm/macos-arm64@11.27.1':
-    resolution: {integrity: sha512-OLPueX2J1ASL6IZGr9Mvxmk/3m0ifKqUqK8THWAvnSjDUb6FF/mGXLF8qDq66TuyHreZKcr8zpGKpqaQBi+qiQ==}
+  '@pnpm/macos-arm64@11.28.0':
+    resolution: {integrity: sha512-uvlqxH3b87yAPNammqG45l8CIzo4brI0lnu8q1uRecWyn6vWzYu1yguLzZRzUbnuRdGktXtDUAv6EHVgaEdm4Q==}
     cpu: [arm64]
     os: [darwin]
 
-  '@pnpm/win-arm64@11.27.1':
-    resolution: {integrity: sha512-AyP7zk7GiDUQjBk28UTDbwP5dSnfdrQkVlQZ11knhPywE4HKSjRdqKVBowLUb/Sp+YWB+/YB8TEmK9Iit5bosw==}
+  '@pnpm/win-arm64@11.28.0':
+    resolution: {integrity: sha512-+ptm0JggdnevsGTEqyRASs5Kl73/+26N4QEnQCJpFxldtOKKXzBNHoV4JdHvhTy54enj3axo7fxtmmERa9y/jw==}
     cpu: [arm64]
     os: [win32]
 
-  '@pnpm/win-x64@11.27.1':
-    resolution: {integrity: sha512-cJGFL+NcvxzCRhfirhqo95UQ+aPLux8cfjKlpFJhaQpC/n/qF3SDSsKjJMYMZGaLKHbrs50VFdkJR5z73RDsqQ==}
+  '@pnpm/win-x64@11.28.0':
+    resolution: {integrity: sha512-Ge86u3esWdyCNWtC+z58w19AQ9mhQJqBaPgAKyeomOxTfifXDOpe4ICDli/ChCsFJRyM5fTWX3OHkYuf9QsE0Q==}
     cpu: [x64]
     os: [win32]
 
@@ -116,45 +116,45 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  pnpm@11.27.1:
-    resolution: {integrity: sha512-qB1MIbmwmksK6/kO9eUn1CYr3aMi0mCCl4y1SQI6xtnK/Jixn/+qXHHbQ4pl9wIk7beNcxEYeGH/lkgNHNyiPA==}
+  pnpm@11.28.0:
+    resolution: {integrity: sha512-jtI5Nx3oIkS2zM+eICPBjqhDmWHy7D/omJE7n37i52ygpFcXWArKPHmXwTX21PXeRSTL7uGizKxDDAPRNOKkjA==}
     engines: {node: '>=22.13'}
     hasBin: true
 
 snapshots:
 
-  '@pnpm/exe@11.27.1':
+  '@pnpm/exe@11.28.0':
     dependencies:
       '@reflink/reflink': 0.1.19
       detect-libc: 2.1.2
     optionalDependencies:
-      '@pnpm/linux-arm64': 11.27.1
-      '@pnpm/linux-x64': 11.27.1
-      '@pnpm/linuxstatic-arm64': 11.27.1
-      '@pnpm/linuxstatic-x64': 11.27.1
-      '@pnpm/macos-arm64': 11.27.1
-      '@pnpm/win-arm64': 11.27.1
-      '@pnpm/win-x64': 11.27.1
+      '@pnpm/linux-arm64': 11.28.0
+      '@pnpm/linux-x64': 11.28.0
+      '@pnpm/linuxstatic-arm64': 11.28.0
+      '@pnpm/linuxstatic-x64': 11.28.0
+      '@pnpm/macos-arm64': 11.28.0
+      '@pnpm/win-arm64': 11.28.0
+      '@pnpm/win-x64': 11.28.0
 
-  '@pnpm/linux-arm64@11.27.1':
+  '@pnpm/linux-arm64@11.28.0':
     optional: true
 
-  '@pnpm/linux-x64@11.27.1':
+  '@pnpm/linux-x64@11.28.0':
     optional: true
 
-  '@pnpm/linuxstatic-arm64@11.27.1':
+  '@pnpm/linuxstatic-arm64@11.28.0':
     optional: true
 
-  '@pnpm/linuxstatic-x64@11.27.1':
+  '@pnpm/linuxstatic-x64@11.28.0':
     optional: true
 
-  '@pnpm/macos-arm64@11.27.1':
+  '@pnpm/macos-arm64@11.28.0':
     optional: true
 
-  '@pnpm/win-arm64@11.27.1':
+  '@pnpm/win-arm64@11.28.0':
     optional: true
 
-  '@pnpm/win-x64@11.27.1':
+  '@pnpm/win-x64@11.28.0':
     optional: true
 
   '@reflink/reflink-darwin-arm64@0.1.19':
@@ -194,7 +194,7 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
-  pnpm@11.27.1: {}
+  pnpm@11.28.0: {}
 
 ---
 lockfileVersion: '9.0'
@@ -7138,11 +7138,6 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  prettier@3.9.9:
-    resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
-    engines: {node: '>=14'}
-    hasBin: true
-
   pretty-ms@9.3.1:
     resolution: {integrity: sha512-HzMy3Geq23nVALD/M2LliU+F+M+gVNsvkQWWqeBZ8HDiCgzo6YPJ/Omrmtq24EFrIsk0a3EkQGEd7bDOo+IhGA==}
     engines: {node: '>=18'}
@@ -13267,7 +13262,7 @@ snapshots:
       micromark-util-resolve-all: 2.0.1
       micromark-util-subtokenize: 2.1.0
       micromark-util-symbol: 2.0.1
-      micromark-util-types: 2.0.3
+      micromark-util-types: 2.0.2
 
   micromark-core-commonmark@2.0.4:
     dependencies:
@@ -13296,7 +13291,7 @@ snapshots:
       micromark-factory-whitespace: 2.0.1
       micromark-util-character: 2.1.1
       micromark-util-symbol: 2.0.1
-      micromark-util-types: 2.0.3
+      micromark-util-types: 2.0.2
       parse-entities: 4.0.2
 
   micromark-extension-frontmatter@2.0.0:
@@ -13339,7 +13334,7 @@ snapshots:
       micromark-factory-space: 2.1.0
       micromark-util-character: 2.1.1
       micromark-util-symbol: 2.0.1
-      micromark-util-types: 2.0.3
+      micromark-util-types: 2.0.2
 
   micromark-extension-gfm-table@2.1.2:
     dependencies:
@@ -13437,14 +13432,14 @@ snapshots:
     dependencies:
       micromark-util-character: 2.1.1
       micromark-util-symbol: 2.0.1
-      micromark-util-types: 2.0.3
+      micromark-util-types: 2.0.2
 
   micromark-factory-label@2.0.1:
     dependencies:
       devlop: 1.1.0
       micromark-util-character: 2.1.1
       micromark-util-symbol: 2.0.1
-      micromark-util-types: 2.0.3
+      micromark-util-types: 2.0.2
 
   micromark-factory-mdx-expression@2.0.3:
     dependencies:
@@ -13468,14 +13463,14 @@ snapshots:
       micromark-factory-space: 2.1.0
       micromark-util-character: 2.1.1
       micromark-util-symbol: 2.0.1
-      micromark-util-types: 2.0.3
+      micromark-util-types: 2.0.2
 
   micromark-factory-whitespace@2.0.1:
     dependencies:
       micromark-factory-space: 2.1.0
       micromark-util-character: 2.1.1
       micromark-util-symbol: 2.0.1
-      micromark-util-types: 2.0.3
+      micromark-util-types: 2.0.2
 
   micromark-heading-id@2.0.0:
     dependencies:
@@ -13563,7 +13558,7 @@ snapshots:
       debug: 4.4.3(supports-color@10.2.2)
       decode-named-character-reference: 1.3.0
       devlop: 1.1.0
-      micromark-core-commonmark: 2.0.4
+      micromark-core-commonmark: 2.0.3
       micromark-factory-space: 2.1.0
       micromark-util-character: 2.1.1
       micromark-util-chunked: 2.0.1
@@ -13575,7 +13570,7 @@ snapshots:
       micromark-util-sanitize-uri: 2.0.1
       micromark-util-subtokenize: 2.1.0
       micromark-util-symbol: 2.0.1
-      micromark-util-types: 2.0.3
+      micromark-util-types: 2.0.2
     transitivePeerDependencies:
       - supports-color
 
@@ -13999,8 +13994,6 @@ snapshots:
       sh-syntax: 0.7.0
 
   prettier@3.8.1: {}
-
-  prettier@3.9.9: {}
 
   pretty-ms@9.3.1:
     dependencies:
@@ -15342,7 +15335,7 @@ snapshots:
       ajv: 8.20.0
       ajv-draft-04: 1.0.0(ajv@8.20.0)
       ajv-i18n: 4.2.0(ajv@8.20.0)
-      prettier: 3.9.9
+      prettier: 3.8.1
       request-light: 0.5.8
       vscode-json-languageservice: 4.1.8
       vscode-languageserver: 9.0.1
