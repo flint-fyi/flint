@@ -20,7 +20,7 @@ function getNegationText(
 
 	const kind = node.raw[1];
 	if (!kind) {
-		return undefined;
+		return;
 	}
 
 	const newKind =
@@ -40,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		preferNegatedEscape: {
 			primary: "Use '{{ replacement }}' instead of negated character class.",
 			secondary: [
-				"Shorthand escape sequences like \\D, \\W, and \\S are more concise than negated character classes.",
+				String.raw`Shorthand escape sequences like \D, \W, and \S are more concise than negated character classes.`,
 			],
 			suggestions: [
 				"Replace the negated character class with '{{ replacement }}'.",

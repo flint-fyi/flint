@@ -27,8 +27,8 @@ export function nullThrows<T>(x: T, message: string): NonNullable<T> {
 /** @internal */
 export function sanitizeStackTrace(stack: string): string {
 	const pathRegex = /(?:[a-z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
-	return stack.replace(pathRegex, (match) => {
-		const normalized = match.replace(/\\/g, "/");
+	return stack.replaceAll(pathRegex, (match) => {
+		const normalized = match.replaceAll("\\", "/");
 		const nodeModulesIndex = normalized.lastIndexOf("node_modules/");
 		if (nodeModulesIndex !== -1) {
 			return normalized.slice(nodeModulesIndex);
@@ -69,5 +69,5 @@ function buildIssueUrl(message: string, stack: string | undefined): string {
 			"`" + (process.argv.slice(2).join(" ") || "<none>") + "`",
 		].join("\n"),
 	);
-	return issueUrl.toString();
+	return issueUrl.href;
 }

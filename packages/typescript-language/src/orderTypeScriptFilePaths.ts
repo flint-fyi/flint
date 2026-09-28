@@ -88,7 +88,7 @@ export function orderTypeScriptFilePaths(
 							.map((reference) =>
 								resolve(cwd, ts.resolveProjectReferencePath(reference)),
 							)
-							.sort(comparePaths),
+							.toSorted(comparePaths),
 					};
 
 		parsedConfigByPath.set(configKey, parsedConfig);
@@ -137,7 +137,7 @@ export function orderTypeScriptFilePaths(
 				.map(({ rootConfig }) => rootConfig)
 				.filter((rootConfig) => rootConfig != null),
 		),
-	).sort(comparePaths);
+	).toSorted(comparePaths);
 	const fileInfoByPath = new Map(
 		fileInfos.map((fileInfo) => [
 			pathKey(fileInfo.absolute, caseSensitiveFS),

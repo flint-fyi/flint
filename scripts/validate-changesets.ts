@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { basename } from "node:path";
+import path from "node:path";
 import { styleText } from "node:util";
 
 /**
@@ -42,7 +42,7 @@ const validations = [
 async function validateChangesets(files: string[]): Promise<void> {
 	const tasks = files.map(async (filePath): Promise<boolean> => {
 		try {
-			const content = await readFile(filePath, "utf-8");
+			const content = await readFile(filePath, "utf8");
 
 			// Changeset format:
 			// ---
@@ -54,18 +54,18 @@ async function validateChangesets(files: string[]): Promise<void> {
 
 			if (!summary) {
 				console.error(
-					`${styleText("red", `❌ Error in ${basename(filePath)}:`)} Summary is empty.`,
+					`${styleText("red", `❌ Error in ${path.basename(filePath)}:`)} Summary is empty.`,
 				);
 				return false;
 			}
 
-			const found = summary.split("\n")[0];
+			const found = summary.split("\n", 1)[0];
 			const errors: string[] = [];
 			let recommended = found;
 
 			if (!recommended) {
 				console.error(
-					`${styleText("red", `❌ Error in ${basename(filePath)}:`)} No changeset summary found.`,
+					`${styleText("red", `❌ Error in ${path.basename(filePath)}:`)} No changeset summary found.`,
 				);
 				return false;
 			}
@@ -79,7 +79,9 @@ async function validateChangesets(files: string[]): Promise<void> {
 			}
 
 			if (errors.length) {
-				console.error(styleText("red", `❌ Error in ${basename(filePath)}:`));
+				console.error(
+					styleText("red", `❌ Error in ${path.basename(filePath)}:`),
+				);
 				for (const error of errors) {
 					console.error(`   - ${error}`);
 				}

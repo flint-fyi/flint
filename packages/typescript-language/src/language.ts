@@ -25,7 +25,7 @@ import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 interface GlobalLanguageState {
 	packageVersion: string;
@@ -40,7 +40,7 @@ type VolarCreateFile = (
 type VolarLanguageFileDefinition =
 	LanguageFileDefinition<TypeScriptFileServices> & {
 		__volarServices: {
-			getLanguageReports(): LanguageReports;
+			getLanguageReports(currentDirectory: string): LanguageReports;
 			runVisitors(
 				fileVisitors: readonly FileVisitors<
 					TypeScriptNodeVisitors,
@@ -149,16 +149,19 @@ export const typescriptLanguage: Language<
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
-	getLanguageReports(file) {
+	getLanguageReports(file, host) {
+		const currentDirectory = host.getCurrentDirectory();
 		if ("__volarServices" in file) {
 			return (
 				file as VolarLanguageFileDefinition
-			).__volarServices.getLanguageReports();
+			).__volarServices.getLanguageReports(currentDirectory);
 		}
 		return getPreEmitDiagnostics(
 			file.services.program,
 			file.services.sourceFile,
-		).map(convertTypeScriptDiagnosticToLanguageReport);
+		).map((diagnostic) =>
+			convertTypeScriptDiagnosticToLanguageReport(diagnostic, currentDirectory),
+		);
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
 	runFileVisitors(file, fileVisitors) {

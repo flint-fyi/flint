@@ -51,11 +51,11 @@ declare const obj: {
 `,
 		},
 		{
-			code: `
+			code: String.raw`
 declare const obj: {
     a: unknown;
 };
-let {\\u0061: a} = obj;
+let {\u0061: a} = obj;
 `,
 			output: `
 declare const obj: {
@@ -63,55 +63,55 @@ declare const obj: {
 };
 let {a} = obj;
 `,
-			snapshot: `
+			snapshot: String.raw`
 declare const obj: {
     a: unknown;
 };
-let {\\u0061: a} = obj;
+let {\u0061: a} = obj;
      ~~~~~~~~~
      Renaming to the same identifier name is unnecessary.
 `,
 		},
 		{
-			code: `
+			code: String.raw`
 declare const obj: {
     a: unknown;
 };
-let {a: \\u0061} = obj;
+let {a: \u0061} = obj;
 `,
-			output: `
+			output: String.raw`
 declare const obj: {
     a: unknown;
 };
-let {\\u0061} = obj;
+let {\u0061} = obj;
 `,
-			snapshot: `
+			snapshot: String.raw`
 declare const obj: {
     a: unknown;
 };
-let {a: \\u0061} = obj;
+let {a: \u0061} = obj;
      ~~~~~~~~~
      Renaming to the same identifier name is unnecessary.
 `,
 		},
 		{
-			code: `
+			code: String.raw`
 declare const obj: {
     a: unknown;
 };
-let {\\u0061: \\u0061} = obj;
+let {\u0061: \u0061} = obj;
 `,
-			output: `
+			output: String.raw`
 declare const obj: {
     a: unknown;
 };
-let {\\u0061} = obj;
+let {\u0061} = obj;
 `,
-			snapshot: `
+			snapshot: String.raw`
 declare const obj: {
     a: unknown;
 };
-let {\\u0061: \\u0061} = obj;
+let {\u0061: \u0061} = obj;
      ~~~~~~~~~~~~~~
      Renaming to the same identifier name is unnecessary.
 `,
@@ -986,8 +986,8 @@ import {'foo' as foo} from 'foo';
 `,
 		},
 		{
-			code: `
-import {\\u0061 as a} from 'foo';
+			code: String.raw`
+import {\u0061 as a} from 'foo';
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -1033,15 +1033,15 @@ export declare const value: unknown;
 			output: `
 import {a} from 'foo';
 `,
-			snapshot: `
-import {\\u0061 as a} from 'foo';
+			snapshot: String.raw`
+import {\u0061 as a} from 'foo';
         ~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
 		},
 		{
-			code: `
-import {a as \\u0061} from 'foo';
+			code: String.raw`
+import {a as \u0061} from 'foo';
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -1084,18 +1084,18 @@ export declare const value: unknown;
 	}
 }`,
 			},
-			output: `
-import {\\u0061} from 'foo';
+			output: String.raw`
+import {\u0061} from 'foo';
 `,
-			snapshot: `
-import {a as \\u0061} from 'foo';
+			snapshot: String.raw`
+import {a as \u0061} from 'foo';
         ~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
 		},
 		{
-			code: `
-import {\\u0061 as \\u0061} from 'foo';
+			code: String.raw`
+import {\u0061 as \u0061} from 'foo';
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -1138,11 +1138,11 @@ export declare const value: unknown;
 	}
 }`,
 			},
-			output: `
-import {\\u0061} from 'foo';
+			output: String.raw`
+import {\u0061} from 'foo';
 `,
-			snapshot: `
-import {\\u0061 as \\u0061} from 'foo';
+			snapshot: String.raw`
+import {\u0061 as \u0061} from 'foo';
         ~~~~~~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
@@ -1696,9 +1696,9 @@ export {'' as ''} from 'bar';
 `,
 		},
 		{
-			code: `
+			code: String.raw`
 var a = 0;
-export {a as \\u0061};
+export {a as \u0061};
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -1745,17 +1745,17 @@ export declare const value: unknown;
 var a = 0;
 export {a};
 `,
-			snapshot: `
+			snapshot: String.raw`
 var a = 0;
-export {a as \\u0061};
+export {a as \u0061};
         ~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
 		},
 		{
-			code: `
-var \\u0061 = 0;
-export {\\u0061 as a};
+			code: String.raw`
+var \u0061 = 0;
+export {\u0061 as a};
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -1798,21 +1798,21 @@ export declare const value: unknown;
 	}
 }`,
 			},
-			output: `
-var \\u0061 = 0;
-export {\\u0061};
+			output: String.raw`
+var \u0061 = 0;
+export {\u0061};
 `,
-			snapshot: `
-var \\u0061 = 0;
-export {\\u0061 as a};
+			snapshot: String.raw`
+var \u0061 = 0;
+export {\u0061 as a};
         ~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
 		},
 		{
-			code: `
-var \\u0061 = 0;
-export {\\u0061 as \\u0061};
+			code: String.raw`
+var \u0061 = 0;
+export {\u0061 as \u0061};
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -1855,13 +1855,13 @@ export declare const value: unknown;
 	}
 }`,
 			},
-			output: `
-var \\u0061 = 0;
-export {\\u0061};
+			output: String.raw`
+var \u0061 = 0;
+export {\u0061};
 `,
-			snapshot: `
-var \\u0061 = 0;
-export {\\u0061 as \\u0061};
+			snapshot: String.raw`
+var \u0061 = 0;
+export {\u0061 as \u0061};
         ~~~~~~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
@@ -2091,8 +2091,8 @@ export {foo as foo} from 'foo';
 `,
 		},
 		{
-			code: `
-export {a as \\u0061} from 'foo';
+			code: String.raw`
+export {a as \u0061} from 'foo';
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -2138,15 +2138,15 @@ export declare const value: unknown;
 			output: `
 export {a} from 'foo';
 `,
-			snapshot: `
-export {a as \\u0061} from 'foo';
+			snapshot: String.raw`
+export {a as \u0061} from 'foo';
         ~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
 		},
 		{
-			code: `
-export {\\u0061 as a} from 'foo';
+			code: String.raw`
+export {\u0061 as a} from 'foo';
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -2189,18 +2189,18 @@ export declare const value: unknown;
 	}
 }`,
 			},
-			output: `
-export {\\u0061} from 'foo';
+			output: String.raw`
+export {\u0061} from 'foo';
 `,
-			snapshot: `
-export {\\u0061 as a} from 'foo';
+			snapshot: String.raw`
+export {\u0061 as a} from 'foo';
         ~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
 		},
 		{
-			code: `
-export {\\u0061 as \\u0061} from 'foo';
+			code: String.raw`
+export {\u0061 as \u0061} from 'foo';
 `,
 			files: {
 				"node_modules/bar/index.d.ts": `
@@ -2243,11 +2243,11 @@ export declare const value: unknown;
 	}
 }`,
 			},
-			output: `
-export {\\u0061} from 'foo';
+			output: String.raw`
+export {\u0061} from 'foo';
 `,
-			snapshot: `
-export {\\u0061 as \\u0061} from 'foo';
+			snapshot: String.raw`
+export {\u0061 as \u0061} from 'foo';
         ~~~~~~~~~~~~~~~~
         Renaming to the same identifier name is unnecessary.
 `,
