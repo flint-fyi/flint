@@ -61,7 +61,6 @@ describe(readFromCache, () => {
 			},
 			{
 				[filePath]: {
-					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},
@@ -83,7 +82,6 @@ describe(readFromCache, () => {
 			{
 				[filePath]: {
 					dependencies: [dependencyPath],
-					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},
@@ -105,7 +103,6 @@ describe(readFromCache, () => {
 			{
 				[filePath]: {
 					dependencies: [dependencyPath],
-					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},
@@ -126,7 +123,6 @@ describe(readFromCache, () => {
 			{
 				[filePath]: {
 					dependencies: [dependencyPath],
-					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},
@@ -150,12 +146,10 @@ describe(readFromCache, () => {
 			{
 				[dependentPath]: {
 					dependencies: [dependencyPath, filePath],
-					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 				[filePath]: {
 					dependencies: [dependencyPath],
-					invalidatesCache: false,
 					timestamp: cacheWriteTime,
 				},
 			},

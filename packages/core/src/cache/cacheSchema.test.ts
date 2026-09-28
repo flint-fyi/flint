@@ -5,6 +5,19 @@ import type { CacheStorage } from "../types/cache.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
 
 describe("cacheStorageSchema decoding", () => {
+	it("rejects an explicitly false global invalidation flag", () => {
+		const result = cacheStorageSchema.safeDecode(
+			JSON.stringify({
+				configs: {},
+				files: {
+					"src/index.ts": { invalidatesCache: false, timestamp: 123 },
+				},
+			}),
+		);
+
+		expect(result.success).toBe(false);
+	});
+
 	it("parses valid cache data", () => {
 		const validCache: CacheStorage = {
 			configs: {
@@ -13,7 +26,6 @@ describe("cacheStorageSchema decoding", () => {
 			},
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					timestamp: 1_234_567_890,
 				},
 			},
@@ -55,7 +67,6 @@ describe("cacheStorageSchema decoding", () => {
 			configs: {},
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					timestamp: "not-a-number",
 				},
 			},
@@ -75,7 +86,6 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
-					invalidatesCache: false,
 					languageReports: [{ text: "Error" }],
 					timestamp: 123,
 				},
@@ -93,7 +103,6 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
-					invalidatesCache: false,
 					languageReports: [
 						{ code: "TS1234", source: "typescript", text: "Error message" },
 					],
@@ -139,7 +148,6 @@ describe("cacheStorageSchema decoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -179,7 +187,6 @@ describe("cacheStorageSchema decoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -237,7 +244,6 @@ describe("cacheStorageSchema decoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -270,7 +276,6 @@ describe("cacheStorageSchema decoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -309,7 +314,6 @@ describe("cacheStorageSchema", () => {
 			},
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					timestamp: 1_234_567_890,
 				},
 			},
@@ -326,7 +330,6 @@ describe("cacheStorageSchema", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					timestamp: 123,
 				},
 			},
@@ -422,7 +425,6 @@ describe("toSerializableCacheStorage encoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -472,7 +474,6 @@ describe("toSerializableCacheStorage encoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -507,7 +508,6 @@ describe("toSerializableCacheStorage encoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					timestamp: 123,
 				},
 			},
@@ -526,7 +526,6 @@ describe("toSerializableCacheStorage encoding", () => {
 			configs: { "package.json": 123 },
 			files: {
 				"src/index.ts": {
-					invalidatesCache: false,
 					reports: [
 						{
 							about: { id: "test-rule" },

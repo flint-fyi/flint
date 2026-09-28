@@ -20,6 +20,7 @@ const range = {
 async function roundTrip(
 	reports: FileReport[],
 	languageReports: LanguageReport[] = [],
+	invalidatesCache?: boolean,
 ): Promise<FileCacheStorage | undefined> {
 	const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 	const allFilePaths = new Set([filePath]);
@@ -42,6 +43,7 @@ async function roundTrip(
 					filePath,
 					{
 						dependencies: new Set([dependencyPath]),
+						...(invalidatesCache !== undefined && { invalidatesCache }),
 						languageReports,
 						reports,
 					},
@@ -66,6 +68,17 @@ async function roundTrip(
 }
 
 describe(writeToCache, () => {
+	it.each([undefined, false, true])(
+		"stores the global invalidation flag only when true: %s",
+		async (invalidatesCache) => {
+			expect(await roundTrip([], [], invalidatesCache)).toStrictEqual({
+				dependencies: [dependencyPath],
+				...(invalidatesCache && { invalidatesCache: true }),
+				timestamp: expect.any(Number),
+			});
+		},
+	);
+
 	it.each<ReportMessageData>([
 		{ primary: "Report", secondary: [], suggestions: [] },
 		{ primary: "Report", secondary: ["Details"], suggestions: [] },
@@ -96,7 +109,6 @@ describe(writeToCache, () => {
 
 		expect(await roundTrip(reports, languageReports)).toEqual({
 			dependencies: [dependencyPath],
-			invalidatesCache: false,
 			languageReports,
 			reports,
 			timestamp: expect.any(Number),
@@ -117,7 +129,6 @@ describe(writeToCache, () => {
 
 		expect(await roundTrip(reports)).toEqual({
 			dependencies: [dependencyPath],
-			invalidatesCache: false,
 			reports: [
 				{
 					about,

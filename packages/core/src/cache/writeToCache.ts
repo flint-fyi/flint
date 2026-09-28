@@ -34,13 +34,13 @@ export async function writeToCache(
 								(a, b) => a.localeCompare(b, "en-US"),
 							),
 						}),
+						...(fileResults.invalidatesCache && { invalidatesCache: true }),
 						...(fileResults.languageReports.length && {
 							languageReports: fileResults.languageReports,
 						}),
 						...(fileResults.reports.length && {
 							reports: fileResults.reports,
 						}),
-						invalidatesCache: fileResults.invalidatesCache ?? false,
 						timestamp,
 					},
 				]),

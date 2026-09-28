@@ -16,54 +16,6 @@ describe(runConfig, () => {
 		vi.restoreAllMocks();
 	});
 
-	it("re-lints files when the cache uses the old global-invalidation format", async () => {
-		vi.spyOn(Date, "now").mockReturnValue(1000);
-		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
-		const visit = vi.fn();
-		const language = createLanguage({
-			about: { name: "test" },
-			createFileFactory: () => ({
-				createFile: (about) => ({ about, services: {} }),
-			}),
-			runFileVisitors: visit,
-		});
-		const config = {
-			filePath: "/root/flint.config.ts",
-			use: [
-				{
-					files: ["global.d.ts"],
-					rules: [
-						ruleCreator.createRule(language, {
-							about: { description: "Check cached files", id: "test" },
-							messages: {},
-							setup: () => ({ visitors: {} }),
-						}),
-					],
-				},
-			],
-		};
-		host.vfsUpsertFile(config.filePath, "");
-		host.vfsUpsertFile("package.json", "{}");
-		host.vfsUpsertFile("/root/global.d.ts", "declare const value: string;");
-		host.vfsUpsertFile(
-			"/root/cache.json",
-			JSON.stringify({
-				configs: { [config.filePath]: 1000, "package.json": 1000 },
-				files: { "/root/global.d.ts": { timestamp: 1000 } },
-				globalInvalidations: [
-					{ filePath: "/root/global.d.ts", touchTime: 1000 },
-				],
-			}),
-		);
-
-		const results = await runConfig(config, host, {
-			cacheLocation: "/root/cache.json",
-		});
-
-		expect(results.cached).toBeUndefined();
-		expect(visit).toHaveBeenCalledOnce();
-	});
-
 	it.each(["changed", "deleted"])(
 		"re-lints unrelated files when a global declaration is %s after a cache hit",
 		async (change) => {

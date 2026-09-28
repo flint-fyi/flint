@@ -73,7 +73,7 @@ export async function runConfig(
 		for (const [filePath, cachedStorage] of cached) {
 			allFileResults.set(filePath, {
 				dependencies: new Set(cachedStorage.dependencies),
-				invalidatesCache: cachedStorage.invalidatesCache,
+				invalidatesCache: cachedStorage.invalidatesCache ?? false,
 				languageReports: cachedStorage.languageReports ?? [],
 				reports: cachedStorage.reports ?? [],
 			});
