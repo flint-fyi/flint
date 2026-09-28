@@ -6,6 +6,11 @@ declare module "typescript" {
 		 * Maps from a SourceFile's `.path` to the name of the package it was imported with.
 		 */
 		readonly sourceFileToPackageName: ReadonlyMap<Path, string>;
+
+		/**
+		 * Whether the Program's CompilerHost treats file names as case-sensitive.
+		 * @see https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/types.ts#L4919
+		 */
 		useCaseSensitiveFileNames(): boolean;
 	}
 
