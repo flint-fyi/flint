@@ -6,6 +6,7 @@ import type {
 import ts, { SyntaxKind } from "typescript";
 
 import {
+	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -38,7 +39,7 @@ function extractCallExpression(expression: AST.Expression) {
 		return extractCallExpression(unwrapped.expression);
 	}
 
-	return undefined;
+	return;
 }
 
 function findAssignmentsToSymbol(
@@ -46,20 +47,20 @@ function findAssignmentsToSymbol(
 	sourceFile: AST.SourceFile,
 	typeChecker: Checker,
 ) {
-	const assignments: ts.BinaryExpression[] = [];
+	const assignments: AST.BinaryExpression[] = [];
 
-	function visit(node: ts.Node) {
+	function visit(node: AST.AnyNode) {
 		if (
-			ts.isBinaryExpression(node) &&
+			node.kind === SyntaxKind.BinaryExpression &&
 			node.operatorToken.kind === SyntaxKind.EqualsToken &&
-			ts.isIdentifier(node.left)
+			node.left.kind === SyntaxKind.Identifier
 		) {
 			const leftSymbol = typeChecker.getSymbolAtLocation(node.left);
 			if (leftSymbol === symbol) {
 				assignments.push(node);
 			}
 		}
-		ts.forEachChild(node, visit);
+		forEachChild(node, visit);
 	}
 
 	visit(sourceFile);
@@ -134,7 +135,7 @@ function getNamedGroupsFromExpression(
 		);
 	}
 
-	return undefined;
+	return;
 }
 
 function getRegexFromCall(
@@ -155,11 +156,11 @@ function getRegexFromExecCall(
 	sourceFile: AST.SourceFile,
 ) {
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-		return undefined;
+		return;
 	}
 
 	if (node.expression.name.text !== "exec" || node.arguments.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	const regexObject = node.expression.expression;
@@ -172,16 +173,16 @@ function getRegexFromMatchAllCall(
 	sourceFile: AST.SourceFile,
 ) {
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-		return undefined;
+		return;
 	}
 
 	if (node.expression.name.text !== "matchAll" || node.arguments.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	const objectType = typeChecker.getTypeAtLocation(node.expression.expression);
 	if (!(objectType.flags & ts.TypeFlags.StringLike)) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -200,12 +201,12 @@ function getRegexFromMatchCall(
 		node.expression.name.text !== "match" ||
 		node.arguments.length !== 1
 	) {
-		return undefined;
+		return;
 	}
 
 	const objectType = typeChecker.getTypeAtLocation(node.expression.expression);
 	if (!(objectType.flags & ts.TypeFlags.StringLike)) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -213,7 +214,7 @@ function getRegexFromMatchCall(
 
 	const info = getRegexInfoFromExpression(regexArg, typeChecker, sourceFile);
 	if (info?.flags.includes("g")) {
-		return undefined;
+		return;
 	}
 
 	return info;
@@ -241,7 +242,7 @@ function getRegexInfoFromExpression(
 		if (construction) {
 			return {
 				flags: construction.flags,
-				pattern: construction.pattern.replace(/\\\\/g, "\\"),
+				pattern: construction.pattern.replaceAll("\\\\", "\\"),
 			};
 		}
 	}
@@ -249,15 +250,17 @@ function getRegexInfoFromExpression(
 	if (unwrapped.kind === SyntaxKind.Identifier) {
 		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
 		if (symbol) {
-			const declarations = symbol.getDeclarations();
+			const declarations = symbol.getDeclarations() as
+				| AST.AnyNode[]
+				| undefined;
 			if (declarations) {
 				for (const declaration of declarations) {
 					if (
-						ts.isVariableDeclaration(declaration) &&
+						declaration.kind === SyntaxKind.VariableDeclaration &&
 						declaration.initializer
 					) {
 						return getRegexInfoFromExpression(
-							declaration.initializer as AST.Expression,
+							declaration.initializer,
 							typeChecker,
 							sourceFile,
 						);
@@ -267,7 +270,7 @@ function getRegexInfoFromExpression(
 		}
 	}
 
-	return undefined;
+	return;
 }
 
 function getRegexInfoFromSymbol(
@@ -275,14 +278,15 @@ function getRegexInfoFromSymbol(
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
 ) {
-	const declarations = symbol.getDeclarations();
+	const declarations = symbol.getDeclarations() as AST.AnyNode[] | undefined;
 
 	if (declarations) {
 		for (const declaration of declarations) {
-			if (ts.isVariableDeclaration(declaration) && declaration.initializer) {
-				const callExpression = extractCallExpression(
-					declaration.initializer as AST.Expression,
-				);
+			if (
+				declaration.kind === SyntaxKind.VariableDeclaration &&
+				declaration.initializer
+			) {
+				const callExpression = extractCallExpression(declaration.initializer);
 				if (callExpression) {
 					const regexInfo = getRegexFromCall(
 						callExpression,
@@ -300,18 +304,12 @@ function getRegexInfoFromSymbol(
 					}
 				}
 			}
-
-			if (ts.isParameter(declaration)) {
-				continue;
-			}
 		}
 	}
 
 	const assignments = findAssignmentsToSymbol(symbol, sourceFile, typeChecker);
 	for (const assignment of assignments) {
-		const callExpression = extractCallExpression(
-			assignment.right as AST.Expression,
-		);
+		const callExpression = extractCallExpression(assignment.right);
 		if (callExpression) {
 			const regexInfo = getRegexFromCall(
 				callExpression,
@@ -330,7 +328,7 @@ function getRegexInfoFromSymbol(
 		}
 	}
 
-	return undefined;
+	return;
 }
 
 function isAnyType(type: ts.Type): boolean {

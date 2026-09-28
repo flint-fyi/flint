@@ -25,7 +25,7 @@ describe(collectLanguageFilesByFilePath, () => {
 
 		const orderedCreated: string[] = [];
 		const orderedFilePaths = vi.fn((filePaths: readonly string[]) =>
-			[...filePaths].reverse(),
+			filePaths.toReversed(),
 		);
 		const orderedLanguage = createStubLanguage(
 			"ordered",

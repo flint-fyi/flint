@@ -21,7 +21,7 @@ import type { OptionsValues } from "./options.ts";
 import { renderCliResults } from "./renderCliResults.ts";
 import type { Renderer } from "./renderers/types.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function runCliWatch(
 	host: LinterHost,
@@ -35,7 +35,7 @@ export async function runCliWatch(
 	return new Promise<void>((resolve) => {
 		let configDefinition: ProcessedConfigDefinition | undefined;
 		let currentRenderer: Renderer | undefined;
-		let currentTask = Promise.resolve(undefined);
+		let currentTask: Promise<unknown> = Promise.resolve();
 		let importVersion = 0;
 		let lintSession: LintSession | undefined;
 		let quitting = false;
@@ -70,13 +70,9 @@ export async function runCliWatch(
 		}
 
 		function queueTask<Result>(task: () => Promise<Result>) {
-			currentTask = currentTask
-				.then(task, task)
-				.then(() => undefined)
-				.catch((error: unknown) => {
-					log("Error during lint run: %o", error);
-					return undefined;
-				});
+			currentTask = currentTask.then(task, task).catch((error: unknown) => {
+				log("Error during lint run: %o", error);
+			});
 		}
 
 		async function rebuildSession() {

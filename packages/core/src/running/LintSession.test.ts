@@ -66,7 +66,7 @@ describe(LintSession, () => {
 	it("orders file creation through the language", async () => {
 		const orderedCreatedFilePaths: string[] = [];
 		const orderFilePaths = vi.fn((filePaths: readonly string[]) =>
-			[...filePaths].reverse(),
+			filePaths.toReversed(),
 		);
 		const { configDefinition, host, root } = await createTestProject({
 			orderedCreatedFilePaths,
@@ -386,14 +386,13 @@ async function createTestProject({
 				...(onTeardown && {
 					teardown: () => {
 						onTeardown();
-						return undefined;
 					},
 				}),
 				visitors: {
 					Root(node, services) {
 						visitedFilePaths?.push(node.filePath);
 						if (typeof services.sourceText !== "string") {
-							throw new Error("Expected source text.");
+							throw new TypeError("Expected source text.");
 						}
 
 						context.report({

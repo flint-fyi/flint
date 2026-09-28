@@ -1,16 +1,7 @@
 import { parseArgs } from "node:util";
 
-import {
-	createDiskBackedLinterHost,
-	createEphemeralLinterHost,
-	findConfigFileName,
-} from "@flint.fyi/core";
-
 import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
-import { createRendererFactory } from "./renderers/createRendererFactory.ts";
-import { runCliOnce } from "./runCliOnce.ts";
-import { runCliWatch } from "./runCliWatch.ts";
 
 export async function runCli(args: string[]): Promise<number> {
 	const { values } = parseArgs({
@@ -68,7 +59,7 @@ export async function runCli(args: string[]): Promise<number> {
 		);
 		console.log("");
 		console.log(
-			"See \u001B]8;;flint.fyi\u0007flint.fyi\u001B]8;;\u0007 for more information.",
+			"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
 		);
 		return 0;
 	}
@@ -77,6 +68,10 @@ export async function runCli(args: string[]): Promise<number> {
 		console.log(packageData.version);
 		return 0;
 	}
+
+	const { createEphemeralLinterHost, findConfigFileName } =
+		await import("@flint.fyi/core");
+	const { createDiskBackedLinterHost } = await import("@flint.fyi/core/node");
 
 	const host = createDiskBackedLinterHost(process.cwd());
 	const cwd = host.getCurrentDirectory();
@@ -87,19 +82,23 @@ export async function runCli(args: string[]): Promise<number> {
 			"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
 		);
 		console.error(
-			`In the meantime, why not join \u001B]8;;https://flint.fyi/discord\u0007flint.fyi/discord\u001B]8;;\u0007 and chat with us? ❤️`,
+			`In the meantime, why not join \u{1B}]8;;https://flint.fyi/discord\u{7}flint.fyi/discord\u{1B}]8;;\u{7} and chat with us? ❤️`,
 		);
 		return 2;
 	}
 
+	const { createRendererFactory } =
+		await import("./renderers/createRendererFactory.ts");
 	const getRenderer = await createRendererFactory(host, configFileName, values);
 
 	if (values.watch) {
+		const { runCliWatch } = await import("./runCliWatch.ts");
 		await runCliWatch(host, configFileName, getRenderer, values);
 		console.log("👋 Thanks for using Flint!");
 		return 0;
 	}
 
+	const { runCliOnce } = await import("./runCliOnce.ts");
 	const renderer = getRenderer();
 	const { exitCode } = await runCliOnce(
 		createEphemeralLinterHost(host),

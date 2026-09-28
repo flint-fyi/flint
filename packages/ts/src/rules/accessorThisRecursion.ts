@@ -1,7 +1,8 @@
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
+	forEachChild,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -66,20 +67,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const propertyName = getPropertyName(accessor, sourceFile);
 			const isGetter = accessor.kind === SyntaxKind.GetAccessor;
 
-			function checkNode(node: ts.Node): void {
+			function checkNode(node: AST.AnyNode): void {
 				if (tsutils.isFunctionScopeBoundary(node)) {
 					return;
 				}
 
-				if (ts.isPropertyAccessExpression(node)) {
+				if (node.kind === SyntaxKind.PropertyAccessExpression) {
 					checkPropertyAccessExpression(node);
 				}
 
-				ts.forEachChild(node, checkNode);
+				forEachChild(node, checkNode);
 			}
 
 			function checkPropertyAccessExpression(
-				node: ts.PropertyAccessExpression,
+				node: AST.JsxTagNamePropertyAccess | AST.PropertyAccessExpression,
 			) {
 				if (
 					node.name.text !== propertyName ||
@@ -97,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				} else if (
-					ts.isBinaryExpression(node.parent) &&
+					node.parent.kind === SyntaxKind.BinaryExpression &&
 					node.parent.left === node &&
 					node.parent.operatorToken.kind === SyntaxKind.EqualsToken
 				) {
@@ -113,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			// TODO: This will be more clean when there is a scope manager
 			// https://github.com/flint-fyi/flint/issues/400
-			ts.forEachChild(accessor.body, checkNode);
+			forEachChild(accessor.body, checkNode);
 		}
 
 		return {

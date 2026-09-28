@@ -1,6 +1,6 @@
 {
 	"name": "flint",
-	"version": "0.19.0",
+	"version": "0.19.2",
 	"description": "[Experimental] A fast, friendly linter. ❤️‍🔥",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -16,14 +16,14 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"bin": {
-		"flint": "bin/index.js"
+		"flint": "./src/bin/index.ts"
 	},
 	"files": [
-		"dist/",
-		"!lib/bin/**"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project flint"
@@ -51,8 +51,12 @@
 		"node": ">=26.1.0"
 	},
 	"publishConfig": {
+		"bin": {
+			"flint": "./dist/bin/index.mjs"
+		},
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

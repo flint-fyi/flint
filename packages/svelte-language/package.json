@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/svelte-language",
-	"version": "0.2.1",
+	"version": "0.3.1",
 	"description": "[Experimental] Svelte language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": true,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -32,6 +33,7 @@
 		"@flint.fyi/volar-language": "workspace:^",
 		"@jridgewell/sourcemap-codec": "catalog:prod",
 		"@volar/language-core": "catalog:prod",
+		"pathe": "catalog:prod",
 		"svelte": "catalog:prod",
 		"svelte2tsx": "catalog:prod",
 		"typescript": "catalog:prod"
@@ -47,7 +49,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

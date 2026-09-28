@@ -1,5 +1,6 @@
+import { styleText } from "node:util";
+
 import * as shikiCli from "@shikijs/cli";
-import chalk from "chalk";
 
 import type { FileReport } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
@@ -48,10 +49,11 @@ export async function formatCode(
 		output.push(
 			[
 				indenter,
-				chalk.hex(ColorCodes.codeLineNumbers)(
+				styleText(
+					ColorCodes.codeLineNumbers,
 					`${lineNumber} `.padStart(gutterWidth - 2),
 				),
-				chalk.gray("│ "),
+				styleText("gray", "│ "),
 				highlightedLine,
 			].join(""),
 		);
@@ -66,8 +68,9 @@ export async function formatCode(
 		output.push(
 			[
 				indenter,
-				chalk.gray("│ ".padStart(gutterWidth)),
-				chalk.hex(ColorCodes.codeWarningUnderline)(
+				styleText("gray", "│ ".padStart(gutterWidth)),
+				styleText(
+					ColorCodes.codeWarningUnderline,
 					indent.padEnd(squiggleEnd, "~"),
 				),
 			].join(""),

@@ -7,7 +7,7 @@ import type { LinterHost } from "../types/host.ts";
 import type { LintResultsWithChanges } from "../types/linting.ts";
 import { runConfig } from "./runConfig.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export const maximumFixIterations = 10;
 
@@ -79,8 +79,14 @@ export async function runConfigFixing(
 		changed = changed.union(new Set(fixedFilePaths));
 
 		if (iteration >= maximumFixIterations) {
-			log("Passed maximum iterations of %d, halting.", maximumFixIterations);
-			return { ...lintResults, changed };
+			log("Reached maximum iterations of %d, verifying.", maximumFixIterations);
+			// flint-disable-next-line performance/loopAwaits
+			const finalLintResults = await runConfig(configDefinition, host, {
+				cacheLocation,
+				ignoreCache: true,
+				skipLanguageReports,
+			});
+			return { ...finalLintResults, changed };
 		}
 	}
 }

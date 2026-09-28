@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -45,7 +45,8 @@ describe("isImportedBindingFromModule", () => {
 	it("returns true for an ImportSpecifier from the matching module", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { foo } from "my-module";`,
-			ts.isImportSpecifier,
+			(node): node is ts.ImportSpecifier =>
+				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(isImportedBindingFromModule(specifier, "my-module")).toBe(true);
@@ -54,7 +55,8 @@ describe("isImportedBindingFromModule", () => {
 	it("returns true for a NamespaceImport from the matching module", () => {
 		const nsImport = parseAndFind<ts.NamespaceImport>(
 			`import * as ns from "my-module";`,
-			ts.isNamespaceImport,
+			(node): node is ts.NamespaceImport =>
+				node.kind === SyntaxKind.NamespaceImport,
 		);
 
 		expect(isImportedBindingFromModule(nsImport, "my-module")).toBe(true);
@@ -63,7 +65,8 @@ describe("isImportedBindingFromModule", () => {
 	it("returns false for an ImportSpecifier from a different module", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { foo } from "other-module";`,
-			ts.isImportSpecifier,
+			(node): node is ts.ImportSpecifier =>
+				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(isImportedBindingFromModule(specifier, "my-module")).toBe(false);
@@ -72,7 +75,8 @@ describe("isImportedBindingFromModule", () => {
 	it("returns false for a NamespaceImport from a different module", () => {
 		const nsImport = parseAndFind<ts.NamespaceImport>(
 			`import * as ns from "other-module";`,
-			ts.isNamespaceImport,
+			(node): node is ts.NamespaceImport =>
+				node.kind === SyntaxKind.NamespaceImport,
 		);
 
 		expect(isImportedBindingFromModule(nsImport, "my-module")).toBe(false);
@@ -81,7 +85,7 @@ describe("isImportedBindingFromModule", () => {
 	it("returns false for a non-import node", () => {
 		const identifier = parseAndFind<ts.Identifier>(
 			`const x = 1;`,
-			ts.isIdentifier,
+			(node): node is ts.Identifier => node.kind === SyntaxKind.Identifier,
 		);
 
 		expect(isImportedBindingFromModule(identifier, "my-module")).toBe(false);
@@ -92,7 +96,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns true for a matching named import", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { reportSourceCode } from "@flint.fyi/volar-language";`,
-			ts.isImportSpecifier,
+			(node): node is ts.ImportSpecifier =>
+				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(
@@ -107,7 +112,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns true for a renamed import matching the original name", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { reportSourceCode as report } from "@flint.fyi/volar-language";`,
-			ts.isImportSpecifier,
+			(node): node is ts.ImportSpecifier =>
+				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(
@@ -122,7 +128,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns false when the imported name does not match", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { otherFunction } from "@flint.fyi/volar-language";`,
-			ts.isImportSpecifier,
+			(node): node is ts.ImportSpecifier =>
+				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(
@@ -137,7 +144,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns false when the module does not match", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { reportSourceCode } from "other-module";`,
-			ts.isImportSpecifier,
+			(node): node is ts.ImportSpecifier =>
+				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(
@@ -152,7 +160,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns false for a NamespaceImport", () => {
 		const nsImport = parseAndFind<ts.NamespaceImport>(
 			`import * as ns from "@flint.fyi/volar-language";`,
-			ts.isNamespaceImport,
+			(node): node is ts.NamespaceImport =>
+				node.kind === SyntaxKind.NamespaceImport,
 		);
 
 		expect(

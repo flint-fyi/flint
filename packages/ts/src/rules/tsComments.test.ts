@@ -259,7 +259,9 @@ const value: string = 123;
 const value: string = 123;
 `,
 			options: {
-				allowTsExpectError: { descriptionFormat: "^: TS\\d+ because .+$" },
+				allowTsExpectError: {
+					descriptionFormat: String.raw`^: TS\d+ because .+$`,
+				},
 				minimumDescriptionLength: 0,
 			},
 			snapshot: `
@@ -275,7 +277,9 @@ const value: string = 123;
 const value: string = 123;
 `,
 			options: {
-				allowTsExpectError: { descriptionFormat: "^: TS\\d+ because .+$" },
+				allowTsExpectError: {
+					descriptionFormat: String.raw`^: TS\d+ because .+$`,
+				},
 				minimumDescriptionLength: 0,
 			},
 			snapshot: `
@@ -291,7 +295,7 @@ const value: string = 123;
 const value: string = 123;
 `,
 			options: {
-				allowTsIgnore: { descriptionFormat: "^: ISSUE-\\d+" },
+				allowTsIgnore: { descriptionFormat: String.raw`^: ISSUE-\d+` },
 				minimumDescriptionLength: 0,
 			},
 			output: `
@@ -426,7 +430,9 @@ const value: string = 123;
 const value: string = 123;
 `,
 			options: {
-				allowTsExpectError: { descriptionFormat: "^: TS\\d+ because .+$" },
+				allowTsExpectError: {
+					descriptionFormat: String.raw`^: TS\d+ because .+$`,
+				},
 				minimumDescriptionLength: 0,
 			},
 		},
@@ -436,7 +442,7 @@ const value: string = 123;
 const value: string = 123;
 `,
 			options: {
-				allowTsIgnore: { descriptionFormat: "^: ISSUE-\\d+" },
+				allowTsIgnore: { descriptionFormat: String.raw`^: ISSUE-\d+` },
 				minimumDescriptionLength: 0,
 			},
 		},

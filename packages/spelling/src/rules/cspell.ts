@@ -1,6 +1,5 @@
-import path from "node:path";
-
 import { suggestionsForWord, type DocumentValidator } from "cspell-lib";
+import { resolve } from "pathe";
 
 import type { Suggestion } from "@flint.fyi/core";
 import { textLanguage } from "@flint.fyi/text-language";
@@ -49,13 +48,13 @@ export default ruleCreator.createRule(textLanguage, {
 		const fileTasks: FileTask[] = [];
 
 		const cwd = context.host.getCurrentDirectory();
-		const cspellJsonPath = path.resolve(cwd, "cspell.json");
+		const cspellJsonPath = resolve(cwd, "cspell.json");
 
 		const configTextPromise = context.host.readFile(cspellJsonPath);
-		const configPromise = configTextPromise.then(
-			(configText) =>
-				(parseJsonSafe(configText) as CSpellConfigLike | undefined) ?? {},
-		);
+		const configPromise = (async () => {
+			const configText = await configTextPromise;
+			return (parseJsonSafe(configText) as CSpellConfigLike | undefined) ?? {};
+		})();
 
 		return {
 			dependencies: ["cspell.json"],
@@ -124,7 +123,7 @@ export default ruleCreator.createRule(textLanguage, {
 								const suggestions: Suggestion[] = [
 									{
 										files: {
-											"cspell.json": words.includes(issue.text)
+											[cspellJsonPath]: words.includes(issue.text)
 												? []
 												: [
 														{
@@ -158,9 +157,13 @@ export default ruleCreator.createRule(textLanguage, {
 			visitors: {
 				file: (text, { filePath, filePathAbsolute }) => {
 					fileTasks.push({
-						documentValidatorTask: configPromise.then((config) =>
-							createDocumentValidator(cwd, filePathAbsolute, text, config),
-						),
+						documentValidatorTask: (async () =>
+							createDocumentValidator(
+								cwd,
+								filePathAbsolute,
+								text,
+								await configPromise,
+							))(),
 						filePath,
 						text,
 					});

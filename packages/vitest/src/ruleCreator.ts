@@ -1,4 +1,4 @@
-import { RuleCreator, type RuleAbout } from "@flint.fyi/core";
+import { RuleCreator, type RuleCreatorAbout } from "@flint.fyi/core";
 
 export const ruleCreator = new RuleCreator({
 	docs: (ruleId) => `https://flint.fyi/rules/vitest/${ruleId.toLowerCase()}`,
@@ -6,6 +6,12 @@ export const ruleCreator = new RuleCreator({
 	presets: ["logical", "logicalStrict", "stylistic", "stylisticStrict"],
 });
 
-export interface VitestRuleAbout extends RuleAbout {
-	presets: ("logical" | "logicalStrict" | "stylistic" | "stylisticStrict")[];
+export type VitestPreset =
+	| "logical"
+	| "logicalStrict"
+	| "stylistic"
+	| "stylisticStrict";
+
+export interface VitestRuleAbout extends RuleCreatorAbout<VitestPreset> {
+	presets: VitestPreset[];
 }

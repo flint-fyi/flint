@@ -32,36 +32,40 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-						node.expression.name.text === "substring" &&
-						tsutils.isTypeFlagSet(
-							getConstrainedTypeAtLocation(node, typeChecker),
-							TypeFlags.StringLike,
+						!(
+							node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+							node.expression.name.text === "substring" &&
+							tsutils.isTypeFlagSet(
+								getConstrainedTypeAtLocation(node, typeChecker),
+								TypeFlags.StringLike,
+							)
 						)
 					) {
-						const args = node.arguments.map((arg) => arg.getText(sourceFile));
-						const receiver = node.expression.expression.getText(sourceFile);
-						const replacement = !args.length
-							? `${receiver}.slice()`
-							: args.length === 1
-								? `${receiver}.slice(${args[0]})`
-								: `${receiver}.slice(${args[0]}, ${args[1]})`;
-
-						context.report({
-							message: "preferSliceOverSubstring",
-							range: getTSNodeRange(node.expression.name, sourceFile),
-							suggestions: [
-								{
-									id: "replaceWithSlice",
-									range: {
-										begin: node.getStart(sourceFile),
-										end: node.getEnd(),
-									},
-									text: replacement,
-								},
-							],
-						});
+						return;
 					}
+
+					const args = node.arguments.map((arg) => arg.getText(sourceFile));
+					const receiver = node.expression.expression.getText(sourceFile);
+					const replacement = args.length
+						? args.length === 1
+							? `${receiver}.slice(${args[0]})`
+							: `${receiver}.slice(${args[0]}, ${args[1]})`
+						: `${receiver}.slice()`;
+
+					context.report({
+						message: "preferSliceOverSubstring",
+						range: getTSNodeRange(node.expression.name, sourceFile),
+						suggestions: [
+							{
+								id: "replaceWithSlice",
+								range: {
+									begin: node.getStart(sourceFile),
+									end: node.getEnd(),
+								},
+								text: replacement,
+							},
+						],
+					});
 				},
 			},
 		};

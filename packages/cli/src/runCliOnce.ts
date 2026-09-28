@@ -12,7 +12,7 @@ import type { OptionsValues } from "./options.ts";
 import { renderCliResults } from "./renderCliResults.ts";
 import type { Renderer } from "./renderers/types.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export interface CliResult {
 	exitCode: number;

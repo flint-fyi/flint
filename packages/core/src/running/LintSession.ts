@@ -1,6 +1,5 @@
-import path from "node:path";
-
 import { CachedFactory } from "cached-factory";
+import { isAbsolute, resolve } from "pathe";
 
 import { pathKey } from "@flint.fyi/utils";
 
@@ -275,9 +274,9 @@ export class LintSession implements Disposable {
 
 	#toPathKey(filePath: string): string {
 		return pathKey(
-			path.isAbsolute(filePath)
+			isAbsolute(filePath)
 				? filePath
-				: path.resolve(this.#host.getCurrentDirectory(), filePath),
+				: resolve(this.#host.getCurrentDirectory(), filePath),
 			this.#caseSensitiveFS,
 		);
 	}

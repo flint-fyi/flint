@@ -9,7 +9,7 @@ import { cacheStorageSchema } from "./cacheSchema.ts";
 import { collectTransitiveDependents } from "./collectTransitiveDependents.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function readFromCache(
 	host: LinterHost,

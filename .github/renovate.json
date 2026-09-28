@@ -9,6 +9,15 @@
 			"matchStrings": [
 				"devEngines.packageManager ? [{ \"depName\": devEngines.packageManager.name, \"currentValue\": devEngines.packageManager.version, \"datasource\": \"npm\", \"versioning\": \"npm\" }] : []"
 			]
+		},
+		{
+			"customType": "regex",
+			"managerFilePatterns": [
+				"/^\\.github\\/actions\\/setup\\/action\\.yaml$/"
+			],
+			"matchStrings": [
+				"# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\n {2}node-version:\\s*\\n(?: {4}[^\\n]*\\n)*? {4}default: (?<currentValue>\\S+)"
+			]
 		}
 	],
 	"extends": [

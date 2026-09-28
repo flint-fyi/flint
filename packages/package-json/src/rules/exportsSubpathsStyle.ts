@@ -12,7 +12,7 @@ import { ruleCreator } from "../ruleCreator.ts";
 
 function getSingleRootSubpath(objectNode: ObjectNode) {
 	if (objectNode.members.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	const [property] = objectNode.members;

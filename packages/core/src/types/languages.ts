@@ -61,7 +61,10 @@ export interface Language<
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
-	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
+	getLanguageReports?(
+		file: LanguageFile<FileServices>,
+		host: LinterHost,
+	): LanguageReports;
 	runFileVisitors(
 		file: LanguageFile<FileServices>,
 		fileVisitors: readonly FileVisitors<AstNodesByName, FileServices>[],
@@ -95,7 +98,10 @@ export interface LanguageDefinition<
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
-	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
+	getLanguageReports?(
+		file: LanguageFile<FileServices>,
+		host: LinterHost,
+	): LanguageReports;
 	orderFilePaths?(filePaths: readonly string[], host: LinterHost): string[];
 	runFileVisitors(
 		file: LanguageFile<FileServices>,

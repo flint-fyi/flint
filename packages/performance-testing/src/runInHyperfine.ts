@@ -5,7 +5,7 @@ import { execa } from "execa";
 
 import { testCasesPath } from "./testCases.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function runInHyperfine(
 	command: string,
