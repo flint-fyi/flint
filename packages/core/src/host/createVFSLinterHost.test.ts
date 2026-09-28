@@ -626,7 +626,7 @@ describe(createVFSLinterHost, () => {
 					ignoredPaths: [],
 					recursive: false,
 				});
-				host.vfsUpsertFile("C:\\file.txt", "content");
+				host.vfsUpsertFile(String.raw`C:\file.txt`, "content");
 
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("C:/file.txt");
 			});
@@ -873,7 +873,7 @@ describe(createVFSLinterHost, () => {
 				exclude: [],
 			});
 
-			expect(matches.toSorted()).toEqual([
+			expect(matches.toSorted((a, b) => a.localeCompare(b, "en-US"))).toEqual([
 				"base-only.ts",
 				"overlay-only.ts",
 				"shared.ts",
@@ -908,7 +908,10 @@ describe(createVFSLinterHost, () => {
 				exclude: [],
 			});
 
-			expect(matches.toSorted()).toEqual([".changeset/a.md", ".github/foo.md"]);
+			expect(matches.toSorted((a, b) => a.localeCompare(b, "en-US"))).toEqual([
+				".changeset/a.md",
+				".github/foo.md",
+			]);
 		});
 
 		it("honors exclude patterns against dot-paths", async () => {

@@ -238,7 +238,7 @@ This alternation can be simplified to a character class '[a.c\dc\-d-f]'.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /]|a|b/;
 `,
 			output: String.raw`
@@ -251,7 +251,7 @@ This alternation can be simplified to a character class '[\]ab]'.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /-|a|c/;
 `,
 			output: String.raw`
@@ -264,7 +264,7 @@ This alternation can be simplified to a character class '[\-ac]'.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /a|-|c/;
 `,
 			output: String.raw`
@@ -277,7 +277,7 @@ This alternation can be simplified to a character class '[a\-c]'.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /a|[-]|c/;
 `,
 			output: String.raw`
@@ -290,13 +290,13 @@ This alternation can be simplified to a character class '[a\-c]'.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?<foo>a|b|c)/;
 `,
-			output: String.raw`
+			output: `
 /(?<foo>[abc])/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?<foo>a|b|c)/;
 ~~~~~~~~~~~~~~~
 This alternation can be simplified to a character class '[abc]'.
@@ -420,13 +420,13 @@ This alternation can be simplified to a character class '[1\&&[\w--\d]]'.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /a|[^b]|c/v;
 `,
-			output: String.raw`
+			output: `
 /[a[^b]c]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /a|[^b]|c/v;
 ~~~~~~~~~~~
 This alternation can be simplified to a character class '[a[^b]c]'.
@@ -441,8 +441,8 @@ This alternation can be simplified to a character class '[a[^b]c]'.
 		`/reg|exp/;`,
 		String.raw`/(?:a|b|c\b)/;`,
 		String.raw`/(?:[ab]|c\b)/;`,
-		String.raw`/(?:[ab]|cd)/;`,
-		String.raw`/(?:[ab]|(c))/;`,
+		"/(?:[ab]|cd)/;",
+		"/(?:[ab]|(c))/;",
 		`/[abc]/;`,
 		`/[regexp]/;`,
 		`/a?|b/;`,
@@ -451,6 +451,6 @@ This alternation can be simplified to a character class '[a[^b]c]'.
 		String.raw`/\d+|\w/;`,
 		`/a|b.c/;`,
 		`/regexp/;`,
-		String.raw`/a|[^b]|c/;`,
+		"/a|[^b]|c/;",
 	],
 });

@@ -32,5 +32,5 @@ Common causes:
 		}
 	}
 
-	return undefined;
+	return;
 }

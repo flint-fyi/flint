@@ -56,10 +56,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /abc(?!.)/;
 `,
-			output: String.raw`
+			output: `
 /abc$/;
 `,
 			snapshot: `
@@ -69,10 +69,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?<!.)abc/;
 `,
-			output: String.raw`
+			output: `
 /^abc/;
 `,
 			snapshot: `
@@ -87,9 +87,9 @@ ruleTester.describe(rule, {
 		String.raw`/a\Bb/;`,
 		String.raw`/(?=\w\w)/;`,
 		String.raw`/(?=\d)/;`,
-		String.raw`/(?=.)/;`,
-		String.raw`/a(?!.)b/;`,
-		String.raw`/a(?<!.)b/;`,
-		String.raw`/(?<!.)word|other/;`,
+		"/(?=.)/;",
+		"/a(?!.)b/;",
+		"/a(?<!.)b/;",
+		"/(?<!.)word|other/;",
 	],
 });

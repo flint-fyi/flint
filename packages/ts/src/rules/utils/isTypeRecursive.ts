@@ -5,6 +5,6 @@ export function isTypeRecursive(
 	predicate: (t: ts.Type) => boolean,
 ): boolean {
 	return type.isUnionOrIntersection()
-		? type.types.some((subType) => isTypeRecursive(subType, predicate))
+		? type.types.some((subtype) => isTypeRecursive(subtype, predicate))
 		: predicate(type);
 }

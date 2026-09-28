@@ -1,6 +1,6 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
-export const indenter: string = chalk.gray("│ ");
+export const indenter: string = styleText("gray", "│ ");
 
 export const ColorCodes = {
 	codeLineNumbers: "#bbb",

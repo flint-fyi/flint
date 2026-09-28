@@ -71,8 +71,8 @@ function resolveReportedSuggestionForFiles(
 	}
 
 	assert.deepStrictEqual(
-		Object.keys(suggestionReported.files).sort(),
-		Object.keys(suggestionExpected.files).sort(),
+		Object.keys(suggestionReported.files).toSorted(),
+		Object.keys(suggestionExpected.files).toSorted(),
 		"Reported suggestion target paths must exactly match expected target paths.",
 	);
 

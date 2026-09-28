@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				case SyntaxKind.QuestionQuestionToken:
 					return "??=";
 				default:
-					return undefined;
+					return;
 			}
 		}
 

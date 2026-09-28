@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/core",
-	"version": "0.27.0",
+	"version": "0.28.0",
 	"description": "[Experimental] Core building blocks for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -17,7 +17,8 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
-		"./node": "./src/node.ts"
+		"./node": "./src/node.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -50,7 +51,8 @@
 		"access": "public",
 		"exports": {
 			".": "./dist/index.mjs",
-			"./node": "./dist/node.mjs"
+			"./node": "./dist/node.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

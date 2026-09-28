@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/svelte",
-	"version": "0.3.2",
+	"version": "0.3.3",
 	"description": "[Experimental] Svelte language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/svelte",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -45,7 +46,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

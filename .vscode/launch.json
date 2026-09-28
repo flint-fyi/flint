@@ -15,7 +15,7 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Run Flint",
-			"program": "${workspaceFolder}/packages/flint/bin/index.js",
+			"program": "${workspaceFolder}/packages/flint/src/bin/index.ts",
 			"sourceMaps": true,
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen",
