@@ -1335,6 +1335,19 @@
 	},
 	{
 		"flint": {
+			"name": "unsafeDomHtml",
+			"plugin": "browser",
+			"preset": "security"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unsafe-dom-html",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-dom-html.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "windowMessagingTargetOrigin",
 			"plugin": "browser",
 			"preset": "logical",
@@ -10523,6 +10536,19 @@
 	},
 	{
 		"flint": {
+			"name": "sqliteInterpolations",
+			"plugin": "node",
+			"preset": "security"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unsafe-sqlite-interpolation",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-sqlite-interpolation.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "syncFunctionInAsyncFunctions",
 			"plugin": "node",
 			"status": "skipped"
@@ -14548,19 +14574,6 @@
 	},
 	{
 		"flint": {
-			"name": "httpsUrls",
-			"plugin": "security",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/prefer-https",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-https.md"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "secrets",
 			"plugin": "security",
 			"status": "skipped"
@@ -14569,32 +14582,6 @@
 			{
 				"name": "noSecrets",
 				"url": "https://biomejs.dev/linter/rules/no-secrets"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "sqliteInterpolations",
-			"plugin": "security",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/no-unsafe-sqlite-interpolation",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-sqlite-interpolation.md"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "unsafeDomHtml",
-			"plugin": "security",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/no-unsafe-dom-html",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-dom-html.md"
 			}
 		]
 	},
@@ -21438,6 +21425,19 @@
 			{
 				"name": "unicorn/no-hex-escape",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-hex-escape.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "httpsUrls",
+			"plugin": "ts",
+			"preset": "security"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-https",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-https.md"
 			}
 		]
 	},
