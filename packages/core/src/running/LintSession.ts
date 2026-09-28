@@ -189,35 +189,35 @@ export class LintSession implements Disposable {
 			},
 		);
 
-		try {
-			const reportsByFilePath = await runRules(
-				languageFilesByFilePath,
-				this.#rulesOptionsByFile,
-				this.#host,
-			);
-			const filesResults = new Map<string, FinalizedFileResults>();
+		using files = new DisposableStack();
 
-			for (const [filePath, languageAndFiles] of languageFilesByFilePath) {
-				const fileResults = finalizeFileResults(
-					filePath,
-					languageAndFiles,
-					reportsByFilePath.get(filePath),
-					this.#host,
-					options?.skipLanguageReports,
-				);
-
-				filesResults.set(filePath, fileResults);
-				this.#storeResults(filePath, fileResults);
-			}
-
-			return filesResults;
-		} finally {
-			for (const languageAndFiles of languageFilesByFilePath.values()) {
-				for (const { file } of languageAndFiles) {
-					file[Symbol.dispose]();
-				}
+		for (const languageAndFiles of languageFilesByFilePath.values()) {
+			for (const { file } of languageAndFiles) {
+				files.use(file);
 			}
 		}
+
+		const reportsByFilePath = await runRules(
+			languageFilesByFilePath,
+			this.#rulesOptionsByFile,
+			this.#host,
+		);
+		const filesResults = new Map<string, FinalizedFileResults>();
+
+		for (const [filePath, languageAndFiles] of languageFilesByFilePath) {
+			const fileResults = finalizeFileResults(
+				filePath,
+				languageAndFiles,
+				reportsByFilePath.get(filePath),
+				this.#host,
+				options?.skipLanguageReports,
+			);
+
+			filesResults.set(filePath, fileResults);
+			this.#storeResults(filePath, fileResults);
+		}
+
+		return filesResults;
 	}
 
 	#resolveFilePaths(filePaths: Iterable<string>): Set<string> {

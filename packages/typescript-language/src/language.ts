@@ -87,12 +87,6 @@ export const typescriptLanguage: Language<
 		});
 		const openClientFilePaths = new Set<string>();
 
-		function closeClientFile(filePathAbsolute: string) {
-			if (openClientFilePaths.delete(filePathAbsolute)) {
-				service.closeClientFile(filePathAbsolute);
-			}
-		}
-
 		function createFile(data: FileAboutData) {
 			log("Opening client file:", data.filePathAbsolute);
 			service.openClientFile(data.filePathAbsolute, data.sourceText);
@@ -132,7 +126,9 @@ export const typescriptLanguage: Language<
 						typeChecker: program.getTypeChecker() as unknown as Checker,
 					},
 					[Symbol.dispose]() {
-						closeClientFile(data.filePathAbsolute);
+						if (openClientFilePaths.delete(data.filePathAbsolute)) {
+							service.closeClientFile(data.filePathAbsolute);
+						}
 					},
 				};
 			}
@@ -151,7 +147,9 @@ export const typescriptLanguage: Language<
 				...volarFile,
 				[Symbol.dispose]() {
 					volarFile[Symbol.dispose]?.();
-					closeClientFile(data.filePathAbsolute);
+					if (openClientFilePaths.delete(data.filePathAbsolute)) {
+						service.closeClientFile(data.filePathAbsolute);
+					}
 				},
 			};
 		}
