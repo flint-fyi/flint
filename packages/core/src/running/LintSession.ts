@@ -109,10 +109,11 @@ export class LintSession implements Disposable {
 		filePaths: Iterable<string>,
 		options?: LintSessionChangedLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
+		const changedPaths = Array.from(filePaths);
 		const changedKeys = new Set(
-			Array.from(filePaths, (filePath) => this.#toPathKey(filePath)),
+			changedPaths.map((filePath) => this.#toPathKey(filePath)),
 		);
-		const changedFilePaths = this.#resolveFilePaths(filePaths);
+		const changedFilePaths = this.#resolveFilePaths(changedPaths);
 		const allResults = new Map<string, FinalizedFileResults>();
 		let invalidatesCache = Array.from(changedFilePaths).some(
 			(filePath) => this.storedResults.get(filePath)?.invalidatesCache,

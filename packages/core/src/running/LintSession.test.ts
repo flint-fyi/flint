@@ -63,6 +63,22 @@ describe(LintSession, () => {
 		]);
 	});
 
+	it("accepts a one-shot iterator of changed files", async () => {
+		const { configDefinition, host, root } = await createTestProject();
+		using session = await LintSession.create(configDefinition, host);
+		const aPath = path.posix.join(root, "a.txt");
+
+		await session.lintAll();
+		await writeFile(aPath, "a2");
+
+		const results = await session.lintChangedFiles(new Set([aPath]).values());
+
+		expect(lintedFileNames(results)).toEqual(new Set(["a.txt"]));
+		expect(session.storedResults.get(aPath)?.languageReports).toEqual([
+			{ text: "a2" },
+		]);
+	});
+
 	it("orders file creation through the language", async () => {
 		const orderedCreatedFilePaths: string[] = [];
 		const orderFilePaths = vi.fn((filePaths: readonly string[]) =>
