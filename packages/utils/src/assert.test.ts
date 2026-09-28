@@ -54,9 +54,9 @@ describe("nullThrows", () => {
 
 describe("sanitizeStackTrace", () => {
 	it("strips absolute paths to filenames", () => {
-		const stack = `Error: Boom
+		const stack = String.raw`Error: Boom
     at doThing (/home/me/proj/packages/foo/src/index.ts:10:5)
-    at other (C:\\Users\\me\\proj\\packages\\bar\\src\\main.ts:20:1)`;
+    at other (C:\Users\me\proj\packages\bar\src\main.ts:20:1)`;
 
 		expect(sanitizeStackTrace(stack)).toBe(
 			`Error: Boom

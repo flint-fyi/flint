@@ -11,7 +11,7 @@
 	"references": [
 		{ "path": "../astro/tsconfig.src.json" },
 		{ "path": "../browser/tsconfig.src.json" },
-		{ "path": "../flint/tsconfig.src.json" },
+		{ "path": "../flint" },
 		{ "path": "../jsx/tsconfig.src.json" },
 		{ "path": "../node/tsconfig.src.json" },
 		{ "path": "../performance/tsconfig.src.json" },

@@ -6,7 +6,7 @@ declare module "@eslint-community/eslint-plugin-eslint-comments/configs" {
 
 		export const recommended: Linter.Config;
 
-		export { defaultExports as default };
+		export default defaultExports;
 	}
 
 	export = Configs;

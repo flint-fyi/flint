@@ -24,7 +24,7 @@ function collectFromElement<T>(
 		for (const item of collector(element)) {
 			result.add(item);
 		}
-		return undefined;
+		return;
 	});
 
 	return result;
@@ -52,7 +52,7 @@ function findFollowingElement(capturingGroup: RegExpAST.CapturingGroup) {
 function findPrecedingQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
 	const info = getAlternativeIndex(capturingGroup);
 	if (!info || info.index <= 0) {
-		return undefined;
+		return;
 	}
 
 	const previous = info.elements[info.index - 1];
@@ -88,7 +88,7 @@ function forEachInGroup(
 function getAlternativeIndex(capturingGroup: RegExpAST.CapturingGroup) {
 	const parent = capturingGroup.parent;
 	if (parent.type !== "Alternative") {
-		return undefined;
+		return;
 	}
 	const index = parent.elements.indexOf(capturingGroup);
 	return index === -1 ? undefined : { elements: parent.elements, index };
@@ -148,7 +148,7 @@ function getEndQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
 		}
 	}
 
-	return undefined;
+	return;
 }
 
 function getFirstElementInGroup(element: RegExpAST.Element) {
@@ -163,7 +163,7 @@ function getFirstElementInGroup(element: RegExpAST.Element) {
 			const alternative: RegExpAST.Alternative | undefined =
 				current.alternatives[0];
 			if (!alternative) {
-				return undefined;
+				return;
 			}
 			current = alternative.elements[0];
 			continue;

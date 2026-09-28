@@ -239,26 +239,26 @@ new RegExp("(?:a)+");
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:0)/;
 `,
-			output: String.raw`
+			output: `
 /0/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:0)/;
  ~~~~~
  This non-capturing group can be removed without changing the regular expression's behavior.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:1)/;
 `,
-			output: String.raw`
+			output: `
 /1/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:1)/;
  ~~~~~
  This non-capturing group can be removed without changing the regular expression's behavior.

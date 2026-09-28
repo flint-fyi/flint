@@ -44,7 +44,7 @@ function getEscapeType(raw: string): EscapeType | undefined {
 }
 
 function toHexEscape(codePoint: number) {
-	return `\\x${codePoint.toString(16).padStart(2, "0")}`;
+	return String.raw`\x${codePoint.toString(16).padStart(2, "0")}`;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -98,8 +98,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 							if (
 								escapeType === "unicode" &&
-								(charNode.raw.startsWith("\\u00") ||
-									(charNode.raw.startsWith("\\u{") && charNode.value <= 0xff))
+								(charNode.raw.startsWith(String.raw`\u00`) ||
+									(charNode.raw.startsWith(String.raw`\u{`) &&
+										charNode.value <= 0xff))
 							) {
 								const hexEscape = toHexEscape(charNode.value);
 

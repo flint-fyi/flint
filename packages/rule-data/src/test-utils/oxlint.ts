@@ -18,7 +18,7 @@ export async function getOxlintLintRules(): Promise<string[]> {
 		new URL(
 			"configuration_schema.json",
 			import.meta.resolve("oxlint/package.json"),
-		).toString(),
+		).href,
 		{ with: { type: "json" } }
 	)) as { default: OxlintSchema };
 	const properties = schema.definitions?.DummyRuleMap?.properties;
@@ -29,7 +29,9 @@ export async function getOxlintLintRules(): Promise<string[]> {
 		);
 	}
 
-	return Object.keys(properties).sort();
+	return Object.keys(properties).toSorted((a, b) =>
+		a.localeCompare(b, "en-US"),
+	);
 }
 
 export function getOxlintRuleConfigName(ruleName: string): string {

@@ -1,5 +1,23 @@
 # @flint/core
 
+## 0.28.0
+
+### Minor Changes
+
+- [#3400](https://github.com/flint-fyi/flint/pull/3400) [`2df6b52`](https://github.com/flint-fyi/flint/commit/2df6b526d4d503e1f2649a092486c7d540d8adda) - Allowed rule options to use any synchronous Standard Schema-compliant validators.
+
+- [#3525](https://github.com/flint-fyi/flint/pull/3525) [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db) - Require the `caseSensitive` option for `createVFSLinterHost` when no `baseHost` is given.
+
+### Patch Changes
+
+- [#3470](https://github.com/flint-fyi/flint/pull/3470) [`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39) - Use the host's current directory instead of `process.cwd()` for language report locations and file paths.
+
+- [#3479](https://github.com/flint-fyi/flint/pull/3479) [`12ad54b`](https://github.com/flint-fyi/flint/commit/12ad54bb504f1c54d215f9b6041fe8a79c263faf) - Preserve empty report message arrays and other nested report data when writing the lint cache.
+
+- [#3476](https://github.com/flint-fyi/flint/pull/3476) [`c049ab9`](https://github.com/flint-fyi/flint/commit/c049ab9a74c48b2a3c75c2aac26ca33b99a3d6a3) - Re-lint without applying fixes or reading cached results after the tenth fixing round so returned diagnostics and the final cache describe the final file contents.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
 ## 0.27.0
 
 ### Minor Changes

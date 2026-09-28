@@ -85,14 +85,12 @@ function getImportSpecifiers(node: AST.ImportDeclaration) {
 }
 
 function getReferencedSymbol(typeChecker: Checker, node: AST.Identifier) {
-	let symbol: Symbol | undefined;
 	const parent = node.parent;
 
-	if (parent.kind === SyntaxKind.ShorthandPropertyAssignment) {
-		symbol = typeChecker.getShorthandAssignmentValueSymbol(parent);
-	} else {
-		symbol = typeChecker.getSymbolAtLocation(node);
-	}
+	const symbol: Symbol | undefined =
+		parent.kind === SyntaxKind.ShorthandPropertyAssignment
+			? typeChecker.getShorthandAssignmentValueSymbol(parent)
+			: typeChecker.getSymbolAtLocation(node);
 
 	return symbol?.flags && (symbol.flags & SymbolFlags.Alias) !== 0
 		? typeChecker.getAliasedSymbol(symbol)
@@ -120,7 +118,7 @@ function getTypeImportFix(
 			importClause.name ||
 			namedBindings?.kind !== SyntaxKind.NamedImports
 		) {
-			return undefined;
+			return;
 		}
 
 		const typeSpecifiers = new Set(report.typeSpecifiers);

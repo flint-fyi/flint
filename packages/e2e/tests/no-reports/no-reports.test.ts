@@ -10,11 +10,11 @@ describe("no-reports", () => {
 
 		expect(exitCode).toBe(0);
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
-			"<dim>Linting with <cyan><bold>flint.config.ts</bold></fg><dim>...</fg>
-			<green>No linting issues found.</fg>
-			<green></fg>
-			<dim>Finished in <time> on 1 file with 1 rule.</fg>
-			<dim></fg>"
+			"<dim>Linting with <cyan><bold>flint.config.ts</bold><dim>...</fg>
+			<green>No linting issues found.
+			</fg>
+			<dim>Finished in <time> on 1 file with 1 rule.
+			</fg>"
 		`);
 	});
 });

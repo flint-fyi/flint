@@ -57,7 +57,7 @@ const comparableRules: ComparedRule[] = ruleData
 			},
 		];
 	})
-	.sort((a, b) => a.flint.localeCompare(b.flint));
+	.toSorted((a, b) => a.flint.localeCompare(b.flint));
 
 const manyRules = comparableRules.filter(
 	(rule) => rule.preset !== undefined && measuredPresets.has(rule.preset),

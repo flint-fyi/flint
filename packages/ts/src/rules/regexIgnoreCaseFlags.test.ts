@@ -54,9 +54,9 @@ ruleTester.describe(rule, {
 		`/[a-zA-Z0-9]/;`,
 		`/[aB]/;`,
 		`/[abc]/;`,
-		String.raw`/[0-9A-Fa-f]/;`,
-		String.raw`/[09A-Da-d]/;`,
-		String.raw`/[A-Fa-f]/;`,
+		"/[0-9A-Fa-f]/;",
+		"/[09A-Da-d]/;",
+		"/[A-Fa-f]/;",
 		String.raw`/^\\c[A-Za-z]$/;`,
 	],
 });

@@ -51,13 +51,12 @@ function isCharLookaround(
 		return false;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const firstElement = firstAlt.elements[0]!;
-
 	if (firstAlt.elements.length !== 1) {
 		return false;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstElement = firstAlt.elements[0]!;
 	return isCharElement(firstElement);
 }
 
