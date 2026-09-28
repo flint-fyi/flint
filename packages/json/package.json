@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/json",
-	"version": "0.18.0",
+	"version": "0.18.3",
 	"description": "[Experimental] JSON plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/json",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -27,12 +28,12 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
-		"zod": "^4.3.6"
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@humanwhocodes/momoa": "3.3.12",
+		"@humanwhocodes/momoa": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
@@ -42,7 +43,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

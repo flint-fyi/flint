@@ -30,7 +30,7 @@ export interface ParsedTestCaseNodes {
 }
 
 export interface ParsedTestCaseNodesInvalid extends ParsedTestCaseNodes {
-	snapshot: ParsedTestCaseStaticStringNode;
+	snapshot: ParsedTestCaseCodeNode;
 }
 export type ParsedTestCaseStaticStringNode =
 	| AST.NoSubstitutionTemplateLiteral

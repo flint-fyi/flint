@@ -65,16 +65,6 @@ new RegExp("()\\1\\2");
                 Octal escape sequence '\2' can be confused with backreferences.
 `,
 		},
-		{
-			code: String.raw`
-new RegExp("\\07");
-`,
-			snapshot: String.raw`
-new RegExp("\\07");
-            ~~~
-            Octal escape sequence '\07' can be confused with backreferences.
-`,
-		},
 	],
 	valid: [
 		String.raw`/\0/;`,

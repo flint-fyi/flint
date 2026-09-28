@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/vue",
-	"version": "0.3.0",
+	"version": "0.4.1",
 	"description": "[Experimental] Vue.js language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/vue",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -30,8 +31,8 @@
 		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",
-		"@vue/compiler-dom": "^3.5.0",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"@vue/compiler-dom": "catalog:prod",
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -39,7 +40,7 @@
 		"@flint.fyi/typescript-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
-		"vue": "3.5.42"
+		"vue": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=26.1.0"
@@ -47,7 +48,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

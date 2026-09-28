@@ -1,5 +1,6 @@
 import * as vue from "@vue/compiler-dom";
-import ts from "typescript";
+import type ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
@@ -62,7 +63,7 @@ export default ruleCreator.createRule(vueLanguage, {
 						for (const [loc] of map.toGeneratedLocation(sourceLocation)) {
 							return loc;
 						}
-						return undefined;
+						return;
 					};
 
 					const toGeneratedLocationOrThrow = (sourceLocation: number) => {
@@ -195,7 +196,7 @@ export default ruleCreator.createRule(vueLanguage, {
 							if (
 								currentBegin >= valueRange.begin &&
 								currentEnd <= valueRange.end &&
-								ts.isIdentifier(current)
+								current.kind === SyntaxKind.Identifier
 							) {
 								const symbol =
 									services.typeChecker.getSymbolAtLocation(current);
@@ -223,40 +224,42 @@ export default ruleCreator.createRule(vueLanguage, {
 
 					// TODO: add vue: listeners to the language
 					function visitTag(node: vue.TemplateChildNode) {
-						if (node.type === vue.NodeTypes.ELEMENT) {
-							let forDirective: null | vue.DirectiveNode = null;
-							let forParseResult: null | vue.ForParseResult = null;
-							let keyProp: null | vue.AttributeNode | vue.DirectiveNode = null;
+						if (node.type !== vue.NodeTypes.ELEMENT) {
+							return;
+						}
 
-							for (const prop of node.props) {
-								if (
-									prop.type === vue.NodeTypes.DIRECTIVE &&
-									prop.name === "for" &&
-									prop.forParseResult != null
-								) {
-									forDirective = prop;
-									forParseResult = prop.forParseResult;
-								} else if (
-									prop.type === vue.NodeTypes.DIRECTIVE &&
-									prop.name === "bind" &&
-									vue.isStaticArgOf(prop.arg, "key")
-								) {
-									keyProp = prop;
-								} else if (
-									prop.type === vue.NodeTypes.ATTRIBUTE &&
-									prop.name === "key"
-								) {
-									keyProp = prop;
-								}
-							}
+						let forDirective: null | vue.DirectiveNode = null;
+						let forParseResult: null | vue.ForParseResult = null;
+						let keyProp: null | vue.AttributeNode | vue.DirectiveNode = null;
 
-							if (forDirective != null && forParseResult != null) {
-								checkFor(forDirective, forParseResult, keyProp);
+						for (const prop of node.props) {
+							if (
+								prop.type === vue.NodeTypes.DIRECTIVE &&
+								prop.name === "for" &&
+								prop.forParseResult != null
+							) {
+								forDirective = prop;
+								forParseResult = prop.forParseResult;
+							} else if (
+								prop.type === vue.NodeTypes.DIRECTIVE &&
+								prop.name === "bind" &&
+								vue.isStaticArgOf(prop.arg, "key")
+							) {
+								keyProp = prop;
+							} else if (
+								prop.type === vue.NodeTypes.ATTRIBUTE &&
+								prop.name === "key"
+							) {
+								keyProp = prop;
 							}
+						}
 
-							for (const child of node.children) {
-								visitTag(child);
-							}
+						if (forDirective != null && forParseResult != null) {
+							checkFor(forDirective, forParseResult, keyProp);
+						}
+
+						for (const child of node.children) {
+							visitTag(child);
 						}
 					}
 					for (const child of templateBlock.children) {

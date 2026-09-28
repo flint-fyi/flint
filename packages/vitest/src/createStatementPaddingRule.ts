@@ -1,6 +1,6 @@
 import ts, { SyntaxKind } from "typescript";
 
-import type { Rule } from "@flint.fyi/core";
+import type { PluginRuleAbout, Rule } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -8,7 +8,11 @@ import {
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
-import { ruleCreator, type VitestRuleAbout } from "./ruleCreator.ts";
+import {
+	ruleCreator,
+	type VitestPreset,
+	type VitestRuleAbout,
+} from "./ruleCreator.ts";
 
 export interface StatementPaddingMatch {
 	blockName: string;
@@ -16,7 +20,7 @@ export interface StatementPaddingMatch {
 }
 
 export type StatementPaddingRule = Rule<
-	VitestRuleAbout,
+	PluginRuleAbout<VitestPreset>,
 	"missingPadding",
 	undefined
 >;
@@ -110,7 +114,7 @@ export function createStatementPaddingRule(
 					sourceFile.getLineAndCharacterOfPosition(nextStart).line;
 
 				if (nextLine - previousLine > 1) {
-					return undefined;
+					return;
 				}
 
 				return {
@@ -174,7 +178,7 @@ export function getStatementRootName(
 ): string | undefined {
 	const expression = getStatementExpression(statement);
 	if (!expression) {
-		return undefined;
+		return;
 	}
 
 	if (expression.kind === SyntaxKind.AwaitExpression) {

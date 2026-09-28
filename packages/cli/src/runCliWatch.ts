@@ -13,7 +13,7 @@ import type { OptionsValues } from "./options.ts";
 import type { Renderer } from "./renderers/types.ts";
 import { runCliOnce } from "./runCliOnce.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function runCliWatch(
 	host: LinterHost,

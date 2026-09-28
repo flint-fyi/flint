@@ -8,8 +8,8 @@ import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@v
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
 import {
 	getPreEmitDiagnostics,
+	SyntaxKind,
 	type CreateProgramOptions,
-	type Node,
 	type Program,
 } from "typescript";
 import type ts from "typescript";
@@ -19,6 +19,7 @@ import {
 	DirectivesCollector,
 	getColumnAndLineOfPosition,
 	isSuggestionForFiles,
+	runFileVisitorSubscriptions,
 	type CharacterReportRange,
 	type FileAboutData,
 	type FileReport,
@@ -33,8 +34,8 @@ import {
 import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
 import {
 	convertTypeScriptDiagnosticToLanguageReport,
+	createNodeVisitorsForFile,
 	extractDirectivesFromTypeScriptFile,
-	NodeSyntaxKinds,
 	setVolarCreateFile,
 	throwUnknownLanguageExtension,
 	typescriptLanguage,
@@ -99,7 +100,7 @@ type VolarBasedLanguageCreateFile<FileServices extends object> = (
 	directives?: ExtractedDirective[];
 	extraContext?: FileServices;
 	firstStatementPosition: number;
-	getLanguageReports?: () => LanguageReports;
+	getLanguageReports?: (currentDirectory: string) => LanguageReports;
 	reports?: FileReport[];
 };
 
@@ -149,41 +150,41 @@ setTSProgramCreationProxy(
 						ts,
 						createProgramProxy,
 						(ts, options) => {
-							const languagePlugins = Array.from(pluginInitializers)
-								.map((initializer) => initializer(ts, options))
-								.flatMap(({ createFile, languagePlugins }) =>
-									languagePlugins.map((plugin) => {
-										if (plugin.typescript == null) {
-											return plugin;
-										}
-
-										(plugin as VolarLanguagePluginWithCreateFile)[stateSymbol] =
-											{ createFile };
-
-										const getServiceScript =
-											plugin.typescript.getServiceScript.bind(
-												plugin.typescript,
-											);
-										plugin.typescript.getServiceScript = (root) => {
-											const script = getServiceScript(root);
-											if (script == null) {
-												return script;
-											}
-											return {
-												...script,
-												// Leading offset is useful for LanguageService [1], but we don't use it.
-												// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
-												// have to provide it ourselves.
-												//
-												// [1] https://github.com/volarjs/volar.js/discussions/188
-												// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
-												preventLeadingOffset: true,
-											};
-										};
-
+							const languagePlugins = Array.from(
+								pluginInitializers,
+								(initializer) => initializer(ts, options),
+							).flatMap(({ createFile, languagePlugins }) =>
+								languagePlugins.map((plugin) => {
+									if (plugin.typescript == null) {
 										return plugin;
-									}),
-								);
+									}
+
+									(plugin as VolarLanguagePluginWithCreateFile)[stateSymbol] = {
+										createFile,
+									};
+
+									const getServiceScript =
+										plugin.typescript.getServiceScript.bind(plugin.typescript);
+									plugin.typescript.getServiceScript = (root) => {
+										const script = getServiceScript(root);
+										if (script == null) {
+											return script;
+										}
+										return {
+											...script,
+											// Leading offset is useful for LanguageService [1], but we don't use it.
+											// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
+											// have to provide it ourselves.
+											//
+											// [1] https://github.com/volarjs/volar.js/discussions/188
+											// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
+											preventLeadingOffset: true,
+										};
+									};
+
+									return plugin;
+								}),
+							);
 							return {
 								languagePlugins,
 								setup: (lang) => {
@@ -261,19 +262,13 @@ setVolarCreateFile((data, program, sourceFile) => {
 	);
 
 	const map = volarLanguage.maps.get(serviceScript.code, sourceScript);
-	const sortedMappings = map.mappings.toSorted(
-		({ generatedOffsets: [a] }, { generatedOffsets: [b] }) => {
-			assert(
-				a != null,
-				"Expected generatedOffsets to have at least one element",
-			);
-			assert(
-				b != null,
-				"Expected generatedOffsets to have at least one element",
-			);
-			return a - b;
-		},
-	);
+	const sortedMappings = map.mappings.toSorted((first, second) => {
+		const [a] = first.generatedOffsets;
+		const [b] = second.generatedOffsets;
+		assert(a != null, "Expected generatedOffsets to have at least one element");
+		assert(b != null, "Expected generatedOffsets to have at least one element");
+		return a - b;
+	});
 	const {
 		directives,
 		extraContext,
@@ -317,26 +312,20 @@ setVolarCreateFile((data, program, sourceFile) => {
 
 	return {
 		__volarServices: {
-			runVisitors(file, options, runtime) {
-				const { visitors } = runtime;
+			runVisitors(fileVisitors) {
+				const visitors = createNodeVisitorsForFile(fileVisitors);
 				if (!visitors) {
 					return;
 				}
 
-				const visitorServices = { options, ...file.services };
+				const { enter, exit, visit } = visitors;
 				let lastMappingIdx = 0;
-				const visit = (node: Node) => {
-					const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
 
-					// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-					visitors[key]?.(node, visitorServices);
+				const sourceFileEnter = enter?.[SyntaxKind.SourceFile];
+				if (sourceFileEnter !== undefined) {
+					runFileVisitorSubscriptions(sourceFileEnter, sourceFile);
+				}
 
-					node.forEachChild(visit);
-
-					// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-					visitors[`${key}:exit`]?.(node, visitorServices);
-				};
-				visitors.SourceFile?.(sourceFile, visitorServices);
 				// Visit only statements that have a mapping to the source code
 				// to avoid doing extra work
 				Statements: for (const statement of sourceFile.statements) {
@@ -369,26 +358,34 @@ setVolarCreateFile((data, program, sourceFile) => {
 					visit(statement);
 				}
 				visit(sourceFile.endOfFileToken);
-				visitors["SourceFile:exit"]?.(sourceFile, visitorServices);
+
+				const sourceFileExit = exit?.[SyntaxKind.SourceFile];
+				if (sourceFileExit !== undefined) {
+					runFileVisitorSubscriptions(sourceFileExit, sourceFile);
+				}
 			},
 			// TODO: cache
-			getLanguageReports() {
+			getLanguageReports(currentDirectory) {
 				return [
 					...getPreEmitDiagnostics(program, sourceFile).map((diagnostic) =>
-						convertTypeScriptDiagnosticToLanguageReport({
-							...diagnostic,
-							// For some unknown reason, Volar doesn't set file.text to sourceText
-							// when preventLeadingOffset is true, so we have to do it ourselves
-							// https://github.com/volarjs/volar.js/blob/4a9d25d797d08d9c149bebf0f52ac5e172f4757d/packages/typescript/lib/node/transform.ts#L102
-							file: diagnostic.file
-								? {
-										fileName: diagnostic.file.fileName,
-										text: sourceText,
-									}
-								: diagnostic.file,
-						}),
+						convertTypeScriptDiagnosticToLanguageReport(
+							{
+								...diagnostic,
+								// Volar only patches diagnostic.file.text with the original source when the
+								// generated code has a leading offset (a length-preserving in-place swap).
+								// We set preventLeadingOffset, so we supply the source text ourselves.
+								// https://github.com/volarjs/volar.js/blob/4a9d25d797d08d9c149bebf0f52ac5e172f4757d/packages/typescript/lib/node/transform.ts#L96-L107
+								file: diagnostic.file
+									? {
+											fileName: diagnostic.file.fileName,
+											text: sourceText,
+										}
+									: diagnostic.file,
+							},
+							currentDirectory,
+						),
 					),
-					...(getLanguageReports?.() ?? []),
+					...(getLanguageReports?.(currentDirectory) ?? []),
 				];
 			},
 		},

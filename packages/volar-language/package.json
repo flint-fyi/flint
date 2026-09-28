@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/volar-language",
-	"version": "0.3.0",
+	"version": "0.4.1",
 	"description": "[Experimental] Volar.js language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": true,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -29,9 +30,9 @@
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@volar/language-core": "2.4.28",
-		"@volar/typescript": "2.4.28",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"@volar/language-core": "catalog:prod",
+		"@volar/typescript": "catalog:prod",
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -44,7 +45,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

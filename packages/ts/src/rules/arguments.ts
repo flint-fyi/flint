@@ -8,16 +8,16 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
-	if (ts.isArrowFunction(node)) {
+	if (node.kind === SyntaxKind.ArrowFunction) {
 		return "quit";
 	}
 	return (
-		ts.isFunctionDeclaration(node) ||
-		ts.isFunctionExpression(node) ||
-		ts.isMethodDeclaration(node) ||
-		ts.isGetAccessorDeclaration(node) ||
-		ts.isSetAccessorDeclaration(node) ||
-		ts.isConstructorDeclaration(node)
+		node.kind === SyntaxKind.FunctionDeclaration ||
+		node.kind === SyntaxKind.FunctionExpression ||
+		node.kind === SyntaxKind.MethodDeclaration ||
+		node.kind === SyntaxKind.GetAccessor ||
+		node.kind === SyntaxKind.SetAccessor ||
+		node.kind === SyntaxKind.Constructor
 	);
 }
 
@@ -78,10 +78,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							.getDeclarations()
 							?.some(
 								(declaration) =>
-									ts.isParameter(declaration) ||
-									ts.isVariableDeclaration(declaration) ||
-									ts.isPropertyDeclaration(declaration) ||
-									ts.isBindingElement(declaration),
+									declaration.kind === SyntaxKind.Parameter ||
+									declaration.kind === SyntaxKind.VariableDeclaration ||
+									declaration.kind === SyntaxKind.PropertyDeclaration ||
+									declaration.kind === SyntaxKind.BindingElement,
 							)
 					) {
 						return;

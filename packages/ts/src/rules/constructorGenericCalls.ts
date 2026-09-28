@@ -1,4 +1,5 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
+import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -105,7 +106,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const identifier = node.name;
 			const typeAnnotation = node.type;
 			const initializer = node.initializer;
-			const style = options.style;
 
 			if (
 				initializer?.kind !== SyntaxKind.NewExpression ||
@@ -114,6 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
+			const style = options.style;
 			const constructorName = initializer.expression.text;
 
 			if (!typeAnnotation) {
@@ -153,7 +154,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				!ts.isTypeReferenceNode(typeAnnotation) ||
+				typeAnnotation.kind !== SyntaxKind.TypeReference ||
 				typeAnnotation.typeName.kind !== SyntaxKind.Identifier ||
 				typeAnnotation.typeName.text !== constructorName ||
 				isBuiltInTypedArray(typeAnnotation.typeName.text) ||

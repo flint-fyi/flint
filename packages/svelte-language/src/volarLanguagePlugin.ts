@@ -1,4 +1,3 @@
-import path from "node:path";
 import url from "node:url";
 
 import { decode } from "@jridgewell/sourcemap-codec";
@@ -8,6 +7,7 @@ import {
 	type LanguagePlugin,
 	type VirtualCode,
 } from "@volar/language-core";
+import { dirname } from "pathe";
 import type { CompileError } from "svelte/compiler";
 import { internalHelpers, svelte2tsx } from "svelte2tsx";
 import type ts from "typescript";
@@ -19,10 +19,10 @@ import {
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
 
-const sveltePath = path.dirname(
+const sveltePath = dirname(
 	url.fileURLToPath(import.meta.resolve("svelte/package.json")),
 );
-const svelte2tsxPath = path.dirname(
+const svelte2tsxPath = dirname(
 	url.fileURLToPath(import.meta.resolve("svelte2tsx/package.json")),
 );
 
@@ -32,12 +32,12 @@ export function volarLanguagePlugin(
 ): LanguagePlugin<string> {
 	const cwd =
 		typeof options.options.configFilePath === "string"
-			? path.dirname(options.options.configFilePath)
+			? dirname(options.options.configFilePath)
 			: (options.host ?? typescript.sys).getCurrentDirectory();
 	return {
 		createVirtualCode(fileName, languageId, snapshot) {
 			if (languageId !== "svelte") {
-				return undefined;
+				return;
 			}
 			return {
 				codegenStacks: [],
@@ -59,7 +59,7 @@ export function volarLanguagePlugin(
 			if (fileName.endsWith(".svelte")) {
 				return "svelte";
 			}
-			return undefined;
+			return;
 		},
 		typescript: {
 			extraFileExtensions: [
@@ -79,7 +79,7 @@ export function volarLanguagePlugin(
 						};
 					}
 				}
-				return undefined;
+				return;
 			},
 		},
 		updateVirtualCode(fileName, virtualCode, snapshot) {
@@ -112,9 +112,9 @@ export function errorToLanguageReport(
 	}
 	const svelteError = isSvelteCompileError(error) ? error : null;
 	const loc =
-		svelteError?.start != null
-			? `:${svelteError.start.line}:${svelteError.start.column}`
-			: "";
+		svelteError?.start == null
+			? ""
+			: `:${svelteError.start.line}:${svelteError.start.column}`;
 	const res: LanguageReport = {
 		source: "svelte",
 		text: `${fileName}${loc} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
@@ -185,11 +185,11 @@ function getEmbeddedTsCode(
 				});
 				if (current != null) {
 					let length = genOffset - current.genOffset;
-					const sourceText = text.substring(
+					const sourceText = text.slice(
 						current.sourceOffset,
 						current.sourceOffset + length,
 					);
-					const genText = tsx.code.substring(
+					const genText = tsx.code.slice(
 						current.genOffset,
 						current.genOffset + length,
 					);
@@ -262,13 +262,13 @@ function getEmbeddedTsCode(
 			mappings,
 			snapshot: {
 				getChangeRange() {
-					return undefined;
+					return;
 				},
 				getLength() {
 					return codeWithTypes.length;
 				},
 				getText(start, end) {
-					return codeWithTypes.substring(start, end);
+					return codeWithTypes.slice(start, end);
 				},
 			},
 		};
@@ -281,7 +281,7 @@ function getEmbeddedTsCode(
 			mappings: [],
 			snapshot: {
 				getChangeRange() {
-					return undefined;
+					return;
 				},
 				getLength() {
 					return 0;

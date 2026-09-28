@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
-import path from "node:path";
+import { isDeepStrictEqual } from "node:util";
 
 import { CachedFactory } from "cached-factory";
+import { resolve } from "pathe";
 
 import {
-	createDiskBackedLinterHost,
 	createEphemeralLinterHost,
 	createVFSLinterHost,
 	parseOptions,
+	withRepositoryRoot,
 	type AnyLanguage,
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
@@ -17,6 +18,10 @@ import {
 	type RuleAbout,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
+import {
+	createDiskBackedLinterHost,
+	isFileSystemCaseSensitive,
+} from "@flint.fyi/core/node";
 
 import { createOutput } from "./createOutput.ts";
 import { createReportSnapshot } from "./createReportSnapshot.ts";
@@ -32,6 +37,7 @@ export interface RuleTesterDefaults {
 	fileName?: string;
 	files?: Record<string, string>;
 }
+
 export interface RuleTesterOptions {
 	assertNoLanguageReports?: boolean;
 	defaults?: RuleTesterDefaults;
@@ -58,6 +64,11 @@ export type TesterSetupIt = (
 	setup: () => Promise<void>,
 ) => void;
 
+type TestCaseUniqueProperties = Pick<
+	TestCaseNormalized,
+	"code" | "fileName" | "files" | "options"
+>;
+
 export class RuleTester {
 	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
 	#linterHost: VFSLinterHost;
@@ -73,34 +84,35 @@ export class RuleTester {
 		scope = globalThis,
 		skip,
 	}: RuleTesterOptions = {}) {
-		let baseHost =
-			diskBackedFSRoot != null
-				? createEphemeralLinterHost(
-						createDiskBackedLinterHost(
-							path.resolve(
-								process.cwd(),
-								diskBackedFSRoot,
-								"_flint-rule-tester-virtual",
-							),
-						),
-					)
-				: undefined;
+		let host: VFSLinterHost;
+		if (diskBackedFSRoot === undefined) {
+			host = createVFSLinterHost({
+				caseSensitive: isFileSystemCaseSensitive(),
+				cwd: "/",
+			});
+		} else {
+			const cwd = resolve(
+				process.cwd(),
+				diskBackedFSRoot,
+				"_flint-rule-tester-virtual",
+			);
+			host = createVFSLinterHost({
+				baseHost: createEphemeralLinterHost(
+					withRepositoryRoot(createDiskBackedLinterHost(cwd), cwd),
+				),
+			});
+		}
+
 		const { files: defaultFiles = {} } = defaults;
 		if (Object.keys(defaultFiles).length) {
-			const vfs = createVFSLinterHost(
-				baseHost == null ? { cwd: process.cwd() } : { baseHost },
-			);
 			for (const [name, content] of Object.entries(defaultFiles)) {
-				const filePath = path.resolve(vfs.getCurrentDirectory(), name);
-				vfs.vfsUpsertFile(filePath, content);
+				const filePath = resolve(host.getCurrentDirectory(), name);
+				host.vfsUpsertFile(filePath, content);
 			}
-			baseHost = vfs;
+			// Keep per-test-case files from overwriting the defaults.
+			host = createVFSLinterHost({ baseHost: host });
 		}
-		// another overlay to prevent `defaultFiles` from being overwritten
-		// by per-test-case `files`
-		this.#linterHost = createVFSLinterHost(
-			baseHost == null ? { cwd: process.cwd() } : { baseHost },
-		);
+		this.#linterHost = host;
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
 		);
@@ -137,14 +149,16 @@ export class RuleTester {
 	): void {
 		this.#testerOptions.describe(rule.about.id, () => {
 			this.#testerOptions.describe("invalid", () => {
+				const seenTestCases: TestCaseUniqueProperties[] = [];
 				for (const testCase of invalid) {
-					this.#itInvalidCase(rule, testCase);
+					this.#itInvalidCase(rule, testCase, seenTestCases);
 				}
 			});
 
 			this.#testerOptions.describe("valid", () => {
+				const seenTestCases: TestCaseUniqueProperties[] = [];
 				for (const testCase of valid) {
-					this.#itValidCase(rule, testCase);
+					this.#itValidCase(rule, testCase, seenTestCases);
 				}
 			});
 		});
@@ -153,13 +167,14 @@ export class RuleTester {
 	#itInvalidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCase: InvalidTestCase<InferredInputObject<OptionsSchema>>,
+		seenTestCases: TestCaseUniqueProperties[],
 	) {
 		const testCaseNormalized = normalizeTestCase(
 			testCase,
 			this.#testerOptions.defaults.fileName,
 		);
 
-		this.#itTestCase(testCaseNormalized, async () => {
+		this.#itTestCase(testCaseNormalized, seenTestCases, async () => {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
@@ -185,22 +200,26 @@ export class RuleTester {
 			const actualSuggestions = resolveReportedSuggestions(
 				reports,
 				testCaseNormalized,
+				this.#linterHost.getCurrentDirectory(),
 			);
 			assert.deepStrictEqual(actualSuggestions, testCase.suggestions);
 		});
 	}
 
-	#itTestCase(testCase: TestCaseNormalized, setup: () => Promise<void>) {
+	#itTestCase(
+		testCase: TestCaseNormalized,
+		seenTestCases: TestCaseUniqueProperties[],
+		setup: () => Promise<void>,
+	) {
 		let test = testCase.only
 			? this.#testerOptions.only
 			: this.#testerOptions.it;
 
 		if (testCase.skip) {
-			if ("skip" in test && typeof test.skip === "function") {
-				test = test.skip as TesterSetupIt;
-			} else {
-				test = this.#testerOptions.skip;
-			}
+			test =
+				"skip" in test && typeof test.skip === "function"
+					? (test.skip as TesterSetupIt)
+					: this.#testerOptions.skip;
 		}
 
 		test(
@@ -213,6 +232,7 @@ export class RuleTester {
 						)
 					: testCase.code),
 			() => {
+				assertNoDuplicateTestCase(testCase, seenTestCases);
 				if (testCase.files != null) {
 					assert.notEqual(
 						Object.keys(testCase.files).length,
@@ -228,6 +248,7 @@ export class RuleTester {
 	#itValidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCaseRaw: ValidTestCase<InferredInputObject<OptionsSchema>>,
+		seenTestCases: TestCaseUniqueProperties[],
 	) {
 		const testCase =
 			typeof testCaseRaw === "string" ? { code: testCaseRaw } : testCaseRaw;
@@ -236,7 +257,7 @@ export class RuleTester {
 			this.#testerOptions.defaults.fileName,
 		);
 
-		this.#itTestCase(testCaseNormalized, async () => {
+		this.#itTestCase(testCaseNormalized, seenTestCases, async () => {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
@@ -256,6 +277,30 @@ export class RuleTester {
 			}
 		});
 	}
+}
+
+function assertNoDuplicateTestCase(
+	testCase: TestCaseNormalized,
+	seenTestCases: TestCaseUniqueProperties[],
+): void {
+	const duplicateProperties = {
+		code: testCase.code,
+		fileName: testCase.fileName,
+		files: testCase.files,
+		options: testCase.options,
+	} satisfies TestCaseUniqueProperties;
+
+	if (
+		seenTestCases.some((seenTestCase) =>
+			isDeepStrictEqual(seenTestCase, duplicateProperties),
+		)
+	) {
+		assert.fail(
+			"Expected no duplicate test cases, but an earlier test case has the same code, fileName, files, and options.",
+		);
+	}
+
+	seenTestCases.push(duplicateProperties);
 }
 
 function assertNoLanguageReports(languageReports: LanguageReports) {

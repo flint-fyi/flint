@@ -9,6 +9,15 @@
 			"matchStrings": [
 				"devEngines.packageManager ? [{ \"depName\": devEngines.packageManager.name, \"currentValue\": devEngines.packageManager.version, \"datasource\": \"npm\", \"versioning\": \"npm\" }] : []"
 			]
+		},
+		{
+			"customType": "regex",
+			"managerFilePatterns": [
+				"/^\\.github\\/actions\\/setup\\/action\\.yaml$/"
+			],
+			"matchStrings": [
+				"# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\n {2}node-version:\\s*\\n(?: {4}[^\\n]*\\n)*? {4}default: (?<currentValue>\\S+)"
+			]
 		}
 	],
 	"extends": [
@@ -25,8 +34,27 @@
 			"groupName": "astro"
 		},
 		{
-			"matchSourceUrls": ["https://github.com/withastro/starlight"],
+			"matchSourceUrls": [
+				"https://github.com/HiDeoo/starlight-*",
+				"https://github.com/withastro/starlight"
+			],
 			"groupName": "astro"
+		},
+		{
+			"matchDepTypes": [
+				"pnpm.catalog.comparisons",
+				"pnpm.catalog.dev",
+				"pnpm.catalog.site"
+			],
+			"rangeStrategy": "pin"
+		},
+		{
+			"matchDepTypes": ["pnpm.catalog.peer"],
+			"rangeStrategy": "widen"
+		},
+		{
+			"matchDepTypes": ["pnpm.catalog.prod"],
+			"rangeStrategy": "replace"
 		}
 	]
 }

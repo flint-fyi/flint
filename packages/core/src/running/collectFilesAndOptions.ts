@@ -1,5 +1,3 @@
-import { nullThrows } from "@flint.fyi/utils";
-
 import { readFromCache } from "../cache/readFromCache.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
@@ -8,7 +6,7 @@ import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
 import { computeUseDefinitions } from "./computeUseDefinitions.ts";
-import type { LanguageAndFile, LanguageFilesWithOptions } from "./types.ts";
+import type { LanguageAndFile } from "./types.ts";
 
 /**
  * Collected information describing files to lint, along with rule options.
@@ -30,16 +28,11 @@ export interface CollectedFilesAndOptions {
 	languageFilesByFilePath: Map<string, LanguageAndFile[]>;
 
 	/**
-	 * For each rule, the array of files to lint with which options.
-	 * @remarks
-	 * Note that this should not include cached files.
-	 * Those files don't need to have language files or options computed.
+	 * For each rule, the options it's enabled with on each of its file paths.
 	 */
-	rulesFilesAndOptionsByRule: Map<AnyRule, LanguageFilesWithOptions[]>;
+	rulesOptionsByFile: Map<AnyRule, Map<string, object>>;
 }
 
-// TODO: This is very slow and the whole thing should be refactored 🙌.
-// Creating arrays and Maps and Sets per rule x per file is a lot of memory!
 export async function collectFilesAndOptions(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
@@ -72,28 +65,10 @@ export async function collectFilesAndOptions(
 		host,
 	);
 
-	// 5. Join language metadata files into the corresponding options by file path
-	const rulesFilesAndOptionsByRule = new Map(
-		Array.from(rulesOptionsByFile).map(([rule, optionsByFile]) => [
-			rule,
-			Array.from(optionsByFile)
-				.filter(([filePath]) => languageFilesByFilePath.has(filePath))
-				.map(([filePath, options]) => ({
-					languageFiles: Array.from(
-						nullThrows(
-							languageFilesByFilePath.get(filePath),
-							"Language file is expected to be present by the map",
-						).values(),
-					),
-					options,
-				})),
-		]),
-	);
-
 	return {
 		allFilePaths,
 		cached,
 		languageFilesByFilePath,
-		rulesFilesAndOptionsByRule,
+		rulesOptionsByFile,
 	};
 }

@@ -43,8 +43,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[A\u0301]/;
 `,
-			snapshot: `
-/[A\\u0301]/;
+			snapshot: String.raw`
+/[A\u0301]/;
   ~~~~~~~
   Misleading combined character in character class.
 `,
@@ -53,8 +53,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[A\u0301]/u;
 `,
-			snapshot: `
-/[A\\u0301]/u;
+			snapshot: String.raw`
+/[A\u0301]/u;
   ~~~~~~~
   Misleading combined character in character class.
 `,
@@ -63,8 +63,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\u0041\u0301]/;
 `,
-			snapshot: `
-/[\\u0041\\u0301]/;
+			snapshot: String.raw`
+/[\u0041\u0301]/;
   ~~~~~~~~~~~~
   Misleading combined character in character class.
 `,
@@ -73,8 +73,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\u0041\u0301]/u;
 `,
-			snapshot: `
-/[\\u0041\\u0301]/u;
+			snapshot: String.raw`
+/[\u0041\u0301]/u;
   ~~~~~~~~~~~~
   Misleading combined character in character class.
 `,
@@ -139,8 +139,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\uD83D\uDC76\uD83C\uDFFB]/u;
 `,
-			snapshot: `
-/[\\uD83D\\uDC76\\uD83C\\uDFFB]/u;
+			snapshot: String.raw`
+/[\uD83D\uDC76\uD83C\uDFFB]/u;
   ~~~~~~~~~~~~~~~~~~~~~~~~
   Misleading emoji with skin tone modifier in character class.
 `,
@@ -149,8 +149,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\u{1F476}\u{1F3FB}]/u;
 `,
-			snapshot: `
-/[\\u{1F476}\\u{1F3FB}]/u;
+			snapshot: String.raw`
+/[\u{1F476}\u{1F3FB}]/u;
   ~~~~~~~~~~~~~~~~~~
   Misleading emoji with skin tone modifier in character class.
 `,
@@ -195,8 +195,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\uD83C\uDDEF\uD83C\uDDF5]/u;
 `,
-			snapshot: `
-/[\\uD83C\\uDDEF\\uD83C\\uDDF5]/u;
+			snapshot: String.raw`
+/[\uD83C\uDDEF\uD83C\uDDF5]/u;
   ~~~~~~~~~~~~~~~~~~~~~~~~
   Misleading regional indicator symbols (flag) in character class.
 `,
@@ -205,8 +205,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\u{1F1EF}\u{1F1F5}]/u;
 `,
-			snapshot: `
-/[\\u{1F1EF}\\u{1F1F5}]/u;
+			snapshot: String.raw`
+/[\u{1F1EF}\u{1F1F5}]/u;
   ~~~~~~~~~~~~~~~~~~
   Misleading regional indicator symbols (flag) in character class.
 `,
@@ -273,8 +273,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC66]/u;
 `,
-			snapshot: `
-/[\\uD83D\\uDC68\\u200D\\uD83D\\uDC69\\u200D\\uD83D\\uDC66]/u;
+			snapshot: String.raw`
+/[\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC66]/u;
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Misleading zero-width joiner sequence in character class.
 `,
@@ -283,8 +283,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F466}]/u;
 `,
-			snapshot: `
-/[\\u{1F468}\\u{200D}\\u{1F469}\\u{200D}\\u{1F466}]/u;
+			snapshot: String.raw`
+/[\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F466}]/u;
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Misleading zero-width joiner sequence in character class.
 `,
@@ -293,8 +293,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\uD83D\u{DC4D}]/u;
 `,
-			snapshot: `
-/[\\uD83D\\u{DC4D}]/u;
+			snapshot: String.raw`
+/[\uD83D\u{DC4D}]/u;
   ~~~~~~~~~~~~~~
   Misleading surrogate pair in character class.
 `,
@@ -303,8 +303,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\u{D83D}\uDC4D]/u;
 `,
-			snapshot: `
-/[\\u{D83D}\\uDC4D]/u;
+			snapshot: String.raw`
+/[\u{D83D}\uDC4D]/u;
   ~~~~~~~~~~~~~~
   Misleading surrogate pair in character class.
 `,
@@ -313,8 +313,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\u{D83D}\u{DC4D}]/u;
 `,
-			snapshot: `
-/[\\u{D83D}\\u{DC4D}]/u;
+			snapshot: String.raw`
+/[\u{D83D}\u{DC4D}]/u;
   ~~~~~~~~~~~~~~~~
   Misleading surrogate pair in character class.
 `,

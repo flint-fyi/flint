@@ -2,8 +2,8 @@ import type { CommentDirective } from "./directives.ts";
 import type { LinterHost } from "./host.ts";
 import type { CharacterReportRange } from "./ranges.ts";
 import type { FileReport } from "./reports.ts";
-import type { Rule, RuleAbout, RuleDefinition, RuleRuntime } from "./rules.ts";
-import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
+import type { Rule, RuleAbout, RuleDefinition, RuleVisitors } from "./rules.ts";
+import type { AnyOptionalSchema } from "./shapes.ts";
 
 export type AnyLanguage = Language<object, object>;
 export type AnyLanguageFile = LanguageFile<object>;
@@ -44,6 +44,14 @@ export interface FileAboutData {
 	sourceText: string;
 }
 
+/**
+ * One rule's visitors for a file, along with the services they'll be given.
+ */
+export interface FileVisitors<AstNodesByName, VisitorServices extends object> {
+	services: VisitorServices;
+	visitors: RuleVisitors<AstNodesByName, VisitorServices>;
+}
+
 export interface Language<
 	AstNodesByName,
 	FileServices extends object,
@@ -53,15 +61,13 @@ export interface Language<
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
-	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
-	runFileVisitors<
-		OptionsSchema extends AnyOptionalSchema | undefined =
-			| AnyOptionalSchema
-			| undefined,
-	>(
+	getLanguageReports?(
 		file: LanguageFile<FileServices>,
-		options: InferredOutputObject<OptionsSchema>,
-		runtime: RuleRuntime<AstNodesByName, FileServices>,
+		host: LinterHost,
+	): LanguageReports;
+	runFileVisitors(
+		file: LanguageFile<FileServices>,
+		fileVisitors: readonly FileVisitors<AstNodesByName, FileServices>[],
 	): void;
 }
 
@@ -92,16 +98,14 @@ export interface LanguageDefinition<
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
-	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
-	orderFilePaths?(filePaths: readonly string[], host: LinterHost): string[];
-	runFileVisitors<
-		OptionsSchema extends AnyOptionalSchema | undefined =
-			| AnyOptionalSchema
-			| undefined,
-	>(
+	getLanguageReports?(
 		file: LanguageFile<FileServices>,
-		options: InferredOutputObject<OptionsSchema>,
-		runtime: RuleRuntime<AstNodesByName, FileServices>,
+		host: LinterHost,
+	): LanguageReports;
+	orderFilePaths?(filePaths: readonly string[], host: LinterHost): string[];
+	runFileVisitors(
+		file: LanguageFile<FileServices>,
+		fileVisitors: readonly FileVisitors<AstNodesByName, FileServices>[],
 	): void;
 }
 

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getScopeManager,
@@ -125,17 +125,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const variableName =
-						destructured.destructuredProperties.get(propertyName);
-
 					if (
-						(ts.isCallExpression(node.parent) &&
+						(node.parent.kind === SyntaxKind.CallExpression &&
 							node.parent.expression === node) ||
 						isLeftHandSide(node)
 					) {
 						return;
 					}
 
+					const variableName =
+						destructured.destructuredProperties.get(propertyName);
 					const range = getTSNodeRange(node, sourceFile);
 					const expression = node.getText(sourceFile);
 
@@ -163,7 +162,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					destructuredObjects.length = 0;
 				},
 				VariableDeclaration: (node, { sourceFile }) => {
-					if (!node.initializer || !ts.isObjectBindingPattern(node.name)) {
+					if (
+						!node.initializer ||
+						node.name.kind !== SyntaxKind.ObjectBindingPattern
+					) {
 						return;
 					}
 
@@ -174,22 +176,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const properties = new Map<string, null | string>();
 					for (const element of node.name.elements) {
-						if (!ts.isBindingElement(element)) {
-							continue;
-						}
-
 						if (element.propertyName) {
-							if (ts.isIdentifier(element.propertyName)) {
+							if (element.propertyName.kind === SyntaxKind.Identifier) {
 								if (
-									ts.isObjectBindingPattern(element.name) ||
-									ts.isArrayBindingPattern(element.name)
+									element.name.kind === SyntaxKind.ObjectBindingPattern ||
+									element.name.kind === SyntaxKind.ArrayBindingPattern
 								) {
 									properties.set(element.propertyName.text, null);
-								} else if (ts.isIdentifier(element.name)) {
+								} else {
 									properties.set(element.propertyName.text, element.name.text);
 								}
 							}
-						} else if (ts.isIdentifier(element.name)) {
+						} else if (element.name.kind === SyntaxKind.Identifier) {
 							properties.set(element.name.text, element.name.text);
 						}
 					}

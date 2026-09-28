@@ -13,22 +13,23 @@ function hasExportModifier(node: AST.Statement) {
 	);
 }
 
-function isInsideFunction(node: ts.Node): boolean {
-	let current: ts.Node | undefined = node.parent;
+function isInsideFunction(node: AST.AnyNode): boolean {
+	let current = node.parent;
 
-	while (current) {
+	while (current.kind !== SyntaxKind.SourceFile) {
 		if (
-			ts.isFunctionDeclaration(current) ||
-			ts.isFunctionExpression(current) ||
-			ts.isArrowFunction(current) ||
-			ts.isMethodDeclaration(current) ||
-			ts.isConstructorDeclaration(current) ||
-			ts.isGetAccessorDeclaration(current) ||
-			ts.isSetAccessorDeclaration(current)
+			current.kind === SyntaxKind.FunctionDeclaration ||
+			current.kind === SyntaxKind.FunctionExpression ||
+			current.kind === SyntaxKind.ArrowFunction ||
+			current.kind === SyntaxKind.MethodDeclaration ||
+			current.kind === SyntaxKind.Constructor ||
+			current.kind === SyntaxKind.GetAccessor ||
+			current.kind === SyntaxKind.SetAccessor
 		) {
 			return true;
-		} // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as ts.Node | undefined;
+		}
+
+		current = current.parent;
 	}
 
 	return false;

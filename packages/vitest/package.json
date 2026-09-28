@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/vitest",
-	"version": "0.4.0",
+	"version": "0.4.3",
 	"description": "[Experimental] A Flint plugin for Vitest.",
 	"homepage": "https://flint.fyi/rules/vitest",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -28,8 +29,8 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"typescript": "^6.0.0",
-		"zod": "^4.3.6"
+		"typescript": "catalog:prod",
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -38,7 +39,7 @@
 		"vitest": "catalog:dev"
 	},
 	"peerDependencies": {
-		"vitest": ">=0.30.0"
+		"vitest": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"
@@ -46,7 +47,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

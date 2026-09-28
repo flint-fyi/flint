@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/performance",
-	"version": "0.5.0",
+	"version": "0.5.3",
 	"description": "[Experimental] A Flint plugin for performant code.",
 	"homepage": "https://flint.fyi/rules/performance",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -27,8 +28,8 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"ts-api-utils": "^2.4.0",
-		"typescript": "^6.0.0"
+		"ts-api-utils": "catalog:prod",
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -42,7 +43,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

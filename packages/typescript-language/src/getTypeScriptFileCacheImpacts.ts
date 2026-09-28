@@ -1,7 +1,7 @@
 import type { LanguageFile, LanguageFileCacheImpacts } from "@flint.fyi/core";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
-import type { TypeScriptFileServices } from "./language.ts";
+import type { TypeScriptFileServices } from "./types/services.ts";
 import { containsGlobalDeclarations } from "./utils/containsGlobalDeclarations.ts";
 
 export function getTypeScriptFileCacheImpacts(

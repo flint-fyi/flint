@@ -109,7 +109,7 @@ function getMathMethodArgument(
 		argument.kind === SyntaxKind.SpreadElement ||
 		!isMathProperty(node.expression, methodName, typeChecker, program)
 	) {
-		return undefined;
+		return;
 	}
 
 	return argument;
@@ -239,7 +239,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const expressions = flattenPlusExpression(argument);
 
 					if (
-						!expressions.every((expr) => isPowerTwoExpression(expr, sourceFile))
+						expressions.some((expr) => !isPowerTwoExpression(expr, sourceFile))
 					) {
 						return;
 					}

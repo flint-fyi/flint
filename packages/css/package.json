@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/css",
-	"version": "0.3.0",
+	"version": "0.3.3",
 	"description": "[Experimental] A Flint plugin for CSS code.",
 	"homepage": "https://flint.fyi/rules/css",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -27,7 +28,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/css-language": "workspace:^",
-		"typescript": "^6.0.0"
+		"typescript": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -41,7 +42,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

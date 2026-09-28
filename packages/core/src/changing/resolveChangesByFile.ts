@@ -14,7 +14,7 @@ export function resolveChangesByFile(
 	const changesByFile = new CachedFactory<string, FileChange[]>(() => []);
 
 	function collectReportFix(absoluteFilePath: string, report: FileReport) {
-		if (report.fix) {
+		if (report.fix?.length) {
 			changesByFile.get(absoluteFilePath).push(...report.fix);
 		}
 	}
@@ -35,9 +35,7 @@ export function resolveChangesByFile(
 		}
 	}
 
-	for (const [absoluteFilePath, fileResults] of Array.from(
-		filesResults.entries(),
-	)) {
+	for (const [absoluteFilePath, fileResults] of Array.from(filesResults)) {
 		for (const report of fileResults.reports) {
 			collectReportFix(absoluteFilePath, report);
 			collectReportSuggestions(absoluteFilePath, report);

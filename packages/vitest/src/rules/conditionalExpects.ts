@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import z from "zod/v4";
 
 import {
@@ -121,10 +121,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				ConditionalExpression: increaseConditionalDepth,
 				"ConditionalExpression:exit": decreaseConditionalDepth,
 				FunctionDeclaration(node, { sourceFile }) {
-					if (isTestCallbackFunction(node, sourceFile)) {
-						inTestCase = true;
-						expectAssertions = 0;
+					if (!isTestCallbackFunction(node, sourceFile)) {
+						return;
 					}
+
+					inTestCase = true;
+					expectAssertions = 0;
 				},
 				"FunctionDeclaration:exit"(node, { sourceFile }) {
 					if (isTestCallbackFunction(node, sourceFile)) {
@@ -179,7 +181,7 @@ function isCatchCall({ expression }: AST.CallExpression): boolean {
 	}
 	if (expression.kind === ts.SyntaxKind.ElementAccessExpression) {
 		return (
-			ts.isStringLiteral(expression.argumentExpression) &&
+			expression.argumentExpression.kind === SyntaxKind.StringLiteral &&
 			expression.argumentExpression.text === "catch"
 		);
 	}
@@ -216,5 +218,5 @@ function isTestCallbackFunction(
 
 // e.g. 1_000 -> 1000
 function removeNumericSeparators(text: string): string {
-	return text.replace(/_/g, "");
+	return text.replaceAll("_", "");
 }

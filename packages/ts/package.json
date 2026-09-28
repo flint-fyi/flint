@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.23.1",
+	"version": "0.24.0",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/ts",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -25,15 +26,16 @@
 		"test": "vitest --project ts"
 	},
 	"dependencies": {
-		"@eslint-community/regexpp": "^4.12.2",
+		"@eslint-community/regexpp": "catalog:prod",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"regexp-ast-analysis": "^0.7.1",
-		"scslre": "^0.3.0",
-		"ts-api-utils": "^2.4.0",
-		"typescript": "^6.0.0",
-		"zod": "^4.3.6"
+		"pathe": "catalog:prod",
+		"regexp-ast-analysis": "catalog:prod",
+		"scslre": "catalog:prod",
+		"ts-api-utils": "catalog:prod",
+		"typescript": "catalog:prod",
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -47,7 +49,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

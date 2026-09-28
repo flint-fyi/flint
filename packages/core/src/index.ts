@@ -14,13 +14,11 @@ export {
 } from "./directives/DirectivesCollector.ts";
 export { directiveReports } from "./directives/reports/directiveReports.ts";
 export { globs } from "./globs/index.ts";
-export { createDiskBackedLinterHost } from "./host/createDiskBackedLinterHost.ts";
 export { createEphemeralLinterHost } from "./host/createEphemeralLinterHost.ts";
 export {
 	createVFSLinterHost,
 	type CreateVFSLinterHostOpts,
 } from "./host/createVFSLinterHost.ts";
-export { isFileSystemCaseSensitive } from "./host/isFileSystemCaseSensitive.ts";
 export {
 	commonlyIgnoredPaths,
 	gitVcs,
@@ -30,7 +28,14 @@ export {
 	vcsDirectories,
 } from "./host/watcher.ts";
 export { withFileSystemWatcher } from "./host/withFileSystemWatcher.ts";
+export { withRepositoryRoot } from "./host/withRepositoryRoot.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
+export {
+	type FileVisitorSubscription,
+	type GroupedFileVisitors,
+	groupFileVisitors,
+	runFileVisitorSubscriptions,
+} from "./languages/groupFileVisitors.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";
 export { RuleCreator, type RuleCreatorOptions } from "./rules/RuleCreator.ts";
@@ -38,7 +43,6 @@ export { parseOptions } from "./running/parseOptions.ts";
 export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";
 export { runConfigFixing } from "./running/runConfigFixing.ts";
-export { runLintRule } from "./running/runLintRule.ts";
 export type { BaseAbout } from "./types/about.ts";
 export type {
 	CacheStorage,
@@ -90,6 +94,7 @@ export type {
 	AnyLanguageFile,
 	AnyLanguageFileFactory,
 	FileAboutData,
+	FileVisitors,
 	GetLanguageAstNodesByName,
 	GetLanguageFileServices,
 	Language,
@@ -135,8 +140,10 @@ export type {
 export type {
 	AnyRule,
 	AnyRuleDefinition,
+	PluginRuleAbout,
 	Rule,
 	RuleAbout,
+	RuleCreatorAbout,
 	RuleDefinition,
 	RuleRuntime,
 	RuleSetup,
@@ -152,6 +159,7 @@ export type {
 } from "./types/shapes.ts";
 export type { WithExitKeys } from "./types/visitors.ts";
 export { binarySearch } from "./utils/arrays.ts";
+export { jsonCodec } from "./utils/codecs.ts";
 export {
 	getColumnAndLineOfPosition,
 	getPositionOfColumnAndLine,

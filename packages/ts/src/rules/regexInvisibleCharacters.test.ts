@@ -8,8 +8,8 @@ ruleTester.describe(rule, {
 			code: `
 /\t/;
 `,
-			output: `
-/\\x09/;
+			output: String.raw`
+/\x09/;
 `,
 			snapshot: `
 /\t/;
@@ -21,8 +21,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u00a0/;
 `,
-			output: `
-/\\xA0/;
+			output: String.raw`
+/\xA0/;
 `,
 			snapshot: `
 /\u00a0/;
@@ -34,8 +34,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u200b/;
 `,
-			output: `
-/\\u200B/;
+			output: String.raw`
+/\u200B/;
 `,
 			snapshot: `
 /\u200b/;
@@ -47,8 +47,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u200b/u;
 `,
-			output: `
-/\\u{200B}/u;
+			output: String.raw`
+/\u{200B}/u;
 `,
 			snapshot: `
 /\u200b/u;
@@ -60,8 +60,8 @@ ruleTester.describe(rule, {
 			code: `
 /[\t]/;
 `,
-			output: `
-/[\\x09]/;
+			output: String.raw`
+/[\x09]/;
 `,
 			snapshot: `
 /[\t]/;
@@ -73,8 +73,8 @@ ruleTester.describe(rule, {
 			code: `
 /[\t\u00a0]/;
 `,
-			output: `
-/[\\x09\\xA0]/;
+			output: String.raw`
+/[\x09\xA0]/;
 `,
 			snapshot: `
 /[\t\u00a0]/;
@@ -88,8 +88,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u1680/;
 `,
-			output: `
-/\\u1680/;
+			output: String.raw`
+/\u1680/;
 `,
 			snapshot: `
 /\u1680/;
@@ -101,8 +101,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u180e/;
 `,
-			output: `
-/\\u180E/;
+			output: String.raw`
+/\u180E/;
 `,
 			snapshot: `
 /\u180e/;
@@ -114,8 +114,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a/;
 `,
-			output: `
-/\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A/;
+			output: String.raw`
+/\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A/;
 `,
 			snapshot: `
 /\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a/;
@@ -147,8 +147,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u202f\u205f\u3000/;
 `,
-			output: `
-/\\u202F\\u205F\\u3000/;
+			output: String.raw`
+/\u202F\u205F\u3000/;
 `,
 			snapshot: `
 /\u202f\u205f\u3000/;
@@ -164,8 +164,8 @@ ruleTester.describe(rule, {
 			code: `
 /\ufeff/;
 `,
-			output: `
-/\\uFEFF/;
+			output: String.raw`
+/\uFEFF/;
 `,
 			snapshot: `
 /\ufeff/;
@@ -177,8 +177,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u0085/;
 `,
-			output: `
-/\\x85/;
+			output: String.raw`
+/\x85/;
 `,
 			snapshot: `
 /\u0085/;
@@ -190,8 +190,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u200c/;
 `,
-			output: `
-/\\u200C/;
+			output: String.raw`
+/\u200C/;
 `,
 			snapshot: `
 /\u200c/;
@@ -203,8 +203,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u200d/;
 `,
-			output: `
-/\\u200D/;
+			output: String.raw`
+/\u200D/;
 `,
 			snapshot: `
 /\u200d/;
@@ -216,8 +216,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u200e/;
 `,
-			output: `
-/\\u200E/;
+			output: String.raw`
+/\u200E/;
 `,
 			snapshot: `
 /\u200e/;
@@ -229,8 +229,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u200f/;
 `,
-			output: `
-/\\u200F/;
+			output: String.raw`
+/\u200F/;
 `,
 			snapshot: `
 /\u200f/;
@@ -242,8 +242,8 @@ ruleTester.describe(rule, {
 			code: `
 /\u2800/;
 `,
-			output: `
-/\\u2800/;
+			output: String.raw`
+/\u2800/;
 `,
 			snapshot: `
 /\u2800/;
@@ -255,8 +255,8 @@ ruleTester.describe(rule, {
 			code: `
 new RegExp('\t');
 `,
-			output: `
-new RegExp('\\x09');
+			output: String.raw`
+new RegExp('\x09');
 `,
 			snapshot: `
 new RegExp('\t');
@@ -268,8 +268,8 @@ new RegExp('\t');
 			code: `
 /[\\q{\t}]/v;
 `,
-			output: `
-/[\\q{\\x09}]/v;
+			output: String.raw`
+/[\q{\x09}]/v;
 `,
 			snapshot: `
 /[\\q{\t}]/v;
@@ -284,8 +284,8 @@ new RegExp('\t');
 		`/[a]/;`,
 		`/a/;`,
 		`/abc/;`,
-		`
-const a = '' + '\\t';
+		String.raw`
+const a = '' + '\t';
 new RegExp(a);
 `,
 		`new RegExp(' ');`,
