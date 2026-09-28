@@ -69,9 +69,13 @@ export async function runCli(args: string[]): Promise<number> {
 		return 0;
 	}
 
-	const { createEphemeralLinterHost, findConfigFileName } =
-		await import("@flint.fyi/core");
-	const { createDiskBackedLinterHost } = await import("@flint.fyi/core/node");
+	const [
+		{ createEphemeralLinterHost, findConfigFileName },
+		{ createDiskBackedLinterHost },
+	] = await Promise.all([
+		import("@flint.fyi/core"),
+		import("@flint.fyi/core/node"),
+	]);
 
 	const host = createDiskBackedLinterHost(process.cwd());
 	const cwd = host.getCurrentDirectory();
