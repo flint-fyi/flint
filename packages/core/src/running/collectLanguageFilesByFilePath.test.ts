@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from "vitest";
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
-import type { FileCacheStorage } from "../types/cache.ts";
 import type { FileAboutData } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
@@ -17,7 +16,7 @@ const ruleCreator = new RuleCreator({
 });
 
 describe(collectLanguageFilesByFilePath, () => {
-	it("orders uncached file creation per language", () => {
+	it("orders requested file creation per language", () => {
 		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 		for (const filePath of ["/root/a.ts", "/root/b.ts", "/root/c.ts"]) {
 			host.vfsUpsertFile(filePath, "");
@@ -44,9 +43,6 @@ describe(collectLanguageFilesByFilePath, () => {
 			messages,
 			setup: () => ({}),
 		});
-		const cached = new Map<string, FileCacheStorage>([
-			["/root/c.ts", { timestamp: 0 }],
-		]);
 		const rulesOptionsByFile = new Map<AnyRule, Map<string, unknown>>([
 			[
 				orderedRule,
@@ -68,7 +64,7 @@ describe(collectLanguageFilesByFilePath, () => {
 		const filesByPath = collectLanguageFilesByFilePath(
 			rulesOptionsByFile,
 			host,
-			{ cached },
+			{ filePaths: new Set(["/root/a.ts", "/root/b.ts"]) },
 		);
 
 		expect(orderedFilePaths).toHaveBeenCalledWith(

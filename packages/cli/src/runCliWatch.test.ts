@@ -110,6 +110,42 @@ describe(runCliWatch, () => {
 		expect(finalFileCount).toBe(3);
 	});
 
+	it("only lints uncached files after rebuilding the lint session", async () => {
+		const project = createTestProject();
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		const cPath = path.posix.join(project.root, "c.txt");
+		let quit: (() => void) | undefined;
+		let renderCount = 0;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						renderCount += 1;
+
+						if (renderCount === 1) {
+							project.host.vfsUpsertFile(cPath, "c1");
+						} else {
+							quit?.();
+						}
+					},
+				}) satisfies Renderer,
+			values,
+		);
+
+		expect(project.visitedFilePaths).toEqual([
+			project.aPath,
+			project.bPath,
+			cPath,
+		]);
+	});
+
 	it("rebuilds the lint session after a structural file changes", async () => {
 		const project = createTestProject();
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
@@ -217,6 +253,8 @@ function createTestProject({
 	const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
 	host.vfsUpsertFile(aPath, "a1");
 	host.vfsUpsertFile(bPath, "b1");
+	host.vfsUpsertFile("flint.config.ts", "");
+	host.vfsUpsertFile("package.json", "{}");
 	const visitedFilePaths: string[] = [];
 	const visitedSourceTexts: string[] = [];
 	const createFileFactory = vi.fn(() => ({

@@ -6,6 +6,7 @@ import { debugForFile } from "debug-for-file";
 import {
 	applyChangesToFiles,
 	LintSession,
+	lintSessionWithCache,
 	maximumFixIterations,
 	nodeModulesCache,
 	vcsDirectories,
@@ -107,7 +108,18 @@ export async function runCliWatch(
 			};
 		}
 
-		async function lintFiles(session: LintSession, filePaths?: Set<string>) {
+		async function lintFiles(
+			session: LintSession,
+			{
+				cacheLocation,
+				filePaths,
+				ignoreCache,
+			}: {
+				cacheLocation: string | undefined;
+				filePaths: Set<string> | undefined;
+				ignoreCache: boolean;
+			},
+		) {
 			const changed = new Set<string>();
 			const formatFilePaths = new Set<string>();
 			const lintOptions = {
@@ -120,7 +132,13 @@ export async function runCliWatch(
 			): Promise<void> {
 				const filesResults =
 					nextFilePaths == null
-						? await session.lintAll(lintOptions)
+						? (
+								await lintSessionWithCache(session, configFileName, host, {
+									cacheLocation,
+									ignoreCache,
+									...lintOptions,
+								})
+							).allFileResults
 						: await session.lintChangedFiles(nextFilePaths, lintOptions);
 
 				for (const filePath of filesResults.keys()) {
@@ -155,9 +173,11 @@ export async function runCliWatch(
 
 		async function run({
 			filePaths,
+			ignoreCache = false,
 			rebuild,
 		}: {
 			filePaths?: Set<string>;
+			ignoreCache?: boolean;
 			rebuild: boolean;
 		}) {
 			if (quitting) {
@@ -175,18 +195,16 @@ export async function runCliWatch(
 			renderer.announce();
 
 			const startTime = performance.now();
-			const { changed, formatFilePaths } = await lintFiles(
-				lintSession,
+			const cacheLocation =
+				values["cache-location"] || configDefinition.cacheLocation;
+			const { changed, formatFilePaths } = await lintFiles(lintSession, {
+				cacheLocation,
 				filePaths,
-			);
+				ignoreCache,
+			});
 			const lintResults = createLintResults(lintSession, changed);
 
-			await writeToCache(
-				host,
-				configFileName,
-				lintResults,
-				values["cache-location"] || configDefinition.cacheLocation,
-			);
+			await writeToCache(host, configFileName, lintResults, cacheLocation);
 
 			if (currentRenderer !== renderer) {
 				return lintSession;
@@ -194,7 +212,7 @@ export async function runCliWatch(
 
 			await renderCliResults(host, lintResults, renderer, values, {
 				formatFilePaths,
-				ignoreCache: values["cache-ignore"] ?? false,
+				ignoreCache,
 				startTime,
 			});
 
@@ -293,7 +311,9 @@ export async function runCliWatch(
 		);
 
 		log("Running initial watch lint.");
-		queueTask(() => run({ rebuild: true }));
+		queueTask(() =>
+			run({ ignoreCache: values["cache-ignore"] ?? false, rebuild: true }),
+		);
 	});
 }
 

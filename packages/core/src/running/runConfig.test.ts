@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
@@ -18,6 +18,10 @@ interface TestServices {
 }
 
 describe(runConfig, () => {
+	afterEach(() => {
+		vi.useRealTimers();
+	});
+
 	it("counts only rules with matched files", async () => {
 		const project = createTestProject({ includeUnmatchedRule: true });
 
@@ -27,12 +31,35 @@ describe(runConfig, () => {
 
 		expect(results.ruleCount).toBe(1);
 	});
+
+	it("keeps cache-invalidating files through a fully cached run", async () => {
+		vi.useFakeTimers({ toFake: ["Date"] });
+		vi.setSystemTime(1000);
+		const project = createTestProject({ invalidatingFilePath: "/root/a.txt" });
+
+		await runConfig(project.configDefinition, project.host, {});
+		vi.setSystemTime(2000);
+		const cachedResults = await runConfig(
+			project.configDefinition,
+			project.host,
+			{},
+		);
+		vi.setSystemTime(3000);
+		project.host.vfsUpsertFile(project.aPath, "a2");
+
+		const results = await runConfig(project.configDefinition, project.host, {});
+
+		expect(cachedResults.cached?.size).toBe(2);
+		expect(results.cached).toBeUndefined();
+	});
 });
 
 function createTestProject({
 	includeUnmatchedRule,
+	invalidatingFilePath,
 }: {
 	includeUnmatchedRule?: boolean;
+	invalidatingFilePath?: string;
 } = {}) {
 	const root = "/root";
 	const aPath = path.posix.join(root, "a.txt");
@@ -55,6 +82,12 @@ function createTestProject({
 				};
 			},
 		}),
+		getFileCacheImpacts(file) {
+			return {
+				dependencies: [],
+				invalidatesCache: file.about.filePath === invalidatingFilePath,
+			};
+		},
 		getLanguageReports(file) {
 			return [{ text: file.services.generation.toString() }];
 		},

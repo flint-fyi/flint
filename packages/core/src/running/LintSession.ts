@@ -4,6 +4,7 @@ import { isAbsolute, resolve } from "pathe";
 import { pathKey } from "@flint.fyi/utils";
 
 import { collectTransitiveDependents } from "../cache/collectTransitiveDependents.ts";
+import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type {
@@ -164,6 +165,17 @@ export class LintSession implements Disposable {
 		}
 
 		return await this.#lintCollectedFiles(filePathsToLint, options);
+	}
+
+	restoreCachedResults(cached: Map<string, FileCacheStorage>): void {
+		for (const [filePath, cachedStorage] of cached) {
+			this.#storeResults(filePath, {
+				dependencies: new Set(cachedStorage.dependencies),
+				invalidatesCache: cachedStorage.invalidatesCache ?? false,
+				languageReports: cachedStorage.languageReports ?? [],
+				reports: cachedStorage.reports ?? [],
+			});
+		}
 	}
 
 	[Symbol.dispose](): void {

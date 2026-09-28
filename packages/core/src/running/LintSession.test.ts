@@ -10,6 +10,7 @@ import { createDiskBackedLinterHost } from "../host/createDiskBackedLinterHost.t
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { FileAboutData } from "../types/languages.ts";
 import { LintSession } from "./LintSession.ts";
 
@@ -264,6 +265,40 @@ describe(LintSession, () => {
 		);
 	});
 
+	it("lints dependents of restored cached results", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		dependenciesByFilePath.set(aPath, [bPath]);
+		const cached = await lintIntoCachedResults(configDefinition, host);
+		using session = await LintSession.create(configDefinition, host);
+
+		session.restoreCachedResults(cached);
+
+		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
+			new Set(["a.txt", "b.txt"]),
+		);
+	});
+
+	it("lints every file when a restored cache-invalidating file stops invalidating", async () => {
+		const invalidatingFileNames = new Set(["a.txt"]);
+		const { configDefinition, host, root } = await createTestProject({
+			invalidatingFileNames,
+		});
+		const cached = await lintIntoCachedResults(configDefinition, host);
+		using session = await LintSession.create(configDefinition, host);
+
+		session.restoreCachedResults(cached);
+		invalidatingFileNames.clear();
+
+		expect(
+			lintedFileNames(
+				await session.lintChangedFiles([path.posix.join(root, "a.txt")]),
+			),
+		).toEqual(new Set(["a.txt", "b.txt", "c.txt"]));
+	});
+
 	it("disposes language files and retained factories", async () => {
 		const factoryDispose = vi.fn();
 		const fileDispose = vi.fn();
@@ -409,5 +444,28 @@ async function createTestProject({
 function lintedFileNames(results: Map<string, unknown>) {
 	return new Set(
 		Array.from(results.keys(), (filePath) => path.basename(filePath)),
+	);
+}
+
+async function lintIntoCachedResults(
+	configDefinition: ProcessedConfigDefinition,
+	host: LinterHost,
+) {
+	using session = await LintSession.create(configDefinition, host);
+
+	await session.lintAll();
+
+	return new Map(
+		Array.from(
+			session.storedResults,
+			([filePath, { dependencies, invalidatesCache }]) => [
+				filePath,
+				{
+					dependencies: Array.from(dependencies),
+					...(invalidatesCache && { invalidatesCache }),
+					timestamp: 0,
+				},
+			],
+		),
 	);
 }

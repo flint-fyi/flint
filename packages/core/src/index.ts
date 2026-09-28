@@ -44,6 +44,10 @@ export {
 	LintSession,
 	type LintSessionLintOptions,
 } from "./running/LintSession.ts";
+export {
+	lintSessionWithCache,
+	type LintSessionWithCacheOptions,
+} from "./running/lintSessionWithCache.ts";
 export { parseOptions } from "./running/parseOptions.ts";
 export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";

@@ -3,7 +3,6 @@ import { resolve } from "pathe";
 
 import { nullThrows } from "@flint.fyi/utils";
 
-import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
 import type {
 	AnyLanguage,
@@ -13,8 +12,7 @@ import type {
 import type { AnyRule } from "../types/rules.ts";
 
 export interface CollectLanguageFilesOptions {
-	cached?: Map<string, FileCacheStorage> | undefined;
-	filePaths?: ReadonlySet<string> | undefined;
+	filePaths: ReadonlySet<string>;
 	languageFileFactories?:
 		| CachedFactory<AnyLanguage, AnyLanguageFileFactory>
 		| undefined;
@@ -24,12 +22,11 @@ export function collectLanguageFilesByFilePath(
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
 	{
-		cached,
 		filePaths,
 		languageFileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(host),
 		),
-	}: CollectLanguageFilesOptions = {},
+	}: CollectLanguageFilesOptions,
 ): Map<
 	string,
 	{
@@ -47,8 +44,7 @@ export function collectLanguageFilesByFilePath(
 
 	for (const [rule, optionsByFile] of rulesOptionsByFile) {
 		for (const [filePath] of optionsByFile) {
-			// If the file has cached results, don't bother making files for it
-			if (cached?.has(filePath) || (filePaths && !filePaths.has(filePath))) {
+			if (!filePaths.has(filePath)) {
 				continue;
 			}
 
