@@ -12,6 +12,7 @@ import {
 	vcsDirectories,
 	writeToCache,
 	type LinterHost,
+	type LintResults,
 	type LintResultsWithChanges,
 	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
@@ -32,6 +33,9 @@ export async function runCliWatch(
 ): Promise<void> {
 	const cwd = host.getCurrentDirectory();
 	const isCaseSensitiveFS = host.isCaseSensitiveFS();
+	const lintOptions = {
+		skipLanguageReports: values["skip-language-reports"] ?? false,
+	};
 
 	return new Promise<void>((resolve) => {
 		let configDefinition: ProcessedConfigDefinition | undefined;
@@ -108,39 +112,17 @@ export async function runCliWatch(
 			};
 		}
 
-		async function lintFiles(
+		async function applyFixes(
 			session: LintSession,
-			{
-				cacheLocation,
-				filePaths,
-				ignoreCache,
-			}: {
-				cacheLocation: string | undefined;
-				filePaths: Set<string> | undefined;
-				ignoreCache: boolean;
-			},
+			initialResults: LintResults["allFileResults"],
 		) {
 			const changed = new Set<string>();
 			const formatFilePaths = new Set<string>();
-			const lintOptions = {
-				skipLanguageReports: values["skip-language-reports"] ?? false,
-			};
 
 			async function runIteration(
-				nextFilePaths: Set<string> | undefined,
+				filesResults: LintResults["allFileResults"],
 				iteration: number,
 			): Promise<void> {
-				const filesResults =
-					nextFilePaths == null
-						? (
-								await lintSessionWithCache(session, configFileName, host, {
-									cacheLocation,
-									ignoreCache,
-									...lintOptions,
-								})
-							).allFileResults
-						: await session.lintChangedFiles(nextFilePaths, lintOptions);
-
 				for (const filePath of filesResults.keys()) {
 					formatFilePaths.add(filePath);
 				}
@@ -163,10 +145,13 @@ export async function runCliWatch(
 					formatFilePaths.add(filePath);
 				}
 
-				await runIteration(new Set(fixedFilePaths), iteration + 1);
+				await runIteration(
+					await session.lintChangedFiles(new Set(fixedFilePaths), lintOptions),
+					iteration + 1,
+				);
 			}
 
-			await runIteration(filePaths, 0);
+			await runIteration(initialResults, 0);
 
 			return { changed, formatFilePaths };
 		}
@@ -197,11 +182,18 @@ export async function runCliWatch(
 			const startTime = performance.now();
 			const cacheLocation =
 				values["cache-location"] || configDefinition.cacheLocation;
-			const { changed, formatFilePaths } = await lintFiles(lintSession, {
-				cacheLocation,
-				filePaths,
-				ignoreCache,
-			});
+			const { changed, formatFilePaths } = await applyFixes(
+				lintSession,
+				filePaths
+					? await lintSession.lintChangedFiles(filePaths, lintOptions)
+					: (
+							await lintSessionWithCache(lintSession, configFileName, host, {
+								cacheLocation,
+								ignoreCache,
+								...lintOptions,
+							})
+						).allFileResults,
+			);
 			const lintResults = createLintResults(lintSession, changed);
 
 			await writeToCache(host, configFileName, lintResults, cacheLocation);

@@ -21,12 +21,6 @@ import {
 } from "./finalizeFileResults.ts";
 import { runRules } from "./runRules.ts";
 
-export interface LintSessionChangedLintOptions extends LintSessionLintOptions {
-	onResults?: (
-		results: Map<string, FinalizedFileResults>,
-	) => Promise<void> | void;
-}
-
 export interface LintSessionLintOptions {
 	skipLanguageReports?: boolean;
 }
@@ -100,15 +94,9 @@ export class LintSession implements Disposable {
 		return this.#filePathByKey.has(this.#toPathKey(filePath));
 	}
 
-	async lintAll(
-		options?: LintSessionLintOptions,
-	): Promise<Map<string, FinalizedFileResults>> {
-		return await this.lintFiles(this.allFilePaths, options);
-	}
-
 	async lintChangedFiles(
 		filePaths: Iterable<string>,
-		options?: LintSessionChangedLintOptions,
+		options?: LintSessionLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
 		const changedPaths = Array.from(filePaths);
 		const changedKeys = new Set(
@@ -121,19 +109,15 @@ export class LintSession implements Disposable {
 		);
 
 		const lintPass = async (passFilePaths: Set<string>) => {
-			if (!passFilePaths.size) {
-				return;
-			}
-
-			const results = await this.lintFiles(passFilePaths, options);
-			for (const [filePath, fileResults] of results) {
+			for (const [filePath, fileResults] of await this.lintFiles(
+				passFilePaths,
+				options,
+			)) {
 				allResults.set(filePath, fileResults);
 				if (fileResults.invalidatesCache) {
 					invalidatesCache = true;
 				}
 			}
-
-			await options?.onResults?.(results);
 		};
 
 		await lintPass(changedFilePaths);
@@ -164,41 +148,11 @@ export class LintSession implements Disposable {
 			return new Map();
 		}
 
-		return await this.#lintCollectedFiles(filePathsToLint, options);
-	}
-
-	restoreCachedResults(cached: Map<string, FileCacheStorage>): void {
-		for (const [filePath, cachedStorage] of cached) {
-			this.#storeResults(filePath, {
-				dependencies: new Set(cachedStorage.dependencies),
-				invalidatesCache: cachedStorage.invalidatesCache ?? false,
-				languageReports: cachedStorage.languageReports ?? [],
-				reports: cachedStorage.reports ?? [],
-			});
-		}
-	}
-
-	[Symbol.dispose](): void {
-		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
-			fileFactory[Symbol.dispose]?.();
-		}
-	}
-
-	async #lintCollectedFiles(
-		filePaths: Set<string>,
-		options?: LintSessionLintOptions,
-	): Promise<Map<string, FinalizedFileResults>> {
-		if (!filePaths.size) {
-			return new Map();
-		}
-
 		const languageFilesByFilePath = collectLanguageFilesByFilePath(
 			this.#rulesOptionsByFile,
 			this.#host,
-			{
-				filePaths,
-				languageFileFactories: this.#languageFileFactories,
-			},
+			filePathsToLint,
+			this.#languageFileFactories,
 		);
 
 		using files = new DisposableStack();
@@ -230,6 +184,23 @@ export class LintSession implements Disposable {
 		}
 
 		return filesResults;
+	}
+
+	restoreCachedResults(cached: Map<string, FileCacheStorage>): void {
+		for (const [filePath, cachedStorage] of cached) {
+			this.#storeResults(filePath, {
+				dependencies: new Set(cachedStorage.dependencies),
+				invalidatesCache: cachedStorage.invalidatesCache ?? false,
+				languageReports: cachedStorage.languageReports ?? [],
+				reports: cachedStorage.reports ?? [],
+			});
+		}
+	}
+
+	[Symbol.dispose](): void {
+		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
+			fileFactory[Symbol.dispose]?.();
+		}
 	}
 
 	#resolveFilePaths(filePaths: Iterable<string>): Set<string> {

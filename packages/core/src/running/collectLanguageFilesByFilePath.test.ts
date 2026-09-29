@@ -1,10 +1,11 @@
 /* eslint-disable perfectionist/sort-maps */
+import { CachedFactory } from "cached-factory";
 import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
-import type { FileAboutData } from "../types/languages.ts";
+import type { AnyLanguage, FileAboutData } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
 
@@ -64,7 +65,10 @@ describe(collectLanguageFilesByFilePath, () => {
 		const filesByPath = collectLanguageFilesByFilePath(
 			rulesOptionsByFile,
 			host,
-			{ filePaths: new Set(["/root/a.ts", "/root/b.ts"]) },
+			new Set(["/root/a.ts", "/root/b.ts"]),
+			new CachedFactory((language: AnyLanguage) =>
+				language.createFileFactory(host),
+			),
 		);
 
 		expect(orderedFilePaths).toHaveBeenCalledWith(

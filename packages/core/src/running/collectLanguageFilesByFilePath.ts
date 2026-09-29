@@ -11,22 +11,11 @@ import type {
 } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 
-export interface CollectLanguageFilesOptions {
-	filePaths: ReadonlySet<string>;
-	languageFileFactories?:
-		| CachedFactory<AnyLanguage, AnyLanguageFileFactory>
-		| undefined;
-}
-
 export function collectLanguageFilesByFilePath(
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
-	{
-		filePaths,
-		languageFileFactories = new CachedFactory((language: AnyLanguage) =>
-			language.createFileFactory(host),
-		),
-	}: CollectLanguageFilesOptions,
+	filePaths: ReadonlySet<string>,
+	languageFileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>,
 ): Map<
 	string,
 	{

@@ -50,7 +50,7 @@ describe(LintSession, () => {
 		const aPath = path.posix.join(root, "a.txt");
 		const bPath = path.posix.join(root, "b.txt");
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 		await writeFile(aPath, "a2");
 
 		const results = await session.lintFiles([aPath]);
@@ -69,7 +69,7 @@ describe(LintSession, () => {
 		using session = await LintSession.create(configDefinition, host);
 		const aPath = path.posix.join(root, "a.txt");
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 		await writeFile(aPath, "a2");
 
 		const results = await session.lintChangedFiles(new Set([aPath]).values());
@@ -110,7 +110,7 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(bPath, [cPath]);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(lintedFileNames(await session.lintChangedFiles([cPath]))).toEqual(
 			new Set(["a.txt", "b.txt", "c.txt"]),
@@ -134,7 +134,7 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(cPath, [aPath]);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(lintedFileNames(await session.lintChangedFiles([cPath]))).toEqual(
 			new Set(["a.txt", "b.txt", "c.txt"]),
@@ -149,14 +149,14 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(aPath, [bPath]);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(lintedFileNames(await session.lintFiles([bPath]))).toEqual(
 			new Set(["b.txt"]),
 		);
 	});
 
-	it("reports changed files before their dependents", async () => {
+	it("lints changed files before their dependents", async () => {
 		const { configDefinition, dependenciesByFilePath, host, root } =
 			await createTestProject();
 		const aPath = path.posix.join(root, "a.txt");
@@ -165,16 +165,14 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(aPath, [bPath]);
 		dependenciesByFilePath.set(bPath, [cPath]);
 		using session = await LintSession.create(configDefinition, host);
-		const passes: Set<string>[] = [];
 
-		await session.lintAll();
-		await session.lintChangedFiles([cPath], {
-			onResults(results) {
-				passes.push(lintedFileNames(results));
-			},
-		});
+		await session.lintFiles(session.allFilePaths);
 
-		expect(passes).toEqual([new Set(["c.txt"]), new Set(["a.txt", "b.txt"])]);
+		expect(
+			Array.from((await session.lintChangedFiles([cPath])).keys(), (filePath) =>
+				path.basename(filePath),
+			),
+		).toEqual(["c.txt", "a.txt", "b.txt"]);
 	});
 
 	it("lints dependents of files outside the session", async () => {
@@ -185,7 +183,7 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(aPath, [sharedPath]);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(session.hasDependents(sharedPath)).toBe(true);
 		expect(
@@ -226,7 +224,7 @@ describe(LintSession, () => {
 		const aPath = path.posix.join(root, "a.txt");
 		const bPath = path.posix.join(root, "b.txt");
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
 			new Set(["b.txt"]),
@@ -245,7 +243,7 @@ describe(LintSession, () => {
 		const aPath = path.posix.join(root, "a.txt");
 		const bPath = path.posix.join(root, "b.txt");
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 		invalidatingFileNames.add("a.txt");
 
 		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
@@ -453,7 +451,7 @@ async function lintIntoCachedResults(
 ) {
 	using session = await LintSession.create(configDefinition, host);
 
-	await session.lintAll();
+	await session.lintFiles(session.allFilePaths);
 
 	return new Map(
 		Array.from(
