@@ -12,6 +12,7 @@ export interface FileCacheImpacts {
 }
 
 export interface FileCacheStorage extends FileCacheImpacts {
+	invalidatesCache?: boolean;
 	languageReports?: LanguageReport[];
 
 	/**

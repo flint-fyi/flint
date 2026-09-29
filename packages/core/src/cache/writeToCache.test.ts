@@ -20,6 +20,7 @@ const range = {
 async function roundTrip(
 	reports: FileReport[],
 	languageReports: LanguageReport[] = [],
+	invalidatesCache = false,
 ): Promise<FileCacheStorage | undefined> {
 	const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 	const allFilePaths = new Set([filePath]);
@@ -42,6 +43,7 @@ async function roundTrip(
 					filePath,
 					{
 						dependencies: new Set([dependencyPath]),
+						invalidatesCache,
 						languageReports,
 						reports,
 					},
@@ -98,6 +100,14 @@ describe(writeToCache, () => {
 			dependencies: [dependencyPath],
 			languageReports,
 			reports,
+			timestamp: expect.any(Number),
+		});
+	});
+
+	it("round-trips whether a file invalidates the cache", async () => {
+		expect(await roundTrip([], [], true)).toEqual({
+			dependencies: [dependencyPath],
+			invalidatesCache: true,
 			timestamp: expect.any(Number),
 		});
 	});
