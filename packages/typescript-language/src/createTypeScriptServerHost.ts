@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-unnecessary-global-this -- Flint's ts/recursionOnlyArguments misreads a bare call inside a same-named method as recursion */
 import { join, resolve } from "pathe";
 import ts from "typescript";
 
@@ -6,6 +5,9 @@ import { commonlyIgnoredPaths, type LinterHost } from "@flint.fyi/core";
 import { FlintAssertionError } from "@flint.fyi/utils";
 
 const sys: ts.System | undefined = ts.sys;
+
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
+type Timeout = ReturnType<typeof setTimeout>;
 
 export function createTypeScriptServerHost(
 	host: LinterHost,
@@ -36,12 +38,13 @@ export function createTypeScriptServerHost(
 	return {
 		args: [],
 		// https://github.com/microsoft/vscode/blob/2d698cf0544ccd408de942ece55ff916f8d442a8/extensions/typescript-language-features/web/src/serverHost.ts#L86-L88
-		clearImmediate(immediate: NodeJS.Timeout | number) {
-			globalThis.clearTimeout(immediate);
+		clearImmediate(immediate: Timeout) {
+			clearTimeout(immediate);
 		},
 		// https://github.com/microsoft/vscode/blob/2d698cf0544ccd408de942ece55ff916f8d442a8/extensions/typescript-language-features/web/src/serverHost.ts#L80-L82
-		clearTimeout(timeout: NodeJS.Timeout | number) {
-			globalThis.clearTimeout(timeout);
+		// flint-disable-next-line ts/recursionOnlyArguments
+		clearTimeout(timeout: Timeout) {
+			clearTimeout(timeout);
 		},
 		createDirectory() {
 			serverHostMethodNotImplemented("createDirectory");
@@ -99,15 +102,17 @@ export function createTypeScriptServerHost(
 		resolvePath,
 		// https://github.com/microsoft/vscode/blob/2d698cf0544ccd408de942ece55ff916f8d442a8/extensions/typescript-language-features/web/src/serverHost.ts#L83-L85
 		setImmediate(callback: (...args: unknown[]) => void, ...args: unknown[]) {
-			return globalThis.setTimeout(callback, 0, ...args);
+			return setTimeout(callback, 0, ...args);
 		},
 		// https://github.com/microsoft/vscode/blob/2d698cf0544ccd408de942ece55ff916f8d442a8/extensions/typescript-language-features/web/src/serverHost.ts#L77-L79
 		setTimeout(
+			// flint-disable-lines-begin ts/recursionOnlyArguments
 			callback: (...args: unknown[]) => void,
 			ms: number,
+			// flint-disable-lines-end ts/recursionOnlyArguments
 			...args: unknown[]
 		) {
-			return globalThis.setTimeout(callback, ms, ...args);
+			return setTimeout(callback, ms, ...args);
 		},
 		useCaseSensitiveFileNames,
 		watchDirectory(directoryPath, callback, recursive = false) {
