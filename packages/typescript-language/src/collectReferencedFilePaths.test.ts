@@ -5,7 +5,7 @@ import path from "node:path";
 import ts from "typescript";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { createDiskBackedLinterHost } from "@flint.fyi/core";
+import { createDiskBackedLinterHost } from "@flint.fyi/core/node";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
