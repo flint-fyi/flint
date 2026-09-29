@@ -62,9 +62,12 @@ const flintRulePluginSchema: z.ZodType<FlintPlugin> = z.union([
 type FlintPreset =
 	| "javascript"
 	| "logical"
+	| "logicalStrict"
 	| "security"
+	| "securityStrict"
 	| "sorting"
-	| "stylistic";
+	| "stylistic"
+	| "stylisticStrict";
 
 const flintRulePresetSchema: z.ZodType<FlintPreset> = z.union([
 	z.literal("javascript"),
