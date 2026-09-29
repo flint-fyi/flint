@@ -21,6 +21,6 @@ jobs:
       - uses: $/.github/actions/setup
         with:
           skip-checkout: true
-      - uses: JoshuaKGoldberg/all-contributors-auto-action@5df44012e5ab8f87fc9fa86367aa5eb603c592d8 # v0.6.2
+      - uses: JoshuaKGoldberg/all-contributors-auto-action@c578423db9b2c14d3cee9c72f6c2aed31c128030 # v0.7.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
