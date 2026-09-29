@@ -57,20 +57,18 @@
 						"enum": [
 							"javascript",
 							"logical",
+							"logicalStrict",
 							"security",
+							"securityStrict",
 							"sorting",
-							"stylistic"
+							"stylistic",
+							"stylisticStrict"
 						]
 					},
 					"status": {
 						"type": "string",
 						"description": "The implementation status of the rule.",
 						"enum": ["implemented", "skipped"]
-					},
-					"strictness": {
-						"type": "string",
-						"description": "The strictness level of the rule.",
-						"enum": ["strict"]
 					}
 				},
 				"if": {
@@ -79,8 +77,7 @@
 				},
 				"then": {
 					"properties": {
-						"preset": false,
-						"strictness": false
+						"preset": false
 					}
 				}
 			},

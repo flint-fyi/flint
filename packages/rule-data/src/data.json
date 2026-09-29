@@ -864,9 +864,8 @@
 		"flint": {
 			"name": "documentCookies",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -936,9 +935,8 @@
 		"flint": {
 			"name": "eventListenerSubscriptions",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -1049,9 +1047,8 @@
 		"flint": {
 			"name": "nodeAppendMethods",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -1070,9 +1067,8 @@
 		"flint": {
 			"name": "nodeDatasetAttributes",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -1104,9 +1100,8 @@
 		"flint": {
 			"name": "nodeModificationMethods",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -1125,9 +1120,8 @@
 		"flint": {
 			"name": "nodeQueryMethods",
 			"plugin": "browser",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -1152,9 +1146,8 @@
 		"flint": {
 			"name": "nodeRemoveMethods",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -1186,9 +1179,8 @@
 		"flint": {
 			"name": "nodeTextContents",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -1539,8 +1531,7 @@
 		"flint": {
 			"name": "atRuleVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -1572,8 +1563,7 @@
 		"flint": {
 			"name": "baselineSupport",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -1612,8 +1602,7 @@
 		"flint": {
 			"name": "cascadeLayers",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -1936,8 +1925,7 @@
 		"flint": {
 			"name": "descendingSpecificity",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -2136,8 +2124,7 @@
 		"flint": {
 			"name": "fontUnitRelativity",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -2250,8 +2237,7 @@
 		"flint": {
 			"name": "hexColors",
 			"plugin": "css",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -2322,8 +2308,7 @@
 		"flint": {
 			"name": "importantDeclarations",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -2357,8 +2342,7 @@
 		"flint": {
 			"name": "importantStyles",
 			"plugin": "css",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -2555,8 +2539,7 @@
 		"flint": {
 			"name": "logicalProperties",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -2642,8 +2625,7 @@
 		"flint": {
 			"name": "mediaFeatureNameVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -2959,8 +2941,7 @@
 		"flint": {
 			"name": "propertyVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -3043,8 +3024,7 @@
 		"flint": {
 			"name": "qualifyingTypeSelectors",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -3124,8 +3104,7 @@
 		"flint": {
 			"name": "selectorClassCounts",
 			"plugin": "css",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -3432,8 +3411,7 @@
 		"flint": {
 			"name": "selectorVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -3616,8 +3594,7 @@
 		"flint": {
 			"name": "urlSchemeRelativity",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -3684,8 +3661,7 @@
 		"flint": {
 			"name": "valueVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -4004,8 +3980,7 @@
 		"flint": {
 			"name": "messagePhrases",
 			"plugin": "flint",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -4059,9 +4034,8 @@
 		"flint": {
 			"name": "pluginRuleOrdering",
 			"plugin": "flint",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -6087,9 +6061,8 @@
 		"flint": {
 			"name": "anchorAmbiguousText",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -6192,9 +6165,8 @@
 		"flint": {
 			"name": "ariaHiddenFocusables",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -6388,8 +6360,7 @@
 		"flint": {
 			"name": "booleanPropNames",
 			"plugin": "jsx",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -6585,8 +6556,7 @@
 		"flint": {
 			"name": "childrenWhitespace",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -6885,9 +6855,8 @@
 		"flint": {
 			"name": "elementChildrenValidity",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -6918,8 +6887,7 @@
 		"flint": {
 			"name": "elementIdUniqueness",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -7097,8 +7065,7 @@
 		"flint": {
 			"name": "iframeSandboxes",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -7123,8 +7090,7 @@
 		"flint": {
 			"name": "iframeSandboxPresence",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -7364,9 +7330,8 @@
 		"flint": {
 			"name": "langValidity",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -7780,8 +7745,7 @@
 		"flint": {
 			"name": "pureComponentShouldUpdateDefinitions",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -7800,8 +7764,7 @@
 		"flint": {
 			"name": "renderedLiteralLeaks",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -7917,9 +7880,8 @@
 		"flint": {
 			"name": "roleTags",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -8310,9 +8272,8 @@
 		"flint": {
 			"name": "bareUrls",
 			"plugin": "md",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -8345,8 +8306,7 @@
 		"flint": {
 			"name": "blockquoteBlankLineMultiples",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"markdownlint": [
 			{
@@ -8533,9 +8493,8 @@
 		"flint": {
 			"name": "fencedCodeLanguages",
 			"plugin": "md",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -8664,8 +8623,7 @@
 		"flint": {
 			"name": "headingDuplicates",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -8685,8 +8643,7 @@
 		"flint": {
 			"name": "headingEmphasisEquivalents",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"markdownlint": [
 			{
@@ -8762,9 +8719,8 @@
 		"flint": {
 			"name": "headingRootDuplicates",
 			"plugin": "md",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -8783,8 +8739,7 @@
 		"flint": {
 			"name": "headingRootPresence",
 			"plugin": "md",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"markdownlint": [
 			{
@@ -8825,8 +8780,7 @@
 		"flint": {
 			"name": "headingTrailingPunctuation",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"markdownlint": [
 			{
@@ -9003,8 +8957,7 @@
 		"flint": {
 			"name": "linkDescriptions",
 			"plugin": "md",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"markdownlint": [
 			{
@@ -9112,8 +9065,7 @@
 		"flint": {
 			"name": "olPrefixes",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"markdownlint": [
 			{
@@ -9863,8 +9815,7 @@
 			"name": "consoleSpaces",
 			"plugin": "node",
 			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -9929,9 +9880,8 @@
 		"flint": {
 			"name": "eventClasses",
 			"plugin": "node",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -10004,9 +9954,8 @@
 		"flint": {
 			"name": "filePathsFromImportMeta",
 			"plugin": "node",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -10025,9 +9974,8 @@
 		"flint": {
 			"name": "fileReadJSONBuffers",
 			"plugin": "node",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -11474,8 +11422,7 @@
 		"flint": {
 			"name": "licenseTrust",
 			"plugin": "package-json",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -12578,8 +12525,7 @@
 		"flint": {
 			"name": "captureOwnerStackUsage",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12686,8 +12632,7 @@
 		"flint": {
 			"name": "classComponents",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12706,8 +12651,7 @@
 		"flint": {
 			"name": "classComponentStateDefinitions",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -12720,8 +12664,7 @@
 		"flint": {
 			"name": "classComponentStateInitialization",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -12797,8 +12740,7 @@
 		"flint": {
 			"name": "componentDidMountSetStates",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12817,8 +12759,7 @@
 		"flint": {
 			"name": "componentDidUpdateSetStates",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12837,8 +12778,7 @@
 		"flint": {
 			"name": "componentDisplayNames",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12861,8 +12801,7 @@
 		"flint": {
 			"name": "componentExportModules",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -13009,8 +12948,7 @@
 		"flint": {
 			"name": "componentWillUpdateSetStates",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13041,8 +12979,7 @@
 		"flint": {
 			"name": "contextNames",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -13069,8 +13006,7 @@
 		"flint": {
 			"name": "contextValueReferences",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13089,8 +13025,7 @@
 		"flint": {
 			"name": "contextValueStability",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13180,8 +13115,7 @@
 		"flint": {
 			"name": "dangerousProps",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -13233,8 +13167,7 @@
 		"flint": {
 			"name": "defaultPropsStability",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13308,8 +13241,7 @@
 		"flint": {
 			"name": "eventListenerCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13351,8 +13283,7 @@
 		"flint": {
 			"name": "fetchCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13422,8 +13353,7 @@
 		"flint": {
 			"name": "forwardRefs",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -13510,8 +13440,7 @@
 		"flint": {
 			"name": "idNames",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -13590,8 +13519,7 @@
 		"flint": {
 			"name": "intervalCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13624,8 +13552,7 @@
 		"flint": {
 			"name": "iterableKeys",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -13859,8 +13786,7 @@
 		"flint": {
 			"name": "reactDomFlushSyncCalls",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13921,8 +13847,7 @@
 		"flint": {
 			"name": "refNames",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -14024,8 +13949,7 @@
 		"flint": {
 			"name": "resizeObserverCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -14267,8 +14191,7 @@
 		"flint": {
 			"name": "stylePropObjects",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -14300,8 +14223,7 @@
 		"flint": {
 			"name": "timeoutCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -14710,8 +14632,7 @@
 		"flint": {
 			"name": "innerHTMLProps",
 			"plugin": "solid",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15010,8 +14931,7 @@
 		"flint": {
 			"name": "blockLang",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15024,8 +14944,7 @@
 		"flint": {
 			"name": "buttonTypes",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15038,8 +14957,7 @@
 		"flint": {
 			"name": "classDirectives",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15202,8 +15120,7 @@
 		"flint": {
 			"name": "eventPrefixes",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15300,8 +15217,7 @@
 		"flint": {
 			"name": "htmlCommentSpacing",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15383,8 +15299,7 @@
 		"flint": {
 			"name": "inlineStyles",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -15484,8 +15399,7 @@
 		"flint": {
 			"name": "manualEventListeners",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15553,8 +15467,7 @@
 		"flint": {
 			"name": "optimizedStyleAttributes",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15607,8 +15520,7 @@
 		"flint": {
 			"name": "selectorConsistency",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15621,8 +15533,7 @@
 		"flint": {
 			"name": "selfClosingHtmlElements",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15635,8 +15546,7 @@
 		"flint": {
 			"name": "shorthandAttributes",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15649,8 +15559,7 @@
 		"flint": {
 			"name": "shorthandDirectives",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15759,8 +15668,7 @@
 		"flint": {
 			"name": "styleDirectives",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15813,8 +15721,7 @@
 		"flint": {
 			"name": "targetBlankLinks",
 			"plugin": "svelte",
-			"preset": "security",
-			"strictness": "strict"
+			"preset": "securityStrict"
 		},
 		"eslint": [
 			{
@@ -15827,8 +15734,7 @@
 		"flint": {
 			"name": "topLevelBrowserGlobals",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15908,8 +15814,7 @@
 		"flint": {
 			"name": "unusedClassNames",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -16001,8 +15906,7 @@
 		"flint": {
 			"name": "validStyleParsing",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -16132,9 +16036,8 @@
 		"flint": {
 			"name": "accessorThisRecursion",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -16549,9 +16452,8 @@
 		"flint": {
 			"name": "arrayFilteredFinds",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -16615,9 +16517,8 @@
 		"flint": {
 			"name": "arrayFlatMapMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -16642,9 +16543,8 @@
 		"flint": {
 			"name": "arrayFlatMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -16768,9 +16668,7 @@
 		"flint": {
 			"name": "arrayIncludesMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -16801,9 +16699,7 @@
 		"flint": {
 			"name": "arrayIndexOfMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -17046,9 +16942,7 @@
 		"flint": {
 			"name": "arrayReduceTypeArguments",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -17110,9 +17004,7 @@
 		"flint": {
 			"name": "arraySomeMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -17531,9 +17423,7 @@
 		"flint": {
 			"name": "atAccesses",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -17817,8 +17707,7 @@
 		"flint": {
 			"name": "branchCodeDuplicates",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -17837,9 +17726,7 @@
 		"flint": {
 			"name": "builtinCoercions",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -18038,8 +17925,7 @@
 		"flint": {
 			"name": "caughtErrorCauses",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -18064,9 +17950,7 @@
 		"flint": {
 			"name": "caughtVariableNames",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -18277,9 +18161,7 @@
 		"flint": {
 			"name": "classMethodsThis",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -18321,9 +18203,7 @@
 		"flint": {
 			"name": "combinedPushes",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -18958,9 +18838,7 @@
 		"flint": {
 			"name": "dateNowTimestamps",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -19094,8 +18972,7 @@
 		"flint": {
 			"name": "defaultExportRedundancies",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -19299,9 +19176,7 @@
 		"flint": {
 			"name": "destructuringConsistency",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -19375,8 +19250,7 @@
 		"flint": {
 			"name": "directivePairs",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -19389,8 +19263,7 @@
 		"flint": {
 			"name": "directiveRequireDescriptions",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -19668,8 +19541,7 @@
 		"flint": {
 			"name": "elseIfChains",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -19708,9 +19580,7 @@
 		"flint": {
 			"name": "elseReturns",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -19863,9 +19733,7 @@
 		"flint": {
 			"name": "emptyFiles",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -19890,9 +19758,7 @@
 		"flint": {
 			"name": "emptyFunctions",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -20077,9 +19943,7 @@
 		"flint": {
 			"name": "enumMemberLiterals",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -20123,8 +19987,7 @@
 		"flint": {
 			"name": "enums",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -20266,9 +20129,7 @@
 		"flint": {
 			"name": "errorMessages",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -20306,9 +20167,7 @@
 		"flint": {
 			"name": "errorSubclassProperties",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -20347,9 +20206,7 @@
 		"flint": {
 			"name": "escapeSequenceCasing",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -20400,8 +20257,7 @@
 		"flint": {
 			"name": "evolvingVariableTypes",
 			"plugin": "ts",
-			"status": "implemented",
-			"strictness": "strict"
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -20495,8 +20351,7 @@
 		"flint": {
 			"name": "explicitTimerDelays",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -20736,9 +20591,7 @@
 		"flint": {
 			"name": "extraneousClasses",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -21058,8 +20911,7 @@
 		"flint": {
 			"name": "functionDefinitionScopeConsistency",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -21374,9 +21226,7 @@
 		"flint": {
 			"name": "globalThisAliases",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -22280,8 +22130,7 @@
 		"flint": {
 			"name": "invalidVoidTypes",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -22526,8 +22375,7 @@
 		"flint": {
 			"name": "jsdocAsterisks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -22791,8 +22639,7 @@
 		"flint": {
 			"name": "jsdocInformativeDocs",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -22858,8 +22705,7 @@
 		"flint": {
 			"name": "jsdocMisleadingBlocks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -22885,8 +22731,7 @@
 		"flint": {
 			"name": "jsdocMultilineBlocks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -22925,8 +22770,7 @@
 		"flint": {
 			"name": "jsdocParameterDescriptionHyphens",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -23245,8 +23089,7 @@
 		"flint": {
 			"name": "jsdocTagNames",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -23807,9 +23650,7 @@
 		"flint": {
 			"name": "mathMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -24507,9 +24348,7 @@
 		"flint": {
 			"name": "namedDefaultExports",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -24632,9 +24471,7 @@
 		"flint": {
 			"name": "namespaceImplicitAmbientImports",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"deno": [
 			{
@@ -24647,8 +24484,7 @@
 		"flint": {
 			"name": "namespaceImports",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -24782,9 +24618,7 @@
 		"flint": {
 			"name": "negativeIndexLengthMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25039,9 +24873,7 @@
 		"flint": {
 			"name": "nonNullAssertedNullishCoalesces",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -25092,9 +24924,7 @@
 		"flint": {
 			"name": "nonNullAssertionPlacement",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25113,8 +24943,7 @@
 		"flint": {
 			"name": "nonNullAssertions",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -25313,9 +25142,7 @@
 		"flint": {
 			"name": "numberStaticMethods",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -25482,9 +25309,7 @@
 		"flint": {
 			"name": "numericSeparatorGroups",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -25600,9 +25425,7 @@
 		"flint": {
 			"name": "objectEntriesMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26825,8 +26648,7 @@
 		"flint": {
 			"name": "recursiveParameters",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -26859,8 +26681,7 @@
 		"flint": {
 			"name": "reexportAlls",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -26930,9 +26751,7 @@
 		"flint": {
 			"name": "regexCharacterClasses",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27096,9 +26915,7 @@
 		"flint": {
 			"name": "regexDigitMatchers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27311,9 +27128,7 @@
 		"flint": {
 			"name": "regexExecutors",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -27355,9 +27170,7 @@
 		"flint": {
 			"name": "regexGraphemeStringLiterals",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27370,9 +27183,7 @@
 		"flint": {
 			"name": "regexHexadecimalEscapes",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27427,9 +27238,7 @@
 		"flint": {
 			"name": "regexLetterCasing",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27481,9 +27290,7 @@
 		"flint": {
 			"name": "regexLookaroundAssertions",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27510,9 +27317,7 @@
 		"flint": {
 			"name": "regexMatchNotation",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27583,9 +27388,7 @@
 		"flint": {
 			"name": "regexNamedBackreferences",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27627,9 +27430,7 @@
 		"flint": {
 			"name": "regexNamedReplacements",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27697,9 +27498,7 @@
 		"flint": {
 			"name": "regexPlusQuantifiers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27739,9 +27538,7 @@
 		"flint": {
 			"name": "regexQuestionQuantifiers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27768,9 +27565,7 @@
 		"flint": {
 			"name": "regexResultArrayGroups",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27811,9 +27606,7 @@
 		"flint": {
 			"name": "regexStarQuantifiers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27897,9 +27690,7 @@
 		"flint": {
 			"name": "regexUnicodeCodepointEscapes",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -28137,9 +27928,7 @@
 		"flint": {
 			"name": "regexUnnecessaryNonCapturingGroups",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -28294,9 +28083,7 @@
 		"flint": {
 			"name": "regexWordMatchers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -28659,9 +28446,7 @@
 		"flint": {
 			"name": "returnThisTypes",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -28693,8 +28478,7 @@
 		"flint": {
 			"name": "returnVoidSafety",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -28771,8 +28555,7 @@
 		"flint": {
 			"name": "setHasExistenceChecks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -28804,9 +28587,7 @@
 		"flint": {
 			"name": "setSizeLengthChecks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -29088,9 +28869,7 @@
 		"flint": {
 			"name": "sizeComparisonOperators",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -29218,9 +28997,7 @@
 		"flint": {
 			"name": "staticMemberOnlyClasses",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -29304,9 +29081,7 @@
 		"flint": {
 			"name": "stringCodePoints",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -29440,9 +29215,7 @@
 		"flint": {
 			"name": "stringSliceMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -29561,9 +29334,7 @@
 		"flint": {
 			"name": "structuredCloneMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -30082,9 +29853,7 @@
 		"flint": {
 			"name": "topLevelAwaits",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -30367,9 +30136,7 @@
 		"flint": {
 			"name": "typeImports",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -30595,9 +30362,7 @@
 		"flint": {
 			"name": "undefinedTypeofChecks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -30694,8 +30459,7 @@
 		"flint": {
 			"name": "unifiedSignatures",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -31411,9 +31175,7 @@
 		"flint": {
 			"name": "unnecessaryTernaries",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -32705,8 +32467,7 @@
 		"flint": {
 			"name": "whileLoops",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -32918,8 +32679,7 @@
 	{
 		"flint": {
 			"name": "calledOnceAssertions",
-			"plugin": "vitest",
-			"strictness": "strict"
+			"plugin": "vitest"
 		},
 		"eslint": [
 			{
@@ -32938,8 +32698,7 @@
 		"flint": {
 			"name": "calledOnceWithAssertions",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -32958,8 +32717,7 @@
 		"flint": {
 			"name": "calledTimesAssertions",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -32978,8 +32736,7 @@
 		"flint": {
 			"name": "calledWithAssertions",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -32998,8 +32755,7 @@
 		"flint": {
 			"name": "commentedOutTests",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -33241,8 +32997,7 @@
 		"flint": {
 			"name": "expectsOutsideTests",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -33324,8 +33079,7 @@
 		"flint": {
 			"name": "hoistedApiPositions",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -33364,8 +33118,7 @@
 		"flint": {
 			"name": "hookDuplicates",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -33390,8 +33143,7 @@
 		"flint": {
 			"name": "hookOrders",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -33436,9 +33188,7 @@
 		"flint": {
 			"name": "hooksBeforeTestCases",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -33547,8 +33297,7 @@
 		"flint": {
 			"name": "mockedFunctionInstances",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -33561,8 +33310,7 @@
 		"flint": {
 			"name": "mockReturnShorthands",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"oxlint": [
 			{
@@ -33595,8 +33343,7 @@
 		"flint": {
 			"name": "mockTypeParameters",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -33938,9 +33685,7 @@
 		"flint": {
 			"name": "testCasesWithinDescribes",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -33993,8 +33738,7 @@
 		"flint": {
 			"name": "testConditionals",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -34551,8 +34295,7 @@
 		"flint": {
 			"name": "attributeOrders",
 			"plugin": "vue",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -36491,8 +36234,7 @@
 		"flint": {
 			"name": "loneTemplates",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -36920,8 +36662,7 @@
 		"flint": {
 			"name": "optionsApi",
 			"plugin": "vue",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -37084,8 +36825,7 @@
 		"flint": {
 			"name": "propRequiredAndDefaults",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -37480,8 +37220,7 @@
 		"flint": {
 			"name": "slotArguments",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -37787,8 +37526,7 @@
 		"flint": {
 			"name": "templateShadows",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -37885,8 +37623,7 @@
 		"flint": {
 			"name": "thisInTemplates",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -38167,8 +37904,7 @@
 		"flint": {
 			"name": "vapor",
 			"plugin": "vue",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -38181,8 +37917,7 @@
 		"flint": {
 			"name": "vHtmlDirectives",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -38403,9 +38138,7 @@
 		"flint": {
 			"name": "fileExtensions",
 			"plugin": "yaml",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -38541,9 +38274,7 @@
 		"flint": {
 			"name": "numericTrailingZeros",
 			"plugin": "yaml",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -38556,9 +38287,7 @@
 		"flint": {
 			"name": "plainScalars",
 			"plugin": "yaml",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -38598,9 +38327,7 @@
 		"flint": {
 			"name": "stringMappingKeys",
 			"plugin": "yaml",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{

@@ -23,7 +23,7 @@ const orders = {
 		"stylelint",
 		"notes",
 	],
-	flint: ["name", "plugin", "preset", "status", "strictness"],
+	flint: ["name", "plugin", "preset", "status"],
 	biome: linterRuleReferenceOrder,
 	deno: linterRuleReferenceOrder,
 	eslint: linterRuleReferenceOrder,
