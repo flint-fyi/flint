@@ -57,7 +57,10 @@ function isRecursiveCall(
 
 	let calleeMatchesFunctionName = false;
 
-	if (callee.kind === SyntaxKind.Identifier) {
+	if (
+		callee.kind === SyntaxKind.Identifier &&
+		functionNode.kind !== SyntaxKind.MethodDeclaration
+	) {
 		calleeMatchesFunctionName = callee.text === functionName;
 	} else if (
 		callee.kind === SyntaxKind.PropertyAccessExpression &&
