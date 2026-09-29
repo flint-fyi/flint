@@ -42,7 +42,6 @@ export function createTypeScriptServerHost(
 			clearTimeout(immediate);
 		},
 		// https://github.com/microsoft/vscode/blob/2d698cf0544ccd408de942ece55ff916f8d442a8/extensions/typescript-language-features/web/src/serverHost.ts#L80-L82
-		// flint-disable-next-line ts/recursionOnlyArguments
 		clearTimeout(timeout: Timeout) {
 			clearTimeout(timeout);
 		},
@@ -106,10 +105,8 @@ export function createTypeScriptServerHost(
 		},
 		// https://github.com/microsoft/vscode/blob/2d698cf0544ccd408de942ece55ff916f8d442a8/extensions/typescript-language-features/web/src/serverHost.ts#L77-L79
 		setTimeout(
-			// flint-disable-lines-begin ts/recursionOnlyArguments
 			callback: (...args: unknown[]) => void,
 			ms: number,
-			// flint-disable-lines-end ts/recursionOnlyArguments
 			...args: unknown[]
 		) {
 			return setTimeout(callback, ms, ...args);
