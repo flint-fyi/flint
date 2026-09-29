@@ -3,7 +3,6 @@ import { styleText } from "node:util";
 import { textTable } from "text-table-fast";
 
 import { formatReport, hasFix } from "@flint.fyi/core";
-import { makeAbsolute } from "@flint.fyi/utils";
 
 import { presentHeader } from "./shared/header.ts";
 import { presentLanguageReports } from "./shared/presentLanguageReports.ts";
@@ -25,7 +24,7 @@ export const briefPresenterFactory: PresenterFactory = {
 				counts.fixable += reports.filter(hasFix).length;
 
 				yield "\n";
-				yield styleText("underline", makeAbsolute(file.filePath));
+				yield styleText("underline", file.filePath);
 				yield "\n";
 
 				yield textTable(

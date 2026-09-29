@@ -260,5 +260,12 @@ function mutualB(n: number): number {
     return mutualA(n);
 }
 `,
+		`
+class Host {
+    clearTimeout(timeout: number) {
+        clearTimeout(timeout);
+    }
+}
+`,
 	],
 });

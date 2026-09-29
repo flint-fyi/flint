@@ -14,13 +14,11 @@ export {
 } from "./directives/DirectivesCollector.ts";
 export { directiveReports } from "./directives/reports/directiveReports.ts";
 export { globs } from "./globs/index.ts";
-export { createDiskBackedLinterHost } from "./host/createDiskBackedLinterHost.ts";
 export { createEphemeralLinterHost } from "./host/createEphemeralLinterHost.ts";
 export {
 	createVFSLinterHost,
 	type CreateVFSLinterHostOpts,
 } from "./host/createVFSLinterHost.ts";
-export { isFileSystemCaseSensitive } from "./host/isFileSystemCaseSensitive.ts";
 export {
 	commonlyIgnoredPaths,
 	gitVcs,

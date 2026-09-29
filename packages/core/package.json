@@ -17,6 +17,7 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
+		"./node": "./src/node.ts",
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -50,6 +51,7 @@
 		"access": "public",
 		"exports": {
 			".": "./dist/index.mjs",
+			"./node": "./dist/node.mjs",
 			"./package.json": "./package.json"
 		}
 	}

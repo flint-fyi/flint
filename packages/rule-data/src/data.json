@@ -10796,6 +10796,18 @@
 	},
 	{
 		"flint": {
+			"name": "disttags",
+			"plugin": "package-json"
+		},
+		"eslint": [
+			{
+				"name": "package-json/restrict-dist-tags",
+				"url": "https://eslint-plugin-package-json.dev/rules/restrict-dist-tags"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "emptyFields",
 			"plugin": "package-json",
 			"preset": "logical",
@@ -11287,6 +11299,19 @@
 	},
 	{
 		"flint": {
+			"name": "packageJsonExportPresence",
+			"plugin": "package-json",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "package-json/require-package-json-export",
+				"url": "https://eslint-plugin-package-json.dev/rules/require-package-json-export"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "packageManagerPresence",
 			"plugin": "package-json",
 			"status": "implemented"
@@ -11542,6 +11567,18 @@
 			{
 				"name": "package-json/valid-repository",
 				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-repository"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "rollingWorkspaceSpecs",
+			"plugin": "package-json"
+		},
+		"eslint": [
+			{
+				"name": "package-json/prefer-rolling-workspace-spec",
+				"url": "https://eslint-plugin-package-json.dev/rules/prefer-rolling-workspace-spec"
 			}
 		]
 	},
