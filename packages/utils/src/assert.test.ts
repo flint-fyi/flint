@@ -32,7 +32,7 @@ describe("addFlintAssertionContext", () => {
 		);
 		const issueUrl = new URL(
 			nullThrows(
-				error.message.split("Please report it here: ")[1],
+				error.message.split("Please report it here: ", 2)[1],
 				"Expected a report URL",
 			),
 		);
