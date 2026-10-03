@@ -1,5 +1,12 @@
 # @flint/yaml
 
+## 0.17.4
+
+### Patch Changes
+
+- Updated dependencies [[`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9)]:
+  - @flint.fyi/core@0.29.0
+
 ## 0.17.3
 
 ### Patch Changes

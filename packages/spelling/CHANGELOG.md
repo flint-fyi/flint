@@ -1,5 +1,16 @@
 # @flint.fyi/spelling
 
+## 0.4.4
+
+### Patch Changes
+
+- [#3530](https://github.com/flint-fyi/flint/pull/3530) [`de47eec`](https://github.com/flint-fyi/flint/commit/de47eecc9154d5b82b4e45489f9ddc0a49d55e46) - Resolve expected cross-file suggestion paths against the test host's current directory, so fixtures can use relative path literals.
+  Rules must report absolute target paths; relative reported targets are no longer accepted.
+  Target CSpell dictionary suggestions at the absolute configuration path used to read the dictionary.
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+  - @flint.fyi/core@0.29.0
+
 ## 0.4.3
 
 ### Patch Changes
