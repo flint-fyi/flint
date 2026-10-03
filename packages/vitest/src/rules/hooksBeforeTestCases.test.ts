@@ -163,10 +163,6 @@ describe("suite", () => {
 const myTest = test.extend({})
 beforeEach(() => {})
 `,
-		`
-test.override({ value: 1 })("my test", () => {})
-beforeEach(() => {})
-`,
 		"console.log()",
 	],
 });

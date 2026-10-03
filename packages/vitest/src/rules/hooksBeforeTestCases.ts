@@ -16,7 +16,7 @@ const hookFunctionNamesSet = new Set([
 	"beforeEach",
 ]);
 
-const exemptModifiers = new Set(["extend", "override", "scoped"]);
+const exemptModifiers = new Set(["extend", "scoped"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
