@@ -80,7 +80,7 @@
 	"devEngines": {
 		"packageManager": {
 			"name": "pnpm",
-			"version": "11.28.2"
+			"version": "11.28.3"
 		}
 	}
 }
