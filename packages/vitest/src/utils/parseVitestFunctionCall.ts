@@ -9,7 +9,6 @@ const knownVitestFunctionNames = [
 	"aroundEach",
 	"beforeAll",
 	"beforeEach",
-	"bench",
 	"describe",
 	"it",
 	"suite",

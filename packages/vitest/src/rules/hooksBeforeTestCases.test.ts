@@ -113,13 +113,11 @@ suite("suite", () => {
 		},
 		{
 			code: `
-declare function bench(name: string, fn: () => void): void;
-bench("my benchmark", () => {})
+it("my test", () => {})
 aroundAll(async (runSuite) => { await runSuite() })
 `,
 			snapshot: `
-declare function bench(name: string, fn: () => void): void;
-bench("my benchmark", () => {})
+it("my test", () => {})
 aroundAll(async (runSuite) => { await runSuite() })
 ~~~~~~~~~
 This hook appears after a test case.

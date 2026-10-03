@@ -286,6 +286,26 @@ test("test", () => {
 		},
 		{
 			code: `
+test("test", ({ bench }) => {
+    bench("benchmark", () => {});
+    if (something) {
+        expect(something).toBe(true);
+    }
+});
+`,
+			snapshot: `
+test("test", ({ bench }) => {
+    bench("benchmark", () => {});
+    if (something) {
+        expect(something).toBe(true);
+        ~~~~~~~~~~~~~~~~~
+        Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
 promise["catch"](() => {
     expect(true).toBe(false);
 });
