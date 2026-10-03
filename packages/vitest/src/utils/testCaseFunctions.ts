@@ -4,14 +4,7 @@ import type { AST, ScopeVariable } from "@flint.fyi/typescript-language";
 
 import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
 
-const testCaseFunctionNamesSet = new Set([
-	"bench",
-	"fit",
-	"it",
-	"test",
-	"xit",
-	"xtest",
-]);
+export const testCaseFunctionNamesSet = new Set(["bench", "it", "test"]);
 
 export const isVitestTestFunction = (node: AST.CallExpression): boolean => {
 	const vitestFunction = parseVitestFunctionCall(node);

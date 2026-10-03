@@ -97,6 +97,36 @@ describe("suite", () => {
 		},
 		{
 			code: `
+suite("suite", () => {
+	test("my test", () => {})
+	aroundEach(async (runTest) => { await runTest() })
+})
+`,
+			snapshot: `
+suite("suite", () => {
+	test("my test", () => {})
+	aroundEach(async (runTest) => { await runTest() })
+	~~~~~~~~~~
+	This hook appears after a test case.
+})
+`,
+		},
+		{
+			code: `
+declare function bench(name: string, fn: () => void): void;
+bench("my benchmark", () => {})
+aroundAll(async (runSuite) => { await runSuite() })
+`,
+			snapshot: `
+declare function bench(name: string, fn: () => void): void;
+bench("my benchmark", () => {})
+aroundAll(async (runSuite) => { await runSuite() })
+~~~~~~~~~
+This hook appears after a test case.
+`,
+		},
+		{
+			code: `
 test("my test", () => {})
 console.log()
 afterEach(() => {})
@@ -133,6 +163,10 @@ describe("suite", () => {
 `,
 		`
 const myTest = test.extend({})
+beforeEach(() => {})
+`,
+		`
+test.override({ value: 1 })("my test", () => {})
 beforeEach(() => {})
 `,
 		"console.log()",

@@ -5,10 +5,14 @@ import type { AST } from "@flint.fyi/typescript-language";
 const knownVitestFunctionNames = [
 	"afterAll",
 	"afterEach",
+	"aroundAll",
+	"aroundEach",
 	"beforeAll",
 	"beforeEach",
+	"bench",
 	"describe",
 	"it",
+	"suite",
 	"test",
 ] as const;
 
@@ -20,6 +24,7 @@ const knownVitestFunctionModifiersSet = new Set([
 	"only",
 	"runIf",
 	"sequential",
+	"shuffle",
 	"skip",
 	"skipIf",
 	"todo",

@@ -34,6 +34,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					switch (functionCall?.name) {
 						case "afterAll":
 						case "afterEach":
+						case "aroundAll":
+						case "aroundEach":
 						case "beforeAll":
 						case "beforeEach":
 							if (!insideDescribeStack) {
@@ -46,6 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							break;
 
 						case "describe":
+						case "suite":
 							insideDescribeStack += 1;
 							break;
 
@@ -63,6 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"CallExpression:exit": (node) => {
 					switch (parseVitestFunctionCall(node)?.name) {
 						case "describe":
+						case "suite":
 							insideDescribeStack -= 1;
 							break;
 					}
