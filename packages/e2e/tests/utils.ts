@@ -20,6 +20,10 @@ export function normalizeOutput(stdout: string, cwd: string): string {
  *
  * `GITHUB_ACTIONS` is cleared so the default presenter stays deterministic:
  * otherwise CI would auto-select the `github` presenter and change the output.
+ *
+ * The Node.js compile cache is disabled because CI always starts with an empty
+ * cache, and concurrent flint processes writing it are slow enough on Windows
+ * to time tests out.
  */
 export async function runFlint(
 	cwd: string,
@@ -27,7 +31,11 @@ export async function runFlint(
 ): Promise<{ exitCode: number | undefined; stdout: string }> {
 	const { exitCode, stdout } = await execa({
 		cwd,
-		env: { FORCE_COLOR: "1", GITHUB_ACTIONS: undefined },
+		env: {
+			FORCE_COLOR: "1",
+			GITHUB_ACTIONS: undefined,
+			NODE_DISABLE_COMPILE_CACHE: "1",
+		},
 		reject: false,
 	})`flint ${args}`;
 
