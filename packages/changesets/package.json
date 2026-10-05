@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/changesets",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "[Experimental] A Flint plugin for Changesets.",
 	"homepage": "https://flint.fyi/rules/changesets",
 	"repository": {

@@ -1,5 +1,12 @@
 # @flint.fyi/vue-language
 
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+
 ## 0.4.1
 
 ### Patch Changes
