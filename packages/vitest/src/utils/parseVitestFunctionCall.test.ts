@@ -5,17 +5,17 @@ import type { AST } from "@flint.fyi/typescript-language";
 
 import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
 
-const knownVitestFunctionNames = [
-	"afterAll",
-	"afterEach",
-	"aroundAll",
-	"aroundEach",
-	"beforeAll",
-	"beforeEach",
-	"describe",
-	"it",
-	"suite",
-	"test",
+const knownVitestFunctions = [
+	{ kind: "hook", name: "afterAll" },
+	{ kind: "hook", name: "afterEach" },
+	{ kind: "hook", name: "aroundAll" },
+	{ kind: "hook", name: "aroundEach" },
+	{ kind: "hook", name: "beforeAll" },
+	{ kind: "hook", name: "beforeEach" },
+	{ kind: "describe", name: "describe" },
+	{ kind: "test", name: "it" },
+	{ kind: "describe", name: "suite" },
+	{ kind: "test", name: "test" },
 ];
 
 const unknownVitestFunctionNames = ["foo", "expect", "vi", "tests"];
@@ -42,12 +42,13 @@ function parseCallExpression(source: string): AST.CallExpression {
 }
 
 describe(parseVitestFunctionCall, () => {
-	it.each(knownVitestFunctionNames)(
-		"parses %s called as an identifier",
-		(name) => {
+	it.each(knownVitestFunctions)(
+		"parses $name called as an identifier",
+		({ kind, name }) => {
 			expect(
 				parseVitestFunctionCall(parseCallExpression(`${name}(() => {})`)),
 			).toMatchObject({
+				kind,
 				name,
 				segments: [],
 			});

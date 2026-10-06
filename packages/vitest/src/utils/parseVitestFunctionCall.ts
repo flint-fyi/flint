@@ -2,20 +2,23 @@ import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
-const knownVitestFunctionNames = [
-	"afterAll",
-	"afterEach",
-	"aroundAll",
-	"aroundEach",
-	"beforeAll",
-	"beforeEach",
-	"describe",
-	"it",
-	"suite",
-	"test",
-] as const;
+const vitestFunctionKinds = {
+	afterAll: "hook",
+	afterEach: "hook",
+	aroundAll: "hook",
+	aroundEach: "hook",
+	beforeAll: "hook",
+	beforeEach: "hook",
+	describe: "describe",
+	it: "test",
+	suite: "describe",
+	test: "test",
+} as const;
 
-const knownBlockNamesSet = new Set<string>(knownVitestFunctionNames);
+export type VitestFunctionKind =
+	(typeof vitestFunctionKinds)[VitestFunctionName];
+
+export type VitestFunctionName = keyof typeof vitestFunctionKinds;
 
 const knownVitestFunctionModifiersSet = new Set([
 	"concurrent",
@@ -29,6 +32,11 @@ const knownVitestFunctionModifiersSet = new Set([
 	"todo",
 ]);
 
+export interface VitestFunctionCall extends VitestCallee {
+	kind: VitestFunctionKind;
+	name: VitestFunctionName;
+}
+
 interface VitestCallee {
 	name: string;
 	segments: string[];
@@ -37,12 +45,22 @@ interface VitestCallee {
 
 export function parseVitestFunctionCall(
 	node: AST.CallExpression,
-): undefined | VitestCallee {
+): undefined | VitestFunctionCall {
 	const parsedCallee = parseVitestCallee(node.expression);
-
-	if (!parsedCallee || !knownBlockNamesSet.has(parsedCallee.name)) {
+	if (!parsedCallee) {
 		return;
 	}
+
+	const { name } = parsedCallee;
+	if (!isVitestFunctionName(name)) {
+		return;
+	}
+
+	const functionCall: VitestFunctionCall = {
+		...parsedCallee,
+		kind: vitestFunctionKinds[name],
+		name,
+	};
 
 	switch (node.expression.kind) {
 		case SyntaxKind.CallExpression:
@@ -50,19 +68,23 @@ export function parseVitestFunctionCall(
 			return parsedCallee.segments
 				.slice(0, -1)
 				.every((segment) => knownVitestFunctionModifiersSet.has(segment))
-				? parsedCallee
+				? functionCall
 				: undefined;
 
 		case SyntaxKind.Identifier:
-			return parsedCallee;
+			return functionCall;
 
 		case SyntaxKind.PropertyAccessExpression:
 			return parsedCallee.segments.every((segment) =>
 				knownVitestFunctionModifiersSet.has(segment),
 			)
-				? parsedCallee
+				? functionCall
 				: undefined;
 	}
+}
+
+function isVitestFunctionName(name: string): name is VitestFunctionName {
+	return Object.hasOwn(vitestFunctionKinds, name);
 }
 
 function parseVitestCallee(
