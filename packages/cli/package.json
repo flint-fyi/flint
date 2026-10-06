@@ -34,9 +34,11 @@
 		"debounce": "catalog:prod",
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
+		"parse-standard-args": "link:../../../parse-standard-args",
 		"text-table-fast": "catalog:prod",
 		"typescript": "catalog:prod",
-		"wrap-ansi": "catalog:prod"
+		"wrap-ansi": "catalog:prod",
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

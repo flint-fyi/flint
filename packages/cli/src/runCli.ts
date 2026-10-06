@@ -1,75 +1,35 @@
-import { parseArgs } from "node:util";
+import { createCli } from "parse-standard-args";
 
 import { addFlintAssertionContext } from "@flint.fyi/utils";
 
 import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
 
+const cli = createCli({
+	description:
+		"Welcome to Flint!\nFlint is still very early stage and experimental.",
+	footer:
+		"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
+	name: "flint",
+	options,
+	version: packageData.version,
+});
+
 export async function runCli(args: string[]): Promise<number> {
-	const { values } = parseArgs({
-		args,
-		options,
-		strict: true,
-	});
+	const parsed = await cli.parse(args);
 
-	if (values.help) {
-		console.log("Welcome to Flint!");
-		console.log("Flint is still very early stage and experimental.");
-		console.log("");
-		console.log("Options:");
-		console.log("");
-		console.log("  --cache-ignore");
-		console.log(
-			"    Whether to ignore any existing cache data on disk. This will cause a full re-lint of all linted files.",
-		);
-		console.log("");
-		console.log("  --cache-location <path>");
-		console.log("    The path to the cache file or directory to use.");
-		console.log("");
-		console.log("  --fix");
-		console.log("    Enables auto-fixing 'fixes' from rule reports.");
-		console.log("");
-		console.log("  --fix-suggestions <suggestion>");
-		console.log(
-			"    Enables auto-fixing any number of specific 'suggestions' from rule reports.",
-		);
-		console.log("");
-		console.log("  --interactive");
-		console.log(
-			"    Whether to run Flint with an interactive 'one file at a time' viewer.",
-		);
-		console.log("");
-		console.log("  --presenter <brief|detailed>");
-		console.log(
-			"    Which 'presenter' to output results using: brief (default) or detailed.",
-		);
-		console.log("");
-		console.log("  --skip-formatting");
-		console.log("    Whether to skip formatting after linting.");
-		console.log("");
-		console.log("  --skip-language-reports");
-		console.log(
-			"    Whether to skip generating language reports after linting.",
-		);
-		console.log("");
-		console.log("  --version");
-		console.log("    Prints the current package version of Flint.");
-		console.log("");
-		console.log("  --watch");
-		console.log(
-			"    Whether to keep the linting process running, re-linting files as they change.",
-		);
-		console.log("");
-		console.log(
-			"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
-		);
-		return 0;
+	switch (parsed.type) {
+		case "error":
+			console.error(parsed.text);
+			return 2;
+
+		case "help":
+		case "version":
+			console.log(parsed.text);
+			return 0;
 	}
 
-	if (values.version) {
-		console.log(packageData.version);
-		return 0;
-	}
+	const { values } = parsed;
 
 	try {
 		const [
