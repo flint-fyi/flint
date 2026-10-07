@@ -962,6 +962,9 @@ importers:
       ignore:
         specifier: catalog:prod
         version: 7.0.12
+      parse-standard-args:
+        specifier: link:../../../parse-standard-args
+        version: link:../../../parse-standard-args
       text-table-fast:
         specifier: catalog:prod
         version: 0.2.0
@@ -971,6 +974,9 @@ importers:
       wrap-ansi:
         specifier: catalog:prod
         version: 10.0.2
+      zod:
+        specifier: catalog:prod
+        version: 4.6.5
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
