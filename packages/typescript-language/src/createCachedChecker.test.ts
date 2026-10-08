@@ -111,6 +111,7 @@ export const usesLegacy = legacy;
 		getBaseConstraintOfType: observe("getBaseConstraintOfType"),
 		getImmediateAliasedSymbol: observe("getImmediateAliasedSymbol"),
 		getJsDocTagsOfSymbol: observe("getJsDocTagsOfSymbol"),
+		getNonMissingTypeOfSymbol: observe("getNonMissingTypeOfSymbol"),
 		getTypeOfSymbol: observe("getTypeOfSymbol"),
 		isArrayType: observe("isArrayType"),
 	};
@@ -406,5 +407,38 @@ describe(createCachedChecker, () => {
 		expect(cached.isArrayType(arrayType)).toBe(true);
 		expect(cached.isArrayType(arrayType)).toBe(true);
 		expect(spies.isArrayType).toHaveBeenCalledOnce();
+	});
+
+	it("answers a symbol's type away from where it can be narrowed from one request per symbol", () => {
+		using fixture = createFixture();
+		const { checker, indexFile, spies } = fixture;
+		const cached = createCachedChecker(checker, indexFile);
+		const [firstCall, secondCall] = collectNodes(indexFile, [
+			SyntaxKind.CallExpression,
+		]);
+		const symbol = nullThrows(
+			cached.getSymbolAtLocation(
+				nullThrows(collectReferences(indexFile)[0], "Expected a reference."),
+			),
+			"Expected a symbol.",
+		);
+
+		const types = [firstCall, secondCall].map((call) =>
+			cached.getTypeOfSymbolAtLocation(
+				symbol,
+				nullThrows(call, "Expected a call."),
+			),
+		);
+
+		expect(types[0]).toBe(types[1]);
+		expect(checker.typeToString(nullThrows(types[0], "Expected a type."))).toBe(
+			checker.typeToString(
+				checker.getTypeOfSymbolAtLocation(
+					symbol,
+					nullThrows(firstCall, "Expected a call."),
+				),
+			),
+		);
+		expect(spies.getNonMissingTypeOfSymbol).toHaveBeenCalledOnce();
 	});
 });

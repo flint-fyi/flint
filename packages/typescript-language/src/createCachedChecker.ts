@@ -64,6 +64,7 @@ interface CheckerMemos {
 	typeArgumentsByType: WeakMap<TypeReference, readonly Type[]>;
 	typeByNode: WeakMap<Node, Type>;
 	typeBySymbol: WeakMap<Symbol, Type>;
+	typeElsewhereBySymbol: WeakMap<Symbol, Type>;
 }
 
 const memosByChecker = new WeakMap<Checker, CheckerMemos>();
@@ -102,6 +103,7 @@ function getMemos(checker: Checker): CheckerMemos {
 			typeArgumentsByType: new WeakMap(),
 			typeByNode: new WeakMap(),
 			typeBySymbol: new WeakMap(),
+			typeElsewhereBySymbol: new WeakMap(),
 		};
 		memosByChecker.set(checker, memos);
 	}
@@ -498,6 +500,16 @@ export function createCachedChecker(
 		);
 	};
 
+	// Away from where a symbol can be narrowed or written to, its type at a
+	// location is its own, so one answer serves every such location.
+	const getTypeOfSymbolAtLocation = (symbol: Symbol, location: Node): Type =>
+		symbol.flags & SymbolFlags.ExportValue ||
+		isTypeOfSymbolLocation(symbol, location as AST.AnyNode)
+			? checker.getTypeOfSymbolAtLocation(symbol, location)
+			: memoized(memos.typeElsewhereBySymbol, symbol, () =>
+					checker.getNonMissingTypeOfSymbol(symbol),
+				);
+
 	const overrides = {
 		getAliasedSymbol,
 		getApparentType,
@@ -521,6 +533,7 @@ export function createCachedChecker(
 			),
 		getTypeAtLocation,
 		getTypeOfSymbol,
+		getTypeOfSymbolAtLocation,
 		isArrayType,
 	} satisfies Partial<Record<keyof Checker, (...args: never[]) => unknown>>;
 
@@ -548,6 +561,29 @@ function isCall(node: AST.AnyNode): boolean {
 		node.kind === SyntaxKind.CallExpression ||
 		node.kind === SyntaxKind.NewExpression
 	);
+}
+
+function isTypeOfSymbolLocation(symbol: Symbol, node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		// An identifier is only narrowed as a reference to the symbol it names.
+		case SyntaxKind.Identifier:
+			return (
+				node.text === symbol.name ||
+				node.parent.kind === SyntaxKind.PropertyAccessExpression ||
+				node.parent.kind === SyntaxKind.QualifiedName
+			);
+		case SyntaxKind.PrivateIdentifier:
+			return true;
+		case SyntaxKind.SourceFile:
+			return false;
+		default:
+			return (
+				(node.parent.kind === SyntaxKind.SetAccessor &&
+					node.parent.name === node) ||
+				(node.parent.kind === SyntaxKind.ElementAccessExpression &&
+					node.parent.argumentExpression === node)
+			);
+	}
 }
 
 // The nodes rules ask for the types of: expressions, and functions and
