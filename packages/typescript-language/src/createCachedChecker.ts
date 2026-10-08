@@ -3,13 +3,19 @@ import {
 	SyntaxKind,
 	type Node,
 } from "typescript-native/unstable/ast";
-import type {
-	Checker,
-	Signature,
-	SignatureKind,
-	Symbol,
-	Type,
-	TypeReference,
+import {
+	ObjectFlags,
+	SymbolFlags,
+	TypeFlags,
+	type APIRequestGenerator,
+	type Checker,
+	type JSDocTagInfo,
+	type ObjectType,
+	type Signature,
+	type SignatureKind,
+	type Symbol,
+	type Type,
+	type TypeReference,
 } from "typescript-native/unstable/sync";
 
 import type * as AST from "./types/ast.ts";
@@ -31,7 +37,7 @@ const typePrefetchAfterMisses = 8;
 const typePrefetchSmallFileExpressions = 64;
 
 /**
- * Files with more expressions than this are never type-prefetched: the
+ * Files with more prefetched nodes than this are never type-prefetched: the
  * response would be large, and resolving every expression's type could cost
  * the native process more than the round trips it saves.
  */
@@ -45,10 +51,13 @@ const typePrefetchMaxExpressions = 4000;
  */
 interface CheckerMemos {
 	aliasedBySymbol: WeakMap<Symbol, Symbol>;
+	apparentByPrimitiveFlags: Map<TypeFlags, Type>;
 	apparentByType: WeakMap<Type, Type>;
 	baseConstraintByType: WeakMap<Type, Type | undefined>;
 	immediateAliasedBySymbol: WeakMap<Symbol, Symbol | undefined>;
+	isArrayByTarget: Map<number, boolean>;
 	isArrayByType: WeakMap<Type, boolean>;
+	jsDocTagsBySymbol: WeakMap<Symbol, readonly JSDocTagInfo[]>;
 	returnTypeBySignature: WeakMap<Signature, Type>;
 	signatureByNode: WeakMap<Node, Signature>;
 	signaturesByType: WeakMap<Type, Map<SignatureKind, readonly Signature[]>>;
@@ -59,15 +68,34 @@ interface CheckerMemos {
 
 const memosByChecker = new WeakMap<Checker, CheckerMemos>();
 
+const constrainedTypeFlags =
+	TypeFlags.Index |
+	TypeFlags.InstantiableNonPrimitive |
+	TypeFlags.StringMapping |
+	TypeFlags.TemplateLiteral |
+	TypeFlags.UnionOrIntersection;
+
+const primitiveApparentTypeFlags = [
+	TypeFlags.BigInt | TypeFlags.BigIntLiteral,
+	TypeFlags.BooleanLiteral,
+	TypeFlags.ESSymbol | TypeFlags.UniqueESSymbol,
+	TypeFlags.NonPrimitive,
+	TypeFlags.Number | TypeFlags.NumberLiteral,
+	TypeFlags.String | TypeFlags.StringLiteral,
+];
+
 function getMemos(checker: Checker): CheckerMemos {
 	let memos = memosByChecker.get(checker);
 	if (!memos) {
 		memos = {
 			aliasedBySymbol: new WeakMap(),
+			apparentByPrimitiveFlags: new Map(),
 			apparentByType: new WeakMap(),
 			baseConstraintByType: new WeakMap(),
 			immediateAliasedBySymbol: new WeakMap(),
+			isArrayByTarget: new Map(),
 			isArrayByType: new WeakMap(),
+			jsDocTagsBySymbol: new WeakMap(),
 			returnTypeBySignature: new WeakMap(),
 			signatureByNode: new WeakMap(),
 			signaturesByType: new WeakMap(),
@@ -131,9 +159,14 @@ function memoizedNested<Key extends object, SubKey, Value>(
  * Nothing is fetched until a rule asks, so files no rule queries cost
  * nothing extra, and every answer is exactly what the checker would return.
  */
+export type BatchRequests = <Result>(
+	generators: readonly APIRequestGenerator<Result>[],
+) => Result[];
+
 export function createCachedChecker(
 	checker: Checker,
 	sourceFile: AST.SourceFile,
+	batch?: BatchRequests,
 ): Checker {
 	const memos = getMemos(checker);
 	let symbolsByNode: Map<Node, Symbol | undefined> | undefined;
@@ -186,6 +219,159 @@ export function createCachedChecker(
 			: checker.getSymbolAtLocation(node);
 	}
 
+	// Batches also ask after nodes and symbols no rule has asked about, so a
+	// failure answering any of them falls back to asking about each alone.
+	const tryBatch = <Result>(
+		generators: readonly APIRequestGenerator<Result>[],
+	): Result[] | undefined => {
+		if (!batch || !generators.length) {
+			return undefined;
+		}
+		try {
+			return batch(generators);
+		} catch {
+			return undefined;
+		}
+	};
+
+	let jsDocTagsPrefetched = false;
+
+	const prefetchJsDocTags = (): void => {
+		jsDocTagsPrefetched = true;
+		symbolsByNode ??= prefetchSymbols();
+		const symbols = [...new Set(symbolsByNode.values())].filter(
+			(symbol): symbol is Symbol =>
+				!!symbol && !memos.jsDocTagsBySymbol.has(symbol),
+		);
+		const tags = tryBatch(
+			symbols.map((symbol) => checker.getJsDocTagsOfSymbol.gen(symbol)),
+		);
+		for (const [index, symbol] of symbols.entries()) {
+			const symbolTags = tags?.[index];
+			if (symbolTags) {
+				memos.jsDocTagsBySymbol.set(symbol, symbolTags);
+			}
+		}
+	};
+
+	const getJsDocTagsOfSymbol = (symbol: Symbol): readonly JSDocTagInfo[] => {
+		if (!jsDocTagsPrefetched && !memos.jsDocTagsBySymbol.has(symbol)) {
+			prefetchJsDocTags();
+		}
+		return memoized(memos.jsDocTagsBySymbol, symbol, () =>
+			checker.getJsDocTagsOfSymbol(symbol),
+		);
+	};
+
+	let aliasesPrefetched = false;
+
+	// Rules that resolve one of a file's imports usually resolve them all.
+	const prefetchAliases = (): void => {
+		aliasesPrefetched = true;
+		symbolsByNode ??= prefetchSymbols();
+		const aliases = [...new Set(symbolsByNode.values())].filter(
+			(symbol): symbol is Symbol =>
+				!!symbol &&
+				!!(symbol.flags & SymbolFlags.Alias) &&
+				!memos.aliasedBySymbol.has(symbol),
+		);
+		const answers = tryBatch<Symbol | undefined>(
+			aliases.flatMap((alias) => [
+				checker.getAliasedSymbol.gen(alias),
+				checker.getImmediateAliasedSymbol.gen(alias),
+			]),
+		);
+		if (!answers) {
+			return;
+		}
+		for (const [index, alias] of aliases.entries()) {
+			const aliased = answers[index * 2];
+			if (aliased) {
+				memos.aliasedBySymbol.set(alias, aliased);
+			}
+			memos.immediateAliasedBySymbol.set(alias, answers[index * 2 + 1]);
+		}
+	};
+
+	const getAliasedSymbol = (symbol: Symbol): Symbol => {
+		if (!aliasesPrefetched && !memos.aliasedBySymbol.has(symbol)) {
+			prefetchAliases();
+		}
+		return memoized(memos.aliasedBySymbol, symbol, () =>
+			checker.getAliasedSymbol(symbol),
+		);
+	};
+
+	const getImmediateAliasedSymbol = (symbol: Symbol): Symbol | undefined => {
+		if (!aliasesPrefetched && !memos.immediateAliasedBySymbol.has(symbol)) {
+			prefetchAliases();
+		}
+		return memoized(memos.immediateAliasedBySymbol, symbol, () =>
+			checker.getImmediateAliasedSymbol(symbol),
+		);
+	};
+
+	let signaturesPrefetched = false;
+
+	const prefetchSignatures = (): void => {
+		signaturesPrefetched = true;
+		const calls = collectNodes(isCall).filter(
+			(call) => !memos.signatureByNode.has(call),
+		);
+		const signatures = tryBatch(
+			calls.map((call) => checker.getResolvedSignature.gen(call)),
+		);
+		if (!signatures) {
+			return;
+		}
+		for (const [index, call] of calls.entries()) {
+			const signature = signatures[index];
+			if (signature) {
+				memos.signatureByNode.set(call, signature);
+			}
+		}
+		unprefetchedParameterSignatures = signatures;
+	};
+
+	let unprefetchedParameterSignatures: readonly Signature[] | undefined;
+
+	// Rules that ask for the type of one of a file's resolved signatures'
+	// parameters usually go on to ask for the others.
+	const prefetchParameterTypes = (signatures: readonly Signature[]): void => {
+		unprefetchedParameterSignatures = undefined;
+		const parameterLists = tryBatch(
+			[...new Set(signatures)].map((signature) =>
+				signature.getParameters.gen(),
+			),
+		);
+		const parameters = [...new Set(parameterLists?.flat())].filter(
+			(parameter) => !memos.typeBySymbol.has(parameter),
+		);
+		if (!parameters.length) {
+			return;
+		}
+		const types = tryBatch([checker.getTypeOfSymbol.gen(parameters)])?.[0];
+		for (const [index, parameter] of parameters.entries()) {
+			const type = types?.[index];
+			if (type) {
+				memos.typeBySymbol.set(parameter, type);
+			}
+		}
+	};
+
+	const getResolvedSignature = (node: Node): Signature => {
+		if (
+			!signaturesPrefetched &&
+			!memos.signatureByNode.has(node) &&
+			isInFile(node)
+		) {
+			prefetchSignatures();
+		}
+		return memoized(memos.signatureByNode, node, () =>
+			checker.getResolvedSignature(node),
+		);
+	};
+
 	let expressions: Node[] | undefined;
 
 	const prefetchTypes = (): void => {
@@ -209,7 +395,7 @@ export function createCachedChecker(
 		if (typeMisses < 2) {
 			return false;
 		}
-		expressions ??= collectNodes(isExpression);
+		expressions ??= collectNodes(isTypePrefetched);
 		if (expressions.length > typePrefetchMaxExpressions) {
 			typesPrefetched = true;
 			return false;
@@ -248,26 +434,78 @@ export function createCachedChecker(
 		);
 	}
 
+	// A plain object type is its own apparent type, and every primitive of a
+	// kind shares the apparent type of its global, such as `String`.
+	const getApparentType = (type: Type): Type => {
+		if (
+			type.flags & TypeFlags.Object &&
+			!((type as ObjectType).objectFlags & ObjectFlags.Mapped)
+		) {
+			return type;
+		}
+		const primitiveFlags = primitiveApparentTypeFlags.find(
+			(flags) => type.flags & flags,
+		);
+		if (primitiveFlags === undefined) {
+			return memoized(memos.apparentByType, type, () =>
+				checker.getApparentType(type),
+			);
+		}
+		let apparentType = memos.apparentByPrimitiveFlags.get(primitiveFlags);
+		if (!apparentType) {
+			apparentType = checker.getApparentType(type);
+			memos.apparentByPrimitiveFlags.set(primitiveFlags, apparentType);
+		}
+		return apparentType;
+	};
+
+	// Only these types, and tuples (which may be variadic), have constraints.
+	const getBaseConstraintOfType = (type: Type): Type | undefined =>
+		type.flags & constrainedTypeFlags || type.isTupleType()
+			? memoized(memos.baseConstraintByType, type, () =>
+					checker.getBaseConstraintOfType(type),
+				)
+			: undefined;
+
+	// Whether a type reference is to an array depends only on its target.
+	const isArrayType = (type: Type): boolean => {
+		if (
+			!(type.flags & TypeFlags.Object) ||
+			!((type as ObjectType).objectFlags & ObjectFlags.Reference)
+		) {
+			return false;
+		}
+		const { target } = type as Type & { target?: number };
+		if (target === undefined) {
+			return memoized(memos.isArrayByType, type, () =>
+				checker.isArrayType(type),
+			);
+		}
+		let isArray = memos.isArrayByTarget.get(target);
+		if (isArray === undefined) {
+			isArray = checker.isArrayType(type);
+			memos.isArrayByTarget.set(target, isArray);
+		}
+		return isArray;
+	};
+
+	const getTypeOfSymbol = (symbol: Symbol): Type => {
+		if (unprefetchedParameterSignatures && !memos.typeBySymbol.has(symbol)) {
+			prefetchParameterTypes(unprefetchedParameterSignatures);
+		}
+		return memoized(memos.typeBySymbol, symbol, () =>
+			checker.getTypeOfSymbol(symbol),
+		);
+	};
+
 	const overrides = {
-		getAliasedSymbol: (symbol: Symbol) =>
-			memoized(memos.aliasedBySymbol, symbol, () =>
-				checker.getAliasedSymbol(symbol),
-			),
-		getApparentType: (type: Type) =>
-			memoized(memos.apparentByType, type, () => checker.getApparentType(type)),
-		getBaseConstraintOfType: (type: Type) =>
-			memoized(memos.baseConstraintByType, type, () =>
-				checker.getBaseConstraintOfType(type),
-			),
-		getImmediateAliasedSymbol: (symbol: Symbol) =>
-			memoized(memos.immediateAliasedBySymbol, symbol, () =>
-				checker.getImmediateAliasedSymbol(symbol),
-			),
+		getAliasedSymbol,
+		getApparentType,
+		getBaseConstraintOfType,
+		getImmediateAliasedSymbol,
+		getJsDocTagsOfSymbol,
 		getPropertyOfType: getTypeProperty,
-		getResolvedSignature: (node: Node) =>
-			memoized(memos.signatureByNode, node, () =>
-				checker.getResolvedSignature(node),
-			),
+		getResolvedSignature,
 		getReturnTypeOfSignature: (signature: Signature) =>
 			memoized(memos.returnTypeBySignature, signature, () =>
 				checker.getReturnTypeOfSignature(signature),
@@ -282,12 +520,8 @@ export function createCachedChecker(
 				checker.getTypeArguments(type),
 			),
 		getTypeAtLocation,
-		getTypeOfSymbol: (symbol: Symbol) =>
-			memoized(memos.typeBySymbol, symbol, () =>
-				checker.getTypeOfSymbol(symbol),
-			),
-		isArrayType: (type: Type) =>
-			memoized(memos.isArrayByType, type, () => checker.isArrayType(type)),
+		getTypeOfSymbol,
+		isArrayType,
 	} satisfies Partial<Record<keyof Checker, (...args: never[]) => unknown>>;
 
 	// The checker's methods close over the checker itself rather than `this`,
@@ -309,6 +543,47 @@ export function createCachedChecker(
 	) as Checker;
 }
 
+function isCall(node: AST.AnyNode): boolean {
+	return (
+		node.kind === SyntaxKind.CallExpression ||
+		node.kind === SyntaxKind.NewExpression
+	);
+}
+
+// The nodes rules ask for the types of: expressions, and functions and
+// methods themselves. An identifier that only names a declaration, member, or
+// type is rarely asked about, and resolving all of them would cost the native
+// process more than the round trips it saves.
+function isTypePrefetched(node: AST.AnyNode): boolean {
+	switch (node.kind) {
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.MethodDeclaration:
+			return true;
+		case SyntaxKind.Identifier:
+			return isValueIdentifier(node);
+		default:
+			return isExpression(node);
+	}
+}
+
+function isValueIdentifier(node: AST.Identifier): boolean {
+	const { parent } = node;
+	switch (parent.kind) {
+		case SyntaxKind.ExportSpecifier:
+		case SyntaxKind.ImportClause:
+		case SyntaxKind.ImportSpecifier:
+		case SyntaxKind.NamespaceExport:
+		case SyntaxKind.NamespaceImport:
+		case SyntaxKind.QualifiedName:
+		case SyntaxKind.TypeReference:
+			return false;
+		case SyntaxKind.ShorthandPropertyAssignment:
+			return true;
+		default:
+			return !("name" in parent) || parent.name !== node;
+	}
+}
+
 // The nodes rules and Flint itself ask for the symbols of in bulk: names and
 // the module specifiers of imports and re-exports.
 function isSymbolAnswerable(node: AST.AnyNode): boolean {
@@ -321,6 +596,7 @@ function isSymbolAnswerable(node: AST.AnyNode): boolean {
 function isSymbolPrefetched(node: AST.AnyNode): boolean {
 	switch (node.kind) {
 		case SyntaxKind.Identifier:
+			return !isUnqueriedDeclarationName(node);
 		case SyntaxKind.PrivateIdentifier:
 			return true;
 		case SyntaxKind.StringLiteral:
@@ -329,6 +605,21 @@ function isSymbolPrefetched(node: AST.AnyNode): boolean {
 					node.parent.kind === SyntaxKind.ExportDeclaration) &&
 				node.parent.moduleSpecifier === node
 			);
+		default:
+			return false;
+	}
+}
+
+// Rules ask after what a name refers to, rarely after the declaration a name
+// introduces, so these names are left to single lookups.
+function isUnqueriedDeclarationName(node: AST.Identifier): boolean {
+	switch (node.parent.kind) {
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.InterfaceDeclaration:
+		case SyntaxKind.Parameter:
+		case SyntaxKind.TypeAliasDeclaration:
+		case SyntaxKind.VariableDeclaration:
+			return node.parent.name === node;
 		default:
 			return false;
 	}

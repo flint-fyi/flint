@@ -390,6 +390,7 @@ export const typescriptLanguage: Language<
 					cachedTypeChecker ??= createCachedChecker(
 						getProject().checker,
 						getSourceFile(),
+						currentSessionState.session.batch,
 					);
 					return cachedTypeChecker;
 				},

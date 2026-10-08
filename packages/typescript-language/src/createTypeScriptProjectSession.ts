@@ -13,6 +13,7 @@ import {
 	getTypeScriptContentMapperRegistrations,
 	type TypeScriptContentMapperRegistration,
 } from "./contentMappers.ts";
+import type { BatchRequests } from "./createCachedChecker.ts";
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 import { createTypeScriptOverlayConfig } from "./createTypeScriptOverlayConfig.ts";
 import { createVirtualFiles } from "./createVirtualFiles.ts";
@@ -28,6 +29,7 @@ export interface TypeScriptProjectChanges {
 }
 
 export interface TypeScriptProjectSession extends Disposable {
+	batch: BatchRequests;
 	getProjectForFile(filePath: string): Project | undefined;
 	getSnapshot(): Snapshot;
 	update(changes: TypeScriptProjectChanges): Snapshot;
@@ -336,6 +338,10 @@ export function createTypeScriptProjectSession(
 	};
 
 	return {
+		batch(generators) {
+			assertActive();
+			return api.batch(...generators);
+		},
 		getProjectForFile(filePath) {
 			assertActive();
 			const mapped = mappedExtensions.has(path.extname(filePath));
