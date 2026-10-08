@@ -2,10 +2,12 @@ import { parseArgs } from "node:util";
 
 import { addFlintAssertionContext } from "@flint.fyi/utils";
 
-import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
 
-export async function runCli(args: string[]): Promise<number> {
+export async function runCli(
+	args: string[],
+	packageVersion: string,
+): Promise<number> {
 	const { values } = parseArgs({
 		args,
 		options,
@@ -67,7 +69,7 @@ export async function runCli(args: string[]): Promise<number> {
 	}
 
 	if (values.version) {
-		console.log(packageData.version);
+		console.log(packageVersion);
 		return 0;
 	}
 
