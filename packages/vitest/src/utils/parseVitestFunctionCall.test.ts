@@ -75,6 +75,10 @@ describe(parseVitestFunctionCall, () => {
 		{ segments: ["skipIf"], source: "it.skipIf(true)" },
 		{ segments: ["todo"], source: "describe.todo(() => {})" },
 		{ segments: ["skip", "only"], source: "test.skip.only(() => {})" },
+		{ segments: ["skip"], source: 'test["skip"](() => {})' },
+		{ segments: ["skip"], source: "test[`skip`](() => {})" },
+		{ segments: ["skip", "only"], source: 'test.skip["only"](() => {})' },
+		{ segments: ["skip", "only"], source: 'test["skip"].only(() => {})' },
 	])("parses modifier chain $source", ({ segments, source }) => {
 		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
 			segments,
@@ -86,6 +90,7 @@ describe(parseVitestFunctionCall, () => {
 		"test.each(() => {})",
 		"test.skip.nonsense(() => {})",
 		"test.extend({})",
+		'test["nonsense"](() => {})',
 	])("returns undefined for unknown modifier in %s", (source) => {
 		expect(
 			parseVitestFunctionCall(parseCallExpression(source)),
@@ -107,6 +112,11 @@ describe(parseVitestFunctionCall, () => {
 			name: "describe",
 			segments: ["each"],
 			source: "describe.each([1])('%i', () => {})",
+		},
+		{
+			name: "test",
+			segments: ["each"],
+			source: "test[\"each\"]([1])('%i', () => {})",
 		},
 		{
 			name: "test",
@@ -167,9 +177,21 @@ describe(parseVitestFunctionCall, () => {
 	});
 
 	it.each([
+		"test[modifier](() => {})",
+		"test[`${modifier}`](() => {})",
+		"this.test(() => {})",
+		"(0, test)(() => {})",
+	])("returns undefined for unsupported callee syntax %s", (source) => {
+		expect(
+			parseVitestFunctionCall(parseCallExpression(source)),
+		).toBeUndefined();
+	});
+
+	it.each([
 		{ source: "test(() => {})", targetNode: "test" },
 		{ source: "it.skip(() => {})", targetNode: "it.skip" },
 		{ source: "test.skip.only(() => {})", targetNode: "test.skip.only" },
+		{ source: 'test["skip"](() => {})', targetNode: 'test["skip"]' },
 		{ source: "test.each([1])('%i', () => {})", targetNode: "test.each" },
 	])(
 		"reports $targetNode as the target node of $source",
