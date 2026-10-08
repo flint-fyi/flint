@@ -1,4 +1,5 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { serverFS } from "typescript-native/unstable/fs";
 import { API, JsxEmit } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
@@ -10,8 +11,14 @@ const files = new Map<string, string>();
 const api = new API({
 	cwd: "/repo",
 	fs: {
+		directoryExists: serverFS.useOS,
 		fileExists: (fileName) => files.has(fileName),
-		readFile: (fileName) => files.get(fileName) ?? null,
+		getAccessibleEntries: serverFS.useOS,
+		readFile: (fileName) => files.get(fileName),
+		realpath: serverFS.useOS,
+		removeFile: serverFS.useOS,
+		stat: serverFS.useOS,
+		writeFile: serverFS.useOS,
 	},
 });
 let fileIndex = 0;
@@ -20,7 +27,8 @@ function createNativeSourceFile(sourceText: string): AST.SourceFile {
 	const fileName = `/repo/test-${String(fileIndex++)}.ts`;
 	files.set(fileName, sourceText);
 	const program = api.createProgram([fileName], {
-		compilerOptions: { jsx: JsxEmit.Preserve, noLib: true },
+		jsx: JsxEmit.Preserve,
+		noLib: true,
 	});
 	const sourceFile = program.getSourceFile(fileName);
 	if (!sourceFile) {

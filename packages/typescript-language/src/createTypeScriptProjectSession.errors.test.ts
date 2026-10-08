@@ -12,10 +12,10 @@ const mocks = vi.hoisted(() => ({
 	fileSystems: [] as { fileExists?: (fileName: string) => boolean }[],
 	openedProjectSourceTexts: [] as (string | undefined)[],
 	parsedConfigPaths: [] as string[],
+	snapshotCalls: [] as unknown[],
 	snapshotDisposes: [] as Mock[],
-	updateSnapshotCalls: [] as unknown[],
-	updateSnapshotError: undefined as Error | undefined,
-	updateSnapshotErrors: [] as (Error | undefined)[],
+	snapshotError: undefined as Error | undefined,
+	snapshotErrors: [] as (Error | undefined)[],
 }));
 
 vi.mock("typescript-native/unstable/sync", () => ({
@@ -44,17 +44,8 @@ vi.mock("typescript-native/unstable/sync", () => ({
 		// Mirrors an instance method of the native API, which callers invoke on
 		// the instance, so it can't be static even though this stub ignores state.
 		// flint-disable-next-line ts/classMethodsThis
-		parseConfigFile() {
-			return { fileNames: [] };
-		}
-
-		readConfigFile(fileName: string) {
-			mocks.parsedConfigPaths.push(fileName);
-			return { config: JSON.parse(this.fs.readFile?.(fileName) as string) };
-		}
-
-		updateSnapshot(changes?: unknown) {
-			mocks.updateSnapshotCalls.push(changes);
+		createSnapshot(changes?: unknown) {
+			mocks.snapshotCalls.push(changes);
 			for (const projectPath of (
 				changes as undefined | { openProjects?: string[] }
 			)?.openProjects ?? []) {
@@ -62,15 +53,27 @@ vi.mock("typescript-native/unstable/sync", () => ({
 					this.fs.readFile?.(projectPath) as string | undefined,
 				);
 			}
-			const queuedError = mocks.updateSnapshotErrors.shift();
+			const queuedError = mocks.snapshotErrors.shift();
 			if (queuedError) {
 				throw queuedError;
 			}
-			if (mocks.updateSnapshotError) {
-				throw mocks.updateSnapshotError;
+			if (mocks.snapshotError) {
+				throw mocks.snapshotError;
 			}
 
-			return { dispose: mocks.snapshotDisposes.shift() ?? mocks.dispose };
+			return {
+				dispose: mocks.snapshotDisposes.shift() ?? mocks.dispose,
+				update: (nextChanges: unknown) => this.createSnapshot(nextChanges),
+			};
+		}
+
+		parseConfigFile() {
+			return { fileNames: [] };
+		}
+
+		readConfigFile(fileName: string) {
+			mocks.parsedConfigPaths.push(fileName);
+			return { config: JSON.parse(this.fs.readFile?.(fileName) as string) };
 		}
 	},
 }));
@@ -84,14 +87,14 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		mocks.openedProjectSourceTexts.length = 0;
 		mocks.parsedConfigPaths.length = 0;
 		mocks.snapshotDisposes.length = 0;
-		mocks.updateSnapshotCalls.length = 0;
-		mocks.updateSnapshotErrors.length = 0;
-		mocks.updateSnapshotError = undefined;
+		mocks.snapshotCalls.length = 0;
+		mocks.snapshotErrors.length = 0;
+		mocks.snapshotError = undefined;
 	});
 
 	it("closes the API when creating the initial snapshot fails", () => {
 		const error = new Error("snapshot failed");
-		mocks.updateSnapshotError = error;
+		mocks.snapshotError = error;
 
 		expect(() =>
 			createTypeScriptProjectSession(
@@ -104,7 +107,7 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 	it("preserves ordered initial snapshot and API close failures", () => {
 		const snapshotError = new Error("snapshot failed");
 		const closeError = new Error("API close failed");
-		mocks.updateSnapshotError = snapshotError;
+		mocks.snapshotError = snapshotError;
 		mocks.closeError = closeError;
 
 		let caught: unknown;
@@ -263,11 +266,11 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		using session = createTypeScriptProjectSession(host);
 		session.update({ openProjects: ["/repo/tsconfig.json"] });
 		expect(unregister()).toBe(true);
-		mocks.updateSnapshotErrors.push(undefined, new Error("reopen failed"));
+		mocks.snapshotErrors.push(undefined, new Error("reopen failed"));
 
 		expect(() => session.update({})).toThrow("reopen failed");
 		expect(() => session.update({})).not.toThrow();
-		expect(mocks.updateSnapshotCalls.at(-1)).toMatchObject({
+		expect(mocks.snapshotCalls.at(-1)).toMatchObject({
 			openProjects: ["/repo/tsconfig.json"],
 		});
 	});
@@ -293,12 +296,12 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 			"/repo/tsconfig.json",
 			'{ "references": [{ "path": "./shared" }] }',
 		);
-		mocks.updateSnapshotErrors.push(new Error("close failed"));
+		mocks.snapshotErrors.push(new Error("close failed"));
 
 		expect(() => session.update({})).toThrow("close failed");
 		expect(() => session.update({})).not.toThrow();
 
-		const retryCalls = mocks.updateSnapshotCalls.slice(-2);
+		const retryCalls = mocks.snapshotCalls.slice(-2);
 		expect(retryCalls[0]).toMatchObject({
 			closeProjects: [expect.stringContaining(".flint-overlay.json")],
 		});
@@ -342,7 +345,7 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		host.vfsUpsertFile(secondConfigFilePath, "{}");
 		expect(() => session.update({})).not.toThrow();
 
-		expect(mocks.updateSnapshotCalls.at(-1)).toMatchObject({
+		expect(mocks.snapshotCalls.at(-1)).toMatchObject({
 			openProjects: [expect.stringContaining(".flint-overlay.json")],
 		});
 		expect(

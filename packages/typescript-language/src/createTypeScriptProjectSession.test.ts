@@ -41,8 +41,9 @@ describe(createTypeScriptProjectSession, () => {
 		const snapshot = session.update({ openProjects: [configFilePath] });
 
 		expect(
-			snapshot.getProject(configFilePath)?.program.getSourceFile(indexFilePath)
-				?.text,
+			snapshot
+				.getConfiguredProject(configFilePath)
+				?.program.getSourceFile(indexFilePath)?.text,
 		).toBe("export const value = 1;");
 	});
 
@@ -186,7 +187,7 @@ describe(createTypeScriptProjectSession, () => {
 
 		expect(unregister()).toBe(true);
 		const authoredSnapshot = session.update({ openProjects: [configFilePath] });
-		expect(authoredSnapshot.getProject(configFilePath)).toBeDefined();
+		expect(authoredSnapshot.getConfiguredProject(configFilePath)).toBeDefined();
 		expect(session.getProjectForFile(indexFilePath)).toBe(
 			authoredSnapshot.getDefaultProjectForFile(indexFilePath),
 		);
@@ -204,7 +205,7 @@ describe(createTypeScriptProjectSession, () => {
 		expect(unregister()).toBe(true);
 		const snapshot = session.update({});
 
-		expect(snapshot.getProject(configFilePath)).toBeDefined();
+		expect(snapshot.getConfiguredProject(configFilePath)).toBeDefined();
 		expect(session.getProjectForFile(indexFilePath)).toBe(
 			snapshot.getDefaultProjectForFile(indexFilePath),
 		);
@@ -299,7 +300,7 @@ describe(createTypeScriptProjectSession, () => {
 		expect(session.getProjectForFile(looseFilePath)).toBe(
 			snapshot.getDefaultProjectForFile(looseFilePath),
 		);
-		expect(session.getProjectForFile(looseFilePath)?.configFileName).toBe(
+		expect(session.getProjectForFile(looseFilePath)?.id).toBe(
 			"/dev/null/inferred",
 		);
 	});
@@ -313,7 +314,9 @@ describe(createTypeScriptProjectSession, () => {
 		const snapshot = session.update({ openProjects: [configFilePath] });
 
 		expect(
-			snapshot.getProject(configFilePath)?.program.getSourceFileNames(),
+			snapshot
+				.getConfiguredProject(configFilePath)
+				?.program.getSourceFileNames(),
 		).toEqual(["/repo/src/index.ts", "/repo/src/other.ts"]);
 	});
 
@@ -321,7 +324,7 @@ describe(createTypeScriptProjectSession, () => {
 		const host = createHost();
 		using session = createTypeScriptProjectSession(host);
 		const first = session.update({ openProjects: [configFilePath] });
-		const firstProject = first.getProject(configFilePath);
+		const firstProject = first.getConfiguredProject(configFilePath);
 		expect(firstProject).toBeDefined();
 		if (!firstProject) {
 			throw new Error("Expected the configured project to be open.");
@@ -333,8 +336,9 @@ describe(createTypeScriptProjectSession, () => {
 
 		expect(second).not.toBe(first);
 		expect(
-			second.getProject(configFilePath)?.program.getSourceFile(indexFilePath)
-				?.text,
+			second
+				.getConfiguredProject(configFilePath)
+				?.program.getSourceFile(indexFilePath)?.text,
 		).toBe("export const value = 2;");
 		expect(first.isDisposed()).toBe(true);
 		expect(() => first.getProjects()).toThrow(/disposed/i);
@@ -353,7 +357,7 @@ describe(createTypeScriptProjectSession, () => {
 
 		expect(
 			snapshot
-				.getProject(configFilePath)
+				.getConfiguredProject(configFilePath)
 				?.program.getSourceFile(createdFilePath)?.text,
 		).toBe("export const created = true;");
 	});
@@ -370,7 +374,7 @@ describe(createTypeScriptProjectSession, () => {
 
 		expect(
 			snapshot
-				.getProject(configFilePath)
+				.getConfiguredProject(configFilePath)
 				?.program.getSourceFile(deletedFilePath),
 		).toBeUndefined();
 	});

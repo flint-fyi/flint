@@ -1,5 +1,6 @@
 import path from "node:path";
 
+import { serverFS } from "typescript-native/unstable/fs";
 import { API, JsxEmit } from "typescript-native/unstable/sync";
 import { describe, expect, it, vi } from "vitest";
 
@@ -47,19 +48,22 @@ describe(collectReferencedFilePaths, () => {
 							.filter((fileName) => fileName.includes("/"))
 							.map((fileName) => fileName.slice(0, fileName.indexOf("/"))),
 						files: entries.filter((fileName) => !fileName.includes("/")),
+						symlinks: undefined,
 					};
 				},
-				readFile: (fileName) => files.get(fileName) ?? null,
+				readFile: (fileName) => files.get(fileName),
+				realpath: serverFS.useOS,
+				removeFile: serverFS.useOS,
+				stat: serverFS.useOS,
+				writeFile: serverFS.useOS,
 			},
 		});
 		const program = api.createProgram(["/repo/src/index.ts"], {
-			compilerOptions: {
-				allowJs: true,
-				jsx: JsxEmit.Preserve,
-				moduleResolution: 2,
-				paths: { "@alias/*": ["src/aliased.ts"] },
-				resolveJsonModule: true,
-			},
+			allowJs: true,
+			jsx: JsxEmit.Preserve,
+			moduleResolution: 2,
+			paths: { "@alias/*": ["src/aliased.ts"] },
+			resolveJsonModule: true,
 		});
 		const sourceFile = nullThrows(
 			program.getSourceFile("/repo/src/index.ts"),
@@ -98,11 +102,16 @@ describe(collectReferencedFilePaths, () => {
 						fileName.startsWith(`${directoryName}/`),
 					),
 				fileExists: (fileName) => files.has(fileName),
-				readFile: (fileName) => files.get(fileName) ?? null,
+				getAccessibleEntries: serverFS.useOS,
+				readFile: (fileName) => files.get(fileName),
+				realpath: serverFS.useOS,
+				removeFile: serverFS.useOS,
+				stat: serverFS.useOS,
+				writeFile: serverFS.useOS,
 			},
 		});
 		const program = api.createProgram(["/elsewhere/src/index.ts"], {
-			compilerOptions: { noLib: true },
+			noLib: true,
 		});
 		const sourceFile = nullThrows(
 			program.getSourceFile("/elsewhere/src/index.ts"),
@@ -135,14 +144,17 @@ describe(collectReferencedFilePaths, () => {
 						fileName.startsWith(`${directoryName}/`),
 					),
 				fileExists: (fileName) => files.has(fileName),
-				readFile: (fileName) => files.get(fileName) ?? null,
+				getAccessibleEntries: serverFS.useOS,
+				readFile: (fileName) => files.get(fileName),
+				realpath: serverFS.useOS,
+				removeFile: serverFS.useOS,
+				stat: serverFS.useOS,
+				writeFile: serverFS.useOS,
 			},
 		});
 		const program = api.createProgram(
 			["/repo/src/index.ts", "/repo/src/root.ts"],
-			{
-				compilerOptions: { noLib: true },
-			},
+			{ noLib: true },
 		);
 		const sourceFile = nullThrows(
 			program.getSourceFile("/repo/src/index.ts"),

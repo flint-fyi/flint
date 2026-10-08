@@ -1,4 +1,5 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { serverFS } from "typescript-native/unstable/fs";
 import { API } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
@@ -128,14 +129,18 @@ describe("visitTypeScriptNodes", () => {
 		const api = new API({
 			cwd: "/repo",
 			fs: {
+				directoryExists: serverFS.useOS,
 				fileExists: (fileName) => fileName === "/repo/index.ts",
+				getAccessibleEntries: serverFS.useOS,
 				readFile: (fileName) =>
-					fileName === "/repo/index.ts" ? "let value;" : null,
+					fileName === "/repo/index.ts" ? "let value;" : undefined,
+				realpath: serverFS.useOS,
+				removeFile: serverFS.useOS,
+				stat: serverFS.useOS,
+				writeFile: serverFS.useOS,
 			},
 		});
-		const program = api.createProgram(["/repo/index.ts"], {
-			compilerOptions: { noLib: true },
-		});
+		const program = api.createProgram(["/repo/index.ts"], { noLib: true });
 		const sourceFile = program.getSourceFile("/repo/index.ts") as
 			| AST.SourceFile
 			| undefined;

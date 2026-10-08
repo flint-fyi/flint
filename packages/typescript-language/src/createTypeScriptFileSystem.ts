@@ -1,6 +1,9 @@
 import path from "node:path";
 
-import type { FileSystem } from "typescript-native/unstable/fs";
+import {
+	serverFS,
+	type FileSystemCallbacks,
+} from "typescript-native/unstable/fs";
 
 import type { LinterHost } from "@flint.fyi/core";
 import { getPathInsideDirectory } from "@flint.fyi/utils";
@@ -25,15 +28,26 @@ export function createTypeScriptFileSystem(
 	onFileAccess?: (fileName: string) => void,
 	virtualFiles: VirtualFiles = createVirtualFiles(),
 	{ diskBacked = false }: TypeScriptFileSystemOptions = {},
-): FileSystem {
+): FileSystemCallbacks {
+	const delegatedToDisk = {
+		realpath: serverFS.useOS,
+		removeFile: serverFS.useOS,
+		stat: serverFS.useOS,
+		writeFile: serverFS.useOS,
+	} as const;
+
 	if (diskBacked) {
 		return {
+			...delegatedToDisk,
+			directoryExists: serverFS.useOS,
+			fileExists: serverFS.useOS,
+			getAccessibleEntries: serverFS.useOS,
 			// Reads are still delegated so every file TypeScript touches is
-			// observed for change detection, but `undefined` for anything not
-			// virtual sends TypeScript to the disk for the contents.
+			// observed for change detection, but anything not virtual is sent
+			// back to the disk for its contents.
 			readFile: (fileName) => {
 				onFileAccess?.(fileName);
-				return virtualFiles.get(fileName);
+				return virtualFiles.get(fileName) ?? serverFS.useOS;
 			},
 		};
 	}
@@ -62,6 +76,7 @@ export function createTypeScriptFileSystem(
 	};
 
 	return {
+		...delegatedToDisk,
 		directoryExists: (directoryName) => {
 			if (host.fileTypeSync(directoryName) === "directory") {
 				return true;
@@ -106,11 +121,12 @@ export function createTypeScriptFileSystem(
 			return {
 				directories: [...directories],
 				files: [...files],
+				symlinks: undefined,
 			};
 		},
 		readFile: (fileName) => {
 			onFileAccess?.(fileName);
-			return virtualFiles.get(fileName) ?? host.readFileSync(fileName) ?? null;
+			return virtualFiles.get(fileName) ?? host.readFileSync(fileName);
 		},
 	};
 }

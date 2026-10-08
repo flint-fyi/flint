@@ -1,3 +1,4 @@
+import { serverFS } from "typescript-native/unstable/fs";
 import {
 	API,
 	type Diagnostic,
@@ -76,18 +77,22 @@ function getNativeDiagnostics(declaration: boolean): {
 	const api = new API({
 		cwd: "/repo",
 		fs: {
+			directoryExists: serverFS.useOS,
 			fileExists: (requestedFileName) => requestedFileName === fileName,
+			getAccessibleEntries: serverFS.useOS,
 			readFile: (requestedFileName) =>
-				requestedFileName === fileName ? sourceText : null,
+				requestedFileName === fileName ? sourceText : undefined,
+			realpath: serverFS.useOS,
+			removeFile: serverFS.useOS,
+			stat: serverFS.useOS,
+			writeFile: serverFS.useOS,
 		},
 	});
 	const program = api.createProgram([fileName], {
-		compilerOptions: {
-			declaration,
-			isolatedDeclarations: declaration,
-			noLib: true,
-			strict: true,
-		},
+		declaration,
+		isolatedDeclarations: declaration,
+		noLib: true,
+		strict: true,
 	});
 
 	try {

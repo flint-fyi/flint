@@ -156,7 +156,7 @@ export interface ClassDeclaration
 	extends StatementBase, DeclarationBase, ClassLikeBase {
 	readonly kind: NativeAST.SyntaxKind.ClassDeclaration;
 }
-export interface ClassElementBase extends NodeBase {
+export interface ClassElementBase extends DeclarationBase {
 	readonly _classElementBrand: any;
 }
 export type ClassElementList = NodeArray<ClassElement>;
@@ -252,6 +252,7 @@ export type DeclarationName =
 	| NoSubstitutionTemplateLiteral
 	| ComputedPropertyName
 	| BindingPattern
+	| PropertyAccessExpression
 	| ElementAccessExpression;
 export type DeclareKeyword = Token<NativeAST.SyntaxKind.DeclareKeyword>;
 export interface Decorator extends NodeBase {
@@ -1171,6 +1172,7 @@ export interface ModuleDeclaration
 		| NativeAST.SyntaxKind.ModuleKeyword
 		| NativeAST.SyntaxKind.NamespaceKeyword;
 	readonly name: ModuleName;
+	readonly attributes?: TypeLiteralNode;
 	readonly body?: ModuleBody;
 }
 export type ModuleExportName = Identifier | StringLiteral;
@@ -1265,7 +1267,7 @@ export interface ObjectBindingPattern extends NodeBase {
 	readonly elements: NodeArray<BindingElement>;
 }
 export type ObjectDestructuringAssignment = BinaryExpression;
-export interface ObjectLiteralElementBase extends NodeBase {
+export interface ObjectLiteralElementBase extends DeclarationBase {
 	readonly _objectLiteralBrand: any;
 }
 export type ObjectLiteralElementLike =
@@ -1584,6 +1586,8 @@ export interface SourceFile extends NodeBase {
 	getPositionOfLineAndCharacter(line: number, character: number): number;
 	/** @internal */
 	tokenCache?: Map<string, Node>;
+	/** @internal */
+	childrenCache?: Map<Node, readonly Node[]>;
 }
 export interface SpreadAssignment
 	extends NodeBase, DeclarationBase, ObjectLiteralElementBase {
@@ -1897,7 +1901,7 @@ export interface TypeAssertion extends UnaryExpressionBase {
 	readonly type: TypeNode;
 	readonly expression: Expression;
 }
-export interface TypeElementBase extends NodeBase {
+export interface TypeElementBase extends DeclarationBase {
 	readonly _typeElementBrand: any;
 }
 export type TypeElementList = NodeArray<TypeElement>;
@@ -2008,6 +2012,7 @@ export interface NodeBase extends ReadonlyTextRange {
 	readonly flags: NativeAST.NodeFlags;
 	readonly parent: Node;
 	readonly jsDoc?: readonly Node[] | undefined;
+	childrenIter<TNext = void>(): Generator<Node, TNext | undefined, TNext>;
 	forEachChild<T>(
 		visitor: (node: Node) => T,
 		visitArray?: (nodes: NodeArray<Node>) => T,
@@ -2021,6 +2026,11 @@ export interface NodeBase extends ReadonlyTextRange {
 	getLeadingTriviaWidth(sourceFile?: SourceFile): number;
 	getFullText(sourceFile?: SourceFile): string;
 	getText(sourceFile?: SourceFile): string;
+	getChildCount(sourceFile?: SourceFile): number;
+	getChildAt(index: number, sourceFile?: SourceFile): Node;
+	getChildren(sourceFile?: SourceFile): readonly Node[];
+	getFirstToken(sourceFile?: SourceFile): Node | undefined;
+	getLastToken(sourceFile?: SourceFile): Node | undefined;
 }
 export type Token<TKind extends TokenSyntaxKind = TokenSyntaxKind> =
 	TKind extends TokenSyntaxKind ? TokenNode<TKind> : never;
@@ -2612,6 +2622,7 @@ export type Declaration =
 	| JSDocTypeLiteral
 	| JsxAttribute
 	| JsxAttributes
+	| JsxSpreadAttribute
 	| MappedTypeNode
 	| MethodDeclaration
 	| MethodSignatureDeclaration
@@ -2622,6 +2633,7 @@ export type Declaration =
 	| NamespaceExportDeclaration
 	| NamespaceImport
 	| NoSubstitutionTemplateLiteral
+	| NotEmittedTypeElement
 	| ObjectLiteralExpression
 	| ParameterDeclaration
 	| PropertyAssignment

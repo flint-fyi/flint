@@ -1,4 +1,5 @@
 import { SyntaxKind } from "typescript-native/unstable/ast";
+import { serverFS } from "typescript-native/unstable/fs";
 import { API } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
@@ -10,8 +11,14 @@ const files = new Map<string, string>();
 const api = new API({
 	cwd: "/repo",
 	fs: {
+		directoryExists: serverFS.useOS,
 		fileExists: (fileName) => files.has(fileName),
-		readFile: (fileName) => files.get(fileName) ?? null,
+		getAccessibleEntries: serverFS.useOS,
+		readFile: (fileName) => files.get(fileName),
+		realpath: serverFS.useOS,
+		removeFile: serverFS.useOS,
+		stat: serverFS.useOS,
+		writeFile: serverFS.useOS,
 	},
 });
 let fileIndex = 0;
@@ -31,9 +38,7 @@ const unknownVitestFunctionNames = ["foo", "expect", "vi", "tests"];
 function parseCallExpression(source: string): AST.CallExpression {
 	const fileName = `/repo/parseVitestFunctionCall-${String(fileIndex++)}.ts`;
 	files.set(fileName, `${source};`);
-	const program = api.createProgram([fileName], {
-		compilerOptions: { noLib: true },
-	});
+	const program = api.createProgram([fileName], { noLib: true });
 	const sourceFile = program.getSourceFile(fileName);
 	if (!sourceFile) {
 		throw new Error(`Could not parse call expression: ${source}`);

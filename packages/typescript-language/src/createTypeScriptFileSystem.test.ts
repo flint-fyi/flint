@@ -1,3 +1,4 @@
+import { serverFS } from "typescript-native/unstable/fs";
 import { describe, expect, it } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
@@ -11,8 +12,10 @@ describe(createTypeScriptFileSystem, () => {
 		host.vfsUpsertFile("/repo/src/index.ts", "export {};");
 		const fileSystem = createTypeScriptFileSystem(host);
 
-		expect(fileSystem.readFile?.("/repo/src/index.ts")).toBe("export {};");
-		expect(fileSystem.readFile?.("/repo/missing.ts")).toBeNull();
+		expect(callback(fileSystem.readFile)("/repo/src/index.ts")).toBe(
+			"export {};",
+		);
+		expect(callback(fileSystem.readFile)("/repo/missing.ts")).toBeUndefined();
 	});
 
 	it("reports files, directories, and accessible entries", () => {
@@ -21,13 +24,16 @@ describe(createTypeScriptFileSystem, () => {
 		host.vfsUpsertFile("/repo/src/nested/other.ts", "export {};");
 		const fileSystem = createTypeScriptFileSystem(host);
 
-		expect(fileSystem.fileExists?.("/repo/src/index.ts")).toBe(true);
-		expect(fileSystem.fileExists?.("/repo/src")).toBe(false);
-		expect(fileSystem.directoryExists?.("/repo/src")).toBe(true);
-		expect(fileSystem.directoryExists?.("/repo/src/index.ts")).toBe(false);
-		expect(fileSystem.getAccessibleEntries?.("/repo/src")).toEqual({
+		expect(callback(fileSystem.fileExists)("/repo/src/index.ts")).toBe(true);
+		expect(callback(fileSystem.fileExists)("/repo/src")).toBe(false);
+		expect(callback(fileSystem.directoryExists)("/repo/src")).toBe(true);
+		expect(callback(fileSystem.directoryExists)("/repo/src/index.ts")).toBe(
+			false,
+		);
+		expect(callback(fileSystem.getAccessibleEntries)("/repo/src")).toEqual({
 			directories: ["nested"],
 			files: ["index.ts"],
+			symlinks: undefined,
 		});
 	});
 
@@ -36,12 +42,15 @@ describe(createTypeScriptFileSystem, () => {
 		host.vfsUpsertFile("/repo/src/index.ts", "export {};");
 		const fileSystem = createTypeScriptFileSystem(host);
 
-		expect(fileSystem.readFile?.("/repo/src/../src/index.ts")).toBe(
+		expect(callback(fileSystem.readFile)("/repo/src/../src/index.ts")).toBe(
 			"export {};",
 		);
-		expect(fileSystem.getAccessibleEntries?.("/repo/src/../src/")).toEqual({
+		expect(
+			callback(fileSystem.getAccessibleEntries)("/repo/src/../src/"),
+		).toEqual({
 			directories: [],
 			files: ["index.ts"],
+			symlinks: undefined,
 		});
 	});
 
@@ -57,12 +66,15 @@ describe(createTypeScriptFileSystem, () => {
 		host.vfsUpsertFile("/repo/src/shadowed", "overlay file");
 		const fileSystem = createTypeScriptFileSystem(host);
 
-		expect(fileSystem.readFile?.("/repo/src/index.ts")).toBe("overlay");
-		expect(fileSystem.fileExists?.("/repo/src/shadowed")).toBe(true);
-		expect(fileSystem.directoryExists?.("/repo/src/shadowed")).toBe(false);
-		expect(fileSystem.getAccessibleEntries?.("/repo/src")).toEqual({
+		expect(callback(fileSystem.readFile)("/repo/src/index.ts")).toBe("overlay");
+		expect(callback(fileSystem.fileExists)("/repo/src/shadowed")).toBe(true);
+		expect(callback(fileSystem.directoryExists)("/repo/src/shadowed")).toBe(
+			false,
+		);
+		expect(callback(fileSystem.getAccessibleEntries)("/repo/src")).toEqual({
 			directories: [],
 			files: ["index.ts", "shadowed"],
+			symlinks: undefined,
 		});
 	});
 
@@ -78,11 +90,19 @@ describe(createTypeScriptFileSystem, () => {
 			{ diskBacked: true },
 		);
 
-		expect(Object.keys(fileSystem)).toEqual(["readFile"]);
-		expect(fileSystem.readFile?.(virtualFilePath)).toBe("{}");
+		expect(fileSystem).toMatchObject({
+			directoryExists: serverFS.useOS,
+			fileExists: serverFS.useOS,
+			getAccessibleEntries: serverFS.useOS,
+		});
+		expect(callback(fileSystem.readFile)(virtualFilePath)).toBe("{}");
 		// TypeScript reads the disk itself for everything else.
-		expect(fileSystem.readFile?.("/repo/src/index.ts")).toBeUndefined();
-		expect(fileSystem.readFile?.("/repo/missing.ts")).toBeUndefined();
+		expect(callback(fileSystem.readFile)("/repo/src/index.ts")).toBe(
+			serverFS.useOS,
+		);
+		expect(callback(fileSystem.readFile)("/repo/missing.ts")).toBe(
+			serverFS.useOS,
+		);
 		expect(accessed).toEqual([
 			virtualFilePath,
 			"/repo/src/index.ts",
@@ -93,7 +113,7 @@ describe(createTypeScriptFileSystem, () => {
 	it("does not override native realpath handling", () => {
 		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
 
-		expect(createTypeScriptFileSystem(host)).not.toHaveProperty("realpath");
+		expect(createTypeScriptFileSystem(host).realpath).toBe(serverFS.useOS);
 	});
 
 	it("serves host-only virtual files without mutating the host", () => {
@@ -105,8 +125,8 @@ describe(createTypeScriptFileSystem, () => {
 			virtualFilesOf([[virtualFilePath, '{"extends":"/repo/tsconfig.json"}']]),
 		);
 
-		expect(fileSystem.fileExists?.(virtualFilePath)).toBe(true);
-		expect(fileSystem.readFile?.(virtualFilePath)).toBe(
+		expect(callback(fileSystem.fileExists)(virtualFilePath)).toBe(true);
+		expect(callback(fileSystem.readFile)(virtualFilePath)).toBe(
 			'{"extends":"/repo/tsconfig.json"}',
 		);
 		expect(host.fileTypeSync(virtualFilePath)).toBeUndefined();
@@ -121,18 +141,33 @@ describe(createTypeScriptFileSystem, () => {
 			virtualFilesOf([["/repo/.cache/overlays/tsconfig.json", "{}"]]),
 		);
 
-		expect(fileSystem.directoryExists?.("/repo/.cache")).toBe(true);
-		expect(fileSystem.directoryExists?.("/repo/.cache/overlays")).toBe(true);
-		expect(fileSystem.getAccessibleEntries?.("/repo/.cache")).toEqual({
+		expect(callback(fileSystem.directoryExists)("/repo/.cache")).toBe(true);
+		expect(callback(fileSystem.directoryExists)("/repo/.cache/overlays")).toBe(
+			true,
+		);
+		expect(callback(fileSystem.getAccessibleEntries)("/repo/.cache")).toEqual({
 			directories: ["overlays"],
 			files: [],
+			symlinks: undefined,
 		});
-		expect(fileSystem.getAccessibleEntries?.("/repo/.cache/overlays")).toEqual({
+		expect(
+			callback(fileSystem.getAccessibleEntries)("/repo/.cache/overlays"),
+		).toEqual({
 			directories: [],
 			files: ["tsconfig.json"],
+			symlinks: undefined,
 		});
 	});
 });
+
+function callback<Value>(
+	value: Value,
+): Extract<Value, (...args: never[]) => unknown> {
+	if (typeof value !== "function") {
+		throw new TypeError("Expected a file system callback.");
+	}
+	return value as Extract<Value, (...args: never[]) => unknown>;
+}
 
 function virtualFilesOf(entries: [string, string][]) {
 	const virtualFiles = createVirtualFiles();

@@ -20,7 +20,7 @@
 "@flint.fyi/yaml": patch
 ---
 
-Migrated type-aware linting from the TypeScript 6 compiler API to TypeScript 7.1's native synchronous API, installed as the `typescript-native` alias of `typescript@7.1.0-dev.20260830.1`.
+Migrated type-aware linting from the TypeScript 6 compiler API to TypeScript 7.1's native synchronous API, installed as the `typescript-native` alias of `typescript@7.1.0-dev.20261001.1`.
 Rules receive native `Program`, `Checker`, and AST objects, and `@flint.fyi/typescript-language` exports generated discriminated `AST` union types in place of TypeScript 6's `ts.Node` interfaces.
 Astro, Svelte, and Vue files are type-checked through TypeScript content mappers spawned from each language package's new `./content-mapper` entry, so `@flint.fyi/volar-language` and `@flint.fyi/ts-patch` are no longer published.
 `RuleTester` now requires an `afterAll` hook, from its options or the calling scope, to dispose native TypeScript sessions.

@@ -5,12 +5,9 @@ import { createDefaultProjectResolver } from "./resolveDefaultProjectForFile.ts"
 
 const sourceFileNamesByProject = new WeakMap<Project, string[]>();
 
-function createProject(
-	configFileName: string,
-	sourceFileNames: string[],
-): Project {
+function createProject(id: string, sourceFileNames: string[]): Project {
 	const project = {
-		configFileName,
+		id,
 		program: { getSourceFileNames: vi.fn(() => sourceFileNames) },
 	} as unknown as Project;
 	sourceFileNamesByProject.set(project, sourceFileNames);

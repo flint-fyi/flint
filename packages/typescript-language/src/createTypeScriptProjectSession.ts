@@ -33,13 +33,16 @@ export interface TypeScriptProjectSession extends Disposable {
 	update(changes: TypeScriptProjectChanges): Snapshot;
 }
 
-interface SnapshotChanges extends TypeScriptProjectChanges {
+interface SnapshotChanges {
+	closeFiles?: string[];
 	closeProjects?: string[];
-	fileChanges?: {
+	fileNotifications?: {
 		changed?: string[];
 		created?: string[];
 		deleted?: string[];
 	};
+	openFiles?: string[];
+	openProjects?: string[];
 }
 
 export function createTypeScriptProjectSession(
@@ -85,7 +88,7 @@ export function createTypeScriptProjectSession(
 	);
 	let snapshot: Snapshot;
 	try {
-		snapshot = api.updateSnapshot();
+		snapshot = api.createSnapshot({});
 	} catch (error) {
 		try {
 			api.close();
@@ -149,7 +152,13 @@ export function createTypeScriptProjectSession(
 	};
 	const replaceSnapshot = (changes: SnapshotChanges): Snapshot => {
 		const previousSnapshot = snapshot;
-		snapshot = api.updateSnapshot(changes);
+		// Without ensurePrograms, a project whose files changed keeps answering
+		// from its previous program.
+		snapshot = previousSnapshot.update({ ...changes, ensurePrograms: true });
+		// An update that changes nothing answers with the snapshot it was given.
+		if (snapshot === previousSnapshot) {
+			return snapshot;
+		}
 		try {
 			previousSnapshot.dispose();
 		} catch (error) {
@@ -336,7 +345,8 @@ export function createTypeScriptProjectSession(
 			const configFilePath = findConfigFile(filePath);
 			const overlayPath =
 				configFilePath && overlayPathByAuthoredConfigPath.get(configFilePath);
-			const overlayProject = overlayPath && snapshot.getProject(overlayPath);
+			const overlayProject =
+				overlayPath && snapshot.getConfiguredProject(overlayPath);
 			if (mapped) {
 				return overlayProject || undefined;
 			}
@@ -411,6 +421,13 @@ export function createTypeScriptProjectSession(
 					nextOpenedMappedFilePaths.add(filePath);
 				}
 			}
+			// TypeScript only finds an opened file's project through the nearest
+			// tsconfig.json or jsconfig.json, which never lists mapped files. They
+			// are instead roots of their overlay project, which is opened directly.
+			const isNativeFile = (filePath: string): boolean =>
+				!mappedExtensions.has(path.extname(filePath));
+			const nativeCloseFiles = closeFiles?.filter(isNativeFile);
+			const nativeOpenFiles = existingOpenFiles?.filter(isNativeFile);
 			const mappedFilePathsByConfigFilePath = new Map<string, string[]>();
 			for (const filePath of nextOpenedMappedFilePaths) {
 				const configFilePath = findConfigFile(filePath);
@@ -494,7 +511,7 @@ export function createTypeScriptProjectSession(
 				try {
 					replaceSnapshot({
 						closeProjects,
-						fileChanges: {
+						fileNotifications: {
 							...(changedFilePaths.size && {
 								changed: [...changedFilePaths],
 							}),
@@ -515,7 +532,7 @@ export function createTypeScriptProjectSession(
 				}
 			}
 			const replacement = replaceSnapshot({
-				fileChanges: {
+				fileNotifications: {
 					...(changedFilePaths.size && {
 						changed: [...changedFilePaths],
 					}),
@@ -526,8 +543,8 @@ export function createTypeScriptProjectSession(
 						deleted: [...new Set([...(deleted ?? []), ...detectedDeleted])],
 					}),
 				},
-				...(closeFiles && { closeFiles }),
-				...(existingOpenFiles?.length && { openFiles: existingOpenFiles }),
+				...(nativeCloseFiles?.length && { closeFiles: nativeCloseFiles }),
+				...(nativeOpenFiles?.length && { openFiles: nativeOpenFiles }),
 				...(projectsToOpen?.length && {
 					openProjects: [...new Set(projectsToOpen)],
 				}),

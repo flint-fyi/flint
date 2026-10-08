@@ -1,3 +1,4 @@
+import { serverFS } from "typescript-native/unstable/fs";
 import { API, JsxEmit } from "typescript-native/unstable/sync";
 
 import type * as AST from "../types/ast.ts";
@@ -7,8 +8,14 @@ const activePrograms: Disposable[] = [];
 const api = new API({
 	cwd: "/repo",
 	fs: {
+		directoryExists: serverFS.useOS,
 		fileExists: (fileName) => files.has(fileName),
-		readFile: (fileName) => files.get(fileName) ?? null,
+		getAccessibleEntries: serverFS.useOS,
+		readFile: (fileName) => files.get(fileName),
+		realpath: serverFS.useOS,
+		removeFile: serverFS.useOS,
+		stat: serverFS.useOS,
+		writeFile: serverFS.useOS,
 	},
 });
 let fileIndex = 0;
@@ -20,7 +27,9 @@ export function createNativeSourceFile(
 	const fileName = `/repo/test-${String(fileIndex++)}${extension}`;
 	files.set(fileName, sourceText);
 	const program = api.createProgram([fileName], {
-		compilerOptions: { allowJs: true, jsx: JsxEmit.Preserve, noLib: true },
+		allowJs: true,
+		jsx: JsxEmit.Preserve,
+		noLib: true,
 	});
 	activePrograms.push(program);
 	const sourceFile = program.getSourceFile(fileName);
