@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { isStringLiteralLike, SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -94,7 +94,7 @@ function parseCalleeChain(node: AST.AnyNode): CalleeChain | undefined {
 			return parseCalleeChain(node.expression);
 
 		case SyntaxKind.ElementAccessExpression: {
-			if (!ts.isStringLiteralLike(node.argumentExpression)) {
+			if (!isStringLiteralLike(node.argumentExpression)) {
 				return;
 			}
 
