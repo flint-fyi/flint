@@ -4,7 +4,7 @@ import {
 	type Diagnostic,
 	type Program,
 } from "typescript-native/unstable/sync";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 
@@ -200,5 +200,17 @@ describe("getTypeScriptDiagnostics", () => {
 		expect(
 			new Set(diagnostics.map((diagnostic) => JSON.stringify(diagnostic))),
 		).toHaveLength(diagnostics.length);
+	});
+
+	it("asks for program-wide diagnostics once per program when reporting several files", () => {
+		const global = createDiagnostic("Global", "detail");
+		const program = createProgram([], [global]);
+		const getGlobalDiagnostics = vi.spyOn(program, "getGlobalDiagnostics");
+		const getProgramDiagnostics = vi.spyOn(program, "getProgramDiagnostics");
+
+		expect(getTypeScriptDiagnostics(program, "/repo/a.ts")).toEqual([global]);
+		expect(getTypeScriptDiagnostics(program, "/repo/b.ts")).toEqual([global]);
+		expect(getGlobalDiagnostics).toHaveBeenCalledOnce();
+		expect(getProgramDiagnostics).toHaveBeenCalledOnce();
 	});
 });

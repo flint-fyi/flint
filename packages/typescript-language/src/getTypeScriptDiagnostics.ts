@@ -10,6 +10,16 @@ export interface GetTypeScriptDiagnosticsOptions {
 	includeConfigurationDiagnostics?: boolean;
 }
 
+interface ProgramDiagnostics {
+	configuration: readonly Diagnostic[];
+	global: readonly Diagnostic[];
+}
+
+// Programs are handed out once per snapshot, and every file linted in one
+// shares its program-wide diagnostics. Asking for global diagnostics is
+// expensive in the native process, so they are asked for once per program.
+const programDiagnosticsByProgram = new WeakMap<Program, ProgramDiagnostics>();
+
 export function getTypeScriptDiagnostics(
 	program: Program,
 	fileName: string,
@@ -17,21 +27,17 @@ export function getTypeScriptDiagnostics(
 		includeConfigurationDiagnostics = true,
 	}: GetTypeScriptDiagnosticsOptions = {},
 ): readonly Diagnostic[] {
+	const programDiagnostics = getProgramDiagnostics(program);
 	const diagnostics = [
 		...(includeConfigurationDiagnostics
-			? [
-					...program.getConfigFileParsingDiagnostics(),
-					...program.getProgramDiagnostics(),
-				]
+			? programDiagnostics.configuration
 			: []),
 		...program.getSyntacticDiagnostics(fileName),
 		// Global diagnostics also carry option errors, which are the only kind
 		// with no file to attach to.
-		...program
-			.getGlobalDiagnostics()
-			.filter(
-				(diagnostic) => includeConfigurationDiagnostics || diagnostic.fileName,
-			),
+		...programDiagnostics.global.filter(
+			(diagnostic) => includeConfigurationDiagnostics || diagnostic.fileName,
+		),
 		...program.getSemanticDiagnostics(fileName),
 	];
 
@@ -181,4 +187,19 @@ function diagnosticsEqual(left: Diagnostic, right: Diagnostic): boolean {
 			right.relatedInformation,
 		) === 0
 	);
+}
+
+function getProgramDiagnostics(program: Program): ProgramDiagnostics {
+	let programDiagnostics = programDiagnosticsByProgram.get(program);
+	if (!programDiagnostics) {
+		programDiagnostics = {
+			configuration: [
+				...program.getConfigFileParsingDiagnostics(),
+				...program.getProgramDiagnostics(),
+			],
+			global: program.getGlobalDiagnostics(),
+		};
+		programDiagnosticsByProgram.set(program, programDiagnostics);
+	}
+	return programDiagnostics;
 }
