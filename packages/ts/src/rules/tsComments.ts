@@ -158,7 +158,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					function getDirectiveOption(directive: SuppressionDirective) {
 						const optionKey = directiveConfigKeys.get(directive);
 						if (!optionKey) {
-							return undefined;
+							return;
 						}
 
 						return options[optionKey];

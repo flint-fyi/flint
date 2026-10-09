@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
 	collectRuleCoverageReports,
@@ -9,7 +9,19 @@ import {
 } from "./coverage.ts";
 
 describe(collectRuleCoverageReports, () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
 	it("collects one report per source, preserving source order", async () => {
+		vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+			Response.json({
+				oneOf: [
+					{ pattern: "^[a-z0-9-]+/[a-z0-9-]+$", type: "string" },
+					{ enum: ["no-dupe-keys"] },
+				],
+			}),
+		);
 		const reports = await collectRuleCoverageReports();
 
 		expect(reports.map(({ linter }) => linter)).toEqual(

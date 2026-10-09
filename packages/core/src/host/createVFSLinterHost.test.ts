@@ -57,7 +57,10 @@ describe(createVFSLinterHost, () => {
 
 	describe("file touch times", () => {
 		it("returns undefined for missing files with or without a base host", async () => {
-			const baseHost = createVFSLinterHost({ cwd: "/root" });
+			const baseHost = createVFSLinterHost({
+				caseSensitive: true,
+				cwd: "/root",
+			});
 			const host = createVFSLinterHost({ baseHost });
 
 			expect(
@@ -69,7 +72,10 @@ describe(createVFSLinterHost, () => {
 		});
 
 		it("inherits timestamps using the matching base-host method", async () => {
-			const baseHost = createVFSLinterHost({ cwd: "/root" });
+			const baseHost = createVFSLinterHost({
+				caseSensitive: true,
+				cwd: "/root",
+			});
 			const host = createVFSLinterHost({ baseHost });
 			baseHost.vfsUpsertFile("/root/file.ts", "base content");
 			const touchTime = baseHost.getFileTouchTimeSync("/root/file.ts");
@@ -496,6 +502,44 @@ describe(createVFSLinterHost, () => {
 			expect(onEvent).not.toHaveBeenCalled();
 		});
 
+		it("reports editing when an overlay shadows a base host file", () => {
+			const baseHost = createVFSLinterHost({
+				caseSensitive: true,
+				cwd: "/root",
+			});
+			const host = createVFSLinterHost({ baseHost });
+			const onEvent = vi.fn();
+
+			baseHost.vfsUpsertFile("/root/file.txt", "base content");
+			using _ = host.watchFileSync("/root/file.txt", onEvent, {
+				ignoredPaths: [],
+			});
+
+			host.vfsUpsertFile("/root/file.txt", "overlay content");
+
+			expect(onEvent).toHaveBeenCalledExactlyOnceWith("changed");
+		});
+
+		it("reports editing when removing an overlay reveals a base host file", () => {
+			const baseHost = createVFSLinterHost({
+				caseSensitive: true,
+				cwd: "/root",
+			});
+			const host = createVFSLinterHost({ baseHost });
+			const onEvent = vi.fn();
+
+			baseHost.vfsUpsertFile("/root/file.txt", "base content");
+			host.vfsUpsertFile("/root/file.txt", "overlay content");
+			using _ = host.watchFileSync("/root/file.txt", onEvent, {
+				ignoredPaths: [],
+			});
+
+			host.vfsDeleteFile("/root/file.txt");
+
+			expect(onEvent).toHaveBeenCalledExactlyOnceWith("changed");
+			expect(host.readFileSync("/root/file.txt")).toBe("base content");
+		});
+
 		it("propagates base host events", () => {
 			const baseHost = createVFSLinterHost({
 				caseSensitive: true,
@@ -620,7 +664,7 @@ describe(createVFSLinterHost, () => {
 					ignoredPaths: [],
 					recursive: false,
 				});
-				host.vfsUpsertFile("C:\\file.txt", "content");
+				host.vfsUpsertFile(String.raw`C:\file.txt`, "content");
 
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("C:/file.txt");
 			});
@@ -867,7 +911,7 @@ describe(createVFSLinterHost, () => {
 				exclude: [],
 			});
 
-			expect(matches.toSorted()).toEqual([
+			expect(matches.toSorted((a, b) => a.localeCompare(b, "en-US"))).toEqual([
 				"base-only.ts",
 				"overlay-only.ts",
 				"shared.ts",
@@ -902,7 +946,10 @@ describe(createVFSLinterHost, () => {
 				exclude: [],
 			});
 
-			expect(matches.toSorted()).toEqual([".changeset/a.md", ".github/foo.md"]);
+			expect(matches.toSorted((a, b) => a.localeCompare(b, "en-US"))).toEqual([
+				".changeset/a.md",
+				".github/foo.md",
+			]);
 		});
 
 		it("honors exclude patterns against dot-paths", async () => {

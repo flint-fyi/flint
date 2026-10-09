@@ -5,6 +5,19 @@ import type { CacheStorage } from "../types/cache.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
 
 describe("cacheStorageSchema decoding", () => {
+	it("rejects an explicitly false global invalidation flag", () => {
+		const result = cacheStorageSchema.safeDecode(
+			JSON.stringify({
+				configs: {},
+				files: {
+					"src/index.ts": { isGlobalDependency: false, timestamp: 123 },
+				},
+			}),
+		);
+
+		expect(result.success).toBe(false);
+	});
+
 	it("parses valid cache data", () => {
 		const validCache: CacheStorage = {
 			configs: {
@@ -16,7 +29,6 @@ describe("cacheStorageSchema decoding", () => {
 					timestamp: 1_234_567_890,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
@@ -78,7 +90,6 @@ describe("cacheStorageSchema decoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
@@ -112,7 +123,6 @@ describe("cacheStorageSchema decoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
@@ -165,7 +175,6 @@ describe("cacheStorageSchema decoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
@@ -308,7 +317,6 @@ describe("cacheStorageSchema", () => {
 					timestamp: 1_234_567_890,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const encoded = z.encode(cacheStorageSchema, validCache);
@@ -325,7 +333,6 @@ describe("cacheStorageSchema", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 		const json = JSON.stringify(validCache);
 
@@ -382,6 +389,7 @@ describe("cacheStorageSchema", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
+					isGlobalDependency: true,
 					languageReports: [
 						{ code: "TS1234", source: "typescript", text: "Error message" },
 					],
@@ -402,7 +410,6 @@ describe("cacheStorageSchema", () => {
 					timestamp: 1_234_567_890,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const encoded = z.encode(cacheStorageSchema, original);
@@ -444,7 +451,6 @@ describe("toSerializableCacheStorage encoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.decode(
@@ -485,7 +491,6 @@ describe("toSerializableCacheStorage encoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.decode(
@@ -506,7 +511,6 @@ describe("toSerializableCacheStorage encoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const result = z.decode(
@@ -547,7 +551,6 @@ describe("toSerializableCacheStorage encoding", () => {
 					timestamp: 123,
 				},
 			},
-			globalInvalidations: [],
 		};
 
 		const serializable = z.decode(

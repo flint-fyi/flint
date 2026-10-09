@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts-patch",
-	"version": "0.17.0",
+	"version": "0.17.1",
 	"description": "[Experimental] Utilities for patching TypeScript used by @flint/core.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -23,7 +23,8 @@
 	"exports": {
 		".": "./src/index.ts",
 		"./install-patch": "./src/install-patch.ts",
-		"./install-patch-hooks": "./src/install-patch-hooks.ts"
+		"./install-patch-hooks": "./src/install-patch-hooks.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -44,7 +45,8 @@
 		"exports": {
 			".": "./dist/index.mjs",
 			"./install-patch": "./dist/install-patch.mjs",
-			"./install-patch-hooks": "./dist/install-patch-hooks.mjs"
+			"./install-patch-hooks": "./dist/install-patch-hooks.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

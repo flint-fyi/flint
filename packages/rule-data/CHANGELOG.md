@@ -1,5 +1,29 @@
 # @flint.fyi/rule-data
 
+## 0.5.4
+
+### Patch Changes
+
+- [#3559](https://github.com/flint-fyi/flint/pull/3559) [`0631b5b`](https://github.com/flint-fyi/flint/commit/0631b5b676b1b93720f5aeb6ad8f09cd40a17cb8) - Added an initial Changesets plugin with `summaryCasing`, `summaryPunctuation`, and `summaryReadability` rules.
+
+- [#3579](https://github.com/flint-fyi/flint/pull/3579) [`40bdb4b`](https://github.com/flint-fyi/flint/commit/40bdb4bf3a0b3eb945080d1c779ad791afb97fb3) - Added missing `package-json` data.
+- Updated dependencies [[`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`0631b5b`](https://github.com/flint-fyi/flint/commit/0631b5b676b1b93720f5aeb6ad8f09cd40a17cb8), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9)]:
+  - @flint.fyi/core@0.29.0
+  - @flint.fyi/changesets@0.1.0
+
+## 0.5.3
+
+### Patch Changes
+
+- [#3523](https://github.com/flint-fyi/flint/pull/3523) [`7b37b92`](https://github.com/flint-fyi/flint/commit/7b37b92200a7455e1832ce92df6677092e51676e) - Removed `ts/nonOctalDecimalEscapes` because TypeScript already rejects non-octal decimal escapes in ordinary strings and untagged templates.
+  Tagged templates permit these sequences and should not be reported.
+  Remove explicit references to this rule from your configuration.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+- Updated dependencies [[`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39), [`12ad54b`](https://github.com/flint-fyi/flint/commit/12ad54bb504f1c54d215f9b6041fe8a79c263faf), [`c049ab9`](https://github.com/flint-fyi/flint/commit/c049ab9a74c48b2a3c75c2aac26ca33b99a3d6a3), [`7b37b92`](https://github.com/flint-fyi/flint/commit/7b37b92200a7455e1832ce92df6677092e51676e), [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f), [`2df6b52`](https://github.com/flint-fyi/flint/commit/2df6b526d4d503e1f2649a092486c7d540d8adda), [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db)]:
+  - @flint.fyi/core@0.28.0
+  - @flint.fyi/ts@0.24.0
+
 ## 0.5.2
 
 ### Patch Changes

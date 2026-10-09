@@ -1,5 +1,33 @@
 # @flint/cli
 
+## 0.23.4
+
+### Patch Changes
+
+- [#3509](https://github.com/flint-fyi/flint/pull/3509) [`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589) - Print the Flint bug report link from the CLI instead of embedding it in `FlintAssertionError` messages.
+
+- [#3526](https://github.com/flint-fyi/flint/pull/3526) [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001) - Move `createDiskBackedLinterHost` and `isFileSystemCaseSensitive` to a new `@flint.fyi/core/node` entry point, so the main entry no longer imports Node.js built-ins.
+  Invalid-config errors no longer print a `Received:` line.
+
+- [#3512](https://github.com/flint-fyi/flint/pull/3512) [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab) - Print file paths relative to the current directory in the `brief` presenter, and remove the `makeAbsolute` export from `@flint.fyi/utils`.
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+  - @flint.fyi/core@0.29.0
+
+## 0.23.3
+
+### Patch Changes
+
+- [#3520](https://github.com/flint-fyi/flint/pull/3520) [`686b071`](https://github.com/flint-fyi/flint/commit/686b0716fcea63a23f31b595e6a47dbf136ec03b) - Defer linting dependencies until needed so `--help` and `--version` avoid loading the lint engine and TypeScript.
+  Load the TypeScript patch immediately before user configs, and load watch mode, interactive rendering, and formatting only when selected.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
+- [#3535](https://github.com/flint-fyi/flint/pull/3535) [`9c5e8da`](https://github.com/flint-fyi/flint/commit/9c5e8da73049db7737878e7f2f8eb1ad207f6804) - Replace Chalk with Node.js native terminal styling.
+  Report colors retain their RGB values without low-color downconversion, and terminal styling now honors `NO_COLOR` and `NODE_DISABLE_COLORS`.
+- Updated dependencies [[`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39), [`12ad54b`](https://github.com/flint-fyi/flint/commit/12ad54bb504f1c54d215f9b6041fe8a79c263faf), [`c049ab9`](https://github.com/flint-fyi/flint/commit/c049ab9a74c48b2a3c75c2aac26ca33b99a3d6a3), [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f), [`2df6b52`](https://github.com/flint-fyi/flint/commit/2df6b526d4d503e1f2649a092486c7d540d8adda), [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db)]:
+  - @flint.fyi/core@0.28.0
+
 ## 0.23.2
 
 ### Patch Changes

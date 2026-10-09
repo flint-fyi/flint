@@ -7,6 +7,7 @@ import { forEachChild } from "./utils/forEachChild.ts";
 export function collectReferencedFilePaths(
 	program: ts.Program,
 	sourceFile: AST.SourceFile,
+	moduleResolutionHost: ts.ModuleResolutionHost,
 ): string[] {
 	const modulePaths = new Set<string>();
 
@@ -15,9 +16,7 @@ export function collectReferencedFilePaths(
 			moduleSpecifier,
 			sourceFile.fileName,
 			program.getCompilerOptions(),
-			// TODO: Eventually, the file system should be abstracted
-			// https://github.com/flint-fyi/flint/issues/73
-			ts.sys,
+			moduleResolutionHost,
 		);
 
 		if (resolved.resolvedModule?.isExternalLibraryImport === false) {

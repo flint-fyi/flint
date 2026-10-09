@@ -1,18 +1,13 @@
 import { parseArgs } from "node:util";
 
-import {
-	createDiskBackedLinterHost,
-	createEphemeralLinterHost,
-	findConfigFileName,
-} from "@flint.fyi/core";
+import { addFlintAssertionContext } from "@flint.fyi/utils";
 
-import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
-import { createRendererFactory } from "./renderers/createRendererFactory.ts";
-import { runCliOnce } from "./runCliOnce.ts";
-import { runCliWatch } from "./runCliWatch.ts";
 
-export async function runCli(args: string[]): Promise<number> {
+export async function runCli(
+	args: string[],
+	packageVersion: string,
+): Promise<number> {
 	const { values } = parseArgs({
 		args,
 		options,
@@ -68,47 +63,69 @@ export async function runCli(args: string[]): Promise<number> {
 		);
 		console.log("");
 		console.log(
-			"See \u001B]8;;flint.fyi\u0007flint.fyi\u001B]8;;\u0007 for more information.",
+			"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
 		);
 		return 0;
 	}
 
 	if (values.version) {
-		console.log(packageData.version);
+		console.log(packageVersion);
 		return 0;
 	}
 
-	const host = createDiskBackedLinterHost(process.cwd());
-	const cwd = host.getCurrentDirectory();
-	const configFileName = await findConfigFileName(host);
-	if (!configFileName) {
-		console.error(`No flint.config.* file found in ${cwd}.`);
-		console.error(
-			"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
+	try {
+		const [
+			{ createEphemeralLinterHost, findConfigFileName },
+			{ createDiskBackedLinterHost },
+		] = await Promise.all([
+			import("@flint.fyi/core"),
+			import("@flint.fyi/core/node"),
+		]);
+
+		const host = createDiskBackedLinterHost(process.cwd());
+		const cwd = host.getCurrentDirectory();
+		const configFileName = await findConfigFileName(host);
+		if (!configFileName) {
+			console.error(`No flint.config.* file found in ${cwd}.`);
+			console.error(
+				"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
+			);
+			console.error(
+				`In the meantime, why not join \u{1B}]8;;https://flint.fyi/discord\u{7}flint.fyi/discord\u{1B}]8;;\u{7} and chat with us? ❤️`,
+			);
+			return 2;
+		}
+
+		const { createRendererFactory } =
+			await import("./renderers/createRendererFactory.ts");
+		const getRenderer = await createRendererFactory(
+			host,
+			configFileName,
+			values,
 		);
-		console.error(
-			`In the meantime, why not join \u001B]8;;https://flint.fyi/discord\u0007flint.fyi/discord\u001B]8;;\u0007 and chat with us? ❤️`,
-		);
-		return 2;
+
+		if (values.watch) {
+			const { runCliWatch } = await import("./runCliWatch.ts");
+			await runCliWatch(host, configFileName, getRenderer, values, args);
+			console.log("👋 Thanks for using Flint!");
+			return 0;
+		}
+
+		const { runCliOnce } = await import("./runCliOnce.ts");
+		const renderer = getRenderer();
+		try {
+			const { exitCode } = await runCliOnce(
+				createEphemeralLinterHost(host),
+				configFileName,
+				renderer,
+				values,
+			);
+
+			return exitCode;
+		} finally {
+			renderer.dispose?.();
+		}
+	} catch (error) {
+		throw addFlintAssertionContext(error, args);
 	}
-
-	const getRenderer = await createRendererFactory(host, configFileName, values);
-
-	if (values.watch) {
-		await runCliWatch(host, configFileName, getRenderer, values);
-		console.log("👋 Thanks for using Flint!");
-		return 0;
-	}
-
-	const renderer = getRenderer();
-	const { exitCode } = await runCliOnce(
-		createEphemeralLinterHost(host),
-		configFileName,
-		renderer,
-		values,
-	);
-
-	renderer.dispose?.();
-
-	return exitCode;
 }

@@ -5,68 +5,68 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-'\\xa9';
+			code: String.raw`
+'\xa9';
 `,
-			output: `
-'\\xA9';
+			output: String.raw`
+'\xA9';
 `,
-			snapshot: `
-'\\xa9';
+			snapshot: String.raw`
+'\xa9';
  ~~~~
- Prefer uppercase characters for escape sequence '\\xa9'.
+ Prefer uppercase characters for escape sequence '\xa9'.
 `,
 		},
 		{
-			code: `
-'\\ud834';
+			code: String.raw`
+'\ud834';
 `,
-			output: `
-'\\uD834';
+			output: String.raw`
+'\uD834';
 `,
-			snapshot: `
-'\\ud834';
+			snapshot: String.raw`
+'\ud834';
  ~~~~~~
- Prefer uppercase characters for escape sequence '\\ud834'.
+ Prefer uppercase characters for escape sequence '\ud834'.
 `,
 		},
 		{
-			code: `
-'\\u{1d306}';
+			code: String.raw`
+'\u{1d306}';
 `,
-			output: `
-'\\u{1D306}';
+			output: String.raw`
+'\u{1D306}';
 `,
-			snapshot: `
-'\\u{1d306}';
+			snapshot: String.raw`
+'\u{1d306}';
  ~~~~~~~~~
- Prefer uppercase characters for escape sequence '\\u{1d306}'.
+ Prefer uppercase characters for escape sequence '\u{1d306}'.
 `,
 		},
 		{
-			code: `
-'\\ca';
+			code: String.raw`
+'\ca';
 `,
-			output: `
-'\\cA';
+			output: String.raw`
+'\cA';
 `,
-			snapshot: `
-'\\ca';
+			snapshot: String.raw`
+'\ca';
  ~~~
- Prefer uppercase characters for escape sequence '\\ca'.
+ Prefer uppercase characters for escape sequence '\ca'.
 `,
 		},
 		{
-			code: `
-"\\xa9";
+			code: String.raw`
+"\xa9";
 `,
-			output: `
-"\\xA9";
+			output: String.raw`
+"\xA9";
 `,
-			snapshot: `
-"\\xa9";
+			snapshot: String.raw`
+"\xa9";
  ~~~~
- Prefer uppercase characters for escape sequence '\\xa9'.
+ Prefer uppercase characters for escape sequence '\xa9'.
 `,
 		},
 		{
@@ -100,13 +100,13 @@ const x = 5;
 		},
 	],
 	valid: [
-		`'\\xA9';`,
-		`'\\uD834';`,
-		`'\\u{1D306}';`,
-		`'\\cA';`,
-		`"\\xA9";`,
+		String.raw`'\xA9';`,
+		String.raw`'\uD834';`,
+		String.raw`'\u{1D306}';`,
+		String.raw`'\cA';`,
+		String.raw`"\xA9";`,
 		`\`\\xA9\`;`,
 		`'hello';`,
-		`'\\n\\t\\r';`,
+		String.raw`'\n\t\r';`,
 	],
 });

@@ -6,23 +6,7 @@ import {
 import { ruleCreator } from "../ruleCreator.ts";
 import { parseVitestFunctionCall } from "../utils/parseVitestFunctionCall.ts";
 
-const testCaseFunctionNamesSet = new Set([
-	"bench",
-	"fit",
-	"it",
-	"test",
-	"xit",
-	"xtest",
-]);
-
-const hookFunctionNamesSet = new Set([
-	"afterAll",
-	"afterEach",
-	"beforeAll",
-	"beforeEach",
-]);
-
-const exemptModifiers = ["extend", "scoped"];
+const exemptModifiers = new Set(["extend", "scoped"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -53,17 +37,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const { name, segments, targetNode } = vitestFunction;
+					const { kind, segments, targetNode } = vitestFunction;
 
 					const hasExemptModifier = segments.some((segment) =>
-						exemptModifiers.includes(segment),
+						exemptModifiers.has(segment),
 					);
 
-					if (testCaseFunctionNamesSet.has(name) && !hasExemptModifier) {
+					if (kind === "test" && !hasExemptModifier) {
 						testCaseSeenByScope[testCaseSeenByScope.length - 1] = true;
 					}
 
-					if (testCaseSeenByScope.at(-1) && hookFunctionNamesSet.has(name)) {
+					if (testCaseSeenByScope.at(-1) && kind === "hook") {
 						context.report({
 							message: "hookAfterTestCase",
 							range: getTSNodeRange(targetNode, sourceFile),

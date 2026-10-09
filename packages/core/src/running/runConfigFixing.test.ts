@@ -136,7 +136,6 @@ describe(runConfigFixing, () => {
 						"package.json": Date.now(),
 					},
 					files: { [cachedFilePath]: { timestamp: Date.now() } },
-					globalInvalidations: [],
 				}),
 			);
 			const incrementRule = ruleCreator.createRule(language, {

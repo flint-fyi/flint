@@ -44,7 +44,7 @@ function getEscapeType(raw: string): EscapeType | undefined {
 }
 
 function toHexEscape(codePoint: number) {
-	return `\\x${codePoint.toString(16).padStart(2, "0")}`;
+	return String.raw`\x${codePoint.toString(16).padStart(2, "0")}`;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -97,32 +97,34 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							if (
-								escapeType === "unicode" &&
-								(charNode.raw.startsWith("\\u00") ||
-									(charNode.raw.startsWith("\\u{") && charNode.value <= 0xff))
+								escapeType !== "unicode" ||
+								(!charNode.raw.startsWith(String.raw`\u00`) &&
+									(!charNode.raw.startsWith(String.raw`\u{`) ||
+										charNode.value > 0xff))
 							) {
-								const hexEscape = toHexEscape(charNode.value);
+								return;
+							}
 
-								context.report({
-									data: {
-										escapeType,
-										found: charNode.raw,
-										hexEscape,
-									},
-									fix: {
-										range: {
-											begin: range.begin + 1 + charNode.start,
-											end: range.begin + 1 + charNode.end,
-										},
-										text: hexEscape,
-									},
-									message: "preferHexEscape",
+							const hexEscape = toHexEscape(charNode.value);
+							context.report({
+								data: {
+									escapeType,
+									found: charNode.raw,
+									hexEscape,
+								},
+								fix: {
 									range: {
 										begin: range.begin + 1 + charNode.start,
 										end: range.begin + 1 + charNode.end,
 									},
-								});
-							}
+									text: hexEscape,
+								},
+								message: "preferHexEscape",
+								range: {
+									begin: range.begin + 1 + charNode.start,
+									end: range.begin + 1 + charNode.end,
+								},
+							});
 						},
 					});
 				},

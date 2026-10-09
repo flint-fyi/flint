@@ -5,7 +5,10 @@ import path from "node:path";
 import ts from "typescript";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { createDiskBackedLinterHost } from "@flint.fyi/core/node";
+
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
+import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 import type * as AST from "./types/ast.ts";
 
 const tempDirectories: string[] = [];
@@ -61,9 +64,11 @@ describe(collectReferencedFilePaths, () => {
 		expect(sourceFile).toBeDefined();
 		expect(
 			new Set(
-				collectReferencedFilePaths(program, sourceFile as AST.SourceFile).map(
-					(filePath) => path.basename(filePath, ".ts"),
-				),
+				collectReferencedFilePaths(
+					program,
+					sourceFile as AST.SourceFile,
+					createTypeScriptServerHost(createDiskBackedLinterHost(root)),
+				).map((filePath) => path.basename(filePath, ".ts")),
 			),
 		).toEqual(new Set(dependencyNames));
 	});

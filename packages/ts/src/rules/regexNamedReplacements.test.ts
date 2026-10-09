@@ -4,10 +4,10 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 "str".replace(/a(?<name>b)c/, "_$1_");
 `,
-			output: String.raw`
+			output: `
 "str".replace(/a(?<name>b)c/, "_$<name>_");
 `,
 			snapshot: `
@@ -17,10 +17,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "str".replace(/a(?<name>b)c/v, "_$1_");
 `,
-			output: String.raw`
+			output: `
 "str".replace(/a(?<name>b)c/v, "_$<name>_");
 `,
 			snapshot: `
@@ -30,10 +30,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "str".replaceAll(/a(?<name>b)c/g, "_$1_");
 `,
-			output: String.raw`
+			output: `
 "str".replaceAll(/a(?<name>b)c/g, "_$<name>_");
 `,
 			snapshot: `
@@ -43,10 +43,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "str".replace(/(a)(?<name>b)c/, "_$1$2_");
 `,
-			output: String.raw`
+			output: `
 "str".replace(/(a)(?<name>b)c/, "_$1$<name>_");
 `,
 			snapshot: `
@@ -56,10 +56,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "str".replace(/(?<first>a)(?<second>b)/, "$1-$2");
 `,
-			output: String.raw`
+			output: `
 "str".replace(/(?<first>a)(?<second>b)/, "$<first>-$<second>");
 `,
 			snapshot: `
@@ -72,13 +72,13 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		String.raw`"str".replace(/regexp/, "foo")`,
-		String.raw`"str".replace(/a(b)c/, "_$1_")`,
-		String.raw`"str".replaceAll(/a(b)c/g, "_$1_")`,
-		String.raw`"str".replace(/a(?<name>b)c/, "_$<name>_")`,
-		String.raw`"str".replaceAll(/a(?<name>b)c/g, "_$<name>_")`,
-		String.raw`"str".replace(/a(?<name>b)c/, "_$0_")`,
-		String.raw`"str".replace(/(a)(?<name>b)c/, "_$1_")`,
-		String.raw`"str".replace(/a(b)c/, "_$2_")`,
+		'"str".replace(/regexp/, "foo")',
+		'"str".replace(/a(b)c/, "_$1_")',
+		'"str".replaceAll(/a(b)c/g, "_$1_")',
+		'"str".replace(/a(?<name>b)c/, "_$<name>_")',
+		'"str".replaceAll(/a(?<name>b)c/g, "_$<name>_")',
+		'"str".replace(/a(?<name>b)c/, "_$0_")',
+		'"str".replace(/(a)(?<name>b)c/, "_$1_")',
+		'"str".replace(/a(b)c/, "_$2_")',
 	],
 });

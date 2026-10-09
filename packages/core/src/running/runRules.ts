@@ -193,7 +193,7 @@ function collectFileVisitors(
 function getParsedOptions(state: VisitingRuleState, options: object) {
 	const { rule } = state;
 	if (rule.options === undefined) {
-		return undefined;
+		return;
 	}
 
 	let parsedOptions = state.parsedOptionsByOptions.get(options);

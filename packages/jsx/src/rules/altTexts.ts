@@ -45,12 +45,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const elementName = tagName.text.toLowerCase();
 
-			if (elementName === "img" || elementName === "area") {
-				checkAltAttribute(attributes, tagName, elementName, sourceFile);
-			} else if (elementName === "input") {
-				checkInputElement(attributes, tagName, sourceFile);
-			} else if (elementName === "object") {
-				checkObjectAccessibility(attributes, tagName, sourceFile);
+			switch (elementName) {
+				case "area":
+				case "img": {
+					checkAltAttribute(attributes, tagName, elementName, sourceFile);
+
+					break;
+				}
+				case "input": {
+					checkInputElement(attributes, tagName, sourceFile);
+
+					break;
+				}
+				case "object": {
+					checkObjectAccessibility(attributes, tagName, sourceFile);
+
+					break;
+				}
 			}
 		}
 
@@ -90,20 +101,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				properties.kind === SyntaxKind.JsxAttribute &&
-				properties.initializer?.kind === SyntaxKind.JsxExpression
+				properties.kind !== SyntaxKind.JsxAttribute ||
+				properties.initializer?.kind !== SyntaxKind.JsxExpression
 			) {
-				const { expression } = properties.initializer;
-				if (
-					expression?.kind === SyntaxKind.Identifier &&
-					expression.text === "undefined"
-				) {
-					context.report({
-						data: { element: elementName },
-						message: "missingAlt",
-						range: getTSNodeRange(tagName, sourceFile),
-					});
-				}
+				return;
+			}
+
+			const { expression } = properties.initializer;
+			if (
+				expression?.kind === SyntaxKind.Identifier &&
+				expression.text === "undefined"
+			) {
+				context.report({
+					data: { element: elementName },
+					message: "missingAlt",
+					range: getTSNodeRange(tagName, sourceFile),
+				});
 			}
 		}
 

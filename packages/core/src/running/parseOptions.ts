@@ -23,7 +23,7 @@ export function parseOptions<
 				transform(value, context) {
 					const result = propertySchema["~standard"].validate(value);
 					if (result instanceof Promise) {
-						throw new Error("Async rule-option schemas are not supported.");
+						throw new TypeError("Async rule-option schemas are not supported.");
 					}
 					if (!result.issues) {
 						return result.value;
@@ -39,7 +39,7 @@ export function parseOptions<
 							),
 						});
 					}
-					return undefined;
+					return;
 				},
 				type: "transform",
 			}),

@@ -1,5 +1,19 @@
 # @flint/utils
 
+## 0.17.0
+
+### Minor Changes
+
+- [#3509](https://github.com/flint-fyi/flint/pull/3509) [`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589) - Print the Flint bug report link from the CLI instead of embedding it in `FlintAssertionError` messages.
+
+- [#3512](https://github.com/flint-fyi/flint/pull/3512) [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab) - Print file paths relative to the current directory in the `brief` presenter, and remove the `makeAbsolute` export from `@flint.fyi/utils`.
+
+## 0.16.1
+
+### Patch Changes
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
 ## 0.16.0
 
 ### Minor Changes

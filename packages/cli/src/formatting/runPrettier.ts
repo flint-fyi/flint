@@ -37,7 +37,7 @@ export async function runPrettier(
 	// Eventually we should investigate faster APIs.
 	// https://github.com/prettier/prettier/issues/17422
 	await Promise.all(
-		Array.from(allFilePaths).map(async (filePath) => {
+		Array.from(allFilePaths, async (filePath) => {
 			if (
 				prettierIgnore.checkIgnore(path.posix.relative(configRoot, filePath))
 					.ignored

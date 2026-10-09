@@ -16,15 +16,18 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsdown",
-		"flint": "node packages/flint/bin/index.js",
-		"flint:cache-ignore": "node packages/flint/bin/index.js --cache-ignore",
+		"flint": "flint",
+		"flint:cache-ignore": "flint --cache-ignore",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
 		"lint:knip:prod": "knip --strict",
-		"prepare": "node scripts/use-tracked-config.ts",
+		"prepare": "simple-git-hooks",
 		"release": "pnpm build && changeset publish",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest"
+	},
+	"simple-git-hooks": {
+		"pre-commit": "pnpm exec nano-staged"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/core": "catalog:dev",
@@ -35,6 +38,7 @@
 		"@eslint/json": "catalog:dev",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/build": "workspace:^",
+		"@flint.fyi/changesets": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
 		"@flint.fyi/performance": "workspace:^",
 		"@flint.fyi/plugin-flint": "workspace:^",
@@ -53,6 +57,7 @@
 		"eslint-plugin-package-json": "catalog:dev",
 		"eslint-plugin-perfectionist": "catalog:dev",
 		"eslint-plugin-regexp": "catalog:dev",
+		"eslint-plugin-unicorn": "catalog:dev",
 		"eslint-plugin-yml": "catalog:dev",
 		"flint": "workspace:^",
 		"jiti": "catalog:dev",
@@ -65,6 +70,7 @@
 		"prettier-plugin-packagejson": "catalog:dev",
 		"prettier-plugin-sentences-per-line": "catalog:dev",
 		"prettier-plugin-sh": "catalog:dev",
+		"simple-git-hooks": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev",
 		"typescript-eslint": "catalog:dev",
@@ -77,7 +83,7 @@
 	"devEngines": {
 		"packageManager": {
 			"name": "pnpm",
-			"version": "11.27.0"
+			"version": "12.10.0"
 		}
 	}
 }

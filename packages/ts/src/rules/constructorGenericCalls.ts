@@ -106,7 +106,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const identifier = node.name;
 			const typeAnnotation = node.type;
 			const initializer = node.initializer;
-			const style = options.style;
 
 			if (
 				initializer?.kind !== SyntaxKind.NewExpression ||
@@ -115,6 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
+			const style = options.style;
 			const constructorName = initializer.expression.text;
 
 			if (!typeAnnotation) {

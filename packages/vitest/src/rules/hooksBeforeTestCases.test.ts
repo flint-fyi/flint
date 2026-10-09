@@ -97,6 +97,34 @@ describe("suite", () => {
 		},
 		{
 			code: `
+suite("suite", () => {
+	test("my test", () => {})
+	aroundEach(async (runTest) => { await runTest() })
+})
+`,
+			snapshot: `
+suite("suite", () => {
+	test("my test", () => {})
+	aroundEach(async (runTest) => { await runTest() })
+	~~~~~~~~~~
+	This hook appears after a test case.
+})
+`,
+		},
+		{
+			code: `
+it("my test", () => {})
+aroundAll(async (runSuite) => { await runSuite() })
+`,
+			snapshot: `
+it("my test", () => {})
+aroundAll(async (runSuite) => { await runSuite() })
+~~~~~~~~~
+This hook appears after a test case.
+`,
+		},
+		{
+			code: `
 test("my test", () => {})
 console.log()
 afterEach(() => {})

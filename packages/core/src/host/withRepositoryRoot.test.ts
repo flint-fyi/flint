@@ -24,7 +24,7 @@ describe(withRepositoryRoot, () => {
 	it("normalizes the repository root path", () => {
 		const baseHost = {} as LinterHost;
 
-		const host = withRepositoryRoot(baseHost, "C:\\root\\repo");
+		const host = withRepositoryRoot(baseHost, String.raw`C:\root\repo`);
 
 		expect(host.getRepositoryRoot()).toBe("C:/root/repo");
 	});

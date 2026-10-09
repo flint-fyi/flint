@@ -113,14 +113,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (classType === type) {
 					hasReturnClassType = true;
 					return true;
-				}
-
-				if (classType.thisType === type) {
+				} else if (classType.thisType === type) {
 					hasReturnThis = true;
 					return;
-				}
-
-				if (tsutils.isUnionType(type) && type.types.includes(classType)) {
+				} else if (
+					tsutils.isUnionType(type) &&
+					type.types.includes(classType)
+				) {
 					hasReturnClassType = true;
 					return true;
 				}

@@ -56,7 +56,7 @@ export async function runConfig(
 
 	// 3. For each file path, finalize output using each of its language files
 	const allFileResults = new Map(
-		Array.from(languageFilesByFilePath).map(([filePath, languageAndFiles]) => [
+		Array.from(languageFilesByFilePath, ([filePath, languageAndFiles]) => [
 			filePath,
 			finalizeFileResults(
 				filePath,
@@ -73,6 +73,7 @@ export async function runConfig(
 		for (const [filePath, cachedStorage] of cached) {
 			allFileResults.set(filePath, {
 				dependencies: new Set(cachedStorage.dependencies),
+				isGlobalDependency: cachedStorage.isGlobalDependency ?? false,
 				languageReports: cachedStorage.languageReports ?? [],
 				reports: cachedStorage.reports ?? [],
 			});

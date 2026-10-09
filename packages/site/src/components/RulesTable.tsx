@@ -39,14 +39,11 @@ function renderFlintPreset(flint: FlintRuleReference) {
 		return <td className={styles.noneCell}>(none)</td>;
 	}
 
-	const hrefBase = `/rules/${flint.plugin}#${flint.preset.toLowerCase()}`;
-	const [href, text] = flint.strictness
-		? [`${hrefBase}strict`, `${flint.preset} (${flint.strictness})`]
-		: [hrefBase, flint.preset];
+	const href = `/rules/${flint.plugin}#${flint.preset.toLowerCase()}`;
 
 	return (
 		<td className={styles.linkCell}>
-			<a href={href}>{text}</a>
+			<a href={href}>{flint.preset}</a>
 		</td>
 	);
 }

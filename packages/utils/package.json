@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/utils",
-	"version": "0.16.0",
+	"version": "0.17.0",
 	"description": "[Experimental] Shared utilities used by @flint/core and at least one other package.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -38,7 +39,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

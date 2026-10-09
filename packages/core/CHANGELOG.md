@@ -1,5 +1,39 @@
 # @flint/core
 
+## 0.29.0
+
+### Minor Changes
+
+- [#3526](https://github.com/flint-fyi/flint/pull/3526) [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001) - Move `createDiskBackedLinterHost` and `isFileSystemCaseSensitive` to a new `@flint.fyi/core/node` entry point, so the main entry no longer imports Node.js built-ins.
+  Invalid-config errors no longer print a `Received:` line.
+
+### Patch Changes
+
+- [#3475](https://github.com/flint-fyi/flint/pull/3475) [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5) - Preserve global cache invalidation across cache-hit runs so changing a global declaration re-lints unrelated files.
+  Rename the language cache-impact flag from `invalidatesCache` to `isGlobalDependency`.
+
+- [#3582](https://github.com/flint-fyi/flint/pull/3582) [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9) - Resolve language cache dependencies against the host's current directory instead of the process's current directory.
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+
+## 0.28.0
+
+### Minor Changes
+
+- [#3400](https://github.com/flint-fyi/flint/pull/3400) [`2df6b52`](https://github.com/flint-fyi/flint/commit/2df6b526d4d503e1f2649a092486c7d540d8adda) - Allowed rule options to use any synchronous Standard Schema-compliant validators.
+
+- [#3525](https://github.com/flint-fyi/flint/pull/3525) [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db) - Require the `caseSensitive` option for `createVFSLinterHost` when no `baseHost` is given.
+
+### Patch Changes
+
+- [#3470](https://github.com/flint-fyi/flint/pull/3470) [`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39) - Use the host's current directory instead of `process.cwd()` for language report locations and file paths.
+
+- [#3479](https://github.com/flint-fyi/flint/pull/3479) [`12ad54b`](https://github.com/flint-fyi/flint/commit/12ad54bb504f1c54d215f9b6041fe8a79c263faf) - Preserve empty report message arrays and other nested report data when writing the lint cache.
+
+- [#3476](https://github.com/flint-fyi/flint/pull/3476) [`c049ab9`](https://github.com/flint-fyi/flint/commit/c049ab9a74c48b2a3c75c2aac26ca33b99a3d6a3) - Re-lint without applying fixes or reading cached results after the tenth fixing round so returned diagnostics and the final cache describe the final file contents.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
 ## 0.27.0
 
 ### Minor Changes

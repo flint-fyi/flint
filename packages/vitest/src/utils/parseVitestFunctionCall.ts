@@ -1,18 +1,24 @@
-import { SyntaxKind } from "typescript";
+import { isStringLiteralLike, SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
-const knownVitestFunctionNames = [
-	"afterAll",
-	"afterEach",
-	"beforeAll",
-	"beforeEach",
-	"describe",
-	"it",
-	"test",
-] as const;
+const vitestFunctionKinds = {
+	afterAll: "hook",
+	afterEach: "hook",
+	aroundAll: "hook",
+	aroundEach: "hook",
+	beforeAll: "hook",
+	beforeEach: "hook",
+	describe: "describe",
+	it: "test",
+	suite: "describe",
+	test: "test",
+} as const;
 
-const knownBlockNamesSet = new Set<string>(knownVitestFunctionNames);
+export type VitestFunctionKind =
+	(typeof vitestFunctionKinds)[VitestFunctionName];
+
+export type VitestFunctionName = keyof typeof vitestFunctionKinds;
 
 const knownVitestFunctionModifiersSet = new Set([
 	"concurrent",
@@ -20,12 +26,18 @@ const knownVitestFunctionModifiersSet = new Set([
 	"only",
 	"runIf",
 	"sequential",
+	"shuffle",
 	"skip",
 	"skipIf",
 	"todo",
 ]);
 
-interface VitestCallee {
+export interface VitestFunctionCall extends CalleeChain {
+	kind: VitestFunctionKind;
+	name: VitestFunctionName;
+}
+
+interface CalleeChain {
 	name: string;
 	segments: string[];
 	targetNode: AST.AnyNode;
@@ -33,12 +45,22 @@ interface VitestCallee {
 
 export function parseVitestFunctionCall(
 	node: AST.CallExpression,
-): undefined | VitestCallee {
-	const parsedCallee = parseVitestCallee(node.expression);
-
-	if (!parsedCallee || !knownBlockNamesSet.has(parsedCallee.name)) {
-		return undefined;
+): undefined | VitestFunctionCall {
+	const parsedCallee = parseCalleeChain(node.expression);
+	if (!parsedCallee) {
+		return;
 	}
+
+	const { name } = parsedCallee;
+	if (!isVitestFunctionName(name)) {
+		return;
+	}
+
+	const functionCall: VitestFunctionCall = {
+		...parsedCallee,
+		kind: vitestFunctionKinds[name],
+		name,
+	};
 
 	switch (node.expression.kind) {
 		case SyntaxKind.CallExpression:
@@ -46,38 +68,59 @@ export function parseVitestFunctionCall(
 			return parsedCallee.segments
 				.slice(0, -1)
 				.every((segment) => knownVitestFunctionModifiersSet.has(segment))
-				? parsedCallee
+				? functionCall
 				: undefined;
 
-		case SyntaxKind.Identifier:
-			return parsedCallee;
-
+		case SyntaxKind.ElementAccessExpression:
 		case SyntaxKind.PropertyAccessExpression:
 			return parsedCallee.segments.every((segment) =>
 				knownVitestFunctionModifiersSet.has(segment),
 			)
-				? parsedCallee
+				? functionCall
 				: undefined;
+
+		case SyntaxKind.Identifier:
+			return functionCall;
 	}
 }
 
-function parseVitestCallee(
-	node: AST.AnyNode,
-	targetNode?: AST.AnyNode,
-): undefined | VitestCallee {
+function isVitestFunctionName(name: string): name is VitestFunctionName {
+	return Object.hasOwn(vitestFunctionKinds, name);
+}
+
+function parseCalleeChain(node: AST.AnyNode): CalleeChain | undefined {
 	switch (node.kind) {
 		case SyntaxKind.CallExpression:
-			return parseVitestCallee(node.expression, targetNode);
+			return parseCalleeChain(node.expression);
+
+		case SyntaxKind.ElementAccessExpression: {
+			if (!isStringLiteralLike(node.argumentExpression)) {
+				return;
+			}
+
+			const parsedExpression = parseCalleeChain(node.expression);
+
+			return (
+				parsedExpression && {
+					...parsedExpression,
+					segments: [
+						...parsedExpression.segments,
+						node.argumentExpression.text,
+					],
+					targetNode: node,
+				}
+			);
+		}
 
 		case SyntaxKind.Identifier:
 			return {
 				name: node.text,
 				segments: [],
-				targetNode: targetNode ?? node,
+				targetNode: node,
 			};
 
 		case SyntaxKind.PropertyAccessExpression: {
-			const parsedExpression = parseVitestCallee(node.expression, node);
+			const parsedExpression = parseCalleeChain(node.expression);
 
 			return (
 				parsedExpression && {
@@ -89,6 +132,6 @@ function parseVitestCallee(
 		}
 
 		case SyntaxKind.TaggedTemplateExpression:
-			return parseVitestCallee(node.tag, targetNode);
+			return parseCalleeChain(node.tag);
 	}
 }
