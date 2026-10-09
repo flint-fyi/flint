@@ -53,7 +53,7 @@ catalogs:
     prettier-plugin-packagejson: 3.0.2
     prettier-plugin-sentences-per-line: 0.2.5
     prettier-plugin-sh: 0.20.1
-    svelte: 5.57.1
+    svelte: 5.57.2
     tsdown: 0.23.0
     typescript: 6.0.3
     typescript-eslint: 8.70.1
