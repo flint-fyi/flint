@@ -43,3 +43,26 @@ jobs:
           config: strict
           github-token: ${{ secrets.GITHUB_TOKEN }}
           include-associations: "FIRST_TIMER,FIRST_TIME_CONTRIBUTOR,CONTRIBUTOR"
+          rules: |
+            {
+              "pr-body-descriptive": {
+                "include-associations": [
+                  "COLLABORATOR",
+                  "CONTRIBUTOR",
+                  "FIRST_TIME_CONTRIBUTOR",
+                  "FIRST_TIMER",
+                  "MEMBER",
+                  "OWNER"
+                ]
+              },
+              "pr-title-conventional": {
+                "include-associations": [
+                  "COLLABORATOR",
+                  "CONTRIBUTOR",
+                  "FIRST_TIME_CONTRIBUTOR",
+                  "FIRST_TIMER",
+                  "MEMBER",
+                  "OWNER"
+                ]
+              }
+            }
