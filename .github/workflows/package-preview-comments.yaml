@@ -1,0 +1,60 @@
+name: Package Preview Comments
+
+on:
+  workflow_run:
+    workflows: [Package Previews]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  comment:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.pull_requests[0] != null
+    permissions:
+      actions: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: package-previews
+          path: ${{ runner.temp }}/package-previews
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+      - name: Comment with package previews
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+          PREVIEW_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          jq -e --arg sha "$PREVIEW_SHA" '
+            all(.packages[];
+              (.name | test("^(flint|@flint[.]fyi/[a-z0-9-]+)$")) and
+              (.url == "https://pkg.pr.new/\(.name)@\($sha)" or
+               .url == "https://pkg.pr.new/\(.name)@\($sha[0:7])" or
+               .url == "https://pkg.pr.new/flint-fyi/flint/\(.name)@\($sha)" or
+               .url == "https://pkg.pr.new/flint-fyi/flint/\(.name)@\($sha[0:7])")
+            ) and any(.packages[]; .name == "flint")
+          ' "$RUNNER_TEMP/package-previews/package-previews.json" > /dev/null
+
+          jq '{body: (
+            "<!-- flint-package-previews -->\n\n## Package previews\n\n" +
+            ([.packages[] | select(.name == "flint") | "```sh\npnpm add -D \(.url)\n```"] | join("\n\n")) +
+            "\n\n<details>\n<summary>Other packages</summary>\n\n" +
+            ([.packages[] | select(.name != "flint") | "### \(.name)\n\n```sh\npnpm add -D \(.url)\n```"] | join("\n\n")) +
+            "\n\n</details>"
+          )}' "$RUNNER_TEMP/package-previews/package-previews.json" > "$RUNNER_TEMP/package-previews-comment.json"
+
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | contains("<!-- flint-package-previews -->"))) | .id')
+
+          if [ -n "$comment_id" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" \
+              --input "$RUNNER_TEMP/package-previews-comment.json"
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+              --input "$RUNNER_TEMP/package-previews-comment.json"
+          fi
