@@ -4,6 +4,7 @@ packages:
 allowBuilds:
   esbuild@0.28.2: true
   sharp@0.34.5: true
+  simple-git-hooks@2.14.0: false
 
 autoInstallPeers: false
 
@@ -42,10 +43,9 @@ catalogs:
     eslint-plugin-unicorn: 76.0.0
     eslint-plugin-yml: 3.8.1
     execa: 10.0.1
-    husky: 9.1.7
     jiti: 2.7.0
     knip: 6.39.0
-    lint-staged: 17.6.0
+    nano-staged: 1.0.2
     pkg-pr-new: 0.0.90
     prettier: 3.8.1
     prettier-plugin-astro: 1.1.0
@@ -53,6 +53,7 @@ catalogs:
     prettier-plugin-packagejson: 3.0.2
     prettier-plugin-sentences-per-line: 0.2.5
     prettier-plugin-sh: 0.20.1
+    simple-git-hooks: 2.14.0
     svelte: 5.57.1
     tsdown: 0.23.0
     typescript: 6.0.3
