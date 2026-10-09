@@ -1,0 +1,76 @@
+---
+description: "Reports equality matchers on `.length` that could use `toHaveLength()`."
+title: "toHaveLengthMatchers"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="toHaveLengthMatchers" />
+
+Vitest's `toHaveLength()` matcher asserts on the `.length` property of the value passed to `expect()`.
+Reading `.length` yourself and comparing it with `toBe()`, `toEqual()`, or `toStrictEqual()` checks the same thing, but a failure only prints the two numbers, such as `expected 3 to be 2`.
+A failing `toHaveLength()` also prints the received value, such as `expected [ 'a.ts', 'b.ts', 'c.ts' ] to have a length of 2 but got 3`.
+
+This rule does not report `.length` accesses inside an optional chain, such as `expect(files?.length).toBe(1)`.
+`toHaveLength()` throws an error when the received value is `undefined`, so it is not equivalent there.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+expect(files.length).toBe(1);
+```
+
+```ts
+expect(files.length).toEqual(1);
+```
+
+```ts
+expect(files.length).toStrictEqual(1);
+```
+
+```ts
+expect(files.length).not.toBe(0);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+expect(files).toHaveLength(1);
+```
+
+```ts
+expect(files).not.toHaveLength(0);
+```
+
+```ts
+expect(files.length).toBeGreaterThan(1);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your tests compare `.length` against an asymmetric matcher, such as `expect(files.length).toEqual(expect.any(Number))`, this rule's fix changes the result of the assertion, because `toHaveLength()` only accepts a number.
+If a large existing test suite already asserts on `.length` consistently and you don't want to rewrite it, you might also prefer to leave this rule off.
+
+## Further Reading
+
+- [Vitest API: toHaveLength](https://vitest.dev/api/expect.html#tohavelength)
+- [Vitest API: toBe](https://vitest.dev/api/expect.html#tobe)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="toHaveLengthMatchers" />

@@ -14,6 +14,7 @@ import hooksBeforeTestCases from "./rules/hooksBeforeTestCases.ts";
 import nodeTestImports from "./rules/nodeTestImports.ts";
 import testCasePaddingLines from "./rules/testCasePaddingLines.ts";
 import testCasesWithinDescribes from "./rules/testCasesWithinDescribes.ts";
+import toHaveLengthMatchers from "./rules/toHaveLengthMatchers.ts";
 
 export const vitest = createPlugin({
 	files: {
@@ -33,5 +34,6 @@ export const vitest = createPlugin({
 		nodeTestImports,
 		testCasePaddingLines,
 		testCasesWithinDescribes,
+		toHaveLengthMatchers,
 	],
 });

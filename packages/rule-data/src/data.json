@@ -34057,7 +34057,8 @@
 		"flint": {
 			"name": "toHaveLengthMatchers",
 			"plugin": "vitest",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
