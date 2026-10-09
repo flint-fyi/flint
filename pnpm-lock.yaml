@@ -389,8 +389,8 @@ catalogs:
       specifier: 0.2.5
       version: 0.2.5
     prettier-plugin-sh:
-      specifier: 0.20.1
-      version: 0.20.1
+      specifier: 0.20.2
+      version: 0.20.2
     svelte:
       specifier: 5.57.2
       version: 5.57.2
@@ -780,7 +780,7 @@ importers:
         version: 0.2.5(prettier@3.8.1)
       prettier-plugin-sh:
         specifier: catalog:dev
-        version: 0.20.1(prettier@3.8.1)
+        version: 0.20.2(prettier@3.8.1)
       tsdown:
         specifier: catalog:dev
         version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
@@ -7179,8 +7179,8 @@ packages:
     peerDependencies:
       prettier: ^3
 
-  prettier-plugin-sh@0.20.1:
-    resolution: {integrity: sha512-YMgb/mSRMgg71NCN4lB2nC9+ZrZyH5ZsbRju315bRy6fkgku6EhCXSa75JjEnNFEm3cudSQLsZjtveBb1+MFlw==}
+  prettier-plugin-sh@0.20.2:
+    resolution: {integrity: sha512-4QVyY7Vav0f5i6AVa80SFwUJXaWsAv9t0yUZIivwI0ucxTei6Jwhso/khWqaKDj4QGdwjP2py1nxQrDUeZ0jyQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       prettier: ^3.6.0
@@ -14084,7 +14084,7 @@ snapshots:
       prettier: 3.8.1
       sentences-per-line: 0.5.6
 
-  prettier-plugin-sh@0.20.1(prettier@3.8.1):
+  prettier-plugin-sh@0.20.2(prettier@3.8.1):
     dependencies:
       '@reteps/dockerfmt': 0.5.4
       prettier: 3.8.1
