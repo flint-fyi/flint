@@ -1,5 +1,13 @@
 # @flint.fyi/vitest
 
+## 0.4.5
+
+### Patch Changes
+
+- [#3635](https://github.com/flint-fyi/flint/pull/3635) [`4f31391`](https://github.com/flint-fyi/flint/commit/4f3139156cd3f8be5c4ab77ff856ddf32d4f4f7c) - Recognize Vitest functions called with string literal element access modifiers, such as `test["skip"]()`, in Vitest rules.
+
+- [#3643](https://github.com/flint-fyi/flint/pull/3643) [`ce2797f`](https://github.com/flint-fyi/flint/commit/ce2797f554644aaa191c1a9078ba9d440f54cab5) - Recognize Vitest functions called with non-null assertions, such as `test!()` and `test.each([1])!()`, in Vitest rules.
+
 ## 0.4.4
 
 ### Patch Changes
