@@ -18,7 +18,7 @@ catalogs:
     "@emnapi/core": 1.11.3
     "@emnapi/runtime": 1.11.3
     "@eslint-community/eslint-plugin-eslint-comments": 4.8.1
-    "@eslint/json": 2.1.0
+    "@eslint/json": 2.1.1
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.3
     "@humanwhocodes/momoa": 3.3.13
@@ -65,7 +65,7 @@ catalogs:
   comparisons:
     "@biomejs/biome": 2.5.15
     "@eslint-community/eslint-plugin-eslint-comments": 4.8.1
-    "@eslint/json": 2.1.0
+    "@eslint/json": 2.1.1
     "@eslint/markdown": 8.0.3
     "@next/eslint-plugin-next": 16.4.0
     "@nuxt/eslint-plugin": 1.17.0
