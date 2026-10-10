@@ -39,7 +39,7 @@ catalogs:
     eslint-plugin-package-json: 1.10.1
     eslint-plugin-perfectionist: 5.12.1
     eslint-plugin-regexp: 3.3.1
-    eslint-plugin-unicorn: 76.0.0
+    eslint-plugin-unicorn: 77.0.0
     eslint-plugin-yml: 3.8.1
     execa: 10.1.0
     husky: 9.1.7
@@ -89,7 +89,7 @@ catalogs:
     eslint-plugin-regexp: 3.3.1
     eslint-plugin-solid: 0.18.1
     eslint-plugin-svelte: 3.23.0
-    eslint-plugin-unicorn: 76.0.0
+    eslint-plugin-unicorn: 77.0.0
     eslint-plugin-vue: 10.11.1
     eslint-plugin-yml: 3.8.1
     markdownlint: 0.41.1
