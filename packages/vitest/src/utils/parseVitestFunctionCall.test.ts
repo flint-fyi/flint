@@ -49,8 +49,8 @@ describe(parseVitestFunctionCall, () => {
 				parseVitestFunctionCall(parseCallExpression(`${name}(() => {})`)),
 			).toMatchObject({
 				kind,
+				members: [],
 				name,
-				segments: [],
 			});
 		},
 	);
@@ -65,23 +65,21 @@ describe(parseVitestFunctionCall, () => {
 	);
 
 	it.each([
-		{ segments: ["concurrent"], source: "test.concurrent(() => {})" },
-		{ segments: ["fails"], source: "test.fails(() => {})" },
-		{ segments: ["only"], source: "test.only(() => {})" },
-		{ segments: ["runIf"], source: "test.runIf(true)" },
-		{ segments: ["sequential"], source: "test.sequential(() => {})" },
-		{ segments: ["shuffle"], source: "describe.shuffle(() => {})" },
-		{ segments: ["skip"], source: "it.skip(() => {})" },
-		{ segments: ["skipIf"], source: "it.skipIf(true)" },
-		{ segments: ["todo"], source: "describe.todo(() => {})" },
-		{ segments: ["skip", "only"], source: "test.skip.only(() => {})" },
-		{ segments: ["skip"], source: 'test["skip"](() => {})' },
-		{ segments: ["skip"], source: "test[`skip`](() => {})" },
-		{ segments: ["skip", "only"], source: 'test.skip["only"](() => {})' },
-		{ segments: ["skip", "only"], source: 'test["skip"].only(() => {})' },
-	])("parses modifier chain $source", ({ segments, source }) => {
+		{ members: ["concurrent"], source: "test.concurrent(() => {})" },
+		{ members: ["fails"], source: "test.fails(() => {})" },
+		{ members: ["only"], source: "test.only(() => {})" },
+		{ members: ["sequential"], source: "test.sequential(() => {})" },
+		{ members: ["shuffle"], source: "describe.shuffle(() => {})" },
+		{ members: ["skip"], source: "it.skip(() => {})" },
+		{ members: ["todo"], source: "describe.todo(() => {})" },
+		{ members: ["skip", "only"], source: "test.skip.only(() => {})" },
+		{ members: ["skip"], source: 'test["skip"](() => {})' },
+		{ members: ["skip"], source: "test[`skip`](() => {})" },
+		{ members: ["skip", "only"], source: 'test.skip["only"](() => {})' },
+		{ members: ["skip", "only"], source: 'test["skip"].only(() => {})' },
+	])("parses modifier chain $source", ({ members, source }) => {
 		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
-			segments,
+			members,
 		});
 	});
 
@@ -90,6 +88,8 @@ describe(parseVitestFunctionCall, () => {
 		"test.each(() => {})",
 		"test.skip.nonsense(() => {})",
 		"test.extend({})",
+		"test.runIf(true)",
+		"it.skipIf(true)",
 		'test["nonsense"](() => {})',
 	])("returns undefined for unknown modifier in %s", (source) => {
 		expect(
@@ -99,103 +99,101 @@ describe(parseVitestFunctionCall, () => {
 
 	it.each([
 		{
+			members: ["each"],
 			name: "test",
-			segments: ["each"],
 			source: "test.each([1])('%i', () => {})",
 		},
 		{
+			members: ["skip", "each"],
 			name: "test",
-			segments: ["skip", "each"],
 			source: "test.skip.each([1])('%i', () => {})",
 		},
 		{
+			members: ["each"],
 			name: "describe",
-			segments: ["each"],
 			source: "describe.each([1])('%i', () => {})",
 		},
 		{
+			members: ["each"],
 			name: "test",
-			segments: ["each"],
 			source: "test[\"each\"]([1])('%i', () => {})",
 		},
 		{
+			members: ["extend"],
 			name: "test",
-			segments: ["extend"],
 			source: "test.extend({})('my test', () => {})",
 		},
-	])("parses call-returning callee $source", ({ name, segments, source }) => {
+		{
+			members: ["runIf"],
+			name: "test",
+			source: "test.runIf(true)('my test', () => {})",
+		},
+		{
+			members: ["skipIf"],
+			name: "it",
+			source: "it.skipIf(true)('my test', () => {})",
+		},
+	])("parses call-returning callee $source", ({ members, name, source }) => {
 		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
+			members,
 			name,
-			segments,
 		});
 	});
 
 	it.each([
 		{
+			members: ["each"],
 			name: "test",
-			segments: ["each"],
 			source: "test.each`\na\n${1}\n`('%i', () => {})",
 		},
 		{
+			members: ["skip", "each"],
 			name: "describe",
-			segments: ["skip", "each"],
 			source: "describe.skip.each`\na\n${1}\n`('%i', () => {})",
 		},
-	])("parses tagged template callee $source", ({ name, segments, source }) => {
+	])("parses tagged template callee $source", ({ members, name, source }) => {
 		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
+			members,
 			name,
-			segments,
 		});
 	});
 
 	it.each([
-		{ name: "test", segments: [], source: "test!()" },
-		{ name: "test", segments: ["only"], source: "test.only!()" },
-		{ name: "test", segments: ["only"], source: "test!.only()" },
+		{ members: [], name: "test", source: "test!()" },
+		{ members: ["only"], name: "test", source: "test.only!()" },
+		{ members: ["only"], name: "test", source: "test!.only()" },
 		{
+			members: ["each"],
 			name: "test",
-			segments: ["each"],
 			source: "test.each([1])!('%i', () => {})",
 		},
 		{
+			members: ["each"],
 			name: "test",
-			segments: ["each"],
 			source: "test.each`\na\n${1}\n`!('%i', () => {})",
 		},
 		{
+			members: ["extend"],
 			name: "test",
-			segments: ["extend"],
 			source: "test.extend({})!('my test', () => {})",
 		},
-	])(
-		"parses non-null asserted callee $source",
-		({ name, segments, source }) => {
-			expect(
-				parseVitestFunctionCall(parseCallExpression(source)),
-			).toMatchObject({
-				name,
-				segments,
-			});
-		},
-	);
+	])("parses non-null asserted callee $source", ({ members, name, source }) => {
+		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
+			members,
+			name,
+		});
+	});
 
 	it.each([
 		"nonsense.each([1])('%i', () => {})",
 		"nonsense.each`\na\n${1}\n`('%i', () => {})",
 		"test.nonsense.each([1])('%i', () => {})",
 		"test.nonsense.each([1])!('%i', () => {})",
+		"test.nonsense([1])('%i', () => {})",
 	])("returns undefined for call-returning callee %s", (source) => {
 		expect(
 			parseVitestFunctionCall(parseCallExpression(source)),
 		).toBeUndefined();
-	});
-
-	it("accepts an unknown final segment on a call-returning callee", () => {
-		expect(
-			parseVitestFunctionCall(
-				parseCallExpression("test.nonsense([1])('%i', () => {})"),
-			),
-		).toMatchObject({ name: "test", segments: ["nonsense"] });
 	});
 
 	it.each([
