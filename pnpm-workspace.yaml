@@ -46,7 +46,7 @@ catalogs:
     jiti: 2.7.0
     knip: 6.40.0
     lint-staged: 17.6.0
-    pkg-pr-new: 0.0.90
+    pkg-pr-new: 0.0.91
     prettier: 3.8.1
     prettier-plugin-astro: 1.1.0
     prettier-plugin-curly: 0.4.1
