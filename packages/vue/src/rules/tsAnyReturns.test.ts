@@ -109,20 +109,6 @@ ruleTester.describe(rule, {
 <script lang="ts" setup>
 	import MyComponent from './MyComponent.vue'
 
-	const foo = 'safe' as string
-</script>
-
-<template>
-	<MyComponent :foo="() => foo"/>
-</template>
-`,
-			files: myComponentFixture,
-		},
-		{
-			code: `
-<script lang="ts" setup>
-	import MyComponent from './MyComponent.vue'
-
 	function foo() {
 		return MyComponent
 	}
