@@ -502,5 +502,29 @@ function translateRange(
 		}
 		return { begin, end };
 	}
+
+	// Generated wrappers can extend beyond the mapped source expression.
+	let mappedBegin = Infinity;
+	let mappedEnd = -Infinity;
+	for (const mapping of map.mappings) {
+		for (const [index, offset] of mapping.generatedOffsets.entries()) {
+			const length = nullThrows(
+				mapping.generatedLengths?.[index] ?? mapping.lengths[index],
+				"Expected mapping to have a length for each generated offset",
+			);
+			const begin = Math.max(serviceBegin, offset);
+			const end = Math.min(serviceEnd, offset + length);
+			if (begin < end) {
+				mappedBegin = Math.min(mappedBegin, begin);
+				mappedEnd = Math.max(mappedEnd, end);
+			}
+		}
+	}
+	if (
+		mappedBegin < mappedEnd &&
+		(mappedBegin !== serviceBegin || mappedEnd !== serviceEnd)
+	) {
+		return translateRange(map, mappedBegin, mappedEnd);
+	}
 	return null;
 }
