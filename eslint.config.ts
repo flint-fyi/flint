@@ -179,9 +179,14 @@ const config: ConfigObject[] = defineConfig(
 		},
 	},
 	{
-		files: ["packages/*-language/src/language.ts"],
+		files: [
+			"packages/*-language/src/language.ts",
+			"packages/*/src/rules/*.ts",
+			"packages/site/astro.config.ts",
+		],
 		rules: {
 			// Language entry points register extensions and enforce single-instance invariants.
+			// Rule modules and Astro configuration construct exports using factory calls.
 			"unicorn/no-top-level-side-effects": "off",
 		},
 	},

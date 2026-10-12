@@ -6,11 +6,11 @@ export interface TestCaseNormalized extends TestCase {
 
 export function normalizeTestCase<T extends TestCase>(
 	testCase: T,
-	fileName: string | undefined,
+	fileName = "file.ts",
 ): T & TestCaseNormalized {
 	const rv: T = {
 		...testCase,
 	};
-	rv.fileName ??= fileName ?? "file.ts";
+	rv.fileName ??= fileName;
 	return rv as typeof rv & { fileName: string };
 }
