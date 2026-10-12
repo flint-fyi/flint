@@ -114,7 +114,7 @@ catalogs:
     "@volar/language-core": 2.4.28
     "@volar/typescript": 2.4.28
     "@vue/compiler-dom": ^3.5.0
-    "@vue/language-core": 3.3.11
+    "@vue/language-core": 3.3.12
     cached-factory: ^0.3.0
     change-case: ^5.4.4
     cli-cursor: ^5.0.0
