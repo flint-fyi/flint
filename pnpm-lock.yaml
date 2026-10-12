@@ -241,8 +241,8 @@ catalogs:
       specifier: 0.18.1
       version: 0.18.1
     eslint-plugin-svelte:
-      specifier: 3.23.0
-      version: 3.23.0
+      specifier: 3.23.1
+      version: 3.23.1
     eslint-plugin-unicorn:
       specifier: 77.0.0
       version: 77.0.0
@@ -1683,7 +1683,7 @@ importers:
         version: 0.18.1(eslint@10.12.0)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-svelte:
         specifier: catalog:comparisons
-        version: 3.23.0(eslint@10.12.0)(svelte@5.57.2)
+        version: 3.23.1(eslint@10.12.0)(svelte@5.57.2)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
         version: 77.0.0(eslint@10.12.0)
@@ -5312,8 +5312,8 @@ packages:
       eslint: ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4'
 
-  eslint-plugin-svelte@3.23.0:
-    resolution: {integrity: sha512-n9jRklDqy0+W834568a4ZIZTK7DHXxvvHHxxGP8nNq7N//pOZMubttskHOquyGgfTR4Z05q2NdGNlsTpIEA48w==}
+  eslint-plugin-svelte@3.23.1:
+    resolution: {integrity: sha512-+w86Jlx4IRUuuvtqD6j4njql+akx+81JnpvbN5de3AV5iq2SexvST/Jr51CiTlKeY0i+vhoKjPO/ywFKIP75sA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.1 || ^9.0.0 || ^10.0.0
@@ -11402,7 +11402,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-svelte@3.23.0(eslint@10.12.0)(svelte@5.57.2):
+  eslint-plugin-svelte@3.23.1(eslint@10.12.0)(svelte@5.57.2):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.12.0)
       '@jridgewell/sourcemap-codec': 1.6.0
