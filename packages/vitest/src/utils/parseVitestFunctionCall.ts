@@ -83,6 +83,8 @@ export function parseVitestFunctionCall(
 		case SyntaxKind.Identifier:
 			return functionCall;
 	}
+
+	return undefined;
 }
 
 function getTargetNode(node: AST.Expression): AST.Expression {
@@ -149,6 +151,8 @@ function parseCalleeChain(node: AST.AnyNode): CalleeChain | undefined {
 		case SyntaxKind.TaggedTemplateExpression:
 			return parseCalleeChain(node.tag);
 	}
+
+	return undefined;
 }
 
 function skipNonNullExpressions(node: AST.Expression): AST.Expression {
