@@ -395,8 +395,8 @@ catalogs:
       specifier: 5.57.2
       version: 5.57.2
     tsdown:
-      specifier: 0.23.0
-      version: 0.23.0
+      specifier: 0.23.1
+      version: 0.23.1
     typescript:
       specifier: 6.0.3
       version: 6.0.3
@@ -783,7 +783,7 @@ importers:
         version: 0.20.2(prettier@3.8.1)
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -832,7 +832,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -869,7 +869,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -897,7 +897,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -906,7 +906,7 @@ importers:
     dependencies:
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
   packages/changesets:
     dependencies:
@@ -931,7 +931,7 @@ importers:
         version: 4.0.4
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -980,7 +980,7 @@ importers:
         version: 3.8.1
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
   packages/core:
     dependencies:
@@ -1023,7 +1023,7 @@ importers:
         version: 4.0.3
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1048,7 +1048,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1073,7 +1073,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1143,7 +1143,7 @@ importers:
         version: 3.8.1
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
   packages/json:
     dependencies:
@@ -1168,7 +1168,7 @@ importers:
         version: 3.3.13
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1187,7 +1187,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1221,7 +1221,7 @@ importers:
         version: 1.0.4
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1264,7 +1264,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1295,7 +1295,7 @@ importers:
         version: 4.0.4
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1314,7 +1314,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
   packages/node:
     dependencies:
@@ -1339,7 +1339,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1358,7 +1358,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
   packages/package-json:
     dependencies:
@@ -1404,7 +1404,7 @@ importers:
         version: 3.3.13
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -1435,7 +1435,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1509,7 +1509,7 @@ importers:
         version: link:../volar-language
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1541,7 +1541,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
   packages/rule-data:
     dependencies:
@@ -1701,7 +1701,7 @@ importers:
         version: 1.87.0
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1729,7 +1729,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1842,7 +1842,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
   packages/spelling:
     dependencies:
@@ -1873,7 +1873,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1910,7 +1910,7 @@ importers:
         version: 5.57.2(@typescript-eslint/types@8.71.1)
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1956,7 +1956,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -1972,7 +1972,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
   packages/ts:
     dependencies:
@@ -2015,7 +2015,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -2027,7 +2027,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -2064,7 +2064,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -2080,7 +2080,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -2111,7 +2111,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -2145,7 +2145,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -2185,7 +2185,7 @@ importers:
         version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -2228,7 +2228,7 @@ importers:
         version: link:../core
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -2253,7 +2253,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -2278,7 +2278,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4)
@@ -7506,14 +7506,14 @@ packages:
   tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
 
-  tsdown@0.23.0:
-    resolution: {integrity: sha512-BaT+ep1xnj5hdyICLd5r5SYYE+TXnI1ATePLykv9vcKpHpFTWUWRH+x1AF/E2qcu3YB6+vI8IdyxIIIffEqw5Q==}
+  tsdown@0.23.1:
+    resolution: {integrity: sha512-MSC2WSOts3in95J334/VIS7KPfor3eCSvndJ6KdoVj9Aak9Kh1aNfz9ws5owhdukuTNSXRdfkPEzA/ihpDD6SA==}
     engines: {node: ^22.18.0 || ^24.11.0 || >=26.0.0}
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
-      '@tsdown/css': 0.23.0
-      '@tsdown/exe': 0.23.0
+      '@tsdown/css': 0.23.1
+      '@tsdown/exe': 0.23.1
       '@vitejs/devtools': '*'
       publint: ^0.3.8
       tsx: '*'
@@ -7761,10 +7761,6 @@ packages:
 
   verkit@0.3.2:
     resolution: {integrity: sha512-zj/ob3UsvJGN0whEAKFp53REA5X66hvffVqoCtVQAakJKnKlH+/PcOfMoFwIG/o4rElqLv/ycAFlx8ZlXUorCg==}
-    engines: {node: '>=18.12.0'}
-
-  verkit@0.4.1:
-    resolution: {integrity: sha512-mMVzj0TXExtVdlDEq+Mzp0eyOuyznNpFobNM3uAqe3HVm/Ps2c+u17BligMkZjZCA6EiXpoon8iRTer3iu40SQ==}
     engines: {node: '>=18.12.0'}
 
   verkit@0.5.0:
@@ -14379,14 +14375,14 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3):
+  tsdown@0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3):
     dependencies:
       cac: 7.0.1
       defu: 6.1.7
       empathic: 2.1.0
       hookable: 6.1.2
       import-without-cache: 0.4.1
-      obug: 2.2.1
+      obug: 3.0.0
       picomatch: 4.0.7
       rolldown: 1.2.13
       rolldown-plugin-dts: 0.28.7(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(rolldown@1.2.13)(typescript@6.0.3)
@@ -14394,7 +14390,7 @@ snapshots:
       tinyglobby: 0.2.17
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
-      verkit: 0.4.1
+      verkit: 0.5.0
     optionalDependencies:
       '@arethetypeswrong/core': 0.18.5
       typescript: 6.0.3
@@ -14604,8 +14600,6 @@ snapshots:
   validate-npm-package-name@7.0.2: {}
 
   verkit@0.3.2: {}
-
-  verkit@0.4.1: {}
 
   verkit@0.5.0: {}
 
