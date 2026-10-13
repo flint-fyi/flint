@@ -503,21 +503,6 @@ catalogs:
     language-tags:
       specifier: ^2.1.0
       version: 2.1.0
-    mdast-util-from-markdown:
-      specifier: ^2.0.2
-      version: 2.1.0
-    mdast-util-frontmatter:
-      specifier: ^2.0.1
-      version: 2.0.1
-    mdast-util-gfm:
-      specifier: ^3.1.0
-      version: 3.1.0
-    micromark-extension-frontmatter:
-      specifier: ^2.0.0
-      version: 2.0.0
-    micromark-extension-gfm:
-      specifier: ^3.0.0
-      version: 3.0.0
     package-json-validator:
       specifier: ^1.5.1
       version: 1.6.1
@@ -530,6 +515,9 @@ catalogs:
     regexp-ast-analysis:
       specifier: ^0.7.1
       version: 0.7.1
+    satteri:
+      specifier: ^0.10.5
+      version: 0.10.5
     scslre:
       specifier: ^0.3.0
       version: 0.3.0
@@ -1240,21 +1228,9 @@ importers:
       '@types/unist':
         specifier: catalog:prod
         version: 3.0.3
-      mdast-util-from-markdown:
+      satteri:
         specifier: catalog:prod
-        version: 2.1.0(supports-color@10.2.2)
-      mdast-util-frontmatter:
-        specifier: catalog:prod
-        version: 2.0.1(supports-color@10.2.2)
-      mdast-util-gfm:
-        specifier: catalog:prod
-        version: 3.1.0(supports-color@10.2.2)
-      micromark-extension-frontmatter:
-        specifier: catalog:prod
-        version: 2.0.0
-      micromark-extension-gfm:
-        specifier: catalog:prod
-        version: 3.0.0
+        version: 0.10.5
       unist-util-visit:
         specifier: catalog:prod
         version: 5.1.0

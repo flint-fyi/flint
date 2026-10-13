@@ -30,11 +30,7 @@
 		"@flint.fyi/utils": "workspace:^",
 		"@types/mdast": "catalog:prod",
 		"@types/unist": "catalog:prod",
-		"mdast-util-from-markdown": "catalog:prod",
-		"mdast-util-frontmatter": "catalog:prod",
-		"mdast-util-gfm": "catalog:prod",
-		"micromark-extension-frontmatter": "catalog:prod",
-		"micromark-extension-gfm": "catalog:prod",
+		"satteri": "catalog:prod",
 		"unist-util-visit": "catalog:prod"
 	},
 	"devDependencies": {
