@@ -177,7 +177,7 @@ catalogs:
     starlight-links-validator: 0.27.0
     starlight-package-managers: 0.13.0
     starlight-sidebar-topics: 0.9.0
-    zod: 4.6.6
+    zod: 4.6.7
 
 dedupePeers: true
 
