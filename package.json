@@ -21,10 +21,13 @@
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
 		"lint:knip:prod": "knip --strict",
-		"prepare": "husky",
+		"prepare": "simple-git-hooks",
 		"release": "pnpm build && changeset publish",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest"
+	},
+	"simple-git-hooks": {
+		"pre-commit": "pnpm exec nano-staged"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/core": "catalog:dev",
@@ -57,10 +60,9 @@
 		"eslint-plugin-unicorn": "catalog:dev",
 		"eslint-plugin-yml": "catalog:dev",
 		"flint": "workspace:^",
-		"husky": "catalog:dev",
 		"jiti": "catalog:dev",
 		"knip": "catalog:dev",
-		"lint-staged": "catalog:dev",
+		"nano-staged": "catalog:dev",
 		"pkg-pr-new": "catalog:dev",
 		"prettier": "catalog:dev",
 		"prettier-plugin-astro": "catalog:dev",
@@ -68,6 +70,7 @@
 		"prettier-plugin-packagejson": "catalog:dev",
 		"prettier-plugin-sentences-per-line": "catalog:dev",
 		"prettier-plugin-sh": "catalog:dev",
+		"simple-git-hooks": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev",
 		"typescript-eslint": "catalog:dev",
