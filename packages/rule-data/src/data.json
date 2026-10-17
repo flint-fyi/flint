@@ -31646,6 +31646,20 @@
 	},
 	{
 		"flint": {
+			"name": "unsafeEnumAssignments",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "@typescript-eslint/no-unsafe-enum-assignment",
+				"url": "https://typescript-eslint.io/rules/no-unsafe-enum-assignment"
+			}
+		],
+		"notes": "Type-aware rule: it rejects plain numbers or arithmetic assigned into an enum-typed location, which TypeScript allows on purpose for bit-flag enums. Flint's unsafeEnumComparisons covers the comparison side only."
+	},
+	{
+		"flint": {
 			"name": "unsafeEnumComparisons",
 			"plugin": "ts",
 			"preset": "logical"
