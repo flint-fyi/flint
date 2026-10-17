@@ -101,6 +101,9 @@ type VolarBasedLanguageCreateFile<FileServices extends object> = (
 	extraContext?: FileServices;
 	firstStatementPosition: number;
 	getLanguageReports?: (currentDirectory: string) => LanguageReports;
+	getReportRange?: (
+		range: CharacterReportRange,
+	) => CharacterReportRange | undefined;
 	reports?: FileReport[];
 };
 
@@ -274,6 +277,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 		extraContext,
 		firstStatementPosition,
 		getLanguageReports,
+		getReportRange,
 		reports,
 	} = createFile({
 		data,
@@ -393,14 +397,21 @@ setVolarCreateFile((data, program, sourceFile) => {
 			...data,
 			sourceText,
 		},
-		adjustReportRange(range) {
+		adjustReportRange(range, kind) {
 			if (range.begin < 0) {
 				return {
 					begin: -range.begin,
 					end: range.end,
 				};
 			}
-			return translateRange(map, range.begin, range.end);
+			const translated = translateRange(map, range.begin, range.end);
+			if (translated || kind !== "report") {
+				return translated;
+			}
+			const reportRange = getReportRange?.(range);
+			return reportRange
+				? translateRange(map, reportRange.begin, reportRange.end)
+				: null;
 		},
 		directives: collected.directives,
 		language: typescriptLanguage,
@@ -501,30 +512,6 @@ function translateRange(
 			continue;
 		}
 		return { begin, end };
-	}
-
-	// Generated wrappers can extend beyond the mapped source expression.
-	let mappedBegin = Infinity;
-	let mappedEnd = -Infinity;
-	for (const mapping of map.mappings) {
-		for (const [index, offset] of mapping.generatedOffsets.entries()) {
-			const length = nullThrows(
-				mapping.generatedLengths?.[index] ?? mapping.lengths[index],
-				"Expected mapping to have a length for each generated offset",
-			);
-			const begin = Math.max(serviceBegin, offset);
-			const end = Math.min(serviceEnd, offset + length);
-			if (begin < end) {
-				mappedBegin = Math.min(mappedBegin, begin);
-				mappedEnd = Math.max(mappedEnd, end);
-			}
-		}
-	}
-	if (
-		mappedBegin < mappedEnd &&
-		(mappedBegin !== serviceBegin || mappedEnd !== serviceEnd)
-	) {
-		return translateRange(map, mappedBegin, mappedEnd);
 	}
 	return null;
 }
