@@ -607,11 +607,11 @@ catalogs:
       specifier: 15.0.2
       version: 15.0.2
     react:
-      specifier: 19.3.0
-      version: 19.3.0
+      specifier: 19.3.1
+      version: 19.3.1
     react-dom:
-      specifier: 19.3.0
-      version: 19.3.0
+      specifier: 19.3.1
+      version: 19.3.1
     remark-add-twoslash:
       specifier: 0.0.1
       version: 0.0.1
@@ -1741,7 +1741,7 @@ importers:
         version: 15.0.2
       react:
         specifier: catalog:site
-        version: 19.3.0
+        version: 19.3.1
       starlight-package-managers:
         specifier: catalog:site
         version: 0.13.0(@astrojs/starlight@0.42.6)
@@ -1757,7 +1757,7 @@ importers:
         version: 7.3.2(supports-color@10.2.2)
       '@astrojs/react':
         specifier: catalog:site
-        version: 7.0.1(@types/node@26.6.5)(@types/react-dom@19.3.0)(@types/react@19.3.0)(jiti@2.7.0)(react-dom@19.3.0)(react@19.3.0)(yaml@2.9.1)
+        version: 7.0.1(@types/node@26.6.5)(@types/react-dom@19.3.0)(@types/react@19.3.0)(jiti@2.7.0)(react-dom@19.3.1)(react@19.3.1)(yaml@2.9.1)
       '@expressive-code/core':
         specifier: catalog:site
         version: 0.44.2
@@ -1781,7 +1781,7 @@ importers:
         version: 0.6.1(@expressive-code/core@0.44.2)(eslint@10.12.0)(expressive-code@0.44.2)(supports-color@10.2.2)(typescript@6.0.3)
       react-dom:
         specifier: catalog:site
-        version: 19.3.0(react@19.3.0)
+        version: 19.3.1(react@19.3.1)
       remark-add-twoslash:
         specifier: catalog:site
         version: 0.0.1
@@ -6891,16 +6891,16 @@ packages:
   radix3@1.1.2:
     resolution: {integrity: sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==}
 
-  react-dom@19.3.0:
-    resolution: {integrity: sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q==}
+  react-dom@19.3.1:
+    resolution: {integrity: sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==}
     peerDependencies:
-      react: ^19.3.0
+      react: ^19.3.1
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
-  react@19.3.0:
-    resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
+  react@19.3.1:
+    resolution: {integrity: sha512-QNhWdt7nrgVWWQG58QuGsAR3jv3Hbe4mb4vz7w2csnHavciZJgda1CPNaldF6eVxv90ud3jUXpKlHL69gO38yw==}
     engines: {node: '>=0.10.0'}
 
   readdirp@4.1.2:
@@ -8328,15 +8328,15 @@ snapshots:
     dependencies:
       prismjs: 1.30.0
 
-  '@astrojs/react@7.0.1(@types/node@26.6.5)(@types/react-dom@19.3.0)(@types/react@19.3.0)(jiti@2.7.0)(react-dom@19.3.0)(react@19.3.0)(yaml@2.9.1)':
+  '@astrojs/react@7.0.1(@types/node@26.6.5)(@types/react-dom@19.3.0)(@types/react@19.3.0)(jiti@2.7.0)(react-dom@19.3.1)(react@19.3.1)(yaml@2.9.1)':
     dependencies:
       '@astrojs/internal-helpers': 0.12.0
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
       '@vitejs/plugin-react': 6.1.2(vite@8.3.4)
       devalue: 5.9.4
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       ultrahtml: 1.7.0
       vite: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
     transitivePeerDependencies:
@@ -13483,14 +13483,14 @@ snapshots:
 
   radix3@1.1.2: {}
 
-  react-dom@19.3.0(react@19.3.0):
+  react-dom@19.3.1(react@19.3.1):
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
       scheduler: 0.28.0
 
   react-is@16.13.1: {}
 
-  react@19.3.0: {}
+  react@19.3.1: {}
 
   readdirp@4.1.2: {}
 
