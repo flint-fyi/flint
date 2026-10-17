@@ -6466,10 +6466,6 @@
 		],
 		"deno": [
 			{
-				"name": "button-has-type",
-				"url": "https://docs.deno.com/lint/rules/button-has-type"
-			},
-			{
 				"name": "jsx-button-has-type",
 				"url": "https://docs.deno.com/lint/rules/jsx-button-has-type"
 			}
@@ -6992,6 +6988,20 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-fragments.html"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "freshServerEventHandlers",
+			"plugin": "jsx",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "fresh-server-event-handlers",
+				"url": "https://docs.deno.com/lint/rules/fresh-server-event-handlers"
+			}
+		],
+		"notes": "Fresh-specific."
 	},
 	{
 		"flint": {
@@ -10556,6 +10566,12 @@
 			"name": "topLevelAwaits",
 			"plugin": "node"
 		},
+		"deno": [
+			{
+				"name": "no-top-level-await",
+				"url": "https://docs.deno.com/lint/rules/no-top-level-await"
+			}
+		],
 		"eslint": [
 			{
 				"name": "n/no-top-level-await",
@@ -13122,6 +13138,12 @@
 				"url": "https://biomejs.dev/linter/rules/no-dangerously-set-inner-html-with-children"
 			}
 		],
+		"deno": [
+			{
+				"name": "react-no-danger-with-children",
+				"url": "https://docs.deno.com/lint/rules/react-no-danger-with-children"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-danger-with-children",
@@ -13145,6 +13167,12 @@
 			{
 				"name": "noDangerouslySetInnerHtml",
 				"url": "https://biomejs.dev/linter/rules/no-dangerously-set-inner-html"
+			}
+		],
+		"deno": [
+			{
+				"name": "react-no-danger",
+				"url": "https://docs.deno.com/lint/rules/react-no-danger"
 			}
 		],
 		"eslint": [
@@ -14076,6 +14104,12 @@
 			{
 				"name": "useHookAtTopLevel",
 				"url": "https://biomejs.dev/linter/rules/use-hook-at-top-level"
+			}
+		],
+		"deno": [
+			{
+				"name": "react-rules-of-hooks",
+				"url": "https://docs.deno.com/lint/rules/react-rules-of-hooks"
 			}
 		],
 		"eslint": [
@@ -18056,8 +18090,8 @@
 		],
 		"deno": [
 			{
-				"name": "no-case-assign",
-				"url": "https://docs.deno.com/lint/rules/no-case-assign"
+				"name": "no-class-assign",
+				"url": "https://docs.deno.com/lint/rules/no-class-assign"
 			}
 		],
 		"eslint": [
@@ -19587,6 +19621,12 @@
 				"url": "https://biomejs.dev/linter/rules/no-duplicate-else-if"
 			}
 		],
+		"deno": [
+			{
+				"name": "no-dupe-else-if",
+				"url": "https://docs.deno.com/lint/rules/no-dupe-else-if"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-dupe-else-if",
@@ -20836,6 +20876,20 @@
 	},
 	{
 		"flint": {
+			"name": "freshHandlerExports",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "fresh-handler-export",
+				"url": "https://docs.deno.com/lint/rules/fresh-handler-export"
+			}
+		],
+		"notes": "Fresh-specific."
+	},
+	{
+		"flint": {
 			"name": "functionApplySpreads",
 			"plugin": "ts",
 			"preset": "stylistic",
@@ -21085,6 +21139,25 @@
 			{
 				"name": "typescript/prefer-function-type",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-function-type.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "generatedEmptyObjectTypes",
+			"plugin": "ts",
+			"preset": "logicalStrict"
+		},
+		"eslint": [
+			{
+				"name": "@typescript-eslint/no-generated-empty-object-type",
+				"url": "https://typescript-eslint.io/rules/no-generated-empty-object-type"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "typescript/no-generated-empty-object-type",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-generated-empty-object-type.html"
 			}
 		]
 	},
@@ -21826,6 +21899,20 @@
 			}
 		],
 		"notes": "Overly opinionated."
+	},
+	{
+		"flint": {
+			"name": "importPrefixes",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "no-import-prefix",
+				"url": "https://docs.deno.com/lint/rules/no-import-prefix"
+			}
+		],
+		"notes": "Deno-specific."
 	},
 	{
 		"flint": {
@@ -25760,6 +25847,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"deno": [
+			{
+				"name": "no-octal",
+				"url": "https://docs.deno.com/lint/rules/no-octal"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-octal",
@@ -26074,6 +26167,20 @@
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-keyword-prefix.md"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "primordials",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "prefer-primordials",
+				"url": "https://docs.deno.com/lint/rules/prefer-primordials"
+			}
+		],
+		"notes": "Only intended for Deno's internal code."
 	},
 	{
 		"flint": {
@@ -29496,8 +29603,8 @@
 		},
 		"deno": [
 			{
-				"name": "no-await-in-sync-fun",
-				"url": "https://docs.deno.com/lint/rules/no-await-in-sync-fun"
+				"name": "no-await-in-sync-fn",
+				"url": "https://docs.deno.com/lint/rules/no-await-in-sync-fn"
 			}
 		],
 		"notes": "Generally handled by parsers."
@@ -29680,6 +29787,12 @@
 			{
 				"name": "noUselessThisAlias",
 				"url": "https://biomejs.dev/linter/rules/no-useless-this-alias"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-this-alias",
+				"url": "https://docs.deno.com/lint/rules/no-this-alias"
 			}
 		],
 		"eslint": [
@@ -29940,8 +30053,8 @@
 		},
 		"deno": [
 			{
-				"name": "no-invalid-triple-slash-references",
-				"url": "https://docs.deno.com/lint/rules/no-invalid-triple-slash-references"
+				"name": "no-invalid-triple-slash-reference",
+				"url": "https://docs.deno.com/lint/rules/no-invalid-triple-slash-reference"
 			}
 		]
 	},
@@ -31976,6 +32089,20 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unused-vars.html"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "unversionedImports",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "no-unversioned-import",
+				"url": "https://docs.deno.com/lint/rules/no-unversioned-import"
+			}
+		],
+		"notes": "Deno-specific."
 	},
 	{
 		"flint": {
@@ -34057,7 +34184,8 @@
 		"flint": {
 			"name": "toHaveLengthMatchers",
 			"plugin": "vitest",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{

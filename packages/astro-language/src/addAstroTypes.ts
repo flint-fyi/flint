@@ -57,4 +57,6 @@ function resolveModuleFileName(
 			return resolved;
 		}
 	}
+
+	return undefined;
 }

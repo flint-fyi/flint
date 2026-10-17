@@ -262,7 +262,8 @@ function getIfStatementNullishCheckValue(node: AST.IfStatement) {
 }
 
 function getTypeFlags(type: ts.Type): ts.TypeFlags {
-	let flags = 0;
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-assignment -- TypeFlags has no member for an empty bitmask.
+	let flags = 0 as ts.TypeFlags;
 	for (const constituent of tsutils.unionConstituents(type)) {
 		for (const subConstituent of tsutils.intersectionConstituents(
 			constituent,

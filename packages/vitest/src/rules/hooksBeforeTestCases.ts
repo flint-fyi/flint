@@ -6,8 +6,6 @@ import {
 import { ruleCreator } from "../ruleCreator.ts";
 import { parseVitestFunctionCall } from "../utils/parseVitestFunctionCall.ts";
 
-const exemptModifiers = new Set(["extend", "scoped"]);
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
@@ -37,13 +35,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const { kind, segments, targetNode } = vitestFunction;
+					const { kind, targetNode } = vitestFunction;
 
-					const hasExemptModifier = segments.some((segment) =>
-						exemptModifiers.has(segment),
-					);
-
-					if (kind === "test" && !hasExemptModifier) {
+					if (kind === "test") {
 						testCaseSeenByScope[testCaseSeenByScope.length - 1] = true;
 					}
 

@@ -265,6 +265,8 @@ export default ruleCreator.createRule(vueLanguage, {
 					for (const child of templateBlock.children) {
 						visitTag(child);
 					}
+
+					return;
 				},
 			},
 		};

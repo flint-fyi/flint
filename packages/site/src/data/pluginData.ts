@@ -208,7 +208,7 @@ const pluginDataById = {
 		description:
 			"Rules for linting JavaScript and TypeScript code, including the latest and greatest powerful typed linting rules.",
 		id: "ts",
-		name: "TypeScript (and JavaScript)",
+		name: "TypeScript (and\u00A0JavaScript)",
 	},
 	vitest: {
 		colors: {
