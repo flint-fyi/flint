@@ -1,6 +1,6 @@
 name: Package Preview Comments
 
-on:
+on: # zizmor: ignore[dangerous-triggers] This workflow validates artifact data and does not check out or execute pull request code.
   workflow_run:
     workflows: [Package Previews]
     types: [completed]
