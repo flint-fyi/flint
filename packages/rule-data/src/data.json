@@ -9731,6 +9731,12 @@
 				"name": "useNodeAssertStrict",
 				"url": "https://biomejs.dev/linter/rules/use-node-assert-strict"
 			}
+		],
+		"eslint": [
+			{
+				"name": "n/prefer-import/assert-strict",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-import/assert-strict.md"
+			}
 		]
 	},
 	{
@@ -9790,6 +9796,19 @@
 			{
 				"name": "unicorn/no-new-buffer",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-new-buffer.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "builtinModuleLoading",
+			"plugin": "node",
+			"preset": "stylisticStrict"
+		},
+		"eslint": [
+			{
+				"name": "n/prefer-process-get-builtin-module",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-process-get-builtin-module.md"
 			}
 		]
 	},
