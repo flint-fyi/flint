@@ -72,7 +72,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache Vite Cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
@@ -90,7 +90,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache Vite Cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           key: vite-cache-ubuntu-latest-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
@@ -110,14 +110,14 @@ jobs:
     steps:
       - uses: $/.github/actions/setup
       - name: Cache Vite Cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
       - name: Run Unit Tests
         run: pnpm run test --project='!e2e' --coverage
       - name: Report Code Coverage
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
+        uses: codecov/codecov-action@v7.1.1
         if: ${{ !cancelled() && (matrix.os == 'macos-latest') }}
         with:
           fail_ci_if_error: true
