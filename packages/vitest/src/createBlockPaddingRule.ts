@@ -1,19 +1,20 @@
 import {
 	createStatementPaddingRule,
-	getStatementRootName,
+	parseStatementVitestFunctionCall,
 	type StatementPaddingRule,
 } from "./createStatementPaddingRule.ts";
 import type { VitestRuleAbout } from "./ruleCreator.ts";
+import type { VitestFunctionName } from "./utils/parseVitestFunctionCall.ts";
 
 export function createBlockPaddingRule(
 	about: VitestRuleAbout,
-	targetNames: string | string[],
+	targetNames: VitestFunctionName | VitestFunctionName[],
 	options?: {
 		blockName?: string;
 		ignoreConsecutiveTargetNames?: boolean;
 	},
 ): StatementPaddingRule {
-	const normalizedTargetNames: string[] = Array.isArray(targetNames)
+	const normalizedTargetNames: VitestFunctionName[] = Array.isArray(targetNames)
 		? targetNames
 		: [targetNames];
 	const targetNameSet = new Set(normalizedTargetNames);
@@ -23,14 +24,14 @@ export function createBlockPaddingRule(
 	return createStatementPaddingRule(
 		about,
 		(statement) => {
-			const rootName = getStatementRootName(statement);
-			if (!rootName || !targetNameSet.has(rootName)) {
+			const call = parseStatementVitestFunctionCall(statement);
+			if (!call || !targetNameSet.has(call.name)) {
 				return;
 			}
 
 			return {
 				blockName,
-				category: rootName,
+				category: call.name,
 			};
 		},
 		(previousMatch, nextMatch) => {

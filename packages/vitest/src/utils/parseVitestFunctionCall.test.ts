@@ -250,16 +250,6 @@ describe(parseVitestFunctionCall, () => {
 			name: "expect",
 			source: "expect.hasAssertions()",
 		},
-		{
-			members: ["toEqualTypeOf"],
-			name: "expectTypeOf",
-			source: "expectTypeOf(value).toEqualTypeOf<number>()",
-		},
-		{
-			members: ["parameter", "toBeNumber"],
-			name: "expectTypeOf",
-			source: "expectTypeOf(callback).parameter(0).toBeNumber()",
-		},
 	])("parses expect chain $source", ({ members, name, source }) => {
 		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
 			kind: "expect",
@@ -269,8 +259,34 @@ describe(parseVitestFunctionCall, () => {
 	});
 
 	it.each([
-		"expect(value)",
+		{
+			members: ["toEqualTypeOf"],
+			source: "expectTypeOf(value).toEqualTypeOf<number>()",
+		},
+		{
+			members: ["parameter", "toBeNumber"],
+			source: "expectTypeOf(callback).parameter(0).toBeNumber()",
+		},
+	])("parses type assertion chain $source", ({ members, source }) => {
+		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
+			kind: "typeAssertion",
+			members,
+			name: "expectTypeOf",
+		});
+	});
+
+	it.each([
 		"expectTypeOf(value)",
+		"expectTypeOf.assertions(1)",
+		"expectTypeOf.soft(value).toEqualTypeOf<number>()",
+	])("returns undefined for invalid type assertion chain %s", (source) => {
+		expect(
+			parseVitestFunctionCall(parseCallExpression(source)),
+		).toBeUndefined();
+	});
+
+	it.each([
+		"expect(value)",
 		"expect.soft(value)",
 		"expect.nonsense(value)",
 		"expect.assertions.nonsense(1)",
