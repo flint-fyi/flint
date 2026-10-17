@@ -138,6 +138,7 @@ export interface LanguageFileBase<FileServices extends object> {
 	about: FileAboutData;
 	adjustReportRange?: (
 		range: CharacterReportRange,
+		kind: "change" | "report",
 	) => CharacterReportRange | null;
 	directives?: CommentDirective[];
 	reports?: FileReport[];

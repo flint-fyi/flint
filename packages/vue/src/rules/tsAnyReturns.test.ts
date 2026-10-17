@@ -132,3 +132,55 @@ ruleTester.describe(rule, {
 		},
 	],
 });
+
+const unsafeTemplateCallback = `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => foo" /></template>
+`;
+
+ruleTester.describe(
+	{
+		...rule,
+		setup(context) {
+			return rule.setup({
+				...context,
+				report(report) {
+					context.report({
+						...report,
+						fix: { range: report.range, text: "'safe'" },
+						suggestions: [
+							{ id: "replace", range: report.range, text: "'safe'" },
+						],
+					});
+				},
+			});
+		},
+	},
+	{
+		invalid: [
+			{
+				code: unsafeTemplateCallback,
+				files: myComponentFixture,
+				name: "reports generated unwrap calls without offering wrapper edits",
+				snapshot: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => foo" /></template>
+                                   ~~~
+                                   Unsafe return of a value of type \`any\`.
+`,
+			},
+		],
+		valid: [
+			{
+				code: unsafeTemplateCallback.replace("1 as any", "'safe' as string"),
+				files: myComponentFixture,
+			},
+		],
+	},
+);
