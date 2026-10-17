@@ -1,3 +1,6 @@
+import { resolve } from "pathe";
+
+import { getCacheFilePath } from "../cache/getCacheFilePath.ts";
 import { writeToCache } from "../cache/writeToCache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -23,8 +26,14 @@ export async function runConfig(
 		skipLanguageReports,
 	}: RunConfigOptions,
 ): Promise<LintResults> {
-	const cacheLocationOverride =
-		cacheLocationFromCli || configDefinition.cacheLocation;
+	configDefinition = {
+		...configDefinition,
+		filePath: resolve(host.getCurrentDirectory(), configDefinition.filePath),
+	};
+	const cacheLocationOverride = resolve(
+		host.getCurrentDirectory(),
+		getCacheFilePath(cacheLocationFromCli || configDefinition.cacheLocation),
+	);
 
 	// 1. Based on the original config definition, collect:
 	//   - The full list of all file paths to be linted

@@ -1,5 +1,7 @@
 import { debugForFile } from "debug-for-file";
+import { resolve } from "pathe";
 
+import { getCacheFilePath } from "../cache/getCacheFilePath.ts";
 import { writeToCache } from "../cache/writeToCache.ts";
 import { applyChangesToFiles } from "../changing/applyChangesToFiles.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
@@ -28,6 +30,15 @@ export async function runConfigFixing(
 		skipLanguageReports,
 	}: RunConfigFixingOptions,
 ): Promise<LintResultsWithChanges> {
+	configDefinition = {
+		...configDefinition,
+		filePath: resolve(host.getCurrentDirectory(), configDefinition.filePath),
+	};
+	cacheLocation = resolve(
+		host.getCurrentDirectory(),
+		getCacheFilePath(cacheLocation || configDefinition.cacheLocation),
+	);
+
 	let changed = new Set<string>();
 	let iteration = 0;
 
@@ -69,7 +80,7 @@ export async function runConfigFixing(
 				host,
 				configDefinition.filePath,
 				lintResults,
-				cacheLocation || configDefinition.cacheLocation,
+				cacheLocation,
 			);
 			return { ...lintResults, changed };
 		}

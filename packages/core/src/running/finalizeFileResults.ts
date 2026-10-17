@@ -34,6 +34,7 @@ export function finalizeFileResults(
 ): FinalizedFileResults {
 	const directivesFilterer = new DirectivesFilterer();
 	const fileDependencies = new Set<string>();
+	const fileDependencyKeys = new Set<string>();
 	const languageReports: LanguageReport[] = [];
 	let isGlobalDependency = false;
 
@@ -55,13 +56,16 @@ export function finalizeFileResults(
 
 		if (cacheImpacts?.dependencies) {
 			for (const dependency of cacheImpacts.dependencies) {
-				const normalized = pathKey(
-					resolve(host.getCurrentDirectory(), dependency),
-					host.isCaseSensitiveFS(),
-				);
-				if (!fileDependencies.has(normalized)) {
-					log("Adding file dependency %s for file %s", normalized, filePath);
-					fileDependencies.add(normalized);
+				const dependencyPath = resolve(host.getCurrentDirectory(), dependency);
+				const dependencyKey = pathKey(dependencyPath, host.isCaseSensitiveFS());
+				if (!fileDependencyKeys.has(dependencyKey)) {
+					log(
+						"Adding file dependency %s for file %s",
+						dependencyPath,
+						filePath,
+					);
+					fileDependencies.add(dependencyPath);
+					fileDependencyKeys.add(dependencyKey);
 				}
 			}
 		}

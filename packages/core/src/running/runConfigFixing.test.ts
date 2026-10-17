@@ -127,13 +127,13 @@ describe(runConfigFixing, () => {
 			fixingHost.vfsUpsertFile(filePath, "0");
 			fixingHost.vfsUpsertFile(cachedFilePath, "5");
 			fixingHost.vfsUpsertFile(config.filePath, "");
-			fixingHost.vfsUpsertFile("package.json", "{}");
+			fixingHost.vfsUpsertFile("/root/package.json", "{}");
 			fixingHost.vfsUpsertFile(
 				cacheLocation,
 				cacheStorageSchema.encode({
 					configs: {
+						"/root/package.json": Date.now(),
 						[config.filePath]: Date.now(),
-						"package.json": Date.now(),
 					},
 					files: { [cachedFilePath]: { timestamp: Date.now() } },
 				}),
