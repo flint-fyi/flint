@@ -1,5 +1,11 @@
 # @flint.fyi/rule-data
 
+## 0.5.5
+
+### Patch Changes
+
+- [#3650](https://github.com/flint-fyi/flint/pull/3650) [`0079050`](https://github.com/flint-fyi/flint/commit/007905056b05b28c3f12226a10b755e1ae4b76d2) - Added a `toHaveLengthMatchers` rule.
+
 ## 0.5.4
 
 ### Patch Changes

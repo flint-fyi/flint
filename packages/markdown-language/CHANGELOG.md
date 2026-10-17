@@ -1,5 +1,11 @@
 # @flint.fyi/markdown-language
 
+## 0.18.1
+
+### Patch Changes
+
+- [#3686](https://github.com/flint-fyi/flint/pull/3686) [`8f66a52`](https://github.com/flint-fyi/flint/commit/8f66a52061ef9332897739fd52f84f853a986d21) - Replace mdast parser with `satteri`, rust-based markdown parser.
+
 ## 0.18.0
 
 ### Minor Changes
