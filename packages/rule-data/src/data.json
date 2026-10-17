@@ -36558,6 +36558,19 @@
 	},
 	{
 		"flint": {
+			"name": "nativeEventShadows",
+			"plugin": "vue",
+			"preset": "logicalStrict"
+		},
+		"eslint": [
+			{
+				"name": "vue/no-shadow-native-events",
+				"url": "https://eslint.vuejs.org/rules/no-shadow-native-events.html"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "negatedConditions",
 			"plugin": "vue",
 			"preset": "stylistic"
