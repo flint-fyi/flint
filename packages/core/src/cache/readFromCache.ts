@@ -1,5 +1,6 @@
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
+import { resolve } from "pathe";
 
 import { nullThrows, pathKey } from "@flint.fyi/utils";
 
@@ -41,7 +42,10 @@ export async function readFromCache(
 	);
 
 	// The config file and package.json are hardcoded to always be dependencies of all files
-	for (const filePath of [configFilePath, "package.json"]) {
+	for (const filePath of [
+		configFilePath,
+		resolve(host.getCurrentDirectory(), "package.json"),
+	]) {
 		if (!Object.hasOwn(cache.configs, filePath)) {
 			log(
 				"Linting all %d file path(s) due to no cache of %s",

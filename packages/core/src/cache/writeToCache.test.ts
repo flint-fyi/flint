@@ -27,7 +27,7 @@ async function roundTrip(
 	for (const path of [
 		configFilePath,
 		filePath,
-		"package.json",
+		"/root/package.json",
 		dependencyPath,
 	]) {
 		host.vfsUpsertFile(path, "content");

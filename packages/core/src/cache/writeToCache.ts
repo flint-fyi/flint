@@ -1,4 +1,5 @@
 import { debugForFile } from "debug-for-file";
+import { resolve } from "pathe";
 
 import type { CacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -15,6 +16,7 @@ export async function writeToCache(
 	cacheLocation: string | undefined,
 ): Promise<void> {
 	const timestamp = Date.now();
+	const packageFilePath = resolve(host.getCurrentDirectory(), "package.json");
 
 	const storage: CacheStorage = {
 		configs: {
@@ -22,7 +24,7 @@ export async function writeToCache(
 			// touch time: a fabricated "now" would mask later changes, whereas 0
 			// forces a safe re-validation on the next run.
 			[configFileName]: (await host.getFileTouchTime(configFileName)) ?? 0,
-			"package.json": (await host.getFileTouchTime("package.json")) ?? 0,
+			[packageFilePath]: (await host.getFileTouchTime(packageFilePath)) ?? 0,
 		},
 		files: {
 			...Object.fromEntries(

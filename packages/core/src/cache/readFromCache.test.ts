@@ -25,8 +25,8 @@ function createHostWithCache(
 
 	const storage: CacheStorage = {
 		configs: {
+			"/root/package.json": cacheWriteTime,
 			[configFilePath]: cacheWriteTime,
-			"package.json": cacheWriteTime,
 		},
 		files: cachedFiles,
 	};
@@ -55,9 +55,9 @@ describe(readFromCache, () => {
 	it("keeps a file cached when it has no dependencies", async () => {
 		const host = createHostWithCache(
 			{
+				"/root/package.json": 1000,
 				[configFilePath]: 1000,
 				[filePath]: 2000,
-				"package.json": 1000,
 			},
 			{
 				[filePath]: {
@@ -74,10 +74,10 @@ describe(readFromCache, () => {
 	it("keeps a file cached when a dependency outside the lint set was not touched after the cache was written", async () => {
 		const host = createHostWithCache(
 			{
+				"/root/package.json": 1000,
 				[configFilePath]: 1000,
 				[dependencyPath]: 1000,
 				[filePath]: 2000,
-				"package.json": 1000,
 			},
 			{
 				[filePath]: {
@@ -95,10 +95,10 @@ describe(readFromCache, () => {
 	it("invalidates a file when a dependency outside the lint set was touched after the cache was written", async () => {
 		const host = createHostWithCache(
 			{
+				"/root/package.json": 1000,
 				[configFilePath]: 1000,
 				[dependencyPath]: 4000,
 				[filePath]: 2000,
-				"package.json": 1000,
 			},
 			{
 				[filePath]: {
@@ -116,9 +116,9 @@ describe(readFromCache, () => {
 	it("invalidates a file when a dependency outside the lint set no longer exists", async () => {
 		const host = createHostWithCache(
 			{
+				"/root/package.json": 1000,
 				[configFilePath]: 1000,
 				[filePath]: 2000,
-				"package.json": 1000,
 			},
 			{
 				[filePath]: {
@@ -137,11 +137,11 @@ describe(readFromCache, () => {
 		const dependentPath = "/root/src/dependent.ts";
 		const host = createHostWithCache(
 			{
+				"/root/package.json": 1000,
 				[configFilePath]: 1000,
 				[dependencyPath]: 1000,
 				[dependentPath]: 2000,
 				[filePath]: 4000,
-				"package.json": 1000,
 			},
 			{
 				[dependentPath]: {

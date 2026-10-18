@@ -1,8 +1,6 @@
 import { resolve } from "pathe";
 import { describe, expect, it, vi } from "vitest";
 
-import { pathKey } from "@flint.fyi/utils";
-
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { finalizeFileResults } from "./finalizeFileResults.ts";
@@ -41,13 +39,11 @@ describe(finalizeFileResults, () => {
 				finalizeFileResults(file.about.filePath, [{ file, language }], [], host)
 					.dependencies,
 			).toEqual(
-				new Set(
-					[
-						resolve(cwd, "tsconfig.json"),
-						resolve(cwd, "src/Dependency.ts"),
-						absoluteDependency,
-					].map((dependency) => pathKey(dependency, caseSensitive)),
-				),
+				new Set([
+					absoluteDependency,
+					resolve(cwd, "src/Dependency.ts"),
+					resolve(cwd, "tsconfig.json"),
+				]),
 			);
 		},
 	);
