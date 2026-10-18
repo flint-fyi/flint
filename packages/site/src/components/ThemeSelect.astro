@@ -1,0 +1,41 @@
+---
+import Default from "@astrojs/starlight/components/ThemeSelect.astro";
+import BlogLinks from "starlight-blog/components/ThemeSelect.astro";
+
+const isPlayground = Astro.url.pathname.replace(/\/$/, "") === "/playground";
+---
+
+<div class="header-links">
+	<a
+		aria-current={isPlayground ? "page" : undefined}
+		class="header-link"
+		href="/playground/"
+	>
+		Playground
+	</a>
+	<BlogLinks />
+</div>
+<Default>
+	<slot />
+</Default>
+
+<style>
+	.header-links {
+		display: none;
+	}
+
+	@media (min-width: 50rem) {
+		.header-links {
+			align-items: center;
+			display: flex;
+			gap: 1rem;
+		}
+	}
+
+	.header-link {
+		color: var(--sl-color-text-accent);
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+</style>

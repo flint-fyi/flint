@@ -157,14 +157,21 @@ catalogs:
     "@astrojs/markdown-remark": 7.3.2
     "@astrojs/react": 7.0.1
     "@astrojs/starlight": 0.42.6
+    "@codemirror/lang-javascript": 6.2.5
+    "@codemirror/lang-json": 6.0.2
+    "@codemirror/language": 6.13.1
+    "@codemirror/lint": 6.9.7
+    "@codemirror/view": 6.43.14
     "@expressive-code/core": 0.44.2
     "@konami-emoji-blast/astro": 0.3.0
+    "@lezer/highlight": 1.2.5
     "@types/react": 19.3.0
     "@types/react-dom": 19.3.0
     astro: 7.3.8
     astro-og-canvas: 0.13.2
     canvaskit-wasm: 0.42.0
     clsx: 2.1.1
+    codemirror: 6.0.2
     expressive-code: 0.44.2
     expressive-code-twoslash: 0.6.1
     konami-emoji-blast: 0.7.0
