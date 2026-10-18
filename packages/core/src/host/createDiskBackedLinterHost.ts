@@ -30,6 +30,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			normalizedChangedFilePath: null | string,
 			event: LinterHostFileWatcherEvent,
 		) => void,
+		ignore?: (relativePath: string) => boolean,
 	): Disposable {
 		const normalizedWatchBasename = normalizedWatchPath.slice(
 			normalizedWatchPath.lastIndexOf("/") + 1,
@@ -60,7 +61,17 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const watcher = fs
 				.watch(
 					normalizedWatchPath,
-					{ persistent: false, recursive },
+					{
+						ignore:
+							ignore &&
+							((filename) =>
+								// Native watchers can report the watched directory's own name.
+								filename !== normalizedWatchBasename &&
+								!filename.startsWith("\\\\?\\") &&
+								ignore(filename)),
+						persistent: false,
+						recursive,
+					},
 					(_event, filename) => {
 						if (unwatched) {
 							return;
@@ -255,32 +266,38 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFS);
 			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFS);
 
+			function isIgnoredPath(normalizedChangedFilePath: string): boolean {
+				const changedKey = pathKey(normalizedChangedFilePath, caseSensitiveFS);
+				if (changedKey === dirKey) {
+					return false;
+				}
+				let relative = normalizedChangedFilePath;
+				if (changedKey.startsWith(dirKeySlash)) {
+					relative = relative.slice(directoryPathAbsolute.length);
+				}
+				return options.ignoredPaths.some(
+					(ignored) =>
+						relative.endsWith(ignored) || relative.includes(ignored + "/"),
+				);
+			}
+
 			return createWatcher(
 				directoryPathAbsolute,
 				options.recursive,
 				options.pollingInterval ?? 2000,
 				(normalizedChangedFilePath) => {
 					normalizedChangedFilePath ??= directoryPathAbsolute;
-					const changedKey = pathKey(
-						normalizedChangedFilePath,
-						caseSensitiveFS,
-					);
-					if (changedKey !== dirKey) {
-						let relative = normalizedChangedFilePath;
-						if (changedKey.startsWith(dirKeySlash)) {
-							relative = relative.slice(directoryPathAbsolute.length);
-						}
-						for (const ignored of options.ignoredPaths) {
-							if (
-								relative.endsWith(ignored) ||
-								relative.includes(ignored + "/")
-							) {
-								return;
-							}
-						}
+					if (isIgnoredPath(normalizedChangedFilePath)) {
+						return;
 					}
 					callback(normalizedChangedFilePath);
 				},
+				options.ignoredPaths.length
+					? (relativePath) =>
+							isIgnoredPath(
+								normalizePath(resolve(directoryPathAbsolute, relativePath)),
+							)
+					: undefined,
 			);
 		},
 		watchFileSync(filePathAbsolute, callback, options) {
