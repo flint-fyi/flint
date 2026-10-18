@@ -161,6 +161,53 @@ describe(runRules, () => {
 		expect(reportsByFilePath.get("/filtered.ts")).toEqual([]);
 	});
 
+	it("uses each file's current source text for report coordinates across runs", async () => {
+		const language = createLanguage<{ Node: string }, { marker: string }>({
+			about: { name: "test" },
+			createFileFactory: vi.fn(),
+			runFileVisitors(file, fileVisitors) {
+				for (const { services, visitors } of fileVisitors) {
+					visitors.Node?.(file.about.sourceText, services);
+				}
+			},
+		});
+		const rule = ruleCreator.createRule(language, {
+			about: { description: "", id: "coordinates" },
+			messages,
+			setup(context) {
+				return {
+					visitors: {
+						Node() {
+							context.report({
+								message: "message",
+								range: { begin: 3, end: 6 },
+							});
+						},
+					},
+				};
+			},
+		});
+		const file = createFile("/file.ts", "first");
+		const replacement = createFile("/file.ts", "replacement");
+		for (const [currentFile, sourceText, begin, end] of [
+			[file, "a\r\nbc\nxyz", { column: 0, line: 1 }, { column: 0, line: 2 }],
+			[file, "abcd\nef", { column: 3, line: 0 }, { column: 1, line: 1 }],
+			[replacement, "a\nbcdef", { column: 1, line: 1 }, { column: 4, line: 1 }],
+		] as const) {
+			currentFile.about.sourceText = sourceText;
+			// flint-disable-next-line performance/loopAwaits
+			const reports = await runRules(
+				new Map([["/file.ts", [{ file: currentFile, language }]]]),
+				new Map([[rule, new Map([["/file.ts", {}]])]]),
+				host,
+			);
+
+			expect(reports.get("/file.ts").map((report) => report.range)).toEqual([
+				{ begin: { ...begin, raw: 3 }, end: { ...end, raw: 6 } },
+			]);
+		}
+	});
+
 	it("throws when setup reports without a file path", async () => {
 		const language = createStubLanguage();
 		const rule = ruleCreator.createRule(language, {
