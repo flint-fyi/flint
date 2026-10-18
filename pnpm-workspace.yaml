@@ -34,7 +34,7 @@ catalogs:
     console-table-without-index: 0.1.1
     debug-for-file: 0.5.0
     eslint: 10.12.0
-    eslint-plugin-jsdoc: 65.3.4
+    eslint-plugin-jsdoc: 65.3.6
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-n: 18.4.1
     eslint-plugin-package-json: 1.10.1
@@ -78,7 +78,7 @@ catalogs:
     eslint-plugin-astro: 3.2.1
     eslint-plugin-eslint-plugin: 7.6.2
     eslint-plugin-import: 2.32.0
-    eslint-plugin-jsdoc: 65.3.4
+    eslint-plugin-jsdoc: 65.3.6
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.4.1
@@ -154,8 +154,8 @@ catalogs:
 
   site:
     "@astrojs/check": 0.9.10
-    "@astrojs/markdown-remark": 7.3.2
-    "@astrojs/react": 7.0.1
+    "@astrojs/markdown-remark": 7.3.3
+    "@astrojs/react": 7.1.0
     "@astrojs/starlight": 0.42.6
     "@codemirror/lang-javascript": 6.2.5
     "@codemirror/lang-json": 6.0.2
@@ -167,7 +167,7 @@ catalogs:
     "@lezer/highlight": 1.2.5
     "@types/react": 19.3.0
     "@types/react-dom": 19.3.0
-    astro: 7.3.8
+    astro: 7.4.0
     astro-og-canvas: 0.13.2
     canvaskit-wasm: 0.42.0
     clsx: 2.1.1
