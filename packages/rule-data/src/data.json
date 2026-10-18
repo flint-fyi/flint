@@ -38232,6 +38232,20 @@
 	},
 	{
 		"flint": {
+			"name": "booleanKeys",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "yml/no-boolean-key",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/no-boolean-key.html"
+			}
+		],
+		"notes": "Covered by stringMappingKeys."
+	},
+	{
+		"flint": {
 			"name": "emptyDocuments",
 			"plugin": "yaml",
 			"preset": "logical",
@@ -38479,14 +38493,10 @@
 		"flint": {
 			"name": "stringMappingKeys",
 			"plugin": "yaml",
-			"preset": "logicalStrict",
+			"preset": "logical",
 			"status": "implemented"
 		},
 		"eslint": [
-			{
-				"name": "yml/no-boolean-key",
-				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/no-boolean-key.html"
-			},
 			{
 				"name": "yml/require-string-key",
 				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/require-string-key.html"
