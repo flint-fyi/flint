@@ -1,6 +1,11 @@
+import { tmpdir } from "node:os";
+import path from "node:path";
+
 import { execa } from "execa";
 
 import { normalizePath } from "@flint.fyi/utils";
+
+const nodeCompileCache = path.join(tmpdir(), "flint-e2e-compile-cache");
 
 /**
  * Normalizes CLI output for snapshot testing: converts backslashes to forward
@@ -20,10 +25,6 @@ export function normalizeOutput(stdout: string, cwd: string): string {
  *
  * `GITHUB_ACTIONS` is cleared so the default presenter stays deterministic:
  * otherwise CI would auto-select the `github` presenter and change the output.
- *
- * The Node.js compile cache is disabled because CI always starts with an empty
- * cache, and concurrent flint processes writing it are slow enough on Windows
- * to time tests out.
  */
 export async function runFlint(
 	cwd: string,
@@ -34,7 +35,8 @@ export async function runFlint(
 		env: {
 			FORCE_COLOR: "1",
 			GITHUB_ACTIONS: undefined,
-			NODE_DISABLE_COMPILE_CACHE: "1",
+			NODE_COMPILE_CACHE: nodeCompileCache,
+			NODE_DISABLE_COMPILE_CACHE: undefined,
 		},
 		reject: false,
 	})`flint ${args}`;
