@@ -168,7 +168,7 @@ catalogs:
     expressive-code: 0.44.2
     expressive-code-twoslash: 0.6.1
     konami-emoji-blast: 0.7.0
-    markdown-it: 15.0.2
+    markdown-it: 15.0.3
     react: 19.3.1
     react-dom: 19.3.1
     remark-add-twoslash: 0.0.1
