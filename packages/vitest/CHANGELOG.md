@@ -1,5 +1,21 @@
 # @flint.fyi/vitest
 
+## 0.4.5
+
+### Patch Changes
+
+- [#3635](https://github.com/flint-fyi/flint/pull/3635) [`4f31391`](https://github.com/flint-fyi/flint/commit/4f3139156cd3f8be5c4ab77ff856ddf32d4f4f7c) - Recognize Vitest functions called with string literal element access modifiers, such as `test["skip"]()`, in Vitest rules.
+
+- [#3652](https://github.com/flint-fyi/flint/pull/3652) [`82f7132`](https://github.com/flint-fyi/flint/commit/82f7132151fa11255ea0c8b85dfc52ab84cd70ad) - Stop recognizing uninvoked Vitest factories, such as `test.runIf(true)`, and unknown invoked members, such as `test.nonsense([1])()`, as Vitest functions in Vitest rules.
+  Only recognize members that exist on each kind of Vitest function, so calls such as `test.shuffle()`, `describe.fails()`, and `beforeEach.skip()` are no longer treated as Vitest functions.
+  Count test cases created through `test.extend()` and `test.scoped()`, such as `test.extend({})("name", () => {})`, as test cases in `hooksBeforeTestCases`.
+
+- [#3643](https://github.com/flint-fyi/flint/pull/3643) [`ce2797f`](https://github.com/flint-fyi/flint/commit/ce2797f554644aaa191c1a9078ba9d440f54cab5) - Recognize Vitest functions called with non-null assertions, such as `test!()` and `test.each([1])!()`, in Vitest rules.
+
+- [#3650](https://github.com/flint-fyi/flint/pull/3650) [`0079050`](https://github.com/flint-fyi/flint/commit/007905056b05b28c3f12226a10b755e1ae4b76d2) - Added a `toHaveLengthMatchers` rule.
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
 ## 0.4.4
 
 ### Patch Changes

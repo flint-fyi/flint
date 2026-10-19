@@ -1,5 +1,17 @@
 # @flint.fyi/rule-data
 
+## 0.5.5
+
+### Patch Changes
+
+- [#3711](https://github.com/flint-fyi/flint/pull/3711) [`d22195c`](https://github.com/flint-fyi/flint/commit/d22195c9dc1db8bedf2391c0740a253bab8c8a6f) - Record the missing Node.js rules in the rule catalog.
+
+- [#3650](https://github.com/flint-fyi/flint/pull/3650) [`0079050`](https://github.com/flint-fyi/flint/commit/007905056b05b28c3f12226a10b755e1ae4b76d2) - Added a `toHaveLengthMatchers` rule.
+
+- [#3709](https://github.com/flint-fyi/flint/pull/3709) [`cd8c2bf`](https://github.com/flint-fyi/flint/commit/cd8c2bfc42e0501f1e1c0ab6652de8fd2e367afd) - Record Vue's native event shadowing rule in the rule catalog.
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
 ## 0.5.4
 
 ### Patch Changes
