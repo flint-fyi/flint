@@ -1,0 +1,13 @@
+---
+import { Playground } from "./Playground.tsx";
+---
+
+<script is:inline>
+	// Hides the default files until a shared link's files load.
+	if (location.hash.startsWith("#files=")) {
+		document.documentElement.classList.add("playground-loading");
+	}
+</script>
+<div class="not-content">
+	<Playground client:idle />
+</div>

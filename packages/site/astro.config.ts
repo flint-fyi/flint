@@ -17,6 +17,7 @@ export default defineConfig({
 				Head: "./src/components/Head.astro",
 				Hero: "./src/components/Hero.astro",
 				Pagination: "./src/components/Pagination.astro",
+				ThemeSelect: "./src/components/ThemeSelect.astro",
 			},
 			customCss: ["./src/styles.css"],
 			favicon: "/logo.png",
@@ -46,6 +47,7 @@ export default defineConfig({
 								{ label: "Configuration", link: "configuration" },
 								{ label: "Glossary", link: "glossary" },
 								{ label: "FAQs", link: "faqs" },
+								{ label: "Playground", link: "playground" },
 								{
 									collapsed: true,
 									items: [
@@ -170,6 +172,9 @@ export default defineConfig({
 				"css-tree": "css-tree/dist/csstree.esm",
 			},
 			conditions: ["node", "import", "default", "browser"],
+		},
+		worker: {
+			format: "es",
 		},
 	},
 });

@@ -1,0 +1,84 @@
+.empty {
+	color: var(--sl-color-gray-2);
+	margin: 0;
+	padding: 1rem;
+}
+
+.reports {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.report {
+	align-items: baseline;
+	border-block-end: 1px solid var(--sl-color-hairline);
+	border-inline-start: 0.25rem solid var(--playground-color-warning);
+	column-gap: 0.75rem;
+	display: grid;
+	grid-template-areas:
+		"location message"
+		"location id";
+	grid-template-columns: auto 1fr;
+	margin: 0;
+	padding: 0.625rem 1rem 0.625rem 0.75rem;
+}
+
+.report[data-source="language"] {
+	border-inline-start-color: var(--playground-color-error);
+}
+
+.location {
+	background: none;
+	border: none;
+	color: var(--sl-color-accent-high);
+	cursor: pointer;
+	font-family: var(--__sl-font-mono);
+	font-size: var(--sl-text-code-sm);
+	grid-area: location;
+	padding: 0;
+	text-decoration: underline;
+	transition: color 120ms ease-out;
+}
+
+.location:hover {
+	color: var(--sl-color-white);
+}
+
+.message {
+	grid-area: message;
+	overflow-wrap: anywhere;
+	white-space: pre-wrap;
+}
+
+.message code {
+	font-size: var(--sl-text-code-sm);
+}
+
+.id {
+	color: var(--sl-color-gray-2);
+	font-family: var(--__sl-font-mono);
+	font-size: var(--sl-text-code-sm);
+	grid-area: id;
+}
+
+.id a {
+	color: inherit;
+	transition: color 120ms ease-out;
+}
+
+.id a:hover {
+	color: var(--sl-color-white);
+}
+
+.source {
+	font-family: var(--__sl-font);
+	font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.id a,
+	.location {
+		transition: none;
+	}
+}
