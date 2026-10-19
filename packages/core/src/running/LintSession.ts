@@ -104,8 +104,8 @@ export class LintSession implements Disposable {
 		);
 		const changedFilePaths = this.#resolveFilePaths(changedPaths);
 		const allResults = new Map<string, FinalizedFileResults>();
-		let invalidatesCache = Array.from(changedFilePaths).some(
-			(filePath) => this.storedResults.get(filePath)?.invalidatesCache,
+		let changedGlobalDependency = Array.from(changedFilePaths).some(
+			(filePath) => this.storedResults.get(filePath)?.isGlobalDependency,
 		);
 
 		const lintPass = async (passFilePaths: Set<string>) => {
@@ -114,15 +114,15 @@ export class LintSession implements Disposable {
 				options,
 			)) {
 				allResults.set(filePath, fileResults);
-				if (fileResults.invalidatesCache) {
-					invalidatesCache = true;
+				if (fileResults.isGlobalDependency) {
+					changedGlobalDependency = true;
 				}
 			}
 		};
 
 		await lintPass(changedFilePaths);
 
-		if (!invalidatesCache) {
+		if (!changedGlobalDependency) {
 			await lintPass(
 				collectTransitiveDependents(
 					changedKeys,
@@ -132,7 +132,7 @@ export class LintSession implements Disposable {
 			);
 		}
 
-		if (invalidatesCache) {
+		if (changedGlobalDependency) {
 			await lintPass(this.allFilePaths.difference(new Set(allResults.keys())));
 		}
 
@@ -190,7 +190,7 @@ export class LintSession implements Disposable {
 		for (const [filePath, cachedStorage] of cached) {
 			this.#storeResults(filePath, {
 				dependencies: new Set(cachedStorage.dependencies),
-				invalidatesCache: cachedStorage.invalidatesCache ?? false,
+				isGlobalDependency: cachedStorage.isGlobalDependency ?? false,
 				languageReports: cachedStorage.languageReports ?? [],
 				reports: cachedStorage.reports ?? [],
 			});

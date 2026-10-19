@@ -87,6 +87,8 @@ export function resolveVariable(
 
 		current = current.upper;
 	}
+
+	return undefined;
 }
 
 function findContainingVariableScope(scope: ScopeInternal) {

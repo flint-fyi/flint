@@ -23,6 +23,8 @@ function getTextValue(node: AST.Expression | AST.TypeNode): string | undefined {
 		case SyntaxKind.TrueKeyword:
 			return "true";
 	}
+
+	return undefined;
 }
 
 function isLiteralType(node: AST.TypeNode): boolean {

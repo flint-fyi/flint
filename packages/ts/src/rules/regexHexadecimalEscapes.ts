@@ -97,33 +97,34 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							if (
-								escapeType === "unicode" &&
-								(charNode.raw.startsWith(String.raw`\u00`) ||
-									(charNode.raw.startsWith(String.raw`\u{`) &&
-										charNode.value <= 0xff))
+								escapeType !== "unicode" ||
+								(!charNode.raw.startsWith(String.raw`\u00`) &&
+									(!charNode.raw.startsWith(String.raw`\u{`) ||
+										charNode.value > 0xff))
 							) {
-								const hexEscape = toHexEscape(charNode.value);
+								return;
+							}
 
-								context.report({
-									data: {
-										escapeType,
-										found: charNode.raw,
-										hexEscape,
-									},
-									fix: {
-										range: {
-											begin: range.begin + 1 + charNode.start,
-											end: range.begin + 1 + charNode.end,
-										},
-										text: hexEscape,
-									},
-									message: "preferHexEscape",
+							const hexEscape = toHexEscape(charNode.value);
+							context.report({
+								data: {
+									escapeType,
+									found: charNode.raw,
+									hexEscape,
+								},
+								fix: {
 									range: {
 										begin: range.begin + 1 + charNode.start,
 										end: range.begin + 1 + charNode.end,
 									},
-								});
-							}
+									text: hexEscape,
+								},
+								message: "preferHexEscape",
+								range: {
+									begin: range.begin + 1 + charNode.start,
+									end: range.begin + 1 + charNode.end,
+								},
+							});
 						},
 					});
 				},

@@ -60,6 +60,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			values,
+			[],
 		);
 
 		expect(project.createFileFactory).toHaveBeenCalledTimes(1);
@@ -103,6 +104,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			values,
+			[],
 		);
 
 		expect(project.createFileFactory).toHaveBeenCalledTimes(2);
@@ -137,6 +139,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			values,
+			[],
 		);
 
 		expect(project.visitedFilePaths).toEqual([
@@ -175,6 +178,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			values,
+			[],
 		);
 
 		expect(loadConfigDefinition).toHaveBeenCalledTimes(2);
@@ -201,6 +205,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			{ ...values, fix: true },
+			[],
 		);
 
 		expect(project.host.readFileSync(project.aPath)).toBe("fixed");
@@ -231,6 +236,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			{ ...values, fix: true },
+			[],
 		);
 
 		const fixedText = `a1${"!".repeat(maximumFixIterations)}`;

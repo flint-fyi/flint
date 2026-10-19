@@ -16,7 +16,7 @@ import {
 	type LintResultsWithChanges,
 	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
-import { pathKey } from "@flint.fyi/utils";
+import { addFlintAssertionContext, pathKey } from "@flint.fyi/utils";
 
 import { loadConfigDefinition } from "./loadConfigDefinition.ts";
 import type { OptionsValues } from "./options.ts";
@@ -30,6 +30,7 @@ export async function runCliWatch(
 	configFileName: string,
 	getRenderer: () => Renderer,
 	values: OptionsValues,
+	args: string[],
 ): Promise<void> {
 	const cwd = host.getCurrentDirectory();
 	const isCaseSensitiveFS = host.isCaseSensitiveFS();
@@ -76,7 +77,7 @@ export async function runCliWatch(
 
 		function queueTask<Result>(task: () => Promise<Result>) {
 			currentTask = currentTask.then(task, task).catch((error: unknown) => {
-				log("Error during lint run: %o", error);
+				log("Error during lint run: %o", addFlintAssertionContext(error, args));
 			});
 		}
 

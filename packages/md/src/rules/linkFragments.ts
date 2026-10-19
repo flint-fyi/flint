@@ -76,15 +76,17 @@ export default ruleCreator.createRule(markdownLanguage, {
 					}
 
 					const fragment = node.url.slice(1); // Remove the #
-					if (fragment) {
-						// Decode URI components (e.g., %C3%A9 -> é)
-						const decodedFragment = decodeURIComponent(fragment);
-						linksToCheck.push({
-							begin: node.position.start.offset,
-							end: node.position.end.offset,
-							fragment: decodedFragment,
-						});
+					if (!fragment) {
+						return;
 					}
+
+					// Decode URI components (e.g., %C3%A9 -> é)
+					const decodedFragment = decodeURIComponent(fragment);
+					linksToCheck.push({
+						begin: node.position.start.offset,
+						end: node.position.end.offset,
+						fragment: decodedFragment,
+					});
 				},
 				root() {
 					slugger.reset();

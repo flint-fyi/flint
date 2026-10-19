@@ -1,130 +1,150 @@
-import path from "node:path";
-
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
-import type { ProcessedConfigDefinition } from "../types/configs.ts";
-import type { FileAboutData } from "../types/languages.ts";
 import { runConfig } from "./runConfig.ts";
 
-interface TestNodes {
-	Root: FileAboutData;
-}
-
-interface TestServices {
-	generation: number;
-}
+const ruleCreator = new RuleCreator({
+	docs: (ruleId) => `https://example.com/${ruleId}`,
+	pluginId: "test",
+	presets: [],
+});
 
 describe(runConfig, () => {
 	afterEach(() => {
-		vi.useRealTimers();
+		vi.restoreAllMocks();
 	});
 
 	it("counts only rules with matched files", async () => {
-		const project = createTestProject({ includeUnmatchedRule: true });
-
-		const results = await runConfig(project.configDefinition, project.host, {
-			ignoreCache: true,
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		const language = createLanguage<{ text: string }>({
+			about: { name: "test" },
+			createFileFactory: () => ({
+				createFile: (about) => ({ about, services: {} }),
+			}),
+			runFileVisitors(file, fileVisitors): void {
+				for (const { services, visitors } of fileVisitors) {
+					visitors.text?.(file.about.sourceText, services);
+				}
+			},
 		});
+		const createRule = (id: string) =>
+			ruleCreator.createRule(language, {
+				about: { description: "Test rule.", id },
+				messages: {},
+				setup() {
+					return;
+				},
+			});
+		const config = {
+			filePath: "/root/flint.config.ts",
+			use: [
+				{ files: ["*.ts"], rules: [createRule("matched")] },
+				{ files: ["*.missing"], rules: [createRule("unmatched")] },
+			],
+		};
+		host.vfsUpsertFile(config.filePath, "");
+		host.vfsUpsertFile("/root/a.ts", "");
+
+		const results = await runConfig(config, host, { ignoreCache: true });
 
 		expect(results.ruleCount).toBe(1);
 	});
 
-	it("keeps cache-invalidating files through a fully cached run", async () => {
-		vi.useFakeTimers({ toFake: ["Date"] });
-		vi.setSystemTime(1000);
-		const project = createTestProject({ invalidatingFilePath: "/root/a.txt" });
-
-		await runConfig(project.configDefinition, project.host, {});
-		vi.setSystemTime(2000);
-		const cachedResults = await runConfig(
-			project.configDefinition,
-			project.host,
-			{},
-		);
-		vi.setSystemTime(3000);
-		project.host.vfsUpsertFile(project.aPath, "a2");
-
-		const results = await runConfig(project.configDefinition, project.host, {});
-
-		expect(cachedResults.cached?.size).toBe(2);
-		expect(results.cached).toBeUndefined();
-	});
-});
-
-function createTestProject({
-	includeUnmatchedRule,
-	invalidatingFilePath,
-}: {
-	includeUnmatchedRule?: boolean;
-	invalidatingFilePath?: string;
-} = {}) {
-	const root = "/root";
-	const aPath = path.posix.join(root, "a.txt");
-	const bPath = path.posix.join(root, "b.txt");
-	const configFilePath = path.posix.join(root, "flint.config.ts");
-	const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
-	host.vfsUpsertFile(aPath, "a1");
-	host.vfsUpsertFile(bPath, "b1");
-	host.vfsUpsertFile(configFilePath, "");
-	host.vfsUpsertFile("package.json", "{}");
-
-	let generation = 0;
-	const language = createLanguage<TestNodes, TestServices>({
-		about: { name: "Test" },
-		createFileFactory: () => ({
-			createFile(data) {
-				return {
-					about: data,
-					services: { generation: (generation += 1) },
-				};
-			},
-		}),
-		getFileCacheImpacts(file) {
-			return {
-				dependencies: [],
-				invalidatesCache: file.about.filePath === invalidatingFilePath,
+	it.each(["changed", "deleted"])(
+		"re-lints unrelated files when a global declaration is %s after a cache hit",
+		async (change) => {
+			const clock = vi.spyOn(Date, "now").mockReturnValue(1000);
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			const globalPath = "/root/global.d.ts";
+			const unrelatedPath = "/root/unrelated.ts";
+			const visited: string[] = [];
+			const language = createLanguage<{ text: string }>({
+				about: { name: "test" },
+				createFileFactory: () => ({
+					createFile: (about) => ({ about, services: {} }),
+				}),
+				getFileCacheImpacts: (file) => ({
+					dependencies: [],
+					isGlobalDependency: file.about.filePath === globalPath,
+				}),
+				runFileVisitors(file, fileVisitors): void {
+					visited.push(file.about.filePath);
+					for (const { services, visitors } of fileVisitors) {
+						visitors.text?.(file.about.sourceText, services);
+					}
+				},
+			});
+			const rule = ruleCreator.createRule(language, {
+				about: { description: "Report the global declaration", id: "test" },
+				messages: {
+					global: {
+						primary: "Global: {{ declaration }}",
+						secondary: ["This declaration applies to every file."],
+						suggestions: ["Check the global declaration."],
+					},
+				},
+				setup: (context) => ({
+					visitors: {
+						text(): void {
+							context.report({
+								data: {
+									declaration: host.readFileSync(globalPath) ?? "missing",
+								},
+								message: "global",
+								range: { begin: 0, end: 1 },
+							});
+						},
+					},
+				}),
+			});
+			const config = {
+				filePath: "/root/flint.config.ts",
+				use: [{ files: ["global.d.ts", "unrelated.ts"], rules: [rule] }],
 			};
-		},
-		getLanguageReports(file) {
-			return [{ text: file.services.generation.toString() }];
-		},
-		runFileVisitors(file, fileVisitors) {
-			for (const { services, visitors } of fileVisitors) {
-				visitors.Root?.(file.about, services);
-			}
-		},
-	});
-	const ruleCreator = new RuleCreator({
-		docs: (ruleId) => `https://example.com/rules/${ruleId}`,
-		pluginId: "test",
-		presets: [],
-	});
-	const matchedRule = ruleCreator.createRule(language, {
-		about: { description: "Matched test rule.", id: "matched" },
-		messages: {},
-		setup() {
-			return;
-		},
-	});
-	const unmatchedRule = ruleCreator.createRule(language, {
-		about: { description: "Unmatched test rule.", id: "unmatched" },
-		messages: {},
-		setup() {
-			return;
-		},
-	});
-	const configDefinition: ProcessedConfigDefinition = {
-		filePath: configFilePath,
-		use: [
-			{ files: ["*.txt"], rules: [matchedRule] },
-			...(includeUnmatchedRule
-				? [{ files: ["*.missing"], rules: [unmatchedRule] }]
-				: []),
-		],
-	};
+			const options = { cacheLocation: "/root/cache.json" };
+			host.vfsUpsertFile(config.filePath, "");
+			// Cache config validation currently looks up this relative path.
+			host.vfsUpsertFile("package.json", "{}");
+			host.vfsUpsertFile(globalPath, "declare const value: string;");
+			host.vfsUpsertFile(unrelatedPath, "value;");
 
-	return { aPath, bPath, configDefinition, host };
-}
+			const initial = await runConfig(config, host, options);
+			expect(visited).toContain(unrelatedPath);
+			expect(initial.allFileResults.get(unrelatedPath)?.dependencies).toEqual(
+				new Set(),
+			);
+			expect(
+				initial.allFileResults.get(unrelatedPath)?.reports[0]?.data,
+			).toEqual({
+				declaration: "declare const value: string;",
+			});
+			visited.length = 0;
+			clock.mockReturnValue(2000);
+
+			const unchanged = await runConfig(config, host, options);
+			expect(visited).toEqual([]);
+			expect(unchanged.cached?.has(globalPath)).toBe(true);
+			expect(unchanged.cached?.has(unrelatedPath)).toBe(true);
+			expect(
+				unchanged.allFileResults.get(unrelatedPath)?.reports[0]?.data,
+			).toEqual({ declaration: "declare const value: string;" });
+			clock.mockReturnValue(3000);
+			if (change === "changed") {
+				host.vfsUpsertFile(globalPath, "declare const value: number;");
+			} else {
+				host.vfsDeleteFile(globalPath);
+			}
+
+			const changed = await runConfig(config, host, options);
+			expect(visited).toContain(unrelatedPath);
+			expect(
+				changed.allFileResults.get(unrelatedPath)?.reports[0]?.data,
+			).toEqual({
+				declaration:
+					change === "changed" ? "declare const value: number;" : "missing",
+			});
+		},
+	);
+});

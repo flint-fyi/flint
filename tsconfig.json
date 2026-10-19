@@ -8,13 +8,13 @@
 		"./@types/*/*.ts",
 		"./*.ts",
 		"./packages/*/scripts/*.ts",
-		"./packages/*/tsdown.config.ts",
-		"./scripts/*.ts"
+		"./packages/*/tsdown.config.ts"
 	],
 	"references": [
 		{ "path": "./packages/astro" },
 		{ "path": "./packages/astro-language" },
 		{ "path": "./packages/browser" },
+		{ "path": "./packages/changesets" },
 		{ "path": "./packages/cli" },
 		{ "path": "./packages/core" },
 		{ "path": "./packages/css" },

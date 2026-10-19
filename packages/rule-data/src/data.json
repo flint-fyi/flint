@@ -738,6 +738,19 @@
 	},
 	{
 		"flint": {
+			"name": "addEventListenerOptions",
+			"plugin": "browser",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-add-event-listener-options",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-add-event-listener-options.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "alerts",
 			"plugin": "browser",
 			"preset": "logical",
@@ -764,6 +777,45 @@
 	},
 	{
 		"flint": {
+			"name": "attributeToggles",
+			"plugin": "browser",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-toggle-attribute",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-toggle-attribute.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "blobToFiles",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-blob-to-file",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-blob-to-file.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "canvasToImages",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-canvas-to-image",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-canvas-to-image.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "classListToggles",
 			"plugin": "browser",
 			"preset": "stylistic",
@@ -784,11 +836,36 @@
 	},
 	{
 		"flint": {
+			"name": "cssEscapes",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/require-css-escape",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/require-css-escape.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "datasetAccesses",
+			"plugin": "browser",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/dom-node-dataset",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/dom-node-dataset.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "documentCookies",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -843,11 +920,23 @@
 	},
 	{
 		"flint": {
+			"name": "domTraversals",
+			"plugin": "browser",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/better-dom-traversing",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/better-dom-traversing.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "eventListenerSubscriptions",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -859,6 +948,19 @@
 			{
 				"name": "unicorn/prefer-add-event-listener",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-add-event-listener.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "fileInputAccepts",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-invalid-file-input-accept",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-invalid-file-input-accept.md"
 			}
 		]
 	},
@@ -904,11 +1006,49 @@
 	},
 	{
 		"flint": {
+			"name": "lateCurrentTargetAccesses",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-late-current-target-access",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-late-current-target-access.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "lateEventControl",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-late-event-control",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-late-event-control.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "locationAssigns",
+			"plugin": "browser",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-location-assign",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-location-assign.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "nodeAppendMethods",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -927,9 +1067,8 @@
 		"flint": {
 			"name": "nodeDatasetAttributes",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -946,11 +1085,23 @@
 	},
 	{
 		"flint": {
+			"name": "nodeHtmlMethods",
+			"plugin": "browser",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-dom-node-html-methods",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-dom-node-html-methods.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "nodeModificationMethods",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -969,9 +1120,8 @@
 		"flint": {
 			"name": "nodeQueryMethods",
 			"plugin": "browser",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -996,9 +1146,8 @@
 		"flint": {
 			"name": "nodeRemoveMethods",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -1015,11 +1164,23 @@
 	},
 	{
 		"flint": {
+			"name": "nodeReplaceChildrens",
+			"plugin": "browser",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-dom-node-replace-children",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-dom-node-replace-children.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "nodeTextContents",
 			"plugin": "browser",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -1042,6 +1203,58 @@
 	},
 	{
 		"flint": {
+			"name": "observerApis",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-observer-apis",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-observer-apis.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "passiveEvents",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/require-passive-events",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/require-passive-events.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "path2ds",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-path2d",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-path2d.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "querySelectorValidity",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-incorrect-query-selector",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-incorrect-query-selector.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "removeEventListenerExpressions",
 			"plugin": "browser",
 			"preset": "logical",
@@ -1057,6 +1270,19 @@
 			{
 				"name": "unicorn/no-invalid-remove-event-listener",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-invalid-remove-event-listener.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "scopedSelectors",
+			"plugin": "browser",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-scoped-selector",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-scoped-selector.md"
 			}
 		]
 	},
@@ -1088,6 +1314,32 @@
 	},
 	{
 		"flint": {
+			"name": "selectorDomNames",
+			"plugin": "browser",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-selector-as-dom-name",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-selector-as-dom-name.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unsafeDomHtml",
+			"plugin": "browser",
+			"preset": "security"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unsafe-dom-html",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-dom-html.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "windowMessagingTargetOrigin",
 			"plugin": "browser",
 			"preset": "logical",
@@ -1105,6 +1357,30 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/require-post-message-target-origin.html"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "summaryCasing",
+			"plugin": "changesets",
+			"preset": "stylistic",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "summaryPunctuation",
+			"plugin": "changesets",
+			"preset": "stylistic",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "summaryReadability",
+			"plugin": "changesets",
+			"preset": "logical",
+			"status": "implemented"
+		}
 	},
 	{
 		"flint": {
@@ -1279,8 +1555,7 @@
 		"flint": {
 			"name": "atRuleVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -1312,8 +1587,7 @@
 		"flint": {
 			"name": "baselineSupport",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -1352,8 +1626,7 @@
 		"flint": {
 			"name": "cascadeLayers",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -1676,8 +1949,7 @@
 		"flint": {
 			"name": "descendingSpecificity",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -1777,6 +2049,19 @@
 	},
 	{
 		"flint": {
+			"name": "explicitViewportUnits",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-explicit-viewport-units",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-explicit-viewport-units.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "fileLineLimits",
 			"plugin": "css",
 			"status": "skipped"
@@ -1863,8 +2148,7 @@
 		"flint": {
 			"name": "fontUnitRelativity",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -1977,8 +2261,7 @@
 		"flint": {
 			"name": "hexColors",
 			"plugin": "css",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -2049,8 +2332,7 @@
 		"flint": {
 			"name": "importantDeclarations",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -2084,8 +2366,7 @@
 		"flint": {
 			"name": "importantStyles",
 			"plugin": "css",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -2282,8 +2563,7 @@
 		"flint": {
 			"name": "logicalProperties",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -2369,8 +2649,7 @@
 		"flint": {
 			"name": "mediaFeatureNameVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -2686,8 +2965,7 @@
 		"flint": {
 			"name": "propertyVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -2770,8 +3048,7 @@
 		"flint": {
 			"name": "qualifyingTypeSelectors",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -2851,8 +3128,7 @@
 		"flint": {
 			"name": "selectorClassCounts",
 			"plugin": "css",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -3159,8 +3435,7 @@
 		"flint": {
 			"name": "selectorVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -3255,6 +3530,19 @@
 	},
 	{
 		"flint": {
+			"name": "transitionAlls",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-transition-all",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-transition-all.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "typeSelectorValidity",
 			"plugin": "css",
 			"preset": "logical"
@@ -3330,8 +3618,7 @@
 		"flint": {
 			"name": "urlSchemeRelativity",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -3398,8 +3685,7 @@
 		"flint": {
 			"name": "valueVendorPrefixes",
 			"plugin": "css",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"stylelint": [
 			{
@@ -3718,8 +4004,7 @@
 		"flint": {
 			"name": "messagePhrases",
 			"plugin": "flint",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -3773,9 +4058,8 @@
 		"flint": {
 			"name": "pluginRuleOrdering",
 			"plugin": "flint",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5801,9 +6085,8 @@
 		"flint": {
 			"name": "anchorAmbiguousText",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -5906,9 +6189,8 @@
 		"flint": {
 			"name": "ariaHiddenFocusables",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -6102,8 +6384,7 @@
 		"flint": {
 			"name": "booleanPropNames",
 			"plugin": "jsx",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -6184,10 +6465,6 @@
 			}
 		],
 		"deno": [
-			{
-				"name": "button-has-type",
-				"url": "https://docs.deno.com/lint/rules/button-has-type"
-			},
 			{
 				"name": "jsx-button-has-type",
 				"url": "https://docs.deno.com/lint/rules/jsx-button-has-type"
@@ -6299,8 +6576,7 @@
 		"flint": {
 			"name": "childrenWhitespace",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -6599,9 +6875,8 @@
 		"flint": {
 			"name": "elementChildrenValidity",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -6632,8 +6907,7 @@
 		"flint": {
 			"name": "elementIdUniqueness",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -6714,6 +6988,20 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-fragments.html"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "freshServerEventHandlers",
+			"plugin": "jsx",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "fresh-server-event-handlers",
+				"url": "https://docs.deno.com/lint/rules/fresh-server-event-handlers"
+			}
+		],
+		"notes": "Fresh-specific."
 	},
 	{
 		"flint": {
@@ -6811,8 +7099,7 @@
 		"flint": {
 			"name": "iframeSandboxes",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -6837,8 +7124,7 @@
 		"flint": {
 			"name": "iframeSandboxPresence",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -7078,9 +7364,8 @@
 		"flint": {
 			"name": "langValidity",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -7494,8 +7779,7 @@
 		"flint": {
 			"name": "pureComponentShouldUpdateDefinitions",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -7514,8 +7798,7 @@
 		"flint": {
 			"name": "renderedLiteralLeaks",
 			"plugin": "jsx",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -7631,9 +7914,8 @@
 		"flint": {
 			"name": "roleTags",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -8024,9 +8306,8 @@
 		"flint": {
 			"name": "bareUrls",
 			"plugin": "md",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -8059,8 +8340,7 @@
 		"flint": {
 			"name": "blockquoteBlankLineMultiples",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"markdownlint": [
 			{
@@ -8247,9 +8527,8 @@
 		"flint": {
 			"name": "fencedCodeLanguages",
 			"plugin": "md",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -8290,6 +8569,19 @@
 			}
 		],
 		"notes": "Formatting rule."
+	},
+	{
+		"flint": {
+			"name": "frontmatterFields",
+			"plugin": "md",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/require-frontmatter-fields",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/require-frontmatter-fields.md"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -8365,8 +8657,7 @@
 		"flint": {
 			"name": "headingDuplicates",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -8386,8 +8677,7 @@
 		"flint": {
 			"name": "headingEmphasisEquivalents",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"markdownlint": [
 			{
@@ -8463,9 +8753,8 @@
 		"flint": {
 			"name": "headingRootDuplicates",
 			"plugin": "md",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -8484,8 +8773,7 @@
 		"flint": {
 			"name": "headingRootPresence",
 			"plugin": "md",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"markdownlint": [
 			{
@@ -8526,8 +8814,7 @@
 		"flint": {
 			"name": "headingTrailingPunctuation",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"markdownlint": [
 			{
@@ -8704,8 +8991,7 @@
 		"flint": {
 			"name": "linkDescriptions",
 			"plugin": "md",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"markdownlint": [
 			{
@@ -8813,8 +9099,7 @@
 		"flint": {
 			"name": "olPrefixes",
 			"plugin": "md",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"markdownlint": [
 			{
@@ -9446,6 +9731,12 @@
 				"name": "useNodeAssertStrict",
 				"url": "https://biomejs.dev/linter/rules/use-node-assert-strict"
 			}
+		],
+		"eslint": [
+			{
+				"name": "n/prefer-import/assert-strict",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-import/assert-strict.md"
+			}
 		]
 	},
 	{
@@ -9510,6 +9801,19 @@
 	},
 	{
 		"flint": {
+			"name": "builtinModuleLoading",
+			"plugin": "node",
+			"preset": "stylisticStrict"
+		},
+		"eslint": [
+			{
+				"name": "n/prefer-process-get-builtin-module",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-process-get-builtin-module.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "callbackErrorHandling",
 			"plugin": "node",
 			"status": "skipped"
@@ -9564,8 +9868,7 @@
 			"name": "consoleSpaces",
 			"plugin": "node",
 			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -9630,9 +9933,8 @@
 		"flint": {
 			"name": "eventClasses",
 			"plugin": "node",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -9705,9 +10007,8 @@
 		"flint": {
 			"name": "filePathsFromImportMeta",
 			"plugin": "node",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -9726,9 +10027,8 @@
 		"flint": {
 			"name": "fileReadJSONBuffers",
 			"plugin": "node",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -9909,6 +10209,19 @@
 	},
 	{
 		"flint": {
+			"name": "jsonFileReads",
+			"plugin": "node",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-json-file-read",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-json-file-read.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "missingImports",
 			"plugin": "node",
 			"status": "skipped"
@@ -9917,6 +10230,19 @@
 			{
 				"name": "n/no-missing-import",
 				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-missing-import.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "missingLocalResources",
+			"plugin": "node",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-missing-local-resource",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-missing-local-resource.md"
 			}
 		]
 	},
@@ -10147,6 +10473,19 @@
 	},
 	{
 		"flint": {
+			"name": "queueMicrotasks",
+			"plugin": "node",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-queue-microtask",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-queue-microtask.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "restrictedImports",
 			"plugin": "node"
 		},
@@ -10172,6 +10511,19 @@
 	},
 	{
 		"flint": {
+			"name": "scriptExports",
+			"plugin": "node",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-exports-in-scripts",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-exports-in-scripts.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "shebangs",
 			"plugin": "node"
 		},
@@ -10182,6 +10534,19 @@
 			}
 		],
 		"notes": "Superseded by hashbangs."
+	},
+	{
+		"flint": {
+			"name": "sqliteInterpolations",
+			"plugin": "node",
+			"preset": "security"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unsafe-sqlite-interpolation",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-sqlite-interpolation.md"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -10220,6 +10585,12 @@
 			"name": "topLevelAwaits",
 			"plugin": "node"
 		},
+		"deno": [
+			{
+				"name": "no-top-level-await",
+				"url": "https://docs.deno.com/lint/rules/no-top-level-await"
+			}
+		],
 		"eslint": [
 			{
 				"name": "n/no-top-level-await",
@@ -10252,6 +10623,19 @@
 			}
 		],
 		"notes": "CJS-specific."
+	},
+	{
+		"flint": {
+			"name": "uint8ArrayBase64s",
+			"plugin": "node",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-uint8array-base64",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-uint8array-base64.md"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -10289,6 +10673,19 @@
 			{
 				"name": "n/no-unpublished-require",
 				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unpublished-require.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unsafeBufferConversions",
+			"plugin": "node",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unsafe-buffer-conversion",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-buffer-conversion.md"
 			}
 		]
 	},
@@ -10796,6 +11193,18 @@
 	},
 	{
 		"flint": {
+			"name": "disttags",
+			"plugin": "package-json"
+		},
+		"eslint": [
+			{
+				"name": "package-json/restrict-dist-tags",
+				"url": "https://eslint-plugin-package-json.dev/rules/restrict-dist-tags"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "emptyFields",
 			"plugin": "package-json",
 			"preset": "logical",
@@ -11072,8 +11481,7 @@
 		"flint": {
 			"name": "licenseTrust",
 			"plugin": "package-json",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -11282,6 +11690,19 @@
 			{
 				"name": "package-json/sort-collections",
 				"url": "https://eslint-plugin-package-json.dev/rules/sort-collections"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "packageJsonExportPresence",
+			"plugin": "package-json",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "package-json/require-package-json-export",
+				"url": "https://eslint-plugin-package-json.dev/rules/require-package-json-export"
 			}
 		]
 	},
@@ -11542,6 +11963,18 @@
 			{
 				"name": "package-json/valid-repository",
 				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-repository"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "rollingWorkspaceSpecs",
+			"plugin": "package-json"
+		},
+		"eslint": [
+			{
+				"name": "package-json/prefer-rolling-workspace-spec",
+				"url": "https://eslint-plugin-package-json.dev/rules/prefer-rolling-workspace-spec"
 			}
 		]
 	},
@@ -12151,8 +12584,7 @@
 		"flint": {
 			"name": "captureOwnerStackUsage",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12259,8 +12691,7 @@
 		"flint": {
 			"name": "classComponents",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12279,8 +12710,7 @@
 		"flint": {
 			"name": "classComponentStateDefinitions",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -12293,8 +12723,7 @@
 		"flint": {
 			"name": "classComponentStateInitialization",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -12370,8 +12799,7 @@
 		"flint": {
 			"name": "componentDidMountSetStates",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12390,8 +12818,7 @@
 		"flint": {
 			"name": "componentDidUpdateSetStates",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12410,8 +12837,7 @@
 		"flint": {
 			"name": "componentDisplayNames",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12434,8 +12860,7 @@
 		"flint": {
 			"name": "componentExportModules",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -12582,8 +13007,7 @@
 		"flint": {
 			"name": "componentWillUpdateSetStates",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12614,8 +13038,7 @@
 		"flint": {
 			"name": "contextNames",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -12642,8 +13065,7 @@
 		"flint": {
 			"name": "contextValueReferences",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12662,8 +13084,7 @@
 		"flint": {
 			"name": "contextValueStability",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12736,6 +13157,12 @@
 				"url": "https://biomejs.dev/linter/rules/no-dangerously-set-inner-html-with-children"
 			}
 		],
+		"deno": [
+			{
+				"name": "react-no-danger-with-children",
+				"url": "https://docs.deno.com/lint/rules/react-no-danger-with-children"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-danger-with-children",
@@ -12753,13 +13180,18 @@
 		"flint": {
 			"name": "dangerousProps",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
 				"name": "noDangerouslySetInnerHtml",
 				"url": "https://biomejs.dev/linter/rules/no-dangerously-set-inner-html"
+			}
+		],
+		"deno": [
+			{
+				"name": "react-no-danger",
+				"url": "https://docs.deno.com/lint/rules/react-no-danger"
 			}
 		],
 		"eslint": [
@@ -12806,8 +13238,7 @@
 		"flint": {
 			"name": "defaultPropsStability",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12881,8 +13312,7 @@
 		"flint": {
 			"name": "eventListenerCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12924,8 +13354,7 @@
 		"flint": {
 			"name": "fetchCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -12995,8 +13424,7 @@
 		"flint": {
 			"name": "forwardRefs",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -13083,8 +13511,7 @@
 		"flint": {
 			"name": "idNames",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -13163,8 +13590,7 @@
 		"flint": {
 			"name": "intervalCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13197,8 +13623,7 @@
 		"flint": {
 			"name": "iterableKeys",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -13432,8 +13857,7 @@
 		"flint": {
 			"name": "reactDomFlushSyncCalls",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13494,8 +13918,7 @@
 		"flint": {
 			"name": "refNames",
 			"plugin": "react",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -13597,8 +14020,7 @@
 		"flint": {
 			"name": "resizeObserverCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13701,6 +14123,12 @@
 			{
 				"name": "useHookAtTopLevel",
 				"url": "https://biomejs.dev/linter/rules/use-hook-at-top-level"
+			}
+		],
+		"deno": [
+			{
+				"name": "react-rules-of-hooks",
+				"url": "https://docs.deno.com/lint/rules/react-rules-of-hooks"
 			}
 		],
 		"eslint": [
@@ -13840,8 +14268,7 @@
 		"flint": {
 			"name": "stylePropObjects",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -13873,8 +14300,7 @@
 		"flint": {
 			"name": "timeoutCleanup",
 			"plugin": "react",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -14283,8 +14709,7 @@
 		"flint": {
 			"name": "innerHTMLProps",
 			"plugin": "solid",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -14583,8 +15008,7 @@
 		"flint": {
 			"name": "blockLang",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -14597,8 +15021,7 @@
 		"flint": {
 			"name": "buttonTypes",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -14611,8 +15034,7 @@
 		"flint": {
 			"name": "classDirectives",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -14775,8 +15197,7 @@
 		"flint": {
 			"name": "eventPrefixes",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -14873,8 +15294,7 @@
 		"flint": {
 			"name": "htmlCommentSpacing",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -14956,8 +15376,7 @@
 		"flint": {
 			"name": "inlineStyles",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -15057,8 +15476,7 @@
 		"flint": {
 			"name": "manualEventListeners",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15126,8 +15544,7 @@
 		"flint": {
 			"name": "optimizedStyleAttributes",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15180,8 +15597,7 @@
 		"flint": {
 			"name": "selectorConsistency",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15194,8 +15610,7 @@
 		"flint": {
 			"name": "selfClosingHtmlElements",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15208,8 +15623,7 @@
 		"flint": {
 			"name": "shorthandAttributes",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15222,8 +15636,7 @@
 		"flint": {
 			"name": "shorthandDirectives",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15332,8 +15745,7 @@
 		"flint": {
 			"name": "styleDirectives",
 			"plugin": "svelte",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -15386,8 +15798,7 @@
 		"flint": {
 			"name": "targetBlankLinks",
 			"plugin": "svelte",
-			"preset": "security",
-			"strictness": "strict"
+			"preset": "securityStrict"
 		},
 		"eslint": [
 			{
@@ -15400,8 +15811,7 @@
 		"flint": {
 			"name": "topLevelBrowserGlobals",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15481,8 +15891,7 @@
 		"flint": {
 			"name": "unusedClassNames",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15574,8 +15983,7 @@
 		"flint": {
 			"name": "validStyleParsing",
 			"plugin": "svelte",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -15607,6 +16015,32 @@
 			{
 				"name": "unicorn/prevent-abbreviations",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prevent-abbreviations.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "abortSignalAnys",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-abort-signal-any",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-abort-signal-any.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "abortSignalTimeouts",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-abort-signal-timeout",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-abort-signal-timeout.md"
 			}
 		]
 	},
@@ -15679,9 +16113,8 @@
 		"flint": {
 			"name": "accessorThisRecursion",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -15693,6 +16126,19 @@
 			{
 				"name": "unicorn/no-accessor-recursion",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-accessor-recursion.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "aggregateErrors",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-aggregate-error",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-aggregate-error.md"
 			}
 		]
 	},
@@ -15912,6 +16358,19 @@
 	},
 	{
 		"flint": {
+			"name": "arrayConcatsInLoops",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-array-concat-in-loop",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-array-concat-in-loop.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "arrayConstructors",
 			"plugin": "ts",
 			"preset": "logical",
@@ -16053,6 +16512,12 @@
 			"plugin": "ts",
 			"preset": "logical"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/no-array-fill-with-reference-type",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-array-fill-with-reference-type.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "unicorn/no-array-fill-with-reference-type",
@@ -16064,9 +16529,8 @@
 		"flint": {
 			"name": "arrayFilteredFinds",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -16130,9 +16594,8 @@
 		"flint": {
 			"name": "arrayFlatMapMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -16157,9 +16620,8 @@
 		"flint": {
 			"name": "arrayFlatMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -16196,6 +16658,71 @@
 	},
 	{
 		"flint": {
+			"name": "arrayFromAsyncs",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-array-from-async",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-array-from-async.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "arrayFromFills",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-array-from-fill",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-array-from-fill.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "arrayFromMaps",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-array-from-map",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-array-from-map.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "arrayFromRanges",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-array-from-range",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-array-from-range.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "arrayFrontMutations",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-array-front-mutation",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-array-front-mutation.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "arrayIncludes",
 			"plugin": "ts",
 			"preset": "stylistic",
@@ -16218,9 +16745,7 @@
 		"flint": {
 			"name": "arrayIncludesMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -16251,9 +16776,7 @@
 		"flint": {
 			"name": "arrayIndexOfMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -16289,6 +16812,19 @@
 	},
 	{
 		"flint": {
+			"name": "arrayIterableMethods",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-array-iterable-methods",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-array-iterable-methods.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "arrayJoinSeparators",
 			"plugin": "ts",
 			"status": "skipped"
@@ -16303,6 +16839,19 @@
 			{
 				"name": "unicorn/require-array-join-separator",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/require-array-join-separator.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "arrayLastMethods",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-array-last-methods",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-array-last-methods.md"
 			}
 		]
 	},
@@ -16329,8 +16878,8 @@
 				"url": "https://typescript-eslint.io/rules/prefer-for-of"
 			},
 			{
-				"name": "unicorn/no-array-for-each",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-array-for-each.md"
+				"name": "unicorn/no-for-each",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-for-each.md"
 			},
 			{
 				"name": "unicorn/no-for-loop",
@@ -16436,6 +16985,19 @@
 	},
 	{
 		"flint": {
+			"name": "arrayPushReturns",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-return-array-push",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-return-array-push.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "arrayReducers",
 			"plugin": "ts",
 			"status": "skipped"
@@ -16457,9 +17019,7 @@
 		"flint": {
 			"name": "arrayReduceTypeArguments",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -16477,6 +17037,19 @@
 			{
 				"name": "typescript/prefer-reduce-type-parameter",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-reduce-type-parameter.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "arraySlices",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-array-slice",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-array-slice.md"
 			}
 		]
 	},
@@ -16508,9 +17081,7 @@
 		"flint": {
 			"name": "arraySomeMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -16559,12 +17130,42 @@
 			{
 				"name": "@typescript-eslint/require-array-sort-compare",
 				"url": "https://typescript-eslint.io/rules/require-array-sort-compare"
+			},
+			{
+				"name": "unicorn/require-array-sort-compare",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/require-array-sort-compare.md"
 			}
 		],
 		"oxlint": [
 			{
 				"name": "typescript/require-array-sort-compare",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/require-array-sort-compare.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "arraySortMinMax",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-array-sort-for-min-max",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-array-sort-for-min-max.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "arraySplices",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-array-splice",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-array-splice.md"
 			}
 		]
 	},
@@ -16650,6 +17251,10 @@
 			{
 				"name": "arrow-body-style",
 				"url": "https://eslint.org/docs/latest/rules/arrow-body-style"
+			},
+			{
+				"name": "unicorn/consistent-arrow-return-style",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-arrow-return-style.md"
 			}
 		],
 		"oxlint": [
@@ -16722,6 +17327,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/no-misrefactored-assignment",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-misrefactored-assignment.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/misrefactored-assign-op",
@@ -16740,6 +17351,10 @@
 			{
 				"name": "logical-assignment-operators",
 				"url": "https://eslint.org/docs/latest/rules/logical-assignment-operators"
+			},
+			{
+				"name": "unicorn/logical-assignment-operators",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/logical-assignment-operators.md"
 			}
 		],
 		"oxlint": [
@@ -16850,6 +17465,19 @@
 	},
 	{
 		"flint": {
+			"name": "asyncPromiseFinallys",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-async-promise-finally",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-async-promise-finally.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "asyncUnnecessaryPromiseWrappers",
 			"plugin": "ts",
 			"preset": "logical",
@@ -16872,9 +17500,7 @@
 		"flint": {
 			"name": "atAccesses",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -16949,6 +17575,19 @@
 	},
 	{
 		"flint": {
+			"name": "awaitsOverPromiseChains",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-await",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-await.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "awaitThenable",
 			"plugin": "ts",
 			"preset": "logical"
@@ -16992,6 +17631,12 @@
 				"url": "https://biomejs.dev/linter/rules/no-barrel-file"
 			}
 		],
+		"eslint": [
+			{
+				"name": "unicorn/no-barrel-files",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-barrel-files.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/no-barrel-file",
@@ -17005,6 +17650,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/no-accidental-bitwise-operator",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-accidental-bitwise-operator.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/bad-bitwise-operator",
@@ -17065,6 +17716,19 @@
 	},
 	{
 		"flint": {
+			"name": "blockStatementsOverIifes",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-block-statement-over-iife",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-block-statement-over-iife.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "booleanLiteralParameterComments",
 			"plugin": "ts",
 			"status": "skipped"
@@ -17078,11 +17742,56 @@
 	},
 	{
 		"flint": {
+			"name": "booleanNames",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-boolean-name",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-boolean-name.md"
+			}
+		],
+		"notes": "Naming convention rule."
+	},
+	{
+		"flint": {
+			"name": "booleanReturns",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-boolean-return",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-boolean-return.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "booleanSortComparators",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-boolean-sort-comparator",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-boolean-sort-comparator.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "branchCodeDuplicates",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-hoisting-branch-code",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-hoisting-branch-code.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/branches-sharing-code",
@@ -17094,9 +17803,7 @@
 		"flint": {
 			"name": "builtinCoercions",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -17295,8 +18002,7 @@
 		"flint": {
 			"name": "caughtErrorCauses",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -17321,9 +18027,7 @@
 		"flint": {
 			"name": "caughtVariableNames",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -17405,8 +18109,8 @@
 		],
 		"deno": [
 			{
-				"name": "no-case-assign",
-				"url": "https://docs.deno.com/lint/rules/no-case-assign"
+				"name": "no-class-assign",
+				"url": "https://docs.deno.com/lint/rules/no-class-assign"
 			}
 		],
 		"eslint": [
@@ -17519,11 +18223,22 @@
 	},
 	{
 		"flint": {
+			"name": "classMembersOrder",
+			"plugin": "ts",
+			"preset": "sorting"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-class-member-order",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-class-member-order.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "classMethodsThis",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -17550,11 +18265,22 @@
 	},
 	{
 		"flint": {
+			"name": "collectionBracketAccesses",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-collection-bracket-access",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-collection-bracket-access.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "combinedPushes",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -17588,6 +18314,20 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/capitalized-comments.html"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "commentContent",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/comment-content",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/comment-content.md"
+			}
+		],
+		"notes": "Comment style rule."
 	},
 	{
 		"flint": {
@@ -17632,6 +18372,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/no-chained-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-chained-comparison.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/bad-comparison-sequence",
@@ -17639,6 +18385,33 @@
 			}
 		],
 		"notes": "Handled by TypeScript / otherwise is stylistic."
+	},
+	{
+		"flint": {
+			"name": "compoundWords",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-compound-words",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-compound-words.md"
+			}
+		],
+		"notes": "Naming convention rule."
+	},
+	{
+		"flint": {
+			"name": "computedPropertyExistenceChecks",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-computed-property-existence-check",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-computed-property-existence-check.md"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -17671,6 +18444,19 @@
 			}
 		],
 		"notes": "Superseded by unnecessaryConditions."
+	},
+	{
+		"flint": {
+			"name": "conditionalObjectSpreads",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-conditional-object-spread",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-conditional-object-spread.md"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -17732,10 +18518,29 @@
 	},
 	{
 		"flint": {
+			"name": "confusingArraySplices",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-confusing-array-splice",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-confusing-array-splice.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "confusingArrayWithCalls",
 			"plugin": "ts",
 			"preset": "stylistic"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/no-confusing-array-with",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-confusing-array-with.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "unicorn/no-confusing-array-with",
@@ -17921,6 +18726,19 @@
 	},
 	{
 		"flint": {
+			"name": "constantZeroExpressions",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-constant-zero-expression",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-constant-zero-expression.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "constEnums",
 			"plugin": "ts",
 			"status": "skipped"
@@ -18097,9 +18915,7 @@
 		"flint": {
 			"name": "dateNowTimestamps",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -18149,6 +18965,19 @@
 			{
 				"name": "eslint/no-debugger",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-debugger.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "declarationsBeforeEarlyExits",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-declarations-before-early-exit",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-declarations-before-early-exit.md"
 			}
 		]
 	},
@@ -18220,8 +19049,7 @@
 		"flint": {
 			"name": "defaultExportRedundancies",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -18251,6 +19079,18 @@
 			{
 				"name": "import/no-default-export",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-default-export.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "defaultExportStyles",
+			"plugin": "ts"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/default-export-style",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/default-export-style.md"
 			}
 		]
 	},
@@ -18413,14 +19253,25 @@
 		"flint": {
 			"name": "destructuringConsistency",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
 				"name": "unicorn/consistent-destructuring",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-destructuring.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "directIterations",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-direct-iteration",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-direct-iteration.md"
 			}
 		]
 	},
@@ -18476,8 +19327,7 @@
 		"flint": {
 			"name": "directivePairs",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -18490,8 +19340,7 @@
 		"flint": {
 			"name": "directiveRequireDescriptions",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -18612,6 +19461,20 @@
 	},
 	{
 		"flint": {
+			"name": "documentationCommentAsterisks",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-asterisk-prefix-in-documentation-comments",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-asterisk-prefix-in-documentation-comments.md"
+			}
+		],
+		"notes": "Formatting rule."
+	},
+	{
+		"flint": {
 			"name": "duplicateArguments",
 			"plugin": "ts",
 			"preset": "javascript",
@@ -18633,6 +19496,58 @@
 			{
 				"name": "no-dupe-args",
 				"url": "https://eslint.org/docs/latest/rules/no-dupe-args"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "duplicateIfBranches",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-duplicate-if-branches",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-duplicate-if-branches.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "duplicateLogicalOperands",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-duplicate-logical-operands",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-duplicate-logical-operands.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "duplicateLoopIterables",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-duplicate-loops",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-duplicate-loops.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "duplicateSetValues",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-duplicate-set-values",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-duplicate-set-values.md"
 			}
 		]
 	},
@@ -18688,6 +19603,32 @@
 	},
 	{
 		"flint": {
+			"name": "earlyReturns",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-early-return",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-early-return.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "elseIfChains",
+			"plugin": "ts",
+			"preset": "stylisticStrict"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-else-if",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-else-if.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "elseIfDuplicates",
 			"plugin": "ts",
 			"preset": "logical",
@@ -18697,6 +19638,12 @@
 			{
 				"name": "noDuplicateElseIf",
 				"url": "https://biomejs.dev/linter/rules/no-duplicate-else-if"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-dupe-else-if",
+				"url": "https://docs.deno.com/lint/rules/no-dupe-else-if"
 			}
 		],
 		"eslint": [
@@ -18716,9 +19663,7 @@
 		"flint": {
 			"name": "elseReturns",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -18730,6 +19675,10 @@
 			{
 				"name": "no-else-return",
 				"url": "https://eslint.org/docs/latest/rules/no-else-return"
+			},
+			{
+				"name": "unicorn/no-useless-else",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-else.md"
 			}
 		],
 		"oxlint": [
@@ -18867,9 +19816,7 @@
 		"flint": {
 			"name": "emptyFiles",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -18894,9 +19841,7 @@
 		"flint": {
 			"name": "emptyFunctions",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -19081,9 +20026,7 @@
 		"flint": {
 			"name": "enumMemberLiterals",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -19127,8 +20070,7 @@
 		"flint": {
 			"name": "enums",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -19255,11 +20197,22 @@
 	},
 	{
 		"flint": {
+			"name": "errorIsErrors",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-error-is-error",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-error-is-error.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "errorMessages",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -19282,11 +20235,22 @@
 	},
 	{
 		"flint": {
+			"name": "errorPropertyAssignments",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-error-property-assignment",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-error-property-assignment.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "errorSubclassProperties",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -19325,9 +20289,7 @@
 		"flint": {
 			"name": "escapeSequenceCasing",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -19378,8 +20340,7 @@
 		"flint": {
 			"name": "evolvingVariableTypes",
 			"plugin": "ts",
-			"status": "implemented",
-			"strictness": "strict"
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -19458,11 +20419,29 @@
 	},
 	{
 		"flint": {
+			"name": "explicitResourceManagement",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-dispose",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-dispose.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "explicitTimerDelays",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/explicit-timer-delay",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/explicit-timer-delay.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "unicorn/explicit-timer-delay",
@@ -19517,6 +20496,19 @@
 			{
 				"name": "perfectionist/sort-exports",
 				"url": "https://perfectionist.dev/rules/sort-exports"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "exportDecoratorPositions",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-export-decorator-position",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-export-decorator-position.md"
 			}
 		]
 	},
@@ -19682,9 +20674,7 @@
 		"flint": {
 			"name": "extraneousClasses",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -19773,6 +20763,19 @@
 			{
 				"name": "eslint/no-unsafe-finally",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unsafe-finally.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "flatMathMinMax",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-flat-math-min-max",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-flat-math-min-max.md"
 			}
 		]
 	},
@@ -19892,6 +20895,20 @@
 	},
 	{
 		"flint": {
+			"name": "freshHandlerExports",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "fresh-handler-export",
+				"url": "https://docs.deno.com/lint/rules/fresh-handler-export"
+			}
+		],
+		"notes": "Fresh-specific."
+	},
+	{
+		"flint": {
 			"name": "functionApplySpreads",
 			"plugin": "ts",
 			"preset": "stylistic",
@@ -19991,8 +21008,7 @@
 		"flint": {
 			"name": "functionDefinitionScopeConsistency",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -20109,6 +21125,19 @@
 	},
 	{
 		"flint": {
+			"name": "functionStylesByRole",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-function-style",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-function-style.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "functionTypeDeclarations",
 			"plugin": "ts",
 			"preset": "stylistic"
@@ -20129,6 +21158,25 @@
 			{
 				"name": "typescript/prefer-function-type",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-function-type.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "generatedEmptyObjectTypes",
+			"plugin": "ts",
+			"preset": "logicalStrict"
+		},
+		"eslint": [
+			{
+				"name": "@typescript-eslint/no-generated-empty-object-type",
+				"url": "https://typescript-eslint.io/rules/no-generated-empty-object-type"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "typescript/no-generated-empty-object-type",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-generated-empty-object-type.html"
 			}
 		]
 	},
@@ -20161,6 +21209,19 @@
 			{
 				"name": "eslint/require-yield",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-yield.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "getOrInsertComputeds",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-get-or-insert-computed",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-get-or-insert-computed.md"
 			}
 		]
 	},
@@ -20219,12 +21280,29 @@
 			{
 				"name": "no-global-assign",
 				"url": "https://eslint.org/docs/latest/rules/no-global-assign"
+			},
+			{
+				"name": "unicorn/no-global-object-property-assignment",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-global-object-property-assignment.md"
 			}
 		],
 		"oxlint": [
 			{
 				"name": "eslint/no-global-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-global-assign.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "globalNumberConstants",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-global-number-constants",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-global-number-constants.md"
 			}
 		]
 	},
@@ -20264,9 +21342,7 @@
 		"flint": {
 			"name": "globalThisAliases",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -20294,6 +21370,32 @@
 			{
 				"name": "unicorn/prefer-global-this",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-global-this.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "groupByMethods",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-group-by",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-group-by.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hasChecks",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-has-check",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-has-check.md"
 			}
 		]
 	},
@@ -20331,6 +21433,32 @@
 	},
 	{
 		"flint": {
+			"name": "httpsUrls",
+			"plugin": "ts",
+			"preset": "security"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-https",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-https.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "identifierImportExportSpecifiers",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-identifier-import-export-specifiers",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-identifier-import-export-specifiers.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "identifierMatches",
 			"plugin": "ts",
 			"status": "skipped"
@@ -20339,6 +21467,10 @@
 			{
 				"name": "id-match",
 				"url": "https://eslint.org/docs/latest/rules/id-match"
+			},
+			{
+				"name": "unicorn/id-match",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/id-match.md"
 			}
 		],
 		"oxlint": [
@@ -20789,6 +21921,20 @@
 	},
 	{
 		"flint": {
+			"name": "importPrefixes",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "no-import-prefix",
+				"url": "https://docs.deno.com/lint/rules/no-import-prefix"
+			}
+		],
+		"notes": "Deno-specific."
+	},
+	{
+		"flint": {
 			"name": "importSelf",
 			"plugin": "ts",
 			"preset": "logical"
@@ -20899,6 +22045,32 @@
 			{
 				"name": "import/no-useless-path-segments",
 				"url": "https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/no-useless-path-segments.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "impossibleLengthComparisons",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-impossible-length-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-impossible-length-comparison.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "includesOverRepeatedComparisons",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-includes-over-repeated-comparisons",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-includes-over-repeated-comparisons.md"
 			}
 		]
 	},
@@ -21043,6 +22215,32 @@
 	},
 	{
 		"flint": {
+			"name": "invalidArgumentCounts",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-invalid-argument-count",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-invalid-argument-count.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "invalidCharacterComparisons",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-invalid-character-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-invalid-character-comparison.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "invalidThis",
 			"plugin": "ts",
 			"preset": "javascript"
@@ -21062,8 +22260,7 @@
 		"flint": {
 			"name": "invalidVoidTypes",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -21163,6 +22360,58 @@
 	},
 	{
 		"flint": {
+			"name": "iterableConstructors",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-iterable-in-constructor",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-iterable-in-constructor.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "iterationFallbacks",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/iteration-fallback-style",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/iteration-fallback-style.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "iteratorConcats",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-iterator-concat",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-iterator-concat.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "iteratorHelpers",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-iterator-helpers",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-iterator-helpers.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "iteratorMethodFunctionReferences",
 			"plugin": "ts",
 			"status": "skipped"
@@ -21177,6 +22426,32 @@
 			{
 				"name": "unicorn/no-array-callback-reference",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-callback-reference.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "iteratorToArrays",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-iterator-to-array",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-iterator-to-array.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "iteratorToArraysAtEnd",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-iterator-to-array-at-end",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-iterator-to-array-at-end.md"
 			}
 		]
 	},
@@ -21230,8 +22505,7 @@
 		"flint": {
 			"name": "jsdocAsterisks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -21495,8 +22769,7 @@
 		"flint": {
 			"name": "jsdocInformativeDocs",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -21562,8 +22835,7 @@
 		"flint": {
 			"name": "jsdocMisleadingBlocks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -21589,8 +22861,7 @@
 		"flint": {
 			"name": "jsdocMultilineBlocks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -21629,8 +22900,7 @@
 		"flint": {
 			"name": "jsdocParameterDescriptionHyphens",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -21949,8 +23219,7 @@
 		"flint": {
 			"name": "jsdocTagNames",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -22387,6 +23656,32 @@
 	},
 	{
 		"flint": {
+			"name": "loopContinues",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-continue",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-continue.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "loopIterableMutations",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-loop-iterable-mutation",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-loop-iterable-mutation.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "magicNumbers",
 			"plugin": "ts",
 			"status": "skipped"
@@ -22417,6 +23712,33 @@
 	},
 	{
 		"flint": {
+			"name": "manuallyWrappedComments",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-manually-wrapped-comments",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-manually-wrapped-comments.md"
+			}
+		],
+		"notes": "Formatting rule."
+	},
+	{
+		"flint": {
+			"name": "mapFromEntries",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-map-from-entries",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-map-from-entries.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "mapsOrder",
 			"plugin": "ts",
 			"preset": "sorting"
@@ -22430,11 +23752,35 @@
 	},
 	{
 		"flint": {
+			"name": "mathAbs",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-math-abs",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-math-abs.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mathConstants",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-math-constants",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-math-constants.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "mathMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -22453,7 +23799,7 @@
 		"flint": {
 			"name": "mathRangeTernaries",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "stylistic"
 		},
 		"biome": [
 			{
@@ -22711,6 +24057,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/max-nested-calls",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/max-nested-calls.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "unicorn/max-nested-calls",
@@ -22805,6 +24157,19 @@
 	},
 	{
 		"flint": {
+			"name": "minimalTernaries",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-minimal-ternary",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-minimal-ternary.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "misleadingShorthandAssignments",
 			"plugin": "ts",
 			"status": "skipped"
@@ -22858,6 +24223,19 @@
 			{
 				"name": "typescript/no-confusing-void-expression",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-confusing-void-expression.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mismatchedMapKeys",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-mismatched-map-key",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-mismatched-map-key.md"
 			}
 		]
 	},
@@ -23085,11 +24463,22 @@
 	},
 	{
 		"flint": {
+			"name": "multiplePromiseResolverCalls",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-multiple-promise-resolver-calls",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-multiple-promise-resolver-calls.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "namedDefaultExports",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -23164,6 +24553,20 @@
 	},
 	{
 		"flint": {
+			"name": "nameReplacements",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/name-replacements",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/name-replacements.md"
+			}
+		],
+		"notes": "Naming convention rule."
+	},
+	{
+		"flint": {
 			"name": "namespaceDeclarations",
 			"plugin": "ts",
 			"preset": "logical",
@@ -23198,9 +24601,7 @@
 		"flint": {
 			"name": "namespaceImplicitAmbientImports",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"deno": [
 			{
@@ -23213,8 +24614,7 @@
 		"flint": {
 			"name": "namespaceImports",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -23320,11 +24720,35 @@
 	},
 	{
 		"flint": {
+			"name": "negatedArrayPredicates",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-negated-array-predicate",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-negated-array-predicate.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "negatedComparisons",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-negated-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-negated-comparison.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "negativeIndexLengthMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -23368,6 +24792,19 @@
 			{
 				"name": "eslint/no-compare-neg-zero",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-compare-neg-zero.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "nestedLoopBreaks",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-break-in-nested-loop",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-break-in-nested-loop.md"
 			}
 		]
 	},
@@ -23530,6 +24967,20 @@
 	},
 	{
 		"flint": {
+			"name": "nonFunctionVerbPrefixes",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-non-function-verb-prefix",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-non-function-verb-prefix.md"
+			}
+		],
+		"notes": "Naming convention rule."
+	},
+	{
+		"flint": {
 			"name": "nonNullableTypeAssertions",
 			"plugin": "ts",
 			"preset": "stylistic",
@@ -23552,9 +25003,7 @@
 		"flint": {
 			"name": "nonNullAssertedNullishCoalesces",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -23605,9 +25054,7 @@
 		"flint": {
 			"name": "nonNullAssertionPlacement",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -23626,8 +25073,7 @@
 		"flint": {
 			"name": "nonNullAssertions",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -23679,6 +25125,19 @@
 			}
 		],
 		"notes": "Handled by TypeScript."
+	},
+	{
+		"flint": {
+			"name": "nonstandardBuiltinProperties",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-nonstandard-builtin-properties",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-nonstandard-builtin-properties.md"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -23756,10 +25215,29 @@
 			"plugin": "ts",
 			"preset": "logical"
 		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-number-coercion",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-number-coercion.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "unicorn/prefer-number-coercion",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-number-coercion.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "numberIsSafeInteger",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-number-is-safe-integer",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-number-is-safe-integer.md"
 			}
 		]
 	},
@@ -23794,9 +25272,7 @@
 		"flint": {
 			"name": "numberStaticMethods",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -23963,9 +25439,7 @@
 		"flint": {
 			"name": "numericSeparatorGroups",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -24053,11 +25527,35 @@
 	},
 	{
 		"flint": {
+			"name": "objectDefineProperties",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-object-define-properties",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-object-define-properties.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "objectDestructuringDefaults",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-object-destructuring-defaults",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-object-destructuring-defaults.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "objectEntriesMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -24100,6 +25598,19 @@
 	},
 	{
 		"flint": {
+			"name": "objectIterableMethods",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-object-iterable-methods",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-object-iterable-methods.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "objectKeyDuplicates",
 			"plugin": "ts",
 			"preset": "javascript",
@@ -24134,6 +25645,19 @@
 			{
 				"name": "oxc/bad-object-literal-comparison",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/bad-object-literal-comparison.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "objectMethodsWithCollections",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-object-methods-with-collections",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-object-methods-with-collections.md"
 			}
 		]
 	},
@@ -24218,6 +25742,19 @@
 			{
 				"name": "eslint/object-shorthand",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/object-shorthand.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "objectShorthandPropertyOverrides",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-shorthand-property-overrides",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-shorthand-property-overrides.md"
 			}
 		]
 	},
@@ -24329,6 +25866,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"deno": [
+			{
+				"name": "no-octal",
+				"url": "https://docs.deno.com/lint/rules/no-octal"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-octal",
@@ -24354,6 +25897,10 @@
 			{
 				"name": "operator-assignment",
 				"url": "https://eslint.org/docs/latest/rules/operator-assignment"
+			},
+			{
+				"name": "unicorn/operator-assignment",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/operator-assignment.md"
 			}
 		],
 		"oxlint": [
@@ -24373,6 +25920,32 @@
 			{
 				"name": "oxc/no-optional-chaining",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/no-optional-chaining.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "optionalChainingConsistency",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-optional-chaining",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-optional-chaining.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "optionalChainingOnUndeclaredVariables",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-optional-chaining-on-undeclared-variable",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-optional-chaining-on-undeclared-variable.md"
 			}
 		]
 	},
@@ -24611,6 +26184,33 @@
 			{
 				"name": "unicorn/no-keyword-prefix",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-keyword-prefix.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "primordials",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "prefer-primordials",
+				"url": "https://docs.deno.com/lint/rules/prefer-primordials"
+			}
+		],
+		"notes": "Only intended for Deno's internal code."
+	},
+	{
+		"flint": {
+			"name": "privateClassFields",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-private-class-fields",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-private-class-fields.md"
 			}
 		]
 	},
@@ -25048,6 +26648,32 @@
 	},
 	{
 		"flint": {
+			"name": "promiseTry",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-promise-try",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-promise-try.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "promiseWithResolvers",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-promise-with-resolvers",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-promise-with-resolvers.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "propertyAccessNotation",
 			"plugin": "ts",
 			"preset": "stylistic",
@@ -25092,6 +26718,19 @@
 			{
 				"name": "eslint/no-iterator",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-iterator.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "proxyTrapBooleanReturns",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/require-proxy-trap-boolean-return",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/require-proxy-trap-boolean-return.md"
 			}
 		]
 	},
@@ -25159,8 +26798,7 @@
 		"flint": {
 			"name": "recursiveParameters",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -25191,10 +26829,9 @@
 	},
 	{
 		"flint": {
-			"name": "reExportAlls",
+			"name": "reexportAlls",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -25264,9 +26901,7 @@
 		"flint": {
 			"name": "regexCharacterClasses",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25430,9 +27065,7 @@
 		"flint": {
 			"name": "regexDigitMatchers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25645,9 +27278,7 @@
 		"flint": {
 			"name": "regexExecutors",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -25689,9 +27320,7 @@
 		"flint": {
 			"name": "regexGraphemeStringLiterals",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25704,9 +27333,7 @@
 		"flint": {
 			"name": "regexHexadecimalEscapes",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25761,9 +27388,7 @@
 		"flint": {
 			"name": "regexLetterCasing",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25815,9 +27440,7 @@
 		"flint": {
 			"name": "regexLookaroundAssertions",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25844,9 +27467,7 @@
 		"flint": {
 			"name": "regexMatchNotation",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25917,9 +27538,7 @@
 		"flint": {
 			"name": "regexNamedBackreferences",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -25961,9 +27580,7 @@
 		"flint": {
 			"name": "regexNamedReplacements",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26016,11 +27633,22 @@
 	},
 	{
 		"flint": {
+			"name": "regexpEscapes",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-regexp-escape",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-regexp-escape.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "regexPlusQuantifiers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26060,9 +27688,7 @@
 		"flint": {
 			"name": "regexQuestionQuantifiers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26089,9 +27715,7 @@
 		"flint": {
 			"name": "regexResultArrayGroups",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26132,9 +27756,7 @@
 		"flint": {
 			"name": "regexStarQuantifiers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26218,9 +27840,7 @@
 		"flint": {
 			"name": "regexUnicodeCodepointEscapes",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26458,9 +28078,7 @@
 		"flint": {
 			"name": "regexUnnecessaryNonCapturingGroups",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26615,9 +28233,7 @@
 		"flint": {
 			"name": "regexWordMatchers",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -26980,9 +28596,7 @@
 		"flint": {
 			"name": "returnThisTypes",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -27014,8 +28628,7 @@
 		"flint": {
 			"name": "returnVoidSafety",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -27092,8 +28705,7 @@
 		"flint": {
 			"name": "setHasExistenceChecks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27110,11 +28722,22 @@
 	},
 	{
 		"flint": {
+			"name": "setMethods",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-set-methods",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-set-methods.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "setSizeLengthChecks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27237,6 +28860,19 @@
 	},
 	{
 		"flint": {
+			"name": "shortArrowMethods",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-short-arrow-method",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-short-arrow-method.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "shorthandAssignmentRefactors",
 			"plugin": "ts",
 			"preset": "logical"
@@ -27276,6 +28912,85 @@
 	},
 	{
 		"flint": {
+			"name": "simpleSortComparators",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-simple-sort-comparator",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-simple-sort-comparator.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "simplifiedConditions",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-simplified-conditions",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-simplified-conditions.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "singleArrayPredicates",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-single-array-predicate",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-single-array-predicate.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "singleLineBlockComments",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/single-line-block-comment-style",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/single-line-block-comment-style.md"
+			}
+		],
+		"notes": "Formatting rule."
+	},
+	{
+		"flint": {
+			"name": "singleObjectDestructuring",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-single-object-destructuring",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-single-object-destructuring.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "singleStringReplaces",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-single-replace",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-single-replace.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "singleVariableDeclarations",
 			"plugin": "ts",
 			"preset": "logical",
@@ -27304,9 +29019,7 @@
 		"flint": {
 			"name": "sizeComparisonOperators",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -27355,6 +29068,19 @@
 	},
 	{
 		"flint": {
+			"name": "smallerScopes",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-smaller-scope",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-smaller-scope.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "sparseArrays",
 			"plugin": "ts",
 			"preset": "logical",
@@ -27387,6 +29113,19 @@
 	},
 	{
 		"flint": {
+			"name": "splitLimits",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-split-limit",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-split-limit.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "spreadSyntaxes",
 			"plugin": "ts",
 			"preset": "stylistic"
@@ -27408,9 +29147,7 @@
 		"flint": {
 			"name": "staticMemberOnlyClasses",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -27428,6 +29165,19 @@
 			{
 				"name": "unicorn/no-static-only-class",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-static-only-class.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "staticMethodClassReferences",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/class-reference-in-static-methods",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/class-reference-in-static-methods.md"
 			}
 		]
 	},
@@ -27481,9 +29231,7 @@
 		"flint": {
 			"name": "stringCodePoints",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -27538,6 +29286,32 @@
 	},
 	{
 		"flint": {
+			"name": "stringMatchAll",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-string-match-all",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-string-match-all.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "stringPadStartEnd",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-string-pad-start-end",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-string-pad-start-end.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "stringRawEscapes",
 			"plugin": "ts",
 			"status": "skipped"
@@ -27552,6 +29326,19 @@
 			{
 				"name": "unicorn/prefer-string-raw",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-string-raw.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "stringRepeats",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-string-repeat",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-string-repeat.md"
 			}
 		]
 	},
@@ -27578,9 +29365,7 @@
 		"flint": {
 			"name": "stringSliceMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -27699,9 +29484,7 @@
 		"flint": {
 			"name": "structuredCloneMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -27713,6 +29496,19 @@
 			{
 				"name": "unicorn/prefer-structured-clone",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-structured-clone.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "subtractionComparisons",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-subtraction-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-subtraction-comparison.md"
 			}
 		]
 	},
@@ -27826,8 +29622,8 @@
 		},
 		"deno": [
 			{
-				"name": "no-await-in-sync-fun",
-				"url": "https://docs.deno.com/lint/rules/no-await-in-sync-fun"
+				"name": "no-await-in-sync-fn",
+				"url": "https://docs.deno.com/lint/rules/no-await-in-sync-fn"
 			}
 		],
 		"notes": "Generally handled by parsers."
@@ -27880,6 +29676,32 @@
 			{
 				"name": "unicorn/consistent-template-literal-escape",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/consistent-template-literal-escape.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "templateStringInterpolations",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-incorrect-template-string-interpolation",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-incorrect-template-string-interpolation.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "temporalApis",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-temporal",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-temporal.md"
 			}
 		]
 	},
@@ -27962,6 +29784,19 @@
 	},
 	{
 		"flint": {
+			"name": "thenCatchSeparation",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-then-catch",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-then-catch.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "thisAliases",
 			"plugin": "ts",
 			"preset": "logical",
@@ -27971,6 +29806,12 @@
 			{
 				"name": "noUselessThisAlias",
 				"url": "https://biomejs.dev/linter/rules/no-useless-this-alias"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-this-alias",
+				"url": "https://docs.deno.com/lint/rules/no-this-alias"
 			}
 		],
 		"eslint": [
@@ -28069,6 +29910,19 @@
 	},
 	{
 		"flint": {
+			"name": "thisOutsideOfClasses",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-this-outside-of-class",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-this-outside-of-class.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "throwErrors",
 			"plugin": "ts",
 			"preset": "logical",
@@ -28140,11 +29994,22 @@
 	},
 	{
 		"flint": {
+			"name": "topLevelAssignmentsInFunctions",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-top-level-assignment-in-function",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-top-level-assignment-in-function.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "topLevelAwaits",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -28156,6 +30021,19 @@
 			{
 				"name": "unicorn/prefer-top-level-await",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-top-level-await.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "topLevelSideEffects",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-top-level-side-effects",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-top-level-side-effects.md"
 			}
 		]
 	},
@@ -28194,10 +30072,24 @@
 		},
 		"deno": [
 			{
-				"name": "no-invalid-triple-slash-references",
-				"url": "https://docs.deno.com/lint/rules/no-invalid-triple-slash-references"
+				"name": "no-invalid-triple-slash-reference",
+				"url": "https://docs.deno.com/lint/rules/no-invalid-triple-slash-reference"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "tryComplexity",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/try-complexity",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/try-complexity.md"
+			}
+		],
+		"notes": "Overly opinionated."
 	},
 	{
 		"flint": {
@@ -28256,6 +30148,19 @@
 			{
 				"name": "typescript/ban-tslint-comment",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/ban-tslint-comment.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tupleLabels",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-tuple-labels",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-tuple-labels.md"
 			}
 		]
 	},
@@ -28387,9 +30292,7 @@
 		"flint": {
 			"name": "typeImports",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -28415,6 +30318,19 @@
 			{
 				"name": "typescript/consistent-type-imports",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-type-imports.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "typeLiteralsLast",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-type-literal-last",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-type-literal-last.md"
 			}
 		]
 	},
@@ -28447,6 +30363,19 @@
 			{
 				"name": "eslint/valid-typeof",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/valid-typeof.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unaryMinus",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-unary-minus",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-unary-minus.md"
 			}
 		]
 	},
@@ -28517,6 +30446,32 @@
 	},
 	{
 		"flint": {
+			"name": "uncalledMethods",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-uncalled-method",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-uncalled-method.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "undeclaredClassMembers",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-undeclared-class-members",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-undeclared-class-members.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "undefinedInitialValues",
 			"plugin": "ts",
 			"preset": "stylistic"
@@ -28563,9 +30518,7 @@
 		"flint": {
 			"name": "undefinedTypeofChecks",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -28647,10 +30600,22 @@
 	},
 	{
 		"flint": {
+			"name": "unicodeCodePointEscapes",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-unicode-code-point-escapes",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-unicode-code-point-escapes.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "unifiedSignatures",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -28681,6 +30646,19 @@
 			{
 				"name": "perfectionist/sort-union-types",
 				"url": "https://perfectionist.dev/rules/sort-union-types"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unnecessaryArrayFlatMaps",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unnecessary-array-flat-map",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unnecessary-array-flat-map.md"
 			}
 		]
 	},
@@ -28753,12 +30731,29 @@
 			{
 				"name": "no-extra-boolean-cast",
 				"url": "https://eslint.org/docs/latest/rules/no-extra-boolean-cast"
+			},
+			{
+				"name": "unicorn/no-useless-boolean-cast",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-boolean-cast.md"
 			}
 		],
 		"oxlint": [
 			{
 				"name": "eslint/no-extra-boolean-cast",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-extra-boolean-cast.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unnecessaryBooleanComparisons",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unnecessary-boolean-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unnecessary-boolean-comparison.md"
 			}
 		]
 	},
@@ -28830,6 +30825,14 @@
 			{
 				"name": "no-self-compare",
 				"url": "https://eslint.org/docs/latest/rules/no-self-compare"
+			},
+			{
+				"name": "unicorn/no-double-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-double-comparison.md"
+			},
+			{
+				"name": "unicorn/no-redundant-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-redundant-comparison.md"
 			}
 		],
 		"oxlint": [
@@ -28889,6 +30892,10 @@
 			{
 				"name": "no-useless-concat",
 				"url": "https://eslint.org/docs/latest/rules/no-useless-concat"
+			},
+			{
+				"name": "unicorn/no-useless-concat",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-concat.md"
 			}
 		],
 		"oxlint": [
@@ -28997,6 +31004,32 @@
 	},
 	{
 		"flint": {
+			"name": "unnecessaryFetchOptions",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unnecessary-fetch-options",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unnecessary-fetch-options.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unnecessaryGlobalThis",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unnecessary-global-this",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unnecessary-global-this.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "unnecessaryIteratorArrays",
 			"plugin": "ts",
 			"preset": "stylistic"
@@ -29081,6 +31114,19 @@
 			{
 				"name": "oxc/bad-min-max-func",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/bad-min-max-func.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unnecessaryNestedTernaries",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unnecessary-nested-ternary",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unnecessary-nested-ternary.md"
 			}
 		]
 	},
@@ -29196,6 +31242,19 @@
 	},
 	{
 		"flint": {
+			"name": "unnecessarySplices",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unnecessary-splice",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unnecessary-splice.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "unnecessarySpreads",
 			"plugin": "ts",
 			"preset": "logical"
@@ -29223,6 +31282,19 @@
 			{
 				"name": "noUselessStringRaw",
 				"url": "https://biomejs.dev/linter/rules/no-useless-string-raw"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unnecessaryStringTrims",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unnecessary-string-trim",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unnecessary-string-trim.md"
 			}
 		]
 	},
@@ -29259,9 +31331,7 @@
 		"flint": {
 			"name": "unnecessaryTernaries",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -29519,6 +31589,45 @@
 	},
 	{
 		"flint": {
+			"name": "unreadableForOfExpressions",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unreadable-for-of-expression",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unreadable-for-of-expression.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unreadableNewExpressions",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unreadable-new-expression",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unreadable-new-expression.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unreadableObjectDestructurings",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unreadable-object-destructuring",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unreadable-object-destructuring.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "unresolvedImports",
 			"plugin": "ts"
 		},
@@ -29651,6 +31760,45 @@
 	},
 	{
 		"flint": {
+			"name": "unsafePromiseAllSettledValues",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unsafe-promise-all-settled-values",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-promise-all-settled-values.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unsafePropertyKeys",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unsafe-property-key",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-property-key.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unsafeStringReplacements",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unsafe-string-replacement",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unsafe-string-replacement.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "unsafeToString",
 			"plugin": "ts",
 			"preset": "logical"
@@ -29709,6 +31857,19 @@
 			{
 				"name": "typescript/no-unsafe-unary-minus",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-unary-minus.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unusedArrayMethodReturns",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-unused-array-method-return",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unused-array-method-return.md"
 			}
 		]
 	},
@@ -29950,6 +32111,46 @@
 	},
 	{
 		"flint": {
+			"name": "unversionedImports",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"deno": [
+			{
+				"name": "no-unversioned-import",
+				"url": "https://docs.deno.com/lint/rules/no-unversioned-import"
+			}
+		],
+		"notes": "Deno-specific."
+	},
+	{
+		"flint": {
+			"name": "urlCanParse",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-url-can-parse",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-url-can-parse.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "urlHrefs",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-url-href",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-url-href.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "urlRelativity",
 			"plugin": "ts",
 			"status": "skipped"
@@ -29964,6 +32165,19 @@
 			{
 				"name": "unicorn/relative-url-style",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/relative-url-style.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "urlSearchParameters",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-url-search-parameters",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-url-search-parameters.md"
 			}
 		]
 	},
@@ -29998,6 +32212,45 @@
 	},
 	{
 		"flint": {
+			"name": "uselessCoercions",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-coercion",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-coercion.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "uselessCompoundAssignments",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-compound-assignment",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-compound-assignment.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "uselessContinues",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-continue",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-continue.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "uselessDefaultAssignments",
 			"plugin": "ts",
 			"preset": "logical"
@@ -30012,6 +32265,84 @@
 			{
 				"name": "typescript/no-useless-default-assignment",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-useless-default-assignment.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "uselessDeleteChecks",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-delete-check",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-delete-check.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "uselessLogicalOperands",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-logical-operand",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-logical-operand.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "uselessOverrides",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-override",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-override.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "uselessRecursions",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-recursion",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-recursion.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "uselessReexports",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-re-export",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-re-export.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "uselessTemplateLiterals",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-template-literals",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-template-literals.md"
 			}
 		]
 	},
@@ -30278,10 +32609,35 @@
 	},
 	{
 		"flint": {
+			"name": "wellKnownSymbolMethods",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-invalid-well-known-symbol-methods",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-invalid-well-known-symbol-methods.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "whileLoopConditions",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-while-loop-condition",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-while-loop-condition.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "whileLoops",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -30364,6 +32720,19 @@
 			{
 				"name": "typescript/no-wrapper-object-types",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-wrapper-object-types.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "xorAsExponentiation",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/no-xor-as-exponentiation",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-xor-as-exponentiation.md"
 			}
 		]
 	},
@@ -30480,8 +32849,7 @@
 	{
 		"flint": {
 			"name": "calledOnceAssertions",
-			"plugin": "vitest",
-			"strictness": "strict"
+			"plugin": "vitest"
 		},
 		"eslint": [
 			{
@@ -30500,8 +32868,7 @@
 		"flint": {
 			"name": "calledOnceWithAssertions",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -30520,8 +32887,7 @@
 		"flint": {
 			"name": "calledTimesAssertions",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -30540,8 +32906,7 @@
 		"flint": {
 			"name": "calledWithAssertions",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -30560,8 +32925,7 @@
 		"flint": {
 			"name": "commentedOutTests",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -30803,8 +33167,7 @@
 		"flint": {
 			"name": "expectsOutsideTests",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -30886,8 +33249,7 @@
 		"flint": {
 			"name": "hoistedApiPositions",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -30926,8 +33288,7 @@
 		"flint": {
 			"name": "hookDuplicates",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"biome": [
 			{
@@ -30952,8 +33313,7 @@
 		"flint": {
 			"name": "hookOrders",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -30998,9 +33358,7 @@
 		"flint": {
 			"name": "hooksBeforeTestCases",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -31109,8 +33467,7 @@
 		"flint": {
 			"name": "mockedFunctionInstances",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -31123,8 +33480,7 @@
 		"flint": {
 			"name": "mockReturnShorthands",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"oxlint": [
 			{
@@ -31157,8 +33513,7 @@
 		"flint": {
 			"name": "mockTypeParameters",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -31500,9 +33855,7 @@
 		"flint": {
 			"name": "testCasesWithinDescribes",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -31555,8 +33908,7 @@
 		"flint": {
 			"name": "testConditionals",
 			"plugin": "vitest",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -31851,7 +34203,8 @@
 		"flint": {
 			"name": "toHaveLengthMatchers",
 			"plugin": "vitest",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -32113,8 +34466,7 @@
 		"flint": {
 			"name": "attributeOrders",
 			"plugin": "vue",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -34053,8 +36405,7 @@
 		"flint": {
 			"name": "loneTemplates",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -34221,6 +36572,19 @@
 			{
 				"name": "vue/require-name-property",
 				"url": "https://eslint.vuejs.org/rules/require-name-property.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "nativeEventShadows",
+			"plugin": "vue",
+			"preset": "logicalStrict"
+		},
+		"eslint": [
+			{
+				"name": "vue/no-shadow-native-events",
+				"url": "https://eslint.vuejs.org/rules/no-shadow-native-events.html"
 			}
 		]
 	},
@@ -34482,8 +36846,7 @@
 		"flint": {
 			"name": "optionsApi",
 			"plugin": "vue",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -34646,8 +37009,7 @@
 		"flint": {
 			"name": "propRequiredAndDefaults",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -35042,8 +37404,7 @@
 		"flint": {
 			"name": "slotArguments",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -35349,8 +37710,7 @@
 		"flint": {
 			"name": "templateShadows",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -35447,8 +37807,7 @@
 		"flint": {
 			"name": "thisInTemplates",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -35729,8 +38088,7 @@
 		"flint": {
 			"name": "vapor",
 			"plugin": "vue",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"biome": [
 			{
@@ -35743,8 +38101,7 @@
 		"flint": {
 			"name": "vHtmlDirectives",
 			"plugin": "vue",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
@@ -35965,9 +38322,7 @@
 		"flint": {
 			"name": "fileExtensions",
 			"plugin": "yaml",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -36103,9 +38458,7 @@
 		"flint": {
 			"name": "numericTrailingZeros",
 			"plugin": "yaml",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -36118,9 +38471,7 @@
 		"flint": {
 			"name": "plainScalars",
 			"plugin": "yaml",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -36160,9 +38511,7 @@
 		"flint": {
 			"name": "stringMappingKeys",
 			"plugin": "yaml",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{

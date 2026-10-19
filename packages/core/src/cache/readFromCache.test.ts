@@ -29,7 +29,6 @@ function createHostWithCache(
 			"package.json": cacheWriteTime,
 		},
 		files: cachedFiles,
-		globalInvalidations: [],
 	};
 
 	host.vfsUpsertFile(cacheFilePath, JSON.stringify(storage));

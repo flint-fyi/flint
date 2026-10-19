@@ -11,7 +11,7 @@ import { dirname } from "pathe";
 import type { CompileError } from "svelte/compiler";
 import { internalHelpers, svelte2tsx } from "svelte2tsx";
 import type ts from "typescript";
-import type { CreateProgramOptions, ScriptKind } from "typescript";
+import type { CreateProgramOptions } from "typescript";
 
 import {
 	getPositionOfColumnAndLine,
@@ -66,7 +66,7 @@ export function volarLanguagePlugin(
 				{
 					extension: "svelte",
 					isMixedContent: true,
-					scriptKind: 7 satisfies ScriptKind.Deferred,
+					scriptKind: typescript.ScriptKind.Deferred,
 				},
 			],
 			getServiceScript(root) {
@@ -75,7 +75,7 @@ export function volarLanguagePlugin(
 						return {
 							code,
 							extension: ".tsx",
-							scriptKind: 4 satisfies ScriptKind.TSX,
+							scriptKind: typescript.ScriptKind.TSX,
 						};
 					}
 				}

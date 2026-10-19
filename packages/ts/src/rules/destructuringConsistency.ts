@@ -44,6 +44,8 @@ function getInitializerKey(node: AST.Expression): string | undefined {
 		case SyntaxKind.ThisKeyword:
 			return "this";
 	}
+
+	return undefined;
 }
 
 function isLeftHandSide(node: AST.AnyNode) {

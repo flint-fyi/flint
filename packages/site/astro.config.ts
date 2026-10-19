@@ -106,6 +106,7 @@ export default defineConfig({
 								{
 									items: [
 										{ label: "Astro", link: "rules/astro" },
+										{ label: "Changesets", link: "rules/changesets" },
 										{ label: "CSS", link: "rules/css" },
 										{ label: "Next", link: "rules/next" },
 										{ label: "Nuxt", link: "rules/nuxt" },

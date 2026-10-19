@@ -289,6 +289,34 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "akmalsaiful616-hub",
+      "name": "akmalsaiful616-hub",
+      "avatar_url": "https://avatars.githubusercontent.com/u/238680086?v=4",
+      "profile": "https://github.com/akmalsaiful616-hub",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "amitreny",
+      "name": "amitreny",
+      "avatar_url": "https://avatars.githubusercontent.com/u/57823595?v=4",
+      "profile": "https://github.com/amitreny",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Erfouni",
+      "name": "erfouni",
+      "avatar_url": "https://avatars.githubusercontent.com/u/232311059?v=4",
+      "profile": "https://erfouni.ir",
+      "contributions": [
+        "ideas",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/rule-data",
-	"version": "0.5.3",
+	"version": "0.5.4",
 	"description": "Data for all of Flint's rules and mappings between Flint and other web linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -31,6 +31,7 @@
 	"dependencies": {
 		"@flint.fyi/astro": "workspace:^",
 		"@flint.fyi/browser": "workspace:^",
+		"@flint.fyi/changesets": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/css": "workspace:^",
 		"@flint.fyi/json": "workspace:^",

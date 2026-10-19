@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - packages/rule-data/package.json
+      - packages/rule-data/src/test-utils/deno.ts
       - pnpm-workspace.yaml
 
 concurrency:

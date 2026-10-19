@@ -368,7 +368,7 @@ async function createTestProject({
 		getFileCacheImpacts(file) {
 			return {
 				dependencies: dependenciesByFilePath.get(file.about.filePath) ?? [],
-				invalidatesCache:
+				isGlobalDependency:
 					invalidatingFileNames?.has(path.basename(file.about.filePath)) ??
 					false,
 			};
@@ -456,11 +456,11 @@ async function lintIntoCachedResults(
 	return new Map(
 		Array.from(
 			session.storedResults,
-			([filePath, { dependencies, invalidatesCache }]) => [
+			([filePath, { dependencies, isGlobalDependency }]) => [
 				filePath,
 				{
 					dependencies: Array.from(dependencies),
-					...(invalidatesCache && { invalidatesCache }),
+					...(isGlobalDependency && { isGlobalDependency }),
 					timestamp: 0,
 				},
 			],

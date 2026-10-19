@@ -3,6 +3,18 @@
 	"automerge": true,
 	"customManagers": [
 		{
+			"customType": "regex",
+			"datasourceTemplate": "github-tags",
+			"depNameTemplate": "denoland/deno",
+			"managerFilePatterns": [
+				"/^packages\\/rule-data\\/src\\/test-utils\\/deno\\.ts$/"
+			],
+			"matchStrings": [
+				"https://raw\\.githubusercontent\\.com/denoland/deno/(?<currentValue>v\\d+\\.\\d+\\.\\d+)/cli/schemas/lint-rules\\.v1\\.json"
+			],
+			"versioningTemplate": "semver"
+		},
+		{
 			"customType": "jsonata",
 			"fileFormat": "json",
 			"managerFilePatterns": ["/package.json/"],

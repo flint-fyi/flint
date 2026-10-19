@@ -1,3 +1,4 @@
+import { changesets } from "@flint.fyi/changesets";
 import { node } from "@flint.fyi/node";
 import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
@@ -27,6 +28,10 @@ const config: Config = defineConfig({
 				packageJson.presets.sorting,
 				packageJson.presets.stylistic,
 			],
+		},
+		{
+			files: changesets.files.all,
+			rules: [changesets.presets.logical, changesets.presets.stylistic],
 		},
 		{
 			files: json.files.all,

@@ -1,5 +1,19 @@
 # @flint.fyi/markdown-language
 
+## 0.18.0
+
+### Minor Changes
+
+- [#3559](https://github.com/flint-fyi/flint/pull/3559) [`0631b5b`](https://github.com/flint-fyi/flint/commit/0631b5b676b1b93720f5aeb6ad8f09cd40a17cb8) - Added `sourceText` to Markdown file services.
+
+- [#3559](https://github.com/flint-fyi/flint/pull/3559) [`0631b5b`](https://github.com/flint-fyi/flint/commit/0631b5b676b1b93720f5aeb6ad8f09cd40a17cb8) - Parsed YAML frontmatter in Markdown files as `yaml` nodes instead of a thematic break and heading.
+
+### Patch Changes
+
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+  - @flint.fyi/core@0.29.0
+
 ## 0.17.3
 
 ### Patch Changes

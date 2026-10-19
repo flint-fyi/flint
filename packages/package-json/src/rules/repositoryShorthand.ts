@@ -39,6 +39,8 @@ function createUrl(shorthand: string) {
 	if (isProvider(provider!) && repository) {
 		return `${providerUrls[provider]}${repository}`;
 	}
+
+	return;
 }
 
 export default ruleCreator.createRule(jsonLanguage, {

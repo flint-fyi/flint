@@ -47,16 +47,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (langAttribute.initializer.kind === SyntaxKind.StringLiteral) {
-				const langValue = langAttribute.initializer.text;
+			if (langAttribute.initializer.kind !== SyntaxKind.StringLiteral) {
+				return;
+			}
 
-				if (!languageTags.check(langValue)) {
-					context.report({
-						data: { value: langValue || "(empty)" },
-						message: "invalidLang",
-						range: getTSNodeRange(langAttribute.initializer, sourceFile),
-					});
-				}
+			const langValue = langAttribute.initializer.text;
+
+			if (!languageTags.check(langValue)) {
+				context.report({
+					data: { value: langValue || "(empty)" },
+					message: "invalidLang",
+					range: getTSNodeRange(langAttribute.initializer, sourceFile),
+				});
 			}
 		}
 
