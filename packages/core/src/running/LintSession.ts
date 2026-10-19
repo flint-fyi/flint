@@ -128,12 +128,12 @@ export class LintSession implements Disposable {
 					changedKeys,
 					(dependencyKey) => this.#dependentsByDependencyKey.get(dependencyKey),
 					(filePath) => this.#toPathKey(filePath),
-				).difference(new Set(allResults.keys())),
+				).difference(allResults),
 			);
 		}
 
 		if (changedGlobalDependency) {
-			await lintPass(this.allFilePaths.difference(new Set(allResults.keys())));
+			await lintPass(this.allFilePaths.difference(allResults));
 		}
 
 		return allResults;

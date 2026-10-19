@@ -16,7 +16,7 @@ export async function lintSessionWithCache(
 	{
 		cacheLocation,
 		ignoreCache,
-		skipLanguageReports,
+		skipLanguageReports = false,
 	}: LintSessionWithCacheOptions,
 ): Promise<LintResults> {
 	const cached = ignoreCache
@@ -29,10 +29,8 @@ export async function lintSessionWithCache(
 			);
 
 	await session.lintFiles(
-		cached
-			? session.allFilePaths.difference(new Set(cached.keys()))
-			: session.allFilePaths,
-		{ skipLanguageReports: skipLanguageReports ?? false },
+		cached ? session.allFilePaths.difference(cached) : session.allFilePaths,
+		{ skipLanguageReports },
 	);
 
 	if (cached) {
