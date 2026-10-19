@@ -19,3 +19,4 @@ Remove mappings for deprecated Unicorn rules:
 - `unicorn/no-invalid-media-features`
 - `unicorn/prefer-media-feature-range-syntax`
 - `unicorn/no-unknown-pseudo-selectors`
+- `unicorn/no-unused-array-method-return`
