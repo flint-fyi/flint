@@ -596,7 +596,7 @@ describe("createDiskBackedLinterHost", () => {
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 			});
-			expect(onEvent.mock.calls.flat()).not.toContain(
+			expect(onEvent).not.toHaveBeenCalledWith(
 				normalizePath(path.join(baseDir, ".git")),
 			);
 		});
@@ -627,7 +627,7 @@ describe("createDiskBackedLinterHost", () => {
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 			});
-			expect(onEvent.mock.calls.flat()).not.toContain(
+			expect(onEvent).not.toHaveBeenCalledWith(
 				normalizePath(path.join(baseDir, "node_modules")),
 			);
 		});
