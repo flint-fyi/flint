@@ -1,4 +1,3 @@
-import fs from "node:fs/promises";
 import path from "node:path";
 
 import { debugForFile } from "debug-for-file";
@@ -18,12 +17,11 @@ export async function runInHyperfine(
 	slug: string,
 ): Promise<HyperfineSummary> {
 	const cwd = path.join(testCasesPath, slug);
-	const exportPath = path.resolve(cwd, `${label}.hyperfine.json`);
 
 	log("Measuring %s in %s...", label, cwd);
 	log("\t%s", command);
 
-	await execa({
+	const { stdout } = await execa({
 		cwd,
 	})("hyperfine", [
 		command,
@@ -31,13 +29,13 @@ export async function runInHyperfine(
 		"--metrics",
 		"time_wall_clock:ms,memory_peak_resident:MiB",
 		"--export-json",
-		exportPath,
+		"-",
+		"--style=none",
 		"--ignore-failure",
-		"--show-output",
 		"--warmup",
 		"1",
 	]);
 
-	log("\t✅ %s", exportPath);
-	return summarizeHyperfine(await fs.readFile(exportPath, "utf8"));
+	log("\t✅ %s", stdout);
+	return summarizeHyperfine(stdout);
 }

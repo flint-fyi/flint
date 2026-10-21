@@ -27,7 +27,8 @@
 		"debug-for-file": "catalog:dev",
 		"eslint": "catalog:comparisons",
 		"execa": "catalog:dev",
-		"prettier": "catalog:dev"
+		"prettier": "catalog:dev",
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

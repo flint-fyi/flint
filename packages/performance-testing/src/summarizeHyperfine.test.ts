@@ -52,8 +52,25 @@ describe(summarizeHyperfine, () => {
 
 	it("rejects schema 1 rather than interpreting terminal output", () => {
 		expect(() => summarizeHyperfine('{"results":[{"mean":1}]}')).toThrow(
-			"schema version 2",
+			"schema_version",
 		);
+	});
+
+	it("rejects a nonnumeric metric mean", () => {
+		expect(() =>
+			summarizeHyperfine(
+				JSON.stringify({
+					results: [
+						{
+							summary: {
+								time_wall_clock: { mean: "0.5", stddev: null, unit: "second" },
+							},
+						},
+					],
+					schema_version: 2,
+				}),
+			),
+		).toThrow("mean");
 	});
 
 	it("rejects unexpected units", () => {
@@ -70,6 +87,6 @@ describe(summarizeHyperfine, () => {
 					schema_version: 2,
 				}),
 			),
-		).toThrow("seconds and memory in bytes");
+		).toThrow("unit");
 	});
 });

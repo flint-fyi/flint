@@ -1,35 +1,39 @@
+import z from "zod/v4";
+
 export interface HyperfineSummary {
 	meanSeconds: number;
 	memory: string;
 	time: string;
 }
 
-interface MetricSummary {
-	mean: number;
-	stddev: null | number;
-	unit: string;
-}
+const metricSummary = z.object({
+	mean: z.number(),
+	stddev: z.number().nullable(),
+});
+
+const hyperfineResult = z.object({
+	results: z.tuple([
+		z.object({
+			summary: z.object({
+				memory_peak_resident: metricSummary
+					.extend({ unit: z.literal("byte") })
+					.optional(),
+				time_wall_clock: metricSummary.extend({ unit: z.literal("second") }),
+			}),
+		}),
+	]),
+	schema_version: z.literal(2),
+});
+
+const numberFormat = new Intl.NumberFormat("en", {
+	maximumFractionDigits: 1,
+	minimumFractionDigits: 1,
+	useGrouping: false,
+});
 
 export function summarizeHyperfine(json: string): HyperfineSummary {
-	const data = JSON.parse(json) as {
-		results: {
-			summary: {
-				memory_peak_resident?: MetricSummary;
-				time_wall_clock: MetricSummary;
-			};
-		}[];
-		schema_version: number;
-	};
-	const result = data.results[0];
-	if (data.schema_version !== 2 || data.results.length !== 1 || !result) {
-		throw new Error("Expected one Hyperfine schema version 2 result.");
-	}
-
 	const { memory_peak_resident: memory, time_wall_clock: time } =
-		result.summary;
-	if (time.unit !== "second" || (memory && memory.unit !== "byte")) {
-		throw new Error("Expected Hyperfine time in seconds and memory in bytes.");
-	}
+		hyperfineResult.parse(JSON.parse(json)).results[0].summary;
 
 	return {
 		meanSeconds: time.mean,
@@ -39,13 +43,13 @@ export function summarizeHyperfine(json: string): HyperfineSummary {
 }
 
 function formatMetric(
-	metric: MetricSummary,
+	metric: z.infer<typeof metricSummary>,
 	scale: number,
 	unit: string,
 ): string {
-	return `${(metric.mean * scale).toFixed(1)} ${unit}${
+	return `${numberFormat.format(metric.mean * scale)} ${unit}${
 		metric.stddev === null
 			? ""
-			: ` ± ${(metric.stddev * scale).toFixed(1)} ${unit}`
+			: ` ± ${numberFormat.format(metric.stddev * scale)} ${unit}`
 	}`;
 }

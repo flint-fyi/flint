@@ -1436,6 +1436,9 @@ importers:
       prettier:
         specifier: catalog:dev
         version: 3.8.1
+      zod:
+        specifier: catalog:prod
+        version: 4.6.7
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^

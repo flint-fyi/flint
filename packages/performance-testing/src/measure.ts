@@ -1,3 +1,6 @@
+import { createRequire } from "node:module";
+import path from "node:path";
+
 import { table } from "console-table-without-index";
 
 import { calculateDelta } from "./calculateDelta.ts";
@@ -10,11 +13,15 @@ import { testCaseEntries, testCasesPath } from "./testCases.ts";
 
 const results: unknown[] = [];
 
-const eslintCommand = await resolveLinterCommand("eslint", testCasesPath);
+const require = createRequire(path.resolve(testCasesPath, "package.json"));
+const eslintCommand = await resolveLinterCommand(
+	"eslint",
+	require.resolve("eslint/package.json"),
+);
 
 // --cache-ignore stops Hyperfine's repeated runs from measuring a warm Flint
 // cache against ESLint runs that have none.
-const flintCommand = `${await resolveLinterCommand("flint", testCasesPath)} --cache-ignore --skip-formatting --skip-language-reports`;
+const flintCommand = `${await resolveLinterCommand("flint", require.resolve("flint/package.json"))} --cache-ignore --skip-formatting --skip-language-reports`;
 
 for (const files of testCaseEntries[0].values) {
 	for (const rules of testCaseEntries[1].values) {

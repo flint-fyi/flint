@@ -1,5 +1,10 @@
-export function calculateDelta(eslint: number, flint: number): string {
-	const delta = ((flint - eslint) / eslint) * 100;
+const formatPercent = new Intl.NumberFormat("en", {
+	maximumFractionDigits: 1,
+	minimumFractionDigits: 1,
+	signDisplay: "exceptZero",
+	style: "percent",
+});
 
-	return `${delta > 0 ? "+" : ""}${delta.toFixed(1)}%`;
+export function calculateDelta(baseline: number, candidate: number): string {
+	return formatPercent.format((candidate - baseline) / baseline);
 }

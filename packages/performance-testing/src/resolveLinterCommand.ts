@@ -1,14 +1,10 @@
 import fs from "node:fs/promises";
-import { createRequire } from "node:module";
 import path from "node:path";
 
 export async function resolveLinterCommand(
 	linter: string,
-	directory: string,
+	packagePath: string,
 ): Promise<string> {
-	const packagePath = createRequire(
-		path.resolve(directory, "package.json"),
-	).resolve(`${linter}/package.json`);
 	const { bin } = JSON.parse((await fs.readFile(packagePath)).toString()) as {
 		bin: Record<string, string>;
 	};

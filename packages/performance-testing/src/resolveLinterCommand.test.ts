@@ -23,7 +23,12 @@ describe(resolveLinterCommand, () => {
 				}),
 			);
 
-			expect(await resolveLinterCommand("flint", directory)).toBe(
+			expect(
+				await resolveLinterCommand(
+					"flint",
+					path.join(packageDirectory, "package.json"),
+				),
+			).toBe(
 				`${JSON.stringify(process.execPath)} ${JSON.stringify(path.join(packageDirectory, "custom output/cli.mjs"))}`,
 			);
 		} finally {
