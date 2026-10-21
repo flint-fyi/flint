@@ -11,10 +11,6 @@ import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "../ruleCreator.ts";
 import {
-	parseVitestFunctionCall,
-	type VitestFunctionCall,
-} from "../utils/parseVitestFunctionCall.ts";
-import {
 	getTestCallExpressionsFromDeclaredVariables,
 	isVitestTestFunction,
 } from "../utils/testCaseFunctions.ts";
@@ -81,24 +77,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						inPromiseCatch = true;
 					}
 
-					const vitestCall = parseVitestFunctionCall(node);
-					if (!vitestCall) {
-						return;
-					}
-
-					if (vitestCall.kind === "test") {
-						inTestCase = true;
-						expectAssertions = 0;
-						return;
-					}
-
-					if (vitestCall.kind !== "expect") {
-						return;
-					}
-
 					if (options.expectAssertions && inTestCase) {
 						expectAssertions =
-							getExpectAssertionsCount(node, vitestCall) ?? expectAssertions;
+							getExpectAssertionsCount(node) ?? expectAssertions;
+					}
+
+					if (isVitestTestFunction(node)) {
+						inTestCase = true;
+						expectAssertions = 0;
+					}
+
+					if (!isExpectCall(node)) {
+						return;
 					}
 
 					const range = getTSNodeRange(node, sourceFile);
@@ -154,14 +144,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function getExpectAssertionsCount(
 	node: AST.CallExpression,
-	{ members, name }: VitestFunctionCall,
 ): number | undefined {
+	if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
+		return undefined;
+	}
+	const { expression: object, name: property } = node.expression;
+
+	if (object.kind !== ts.SyntaxKind.Identifier || object.text !== "expect") {
+		return undefined;
+	}
 	if (
-		name !== "expect" ||
-		members.length !== 1 ||
-		members[0] !== "assertions" ||
-		node.arguments.length !== 1
+		property.kind !== ts.SyntaxKind.Identifier ||
+		property.text !== "assertions"
 	) {
+		return undefined;
+	}
+	if (node.arguments.length !== 1) {
 		return undefined;
 	}
 
@@ -188,6 +186,12 @@ function isCatchCall({ expression }: AST.CallExpression): boolean {
 		);
 	}
 	return false;
+}
+
+function isExpectCall({ expression }: AST.CallExpression): boolean {
+	return (
+		expression.kind === ts.SyntaxKind.Identifier && expression.text === "expect"
+	);
 }
 
 function isLogicalBinaryExpression({
