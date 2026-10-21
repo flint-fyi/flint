@@ -49,6 +49,8 @@ const config: KnipConfig = {
 				"eslint-plugin-import",
 				"eslint-plugin-regexp",
 				"eslint-plugin-unicorn",
+				// Installed from packed artifacts in the generated cases consumer.
+				"flint!",
 				"typescript-eslint",
 			],
 			project: ["src/**/*.ts!"],
