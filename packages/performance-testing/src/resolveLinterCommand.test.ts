@@ -8,8 +8,8 @@ import { resolveLinterCommand } from "./resolveLinterCommand.ts";
 
 describe(resolveLinterCommand, () => {
 	it("uses the consumer's declared bin and quotes paths containing spaces", async () => {
-		const directory = await fs.mkdtemp(
-			path.join(os.tmpdir(), "flint consumer "),
+		const directory = await fs.realpath(
+			await fs.mkdtemp(path.join(os.tmpdir(), "flint consumer ")),
 		);
 		try {
 			const packageDirectory = path.join(directory, "node_modules/flint");
