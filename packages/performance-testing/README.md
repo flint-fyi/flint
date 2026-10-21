@@ -5,7 +5,7 @@
 	❤️‍🔥
 </p>
 
-> Requires [Hyperfine 2](https://github.com/sharkdp/hyperfine/releases/tag/v2.0.0) to be installed globally (`hyperfine --version`).
+> Requires [Hyperfine 2](https://github.com/sharkdp/hyperfine/releases/tag/v2.0.0) to be installed globally.
 > Native memory measurements require Linux or macOS; Windows reports memory as unavailable.
 
 ## Running Performance Testing
