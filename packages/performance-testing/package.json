@@ -27,6 +27,7 @@
 		"debug-for-file": "catalog:dev",
 		"eslint": "catalog:comparisons",
 		"execa": "catalog:dev",
+		"flint": "workspace:^",
 		"prettier": "catalog:dev",
 		"zod": "catalog:prod"
 	},
