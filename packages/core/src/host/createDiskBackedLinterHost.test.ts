@@ -729,9 +729,9 @@ describe("createDiskBackedLinterHost", () => {
 			onEvent.mockClear();
 		});
 
-		it.each([false, true])(
-			"reattaches watchers when the watched root has an ignored name (recursive: %s)",
-			async (recursive) => {
+		it.each([{ recursive: false }, { recursive: true }])(
+			"reattaches watchers when the watched root has an ignored name (recursive: $recursive)",
+			async ({ recursive }) => {
 				const host = createDiskBackedLinterHost(integrationRoot);
 				const directoryPath = path.join(integrationRoot, "node_modules");
 				const onEvent = vi.fn();

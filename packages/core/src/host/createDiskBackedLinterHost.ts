@@ -65,7 +65,8 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 						ignore:
 							ignore &&
 							((filename) =>
-								// Native watchers can report the watched directory's own name.
+								// Root deletion can report a basename or Windows namespaced path.
+								// Let the callback handle it so watching resumes after recreation.
 								filename !== normalizedWatchBasename &&
 								!filename.startsWith("\\\\?\\") &&
 								ignore(filename)),
