@@ -46,6 +46,8 @@ const config: KnipConfig = {
 		"packages/performance-testing": {
 			entry: ["src/{generate,measure}.ts!"],
 			ignoreDependencies: [
+				// Resolved at runtime by resolveLinterCommand.
+				"eslint",
 				"eslint-plugin-import",
 				"eslint-plugin-regexp",
 				"eslint-plugin-unicorn",

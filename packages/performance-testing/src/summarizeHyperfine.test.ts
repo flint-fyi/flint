@@ -16,7 +16,7 @@ describe(summarizeHyperfine, () => {
 									unit: "byte",
 								},
 								time_wall_clock: {
-									mean: 1.234567,
+									mean: 1_234_567e-6,
 									stddev: 0.0123,
 									unit: "second",
 								},
@@ -27,7 +27,7 @@ describe(summarizeHyperfine, () => {
 				}),
 			),
 		).toEqual({
-			meanSeconds: 1.234567,
+			meanSeconds: 1_234_567e-6,
 			memory: "125.0 MiB ± 1.5 MiB",
 			time: "1234.6 ms ± 12.3 ms",
 		});

@@ -9,7 +9,7 @@ export async function resolveLinterCommand(
 	const packagePath = createRequire(
 		path.resolve(directory, "package.json"),
 	).resolve(`${linter}/package.json`);
-	const { bin } = JSON.parse(await fs.readFile(packagePath, "utf8")) as {
+	const { bin } = JSON.parse((await fs.readFile(packagePath)).toString()) as {
 		bin: Record<string, string>;
 	};
 	const executable = bin[linter];
