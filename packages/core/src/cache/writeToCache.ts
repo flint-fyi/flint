@@ -52,6 +52,7 @@ export async function writeToCache(
 					),
 				)),
 		},
+		version: 3,
 	};
 
 	const encoded = cacheStorageSchema.safeEncode(storage);
