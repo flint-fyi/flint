@@ -123,6 +123,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: marcalexiei/changesets-release-commenter@ec778ccda5a45d2eff60cb43c58f4e2e144cd2ea # v0.3.0
+      - uses: marcalexiei/changesets-release-commenter@97096fbe9cde74fcae784df963274998e0090a7c # v0.3.1
         with:
           published-packages: ${{ needs.publish.outputs['published-packages'] }}
