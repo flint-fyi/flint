@@ -32,7 +32,9 @@ export interface TSLineAndCharacter {
 }
 
 /**
- * Reuses the source's line map across position lookups.
+ * Converts a character offset in the source text to a zero-based line and column.
+ * Delegates to `source.getLineAndCharacterOfPosition` when available.
+ * Otherwise, computes and caches line start offsets in `source.lineMap` for reuse.
  */
 export function getColumnAndLineOfPosition(
 	source: HasGetLineAndCharacterOfPosition | SourceFileWithLineMap,
