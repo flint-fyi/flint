@@ -1,5 +1,7 @@
 import z from "zod/v4";
 
+import { jsonCodec } from "@flint.fyi/core";
+
 export interface HyperfineSummary {
 	meanSeconds: number;
 	memory: string;
@@ -11,19 +13,21 @@ const metricSummary = z.object({
 	stddev: z.number().nullable(),
 });
 
-const hyperfineResult = z.object({
-	results: z.tuple([
-		z.object({
-			summary: z.object({
-				memory_peak_resident: metricSummary
-					.extend({ unit: z.literal("byte") })
-					.optional(),
-				time_wall_clock: metricSummary.extend({ unit: z.literal("second") }),
+const hyperfineResult = jsonCodec(
+	z.object({
+		results: z.tuple([
+			z.object({
+				summary: z.object({
+					memory_peak_resident: metricSummary
+						.extend({ unit: z.literal("byte") })
+						.optional(),
+					time_wall_clock: metricSummary.extend({ unit: z.literal("second") }),
+				}),
 			}),
-		}),
-	]),
-	schema_version: z.literal(2),
-});
+		]),
+		schema_version: z.literal(2),
+	}),
+);
 
 const numberFormat = new Intl.NumberFormat("en", {
 	maximumFractionDigits: 1,
@@ -33,7 +37,7 @@ const numberFormat = new Intl.NumberFormat("en", {
 
 export function summarizeHyperfine(json: string): HyperfineSummary {
 	const { memory_peak_resident: memory, time_wall_clock: time } =
-		hyperfineResult.parse(JSON.parse(json)).results[0].summary;
+		hyperfineResult.decode(json).results[0].summary;
 
 	return {
 		meanSeconds: time.mean,

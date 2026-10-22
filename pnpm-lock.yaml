@@ -1418,6 +1418,9 @@ importers:
 
   packages/performance-testing:
     dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
       '@flint.fyi/rule-data':
         specifier: workspace:^
         version: link:../rule-data

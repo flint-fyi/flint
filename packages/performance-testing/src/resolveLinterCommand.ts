@@ -1,14 +1,24 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import z from "zod/v4";
+
+import { jsonCodec } from "@flint.fyi/core";
+
+const packageSchema = jsonCodec(
+	z.object({
+		bin: z.union([z.string(), z.record(z.string(), z.string())]),
+	}),
+);
+
 export async function resolveLinterCommand(
 	linter: string,
 	packagePath: string,
 ): Promise<string> {
-	const { bin } = JSON.parse((await fs.readFile(packagePath)).toString()) as {
-		bin: Record<string, string>;
-	};
-	const executable = bin[linter];
+	const { bin } = packageSchema.decode(
+		(await fs.readFile(packagePath)).toString(),
+	);
+	const executable = typeof bin === "string" ? bin : bin[linter];
 	if (!executable) {
 		throw new Error(`Missing ${linter} bin entry in ${packagePath}`);
 	}

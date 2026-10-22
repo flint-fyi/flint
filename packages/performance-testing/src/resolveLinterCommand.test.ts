@@ -7,32 +7,35 @@ import { describe, expect, it } from "vitest";
 import { resolveLinterCommand } from "./resolveLinterCommand.ts";
 
 describe(resolveLinterCommand, () => {
-	it("uses the consumer's declared bin and quotes paths containing spaces", async () => {
-		const directory = await fs.realpath(
-			await fs.mkdtemp(path.join(os.tmpdir(), "flint consumer ")),
-		);
-		try {
-			const packageDirectory = path.join(directory, "node_modules/flint");
-			await fs.mkdir(packageDirectory, { recursive: true });
-			await fs.writeFile(
-				path.join(packageDirectory, "package.json"),
-				JSON.stringify({
-					bin: { flint: "./custom output/cli.mjs" },
-					exports: { "./package.json": "./package.json" },
-					name: "flint",
-				}),
+	it.each([{ flint: "./custom output/cli.mjs" }, "./custom output/cli.mjs"])(
+		"resolves bin %j and quotes paths containing spaces",
+		async (bin) => {
+			const directory = await fs.realpath(
+				await fs.mkdtemp(path.join(os.tmpdir(), "flint consumer ")),
 			);
-
-			expect(
-				await resolveLinterCommand(
-					"flint",
+			try {
+				const packageDirectory = path.join(directory, "node_modules/flint");
+				await fs.mkdir(packageDirectory, { recursive: true });
+				await fs.writeFile(
 					path.join(packageDirectory, "package.json"),
-				),
-			).toBe(
-				`${JSON.stringify(process.execPath)} ${JSON.stringify(path.join(packageDirectory, "custom output/cli.mjs"))}`,
-			);
-		} finally {
-			await fs.rm(directory, { force: true, recursive: true });
-		}
-	});
+					JSON.stringify({
+						bin,
+						exports: { "./package.json": "./package.json" },
+						name: "flint",
+					}),
+				);
+
+				expect(
+					await resolveLinterCommand(
+						"flint",
+						path.join(packageDirectory, "package.json"),
+					),
+				).toBe(
+					`${JSON.stringify(process.execPath)} ${JSON.stringify(path.join(packageDirectory, "custom output/cli.mjs"))}`,
+				);
+			} finally {
+				await fs.rm(directory, { force: true, recursive: true });
+			}
+		},
+	);
 });
