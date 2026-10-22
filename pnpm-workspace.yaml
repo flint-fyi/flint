@@ -153,7 +153,7 @@ catalogs:
     vitest: ">=0.30.0"
 
   site:
-    "@astrojs/check": 0.9.10
+    "@astrojs/check": 0.9.11
     "@astrojs/markdown-remark": 7.3.3
     "@astrojs/react": 7.1.0
     "@astrojs/starlight": 0.42.6
@@ -161,7 +161,7 @@ catalogs:
     "@konami-emoji-blast/astro": 0.3.0
     "@types/react": 19.3.0
     "@types/react-dom": 19.3.0
-    astro: 7.4.0
+    astro: 7.4.1
     astro-og-canvas: 0.13.2
     canvaskit-wasm: 0.42.0
     clsx: 2.1.1
