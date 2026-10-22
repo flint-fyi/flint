@@ -632,6 +632,38 @@ describe("createDiskBackedLinterHost", () => {
 			);
 		});
 
+		it("matches ignored directory segments at any depth without matching lookalikes", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const ignoredFiles = ["tests/file.ts", "nested/tests/file.ts"].map(
+				(filePath) => normalizePath(path.join(integrationRoot, filePath)),
+			);
+			const visibleFiles = ["mytests/file.ts", "tests-extra/file.ts"].map(
+				(filePath) => normalizePath(path.join(integrationRoot, filePath)),
+			);
+			for (const filePath of [...ignoredFiles, ...visibleFiles]) {
+				fs.mkdirSync(path.dirname(filePath), { recursive: true });
+			}
+			const onEvent = vi.fn();
+			using _ = host.watchDirectorySync(integrationRoot, onEvent, {
+				ignoredPaths: ["/tests"],
+				recursive: true,
+			});
+
+			for (const filePath of [...ignoredFiles, ...visibleFiles]) {
+				fs.writeFileSync(filePath, "content");
+			}
+
+			await vi.waitFor(() => {
+				for (const filePath of visibleFiles) {
+					expect(onEvent).toHaveBeenCalledWith(filePath);
+				}
+			});
+			await sleep(50);
+			for (const filePath of ignoredFiles) {
+				expect(onEvent).not.toHaveBeenCalledWith(filePath);
+			}
+		});
+
 		it("does not ignore lookalike names such as .gitignore", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const baseDir = path.join(integrationRoot, "lookalike");

@@ -14,7 +14,7 @@ import type {
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
-	const caseSensitiveFS = isFileSystemCaseSensitive();
+	const caseSensitiveFs = isFileSystemCaseSensitive();
 	cwd = normalizePath(cwd);
 	const foundRepositoryRoot = findRootSync(cwd);
 	const repositoryRoot =
@@ -201,7 +201,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return entries.map((entry) => normalizePath(entry));
 		},
 		isCaseSensitiveFS() {
-			return caseSensitiveFS;
+			return caseSensitiveFs;
 		},
 		async readDirectory(directoryPathAbsolute) {
 			const dirents = await fs.promises.readdir(directoryPathAbsolute, {
@@ -264,11 +264,11 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
-			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFS);
-			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFS);
+			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFs);
+			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFs);
 
 			function isIgnoredPath(normalizedChangedFilePath: string): boolean {
-				const changedKey = pathKey(normalizedChangedFilePath, caseSensitiveFS);
+				const changedKey = pathKey(normalizedChangedFilePath, caseSensitiveFs);
 				if (changedKey === dirKey) {
 					return false;
 				}
@@ -302,7 +302,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			);
 		},
 		watchFileSync(filePathAbsolute, callback, options) {
-			const watchKey = pathKey(filePathAbsolute, caseSensitiveFS);
+			const watchKey = pathKey(filePathAbsolute, caseSensitiveFs);
 
 			return createWatcher(
 				filePathAbsolute,
@@ -311,7 +311,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				(normalizedChangedFilePath, event) => {
 					if (
 						normalizedChangedFilePath != null &&
-						pathKey(normalizedChangedFilePath, caseSensitiveFS) === watchKey
+						pathKey(normalizedChangedFilePath, caseSensitiveFs) === watchKey
 					) {
 						callback(event);
 					}
