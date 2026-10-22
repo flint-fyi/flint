@@ -362,8 +362,8 @@ catalogs:
       specifier: 2.7.0
       version: 2.7.0
     knip:
-      specifier: 6.42.0
-      version: 6.42.0
+      specifier: 6.42.1
+      version: 6.42.1
     nano-staged:
       specifier: 1.0.2
       version: 1.0.2
@@ -741,7 +741,7 @@ importers:
         version: 2.7.0
       knip:
         specifier: catalog:dev
-        version: 6.42.0
+        version: 6.42.1
       nano-staged:
         specifier: catalog:dev
         version: 1.0.2
@@ -6109,8 +6109,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.42.0:
-    resolution: {integrity: sha512-lNypqHwi38RJQG8pVuItqzCDPMOfPbBExyFh8aM4yMJRHVU7t5OQAtEK4tDkaB3rLHetOcVMhRFAgv5Vn2CM0A==}
+  knip@6.42.1:
+    resolution: {integrity: sha512-gKJVsiT4LJQ0lfc8uSHOCzkOY8adAXNFGarIeODZbJOkBnQRVsG3e0UZFnO4LMwjA82A5tBWX/VgoeTYcjdKiQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -12304,7 +12304,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.42.0:
+  knip@6.42.1:
     dependencies:
       formatly: 0.11.4
       get-tsconfig: 4.14.3
