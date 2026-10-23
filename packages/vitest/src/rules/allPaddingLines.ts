@@ -20,6 +20,7 @@ export default createStatementPaddingRule(
 				return { blockName: "describe", category: "describe" };
 
 			case "expect":
+			case "typeAssertion":
 				return { blockName: "expect", category: call.name };
 
 			case "hook":
