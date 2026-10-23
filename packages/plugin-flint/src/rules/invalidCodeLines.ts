@@ -40,6 +40,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			testCase: ParsedTestCaseInvalid,
 			sourceFile: AST.SourceFile,
 		) {
+			if (!testCase.code) {
+				return;
+			}
+
 			const fix = [
 				...createNewlineFixes(testCase.code, testCase.nodes.code, sourceFile),
 				...createNewlineFixes(
