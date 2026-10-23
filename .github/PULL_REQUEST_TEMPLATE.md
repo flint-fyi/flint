@@ -6,7 +6,7 @@ Otherwise we may not be able to review your PR. -->
 ## PR Checklist
 
 - [ ] This change addresses an existing open issue: fixes #000
-- [ ] The above issue was marked as [`status: accepting prs`](https://github.com/flint-fyi/flint/issues?q=is%3Aopen+is%3Aissue+label%3A%22status%3A+accepting+prs%22)
+- [ ] The above issue was marked as https://github.com/flint-fyi/flint/labels/status%3A%20accepting%20prs
 - [ ] I've read the project's [Contributing Guidelines](https://flint.fyi/project/contributing/)
 
 ## Overview
