@@ -1,0 +1,32 @@
+name: Labels
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/labels.json
+      - .github/workflows/labels.yaml
+  workflow_dispatch: ~
+
+permissions: {}
+
+concurrency:
+  group: labels
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.event.repository.fork != true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: EndBug/label-sync@main # zizmor: ignore[unpinned-uses] Tracks main as required for label-sync.
+        with:
+          config-file: .github/labels.json
+          delete-other-labels: true
