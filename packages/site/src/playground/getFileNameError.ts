@@ -1,11 +1,13 @@
 import {
 	getFileExtension,
 	getPlaygroundLanguage,
-	playgroundExtensions,
 } from "./getPlaygroundLanguage.ts";
 
 const fileNamePattern = /^[\w.-]+$/;
-const reservedFileNames: ReadonlySet<string> = new Set(["jsx.d.ts", "tsconfig.json"]);
+const reservedFileNames: ReadonlySet<string> = new Set([
+	"jsx.d.ts",
+	"tsconfig.json",
+]);
 
 /**
  * Describes why a file name can't be used, if it can't.
@@ -43,15 +45,11 @@ function getExtensionError(
 	fileName: string,
 	isTyping: boolean,
 ): string | undefined {
-	const extension = getFileExtension(fileName);
-
-	if (
-		isTyping &&
-		(!extension ||
-			playgroundExtensions.some((supported) => supported.startsWith(extension)))
-	) {
+	if (isTyping) {
 		return undefined;
 	}
+
+	const extension = getFileExtension(fileName);
 
 	return extension && extension !== "."
 		? `${extension} files aren't supported yet.`

@@ -19,16 +19,24 @@ describe(getFileNameError, () => {
 		expect(getFileNameError("other.ts", ["index.ts"])).toBeUndefined();
 	});
 
-	it.each(["", "data", "data.", "data.j", "data.js"])(
+	it.each([
+		"",
+		"data",
+		"data.",
+		"data.j",
+		"data.js",
+		"lintPlaygroundFiles.tes",
+		"notes.txt",
+	])(
 		"skips errors that more typing might resolve for %j while typing",
 		(fileName) => {
 			expect(getFileNameError(fileName, [], true)).toBeUndefined();
 		},
 	);
 
-	it("returns errors for unsupported extensions while typing", () => {
-		expect(getFileNameError("notes.txt", [], true)).toBe(
-			".txt files aren't supported yet.",
+	it("returns errors that more typing can't resolve while typing", () => {
+		expect(getFileNameError("my file.ts", [], true)).toBe(
+			"Use only letters, numbers, dots, dashes, and underscores.",
 		);
 	});
 });
