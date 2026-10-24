@@ -136,22 +136,23 @@ describe("computeUseDefinitions", () => {
 				{ files: ["src/**/*.ts", "blocked/**/*.ts"], rules: [] },
 			],
 		};
-		const expected = ["/root/src/first.ts", "/root/src/nested/second.ts"];
+		const expected = new Set([
+			"/root/src/first.ts",
+			"/root/src/nested/second.ts",
+		]);
 
 		const initial = await computeUseDefinitions(host, config);
-		expect([...initial.allFilePaths]).toEqual(expected);
-		expect(initial.useDefinitions.map(({ found }) => [...found])).toEqual([
+		expect(initial.allFilePaths).toEqual(expected);
+		expect(initial.useDefinitions.map(({ found }) => found)).toEqual([
 			expected,
 			expected,
 		]);
 
 		host.vfsUpsertFile("/root/.gitignore", "");
 		const refreshed = await computeUseDefinitions(host, config);
-		expect([...refreshed.allFilePaths]).toEqual([
-			...expected,
-			"/root/blocked/third.ts",
-			"/root/other/fourth.ts",
-		]);
+		expect(refreshed.allFilePaths).toEqual(
+			new Set([...expected, "/root/blocked/third.ts", "/root/other/fourth.ts"]),
+		);
 		expect(refreshed.useDefinitions[1]?.found).toEqual(
 			new Set([...expected, "/root/blocked/third.ts"]),
 		);
