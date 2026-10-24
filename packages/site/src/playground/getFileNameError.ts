@@ -5,7 +5,7 @@ import {
 } from "./getPlaygroundLanguage.ts";
 
 const fileNamePattern = /^[\w.-]+$/;
-const reservedFileNames = new Set(["jsx.d.ts", "tsconfig.json"]);
+const reservedFileNames: ReadonlySet<string> = new Set(["jsx.d.ts", "tsconfig.json"]);
 
 /**
  * Describes why a file name can't be used, if it can't.
