@@ -1,3 +1,5 @@
+import { inflateRawSync } from "node:zlib";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -14,11 +16,33 @@ const state: PlaygroundState = {
 	],
 };
 
+const stateHash =
+	"#files=q1ZKTC7JLEt1y8xJ9UvMTVWyUkpJLEnUyyrOz1PSUUrLzEktVrKKrlZKzk8BSaZWFOQXlSgk5-cVlygkJ6YdXqlgq6D-aMZUdesYkIY8iBmZeSmpFXolxUq1OnCt1QoxSokxSlYKhgq1CJUI22pjawE";
+
 async function encodeValue(value: unknown): Promise<string> {
 	return await encodePlaygroundHash(value as PlaygroundState);
 }
 
+describe(encodePlaygroundHash, () => {
+	it("encodes files and the active file as compressed base64url JSON", async () => {
+		const hash = await encodePlaygroundHash(state);
+
+		expect(hash).toBe(stateHash);
+		expect(
+			JSON.parse(
+				inflateRawSync(
+					Buffer.from(hash.slice("#files=".length), "base64url"),
+				).toString(),
+			),
+		).toEqual(state);
+	});
+});
+
 describe(decodePlaygroundHash, () => {
+	it("decodes files and the active file from a known hash", async () => {
+		expect(await decodePlaygroundHash(stateHash)).toEqual(state);
+	});
+
 	it("round trips files and the active file", async () => {
 		const hash = await encodePlaygroundHash(state);
 

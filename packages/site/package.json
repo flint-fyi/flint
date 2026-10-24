@@ -52,6 +52,7 @@
 		"@types/react-dom": "catalog:site",
 		"expressive-code": "catalog:site",
 		"expressive-code-twoslash": "catalog:site",
+		"happy-dom": "catalog:site",
 		"remark-add-twoslash": "catalog:site",
 		"remark-custom-heading-id": "catalog:site",
 		"sharp": "catalog:site",

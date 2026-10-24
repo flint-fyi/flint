@@ -621,6 +621,9 @@ catalogs:
     expressive-code-twoslash:
       specifier: 0.6.1
       version: 0.6.1
+    happy-dom:
+      specifier: 21.0.1
+      version: 21.0.1
     konami-emoji-blast:
       specifier: 0.7.0
       version: 0.7.0
@@ -801,7 +804,7 @@ importers:
         version: 8.71.2(eslint@10.12.0)(supports-color@10.2.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
       vitest-ansi-serializer:
         specifier: catalog:dev
         version: 0.3.1(vitest@5.0.5)
@@ -844,7 +847,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/astro-language:
     dependencies:
@@ -881,7 +884,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/browser:
     dependencies:
@@ -909,7 +912,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/build:
     dependencies:
@@ -943,7 +946,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/cli:
     dependencies:
@@ -1035,7 +1038,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/css:
     dependencies:
@@ -1060,7 +1063,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/css-language:
     dependencies:
@@ -1085,7 +1088,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/e2e:
     devDependencies:
@@ -1109,7 +1112,7 @@ importers:
         version: link:../flint
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
       vitest-ansi-serializer:
         specifier: catalog:dev
         version: 0.3.1(vitest@5.0.5)
@@ -1180,7 +1183,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/json-language:
     dependencies:
@@ -1199,7 +1202,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/jsx:
     dependencies:
@@ -1233,7 +1236,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/markdown-language:
     dependencies:
@@ -1264,7 +1267,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/md:
     dependencies:
@@ -1295,7 +1298,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/next:
     dependencies:
@@ -1339,7 +1342,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/nuxt:
     dependencies:
@@ -1407,7 +1410,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/performance:
     dependencies:
@@ -1435,7 +1438,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/performance-testing:
     dependencies:
@@ -1478,7 +1481,7 @@ importers:
         version: 8.71.2(eslint@10.12.0)(supports-color@10.2.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/plugin-flint:
     dependencies:
@@ -1509,7 +1512,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/plugin-internal:
     dependencies:
@@ -1522,7 +1525,7 @@ importers:
     devDependencies:
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/react:
     dependencies:
@@ -1701,7 +1704,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
       vue-eslint-parser:
         specifier: catalog:comparisons
         version: 10.4.1(eslint@10.12.0)(supports-color@10.2.2)
@@ -1729,7 +1732,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/site:
     dependencies:
@@ -1842,6 +1845,9 @@ importers:
       expressive-code-twoslash:
         specifier: catalog:site
         version: 0.6.1(@expressive-code/core@0.44.2)(eslint@10.12.0)(expressive-code@0.44.2)(supports-color@10.2.2)(typescript@6.0.3)
+      happy-dom:
+        specifier: catalog:site
+        version: 21.0.1
       remark-add-twoslash:
         specifier: catalog:site
         version: 0.0.1
@@ -1909,7 +1915,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/svelte:
     dependencies:
@@ -1946,7 +1952,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/svelte-language:
     dependencies:
@@ -1992,7 +1998,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/text-language:
     dependencies:
@@ -2051,7 +2057,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/ts-patch:
     devDependencies:
@@ -2100,7 +2106,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/utils:
     dependencies:
@@ -2116,7 +2122,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/vitest:
     dependencies:
@@ -2147,7 +2153,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/volar-language:
     dependencies:
@@ -2181,7 +2187,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/vue:
     dependencies:
@@ -2221,7 +2227,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
       vue:
         specifier: catalog:dev
         version: 3.5.44(typescript@6.0.3)
@@ -2264,7 +2270,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   packages/yaml:
     dependencies:
@@ -2289,7 +2295,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
       yaml-unist-parser:
         specifier: catalog:dev
         version: 3.2.1
@@ -2314,7 +2320,7 @@ importers:
         version: 0.23.1(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(@vue/language-core@3.3.11)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+        version: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
 packages:
 
@@ -4248,6 +4254,12 @@ packages:
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
+  '@types/whatwg-mimetype@3.0.2':
+    resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
+
+  '@types/ws@8.18.2':
+    resolution: {integrity: sha512-67MQl+fpWKVTT1NYdnmo3U4sc/xPo/zQBncVnI74qmQa0z/b+1g6iYqNmGCPbxO+zz2aklb08a0oHfegiVd0/w==}
+
   '@typescript-eslint/eslint-plugin@8.71.2':
     resolution: {integrity: sha512-K72/pvT7qpm8q3k8G5u93NCSN1RcLxX5h7Gw0bQpbMXviBHeY6Nx1WEwmk9wP+eKTSQ8ecxvcgt/ZX/rB938xQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -4734,6 +4746,10 @@ packages:
     resolution: {integrity: sha512-1R4kiYKXGViqEN0CnoDrXc1StD9niAwu+j2dukWzrD4bJgsD4lDmEp0CRbc6E/vYJIfTHwPmwyaKtVSudICdPA==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
+
+  buffer-image-size@0.6.4:
+    resolution: {integrity: sha512-nEh+kZOPY1w+gcCMobZ6ETUp9WfibndnosbpwB1iJk/8Gt5ZF2bhS6+B6bPYz424KtwsR6Rflc3tCz1/ghX2dQ==}
+    engines: {node: '>=4.0'}
 
   builtin-modules@5.4.0:
     resolution: {integrity: sha512-JCWSCdun+4Ovd9BhM/Vtlmwb7oD6Wl4YiPRXXwhAuwlPhW1un/MKgXn7GZoFm53ginnoNzus69V8JWx0K393jg==}
@@ -5777,6 +5793,10 @@ packages:
 
   h3@1.15.11:
     resolution: {integrity: sha512-L3THSe2MPeBwgIZVSH5zLdBBU90TOxarvhK9d04IDY2AmVS8j2Jz2LIWtwsGOU3lu2I5jCN7FNvVfY2+XyF+mg==}
+
+  happy-dom@21.0.1:
+    resolution: {integrity: sha512-pRBs/u9fhrncyByOl58DMex0R2uAj6ZPKWIjV5j5yNGZBqLw3P6BTRhlc0DD5b/Ht4/6JYTMuE2LJhUWRC6SGw==}
+    engines: {node: '>=20.0.0'}
 
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
@@ -8068,6 +8088,10 @@ packages:
   web-namespaces@2.0.1:
     resolution: {integrity: sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==}
 
+  whatwg-mimetype@3.0.0:
+    resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
+    engines: {node: '>=12'}
+
   which-boxed-primitive@1.1.1:
     resolution: {integrity: sha512-TbX3mj8n0odCBFVlY8AxkqcHASw3L60jIuF8jFP78az3C2YhmGvqbHBpAjTRH2/xqYunrJ9g1jSyjCjpoWzIAA==}
     engines: {node: '>= 0.4'}
@@ -8110,6 +8134,18 @@ packages:
   wrap-ansi@9.0.2:
     resolution: {integrity: sha512-42AtmgqjV+X1VpdOfyTGOYRi0/zsoLqtXQckTmqTeybT+BDIbM/Guxo7x3pE2vtpr1ok6xRqM9OpBe+Jyoqyww==}
     engines: {node: '>=18'}
+
+  ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
 
   xdg-basedir@5.1.0:
     resolution: {integrity: sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==}
@@ -10098,6 +10134,12 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
+  '@types/whatwg-mimetype@3.0.2': {}
+
+  '@types/ws@8.18.2':
+    dependencies:
+      '@types/node': 26.6.5
+
   '@typescript-eslint/eslint-plugin@8.71.2(@typescript-eslint/parser@8.71.2)(eslint@10.12.0)(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
@@ -10206,7 +10248,7 @@ snapshots:
       obug: 3.0.0
       std-env: 4.3.0
       tinyrainbow: 3.2.0
-      vitest: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+      vitest: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
   '@vitest/eslint-plugin@1.6.27(@typescript-eslint/eslint-plugin@8.71.2)(eslint@10.12.0)(supports-color@10.2.2)(typescript@6.0.3)(vitest@5.0.5)':
     dependencies:
@@ -10216,7 +10258,7 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.71.2(@typescript-eslint/parser@8.71.2)(eslint@10.12.0)(supports-color@10.2.2)(typescript@6.0.3)
       typescript: 6.0.3
-      vitest: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+      vitest: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -10714,6 +10756,10 @@ snapshots:
       electron-to-chromium: 1.5.459
       node-releases: 2.0.59
       update-browserslist-db: 1.3.4(browserslist@4.29.3)
+
+  buffer-image-size@0.6.4:
+    dependencies:
+      '@types/node': 26.6.5
 
   builtin-modules@5.4.0: {}
 
@@ -12016,6 +12062,19 @@ snapshots:
       radix3: 1.1.2
       ufo: 1.6.4
       uncrypto: 0.1.3
+
+  happy-dom@21.0.1:
+    dependencies:
+      '@types/node': 26.6.5
+      '@types/whatwg-mimetype': 3.0.2
+      '@types/ws': 8.18.2
+      buffer-image-size: 0.6.4
+      entities: 7.0.1
+      whatwg-mimetype: 3.0.0
+      ws: 8.22.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   has-bigints@1.1.0: {}
 
@@ -14694,9 +14753,9 @@ snapshots:
 
   vitest-ansi-serializer@0.3.1(vitest@5.0.5):
     dependencies:
-      vitest: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4)
+      vitest: 5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4)
 
-  vitest@5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(vite@8.3.4):
+  vitest@5.0.5(@types/node@26.6.5)(@vitest/coverage-v8@5.0.5)(happy-dom@21.0.1)(vite@8.3.4):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/mocker': 5.0.5(vite@8.3.4)
@@ -14715,6 +14774,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.6.5
       '@vitest/coverage-v8': 5.0.5(vitest@5.0.5)
+      happy-dom: 21.0.1
     transitivePeerDependencies:
       - msw
 
@@ -14854,6 +14914,8 @@ snapshots:
 
   web-namespaces@2.0.1: {}
 
+  whatwg-mimetype@3.0.0: {}
+
   which-boxed-primitive@1.1.1:
     dependencies:
       is-bigint: 1.1.0
@@ -14915,6 +14977,8 @@ snapshots:
       ansi-styles: 6.2.3
       string-width: 7.2.0
       strip-ansi: 7.2.0
+
+  ws@8.22.0: {}
 
   xdg-basedir@5.1.0: {}
 
