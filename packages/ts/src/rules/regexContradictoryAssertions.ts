@@ -254,7 +254,7 @@ function getElementChar(element: string, doubleEscaped: boolean) {
 }
 
 function isWordCharacter(character: string | undefined) {
-	return character ? /^\w$/.test(character) : false;
+	return !!character && /^\w$/.test(character);
 }
 
 function parseOptionalQuantifier(
