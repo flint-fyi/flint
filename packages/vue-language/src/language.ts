@@ -7,7 +7,9 @@ import {
 	tsCodegen,
 	VueVirtualCode,
 } from "@vue/language-core";
+import type { Identifier, Node } from "typescript";
 
+import type { CharacterReportRange } from "@flint.fyi/core";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { assert, nullThrows } from "@flint.fyi/utils";
 import {
@@ -115,6 +117,48 @@ export const vueLanguage: VolarLanguage<VueServices> = createVolarBasedLanguage(
 								: sourceFile.fileName.slice(currentDirectory.length + 1),
 							virtualCode.vueSfc?.errors ?? [],
 						);
+					},
+					getReportRange(range): CharacterReportRange | undefined {
+						const argument = ts.forEachChild(
+							sourceFile,
+							function findUnwrapArgument(node: Node): Identifier | undefined {
+								if (
+									node.getStart(sourceFile) > range.begin ||
+									node.end < range.end
+								) {
+									return undefined;
+								}
+								if (
+									node.getStart(sourceFile) !== range.begin ||
+									node.end !== range.end ||
+									!ts.isCallExpression(node)
+								) {
+									return ts.forEachChild(node, findUnwrapArgument);
+								}
+								if (
+									!ts.isIdentifier(node.expression) ||
+									node.expression.text !== "__VLS_unwrap" ||
+									node.questionDotToken ||
+									node.typeArguments ||
+									node.arguments.length !== 2
+								) {
+									return undefined;
+								}
+								const [value, brand] = node.arguments;
+								if (
+									!value ||
+									!ts.isIdentifier(value) ||
+									brand?.getText(sourceFile) !==
+										`{} as import('${vueCompilerOptions.lib}').Ref<unknown>`
+								) {
+									return undefined;
+								}
+								return value;
+							},
+						);
+						return argument
+							? { begin: argument.getStart(sourceFile), end: argument.end }
+							: undefined;
 					},
 				};
 			},
