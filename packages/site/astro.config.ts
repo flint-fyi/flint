@@ -47,7 +47,6 @@ export default defineConfig({
 								{ label: "Configuration", link: "configuration" },
 								{ label: "Glossary", link: "glossary" },
 								{ label: "FAQs", link: "faqs" },
-								{ label: "Playground", link: "playground" },
 								{
 									collapsed: true,
 									items: [
@@ -124,8 +123,13 @@ export default defineConfig({
 							label: "Rules",
 							link: "rules",
 						},
+						{
+							icon: "laptop",
+							label: "Playground",
+							link: "playground",
+						},
 					],
-					{ exclude: ["/blog", "/blog/**/*"] },
+					{ exclude: ["/blog", "/blog/**/*", "/playground"] },
 				),
 			],
 			social: [
