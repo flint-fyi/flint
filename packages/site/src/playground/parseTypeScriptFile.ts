@@ -1,4 +1,4 @@
-import typescript from "typescript";
+import { createSourceFile, ScriptTarget } from "typescript";
 
 import { getLanguageReportMessage } from "./getLanguageReportMessage.ts";
 import type { PlaygroundParsedFile } from "./parsePlaygroundFile.ts";
@@ -8,10 +8,10 @@ export function parseTypeScriptFile(
 	code: string,
 	filePath: string,
 ): PlaygroundParsedFile {
-	const sourceFile = typescript.createSourceFile(
+	const sourceFile = createSourceFile(
 		filePath,
 		code,
-		typescript.ScriptTarget.Latest,
+		ScriptTarget.Latest,
 		true,
 	);
 

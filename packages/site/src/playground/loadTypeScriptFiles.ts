@@ -1,4 +1,10 @@
-import typescript from "typescript";
+import {
+	getDefaultLibFileName,
+	getDefaultLibFilePath,
+	ScriptTarget,
+	sys,
+	type System,
+} from "typescript";
 
 import { loadLibFiles } from "./loadLibFiles.ts";
 
@@ -11,8 +17,8 @@ export async function loadTypeScriptFiles(
 	directory: string,
 ): Promise<Map<string, string>> {
 	libFilesPromise ??= loadLibFiles(
-		typescript.getDefaultLibFileName({
-			target: typescript.ScriptTarget.ESNext,
+		getDefaultLibFileName({
+			target: ScriptTarget.ESNext,
 		}),
 	).catch((error: unknown) => {
 		// Lets a later lint retry, such as after a network error.
@@ -23,9 +29,9 @@ export async function loadTypeScriptFiles(
 	// Matches where Flint's TypeScript server host looks for lib files,
 	// which is under the current directory when ts.sys is unavailable.
 	const libDirectory =
-		(typescript.sys as typescript.System | undefined) === undefined
+		(sys as System | undefined) === undefined
 			? `${directory}/node_modules/typescript/lib`
-			: typescript.getDefaultLibFilePath({}).replace(/[/\\][^/\\]+$/, "");
+			: getDefaultLibFilePath({}).replace(/[/\\][^/\\]+$/, "");
 
 	const files = new Map(
 		[...(await libFilesPromise)].map(([fileName, text]) => [

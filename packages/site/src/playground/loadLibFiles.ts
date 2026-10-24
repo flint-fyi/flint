@@ -1,4 +1,4 @@
-import typescript from "typescript";
+import { preProcessFile } from "typescript";
 
 const libFileLoaders = import.meta.glob<string>(
 	"/node_modules/typescript/lib/lib.*.d.ts",
@@ -26,11 +26,9 @@ export async function loadLibFiles(
 		libFiles.set(fileName, text);
 
 		await Promise.all(
-			typescript
-				.preProcessFile(text)
-				.libReferenceDirectives.map((reference) =>
-					loadLibFile(`lib.${reference.fileName.toLowerCase()}.d.ts`),
-				),
+			preProcessFile(text).libReferenceDirectives.map((reference) =>
+				loadLibFile(`lib.${reference.fileName.toLowerCase()}.d.ts`),
+			),
 		);
 	}
 

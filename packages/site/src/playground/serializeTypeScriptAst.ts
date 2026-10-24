@@ -1,4 +1,14 @@
-import typescript from "typescript";
+import {
+	forEachChild,
+	isIdentifier,
+	isLiteralExpression,
+	isPrivateIdentifier,
+	isTemplateLiteralToken,
+	SyntaxKind,
+	type Node,
+	type NodeArray,
+	type SourceFile,
+} from "typescript";
 
 import type { PlaygroundAstNode } from "./types.ts";
 
@@ -6,20 +16,20 @@ const syntaxKindNames = new Map<number, string>();
 
 // SyntaxKind includes marker aliases such as FirstStatement that share values
 // with real kinds, so only the first name declared for each value is kept.
-for (const [name, value] of Object.entries(typescript.SyntaxKind)) {
+for (const [name, value] of Object.entries(SyntaxKind)) {
 	if (typeof value === "number" && !syntaxKindNames.has(value)) {
 		syntaxKindNames.set(value, name);
 	}
 }
 
 export function serializeTypeScriptAst(
-	node: typescript.Node,
-	sourceFile: typescript.SourceFile,
+	node: Node,
+	sourceFile: SourceFile,
 ): PlaygroundAstNode {
 	const childNodes = new Set<unknown>();
 	const childNodeArrays = new Set<unknown>();
 
-	typescript.forEachChild(
+	forEachChild(
 		node,
 		(child) => {
 			childNodes.add(child);
@@ -33,14 +43,11 @@ export function serializeTypeScriptAst(
 
 	for (const [key, value] of Object.entries(node) as [string, unknown][]) {
 		if (childNodeArrays.has(value)) {
-			properties[key] = (value as typescript.NodeArray<typescript.Node>).map(
-				(child) => serializeTypeScriptAst(child, sourceFile),
+			properties[key] = (value as NodeArray<Node>).map((child) =>
+				serializeTypeScriptAst(child, sourceFile),
 			);
 		} else if (childNodes.has(value)) {
-			properties[key] = serializeTypeScriptAst(
-				value as typescript.Node,
-				sourceFile,
-			);
+			properties[key] = serializeTypeScriptAst(value as Node, sourceFile);
 		}
 	}
 
@@ -53,13 +60,11 @@ export function serializeTypeScriptAst(
 	};
 }
 
-function isNodeWithText(
-	node: typescript.Node,
-): node is typescript.Node & { text: string } {
+function isNodeWithText(node: Node): node is Node & { text: string } {
 	return (
-		typescript.isIdentifier(node) ||
-		typescript.isPrivateIdentifier(node) ||
-		typescript.isLiteralExpression(node) ||
-		typescript.isTemplateLiteralToken(node)
+		isIdentifier(node) ||
+		isPrivateIdentifier(node) ||
+		isLiteralExpression(node) ||
+		isTemplateLiteralToken(node)
 	);
 }
