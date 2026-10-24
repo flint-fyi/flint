@@ -1,0 +1,41 @@
+name: Issue Labels
+
+on:
+  issues:
+    types: [edited, opened, reopened]
+
+permissions: {}
+
+concurrency:
+  group: issue-labels-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  label:
+    if: github.event.repository.fork != true
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Record form version
+        if: github.event.action == 'opened'
+        uses: octokit/request-action@b91aabaa861c777dcdb14e2387e30eddf04619ae # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ISSUE_BODY: |
+            ${{ github.event.issue.body }}
+
+            <!-- issue_labeler_regex_version=1 -->
+        with:
+          route: PATCH /repos/{owner}/{repo}/issues/{issue_number}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          body: ${{ toJSON(env.ISSUE_BODY) }}
+      - uses: github/issue-labeler@ccca1e16fcb66762200e616fc29b57b940c1cb67 # v3.5
+        with:
+          configuration-path: .github/issue-labels.yml
+          enable-versioned-regex: 1
+          versioned-regex: 'issue_labeler_regex_version=(\d+)'
+          sync-labels: 1

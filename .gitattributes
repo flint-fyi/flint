@@ -1,5 +1,6 @@
 # Normalize EOL for all files that Git considers text files.
 * text=auto eol=lf
 
+.github/issue-labels-v*.yml linguist-generated
 .github/labels.json linguist-generated
 packages/ts/src/types/ast.ts linguist-generated

@@ -4,7 +4,7 @@ import process from "node:process";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 
-import { parse, parseDocument } from "yaml";
+import { parse, parseDocument, stringify } from "yaml";
 
 const root = path.join(import.meta.dirname, "..");
 
@@ -114,6 +114,23 @@ for (const field of ["Package", "Plugin"] as const) {
 		),
 	);
 }
+
+const labelPatterns = Object.entries(selections).flatMap(([field, options]) =>
+	Object.entries(options).map(
+		([name, label]) =>
+			[
+				label,
+				String.raw`(?:^|\n)### ${field}\r?\n\r?\n${RegExp.escape(name)}(?=\r?\n|$)`,
+			] as const,
+	),
+);
+
+labelPatterns.sort(([first], [second]) => first.localeCompare(second));
+
+await updateFile(
+	".github/issue-labels-v1.yml",
+	stringify(Object.fromEntries(labelPatterns), { lineWidth: 0 }),
+);
 
 const templateFiles = await readdir(path.join(root, ".github/ISSUE_TEMPLATE"));
 
