@@ -1,5 +1,11 @@
 # @flint.fyi/rule-data
 
+## 0.5.6
+
+### Patch Changes
+
+- [#3712](https://github.com/flint-fyi/flint/pull/3712) [`3169c3f`](https://github.com/flint-fyi/flint/commit/3169c3fd282f495fbab2b2f46bef70954d90a2cf) - Added missing YAML rule mappings for boolean keys and trailing spaces.
+
 ## 0.5.5
 
 ### Patch Changes
