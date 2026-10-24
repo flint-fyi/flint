@@ -40,6 +40,13 @@ jobs:
       - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run lint
 
+  labels:
+    name: Label Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: $/.github/actions/setup
+      - run: pnpm generate:labels --check
+
   lint_knip:
     name: Lint Knip
     runs-on: ubuntu-latest

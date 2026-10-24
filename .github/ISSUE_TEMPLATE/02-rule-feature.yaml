@@ -25,22 +25,25 @@ body:
       options:
         - Astro
         - Browser
+        - CSS
+        - Changesets
         - Flint
         - Internal
         - JSON
         - JSX
         - Markdown
-        - Next
-        - Node
-        - Nuxt
+        - Next.js
+        - Node.js
+        - Nuxt.js
         - PackageJSON
         - Performance
         - React
         - SolidJS
         - Spelling
+        - Svelte
         - TypeScript
         - Vitest
-        - Vue
+        - Vue.js
         - YAML
     validations:
       required: true
