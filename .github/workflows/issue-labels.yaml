@@ -1,0 +1,25 @@
+name: Issue Labels
+
+on:
+  issues:
+    types: [edited, opened, reopened]
+
+permissions: {}
+
+concurrency:
+  group: issue-labels-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  label:
+    if: github.event.repository.fork != true
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: github/issue-labeler@v3.5
+        with:
+          configuration-path: .github/issue-labels.yaml
+          enable-versioned-regex: 0
+          sync-labels: 1
