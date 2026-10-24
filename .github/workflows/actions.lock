@@ -16,6 +16,9 @@ workflows:
     '.github/workflows/copilot-setup-steps.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
+    '.github/workflows/labels.yaml':
+        - 'actions/checkout@v7.0.1'
+        - 'endbug/label-sync@cursor/upgrade-github-label-sync-4-e46e'
     '.github/workflows/merge-changesets-pr.yaml':
         - 'actions/create-github-app-token@v3.3.0'
     '.github/workflows/octoguide.yaml':
@@ -97,6 +100,11 @@ dependencies:
         repo_id: 200299178
         uses:
             - 'actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd'
+    'endbug/label-sync@cursor/upgrade-github-label-sync-4-e46e':
+        ref: 'cursor/upgrade-github-label-sync-4-e46e'
+        commit: 'sha1-0e763891710d5a9493f298b8fd6b567beb55c932'
+        owner_id: 26386270
+        repo_id: 302251027
     'github/codeql-action@9b3254085494b55a0f7c4c2b3d2d52cc712ce370':
         ref: 'v4.39.1'
         commit: 'sha1-9b3254085494b55a0f7c4c2b3d2d52cc712ce370'
