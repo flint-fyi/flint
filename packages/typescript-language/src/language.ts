@@ -113,6 +113,18 @@ export const typescriptLanguage: Language<
 				`Could not retrieve source file for: ${data.filePathAbsolute}`,
 			);
 
+			const projectConfigFilePaths: string[] = Array.from(
+				service.configFileExistenceInfoCache,
+			)
+				.filter(([, info]) =>
+					info.openFilesImpactedByConfigFile?.has(scriptInfo.path),
+				)
+				.map(([filePath]) => filePath);
+			const configFilePath = program.getCompilerOptions().configFilePath;
+			if (typeof configFilePath === "string") {
+				projectConfigFilePaths.push(configFilePath);
+			}
+
 			const fileExtension = extname(data.filePathAbsolute);
 			if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
 				return {
@@ -121,6 +133,7 @@ export const typescriptLanguage: Language<
 					language: typescriptLanguage,
 					services: {
 						program,
+						projectConfigFilePaths,
 						sourceFile: sourceFile as AST.SourceFile,
 						// ew, I don't like this. the ts -> AST type story is not great
 						typeChecker: program.getTypeChecker() as unknown as Checker,
@@ -145,6 +158,10 @@ export const typescriptLanguage: Language<
 
 			return {
 				...volarFile,
+				services: {
+					...volarFile.services,
+					projectConfigFilePaths,
+				},
 				[Symbol.dispose]() {
 					volarFile[Symbol.dispose]?.();
 					if (openClientFilePaths.delete(data.filePathAbsolute)) {
