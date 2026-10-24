@@ -1,9 +1,8 @@
-import type { PlaygroundReport } from "~/playground/types.ts";
+import type { PlaygroundRange, PlaygroundReport } from "~/playground/types.ts";
 import type { JSX } from "react";
 
 import { PlaygroundMessage } from "./PlaygroundMessage.tsx";
 import styles from "./PlaygroundReports.module.css";
-import type { PlaygroundRange } from "./types.ts";
 
 export interface PlaygroundReportsProps {
 	languageName: string;

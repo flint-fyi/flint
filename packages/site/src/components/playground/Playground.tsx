@@ -1,4 +1,5 @@
 import { getPlaygroundLanguage } from "~/playground/getPlaygroundLanguage.ts";
+import type { PlaygroundRange } from "~/playground/types.ts";
 import { useEffect, useMemo, useState, type JSX } from "react";
 
 import { initialFiles } from "./initialFiles.ts";
@@ -10,7 +11,6 @@ import { PlaygroundFiles } from "./PlaygroundFiles.tsx";
 import { PlaygroundIcon } from "./PlaygroundIcon.tsx";
 import { PlaygroundReports } from "./PlaygroundReports.tsx";
 import { PlaygroundSeparator } from "./PlaygroundSeparator.tsx";
-import type { PlaygroundRange } from "./types.ts";
 import { usePlaygroundHash } from "./usePlaygroundHash.ts";
 import { usePlaygroundLayout } from "./usePlaygroundLayout.ts";
 import { usePlaygroundResponse } from "./usePlaygroundResponse.ts";

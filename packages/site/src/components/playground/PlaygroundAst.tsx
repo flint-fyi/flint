@@ -1,8 +1,7 @@
-import type { PlaygroundAstNode } from "~/playground/types.ts";
+import type { PlaygroundAstNode, PlaygroundRange } from "~/playground/types.ts";
 import { useState, type JSX, type ReactNode } from "react";
 
 import styles from "./PlaygroundAst.module.css";
-import type { PlaygroundRange } from "./types.ts";
 
 export interface PlaygroundAstProps {
 	ast: PlaygroundAstNode;

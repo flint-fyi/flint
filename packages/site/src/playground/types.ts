@@ -18,6 +18,11 @@ export interface PlaygroundFileResult {
 
 export type PlaygroundLanguage = "json" | "typescript";
 
+export interface PlaygroundRange {
+	begin: number;
+	end: number;
+}
+
 export interface PlaygroundReport {
 	begin: number;
 	column: number;

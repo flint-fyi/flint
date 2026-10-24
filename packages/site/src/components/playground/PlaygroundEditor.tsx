@@ -6,13 +6,12 @@ import {
 import { lintGutter, setDiagnostics } from "@codemirror/lint";
 import { EditorView, tooltips } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
-import type { PlaygroundReport } from "~/playground/types.ts";
+import type { PlaygroundRange, PlaygroundReport } from "~/playground/types.ts";
 import { basicSetup } from "codemirror";
 import { useEffect, useRef, useState, type JSX } from "react";
 
 import styles from "./PlaygroundEditor.module.css";
 import { renderDiagnosticMessage } from "./renderDiagnosticMessage.ts";
-import type { PlaygroundRange } from "./types.ts";
 
 export interface PlaygroundEditorProps {
 	autoFocus: boolean;
