@@ -133,14 +133,6 @@ ruleTester.describe(rule, {
 	],
 });
 
-const unsafeTemplateCallback = `
-<script setup lang="ts">
-import MyComponent from './MyComponent.vue';
-const foo = 1 as any;
-</script>
-<template><MyComponent :foo="() => foo" /></template>
-`;
-
 ruleTester.describe(
 	{
 		...rule,
@@ -162,7 +154,13 @@ ruleTester.describe(
 	{
 		invalid: [
 			{
-				code: unsafeTemplateCallback,
+				code: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => foo" /></template>
+`,
 				files: myComponentFixture,
 				name: "reports generated unwrap calls without offering wrapper edits",
 				snapshot: `
@@ -178,7 +176,13 @@ const foo = 1 as any;
 		],
 		valid: [
 			{
-				code: unsafeTemplateCallback.replace("1 as any", "'safe' as string"),
+				code: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 'safe' as string;
+</script>
+<template><MyComponent :foo="() => foo" /></template>
+`,
 				files: myComponentFixture,
 			},
 		],
