@@ -18,6 +18,8 @@ export interface FinalizedFileResults {
 	languageReports: LanguageReport[];
 	reports: FileReport[];
 	structuralDependencies?: ReadonlySet<string>;
+	/** Unix milliseconds at the start of the lint pass, retained across checkpoints. */
+	timestamp?: number;
 }
 
 /**
