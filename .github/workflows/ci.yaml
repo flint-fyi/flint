@@ -27,6 +27,8 @@ jobs:
             run: pnpm run --filter=rule-data sort-data --check
           - name: Flint
             run: pnpm run flint
+          - name: Label Configuration
+            run: pnpm generate:labels --check
           - name: Lint
             run: pnpm run lint
           - name: Lint Knip

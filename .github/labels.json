@@ -50,9 +50,6 @@
 		"name": "invalid"
 	},
 	{
-		"aliases": [
-			"package: astro"
-		],
 		"color": "FFa1DF",
 		"description": "Astro language for Flint.",
 		"name": "package: astro-language"
@@ -113,9 +110,6 @@
 		"name": "package: lsp"
 	},
 	{
-		"aliases": [
-			"package: markdown"
-		],
 		"color": "24A1E2",
 		"description": "Markdown language for Flint.",
 		"name": "package: markdown-language"
@@ -146,9 +140,6 @@
 		"name": "package: site"
 	},
 	{
-		"aliases": [
-			"package: svelte"
-		],
 		"color": "ff3e00",
 		"description": "Svelte language for Flint.",
 		"name": "package: svelte-language"
@@ -174,9 +165,6 @@
 		"name": "package: utils"
 	},
 	{
-		"aliases": [
-			"package: volar"
-		],
 		"color": "1459f1",
 		"description": "Volar.js language for Flint.",
 		"name": "package: volar-language"
@@ -252,9 +240,6 @@
 		"name": "plugin: md"
 	},
 	{
-		"aliases": [
-			"plugin: next.js"
-		],
 		"color": "000000",
 		"description": "A Flint plugin for Next.js code.",
 		"name": "plugin: next"

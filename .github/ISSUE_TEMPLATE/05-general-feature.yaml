@@ -17,6 +17,33 @@ body:
         - label: I have [searched for related issues](https://github.com/flint-fyi/flint/issues?q=is%3Aissue) and found none that matched my issue.
           required: true
     type: checkboxes
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      description: Which package does this issue concern? Leave blank if unsure.
+      options:
+        - "@flint.fyi/astro-language"
+        - "@flint.fyi/build"
+        - "@flint.fyi/cli"
+        - "@flint.fyi/core"
+        - "@flint.fyi/css-language"
+        - "@flint.fyi/e2e"
+        - "@flint.fyi/json-language"
+        - "@flint.fyi/markdown-language"
+        - "@flint.fyi/performance-testing"
+        - "@flint.fyi/rule-data"
+        - "@flint.fyi/rule-tester"
+        - "@flint.fyi/site"
+        - "@flint.fyi/svelte-language"
+        - "@flint.fyi/text-language"
+        - "@flint.fyi/ts-patch"
+        - "@flint.fyi/typescript-language"
+        - "@flint.fyi/utils"
+        - "@flint.fyi/volar-language"
+        - "@flint.fyi/vue-language"
+        - "@flint.fyi/yaml-language"
+        - flint
   - attributes:
       description: What did you expect to be able to do?
       label: Overview
