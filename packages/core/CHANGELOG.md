@@ -1,5 +1,15 @@
 # @flint/core
 
+## 0.30.1
+
+### Patch Changes
+
+- [#3742](https://github.com/flint-fyi/flint/pull/3742) [`348a945`](https://github.com/flint-fyi/flint/commit/348a945368205fce1b7ad4cfcfafba73edd94ff1) - Evaluate `.gitignore` rules once per path during file discovery instead of once per matched file and `use` group.
+
+- [#3743](https://github.com/flint-fyi/flint/pull/3743) [`4104141`](https://github.com/flint-fyi/flint/commit/410414102219774ae672c2b07f4015c8dd16af39) - Skip ignored subtrees such as `node_modules` and `.git` when setting up recursive directory watchers.
+
+- [#3745](https://github.com/flint-fyi/flint/pull/3745) [`a2187b2`](https://github.com/flint-fyi/flint/commit/a2187b2afc98cbe65e899b53f633493543551fca) - Compute each file's line starts once when converting rule report positions instead of once per report.
+
 ## 0.30.0
 
 ### Minor Changes
