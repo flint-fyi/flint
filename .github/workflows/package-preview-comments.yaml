@@ -41,10 +41,10 @@ jobs:
           ' "$RUNNER_TEMP/package-previews/package-previews.json" > /dev/null
 
           jq '{body: (
-            "<!-- flint-package-previews -->\n\n## Package previews\n\n" +
-            ([.packages[] | select(.name == "flint") | "```sh\npnpm add -D \(.url)\n```"] | join("\n\n")) +
+            "<!-- flint-package-previews -->\n\n#### Package previews\n\n" +
+            ([.packages[] | select(.name == "flint") | "```shell\npnpm add -D \(.url)\n```"] | join("\n\n")) +
             "\n\n<details>\n<summary>Other packages</summary>\n\n" +
-            ([.packages[] | select(.name != "flint") | "### \(.name)\n\n```sh\npnpm add -D \(.url)\n```"] | join("\n\n")) +
+            ([.packages[] | select(.name != "flint") | "##### \(.name)\n\n```shell\npnpm add -D \(.url)\n```"] | join("\n\n")) +
             "\n\n</details>"
           )}' "$RUNNER_TEMP/package-previews/package-previews.json" > "$RUNNER_TEMP/package-previews-comment.json"
 
