@@ -307,6 +307,13 @@ const config: ConfigObject[] = defineConfig(
 		},
 	},
 	{
+		files: [".github/issue-labels-v*.yml"],
+		rules: {
+			// issue-labeler requires .yml for versioned configurations.
+			"yml/file-extension": ["error", { extension: "yml" }],
+		},
+	},
+	{
 		extends: [packageJson.configs.recommended, packageJson.configs.stylistic],
 		files: ["**/package.json"],
 		ignores: ["packages/e2e/tests/**/package.json"],
