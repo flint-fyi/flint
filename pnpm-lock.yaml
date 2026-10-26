@@ -356,8 +356,8 @@ catalogs:
       specifier: 3.9.0
       version: 3.9.0
     execa:
-      specifier: 10.2.0
-      version: 10.2.0
+      specifier: 10.2.1
+      version: 10.2.1
     jiti:
       specifier: 2.7.0
       version: 2.7.0
@@ -1082,7 +1082,7 @@ importers:
         version: link:../utils
       execa:
         specifier: catalog:dev
-        version: 10.2.0
+        version: 10.2.1
       flint:
         specifier: workspace:^
         version: link:../flint
@@ -1435,7 +1435,7 @@ importers:
         version: 10.13.0(jiti@2.7.0)(supports-color@10.2.2)
       execa:
         specifier: catalog:dev
-        version: 10.2.0
+        version: 10.2.1
       prettier:
         specifier: catalog:dev
         version: 3.9.10
@@ -5470,8 +5470,8 @@ packages:
   eventemitter3@5.0.4:
     resolution: {integrity: sha512-mlsTRyGaPBjPedk6Bvw+aqbsXDtoAyAzm5MO7JgU+yVRyMQ5O8bD4Kcci7BS85f93veegeCPkL8R4GLClnjLFw==}
 
-  execa@10.2.0:
-    resolution: {integrity: sha512-j1pFOVxaybMVCTNHSBuISL2KQcDS3KIE1wBmUp4n2X+1FgaQI2ZDJVy9TYxDyMCzYojRIMh9O8X/UoWZtxTJdw==}
+  execa@10.2.1:
+    resolution: {integrity: sha512-/Bofl3ZBh2Q4/PG0W63qFzP5vDAypi8Zc90UWTBzaDNIYiX7apPOd0N6L8hG8CojUdq4V51adu8BObP+iVsSTw==}
     engines: {node: '>=22'}
 
   expect-type@1.4.0:
@@ -11622,7 +11622,7 @@ snapshots:
 
   eventemitter3@5.0.4: {}
 
-  execa@10.2.0:
+  execa@10.2.1:
     dependencies:
       '@sindresorhus/merge-streams': 4.0.0
       figures: 6.1.0
