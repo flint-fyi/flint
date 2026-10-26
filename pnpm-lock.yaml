@@ -178,8 +178,8 @@ catalogs:
       specifier: 8.0.3
       version: 8.0.3
     '@next/eslint-plugin-next':
-      specifier: 16.4.2
-      version: 16.4.2
+      specifier: 16.4.3
+      version: 16.4.3
     '@nuxt/eslint-plugin':
       specifier: 1.17.0
       version: 1.17.0
@@ -1602,7 +1602,7 @@ importers:
         version: link:../build
       '@next/eslint-plugin-next':
         specifier: catalog:comparisons
-        version: 16.4.2(eslint@10.13.0)
+        version: 16.4.3(eslint@10.13.0)
       '@nuxt/eslint-plugin':
         specifier: catalog:comparisons
         version: 1.17.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
@@ -3469,8 +3469,8 @@ packages:
       '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.4
       '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.4
 
-  '@next/eslint-plugin-next@16.4.2':
-    resolution: {integrity: sha512-gCTWlw0e+Y6kajpFyKKgA195jUJCRhlzJE0lV7ufe8a+ghIsANWZ0/FiJwg6DuOG1+OvRbcZDcFBoRh3mNJx0g==}
+  '@next/eslint-plugin-next@16.4.3':
+    resolution: {integrity: sha512-oxuC06wt/71h6ACYCV9GbKOfnf5a7VlRe/p80YHTut15TNgDEmynDnaq8t/xhy5rlvk7dhItIPs6H3rvIM4kyw==}
 
   '@nodable/entities@3.1.0':
     resolution: {integrity: sha512-LsS/DjHr+uDM647Gru/cA8+J3a3HfhttwCKLyuoyN7yXTFCxKBtSgMQBvrW9yNPa2/zDRUNuGPaH5QUFoa4arQ==}
@@ -9504,7 +9504,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
     optional: true
 
-  '@next/eslint-plugin-next@16.4.2(eslint@10.13.0)':
+  '@next/eslint-plugin-next@16.4.3(eslint@10.13.0)':
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.13.0)
       fast-glob: 3.3.1
