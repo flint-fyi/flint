@@ -1,11 +1,6 @@
 packages:
   - packages/*
 
-allowBuilds:
-  esbuild@0.28.2: true
-  sharp@0.34.5: true
-  simple-git-hooks@2.14.0: false
-
 autoInstallPeers: false
 
 catalogMode: strict
@@ -203,6 +198,10 @@ peerDependencyRules:
     expressive-code-twoslash>@expressive-code/core: "0.44"
     expressive-code-twoslash>expressive-code: "0.44"
     typescript: "6"
+
+permissions:
+  simple-git-hooks@2.14.0:
+    build: false
 
 shellEmulator: true
 
