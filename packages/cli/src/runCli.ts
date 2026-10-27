@@ -114,12 +114,18 @@ export async function runCli(
 		const { runCliOnce } = await import("./runCliOnce.ts");
 		const renderer = getRenderer();
 		try {
-			const { exitCode } = await runCliOnce(
+			const { exitCode, lintResults } = await runCliOnce(
 				createEphemeralLinterHost(host),
 				configFileName,
 				renderer,
 				values,
 			);
+
+			if (lintResults && renderer.onQuit) {
+				const quit: PromiseWithResolvers<void> = Promise.withResolvers();
+				renderer.onQuit(quit.resolve);
+				await quit.promise;
+			}
 
 			return exitCode;
 		} finally {
