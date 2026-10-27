@@ -20,7 +20,6 @@ import {
 	validateConfigDefinition,
 	withFileSystemWatcher,
 	type FileResults,
-	type LinterHostFileWatcherEvent,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
 import { createDiskBackedLinterHost } from "@flint.fyi/core/node";
@@ -40,20 +39,16 @@ const CONFIG_RELOAD_QUERY_PARAMETER = "flintLspCacheBust";
 export function startServer(): void {
 	const connection = createConnection(process.stdin, process.stdout);
 	const documents = new TextDocuments(TextDocument);
-
-	let workspaceRoot: string | undefined;
-	let configFileName: string | undefined;
-	let vfsHost: undefined | VFSLinterHost;
-	let lintSession: LintSession | undefined;
-
+	const pendingFilePaths = new Set<string>();
 	const storedResults = new Map<string, FileResults>();
 
+	let currentTask: Promise<void> = Promise.resolve();
 	let debounceTimer: NodeJS.Timeout | undefined;
-	let lintInFlight = false;
-	let pendingFullRebuild = false;
-	const pendingPaths = new Set<string>();
-	let structuralVersion = 0;
+	let lintSession: LintSession | undefined;
+	let rebuildPending = false;
+	let vfsHost: undefined | VFSLinterHost;
 	let watchedFilesSubscription: Disposable | undefined;
+	let workspaceRoot: string | undefined;
 
 	connection.onInitialize((initializeParams: InitializeParams) => {
 		workspaceRoot = getWorkspaceRoot(initializeParams);
@@ -69,14 +64,6 @@ export function startServer(): void {
 	});
 
 	connection.onInitialized(() => {
-		initializeServer().catch((error: unknown) => {
-			connection.console.error(
-				`Initialization error: ${formatUnknownError(error)}`,
-			);
-		});
-	});
-
-	async function initializeServer() {
 		if (!workspaceRoot) {
 			connection.console.error("No workspace root provided.");
 			return;
@@ -89,211 +76,100 @@ export function startServer(): void {
 				fileSystemWatcher,
 			),
 		});
-
 		watchedFilesSubscription = fileSystemWatcher.watchDirectoryWithEventSync(
 			workspaceRoot,
-			handleWatchedFileChange,
+			(filePath, event) => {
+				if (event === "changed") {
+					requestLint(filePath);
+				} else {
+					requestRebuild();
+				}
+			},
 			{ ignoredPaths: commonlyIgnoredPaths, recursive: true },
 		);
 
-		configFileName = await findConfigFileName(vfsHost);
+		requestRebuild();
+	});
 
-		if (configFileName) {
-			connection.console.info(
-				`Flint LSP initialized with config: ${configFileName}`,
-			);
-		} else {
-			connection.console.error(`No flint.config.* found in ${workspaceRoot}`);
-		}
-
-		requestFullRebuild();
+	function requestRebuild() {
+		rebuildPending = true;
+		scheduleLint();
 	}
 
-	function handleWatchedFileChange(
-		filePath: string,
-		event: LinterHostFileWatcherEvent,
-	) {
-		if (
-			event === "created" ||
-			event === "deleted" ||
-			(workspaceRoot &&
-				isStructuralFilePath(filePath, workspaceRoot, configFileNameCandidates))
-		) {
-			requestFullRebuild();
-			return;
-		}
-
-		requestIncrementalLint(filePath);
-	}
-
-	function queueLintRun() {
-		runQueuedLint().catch((error: unknown) => {
-			connection.console.error(`Lint error: ${formatUnknownError(error)}`);
-		});
-	}
-
-	function requestFullRebuild() {
-		structuralVersion += 1;
-		pendingFullRebuild = true;
-		pendingPaths.clear();
-		queueOpenDocumentPaths();
-		if (debounceTimer) {
-			clearTimeout(debounceTimer);
-			debounceTimer = undefined;
-		}
-		queueLintRun();
-	}
-
-	function requestIncrementalLint(filePath: string) {
+	function requestLint(filePath: string) {
 		if (
 			workspaceRoot &&
 			isStructuralFilePath(filePath, workspaceRoot, configFileNameCandidates)
 		) {
-			requestFullRebuild();
+			requestRebuild();
 			return;
 		}
 
-		pendingPaths.add(normalizeFilePath(filePath));
-		scheduleDebouncedLint();
+		pendingFilePaths.add(normalizeFilePath(filePath));
+		scheduleLint();
 	}
 
-	function scheduleDebouncedLint() {
-		if (debounceTimer) {
-			clearTimeout(debounceTimer);
-		}
+	function scheduleLint() {
+		clearTimeout(debounceTimer);
 		debounceTimer = setTimeout(() => {
-			debounceTimer = undefined;
-			queueLintRun();
+			currentTask = currentTask.then(lintPending).catch((error: unknown) => {
+				connection.console.error(`Lint error: ${formatUnknownError(error)}`);
+			});
 		}, LINT_DEBOUNCE_MS);
 	}
 
-	async function runQueuedLint() {
-		if (lintInFlight) {
-			return;
+	async function lintPending() {
+		const previousUris = rebuildPending
+			? new Set(storedResults.keys())
+			: undefined;
+		if (rebuildPending) {
+			rebuildPending = false;
+			await rebuildSession();
 		}
 
-		if (!pendingFullRebuild && !pendingPaths.size) {
-			return;
-		}
-
-		lintInFlight = true;
-
-		try {
-			let canLint = true;
-			let previousUris: Set<string> | undefined;
-			const expectedStructuralVersion = structuralVersion;
-
-			if (pendingFullRebuild) {
-				pendingFullRebuild = false;
-				const rebuildResult = await rebuildSession(expectedStructuralVersion);
-				if (rebuildResult == null) {
-					return;
-				}
-
-				({ canLint, previousUris } = rebuildResult);
-				if (canLint) {
-					queueOpenDocumentPaths();
-				} else {
-					pendingPaths.clear();
-				}
-			}
-
-			if (canLint && pendingPaths.size) {
-				const filePaths = new Set(pendingPaths);
-				pendingPaths.clear();
-				const publishedUris = await lintChangedPathsAndPublish(
-					filePaths,
-					expectedStructuralVersion,
-				);
-
-				if (previousUris && publishedUris) {
-					await clearUnpublishedDiagnostics(previousUris, publishedUris);
-				}
-			} else if (previousUris) {
-				await clearUnpublishedDiagnostics(previousUris, new Set());
-			}
-		} catch (error) {
-			connection.console.error(`Lint error: ${formatUnknownError(error)}`);
-		} finally {
-			lintInFlight = false;
-
-			if (pendingFullRebuild) {
-				queueLintRun();
-			} else if (pendingPaths.size) {
-				scheduleDebouncedLint();
-			}
-		}
-	}
-
-	async function rebuildSession(expectedStructuralVersion: number) {
-		if (!vfsHost || !workspaceRoot) {
-			return;
-		}
-
-		const previousUris = new Set(storedResults.keys());
-		const nextConfigFileName = await findConfigFileName(vfsHost);
-
-		if (expectedStructuralVersion !== structuralVersion) {
-			return;
-		}
-
-		if (!nextConfigFileName) {
-			configFileName = undefined;
-			lintSession?.[Symbol.dispose]();
-			lintSession = undefined;
-			storedResults.clear();
-			connection.console.error(`No flint.config.* found in ${workspaceRoot}`);
-			return { canLint: false, previousUris };
-		}
-
-		configFileName = nextConfigFileName;
-
-		const nextConfigDefinition = await loadConfigDefinition(configFileName);
-		const nextLintSession = await LintSession.create(
-			nextConfigDefinition,
-			vfsHost,
-		);
-
-		if (expectedStructuralVersion !== structuralVersion) {
-			nextLintSession[Symbol.dispose]();
-			return;
-		}
-
-		lintSession?.[Symbol.dispose]();
-		lintSession = nextLintSession;
-		storedResults.clear();
-
-		return { canLint: true, previousUris };
-	}
-
-	async function lintChangedPathsAndPublish(
-		filePaths: Set<string>,
-		expectedStructuralVersion: number,
-	) {
-		const session = lintSession;
-		if (!session) {
-			requestFullRebuild();
-			return;
-		}
-
-		const isStale = () =>
-			expectedStructuralVersion !== structuralVersion ||
-			session !== lintSession;
+		const filePaths = new Set(pendingFilePaths);
+		pendingFilePaths.clear();
 		const publishedUris = new Set<string>();
 
-		await session.lintChangedFiles(filePaths, {
-			async onResults(results) {
-				if (isStale()) {
-					return;
-				}
+		if (lintSession && filePaths.size) {
+			await lintSession.lintChangedFiles(filePaths, {
+				async onResults(results) {
+					for (const uri of await publishResults(results)) {
+						publishedUris.add(uri);
+					}
+				},
+			});
+		}
 
-				for (const uri of await publishResults(results)) {
-					publishedUris.add(uri);
-				}
-			},
-		});
+		if (previousUris) {
+			await clearDiagnostics(previousUris.difference(publishedUris));
+		}
+	}
 
-		return isStale() ? undefined : publishedUris;
+	async function rebuildSession() {
+		if (!vfsHost) {
+			return;
+		}
+
+		const configFileName = await findConfigFileName(vfsHost);
+		if (!configFileName) {
+			lintSession?.[Symbol.dispose]();
+			lintSession = undefined;
+			connection.console.error(`No flint.config.* found in ${workspaceRoot}`);
+			return;
+		}
+
+		const nextLintSession = await LintSession.create(
+			await loadConfigDefinition(configFileName),
+			vfsHost,
+		);
+		lintSession?.[Symbol.dispose]();
+		lintSession = nextLintSession;
+		connection.console.info(`Flint LSP loaded config: ${configFileName}`);
+
+		for (const document of documents.all()) {
+			pendingFilePaths.add(normalizeFilePath(fileURLToPath(document.uri)));
+		}
 	}
 
 	async function loadConfigDefinition(configFileName: string) {
@@ -356,21 +232,13 @@ export function startServer(): void {
 		return publishedUris;
 	}
 
-	async function clearUnpublishedDiagnostics(
-		previousUris: Set<string>,
-		publishedUris: Set<string>,
-	) {
+	async function clearDiagnostics(uris: Set<string>) {
 		await Promise.all(
-			Array.from(previousUris)
-				.filter((uri) => !publishedUris.has(uri))
-				.map((uri) => connection.sendDiagnostics({ diagnostics: [], uri })),
+			Array.from(uris, (uri) => {
+				storedResults.delete(uri);
+				return connection.sendDiagnostics({ diagnostics: [], uri });
+			}),
 		);
-	}
-
-	function queueOpenDocumentPaths() {
-		for (const document of documents.all()) {
-			pendingPaths.add(normalizeFilePath(fileURLToPath(document.uri)));
-		}
 	}
 
 	function getDiagnosticDocument(uri: string) {
@@ -392,7 +260,7 @@ export function startServer(): void {
 
 		const filePath = normalizeFilePath(fileURLToPath(change.document.uri));
 		vfsHost.vfsUpsertFile(filePath, change.document.getText());
-		requestIncrementalLint(filePath);
+		requestLint(filePath);
 	});
 
 	documents.onDidClose((event) => {
@@ -402,7 +270,7 @@ export function startServer(): void {
 
 		const filePath = normalizeFilePath(fileURLToPath(event.document.uri));
 		vfsHost.vfsDeleteFile(filePath);
-		requestIncrementalLint(filePath);
+		requestLint(filePath);
 	});
 
 	connection.onCodeAction((codeActionParams) => {
@@ -427,8 +295,8 @@ export function startServer(): void {
 	});
 
 	connection.onShutdown(() => {
+		clearTimeout(debounceTimer);
 		watchedFilesSubscription?.[Symbol.dispose]();
-		watchedFilesSubscription = undefined;
 		lintSession?.[Symbol.dispose]();
 	});
 

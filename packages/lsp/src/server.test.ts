@@ -68,7 +68,7 @@ const mocks = vi.hoisted(() => {
 				changeWatchedFiles?: (event: unknown) => void;
 				codeAction?: (params: unknown) => unknown;
 				initialize?: (params: unknown) => unknown;
-				initialized?: () => Promise<void> | void;
+				initialized?: () => void;
 				shutdown?: () => void;
 			};
 			console: {
@@ -288,8 +288,8 @@ describe("startServer", () => {
 				},
 			],
 		});
-		await mocks.connection.callbacks.initialized?.();
-		await vi.dynamicImportSettled();
+		mocks.connection.callbacks.initialized?.();
+		await flushQueuedWork();
 	}
 
 	it("reports a missing workspace root", async () => {
@@ -305,7 +305,7 @@ describe("startServer", () => {
 		mocks.documents.fireDidChangeContent(document);
 		mocks.documents.fireDidClose(document);
 		mocks.connection.callbacks.initialize?.({});
-		await mocks.connection.callbacks.initialized?.();
+		mocks.connection.callbacks.initialized?.();
 		await vi.dynamicImportSettled();
 
 		expect(mocks.connection.console.error).toHaveBeenCalledWith(
@@ -354,7 +354,7 @@ describe("startServer", () => {
 					? { rootUri: pathToFileURL(workspaceRoot).href }
 					: { rootPath: workspaceRoot },
 			);
-			await mocks.connection.callbacks.initialized?.();
+			mocks.connection.callbacks.initialized?.();
 			await flushQueuedWork();
 
 			expect(mocks.lintSessionCreate).toHaveBeenCalled();
@@ -499,6 +499,37 @@ describe("startServer", () => {
 			expect.anything(),
 			nextConfigFileName,
 		);
+	});
+
+	it("clears diagnostics that a rebuild does not republish", async () => {
+		const filePath = path.join(workspaceRoot, "src/excluded.ts");
+		const fileUri = pathToFileURL(filePath).href;
+
+		mocks.lintPasses.push([
+			new Map([[filePath, createFileResults("before rebuild")]]),
+		]);
+
+		await startInitializedServer();
+		mocks.documents.fireDidChangeContent(
+			TextDocument.create(fileUri, "typescript", 1, "value"),
+		);
+		await flushQueuedWork();
+		mocks.connection.sendDiagnostics.mockClear();
+
+		mocks.connection.callbacks.changeWatchedFiles?.({
+			changes: [
+				{
+					type: FileChangeType.Changed,
+					uri: pathToFileURL(path.join(workspaceRoot, "flint.config.mjs")).href,
+				},
+			],
+		});
+		await flushQueuedWork();
+
+		expect(mocks.connection.sendDiagnostics).toHaveBeenCalledExactlyOnceWith({
+			diagnostics: [],
+			uri: fileUri,
+		});
 	});
 
 	it("rebuilds when an external watched file is created", async () => {
