@@ -124,8 +124,7 @@ describe(createLspFileSystemWatcher, () => {
 
 function createTestWatcher() {
 	let watchedFilesHandler:
-		| ((params: DidChangeWatchedFilesParams) => void)
-		| undefined;
+		((params: DidChangeWatchedFilesParams) => void) | undefined;
 	const connection = {
 		onDidChangeWatchedFiles(
 			handler: (params: DidChangeWatchedFilesParams) => void,

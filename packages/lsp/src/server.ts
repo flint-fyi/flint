@@ -13,7 +13,6 @@ import {
 import {
 	commonlyIgnoredPaths,
 	configFileNameCandidates,
-	createDiskBackedLinterHost,
 	createVFSLinterHost,
 	findConfigFileName,
 	isConfig,
@@ -24,6 +23,7 @@ import {
 	type LinterHostFileWatcherEvent,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
+import { createDiskBackedLinterHost } from "@flint.fyi/core/node";
 
 import { createCodeActions } from "./codeActions.ts";
 import { createLspFileSystemWatcher } from "./createLspFileSystemWatcher.ts";
@@ -98,12 +98,12 @@ export function startServer(): void {
 
 		configFileName = await findConfigFileName(vfsHost);
 
-		if (!configFileName) {
-			connection.console.error(`No flint.config.* found in ${workspaceRoot}`);
-		} else {
+		if (configFileName) {
 			connection.console.info(
 				`Flint LSP initialized with config: ${configFileName}`,
 			);
+		} else {
+			connection.console.error(`No flint.config.* found in ${workspaceRoot}`);
 		}
 
 		requestFullRebuild();
@@ -227,14 +227,14 @@ export function startServer(): void {
 
 	async function rebuildSession(expectedStructuralVersion: number) {
 		if (!vfsHost || !workspaceRoot) {
-			return undefined;
+			return;
 		}
 
 		const previousUris = new Set(storedResults.keys());
 		const nextConfigFileName = await findConfigFileName(vfsHost);
 
 		if (expectedStructuralVersion !== structuralVersion) {
-			return undefined;
+			return;
 		}
 
 		if (!nextConfigFileName) {
@@ -256,7 +256,7 @@ export function startServer(): void {
 
 		if (expectedStructuralVersion !== structuralVersion) {
 			nextLintSession[Symbol.dispose]();
-			return undefined;
+			return;
 		}
 
 		lintSession?.[Symbol.dispose]();
@@ -273,28 +273,19 @@ export function startServer(): void {
 		const session = lintSession;
 		if (!session) {
 			requestFullRebuild();
-			return undefined;
+			return;
 		}
 
-		const isStale = () =>
+		const results = await session.lintChangedFiles(filePaths);
+
+		if (
 			expectedStructuralVersion !== structuralVersion ||
-			session !== lintSession;
-		const publishedUris = new Set<string>();
+			session !== lintSession
+		) {
+			return;
+		}
 
-		await session.lintChangedFiles(filePaths, {
-			async onResults(results) {
-				if (isStale()) {
-					return;
-				}
-
-				for (const uri of await publishResults(results)) {
-					publishedUris.add(uri);
-				}
-			},
-			skipLanguageReports: false,
-		});
-
-		return isStale() ? undefined : publishedUris;
+		return publishResults(results);
 	}
 
 	async function loadConfigDefinition(configFileName: string) {

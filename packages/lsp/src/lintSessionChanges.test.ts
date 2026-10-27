@@ -38,7 +38,7 @@ describe(isStructuralFilePath, () => {
 
 describe(normalizeFilePath, () => {
 	it("normalizes path separators", () => {
-		expect(normalizeFilePath("C:\\workspace\\src\\index.ts")).toBe(
+		expect(normalizeFilePath(String.raw`C:\workspace\src\index.ts`)).toBe(
 			"C:/workspace/src/index.ts",
 		);
 	});

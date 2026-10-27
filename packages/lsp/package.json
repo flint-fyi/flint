@@ -10,23 +10,23 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"bin": {
-		"flint-lsp": "bin/index.js"
+		"lsp": "./src/bin/index.ts"
 	},
 	"files": [
-		"bin/",
 		"dist/"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project lsp"
+		"test": "vitest --project lsp"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
@@ -41,12 +41,16 @@
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
+		"bin": {
+			"lsp": "./dist/bin/index.mjs"
+		},
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

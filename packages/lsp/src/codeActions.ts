@@ -86,7 +86,7 @@ function createFilesSuggestionAction(
 	options: CodeActionOptions | undefined,
 ) {
 	if (!options) {
-		return undefined;
+		return;
 	}
 
 	const changes: Record<string, TextEdit[]> = {};
@@ -99,7 +99,7 @@ function createFilesSuggestionAction(
 		const targetUri = filePathToUri(filePath, options.workspaceRoot);
 		const targetDocument = options.getDocument(targetUri);
 		if (!targetDocument) {
-			return undefined;
+			return;
 		}
 
 		changes[targetUri] = fileChanges.map((fileChange) =>
@@ -108,7 +108,7 @@ function createFilesSuggestionAction(
 	}
 
 	if (!Object.keys(changes).length) {
-		return undefined;
+		return;
 	}
 
 	return {
