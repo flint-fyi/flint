@@ -12,7 +12,6 @@ import {
 
 import {
 	commonlyIgnoredPaths,
-	configFileNameCandidates,
 	createVFSLinterHost,
 	findConfigFileName,
 	isConfig,
@@ -23,15 +22,13 @@ import {
 	type VFSLinterHost,
 } from "@flint.fyi/core";
 import { createDiskBackedLinterHost } from "@flint.fyi/core/node";
+import { normalizePath } from "@flint.fyi/utils";
 
 import { createCodeActions } from "./codeActions.ts";
 import { createLspFileSystemWatcher } from "./createLspFileSystemWatcher.ts";
 import { mapFileResultsToDiagnostics } from "./diagnostics.ts";
 import { filePathToUri } from "./filePathToUri.ts";
-import {
-	isStructuralFilePath,
-	normalizeFilePath,
-} from "./lintSessionChanges.ts";
+import { isStructuralFilePath } from "./lintSessionChanges.ts";
 
 const LINT_DEBOUNCE_MS = 250;
 const CONFIG_RELOAD_QUERY_PARAMETER = "flintLspCacheBust";
@@ -46,8 +43,8 @@ export function startServer(): void {
 	let debounceTimer: NodeJS.Timeout | undefined;
 	let lintSession: LintSession | undefined;
 	let rebuildPending = false;
-	let vfsHost: undefined | VFSLinterHost;
 	let watchedFilesSubscription: Disposable | undefined;
+	let workspace: undefined | { root: string; vfsHost: VFSLinterHost };
 	let workspaceRoot: string | undefined;
 
 	connection.onInitialize((initializeParams: InitializeParams) => {
@@ -69,20 +66,27 @@ export function startServer(): void {
 			return;
 		}
 
+		const root = workspaceRoot;
 		const fileSystemWatcher = createLspFileSystemWatcher(connection);
-		vfsHost = createVFSLinterHost({
-			baseHost: withFileSystemWatcher(
-				createDiskBackedLinterHost(workspaceRoot),
-				fileSystemWatcher,
-			),
-		});
-		watchedFilesSubscription = fileSystemWatcher.watchDirectoryWithEventSync(
-			workspaceRoot,
+		workspace = {
+			root,
+			vfsHost: createVFSLinterHost({
+				baseHost: withFileSystemWatcher(
+					createDiskBackedLinterHost(root),
+					fileSystemWatcher,
+				),
+			}),
+		};
+		watchedFilesSubscription = fileSystemWatcher.watchDirectorySync(
+			root,
 			(filePath, event) => {
-				if (event === "changed") {
-					requestLint(filePath);
-				} else {
+				if (event !== "changed") {
 					requestRebuild();
+				} else if (
+					isStructuralFilePath(filePath, root) ||
+					!isOpenDocument(filePath)
+				) {
+					requestLint(filePath);
 				}
 			},
 			{ ignoredPaths: commonlyIgnoredPaths, recursive: true },
@@ -91,21 +95,26 @@ export function startServer(): void {
 		requestRebuild();
 	});
 
+	function isOpenDocument(filePath: string) {
+		return documents
+			.all()
+			.some(
+				(document) => normalizePath(fileURLToPath(document.uri)) === filePath,
+			);
+	}
+
 	function requestRebuild() {
 		rebuildPending = true;
 		scheduleLint();
 	}
 
 	function requestLint(filePath: string) {
-		if (
-			workspaceRoot &&
-			isStructuralFilePath(filePath, workspaceRoot, configFileNameCandidates)
-		) {
+		if (workspace && isStructuralFilePath(filePath, workspace.root)) {
 			requestRebuild();
 			return;
 		}
 
-		pendingFilePaths.add(normalizeFilePath(filePath));
+		pendingFilePaths.add(normalizePath(filePath));
 		scheduleLint();
 	}
 
@@ -119,105 +128,78 @@ export function startServer(): void {
 	}
 
 	async function lintPending() {
-		const previousUris = rebuildPending
-			? new Set(storedResults.keys())
-			: undefined;
-		if (rebuildPending) {
+		const previousUris = rebuildPending && new Set(storedResults.keys());
+		if (previousUris) {
 			rebuildPending = false;
 			await rebuildSession();
 		}
 
 		const filePaths = new Set(pendingFilePaths);
 		pendingFilePaths.clear();
-		const publishedUris = new Set<string>();
 
-		if (lintSession && filePaths.size) {
-			await lintSession.lintChangedFiles(filePaths, {
-				async onResults(results) {
-					for (const uri of await publishResults(results)) {
-						publishedUris.add(uri);
-					}
-				},
-			});
+		const results =
+			lintSession && filePaths.size
+				? await lintSession.lintChangedFiles(filePaths, {
+						onResults: publishResults,
+					})
+				: new Map<string, FileResults>();
+
+		if (!previousUris || !workspace) {
+			return;
 		}
 
-		if (previousUris) {
-			await clearDiagnostics(previousUris.difference(publishedUris));
-		}
+		const { root } = workspace;
+		await clearDiagnostics(
+			previousUris.difference(
+				new Set(
+					Array.from(results.keys(), (filePath) =>
+						filePathToUri(filePath, root),
+					),
+				),
+			),
+		);
 	}
 
 	async function rebuildSession() {
-		if (!vfsHost) {
+		if (!workspace) {
 			return;
 		}
 
-		const configFileName = await findConfigFileName(vfsHost);
-		if (!configFileName) {
-			lintSession?.[Symbol.dispose]();
-			lintSession = undefined;
-			connection.console.error(`No flint.config.* found in ${workspaceRoot}`);
-			return;
-		}
+		const configFileName = await findConfigFileName(workspace.vfsHost);
+		const nextLintSession = configFileName
+			? await LintSession.create(
+					await loadConfigDefinition(workspace.root, configFileName),
+					workspace.vfsHost,
+				)
+			: undefined;
 
-		const nextLintSession = await LintSession.create(
-			await loadConfigDefinition(configFileName),
-			vfsHost,
-		);
 		lintSession?.[Symbol.dispose]();
 		lintSession = nextLintSession;
+
+		if (!configFileName) {
+			connection.console.error(`No flint.config.* found in ${workspace.root}`);
+			return;
+		}
+
 		connection.console.info(`Flint LSP loaded config: ${configFileName}`);
 
 		for (const document of documents.all()) {
-			pendingFilePaths.add(normalizeFilePath(fileURLToPath(document.uri)));
+			pendingFilePaths.add(normalizePath(fileURLToPath(document.uri)));
 		}
-	}
-
-	async function loadConfigDefinition(configFileName: string) {
-		if (!workspaceRoot) {
-			throw new Error("No workspace root provided.");
-		}
-
-		const configUrl = pathToFileURL(path.join(workspaceRoot, configFileName));
-		configUrl.searchParams.set(
-			CONFIG_RELOAD_QUERY_PARAMETER,
-			Date.now().toString(),
-		);
-
-		const imported = (await import(configUrl.href)) as Record<string, unknown>;
-		const config: unknown = imported.default;
-
-		if (!isConfig(config)) {
-			throw new Error(`${configFileName} does not export a Flint config.`);
-		}
-
-		const validationError = validateConfigDefinition(
-			config.definition,
-			configFileName,
-		);
-
-		if (validationError) {
-			throw new Error(validationError);
-		}
-
-		return {
-			...config.definition,
-			filePath: configFileName,
-		};
 	}
 
 	async function publishResults(filesResults: Map<string, FileResults>) {
-		if (!workspaceRoot) {
-			throw new Error("No workspace root provided.");
+		if (!workspace) {
+			return;
 		}
-		const root = workspaceRoot;
-		const publishedUris = new Set<string>();
+
+		const { root } = workspace;
 
 		await Promise.all(
 			Array.from(filesResults, ([filePath, fileResults]) => {
 				const uri = filePathToUri(filePath, root);
 
 				storedResults.set(uri, fileResults);
-				publishedUris.add(uri);
 
 				return connection.sendDiagnostics({
 					diagnostics: mapFileResultsToDiagnostics(
@@ -228,8 +210,6 @@ export function startServer(): void {
 				});
 			}),
 		);
-
-		return publishedUris;
 	}
 
 	async function clearDiagnostics(uris: Set<string>) {
@@ -247,38 +227,37 @@ export function startServer(): void {
 			return document;
 		}
 
-		const sourceText = vfsHost?.readFileSync(fileURLToPath(uri));
+		const sourceText = workspace?.vfsHost.readFileSync(fileURLToPath(uri));
 		return sourceText == null
 			? undefined
 			: TextDocument.create(uri, "plaintext", 0, sourceText);
 	}
 
 	documents.onDidChangeContent((change) => {
-		if (!vfsHost) {
+		if (!workspace) {
 			return;
 		}
 
-		const filePath = normalizeFilePath(fileURLToPath(change.document.uri));
-		vfsHost.vfsUpsertFile(filePath, change.document.getText());
+		const filePath = normalizePath(fileURLToPath(change.document.uri));
+		workspace.vfsHost.vfsUpsertFile(filePath, change.document.getText());
 		requestLint(filePath);
 	});
 
 	documents.onDidClose((event) => {
-		if (!vfsHost) {
+		if (!workspace) {
 			return;
 		}
 
-		const filePath = normalizeFilePath(fileURLToPath(event.document.uri));
-		vfsHost.vfsDeleteFile(filePath);
+		const filePath = normalizePath(fileURLToPath(event.document.uri));
+		workspace.vfsHost.vfsDeleteFile(filePath);
 		requestLint(filePath);
 	});
 
 	connection.onCodeAction((codeActionParams) => {
 		const uri = codeActionParams.textDocument.uri;
 		const fileResults = storedResults.get(uri);
-		const document = documents.get(uri);
 
-		if (!fileResults || !document || !workspaceRoot) {
+		if (!fileResults || !workspace) {
 			return [];
 		}
 
@@ -286,10 +265,9 @@ export function startServer(): void {
 			uri,
 			codeActionParams.context,
 			fileResults.reports,
-			document,
 			{
 				getDocument: getDiagnosticDocument,
-				workspaceRoot,
+				workspaceRoot: workspace.root,
 			},
 		);
 	});
@@ -309,18 +287,44 @@ function formatUnknownError(error: unknown) {
 }
 
 function getWorkspaceRoot(initializeParams: InitializeParams) {
-	const workspaceFolderUri = initializeParams.workspaceFolders?.[0]?.uri;
-	if (workspaceFolderUri) {
-		return fileURLToPath(workspaceFolderUri);
-	}
-
 	const legacyInitializeParams = initializeParams as unknown as {
 		rootPath?: null | string;
 		rootUri?: null | string;
 	};
-	if (legacyInitializeParams.rootUri) {
-		return fileURLToPath(legacyInitializeParams.rootUri);
+	const uri =
+		initializeParams.workspaceFolders?.[0]?.uri ??
+		legacyInitializeParams.rootUri;
+
+	return uri
+		? fileURLToPath(uri)
+		: (legacyInitializeParams.rootPath ?? undefined);
+}
+
+async function loadConfigDefinition(root: string, configFileName: string) {
+	const configUrl = pathToFileURL(path.join(root, configFileName));
+	configUrl.searchParams.set(
+		CONFIG_RELOAD_QUERY_PARAMETER,
+		Date.now().toString(),
+	);
+
+	const imported = (await import(configUrl.href)) as Record<string, unknown>;
+	const config: unknown = imported.default;
+
+	if (!isConfig(config)) {
+		throw new Error(`${configFileName} does not export a Flint config.`);
 	}
 
-	return legacyInitializeParams.rootPath ?? undefined;
+	const validationError = validateConfigDefinition(
+		config.definition,
+		configFileName,
+	);
+
+	if (validationError) {
+		throw new Error(validationError);
+	}
+
+	return {
+		...config.definition,
+		filePath: configFileName,
+	};
 }

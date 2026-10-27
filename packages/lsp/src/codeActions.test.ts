@@ -103,18 +103,14 @@ describe(createCodeActions, () => {
 			],
 		};
 
-		const actions = createCodeActions(
-			sourceUri,
-			context,
-			[report],
-			sourceDocument,
-			{
-				getDocument(uri) {
-					return uri === targetUri ? targetDocument : undefined;
-				},
-				workspaceRoot,
-			},
-		);
+		const documents = new Map([
+			[sourceUri, sourceDocument],
+			[targetUri, targetDocument],
+		]);
+		const actions = createCodeActions(sourceUri, context, [report], {
+			getDocument: (uri) => documents.get(uri),
+			workspaceRoot,
+		});
 
 		expect(actions).toHaveLength(3);
 		expect(actions[0]?.edit).toEqual({
@@ -160,8 +156,13 @@ describe(createCodeActions, () => {
 		});
 		expect(actions[2]?.title).toBe("Suggestion: replaceWord");
 
+		documents.delete(targetUri);
+
 		expect(
-			createCodeActions(sourceUri, context, [report], sourceDocument),
+			createCodeActions(sourceUri, context, [report], {
+				getDocument: (uri) => documents.get(uri),
+				workspaceRoot,
+			}),
 		).toHaveLength(2);
 	});
 
@@ -202,7 +203,10 @@ describe(createCodeActions, () => {
 		};
 
 		expect(
-			createCodeActions(sourceUri, context, [report], sourceDocument),
+			createCodeActions(sourceUri, context, [report], {
+				getDocument: () => sourceDocument,
+				workspaceRoot: "/workspace",
+			}),
 		).toEqual([]);
 	});
 });

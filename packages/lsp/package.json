@@ -20,7 +20,7 @@
 		"./package.json": "./package.json"
 	},
 	"bin": {
-		"lsp": "./src/bin/index.ts"
+		"flint-lsp": "./src/bin/index.ts"
 	},
 	"files": [
 		"dist/"
@@ -46,7 +46,7 @@
 	"publishConfig": {
 		"access": "public",
 		"bin": {
-			"lsp": "./dist/bin/index.mjs"
+			"flint-lsp": "./dist/bin/index.mjs"
 		},
 		"exports": {
 			".": "./dist/index.mjs",

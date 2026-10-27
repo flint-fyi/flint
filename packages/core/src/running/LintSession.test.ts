@@ -258,6 +258,21 @@ describe(LintSession, () => {
 		);
 	});
 
+	it("relints only previously linted files when a cache-invalidating file changes", async () => {
+		const { configDefinition, host, root } = await createTestProject({
+			invalidatingFileNames: new Set(["a.txt"]),
+		});
+		using session = await LintSession.create(configDefinition, host);
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+
+		await session.lintFiles([aPath, bPath]);
+
+		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
+			new Set(["a.txt", "b.txt"]),
+		);
+	});
+
 	it("lints every file when a relinted file starts invalidating the cache", async () => {
 		const invalidatingFileNames = new Set<string>();
 		const { configDefinition, host, root } = await createTestProject({

@@ -7,7 +7,11 @@ import {
 	type Diagnostic,
 } from "vscode-languageserver/node.js";
 
-import type { FileChange, FileReport, Suggestion } from "@flint.fyi/core";
+import {
+	isSuggestionForFiles,
+	type FileChange,
+	type FileReport,
+} from "@flint.fyi/core";
 
 import { FLINT_DIAGNOSTIC_SOURCE } from "./diagnostics.ts";
 import { filePathToUri } from "./filePathToUri.ts";
@@ -21,8 +25,7 @@ export function createCodeActions(
 	uri: string,
 	context: CodeActionContext,
 	reports: FileReport[],
-	document: TextDocument,
-	options?: CodeActionOptions,
+	options: CodeActionOptions,
 ): CodeAction[] {
 	const reportsByKey = new Map(
 		reports.map((report) => [
@@ -37,11 +40,9 @@ export function createCodeActions(
 		]),
 	);
 
-	const actions: CodeAction[] = [];
-
-	for (const diagnostic of context.diagnostics) {
+	return context.diagnostics.flatMap((diagnostic) => {
 		if (diagnostic.source !== FLINT_DIAGNOSTIC_SOURCE) {
-			continue;
+			return [];
 		}
 
 		const report = reportsByKey.get(
@@ -54,110 +55,77 @@ export function createCodeActions(
 			),
 		);
 		if (!report) {
-			continue;
+			return [];
 		}
 
-		if (report.fix) {
-			actions.push(createFixAction(uri, diagnostic, report.fix, document));
-		}
-
-		if (report.suggestions) {
-			for (const suggestion of report.suggestions) {
-				const action = createSuggestionAction(
-					uri,
+		return [
+			report.fix &&
+				createAction(
 					diagnostic,
-					suggestion,
-					document,
+					`Fix: ${diagnostic.message}`,
+					[[uri, report.fix]],
 					options,
-				);
-				if (action) {
-					actions.push(action);
-				}
-			}
-		}
-	}
-
-	return actions;
+					true,
+				),
+			...(report.suggestions ?? []).map((suggestion) =>
+				createAction(
+					diagnostic,
+					`Suggestion: ${suggestion.id}`,
+					isSuggestionForFiles(suggestion)
+						? Object.entries(suggestion.files).map(
+								([filePath, fileChanges]) => [
+									filePathToUri(filePath, options.workspaceRoot),
+									fileChanges,
+								],
+							)
+						: [[uri, [suggestion]]],
+					options,
+				),
+			),
+		].filter((action) => action !== undefined);
+	});
 }
 
-function createFilesSuggestionAction(
+function createAction(
 	diagnostic: Diagnostic,
-	suggestion: Extract<Suggestion, { files: object }>,
-	options: CodeActionOptions | undefined,
-) {
-	if (!options) {
-		return;
-	}
-
+	title: string,
+	fileChangesByUri: [string, FileChange[] | undefined][],
+	options: CodeActionOptions,
+	isPreferred?: true,
+): CodeAction | undefined {
 	const changes: Record<string, TextEdit[]> = {};
 
-	for (const [filePath, fileChanges] of Object.entries(suggestion.files)) {
+	for (const [uri, fileChanges] of fileChangesByUri) {
 		if (!fileChanges?.length) {
 			continue;
 		}
 
-		const targetUri = filePathToUri(filePath, options.workspaceRoot);
-		const targetDocument = options.getDocument(targetUri);
-		if (!targetDocument) {
-			return;
+		const document = options.getDocument(uri);
+		if (!document) {
+			return undefined;
 		}
 
-		changes[targetUri] = fileChanges.map((fileChange) =>
-			fileChangeToTextEdit(fileChange, targetDocument),
+		changes[uri] = fileChanges.map((fileChange) =>
+			TextEdit.replace(
+				{
+					end: document.positionAt(fileChange.range.end),
+					start: document.positionAt(fileChange.range.begin),
+				},
+				fileChange.text,
+			),
 		);
 	}
 
 	if (!Object.keys(changes).length) {
-		return;
+		return undefined;
 	}
 
 	return {
 		diagnostics: [diagnostic],
 		edit: { changes },
+		...(isPreferred && { isPreferred }),
 		kind: CodeActionKind.QuickFix,
-		title: `Suggestion: ${suggestion.id}`,
-	};
-}
-
-function createFixAction(
-	uri: string,
-	diagnostic: Diagnostic,
-	fixes: FileChange[],
-	document: TextDocument,
-) {
-	return {
-		diagnostics: [diagnostic],
-		edit: {
-			changes: {
-				[uri]: fixes.map((fix) => fileChangeToTextEdit(fix, document)),
-			},
-		},
-		isPreferred: true,
-		kind: CodeActionKind.QuickFix,
-		title: `Fix: ${diagnostic.message}`,
-	};
-}
-
-function createSuggestionAction(
-	uri: string,
-	diagnostic: Diagnostic,
-	suggestion: Suggestion,
-	document: TextDocument,
-	options: CodeActionOptions | undefined,
-) {
-	if ("files" in suggestion) {
-		return createFilesSuggestionAction(diagnostic, suggestion, options);
-	}
-
-	return {
-		diagnostics: [diagnostic],
-		edit: {
-			changes: {
-				[uri]: [fileChangeToTextEdit(suggestion, document)],
-			},
-		},
-		kind: CodeActionKind.QuickFix,
-		title: `Suggestion: ${suggestion.id}`,
+		title,
 	};
 }
 
@@ -169,14 +137,4 @@ function diagnosticKey(
 	endColumn: number,
 ) {
 	return [id, beginLine, beginColumn, endLine, endColumn].join("|");
-}
-
-function fileChangeToTextEdit(change: FileChange, document: TextDocument) {
-	return TextEdit.replace(
-		{
-			end: document.positionAt(change.range.end),
-			start: document.positionAt(change.range.begin),
-		},
-		change.text,
-	);
 }

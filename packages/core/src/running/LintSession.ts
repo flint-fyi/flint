@@ -1,7 +1,7 @@
 import { CachedFactory } from "cached-factory";
 import { isAbsolute, resolve } from "pathe";
 
-import { pathKey } from "@flint.fyi/utils";
+import { pathKey, type PromiseOrSync } from "@flint.fyi/utils";
 
 import { collectTransitiveDependents } from "../cache/collectTransitiveDependents.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
@@ -24,7 +24,7 @@ import { runRules } from "./runRules.ts";
 export interface LintSessionChangedLintOptions extends LintSessionLintOptions {
 	onResults?: (
 		results: Map<string, FinalizedFileResults>,
-	) => Promise<void> | void;
+	) => PromiseOrSync<void>;
 }
 
 export interface LintSessionLintOptions {
@@ -139,7 +139,7 @@ export class LintSession implements Disposable {
 		}
 
 		if (changedGlobalDependency) {
-			await lintPass(this.allFilePaths.difference(allResults));
+			await lintPass(new Set(this.storedResults.keys()).difference(allResults));
 		}
 
 		return allResults;

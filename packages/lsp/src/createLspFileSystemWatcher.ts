@@ -1,3 +1,4 @@
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { FileChangeType, type Connection } from "vscode-languageserver/node.js";
@@ -11,7 +12,7 @@ import type {
 import { normalizePath } from "@flint.fyi/utils";
 
 export interface LspFileSystemWatcher extends FileSystemWatcher {
-	watchDirectoryWithEventSync: (
+	watchDirectorySync: (
 		directoryPathAbsolute: string,
 		callback: LspFileSystemDirectoryWatcher,
 		options: WatchDirectoryOptions,
@@ -20,6 +21,7 @@ export interface LspFileSystemWatcher extends FileSystemWatcher {
 
 interface DirectorySubscription {
 	callback: LspFileSystemDirectoryWatcher;
+	ignoredPaths: string[];
 	recursive: boolean;
 	rootPath: string;
 }
@@ -50,53 +52,32 @@ export function createLspFileSystemWatcher(
 			const event = FILE_CHANGE_TYPE_TO_EVENT[change.type];
 
 			for (const subscription of directorySubscriptions) {
-				if (
-					isFileUnderDirectory(
-						filePath,
-						subscription.rootPath,
-						subscription.recursive,
-					)
-				) {
+				if (isWatchedBy(subscription, filePath)) {
 					subscription.callback(filePath, event);
 				}
 			}
 
-			const fileWatchers = fileSubscriptions.get(filePath);
-			if (fileWatchers) {
-				for (const callback of fileWatchers) {
-					callback(event);
-				}
+			for (const callback of fileSubscriptions.get(filePath) ?? []) {
+				callback(event);
 			}
 		}
 	});
 
-	function watchDirectoryWithEventSync(
-		directoryPathAbsolute: string,
-		callback: LspFileSystemDirectoryWatcher,
-		options: WatchDirectoryOptions,
-	) {
-		const subscription: DirectorySubscription = {
-			callback,
-			recursive: options.recursive,
-			rootPath: normalizePath(directoryPathAbsolute),
-		};
-		directorySubscriptions.add(subscription);
-		return {
-			[Symbol.dispose]() {
-				directorySubscriptions.delete(subscription);
-			},
-		};
-	}
-
 	return {
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
-			return watchDirectoryWithEventSync(
-				directoryPathAbsolute,
+			const subscription: DirectorySubscription = {
 				callback,
-				options,
-			);
+				ignoredPaths: options.ignoredPaths,
+				recursive: options.recursive,
+				rootPath: normalizePath(directoryPathAbsolute),
+			};
+			directorySubscriptions.add(subscription);
+			return {
+				[Symbol.dispose]() {
+					directorySubscriptions.delete(subscription);
+				},
+			};
 		},
-		watchDirectoryWithEventSync,
 		watchFileSync(filePathAbsolute, callback) {
 			const normalizedFilePath = normalizePath(filePathAbsolute);
 			let fileWatchers = fileSubscriptions.get(normalizedFilePath);
@@ -107,12 +88,7 @@ export function createLspFileSystemWatcher(
 			fileWatchers.add(callback);
 			return {
 				[Symbol.dispose]() {
-					const currentFileWatchers = fileSubscriptions.get(normalizedFilePath);
-					if (!currentFileWatchers) {
-						return;
-					}
-					currentFileWatchers.delete(callback);
-					if (!currentFileWatchers.size) {
+					if (fileWatchers.delete(callback) && !fileWatchers.size) {
 						fileSubscriptions.delete(normalizedFilePath);
 					}
 				},
@@ -121,20 +97,26 @@ export function createLspFileSystemWatcher(
 	};
 }
 
-function isFileUnderDirectory(
+function isWatchedBy(
+	{ ignoredPaths, recursive, rootPath }: DirectorySubscription,
 	filePath: string,
-	rootPath: string,
-	recursive: boolean,
 ) {
 	if (filePath === rootPath) {
 		return true;
 	}
+
 	if (!filePath.startsWith(rootPath + "/")) {
 		return false;
 	}
-	if (recursive) {
-		return true;
-	}
-	const remainder = filePath.slice(rootPath.length + 1);
-	return !remainder.includes("/");
+
+	const relativePath = filePath.slice(rootPath.length);
+
+	return (
+		(recursive || path.posix.dirname(filePath) === rootPath) &&
+		ignoredPaths.every(
+			(ignoredPath) =>
+				!relativePath.endsWith(ignoredPath) &&
+				!relativePath.includes(ignoredPath + "/"),
+		)
+	);
 }

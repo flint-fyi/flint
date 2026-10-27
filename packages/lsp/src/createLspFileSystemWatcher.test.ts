@@ -18,17 +18,11 @@ describe(createLspFileSystemWatcher, () => {
 		const rootPath = normalizePath(path.resolve("workspace"));
 		const filePath = normalizePath(path.join(rootPath, "src/file.ts"));
 		const directoryCallback = vi.fn();
-		const directoryEventCallback = vi.fn();
 		const firstFileCallback = vi.fn();
 		const secondFileCallback = vi.fn();
 		const directorySubscription = watcher.watchDirectorySync(
 			rootPath,
 			directoryCallback,
-			{ ignoredPaths: [], recursive: true },
-		);
-		const directoryEventSubscription = watcher.watchDirectoryWithEventSync(
-			rootPath,
-			directoryEventCallback,
 			{ ignoredPaths: [], recursive: true },
 		);
 		const firstFileSubscription = watcher.watchFileSync(
@@ -51,10 +45,6 @@ describe(createLspFileSystemWatcher, () => {
 			filePath,
 			"changed",
 		);
-		expect(directoryEventCallback).toHaveBeenCalledExactlyOnceWith(
-			filePath,
-			"changed",
-		);
 		expect(firstFileCallback).toHaveBeenCalledExactlyOnceWith("changed");
 		expect(secondFileCallback).toHaveBeenCalledExactlyOnceWith("changed");
 
@@ -70,14 +60,12 @@ describe(createLspFileSystemWatcher, () => {
 		secondFileSubscription[Symbol.dispose]();
 		secondFileSubscription[Symbol.dispose]();
 		directorySubscription[Symbol.dispose]();
-		directoryEventSubscription[Symbol.dispose]();
 		emit({
 			type: FileChangeType.Deleted,
 			uri: pathToFileURL(filePath).href,
 		});
 
 		expect(directoryCallback).toHaveBeenCalledTimes(2);
-		expect(directoryEventCallback).toHaveBeenCalledTimes(2);
 		expect(secondFileCallback).toHaveBeenCalledTimes(2);
 	});
 
@@ -85,11 +73,10 @@ describe(createLspFileSystemWatcher, () => {
 		const { emit, watcher } = createTestWatcher();
 		const rootPath = normalizePath(path.resolve("workspace"));
 		const callback = vi.fn();
-		const subscription = watcher.watchDirectoryWithEventSync(
-			rootPath,
-			callback,
-			{ ignoredPaths: [], recursive: false },
-		);
+		const subscription = watcher.watchDirectorySync(rootPath, callback, {
+			ignoredPaths: [],
+			recursive: false,
+		});
 
 		emit(
 			{
@@ -115,6 +102,35 @@ describe(createLspFileSystemWatcher, () => {
 		expect(callback).toHaveBeenNthCalledWith(
 			2,
 			normalizePath(path.join(rootPath, "direct.ts")),
+			"changed",
+		);
+
+		subscription[Symbol.dispose]();
+	});
+
+	it("skips changes under ignored paths", () => {
+		const { emit, watcher } = createTestWatcher();
+		const rootPath = normalizePath(path.resolve("workspace"));
+		const callback = vi.fn();
+		const subscription = watcher.watchDirectorySync(rootPath, callback, {
+			ignoredPaths: ["/node_modules"],
+			recursive: true,
+		});
+
+		emit(
+			{
+				type: FileChangeType.Changed,
+				uri: pathToFileURL(path.join(rootPath, "node_modules/lib/package.json"))
+					.href,
+			},
+			{
+				type: FileChangeType.Changed,
+				uri: pathToFileURL(path.join(rootPath, "src/file.ts")).href,
+			},
+		);
+
+		expect(callback).toHaveBeenCalledExactlyOnceWith(
+			normalizePath(path.join(rootPath, "src/file.ts")),
 			"changed",
 		);
 
