@@ -3,11 +3,32 @@
 	"automerge": true,
 	"customManagers": [
 		{
+			"customType": "regex",
+			"datasourceTemplate": "github-tags",
+			"depNameTemplate": "denoland/deno",
+			"managerFilePatterns": [
+				"/^packages\\/rule-data\\/src\\/test-utils\\/deno\\.ts$/"
+			],
+			"matchStrings": [
+				"https://raw\\.githubusercontent\\.com/denoland/deno/(?<currentValue>v\\d+\\.\\d+\\.\\d+)/cli/schemas/lint-rules\\.v1\\.json"
+			],
+			"versioningTemplate": "semver"
+		},
+		{
 			"customType": "jsonata",
 			"fileFormat": "json",
 			"managerFilePatterns": ["/package.json/"],
 			"matchStrings": [
 				"devEngines.packageManager ? [{ \"depName\": devEngines.packageManager.name, \"currentValue\": devEngines.packageManager.version, \"datasource\": \"npm\", \"versioning\": \"npm\" }] : []"
+			]
+		},
+		{
+			"customType": "regex",
+			"managerFilePatterns": [
+				"/^\\.github\\/actions\\/setup\\/action\\.yaml$/"
+			],
+			"matchStrings": [
+				"# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\n {2}node-version:\\s*\\n(?: {4}[^\\n]*\\n)*? {4}default: (?<currentValue>\\S+)"
 			]
 		}
 	],

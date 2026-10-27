@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -14,11 +14,13 @@ const globalReplacements = new Map([
 	["isNaN", "Number.isNaN"],
 ]);
 
-function isDeclarationName(node: ts.Identifier) {
+function isDeclarationName(node: AST.Identifier) {
 	return (
-		(ts.isFunctionDeclaration(node.parent) && node.parent.name === node) ||
-		(ts.isVariableDeclaration(node.parent) && node.parent.name === node) ||
-		(ts.isParameter(node.parent) && node.parent.name === node)
+		(node.parent.kind === SyntaxKind.FunctionDeclaration &&
+			node.parent.name === node) ||
+		(node.parent.kind === SyntaxKind.VariableDeclaration &&
+			node.parent.name === node) ||
+		(node.parent.kind === SyntaxKind.Parameter && node.parent.name === node)
 	);
 }
 
@@ -31,15 +33,17 @@ function isLeftHandSide(node: AST.Identifier) {
 	);
 }
 
-function isPropertyAccessOfNode(node: ts.Identifier) {
+function isPropertyAccessOfNode(node: AST.Identifier) {
 	return (
-		ts.isPropertyAccessExpression(node.parent) && node.parent.name === node
+		node.parent.kind === SyntaxKind.PropertyAccessExpression &&
+		node.parent.name === node
 	);
 }
 
-function isPropertyShorthandOfNode(node: ts.Identifier) {
+function isPropertyShorthandOfNode(node: AST.Identifier) {
 	return (
-		ts.isShorthandPropertyAssignment(node.parent) && node.parent.name === node
+		node.parent.kind === SyntaxKind.ShorthandPropertyAssignment &&
+		node.parent.name === node
 	);
 }
 

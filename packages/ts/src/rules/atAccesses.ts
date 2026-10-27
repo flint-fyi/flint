@@ -113,9 +113,5 @@ function isLengthMinusAccess(
 	}
 
 	const offset = Number(right.text);
-	if (!Number.isInteger(offset) || offset <= 0) {
-		return false;
-	}
-
-	return true;
+	return Number.isInteger(offset) && offset > 0;
 }

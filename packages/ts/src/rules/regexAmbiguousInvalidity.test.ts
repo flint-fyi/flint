@@ -38,8 +38,8 @@ const re = /}/;
 			code: String.raw`
 const re = /\c;/;
 `,
-			snapshot: `
-const re = /\\c;/;
+			snapshot: String.raw`
+const re = /\c;/;
             ~
             Invalid or incomplete control escape sequence.
 `,
@@ -48,72 +48,72 @@ const re = /\\c;/;
 			code: String.raw`
 const re = /\p/;
 `,
-			snapshot: `
-const re = /\\p/;
+			snapshot: String.raw`
+const re = /\p/;
             ~~
-            Invalid property escape sequence '\\p'.
+            Invalid property escape sequence '\p'.
 `,
 		},
 		{
 			code: String.raw`
 const re = /\; \_ \a \- \'/;
 `,
-			snapshot: `
-const re = /\\; \\_ \\a \\- \\'/;
+			snapshot: String.raw`
+const re = /\; \_ \a \- \'/;
             ~~
-            Useless escape '\\;'.
+            Useless escape '\;'.
                ~~
-               Useless escape '\\_'.
+               Useless escape '\_'.
                   ~~
-                  Useless escape '\\a'.
+                  Useless escape '\a'.
                      ~~
-                     Useless escape '\\-'.
+                     Useless escape '\-'.
                         ~~
-                        Useless escape '\\''.
+                        Useless escape '\''.
 `,
 		},
 		{
 			code: String.raw`
 const re = /[\; \_ \a \']/;
 `,
-			snapshot: `
-const re = /[\\; \\_ \\a \\']/;
+			snapshot: String.raw`
+const re = /[\; \_ \a \']/;
              ~~
-             Useless escape '\\;'.
+             Useless escape '\;'.
                 ~~
-                Useless escape '\\_'.
+                Useless escape '\_'.
                    ~~
-                   Useless escape '\\a'.
+                   Useless escape '\a'.
                       ~~
-                      Useless escape '\\''.
+                      Useless escape '\''.
 `,
 		},
 		{
 			code: String.raw`
 const re = /\q/;
 `,
-			snapshot: `
-const re = /\\q/;
+			snapshot: String.raw`
+const re = /\q/;
             ~~
-            Useless escape '\\q'.
+            Useless escape '\q'.
 `,
 		},
 		{
 			code: String.raw`
 const re = /\!/;
 `,
-			snapshot: `
-const re = /\\!/;
+			snapshot: String.raw`
+const re = /\!/;
             ~~
-            Useless escape '\\!'.
+            Useless escape '\!'.
 `,
 		},
 		{
 			code: String.raw`
 const re = /[\w-a]/;
 `,
-			snapshot: `
-const re = /[\\w-a]/;
+			snapshot: String.raw`
+const re = /[\w-a]/;
              ~~
              Invalid character class range. A character set cannot be the minimum or maximum of a character class range.
 `,
@@ -122,14 +122,14 @@ const re = /[\\w-a]/;
 			code: String.raw`
 const re = /[a-\w]/;
 `,
-			snapshot: `
-const re = /[a-\\w]/;
+			snapshot: String.raw`
+const re = /[a-\w]/;
                ~~
                Invalid character class range. A character set cannot be the minimum or maximum of a character class range.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 const re = /(?!a)+/;
 `,
 			snapshot: `
@@ -142,30 +142,30 @@ const re = /(?!a)+/;
 			code: String.raw`
 const re = RegExp("\\1");
 `,
-			snapshot: `
-const re = RegExp("\\\\1");
+			snapshot: String.raw`
+const re = RegExp("\\1");
                    ~~
-                   Invalid legacy octal escape sequence '\\1'. Use a hexadecimal escape instead.
+                   Invalid legacy octal escape sequence '\1'. Use a hexadecimal escape instead.
 `,
 		},
 		{
 			code: String.raw`
 const re = new RegExp("\\1");
 `,
-			snapshot: `
-const re = new RegExp("\\\\1");
+			snapshot: String.raw`
+const re = new RegExp("\\1");
                        ~~
-                       Invalid legacy octal escape sequence '\\1'. Use a hexadecimal escape instead.
+                       Invalid legacy octal escape sequence '\1'. Use a hexadecimal escape instead.
 `,
 		},
 		{
 			code: String.raw`
 const re = RegExp("\\x1");
 `,
-			snapshot: `
-const re = RegExp("\\\\x1");
+			snapshot: String.raw`
+const re = RegExp("\\x1");
                    ~~
-                   Incomplete escape sequence '\\x'.
+                   Incomplete escape sequence '\x'.
 `,
 		},
 		{
@@ -214,7 +214,7 @@ const re = new RegExp("a]");
 		String.raw`const re = /\\/;`,
 		String.raw`const re = /\(/;`,
 		String.raw`const re = /\)/;`,
-		String.raw`const re = /[A--B]/v;`,
+		"const re = /[A--B]/v;",
 		String.raw`const re = RegExp("\\d+");`,
 		String.raw`const re = new RegExp("\\w+");`,
 		String.raw`const re = RegExp("\\1", "u");`,

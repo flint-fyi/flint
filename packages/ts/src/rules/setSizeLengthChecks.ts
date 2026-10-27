@@ -1,14 +1,4 @@
-import {
-	isArrayLiteralExpression,
-	isIdentifier,
-	isNewExpression,
-	isParenthesizedExpression,
-	isSpreadElement,
-	isVariableDeclaration,
-	NodeFlags,
-	SyntaxKind,
-	type Program,
-} from "typescript";
+import { NodeFlags, SyntaxKind, type Program } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -26,8 +16,8 @@ function isNewSetExpression(
 	program: Program,
 ) {
 	return (
-		isNewExpression(expression) &&
-		isIdentifier(expression.expression) &&
+		expression.kind === SyntaxKind.NewExpression &&
+		expression.expression.kind === SyntaxKind.Identifier &&
 		expression.expression.text === "Set" &&
 		isGlobalDeclarationOfName(
 			expression.expression,
@@ -49,15 +39,12 @@ function isSetExpression(
 		return true;
 	}
 
-	if (!isIdentifier(unwrapped)) {
+	if (unwrapped.kind !== SyntaxKind.Identifier) {
 		return false;
 	}
 
 	const symbol = typeChecker.getSymbolAtLocation(unwrapped);
-	if (
-		!symbol?.valueDeclaration ||
-		!isVariableDeclaration(symbol.valueDeclaration)
-	) {
+	if (symbol?.valueDeclaration?.kind !== SyntaxKind.VariableDeclaration) {
 		return false;
 	}
 
@@ -79,7 +66,7 @@ function isSetExpression(
 }
 
 function unwrapParentheses(expression: AST.Expression): AST.Expression {
-	while (isParenthesizedExpression(expression)) {
+	while (expression.kind === SyntaxKind.ParenthesizedExpression) {
 		expression = expression.expression;
 	}
 	return expression;
@@ -113,7 +100,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.questionDotToken ||
 						node.name.text !== "length" ||
-						!isArrayLiteralExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.ArrayLiteralExpression ||
 						node.expression.elements.length !== 1
 					) {
 						return;
@@ -123,7 +110,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const element = node.expression.elements[0]!;
 
 					if (
-						!isSpreadElement(element) ||
+						element.kind !== SyntaxKind.SpreadElement ||
 						!isSetExpression(element.expression, typeChecker, program)
 					) {
 						return;

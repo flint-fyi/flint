@@ -89,13 +89,13 @@ function getSingleParameterName(
 	parameters: NodeArray<AST.ParameterDeclaration>,
 ) {
 	if (parameters.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const parameter = parameters[0]!;
 	if (parameter.name.kind !== SyntaxKind.Identifier) {
-		return undefined;
+		return;
 	}
 
 	return parameter.name.text;

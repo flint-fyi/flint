@@ -174,7 +174,9 @@ function getExpectedValueDescription(
 		case "token": {
 			const validTokens = tokenValues[propertyName];
 			if (validTokens !== undefined) {
-				const tokens = Array.from(validTokens).sort();
+				const tokens = Array.from(validTokens).toSorted((a, b) =>
+					a.localeCompare(b, "en-US"),
+				);
 				return tokens.length > 4
 					? `one of: ${tokens.slice(0, 4).join(", ")}, ...`
 					: `one of: ${tokens.join(", ")}`;
@@ -315,9 +317,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						prop: propertyName,
 					},
 					message: "invalidPropType",
-					range: property.initializer
-						? getTSNodeRange(property.initializer, sourceFile)
-						: getTSNodeRange(property.name, sourceFile),
+					range: getTSNodeRange(
+						property.initializer ?? property.name,
+						sourceFile,
+					),
 				});
 			}
 		}

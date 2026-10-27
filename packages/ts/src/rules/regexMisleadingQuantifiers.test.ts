@@ -14,10 +14,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:a?b*|c+){4}/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:a?b*|c+){4}/;
  ~~~~~~~~~~~~~~
  Quantifier minimum is 4 but the element can match empty. Consider using '{0,4}' instead.

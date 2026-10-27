@@ -39,10 +39,10 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-["\uD83D"]
+["\u{D83D}"]
 `,
 			snapshot: `
-["\uD83D"]
+["\u{D83D}"]
  ~~~
  This string contains an unmatched surrogate.
 `,
@@ -50,12 +50,12 @@ ruleTester.describe(rule, {
 		{
 			code: `
 {
-    "emoji": "\uD83D"
+    "emoji": "\u{D83D}"
 }
 `,
 			snapshot: `
 {
-    "emoji": "\uD83D"
+    "emoji": "\u{D83D}"
              ~~~
              This string contains an unmatched surrogate.
 }
@@ -153,7 +153,7 @@ ruleTester.describe(rule, {
     "numbers": [0, 100, -50, 3.14]
 }
 `,
-		`["\uD83D\uDD25"]`,
+		`["\u{1F525}"]`,
 		`
 {
     "emoji": "🔥"

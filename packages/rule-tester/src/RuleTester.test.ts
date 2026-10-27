@@ -5,11 +5,15 @@ import { describe, expect, it, vi } from "vitest";
 import {
 	createLanguage,
 	RuleCreator,
+	type AnyLanguageFile,
 	type LanguageReports,
+	type LinterHost,
+	type RuleReport,
 } from "@flint.fyi/core";
 
 import {
 	RuleTester,
+	type RuleTesterOptions,
 	type TestCases,
 	type TesterSetupDescribe,
 	type TesterSetupIt,
@@ -113,12 +117,141 @@ Another language report.`,
 		await expect(first()).resolves.toBeUndefined();
 		await expect(second()).resolves.toBeUndefined();
 	});
+
+	it("rejects cross-file suggestion mismatches through the named test callback", async () => {
+		const registerTest = vi.fn<TesterSetupIt>();
+		createTestSetups({
+			it: registerTest,
+			report: {
+				filePath: "file.ts",
+				message: "",
+				range: { begin: 0, end: 1 },
+				suggestions: [{ files: { "unexpected.ts": [] }, id: "suggestion" }],
+			},
+			testCases: {
+				invalid: [
+					{
+						code: "abc",
+						name: "cross-file target mismatch",
+						snapshot: "abc\n~\n",
+						suggestions: [
+							{
+								files: { "expected.ts": [{ original: "abc", updated: "abc" }] },
+								id: "suggestion",
+							},
+						],
+					},
+				],
+				valid: [],
+			},
+		});
+
+		expect(registerTest).toHaveBeenCalledExactlyOnceWith(
+			"cross-file target mismatch",
+			expect.any(Function),
+		);
+		const registeredTest = registerTest.mock.calls[0];
+		assert.ok(registeredTest);
+		await expect(registeredTest[1]()).rejects.toThrow(
+			"Reported suggestion target paths must exactly match expected target paths.",
+		);
+	});
+
+	it.each([false, true])(
+		"roots virtual files at / with defaults: %s",
+		async (withDefaults) => {
+			const getLanguageReports = vi.fn(
+				(file: AnyLanguageFile, host: LinterHost) => {
+					expect(host.getCurrentDirectory()).toBe("/");
+					expect(file.about.filePathAbsolute).toBe("/src/file.ts");
+					expect(host.readFileSync("/src/file.ts")).toBe("abc");
+					expect(host.readFileSync("/dictionary.json")).toBe("case");
+					expect(host.readFileSync("/default.json")).toBe(
+						withDefaults ? "default" : undefined,
+					);
+					return [];
+				},
+			);
+			await expect(
+				createTestSetup({
+					getLanguageReports,
+					testCases: {
+						invalid: [],
+						valid: [
+							{
+								code: "abc",
+								fileName: "src/file.ts",
+								files: { "dictionary.json": "case" },
+							},
+						],
+					},
+					testerOptions: {
+						...(withDefaults && {
+							defaults: {
+								files: {
+									"default.json": "default",
+									"dictionary.json": "default",
+								},
+							},
+						}),
+					},
+				})(),
+			).resolves.toBeUndefined();
+			expect(getLanguageReports).toHaveBeenCalledOnce();
+		},
+	);
+
+	it("applies absolute suggestion targets using relative expectations", async () => {
+		await expect(
+			createTestSetup({
+				report: {
+					message: "",
+					range: { begin: 0, end: 1 },
+					suggestions: [
+						{
+							files: {
+								"/dictionary.json": [
+									{ range: { begin: 0, end: 4 }, text: "next" },
+								],
+							},
+							id: "dictionary",
+						},
+					],
+				},
+				testCases: {
+					invalid: [
+						{
+							code: "abc",
+							fileName: "src/file.ts",
+							files: { "dictionary.json": "case" },
+							snapshot: "abc\n~\n",
+							suggestions: [
+								{
+									files: {
+										"dictionary.json": [{ original: "case", updated: "next" }],
+									},
+									id: "dictionary",
+								},
+							],
+						},
+					],
+					valid: [],
+				},
+			})(),
+		).resolves.toBeUndefined();
+	});
 });
 
 interface TestSetupOptions {
 	assertNoLanguageReports?: boolean;
-	getLanguageReports?: () => LanguageReports;
+	getLanguageReports?: (
+		file: AnyLanguageFile,
+		host: LinterHost,
+	) => LanguageReports;
+	it?: TesterSetupIt;
+	report?: RuleReport<"">;
 	testCases?: TestCases<undefined>;
+	testerOptions?: RuleTesterOptions;
 }
 
 function createTestSetup(options: TestSetupOptions): () => Promise<void> {
@@ -130,7 +263,10 @@ function createTestSetup(options: TestSetupOptions): () => Promise<void> {
 function createTestSetups({
 	assertNoLanguageReports,
 	getLanguageReports,
+	it: registerTest,
+	report,
 	testCases = { invalid: [], valid: [""] },
+	testerOptions,
 }: TestSetupOptions): (() => Promise<void>)[] {
 	const testSetups: (() => Promise<void>)[] = [];
 	const collectTest: TesterSetupIt = (_description, setup): void => {
@@ -154,15 +290,21 @@ function createTestSetups({
 	}).createRule(language, {
 		about: { description: "", id: "languageReports" },
 		messages: { "": { primary: "", secondary: [], suggestions: [] } },
-		setup: () => ({}),
+		setup: (context) => {
+			if (report) {
+				context.report(report);
+			}
+			return {};
+		},
 	});
 
 	new RuleTester({
+		...testerOptions,
 		...(assertNoLanguageReports === undefined
 			? {}
 			: { assertNoLanguageReports }),
 		describe: runDescribe,
-		it: collectTest,
+		it: registerTest ?? collectTest,
 		only: collectTest,
 		skip: collectTest,
 	}).describe(rule, testCases);

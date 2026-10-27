@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import path from "node:path";
 
 import { findRootSync } from "@altano/repository-tools/findRootSync.js";
+import { dirname, join, resolve } from "pathe";
 import { glob as tinyglobby } from "tinyglobby";
 
 import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
@@ -14,7 +14,7 @@ import type {
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
-	const caseSensitiveFS = isFileSystemCaseSensitive();
+	const caseSensitiveFs = isFileSystemCaseSensitive();
 	cwd = normalizePath(cwd);
 	const foundRepositoryRoot = findRootSync(cwd);
 	const repositoryRoot =
@@ -30,6 +30,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			normalizedChangedFilePath: null | string,
 			event: LinterHostFileWatcherEvent,
 		) => void,
+		ignore?: (relativePath: string) => boolean,
 	): Disposable {
 		const normalizedWatchBasename = normalizedWatchPath.slice(
 			normalizedWatchPath.lastIndexOf("/") + 1,
@@ -60,7 +61,18 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const watcher = fs
 				.watch(
 					normalizedWatchPath,
-					{ persistent: false, recursive },
+					{
+						ignore:
+							ignore &&
+							((filename) =>
+								// Root deletion can report a basename or Windows namespaced path.
+								// Let the callback handle it so watching resumes after recreation.
+								filename !== normalizedWatchBasename &&
+								!filename.startsWith("\\\\?\\") &&
+								ignore(filename)),
+						persistent: false,
+						recursive,
+					},
 					(_event, filename) => {
 						if (unwatched) {
 							return;
@@ -74,21 +86,17 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 							filename = filename.slice("\\\\?\\".length);
 						}
 						if (filename === normalizedWatchBasename) {
-							let changedPath = normalizedWatchPath;
 							// /foo/bar is a directory
 							// /foo/bar/bar is a file
 							// fs.watch('/foo/bar')
 							// /foo/bar/bar deleted -> filename === bar
 							// /foo/bar deleted -> filename === bar
-							if (
-								fs
-									.statSync(normalizedWatchPath, { throwIfNoEntry: false })
-									?.isDirectory()
-							) {
-								changedPath = normalizePath(
-									path.resolve(normalizedWatchPath, filename),
-								);
-							}
+							const changedPath = fs
+								.statSync(normalizedWatchPath, { throwIfNoEntry: false })
+								?.isDirectory()
+								? normalizePath(resolve(normalizedWatchPath, filename))
+								: normalizedWatchPath;
+
 							if (statAndEmitIfChanged(changedPath)) {
 								return;
 							}
@@ -99,7 +107,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 							statAndEmitIfChanged(
 								filename == null
 									? null
-									: normalizePath(path.resolve(normalizedWatchPath, filename)),
+									: normalizePath(resolve(normalizedWatchPath, filename)),
 							)
 						) {
 							return;
@@ -162,35 +170,24 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 	return {
 		fileTypeSync(pathAbsolute) {
-			try {
-				const stat = fs.statSync(pathAbsolute);
-				if (stat.isDirectory()) {
-					return "directory";
-				}
-				if (stat.isFile()) {
-					return "file";
-				}
-			} catch {
-				// Fall through to undefined.
+			const stat = fs.statSync(pathAbsolute, { throwIfNoEntry: false });
+			if (stat?.isDirectory()) {
+				return "directory";
 			}
-			return undefined;
+			if (stat?.isFile()) {
+				return "file";
+			}
+			return;
 		},
 		getCurrentDirectory() {
 			return cwd;
 		},
 		async getFileTouchTime(filePath) {
-			try {
-				return (await fs.promises.stat(filePath)).mtimeMs;
-			} catch {
-				return undefined;
-			}
+			const stat = await fs.promises.stat(filePath, { throwIfNoEntry: false });
+			return stat?.mtimeMs;
 		},
 		getFileTouchTimeSync(filePath) {
-			try {
-				return fs.statSync(filePath).mtimeMs;
-			} catch {
-				return undefined;
-			}
+			return fs.statSync(filePath, { throwIfNoEntry: false })?.mtimeMs;
 		},
 		getRepositoryRoot() {
 			return repositoryRoot;
@@ -204,7 +201,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return entries.map((entry) => normalizePath(entry));
 		},
 		isCaseSensitiveFS() {
-			return caseSensitiveFS;
+			return caseSensitiveFs;
 		},
 		async readDirectory(directoryPathAbsolute) {
 			const dirents = await fs.promises.readdir(directoryPathAbsolute, {
@@ -213,19 +210,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 			const result = await Promise.all(
 				dirents.map(async (entry): Promise<[] | LinterHostDirectoryEntry> => {
-					let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
-					if (entry.isSymbolicLink()) {
-						try {
-							stat = await fs.promises.stat(
-								path.join(directoryPathAbsolute, entry.name),
-							);
-						} catch {
-							return [];
-						}
-					}
-					if (stat.isDirectory()) {
+					const stat = entry.isSymbolicLink()
+						? await fs.promises.stat(join(directoryPathAbsolute, entry.name), {
+								throwIfNoEntry: false,
+							})
+						: entry;
+					if (stat?.isDirectory()) {
 						return { name: entry.name, type: "directory" };
-					} else if (stat.isFile()) {
+					} else if (stat?.isFile()) {
 						return { name: entry.name, type: "file" };
 					}
 
@@ -242,17 +234,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			});
 
 			for (const entry of dirents) {
-				let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
-				if (entry.isSymbolicLink()) {
-					try {
-						stat = fs.statSync(path.join(directoryPathAbsolute, entry.name));
-					} catch {
-						continue;
-					}
-				}
-				if (stat.isDirectory()) {
+				const stat = entry.isSymbolicLink()
+					? fs.statSync(join(directoryPathAbsolute, entry.name), {
+							throwIfNoEntry: false,
+						})
+					: entry;
+				if (stat?.isDirectory()) {
 					result.push({ name: entry.name, type: "directory" });
-				} else if (stat.isFile()) {
+				} else if (stat?.isFile()) {
 					result.push({ name: entry.name, type: "file" });
 				}
 			}
@@ -263,60 +252,66 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			try {
 				return await fs.promises.readFile(filePathAbsolute, "utf8");
 			} catch {
-				return undefined;
+				return;
 			}
 		},
 		readFileSync(filePathAbsolute) {
 			try {
 				return fs.readFileSync(filePathAbsolute, "utf8");
 			} catch {
-				return undefined;
+				return;
 			}
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
-			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFS);
-			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFS);
+			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFs);
+			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFs);
+
+			function isIgnoredPath(normalizedChangedFilePath: string): boolean {
+				const changedKey = pathKey(normalizedChangedFilePath, caseSensitiveFs);
+				if (changedKey === dirKey) {
+					return false;
+				}
+				let relative = normalizedChangedFilePath;
+				if (changedKey.startsWith(dirKeySlash)) {
+					relative = relative.slice(directoryPathAbsolute.length);
+				}
+				return options.ignoredPaths.some(
+					(ignored) =>
+						relative.endsWith(ignored) || relative.includes(ignored + "/"),
+				);
+			}
 
 			return createWatcher(
 				directoryPathAbsolute,
 				options.recursive,
-				options.pollingInterval ?? 2_000,
+				options.pollingInterval ?? 2000,
 				(normalizedChangedFilePath) => {
 					normalizedChangedFilePath ??= directoryPathAbsolute;
-					const changedKey = pathKey(
-						normalizedChangedFilePath,
-						caseSensitiveFS,
-					);
-					if (changedKey !== dirKey) {
-						let relative = normalizedChangedFilePath;
-						if (changedKey.startsWith(dirKeySlash)) {
-							relative = relative.slice(directoryPathAbsolute.length);
-						}
-						for (const ignored of options.ignoredPaths) {
-							if (
-								relative.endsWith(ignored) ||
-								relative.includes(ignored + "/")
-							) {
-								return;
-							}
-						}
+					if (isIgnoredPath(normalizedChangedFilePath)) {
+						return;
 					}
 					callback(normalizedChangedFilePath);
 				},
+				options.ignoredPaths.length
+					? (relativePath) =>
+							isIgnoredPath(
+								normalizePath(resolve(directoryPathAbsolute, relativePath)),
+							)
+					: undefined,
 			);
 		},
 		watchFileSync(filePathAbsolute, callback, options) {
-			const watchKey = pathKey(filePathAbsolute, caseSensitiveFS);
+			const watchKey = pathKey(filePathAbsolute, caseSensitiveFs);
 
 			return createWatcher(
 				filePathAbsolute,
 				false,
-				options.pollingInterval ?? 2_000,
+				options.pollingInterval ?? 2000,
 				(normalizedChangedFilePath, event) => {
 					if (
 						normalizedChangedFilePath != null &&
-						pathKey(normalizedChangedFilePath, caseSensitiveFS) === watchKey
+						pathKey(normalizedChangedFilePath, caseSensitiveFs) === watchKey
 					) {
 						callback(event);
 					}
@@ -326,14 +321,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		async writeFile(filePathAbsolute, content) {
 			// Create missing parent directories so a single writeFile call always
 			// succeeds, with no separate mkdir step for callers.
-			await fs.promises.mkdir(path.dirname(filePathAbsolute), {
+			await fs.promises.mkdir(dirname(filePathAbsolute), {
 				recursive: true,
 			});
 
 			await fs.promises.writeFile(filePathAbsolute, content, "utf8");
 		},
 		writeFileSync(filePathAbsolute, content) {
-			fs.mkdirSync(path.dirname(filePathAbsolute), { recursive: true });
+			fs.mkdirSync(dirname(filePathAbsolute), { recursive: true });
 			fs.writeFileSync(filePathAbsolute, content, "utf8");
 		},
 	};

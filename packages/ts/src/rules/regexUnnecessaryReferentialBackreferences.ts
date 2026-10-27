@@ -65,10 +65,7 @@ function groupCanOnlyMatchEmpty(group: CapturingGroup): boolean {
 			if (element.type === "Group" || element.type === "CapturingGroup") {
 				return groupCanOnlyMatchEmpty(element as CapturingGroup);
 			}
-			if (element.type === "Assertion") {
-				return true;
-			}
-			return false;
+			return element.type === "Assertion";
 		}),
 	);
 }

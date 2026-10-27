@@ -36,7 +36,7 @@ export async function createDocumentValidator(
 		finalSettings.ignorePaths &&
 		checkFilenameMatchesGlob(fileName, finalSettings.ignorePaths)
 	) {
-		return undefined;
+		return;
 	}
 
 	return validator;

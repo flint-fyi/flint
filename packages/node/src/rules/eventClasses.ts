@@ -56,17 +56,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (
+			return (
 				declaration.kind === SyntaxKind.ImportEqualsDeclaration &&
 				declaration.name.text === "EventEmitter" &&
 				declaration.moduleReference.kind ===
 					SyntaxKind.ExternalModuleReference &&
 				isImportFromNodeEvents(declaration.moduleReference.expression)
-			) {
-				return true;
-			}
-
-			return false;
+			);
 		}
 
 		function isIdentifierEventEmitter(
@@ -75,8 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			return (
 				typeChecker.getSymbolAtLocation(identifier)?.getDeclarations() as
-					| AST.AnyNode[]
-					| undefined
+					AST.AnyNode[] | undefined
 			)?.some(isDeclarationEventEmitter);
 		}
 

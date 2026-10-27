@@ -1,0 +1,136 @@
+---
+description: "Reports changeset summaries that are missing or start with a conventional commit prefix."
+title: "summaryReadability"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="changesets" rule="summaryReadability" />
+
+Changesets copies the summary of each changeset into the `CHANGELOG.md` of every package it releases.
+Those changelog entries are read by the package's users, not by commit tooling.
+
+Conventional commit prefixes such as `feat:` or `fix(core):` label commits for tools that parse Git history.
+In a changelog entry, they repeat information already recorded by the version bump in the changeset's frontmatter.
+
+A changeset whose frontmatter lists packages but has no summary creates a changelog entry that doesn't describe its change.
+Changesets created with `changeset add --empty` list no packages and are not reported.
+
+This rule reports summaries that start with a conventional commit prefix and changesets that are missing a summary.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": minor
+---
+
+feat: Added a new option.
+```
+
+```md
+---
+"example-package": patch
+---
+
+fix(parser)!: Fixed a crash on empty files.
+```
+
+```md
+---
+"example-package": patch
+---
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": minor
+---
+
+Added a new option.
+```
+
+```md
+---
+"example-package": patch
+---
+
+Fixed a crash on empty files.
+```
+
+```md
+---
+---
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `types`
+
+> Type: `string[]`
+>
+> Default: `["build", "chore", "ci", "docs", "feat", "feature", "fix", "perf", "refactor", "revert", "style", "test"]`, the default types of [`conventional-changelog-conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits)
+
+Conventional commit types whose prefixes should be reported.
+Words not in this list, such as `Note:`, are not reported as prefixes.
+
+```ts
+changesets.rules({
+	summaryReadability: {
+		types: ["deps", "feat", "fix"],
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": patch
+---
+
+deps: Updated dependencies.
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": patch
+---
+
+Updated dependencies.
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your project publishes changelogs that are generated from conventional commit messages rather than from changeset summaries, the prefixes may be read by your release tooling.
+For example, if you're using forked or separate tooling from changesets that only happens to use these files' formats, this rule may give you false reports.
+You might then prefer to disable this rule rather than change that tooling.
+
+## Further Reading
+
+- [Changesets: Adding a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md)
+- [Keep a Changelog](https://keepachangelog.com/en/1.1.0)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="changesets" ruleId="summaryReadability" />

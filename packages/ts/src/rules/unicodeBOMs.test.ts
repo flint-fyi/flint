@@ -5,9 +5,9 @@ import rule from "./unicodeBOMs.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `\uFEFFconst value = 1;
+			code: `\u{FEFF}const value = 1;
 `,
-			snapshot: `\uFEFFconst value = 1;
+			snapshot: `\u{FEFF}const value = 1;
 ~
 This Unicode Byte Order Mark (BOM) is unnecessary and can cause issues with some tools.
 `,
@@ -20,10 +20,10 @@ This Unicode Byte Order Mark (BOM) is unnecessary and can cause issues with some
 			],
 		},
 		{
-			code: `\uFEFF// Comment
+			code: `\u{FEFF}// Comment
 const value = 1;
 `,
-			snapshot: `\uFEFF// Comment
+			snapshot: `\u{FEFF}// Comment
 ~
 This Unicode Byte Order Mark (BOM) is unnecessary and can cause issues with some tools.
 const value = 1;
@@ -38,10 +38,10 @@ const value = 1;
 			],
 		},
 		{
-			code: `\uFEFF
+			code: `\u{FEFF}
 const value = 1;
 `,
-			snapshot: `\uFEFF
+			snapshot: `\u{FEFF}
 ~
 This Unicode Byte Order Mark (BOM) is unnecessary and can cause issues with some tools.
 const value = 1;

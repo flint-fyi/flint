@@ -10,6 +10,7 @@ import { createDiskBackedLinterHost } from "../host/createDiskBackedLinterHost.t
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { FileAboutData } from "../types/languages.ts";
 import { LintSession } from "./LintSession.ts";
 
@@ -49,7 +50,7 @@ describe(LintSession, () => {
 		const aPath = path.posix.join(root, "a.txt");
 		const bPath = path.posix.join(root, "b.txt");
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 		await writeFile(aPath, "a2");
 
 		const results = await session.lintFiles([aPath]);
@@ -63,10 +64,26 @@ describe(LintSession, () => {
 		]);
 	});
 
+	it("accepts a one-shot iterator of changed files", async () => {
+		const { configDefinition, host, root } = await createTestProject();
+		using session = await LintSession.create(configDefinition, host);
+		const aPath = path.posix.join(root, "a.txt");
+
+		await session.lintFiles(session.allFilePaths);
+		await writeFile(aPath, "a2");
+
+		const results = await session.lintChangedFiles(new Set([aPath]).values());
+
+		expect(lintedFileNames(results)).toEqual(new Set(["a.txt"]));
+		expect(session.storedResults.get(aPath)?.languageReports).toEqual([
+			{ text: "a2" },
+		]);
+	});
+
 	it("orders file creation through the language", async () => {
 		const orderedCreatedFilePaths: string[] = [];
 		const orderFilePaths = vi.fn((filePaths: readonly string[]) =>
-			[...filePaths].reverse(),
+			filePaths.toReversed(),
 		);
 		const { configDefinition, host, root } = await createTestProject({
 			orderedCreatedFilePaths,
@@ -93,7 +110,7 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(bPath, [cPath]);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(lintedFileNames(await session.lintChangedFiles([cPath]))).toEqual(
 			new Set(["a.txt", "b.txt", "c.txt"]),
@@ -117,7 +134,7 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(cPath, [aPath]);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(lintedFileNames(await session.lintChangedFiles([cPath]))).toEqual(
 			new Set(["a.txt", "b.txt", "c.txt"]),
@@ -132,14 +149,14 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(aPath, [bPath]);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(lintedFileNames(await session.lintFiles([bPath]))).toEqual(
 			new Set(["b.txt"]),
 		);
 	});
 
-	it("reports changed files before their dependents", async () => {
+	it("lints changed files before their dependents", async () => {
 		const { configDefinition, dependenciesByFilePath, host, root } =
 			await createTestProject();
 		const aPath = path.posix.join(root, "a.txt");
@@ -148,16 +165,14 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(aPath, [bPath]);
 		dependenciesByFilePath.set(bPath, [cPath]);
 		using session = await LintSession.create(configDefinition, host);
-		const passes: Set<string>[] = [];
 
-		await session.lintAll();
-		await session.lintChangedFiles([cPath], {
-			onResults(results) {
-				passes.push(lintedFileNames(results));
-			},
-		});
+		await session.lintFiles(session.allFilePaths);
 
-		expect(passes).toEqual([new Set(["c.txt"]), new Set(["a.txt", "b.txt"])]);
+		expect(
+			Array.from((await session.lintChangedFiles([cPath])).keys(), (filePath) =>
+				path.basename(filePath),
+			),
+		).toEqual(["c.txt", "a.txt", "b.txt"]);
 	});
 
 	it("lints dependents of files outside the session", async () => {
@@ -168,7 +183,7 @@ describe(LintSession, () => {
 		dependenciesByFilePath.set(aPath, [sharedPath]);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(session.hasDependents(sharedPath)).toBe(true);
 		expect(
@@ -209,7 +224,7 @@ describe(LintSession, () => {
 		const aPath = path.posix.join(root, "a.txt");
 		const bPath = path.posix.join(root, "b.txt");
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 
 		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
 			new Set(["b.txt"]),
@@ -228,7 +243,7 @@ describe(LintSession, () => {
 		const aPath = path.posix.join(root, "a.txt");
 		const bPath = path.posix.join(root, "b.txt");
 
-		await session.lintAll();
+		await session.lintFiles(session.allFilePaths);
 		invalidatingFileNames.add("a.txt");
 
 		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
@@ -248,25 +263,38 @@ describe(LintSession, () => {
 		);
 	});
 
-	it("reruns every configured file for rules that require all files", async () => {
-		const filesSeenInTeardown: string[][] = [];
-		const visitedFilePaths: string[] = [];
-		const { configDefinition, host, root } = await createTestProject({
-			onTeardown: () => {
-				filesSeenInTeardown.push([...visitedFilePaths]);
-			},
-			requiresAllFiles: true,
-			visitedFilePaths,
-		});
+	it("lints dependents of restored cached results", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		dependenciesByFilePath.set(aPath, [bPath]);
+		const cached = await lintIntoCachedResults(configDefinition, host);
 		using session = await LintSession.create(configDefinition, host);
 
-		await session.lintFiles([path.posix.join(root, "a.txt")]);
+		session.restoreCachedResults(cached);
+
+		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
+			new Set(["a.txt", "b.txt"]),
+		);
+	});
+
+	it("lints every file when a restored cache-invalidating file stops invalidating", async () => {
+		const invalidatingFileNames = new Set(["a.txt"]);
+		const { configDefinition, host, root } = await createTestProject({
+			invalidatingFileNames,
+		});
+		const cached = await lintIntoCachedResults(configDefinition, host);
+		using session = await LintSession.create(configDefinition, host);
+
+		session.restoreCachedResults(cached);
+		invalidatingFileNames.clear();
 
 		expect(
-			filesSeenInTeardown.map((filePaths) =>
-				filePaths.map((filePath) => path.basename(filePath)),
+			lintedFileNames(
+				await session.lintChangedFiles([path.posix.join(root, "a.txt")]),
 			),
-		).toEqual([["a.txt", "b.txt", "c.txt"]]);
+		).toEqual(new Set(["a.txt", "b.txt", "c.txt"]));
 	});
 
 	it("disposes language files and retained factories", async () => {
@@ -300,20 +328,14 @@ async function createTestProject({
 	factoryDispose,
 	fileDispose,
 	invalidatingFileNames,
-	onTeardown,
 	orderedCreatedFilePaths,
 	orderFilePaths,
-	requiresAllFiles,
-	visitedFilePaths,
 }: {
 	factoryDispose?: () => void;
 	fileDispose?: () => void;
 	invalidatingFileNames?: Set<string>;
-	onTeardown?: () => void;
 	orderedCreatedFilePaths?: string[];
 	orderFilePaths?: (filePaths: readonly string[]) => string[];
-	requiresAllFiles?: boolean;
-	visitedFilePaths?: string[];
 } = {}) {
 	const root = normalizePath(
 		await mkdtemp(path.join(os.tmpdir(), "flint-lint-session-")),
@@ -346,7 +368,7 @@ async function createTestProject({
 		getFileCacheImpacts(file) {
 			return {
 				dependencies: dependenciesByFilePath.get(file.about.filePath) ?? [],
-				invalidatesCache:
+				isGlobalDependency:
 					invalidatingFileNames?.has(path.basename(file.about.filePath)) ??
 					false,
 			};
@@ -380,20 +402,12 @@ async function createTestProject({
 				suggestions: [],
 			},
 		},
-		...(requiresAllFiles && { requiresAllFiles }),
 		setup(context) {
 			return {
-				...(onTeardown && {
-					teardown: () => {
-						onTeardown();
-						return undefined;
-					},
-				}),
 				visitors: {
-					Root(node, services) {
-						visitedFilePaths?.push(node.filePath);
+					Root(_node, services) {
 						if (typeof services.sourceText !== "string") {
-							throw new Error("Expected source text.");
+							throw new TypeError("Expected source text.");
 						}
 
 						context.report({
@@ -428,5 +442,28 @@ async function createTestProject({
 function lintedFileNames(results: Map<string, unknown>) {
 	return new Set(
 		Array.from(results.keys(), (filePath) => path.basename(filePath)),
+	);
+}
+
+async function lintIntoCachedResults(
+	configDefinition: ProcessedConfigDefinition,
+	host: LinterHost,
+) {
+	using session = await LintSession.create(configDefinition, host);
+
+	await session.lintFiles(session.allFilePaths);
+
+	return new Map(
+		Array.from(
+			session.storedResults,
+			([filePath, { dependencies, isGlobalDependency }]) => [
+				filePath,
+				{
+					dependencies: Array.from(dependencies),
+					...(isGlobalDependency && { isGlobalDependency }),
+					timestamp: 0,
+				},
+			],
+		),
 	);
 }

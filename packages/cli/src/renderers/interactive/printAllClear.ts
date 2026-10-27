@@ -1,5 +1,5 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 export function printAllClear(): string {
-	return chalk.green("No lint reports. Yay!");
+	return styleText("green", "No lint reports. Yay!");
 }

@@ -36,7 +36,9 @@ const {
 		</div>
 		<ol class="services">
 			{[["github", `https://github.com/${username}`] as const, ...links]
-				.sort(([a], [b]) => (a === "seti:html" ? 1 : a.localeCompare(b)))
+				.sort(([a], [b]) =>
+					a === "seti:html" ? 1 : a.localeCompare(b, "en-US"),
+				)
 				.map(([service, url]) => (
 					<li class="service">
 						<a aria-label={`${name}'s ${service}'`} href={url} target="_blank">

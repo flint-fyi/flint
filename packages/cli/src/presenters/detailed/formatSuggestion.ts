@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 import { formatReport, type ReportInterpolationData } from "@flint.fyi/core";
 
@@ -11,15 +11,23 @@ export function formatSuggestion(
 	suggestion = formatReport(data, suggestion);
 
 	return [
-		chalk.hex(ColorCodes.defaultSuggestionColor)(
+		styleText(
+			ColorCodes.defaultSuggestionColor,
 			suggestion
 				.split("`")
 				.map((text, index) =>
-					chalk.hex(
-						index % 2 === 0
-							? ColorCodes.defaultSuggestionColor
-							: ColorCodes.suggestionTextHighlight,
-					)(text),
+					// wrap-ansi requires styles to reopen after explicit newlines.
+					text
+						.split("\n")
+						.map((line) =>
+							styleText(
+								index % 2 === 0
+									? ColorCodes.defaultSuggestionColor
+									: ColorCodes.suggestionTextHighlight,
+								line,
+							),
+						)
+						.join("\n"),
 				)
 				.join("`"),
 		),

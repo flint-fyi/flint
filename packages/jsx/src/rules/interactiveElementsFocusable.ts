@@ -9,14 +9,14 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const interactiveHandlers = [
+const interactiveHandlers = new Set([
 	"onClick",
 	"onKeyDown",
 	"onKeyPress",
 	"onKeyUp",
 	"onMouseDown",
 	"onMouseUp",
-];
+]);
 
 const interactiveRoles = new Set([
 	"button",
@@ -137,7 +137,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (!tabIndex?.initializer) {
-				return undefined;
+				return;
 			}
 
 			if (tabIndex.initializer.kind === SyntaxKind.JsxExpression) {
@@ -151,7 +151,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return Number(tabIndex.initializer.text);
 			}
 
-			return undefined;
+			return;
 		}
 
 		function getRoleValue(
@@ -171,7 +171,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return role.initializer.text;
 			}
 
-			return undefined;
+			return;
 		}
 
 		function isAriaHidden(
@@ -211,7 +211,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				(property) =>
 					property.kind === SyntaxKind.JsxAttribute &&
 					property.name.kind === SyntaxKind.Identifier &&
-					interactiveHandlers.includes(property.name.text),
+					interactiveHandlers.has(property.name.text),
 			);
 		}
 
@@ -282,26 +282,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const hasInherentFocus = inherentlyFocusableElements.has(elementName);
 			const tabIndex = getTabIndexValue(node);
 			const hasFocusableTabIndex = tabIndex !== undefined;
+
+			if (hasInherentFocus || hasFocusableTabIndex) {
+				return;
+			}
+
 			const roleProperty = node.attributes.properties.find(
 				(property) =>
 					property.kind === SyntaxKind.JsxAttribute &&
 					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
-
-			if (!hasInherentFocus && !hasFocusableTabIndex) {
-				const displayRole = role ?? elementName;
-				context.report({
-					data: { role: displayRole },
-					message: "notFocusable",
-					range: getTSNodeRange(
-						roleProperty?.kind === SyntaxKind.JsxAttribute
-							? roleProperty
-							: node.tagName,
-						sourceFile,
-					),
-				});
-			}
+			const displayRole = role ?? elementName;
+			context.report({
+				data: { role: displayRole },
+				message: "notFocusable",
+				range: getTSNodeRange(
+					roleProperty?.kind === SyntaxKind.JsxAttribute
+						? roleProperty
+						: node.tagName,
+					sourceFile,
+				),
+			});
 		}
 
 		return {

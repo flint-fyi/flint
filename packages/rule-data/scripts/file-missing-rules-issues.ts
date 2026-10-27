@@ -17,6 +17,7 @@ interface ExistingIssue {
 
 const labels = [
 	"area: documentation",
+	"good first issue",
 	"package: rule-data",
 	"status: accepting prs",
 ];

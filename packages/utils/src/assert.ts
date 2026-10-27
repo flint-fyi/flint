@@ -1,16 +1,29 @@
 export class FlintAssertionError extends Error {
+	readonly assertionMessage: string;
+
 	constructor(message: string) {
 		super(`Flint bug: ${message}.`);
-		const issueUrl = buildIssueUrl(message, this.stack);
-		// The message uses this.stack, which isn't available before super()
-		// flint-disable-next-line ts/errorSubclassProperties
-		this.message = `Flint bug: ${message}. Please report it here: ${issueUrl}`;
+		this.assertionMessage = message;
 		this.name = "FlintAssertionError";
-		if (this.stack) {
-			const [, ...rest] = this.stack.split("\n");
-			this.stack = [`FlintAssertionError: ${this.message}`, ...rest].join("\n");
-		}
 	}
+}
+
+export function addFlintAssertionContext(
+	error: unknown,
+	processArguments: string[],
+): unknown {
+	if (!(error instanceof FlintAssertionError)) {
+		return error;
+	}
+
+	const originalHeader = `${error.name}: ${error.message}`;
+	error.message += ` Please report it here: ${buildIssueUrl(error, processArguments)}`;
+	if (error.stack?.startsWith(originalHeader)) {
+		error.stack =
+			`${error.name}: ${error.message}` +
+			error.stack.slice(originalHeader.length);
+	}
+	return error;
 }
 
 export function assert(x: unknown, message: string): asserts x {
@@ -24,32 +37,21 @@ export function nullThrows<T>(x: T, message: string): NonNullable<T> {
 	return x;
 }
 
-/** @internal */
-export function sanitizeStackTrace(stack: string): string {
-	const pathRegex = /(?:[a-z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
-	return stack.replace(pathRegex, (match) => {
-		const normalized = match.replace(/\\/g, "/");
-		const nodeModulesIndex = normalized.lastIndexOf("node_modules/");
-		if (nodeModulesIndex !== -1) {
-			return normalized.slice(nodeModulesIndex);
-		}
-
-		return "<censored filename>";
-	});
-}
-
-function buildIssueUrl(message: string, stack: string | undefined): string {
+function buildIssueUrl(
+	error: FlintAssertionError,
+	processArguments: string[],
+): string {
 	const issueUrl = new URL("https://github.com/flint-fyi/flint/issues/new");
 	issueUrl.searchParams.set("template", "04-general-bug.yaml");
 
-	const sanitizedStack = stack
-		? sanitizeStackTrace(stack)
+	const sanitizedStack = error.stack
+		? sanitizeStackTrace(error.stack)
 		: "No stacktrace available.";
 	const body = [
 		"Assertion message:",
 		"",
 		"```",
-		message,
+		error.assertionMessage,
 		"```",
 		"",
 		"Stacktrace:",
@@ -59,15 +61,29 @@ function buildIssueUrl(message: string, stack: string | undefined): string {
 		"```",
 	].join("\n");
 
-	issueUrl.searchParams.set("title", `🐛 Bug: ${message}`);
+	issueUrl.searchParams.set("title", `🐛 Bug: ${error.assertionMessage}`);
 	issueUrl.searchParams.set("actual", body);
 	issueUrl.searchParams.set(
 		"additional_info",
 		[
 			"Process arguments:",
 			"",
-			"`" + (process.argv.slice(2).join(" ") || "<none>") + "`",
+			"`" + (processArguments.join(" ") || "<none>") + "`",
 		].join("\n"),
 	);
-	return issueUrl.toString();
+	return issueUrl.href;
+}
+
+/** @internal */
+export function sanitizeStackTrace(stack: string): string {
+	const pathRegex = /(?:[a-z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
+	return stack.replaceAll(pathRegex, (match) => {
+		const normalized = match.replaceAll("\\", "/");
+		const nodeModulesIndex = normalized.lastIndexOf("node_modules/");
+		if (nodeModulesIndex !== -1) {
+			return normalized.slice(nodeModulesIndex);
+		}
+
+		return "<censored filename>";
+	});
 }

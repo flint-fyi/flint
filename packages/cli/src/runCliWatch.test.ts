@@ -60,6 +60,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			values,
+			[],
 		);
 
 		expect(project.createFileFactory).toHaveBeenCalledTimes(1);
@@ -103,11 +104,49 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			values,
+			[],
 		);
 
 		expect(project.createFileFactory).toHaveBeenCalledTimes(2);
 		expect(loadConfigDefinition).toHaveBeenCalledTimes(2);
 		expect(finalFileCount).toBe(3);
+	});
+
+	it("only lints uncached files after rebuilding the lint session", async () => {
+		const project = createTestProject();
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		const cPath = path.posix.join(project.root, "c.txt");
+		let quit: (() => void) | undefined;
+		let renderCount = 0;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						renderCount += 1;
+
+						if (renderCount === 1) {
+							project.host.vfsUpsertFile(cPath, "c1");
+						} else {
+							quit?.();
+						}
+					},
+				}) satisfies Renderer,
+			values,
+			[],
+		);
+
+		expect(project.visitedFilePaths).toEqual([
+			project.aPath,
+			project.bPath,
+			cPath,
+		]);
 	});
 
 	it("rebuilds the lint session after a structural file changes", async () => {
@@ -139,6 +178,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			values,
+			[],
 		);
 
 		expect(loadConfigDefinition).toHaveBeenCalledTimes(2);
@@ -165,6 +205,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			{ ...values, fix: true },
+			[],
 		);
 
 		expect(project.host.readFileSync(project.aPath)).toBe("fixed");
@@ -195,6 +236,7 @@ describe(runCliWatch, () => {
 					},
 				}) satisfies Renderer,
 			{ ...values, fix: true },
+			[],
 		);
 
 		const fixedText = `a1${"!".repeat(maximumFixIterations)}`;
@@ -217,6 +259,8 @@ function createTestProject({
 	const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
 	host.vfsUpsertFile(aPath, "a1");
 	host.vfsUpsertFile(bPath, "b1");
+	host.vfsUpsertFile("flint.config.ts", "");
+	host.vfsUpsertFile("package.json", "{}");
 	const visitedFilePaths: string[] = [];
 	const visitedSourceTexts: string[] = [];
 	const createFileFactory = vi.fn(() => ({

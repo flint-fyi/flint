@@ -14,9 +14,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 type IgnorePrimitives =
-	| boolean
-	| Record<string, boolean | undefined>
-	| undefined;
+	boolean | Record<string, boolean | undefined> | undefined;
 
 type NullishCheckOperator = "!" | "!=" | "!==" | "" | "==" | "===";
 
@@ -103,20 +101,15 @@ function analyzeConditionalForNullish(
 		condition.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken
 	) {
 		const leftIsComparison =
-			condition.left.kind === SyntaxKind.BinaryExpression
-				? isNullLikeComparison(condition.left)
-				: false;
+			condition.left.kind === SyntaxKind.BinaryExpression &&
+			isNullLikeComparison(condition.left);
 		const rightIsComparison =
-			condition.right.kind === SyntaxKind.BinaryExpression
-				? isNullLikeComparison(condition.right)
-				: false;
+			condition.right.kind === SyntaxKind.BinaryExpression &&
+			isNullLikeComparison(condition.right);
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left as AST.BinaryExpression;
-			const rightComp = condition.right as AST.BinaryExpression;
-
-			const leftValue = extractValueFromComparison(leftComp).value;
-			const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(condition.left).value;
+			const rightValue = extractValueFromComparison(condition.right).value;
 
 			if (
 				leftValue &&
@@ -139,20 +132,15 @@ function analyzeConditionalForNullish(
 		condition.operatorToken.kind === SyntaxKind.BarBarToken
 	) {
 		const leftIsComparison =
-			condition.left.kind === SyntaxKind.BinaryExpression
-				? isNullLikeComparison(condition.left)
-				: false;
+			condition.left.kind === SyntaxKind.BinaryExpression &&
+			isNullLikeComparison(condition.left);
 		const rightIsComparison =
-			condition.right.kind === SyntaxKind.BinaryExpression
-				? isNullLikeComparison(condition.right)
-				: false;
+			condition.right.kind === SyntaxKind.BinaryExpression &&
+			isNullLikeComparison(condition.right);
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left as AST.BinaryExpression;
-			const rightComp = condition.right as AST.BinaryExpression;
-
-			const leftValue = extractValueFromComparison(leftComp).value;
-			const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(condition.left).value;
+			const rightValue = extractValueFromComparison(condition.right).value;
 
 			if (
 				leftValue &&
@@ -210,7 +198,7 @@ function extractAssignmentFromIfStatement(node: AST.IfStatement) {
 		assignmentExpr?.kind !== SyntaxKind.BinaryExpression ||
 		assignmentExpr.operatorToken.kind !== SyntaxKind.EqualsToken
 	) {
-		return undefined;
+		return;
 	}
 
 	return { left: assignmentExpr.left, right: assignmentExpr.right };
@@ -272,7 +260,8 @@ function getIfStatementNullishCheckValue(node: AST.IfStatement) {
 }
 
 function getTypeFlags(type: ts.Type): ts.TypeFlags {
-	let flags = 0;
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-assignment -- TypeFlags has no member for an empty bitmask.
+	let flags = 0 as ts.TypeFlags;
 	for (const constituent of tsutils.unionConstituents(type)) {
 		for (const subConstituent of tsutils.intersectionConstituents(
 			constituent,
@@ -559,7 +548,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					sourceFile,
 				);
 			}
-			return undefined;
+			return;
 		}
 
 		function createNullishNodesFix(
@@ -570,7 +559,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			test?: AST.AnyNode,
 		) {
 			const getText = (node: AST.AnyNode) =>
-				sourceFile.text.substring(node.getStart(sourceFile), node.getEnd());
+				sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 
 			let leftText = getText(consequent);
 
@@ -599,7 +588,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			range: CharacterReportRange,
 		) {
 			const getText = (node: AST.AnyNode) =>
-				sourceFile.text.substring(node.getStart(sourceFile), node.getEnd());
+				sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 
 			return { range, text: `${getText(left)} ??= ${getText(right)};` };
 		}

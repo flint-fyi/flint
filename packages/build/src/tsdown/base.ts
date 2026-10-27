@@ -10,7 +10,6 @@ export const base: UserConfig = {
 	entry: ["src/index.ts"],
 	exports: {
 		devExports: true,
-		packageJson: false,
 	},
 	failOnWarn: true,
 };

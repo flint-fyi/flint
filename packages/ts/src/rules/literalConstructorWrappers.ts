@@ -1,11 +1,4 @@
-import {
-	isBigIntLiteral,
-	isIdentifier,
-	isLiteralExpression,
-	isNumericLiteral,
-	isStringLiteral,
-	SyntaxKind,
-} from "typescript";
+import { isLiteralExpression, SyntaxKind } from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -34,13 +27,16 @@ function isLiteralArgument(node: AST.Expression, constructorName: string) {
 			return isLiteralExpression(node) || isBooleanLiteral(node);
 
 		case "Number":
-			return isStringLiteral(node) && isValidNumericString(node.text);
+			return (
+				node.kind === SyntaxKind.StringLiteral &&
+				isValidNumericString(node.text)
+			);
 
 		case "String":
 			return (
-				isNumericLiteral(node) ||
+				node.kind === SyntaxKind.NumericLiteral ||
 				isBooleanLiteral(node) ||
-				isBigIntLiteral(node)
+				node.kind === SyntaxKind.BigIntLiteral
 			);
 
 		default:
@@ -87,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					node,
 					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) => {
-					if (!isIdentifier(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

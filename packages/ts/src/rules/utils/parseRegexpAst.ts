@@ -13,6 +13,6 @@ export function parseRegexpAst(
 			unicodeSets: flags.includes("v"),
 		});
 	} catch {
-		return undefined;
+		return;
 	}
 }

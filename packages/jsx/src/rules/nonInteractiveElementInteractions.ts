@@ -9,14 +9,14 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const interactiveHandlers = [
+const interactiveHandlers = new Set([
 	"onClick",
 	"onKeyDown",
 	"onKeyPress",
 	"onKeyUp",
 	"onMouseDown",
 	"onMouseUp",
-];
+]);
 
 const nonInteractiveElements = new Set([
 	"area",
@@ -113,7 +113,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (interactiveHandlers.includes(property.name.text)) {
+					if (interactiveHandlers.has(property.name.text)) {
 						hasInteractiveHandler = true;
 					}
 				}

@@ -1,0 +1,160 @@
+---
+description: "Reports changeset summaries that don't start with the configured letter case."
+title: "summaryCasing"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="changesets" rule="summaryCasing" />
+
+Changesets copies the summary of each changeset into the `CHANGELOG.md` of every package it releases.
+Starting every summary with the same letter case makes those changelog entries consistent to read.
+
+This rule checks the first letter of a changeset's summary, after any conventional commit prefix.
+By default, it reports summaries that start with a lowercase letter.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": minor
+---
+
+added a new option.
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": minor
+---
+
+Added a new option.
+```
+
+```md
+---
+"example-package": minor
+---
+
+`createPlugin` now accepts a new option.
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `casing`
+
+> Type: `"lowercase" | "uppercase"`
+>
+> Default: `"uppercase"`
+
+Which letter case the first letter of changeset summaries must be.
+
+```ts
+changesets.rules({
+	summaryCasing: {
+		casing: "lowercase",
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": minor
+---
+
+Added a new option.
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": minor
+---
+
+added a new option.
+```
+
+```md
+---
+"example-package": minor
+---
+
+JSON files are now supported.
+```
+
+</TabItem>
+</Tabs>
+
+### `types`
+
+> Type: `string[]`
+>
+> Default: `["build", "chore", "ci", "docs", "feat", "feature", "fix", "perf", "refactor", "revert", "style", "test"]`, the default types of [`conventional-changelog-conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits)
+
+Conventional commit types whose prefixes are skipped before checking the first letter.
+This should match the `types` option of [`summaryReadability`](/rules/changesets/summaryreadability) if you configure both.
+
+```ts
+changesets.rules({
+	summaryCasing: {
+		types: ["deps", "feat", "fix"],
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```md
+---
+"example-package": patch
+---
+
+deps: updated dependencies.
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```md
+---
+"example-package": patch
+---
+
+deps: Updated dependencies.
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't mind inconsistent casing in your changelog summaries, this rule might not be for you.
+If your project's changesets are written by many contributors and you don't review changelog entries for consistency, this rule may produce reports that nobody acts on.
+You might prefer to leave this rule disabled until your project reviews changelog formatting.
+
+## Further Reading
+
+- [Changesets: Adding a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md)
+- [Keep a Changelog](https://keepachangelog.com/en/1.1.0)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="changesets" ruleId="summaryCasing" />

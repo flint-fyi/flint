@@ -31,16 +31,16 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 				}
 			}
 
-			return undefined;
+			return;
 
 		case SyntaxKind.RegularExpressionLiteral: {
 			const text = node.getText(sourceFile);
 			const lastSlash = text.lastIndexOf("/");
-			return lastSlash >= 0 ? text.slice(lastSlash + 1) : "";
+			return lastSlash === -1 ? "" : text.slice(lastSlash + 1);
 		}
 
 		default:
-			return undefined;
+			return;
 	}
 }
 

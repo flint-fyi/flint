@@ -26,11 +26,12 @@ export interface TSDiagnosticRelatedInformation {
 
 export function convertTypeScriptDiagnosticToLanguageReport(
 	diagnostic: TSDiagnostic,
+	currentDirectory: string,
 ): LanguageReport {
 	return {
 		code: `TS${diagnostic.code}`,
 		source: "typescript",
-		text: formatReport(diagnostic),
+		text: formatReport(diagnostic, currentDirectory),
 		...(diagnostic.file !== undefined &&
 			diagnostic.start !== undefined && {
 				range: {
@@ -45,11 +46,15 @@ function color(text: string, formatStyle: string) {
 	return formatStyle + text + resetEscapeSequence;
 }
 
-function formatReport(diagnostic: TSDiagnostic) {
+function formatReport(diagnostic: TSDiagnostic, currentDirectory: string) {
 	let output = "";
 
 	if (diagnostic.file !== undefined) {
-		output += formatLocation(diagnostic.file, diagnostic.start!);
+		output += formatLocation(
+			diagnostic.file,
+			diagnostic.start!,
+			currentDirectory,
+		);
 		output += " - ";
 	}
 	output += color(`TS${diagnostic.code}`, COLOR.Grey);
@@ -76,7 +81,7 @@ function formatReport(diagnostic: TSDiagnostic) {
 			const indent = "  ";
 			if (file) {
 				output += "\n";
-				output += " " + formatLocation(file, start!);
+				output += " " + formatLocation(file, start!, currentDirectory);
 				output += formatCodeSpan(file, start!, length!, indent, COLOR.Cyan);
 			}
 			output += "\n";
@@ -87,24 +92,23 @@ function formatReport(diagnostic: TSDiagnostic) {
 	return output;
 }
 
-const gutterStyleSequence = "\u001B[7m";
+const gutterStyleSequence = "\u{1B}[7m";
 const ellipsis = "...";
 const gutterSeparator = " ";
-const resetEscapeSequence = "\u001B[0m";
+const resetEscapeSequence = "\u{1B}[0m";
 const COLOR = {
-	Blue: "\u001B[94m",
-	Cyan: "\u001B[96m",
-	Grey: "\u001B[90m",
-	Red: "\u001B[91m",
-	Yellow: "\u001B[93m",
+	Blue: "\u{1B}[94m",
+	Cyan: "\u{1B}[96m",
+	Grey: "\u{1B}[90m",
+	Red: "\u{1B}[91m",
+	Yellow: "\u{1B}[93m",
 };
 
-function displayFilename(name: string) {
+function displayFilename(name: string, currentDirectory: string) {
 	if (name.startsWith("./")) {
 		return name.slice(2);
 	}
-	// TODO: use LinterHost.getCurrentDirectory()
-	return name.slice(process.cwd().length + 1);
+	return name.slice(currentDirectory.length + 1);
 }
 
 function formatCodeSpan(
@@ -150,7 +154,7 @@ function formatCodeSpan(
 				: file.text.length;
 		let lineContent = file.text.slice(lineStart, lineEnd);
 		lineContent = lineContent.trimEnd();
-		lineContent = lineContent.replace(/\t/g, " ");
+		lineContent = lineContent.replaceAll("\t", " ");
 		context +=
 			indent +
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
@@ -164,14 +168,14 @@ function formatCodeSpan(
 		context += squiggleColor;
 		if (i === firstLine) {
 			const lastCharForLine = i === lastLine ? lastLineChar : undefined;
-			context += lineContent.slice(0, firstLineChar).replace(/\S/g, " ");
+			context += lineContent.slice(0, firstLineChar).replaceAll(/\S/g, " ");
 			context += lineContent
 				.slice(firstLineChar, lastCharForLine)
-				.replace(/./g, "~");
+				.replaceAll(/./g, "~");
 		} else if (i === lastLine) {
-			context += lineContent.slice(0, lastLineChar).replace(/./g, "~");
+			context += lineContent.slice(0, lastLineChar).replaceAll(/./g, "~");
 		} else {
-			context += lineContent.replace(/./g, "~");
+			context += lineContent.replaceAll(/./g, "~");
 		}
 		context += resetEscapeSequence;
 	}
@@ -181,14 +185,15 @@ function formatCodeSpan(
 function formatLocation(
 	file: SourceFileWithLineMapAndFileName,
 	start: number,
+	currentDirectory: string,
 ): string {
 	const { column, line } = getColumnAndLineOfPosition(file, start);
-	const relativeFileName = displayFilename(file.fileName);
+	const relativeFileName = displayFilename(file.fileName, currentDirectory);
 	let output = "";
 	output += color(relativeFileName, COLOR.Cyan);
 	output += ":";
-	output += color(`${line + 1}`, COLOR.Yellow);
+	output += color(String(line + 1), COLOR.Yellow);
 	output += ":";
-	output += color(`${column + 1}`, COLOR.Yellow);
+	output += color(String(column + 1), COLOR.Yellow);
 	return output;
 }

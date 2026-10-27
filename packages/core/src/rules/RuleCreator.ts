@@ -4,22 +4,27 @@ import type {
 	GetLanguageAstNodesByName,
 	GetLanguageFileServices,
 } from "../types/languages.ts";
-import type { Rule, RuleAbout, RuleDefinition } from "../types/rules.ts";
+import type {
+	PluginRuleAbout,
+	Rule,
+	RuleCreatorAbout,
+	RuleDefinition,
+} from "../types/rules.ts";
 import type { AnyOptionalSchema } from "../types/shapes.ts";
 
-export interface RuleCreatorOptions<Presets extends string> {
+export interface RuleCreatorOptions<Preset extends string> {
 	docs: (ruleId: string) => string;
 	pluginId: string;
-	presets: readonly Presets[];
+	presets: readonly Preset[];
 }
 
 export class RuleCreator<
-	Presets extends string,
-	const About extends RuleAbout = RuleAbout<Presets>,
+	Preset extends string,
+	const About extends RuleCreatorAbout = RuleCreatorAbout<Preset>,
 > {
-	#options: RuleCreatorOptions<Presets>;
+	#options: RuleCreatorOptions<Preset>;
 
-	constructor(options: RuleCreatorOptions<Presets>) {
+	constructor(options: RuleCreatorOptions<Preset>) {
 		this.#options = options;
 	}
 
@@ -37,11 +42,7 @@ export class RuleCreator<
 			MessageId,
 			OptionsSchema
 		>,
-	): Rule<
-		RuleDefinitionAbout & { readonly pluginId: string; readonly url: string },
-		MessageId,
-		OptionsSchema
-	> {
+	): Rule<PluginRuleAbout & RuleDefinitionAbout, MessageId, OptionsSchema> {
 		// Use RuleCreator.createRule instead of Language.createRule
 		// But this is the original implementation
 		// flint-disable-next-line flint/ruleCreationMethods

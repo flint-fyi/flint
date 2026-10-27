@@ -1,6 +1,9 @@
-import type { LinterHost, LintResults } from "@flint.fyi/core";
+import type {
+	FormattingResults,
+	LinterHost,
+	LintResults,
+} from "@flint.fyi/core";
 
-import { runPrettier } from "./formatting/runPrettier.ts";
 import type { OptionsValues } from "./options.ts";
 import type { Renderer } from "./renderers/types.ts";
 
@@ -19,9 +22,16 @@ export async function renderCliResults(
 ): Promise<0 | 1> {
 	const skipFormatting = values["skip-formatting"] ?? false;
 
-	const formattingResults = skipFormatting
-		? undefined
-		: await runPrettier(host, lintResults, values.fix, formatFilePaths);
+	let formattingResults: FormattingResults | undefined;
+	if (!skipFormatting) {
+		const { runPrettier } = await import("./formatting/runPrettier.ts");
+		formattingResults = await runPrettier(
+			host,
+			lintResults,
+			values.fix,
+			formatFilePaths,
+		);
+	}
 
 	const duration = performance.now() - startTime;
 

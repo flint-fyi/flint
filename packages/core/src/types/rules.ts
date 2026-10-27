@@ -4,7 +4,11 @@ import type { BaseAbout } from "./about.ts";
 import type { RuleContext } from "./context.ts";
 import type { AnyLanguage } from "./languages.ts";
 import type { ReportMessageData } from "./reports.ts";
-import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
+import type {
+	AnyOptionalSchema,
+	InferredOutputObject,
+	OptionalObjectSchema,
+} from "./shapes.ts";
 
 /**
  * A single lint rule, as used by users in configs.
@@ -12,14 +16,12 @@ import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 export type AnyRule<
 	About extends RuleAbout = RuleAbout,
 	OptionsSchema extends AnyOptionalSchema | undefined =
-		| AnyOptionalSchema
-		| undefined,
+		AnyOptionalSchema | undefined,
 > = Rule<About, string, OptionsSchema>;
 
 export type AnyRuleDefinition<
 	OptionsSchema extends AnyOptionalSchema | undefined =
-		| AnyOptionalSchema
-		| undefined,
+		AnyOptionalSchema | undefined,
 > = RuleDefinition<RuleAbout, unknown, object, string, OptionsSchema>;
 
 /**
@@ -34,6 +36,18 @@ export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> =
 /* eslint-enable @typescript-eslint/no-explicit-any */
 // flint-disable-lines-end ts/explicitAnys
 
+export interface PluginRuleAbout<
+	Preset extends string = string,
+> extends RuleAbout<Preset> {
+	/**
+	 * ID of the plugin parent of this rule.
+	 * @example "ts"
+	 */
+	readonly pluginId: string;
+
+	readonly url: string;
+}
+
 /**
  * A single lint rule, as used by users in configs.
  */
@@ -45,7 +59,7 @@ export interface Rule<
 	language: AnyLanguage;
 }
 
-export interface RuleAbout<Presets extends string = string> extends BaseAbout {
+export interface RuleAbout<Preset extends string = string> extends BaseAbout {
 	readonly description: string;
 
 	/**
@@ -54,7 +68,19 @@ export interface RuleAbout<Presets extends string = string> extends BaseAbout {
 	 */
 	readonly pluginId?: string;
 
-	readonly presets?: readonly Presets[];
+	readonly presets?: readonly Preset[];
+}
+
+/**
+ * Metadata a rule passes to its plugin's rule creator.
+ */
+export interface RuleCreatorAbout<
+	Preset extends string = string,
+> extends RuleAbout<Preset> {
+	/**
+	 * This is set by the rule creator, so rules shouldn't try to pass it themselves.
+	 */
+	readonly pluginId?: never;
 }
 
 /**
@@ -69,9 +95,7 @@ export interface RuleDefinition<
 > {
 	about: About;
 	messages: Record<MessageId, ReportMessageData>;
-	options?: OptionsSchema;
-
-	requiresAllFiles?: boolean;
+	options?: OptionalObjectSchema<OptionsSchema>;
 	setup: RuleSetup<
 		AstNodesByName,
 		FileServices,

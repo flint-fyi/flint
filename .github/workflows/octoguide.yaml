@@ -38,8 +38,31 @@ jobs:
   octoguide:
     runs-on: ubuntu-slim
     steps:
-      - uses: OctoGuide/bot@e2c774d098e6b38c428bcd90dcca254389544aef # 0.21.10
+      - uses: OctoGuide/bot@abbf1c1d9d52e3878a1ef6ae8ece8c4d70769fea # 0.29.1
         with:
           config: strict
           github-token: ${{ secrets.GITHUB_TOKEN }}
           include-associations: "FIRST_TIMER,FIRST_TIME_CONTRIBUTOR,CONTRIBUTOR"
+          rules: |
+            {
+              "pr-body-descriptive": {
+                "include-associations": [
+                  "COLLABORATOR",
+                  "CONTRIBUTOR",
+                  "FIRST_TIME_CONTRIBUTOR",
+                  "FIRST_TIMER",
+                  "MEMBER",
+                  "OWNER"
+                ]
+              },
+              "pr-title-conventional": {
+                "include-associations": [
+                  "COLLABORATOR",
+                  "CONTRIBUTOR",
+                  "FIRST_TIME_CONTRIBUTOR",
+                  "FIRST_TIMER",
+                  "MEMBER",
+                  "OWNER"
+                ]
+              }
+            }

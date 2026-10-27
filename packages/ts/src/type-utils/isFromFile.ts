@@ -1,6 +1,5 @@
-import path from "node:path";
-
-import ts from "typescript";
+import { resolve } from "pathe";
+import type ts from "typescript";
 
 import { pathKey } from "@flint.fyi/utils";
 
@@ -16,11 +15,11 @@ export function isFromFile(
 		);
 	}
 
-	const caseSensitive = ts.sys.useCaseSensitiveFileNames;
+	const caseSensitive = program.useCaseSensitiveFileNames();
 	return (
 		pathKey(sourceFile.fileName, caseSensitive) ===
 		pathKey(
-			path.resolve(program.getCurrentDirectory(), specifiedPath),
+			resolve(program.getCurrentDirectory(), specifiedPath),
 			caseSensitive,
 		)
 	);

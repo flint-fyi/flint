@@ -25,7 +25,7 @@ function getMathMethodInfo(
 		unwrapped.arguments.length < 1 ||
 		unwrapped.arguments.some((arg) => arg.kind === SyntaxKind.SpreadElement)
 	) {
-		return undefined;
+		return;
 	}
 
 	if (isMathMethod(unwrapped.expression, "min", typeChecker, program)) {
@@ -44,7 +44,7 @@ function getMathMethodInfo(
 		};
 	}
 
-	return undefined;
+	return;
 }
 
 function isMathMethod(
@@ -134,76 +134,81 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// Check for incorrect clamping patterns
 					// Pattern: Math.max(min, Math.min(max, x)) is incorrect
 					// Correct: Math.min(max, Math.max(min, x))
-					if (outerInfo.arguments.length === 2) {
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						const firstArgument = outerInfo.arguments[0]!;
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						const secondArgument = outerInfo.arguments[1]!;
+					if (outerInfo.arguments.length !== 2) {
+						return;
+					}
 
-						const innerInfo = getMathMethodInfo(
-							secondArgument,
-							typeChecker,
-							program,
-						);
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const firstArgument = outerInfo.arguments[0]!;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const secondArgument = outerInfo.arguments[1]!;
 
-						if (
-							innerInfo &&
-							innerInfo.method !== outerInfo.method &&
-							innerInfo.arguments.length === 2
-						) {
-							const innerFirstArg = innerInfo.arguments[0];
-							const innerSecondArg = innerInfo.arguments[1];
+					const innerInfo = getMathMethodInfo(
+						secondArgument,
+						typeChecker,
+						program,
+					);
 
-							if (!innerFirstArg || !innerSecondArg) {
-								return;
-							}
+					if (
+						!innerInfo ||
+						innerInfo.method === outerInfo.method ||
+						innerInfo.arguments.length !== 2
+					) {
+						return;
+					}
 
-							const outerConstant = getStaticNumberValue(firstArgument);
-							const innerConstantFirst = getStaticNumberValue(innerFirstArg);
-							const innerConstantSecond = getStaticNumberValue(innerSecondArg);
+					const innerFirstArg = innerInfo.arguments[0];
+					const innerSecondArg = innerInfo.arguments[1];
 
-							// Incorrect pattern: Math.max(min, Math.min(max, x))
-							// where outer is max and inner is min, and min < max
-							if (
-								outerInfo.method === "max" &&
-								innerInfo.method === "min" &&
-								outerConstant !== undefined &&
-								innerConstantFirst !== undefined &&
-								outerConstant < innerConstantFirst
-							) {
-								context.report({
-									data: {
-										innerMethod: innerInfo.method,
-										max: String(innerConstantFirst),
-										min: String(outerConstant),
-										outerMethod: outerInfo.method,
-									},
-									message: "incorrectClampOrder",
-									range: getTSNodeRange(node, sourceFile),
-								});
-								return;
-							}
+					if (!innerFirstArg || !innerSecondArg) {
+						return;
+					}
 
-							// Also check if arguments are flipped
-							if (
-								outerInfo.method === "max" &&
-								innerInfo.method === "min" &&
-								outerConstant !== undefined &&
-								innerConstantSecond !== undefined &&
-								outerConstant < innerConstantSecond
-							) {
-								context.report({
-									data: {
-										innerMethod: innerInfo.method,
-										max: String(innerConstantSecond),
-										min: String(outerConstant),
-										outerMethod: outerInfo.method,
-									},
-									message: "incorrectClampOrder",
-									range: getTSNodeRange(node, sourceFile),
-								});
-							}
-						}
+					const outerConstant = getStaticNumberValue(firstArgument);
+					const innerConstantFirst = getStaticNumberValue(innerFirstArg);
+
+					// Incorrect pattern: Math.max(min, Math.min(max, x))
+					// where outer is max and inner is min, and min < max
+					if (
+						outerInfo.method === "max" &&
+						innerInfo.method === "min" &&
+						outerConstant !== undefined &&
+						innerConstantFirst !== undefined &&
+						outerConstant < innerConstantFirst
+					) {
+						context.report({
+							data: {
+								innerMethod: innerInfo.method,
+								max: String(innerConstantFirst),
+								min: String(outerConstant),
+								outerMethod: outerInfo.method,
+							},
+							message: "incorrectClampOrder",
+							range: getTSNodeRange(node, sourceFile),
+						});
+						return;
+					}
+
+					const innerConstantSecond = getStaticNumberValue(innerSecondArg);
+
+					// Also check if arguments are flipped
+					if (
+						outerInfo.method === "max" &&
+						innerInfo.method === "min" &&
+						outerConstant !== undefined &&
+						innerConstantSecond !== undefined &&
+						outerConstant < innerConstantSecond
+					) {
+						context.report({
+							data: {
+								innerMethod: innerInfo.method,
+								max: String(innerConstantSecond),
+								min: String(outerConstant),
+								outerMethod: outerInfo.method,
+							},
+							message: "incorrectClampOrder",
+							range: getTSNodeRange(node, sourceFile),
+						});
 					}
 				},
 			},

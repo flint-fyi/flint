@@ -54,10 +54,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[+]/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[+]/;
  ~~~
  This character class wraps a single element that does not require brackets.

@@ -1,5 +1,78 @@
 # @flint/core
 
+## 0.30.1
+
+### Patch Changes
+
+- [#3742](https://github.com/flint-fyi/flint/pull/3742) [`348a945`](https://github.com/flint-fyi/flint/commit/348a945368205fce1b7ad4cfcfafba73edd94ff1) - Evaluate `.gitignore` rules once per path during file discovery instead of once per matched file and `use` group.
+
+- [#3743](https://github.com/flint-fyi/flint/pull/3743) [`4104141`](https://github.com/flint-fyi/flint/commit/410414102219774ae672c2b07f4015c8dd16af39) - Skip ignored subtrees such as `node_modules` and `.git` when setting up recursive directory watchers.
+
+- [#3745](https://github.com/flint-fyi/flint/pull/3745) [`a2187b2`](https://github.com/flint-fyi/flint/commit/a2187b2afc98cbe65e899b53f633493543551fca) - Compute each file's line starts once when converting rule report positions instead of once per report.
+
+## 0.30.0
+
+### Minor Changes
+
+- [#2766](https://github.com/flint-fyi/flint/pull/2766) [`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929) - Adds a new `LintSession` class to track the relevant files after each change and only lint the ones that have updated inputs.
+  Uses the session in `--watch` mode and rebuilds it when config or fileset changes require a fresh project view.
+  Keeps files with global declarations marked in the cache, so editing one still relints everything after a fully cached run.
+
+## 0.29.0
+
+### Minor Changes
+
+- [#3526](https://github.com/flint-fyi/flint/pull/3526) [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001) - Move `createDiskBackedLinterHost` and `isFileSystemCaseSensitive` to a new `@flint.fyi/core/node` entry point, so the main entry no longer imports Node.js built-ins.
+  Invalid-config errors no longer print a `Received:` line.
+
+### Patch Changes
+
+- [#3475](https://github.com/flint-fyi/flint/pull/3475) [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5) - Preserve global cache invalidation across cache-hit runs so changing a global declaration re-lints unrelated files.
+  Rename the language cache-impact flag from `invalidatesCache` to `isGlobalDependency`.
+
+- [#3582](https://github.com/flint-fyi/flint/pull/3582) [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9) - Resolve language cache dependencies against the host's current directory instead of the process's current directory.
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+
+## 0.28.0
+
+### Minor Changes
+
+- [#3400](https://github.com/flint-fyi/flint/pull/3400) [`2df6b52`](https://github.com/flint-fyi/flint/commit/2df6b526d4d503e1f2649a092486c7d540d8adda) - Allowed rule options to use any synchronous Standard Schema-compliant validators.
+
+- [#3525](https://github.com/flint-fyi/flint/pull/3525) [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db) - Require the `caseSensitive` option for `createVFSLinterHost` when no `baseHost` is given.
+
+### Patch Changes
+
+- [#3470](https://github.com/flint-fyi/flint/pull/3470) [`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39) - Use the host's current directory instead of `process.cwd()` for language report locations and file paths.
+
+- [#3479](https://github.com/flint-fyi/flint/pull/3479) [`12ad54b`](https://github.com/flint-fyi/flint/commit/12ad54bb504f1c54d215f9b6041fe8a79c263faf) - Preserve empty report message arrays and other nested report data when writing the lint cache.
+
+- [#3476](https://github.com/flint-fyi/flint/pull/3476) [`c049ab9`](https://github.com/flint-fyi/flint/commit/c049ab9a74c48b2a3c75c2aac26ca33b99a3d6a3) - Re-lint without applying fixes or reading cached results after the tenth fixing round so returned diagnostics and the final cache describe the final file contents.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
+## 0.27.0
+
+### Minor Changes
+
+- [#3135](https://github.com/flint-fyi/flint/pull/3135) [`fb6ceba`](https://github.com/flint-fyi/flint/commit/fb6ceba45d56c32294e27afff078736ac8e12e07) - Add `withRepositoryRoot` to compose a known repository root onto a host, and use it so disk-backed rule testers resolve `getRepositoryRoot()`.
+
+### Patch Changes
+
+- [#3402](https://github.com/flint-fyi/flint/pull/3402) [`6a34cee`](https://github.com/flint-fyi/flint/commit/6a34cee256df6c575793bd9ab8b094ed06e0efe4) - Ignore empty fix arrays, including fixes entirely filtered out by source mapping, so they do not write unchanged source files, count files as changed, or trigger repeated fixing rounds.
+
+- [#3254](https://github.com/flint-fyi/flint/pull/3254) [`a32109c`](https://github.com/flint-fyi/flint/commit/a32109c1ef55226efd1c05b853a9651c4d4ece6b) - Walk each file's AST once for all rules.
+
+- [#3473](https://github.com/flint-fyi/flint/pull/3473) [`b071991`](https://github.com/flint-fyi/flint/commit/b0719910c991f7b4b986062ccb182d31722c9fe2) - Change the `from` property to `extends` on config definitions.
+
+- [#3364](https://github.com/flint-fyi/flint/pull/3364) [`8950424`](https://github.com/flint-fyi/flint/commit/8950424bd54371e56344eff50f752aba1e5752a3) - Reject `pluginId` in the `about` passed to `RuleCreator.createRule`, since the creator already sets it.
+  Adds `RuleCreatorAbout` and `PluginRuleAbout` types.
+
+- [#3403](https://github.com/flint-fyi/flint/pull/3403) [`07f1ca7`](https://github.com/flint-fyi/flint/commit/07f1ca70461eff08d4bd096ca5d14f2f82dffc68) - Fall back to base-host timestamps for files absent from the VFS overlay, including disk-backed files.
+
+- [#3406](https://github.com/flint-fyi/flint/pull/3406) [`f02543b`](https://github.com/flint-fyi/flint/commit/f02543b8a418ae793b1b0ead1542db899486e7aa) - Fix case-insensitive VFS directory deduplication and glob cwd containment while preserving display spelling and overlay precedence.
+
 ## 0.26.0
 
 ### Minor Changes

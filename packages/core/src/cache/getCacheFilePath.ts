@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import { join } from "pathe";
 
 const defaultCacheFileDirectory = join("node_modules", ".cache");
 const defaultCacheFileName = "flint.json";

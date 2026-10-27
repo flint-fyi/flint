@@ -1,7 +1,6 @@
-import path from "node:path";
-
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
+import { extname } from "pathe";
 import { getPreEmitDiagnostics, type Program } from "typescript";
 
 import {
@@ -26,7 +25,7 @@ import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 interface GlobalLanguageState {
 	packageVersion: string;
@@ -41,7 +40,7 @@ type VolarCreateFile = (
 type VolarLanguageFileDefinition =
 	LanguageFileDefinition<TypeScriptFileServices> & {
 		__volarServices: {
-			getLanguageReports(): LanguageReports;
+			getLanguageReports(currentDirectory: string): LanguageReports;
 			runVisitors(
 				fileVisitors: readonly FileVisitors<
 					TypeScriptNodeVisitors,
@@ -88,12 +87,6 @@ export const typescriptLanguage: Language<
 		});
 		const openClientFilePaths = new Set<string>();
 
-		function closeClientFile(filePathAbsolute: string) {
-			if (openClientFilePaths.delete(filePathAbsolute)) {
-				service.closeClientFile(filePathAbsolute);
-			}
-		}
-
 		function createFile(data: FileAboutData) {
 			log("Opening client file:", data.filePathAbsolute);
 			service.openClientFile(data.filePathAbsolute, data.sourceText);
@@ -120,7 +113,7 @@ export const typescriptLanguage: Language<
 				`Could not retrieve source file for: ${data.filePathAbsolute}`,
 			);
 
-			const fileExtension = path.extname(data.filePathAbsolute);
+			const fileExtension = extname(data.filePathAbsolute);
 			if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
 				return {
 					...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
@@ -133,7 +126,9 @@ export const typescriptLanguage: Language<
 						typeChecker: program.getTypeChecker() as unknown as Checker,
 					},
 					[Symbol.dispose]() {
-						closeClientFile(data.filePathAbsolute);
+						if (openClientFilePaths.delete(data.filePathAbsolute)) {
+							service.closeClientFile(data.filePathAbsolute);
+						}
 					},
 				};
 			}
@@ -152,7 +147,9 @@ export const typescriptLanguage: Language<
 				...volarFile,
 				[Symbol.dispose]() {
 					volarFile[Symbol.dispose]?.();
-					closeClientFile(data.filePathAbsolute);
+					if (openClientFilePaths.delete(data.filePathAbsolute)) {
+						service.closeClientFile(data.filePathAbsolute);
+					}
 				},
 			};
 		}
@@ -169,16 +166,19 @@ export const typescriptLanguage: Language<
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
-	getLanguageReports(file) {
+	getLanguageReports(file, host) {
+		const currentDirectory = host.getCurrentDirectory();
 		if ("__volarServices" in file) {
 			return (
 				file as VolarLanguageFileDefinition
-			).__volarServices.getLanguageReports();
+			).__volarServices.getLanguageReports(currentDirectory);
 		}
 		return getPreEmitDiagnostics(
 			file.services.program,
 			file.services.sourceFile,
-		).map(convertTypeScriptDiagnosticToLanguageReport);
+		).map((diagnostic) =>
+			convertTypeScriptDiagnosticToLanguageReport(diagnostic, currentDirectory),
+		);
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
 	runFileVisitors(file, fileVisitors) {
@@ -218,7 +218,7 @@ const fileExtToFlintPlugin: Record<string, string> = {
 };
 
 export function throwUnknownLanguageExtension(filename: string): never {
-	const pluginName = fileExtToFlintPlugin[path.extname(filename)];
+	const pluginName = fileExtToFlintPlugin[extname(filename)];
 	const message = pluginName
 		? `Did you install & import ${pluginName}?`
 		: "Unknown extension.";

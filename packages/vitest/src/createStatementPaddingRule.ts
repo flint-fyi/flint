@@ -1,6 +1,6 @@
 import ts, { SyntaxKind } from "typescript";
 
-import type { Rule } from "@flint.fyi/core";
+import type { PluginRuleAbout, Rule } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -8,7 +8,15 @@ import {
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
-import { ruleCreator, type VitestRuleAbout } from "./ruleCreator.ts";
+import {
+	ruleCreator,
+	type VitestPreset,
+	type VitestRuleAbout,
+} from "./ruleCreator.ts";
+import {
+	parseVitestFunctionCall,
+	type VitestFunctionCall,
+} from "./utils/parseVitestFunctionCall.ts";
 
 export interface StatementPaddingMatch {
 	blockName: string;
@@ -16,7 +24,7 @@ export interface StatementPaddingMatch {
 }
 
 export type StatementPaddingRule = Rule<
-	VitestRuleAbout,
+	PluginRuleAbout<VitestPreset>,
 	"missingPadding",
 	undefined
 >;
@@ -110,7 +118,7 @@ export function createStatementPaddingRule(
 					sourceFile.getLineAndCharacterOfPosition(nextStart).line;
 
 				if (nextLine - previousLine > 1) {
-					return undefined;
+					return;
 				}
 
 				return {
@@ -169,41 +177,25 @@ export function createStatementPaddingRule(
 	});
 }
 
-export function getStatementRootName(
+export function parseStatementVitestFunctionCall(
 	statement: AST.AnyNode,
-): string | undefined {
+): undefined | VitestFunctionCall {
 	const expression = getStatementExpression(statement);
 	if (!expression) {
-		return undefined;
+		return;
 	}
 
-	if (expression.kind === SyntaxKind.AwaitExpression) {
-		return getRootIdentifierName(expression.expression);
+	const call = unwrapAwaitAndParentheses(expression);
+	if (call.kind !== SyntaxKind.CallExpression) {
+		return;
 	}
 
-	return getRootIdentifierName(expression);
-}
-
-function getRootIdentifierName(node: AST.AnyNode): string | undefined {
-	if (node.kind === SyntaxKind.Identifier) {
-		return node.text;
-	}
-
-	if (
-		node.kind === SyntaxKind.CallExpression ||
-		node.kind === SyntaxKind.NonNullExpression ||
-		node.kind === SyntaxKind.ParenthesizedExpression ||
-		node.kind === SyntaxKind.PropertyAccessExpression
-	) {
-		return getRootIdentifierName(node.expression);
-	}
-
-	return undefined;
+	return parseVitestFunctionCall(call);
 }
 
 function getStatementExpression(
 	statement: AST.AnyNode,
-): AST.AnyNode | undefined {
+): AST.Expression | undefined {
 	if (statement.kind === SyntaxKind.ExpressionStatement) {
 		return statement.expression;
 	}
@@ -213,4 +205,15 @@ function getStatementExpression(
 	}
 
 	return undefined;
+}
+
+function unwrapAwaitAndParentheses(node: AST.Expression): AST.Expression {
+	switch (node.kind) {
+		case SyntaxKind.AwaitExpression:
+		case SyntaxKind.ParenthesizedExpression:
+			return unwrapAwaitAndParentheses(node.expression);
+
+		default:
+			return node;
+	}
 }

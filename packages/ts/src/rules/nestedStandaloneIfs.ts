@@ -13,6 +13,7 @@ function hasCommentsInRange(
 	start: number,
 	end: number,
 ) {
+	// eslint-disable-next-line unicorn/prefer-set-has -- substring check on a string, not array membership
 	const text = sourceFile.text.slice(start, end);
 	return text.includes("//") || text.includes("/*");
 }
@@ -120,11 +121,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				const elseKeyword = grandparent
+				const hasElseKeyword = grandparent
 					.getChildren(sourceFile)
-					.find((child) => child.kind === SyntaxKind.ElseKeyword);
+					.some((child) => child.kind === SyntaxKind.ElseKeyword);
 
-				if (!elseKeyword) {
+				if (!hasElseKeyword) {
 					return;
 				}
 
@@ -150,47 +151,49 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				isIfWithoutElse(node.parent.parent) &&
-				node.parent.parent.thenStatement === node.parent
+				!isIfWithoutElse(node.parent.parent) ||
+				node.parent.parent.thenStatement !== node.parent
 			) {
-				const outerIf = node.parent.parent;
-				const openBrace = node.parent.getStart(sourceFile);
-				const closeBrace = node.parent.getEnd();
-
-				if (
-					hasCommentsInRange(
-						sourceFile,
-						openBrace + 1,
-						node.getStart(sourceFile),
-					) ||
-					hasCommentsInRange(sourceFile, node.getEnd(), closeBrace - 1)
-				) {
-					return;
-				}
-
-				const outerCondition = wrapWithParenthesesIfNeeded(
-					outerIf.expression,
-					sourceFile,
-				);
-				const innerCondition = wrapWithParenthesesIfNeeded(
-					node.expression,
-					sourceFile,
-				);
-
-				const consequentText = node.thenStatement.getText(sourceFile);
-				const fixedText = `if (${outerCondition} && ${innerCondition}) ${consequentText}`;
-
-				context.report({
-					fix: {
-						range: getTSNodeRange(outerIf, sourceFile),
-						text: fixedText,
-					},
-					message: "lonelyIfInIf",
-					range: getTSNodeRange(node, sourceFile),
-				});
-
 				return;
 			}
+
+			const outerIf = node.parent.parent;
+			const openBrace = node.parent.getStart(sourceFile);
+			const closeBrace = node.parent.getEnd();
+
+			if (
+				hasCommentsInRange(
+					sourceFile,
+					openBrace + 1,
+					node.getStart(sourceFile),
+				) ||
+				hasCommentsInRange(sourceFile, node.getEnd(), closeBrace - 1)
+			) {
+				return;
+			}
+
+			const outerCondition = wrapWithParenthesesIfNeeded(
+				outerIf.expression,
+				sourceFile,
+			);
+			const innerCondition = wrapWithParenthesesIfNeeded(
+				node.expression,
+				sourceFile,
+			);
+
+			const consequentText = node.thenStatement.getText(sourceFile);
+			const fixedText = `if (${outerCondition} && ${innerCondition}) ${consequentText}`;
+
+			context.report({
+				fix: {
+					range: getTSNodeRange(outerIf, sourceFile),
+					text: fixedText,
+				},
+				message: "lonelyIfInIf",
+				range: getTSNodeRange(node, sourceFile),
+			});
+
+			return;
 		}
 
 		function checkChildOfIfWithoutElse(

@@ -50,7 +50,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitRegExpAST(regexpAst, {
 				onCharacterEnter(charNode) {
 					if (
-						charNode.value < 0x10000 ||
+						charNode.value < 0x1_00_00 ||
 						!isSurrogatePairEscape(charNode.raw)
 					) {
 						return;
@@ -61,7 +61,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						hex = hex.toUpperCase();
 					}
 
-					const replacement = `\\u{${hex}}`;
+					const replacement = String.raw`\u{${hex}}`;
 
 					context.report({
 						data: {
@@ -103,25 +103,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const high = parseInt(highHex, 16);
-				if (high < 0xd800 || high > 0xdbff) {
+				const high = Number.parseInt(highHex, 16);
+				if (high < 0xd8_00 || high > 0xdb_ff) {
 					continue;
 				}
 
-				const low = parseInt(lowHex, 16);
-				if (low < 0xdc00 || low > 0xdfff) {
+				const low = Number.parseInt(lowHex, 16);
+				if (low < 0xdc_00 || low > 0xdf_ff) {
 					continue;
 				}
 
-				const codepoint = (high - 0xd800) * 0x400 + (low - 0xdc00) + 0x10000;
+				const codepoint =
+					(high - 0xd8_00) * 0x4_00 + (low - 0xdc_00) + 0x1_00_00;
 
 				let hex = codepoint.toString(16);
 				if (/[A-F]/.test(fullMatch)) {
 					hex = hex.toUpperCase();
 				}
 
-				const raw = `\\u${highHex}\\u${lowHex}`;
-				const displayReplacement = `\\u{${hex}}`;
+				const raw = String.raw`\u${highHex}\u${lowHex}`;
+				const displayReplacement = String.raw`\u{${hex}}`;
 				const fixText = `\\${displayReplacement}`;
 
 				context.report({

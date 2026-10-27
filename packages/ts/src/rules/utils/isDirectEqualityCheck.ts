@@ -49,7 +49,7 @@ export function isDirectEqualityCheck(
 
 function getDirectReturnExpression(body: AST.Block) {
 	if (body.statements.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

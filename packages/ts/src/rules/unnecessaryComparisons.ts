@@ -69,15 +69,13 @@ function checkImpossibleRange(
 				return { lowerBound, upperBound };
 			}
 
-			if (upper === lower) {
-				// x <= 5 && x >= 5 is valid (effectively x === 5)
-				// x <= 5 && x > 5 is impossible
-				// x < 5 && x >= 5 is impossible
-				// x < 5 && x > 5 is impossible
-				// Only impossible if at least one bound is strict
-				if (upperBound.isStrict || lowerBound.isStrict) {
-					return { lowerBound, upperBound };
-				}
+			// x <= 5 && x >= 5 is valid (effectively x === 5)
+			// x <= 5 && x > 5 is impossible
+			// x < 5 && x >= 5 is impossible
+			// x < 5 && x > 5 is impossible
+			// Only impossible if at least one bound is strict
+			if (upper === lower && (upperBound.isStrict || lowerBound.isStrict)) {
+				return { lowerBound, upperBound };
 			}
 		}
 	}
@@ -158,19 +156,16 @@ function checkRedundantOrComparison(
 ) {
 	for (const [index, a] of comparisons.entries()) {
 		for (const b of comparisons.slice(index + 1)) {
-			// Must compare the same operands
 			if (
-				!hasSameTokens(a.variable, b.variable, sourceFile) ||
-				!hasSameTokens(a.node.left, b.node.left, sourceFile) ||
-				!hasSameTokens(a.node.right, b.node.right, sourceFile)
-			) {
+				// Must compare the same operands
+				(!hasSameTokens(a.variable, b.variable, sourceFile) ||
+					!hasSameTokens(a.node.left, b.node.left, sourceFile) ||
+					!hasSameTokens(a.node.right, b.node.right, sourceFile)) &&
 				// Also check flipped operands
-				if (
-					!hasSameTokens(a.node.left, b.node.right, sourceFile) ||
-					!hasSameTokens(a.node.right, b.node.left, sourceFile)
-				) {
-					continue;
-				}
+				(!hasSameTokens(a.node.left, b.node.right, sourceFile) ||
+					!hasSameTokens(a.node.right, b.node.left, sourceFile))
+			) {
+				continue;
 			}
 
 			const suggestion = getSimplifiedOperator(a.operatorKind, b.operatorKind);
@@ -457,29 +452,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					// Case 3: OR chains - check for redundant double comparisons
-					if (node.operatorToken.kind === SyntaxKind.BarBarToken) {
-						const comparisons = collectComparisonsFromChain(
-							node,
-							SyntaxKind.BarBarToken,
-						);
-
-						if (comparisons.length >= 2) {
-							const redundant = checkRedundantOrComparison(
-								comparisons,
-								sourceFile,
-							);
-							if (redundant) {
-								context.report({
-									data: {
-										suggestion: redundant.suggestion,
-									},
-									message: "redundantComparison",
-									range: getTSNodeRange(node, sourceFile),
-								});
-								return;
-							}
-						}
+					if (node.operatorToken.kind !== SyntaxKind.BarBarToken) {
+						return;
 					}
+
+					const comparisons = collectComparisonsFromChain(
+						node,
+						SyntaxKind.BarBarToken,
+					);
+
+					if (comparisons.length < 2) {
+						return;
+					}
+
+					const redundant = checkRedundantOrComparison(comparisons, sourceFile);
+					if (!redundant) {
+						return;
+					}
+
+					context.report({
+						data: {
+							suggestion: redundant.suggestion,
+						},
+						message: "redundantComparison",
+						range: getTSNodeRange(node, sourceFile),
+					});
 				},
 			},
 		};

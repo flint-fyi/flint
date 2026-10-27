@@ -37,7 +37,7 @@ export function createESLintConfigFile(rules: TestCaseRules): string {
 	const plugins = Array.from(used, ([name, pluginPackage]) => ({
 		...pluginPackage,
 		name,
-	})).sort((a, b) => a.name.localeCompare(b.name));
+	})).toSorted((a, b) => a.name.localeCompare(b.name));
 
 	return `
 import { defineConfig, globalIgnores } from "eslint/config";

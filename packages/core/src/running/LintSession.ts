@@ -1,10 +1,10 @@
-import path from "node:path";
-
 import { CachedFactory } from "cached-factory";
+import { isAbsolute, resolve } from "pathe";
 
 import { pathKey } from "@flint.fyi/utils";
 
 import { collectTransitiveDependents } from "../cache/collectTransitiveDependents.ts";
+import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type {
@@ -20,12 +20,6 @@ import {
 	type FinalizedFileResults,
 } from "./finalizeFileResults.ts";
 import { runRules } from "./runRules.ts";
-
-export interface LintSessionChangedLintOptions extends LintSessionLintOptions {
-	onResults?: (
-		results: Map<string, FinalizedFileResults>,
-	) => Promise<void> | void;
-}
 
 export interface LintSessionLintOptions {
 	skipLanguageReports?: boolean;
@@ -100,55 +94,46 @@ export class LintSession implements Disposable {
 		return this.#filePathByKey.has(this.#toPathKey(filePath));
 	}
 
-	async lintAll(
-		options?: LintSessionLintOptions,
-	): Promise<Map<string, FinalizedFileResults>> {
-		return await this.lintFiles(this.allFilePaths, options);
-	}
-
 	async lintChangedFiles(
 		filePaths: Iterable<string>,
-		options?: LintSessionChangedLintOptions,
+		options?: LintSessionLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
+		const changedPaths = Array.from(filePaths);
 		const changedKeys = new Set(
-			Array.from(filePaths, (filePath) => this.#toPathKey(filePath)),
+			changedPaths.map((filePath) => this.#toPathKey(filePath)),
 		);
-		const changedFilePaths = this.#resolveFilePaths(filePaths);
+		const changedFilePaths = this.#resolveFilePaths(changedPaths);
 		const allResults = new Map<string, FinalizedFileResults>();
-		let invalidatesCache = Array.from(changedFilePaths).some(
-			(filePath) => this.storedResults.get(filePath)?.invalidatesCache,
+		let changedGlobalDependency = Array.from(changedFilePaths).some(
+			(filePath) => this.storedResults.get(filePath)?.isGlobalDependency,
 		);
 
 		const lintPass = async (passFilePaths: Set<string>) => {
-			if (!passFilePaths.size) {
-				return;
-			}
-
-			const results = await this.lintFiles(passFilePaths, options);
-			for (const [filePath, fileResults] of results) {
+			for (const [filePath, fileResults] of await this.lintFiles(
+				passFilePaths,
+				options,
+			)) {
 				allResults.set(filePath, fileResults);
-				if (fileResults.invalidatesCache) {
-					invalidatesCache = true;
+				if (fileResults.isGlobalDependency) {
+					changedGlobalDependency = true;
 				}
 			}
-
-			await options?.onResults?.(results);
 		};
 
 		await lintPass(changedFilePaths);
 
-		if (!invalidatesCache) {
+		if (!changedGlobalDependency) {
 			await lintPass(
 				collectTransitiveDependents(
 					changedKeys,
 					(dependencyKey) => this.#dependentsByDependencyKey.get(dependencyKey),
 					(filePath) => this.#toPathKey(filePath),
-				).difference(new Set(allResults.keys())),
+				).difference(allResults),
 			);
 		}
 
-		if (invalidatesCache) {
-			await lintPass(this.allFilePaths.difference(new Set(allResults.keys())));
+		if (changedGlobalDependency) {
+			await lintPass(this.allFilePaths.difference(allResults));
 		}
 
 		return allResults;
@@ -163,77 +148,58 @@ export class LintSession implements Disposable {
 			return new Map();
 		}
 
-		this.#addFilesRequiredByRules(filePathsToLint);
+		const languageFilesByFilePath = collectLanguageFilesByFilePath(
+			this.#rulesOptionsByFile,
+			this.#host,
+			filePathsToLint,
+			this.#languageFileFactories,
+		);
 
-		return await this.#lintCollectedFiles(filePathsToLint, options);
+		using files = new DisposableStack();
+
+		for (const languageAndFiles of languageFilesByFilePath.values()) {
+			for (const { file } of languageAndFiles) {
+				files.use(file);
+			}
+		}
+
+		const reportsByFilePath = await runRules(
+			languageFilesByFilePath,
+			this.#rulesOptionsByFile,
+			this.#host,
+		);
+		const filesResults = new Map<string, FinalizedFileResults>();
+
+		for (const [filePath, languageAndFiles] of languageFilesByFilePath) {
+			const fileResults = finalizeFileResults(
+				filePath,
+				languageAndFiles,
+				reportsByFilePath.get(filePath),
+				this.#host,
+				options?.skipLanguageReports,
+			);
+
+			filesResults.set(filePath, fileResults);
+			this.#storeResults(filePath, fileResults);
+		}
+
+		return filesResults;
+	}
+
+	restoreCachedResults(cached: Map<string, FileCacheStorage>): void {
+		for (const [filePath, cachedStorage] of cached) {
+			this.#storeResults(filePath, {
+				dependencies: new Set(cachedStorage.dependencies),
+				isGlobalDependency: cachedStorage.isGlobalDependency ?? false,
+				languageReports: cachedStorage.languageReports ?? [],
+				reports: cachedStorage.reports ?? [],
+			});
+		}
 	}
 
 	[Symbol.dispose](): void {
 		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
 			fileFactory[Symbol.dispose]?.();
-		}
-	}
-
-	#addFilesRequiredByRules(filePaths: Set<string>): void {
-		for (const [rule, optionsByFile] of this.#rulesOptionsByFile) {
-			if (
-				!rule.requiresAllFiles ||
-				!filePaths.intersection(optionsByFile).size
-			) {
-				continue;
-			}
-
-			for (const filePath of optionsByFile.keys()) {
-				filePaths.add(filePath);
-			}
-		}
-	}
-
-	async #lintCollectedFiles(
-		filePaths: Set<string>,
-		options?: LintSessionLintOptions,
-	): Promise<Map<string, FinalizedFileResults>> {
-		if (!filePaths.size) {
-			return new Map();
-		}
-
-		const languageFilesByFilePath = collectLanguageFilesByFilePath(
-			this.#rulesOptionsByFile,
-			this.#host,
-			{
-				filePaths,
-				languageFileFactories: this.#languageFileFactories,
-			},
-		);
-
-		try {
-			const reportsByFilePath = await runRules(
-				languageFilesByFilePath,
-				this.#rulesOptionsByFile,
-				this.#host,
-			);
-			const filesResults = new Map<string, FinalizedFileResults>();
-
-			for (const [filePath, languageAndFiles] of languageFilesByFilePath) {
-				const fileResults = finalizeFileResults(
-					filePath,
-					languageAndFiles,
-					reportsByFilePath.get(filePath),
-					this.#host,
-					options?.skipLanguageReports,
-				);
-
-				filesResults.set(filePath, fileResults);
-				this.#storeResults(filePath, fileResults);
-			}
-
-			return filesResults;
-		} finally {
-			for (const languageAndFiles of languageFilesByFilePath.values()) {
-				for (const { file } of languageAndFiles) {
-					file[Symbol.dispose]();
-				}
-			}
 		}
 	}
 
@@ -275,9 +241,9 @@ export class LintSession implements Disposable {
 
 	#toPathKey(filePath: string): string {
 		return pathKey(
-			path.isAbsolute(filePath)
+			isAbsolute(filePath)
 				? filePath
-				: path.resolve(this.#host.getCurrentDirectory(), filePath),
+				: resolve(this.#host.getCurrentDirectory(), filePath),
 			this.#caseSensitiveFS,
 		);
 	}

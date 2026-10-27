@@ -13,13 +13,13 @@ import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function getPreferredAssertion(node: RegExpAST.LookaroundAssertion) {
 	if (node.alternatives.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const elements = node.alternatives[0]!.elements;
 	if (elements.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -32,28 +32,28 @@ function getPreferredAssertion(node: RegExpAST.LookaroundAssertion) {
 		element.kind === "space" ||
 		element.negate
 	) {
-		return undefined;
+		return;
 	}
 
 	if (element.kind === "word") {
 		if (node.kind === "lookahead" && !node.negate) {
-			return "\\B";
+			return String.raw`\B`;
 		}
 
 		if (node.kind === "lookahead" && node.negate) {
-			return "\\b";
+			return String.raw`\b`;
 		}
 
 		if (node.kind === "lookbehind" && !node.negate) {
-			return "\\B";
+			return String.raw`\B`;
 		}
 
 		if (node.kind === "lookbehind" && node.negate) {
-			return "\\b";
+			return String.raw`\b`;
 		}
 	}
 
-	return undefined;
+	return;
 }
 
 function isNegativeLookaheadDot(node: RegExpAST.Element) {

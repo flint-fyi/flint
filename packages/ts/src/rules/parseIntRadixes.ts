@@ -54,7 +54,7 @@ function isValidRadix(argument: AST.Expression) {
 	}
 
 	const value = getStaticNumberValue(argument);
-	return value === undefined ? true : isValidRadixValue(value);
+	return value === undefined || isValidRadixValue(value);
 }
 
 function isValidRadixValue(value: number) {

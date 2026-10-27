@@ -6,36 +6,42 @@ import { debugForFile } from "debug-for-file";
 import {
 	applyChangesToFiles,
 	LintSession,
+	lintSessionWithCache,
 	maximumFixIterations,
 	nodeModulesCache,
 	vcsDirectories,
 	writeToCache,
 	type LinterHost,
+	type LintResults,
 	type LintResultsWithChanges,
 	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
-import { pathKey } from "@flint.fyi/utils";
+import { addFlintAssertionContext, pathKey } from "@flint.fyi/utils";
 
 import { loadConfigDefinition } from "./loadConfigDefinition.ts";
 import type { OptionsValues } from "./options.ts";
 import { renderCliResults } from "./renderCliResults.ts";
 import type { Renderer } from "./renderers/types.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function runCliWatch(
 	host: LinterHost,
 	configFileName: string,
 	getRenderer: () => Renderer,
 	values: OptionsValues,
+	args: string[],
 ): Promise<void> {
 	const cwd = host.getCurrentDirectory();
 	const isCaseSensitiveFS = host.isCaseSensitiveFS();
+	const lintOptions = {
+		skipLanguageReports: values["skip-language-reports"] ?? false,
+	};
 
 	return new Promise<void>((resolve) => {
 		let configDefinition: ProcessedConfigDefinition | undefined;
 		let currentRenderer: Renderer | undefined;
-		let currentTask = Promise.resolve(undefined);
+		let currentTask: Promise<unknown> = Promise.resolve();
 		let importVersion = 0;
 		let lintSession: LintSession | undefined;
 		let quitting = false;
@@ -70,13 +76,9 @@ export async function runCliWatch(
 		}
 
 		function queueTask<Result>(task: () => Promise<Result>) {
-			currentTask = currentTask
-				.then(task, task)
-				.then(() => undefined)
-				.catch((error: unknown) => {
-					log("Error during lint run: %o", error);
-					return undefined;
-				});
+			currentTask = currentTask.then(task, task).catch((error: unknown) => {
+				log("Error during lint run: %o", addFlintAssertionContext(error, args));
+			});
 		}
 
 		async function rebuildSession() {
@@ -111,22 +113,17 @@ export async function runCliWatch(
 			};
 		}
 
-		async function lintFiles(session: LintSession, filePaths?: Set<string>) {
+		async function applyFixes(
+			session: LintSession,
+			initialResults: LintResults["allFileResults"],
+		) {
 			const changed = new Set<string>();
 			const formatFilePaths = new Set<string>();
-			const lintOptions = {
-				skipLanguageReports: values["skip-language-reports"] ?? false,
-			};
 
 			async function runIteration(
-				nextFilePaths: Set<string> | undefined,
+				filesResults: LintResults["allFileResults"],
 				iteration: number,
 			): Promise<void> {
-				const filesResults =
-					nextFilePaths == null
-						? await session.lintAll(lintOptions)
-						: await session.lintChangedFiles(nextFilePaths, lintOptions);
-
 				for (const filePath of filesResults.keys()) {
 					formatFilePaths.add(filePath);
 				}
@@ -149,19 +146,24 @@ export async function runCliWatch(
 					formatFilePaths.add(filePath);
 				}
 
-				await runIteration(new Set(fixedFilePaths), iteration + 1);
+				await runIteration(
+					await session.lintChangedFiles(new Set(fixedFilePaths), lintOptions),
+					iteration + 1,
+				);
 			}
 
-			await runIteration(filePaths, 0);
+			await runIteration(initialResults, 0);
 
 			return { changed, formatFilePaths };
 		}
 
 		async function run({
 			filePaths,
+			ignoreCache = false,
 			rebuild,
 		}: {
 			filePaths?: Set<string>;
+			ignoreCache?: boolean;
 			rebuild: boolean;
 		}) {
 			if (quitting) {
@@ -179,18 +181,23 @@ export async function runCliWatch(
 			renderer.announce();
 
 			const startTime = performance.now();
-			const { changed, formatFilePaths } = await lintFiles(
+			const cacheLocation =
+				values["cache-location"] || configDefinition.cacheLocation;
+			const { changed, formatFilePaths } = await applyFixes(
 				lintSession,
-				filePaths,
+				filePaths
+					? await lintSession.lintChangedFiles(filePaths, lintOptions)
+					: (
+							await lintSessionWithCache(lintSession, configFileName, host, {
+								cacheLocation,
+								ignoreCache,
+								...lintOptions,
+							})
+						).allFileResults,
 			);
 			const lintResults = createLintResults(lintSession, changed);
 
-			await writeToCache(
-				host,
-				configFileName,
-				lintResults,
-				values["cache-location"] || configDefinition.cacheLocation,
-			);
+			await writeToCache(host, configFileName, lintResults, cacheLocation);
 
 			if (currentRenderer !== renderer) {
 				return lintSession;
@@ -198,7 +205,7 @@ export async function runCliWatch(
 
 			await renderCliResults(host, lintResults, renderer, values, {
 				formatFilePaths,
-				ignoreCache: values["cache-ignore"] ?? false,
+				ignoreCache,
 				startTime,
 			});
 
@@ -297,7 +304,9 @@ export async function runCliWatch(
 		);
 
 		log("Running initial watch lint.");
-		queueTask(() => run({ rebuild: true }));
+		queueTask(() =>
+			run({ ignoreCache: values["cache-ignore"] ?? false, rebuild: true }),
+		);
 	});
 }
 

@@ -30,12 +30,12 @@ function findUnnecessaryAssertions(
 	let match: null | RegExpExecArray;
 	while ((match = wordBoundaryRegex.exec(pattern)) !== null) {
 		const assertionStart = match.index;
-		const assertionEnd = match.index + match[0].length;
 
 		if (isInsideCharacterClass(pattern, assertionStart)) {
 			continue;
 		}
 
+		const assertionEnd = match.index + match[0].length;
 		const characterBefore = getCharBeforeAssertion(
 			pattern,
 			assertionStart,
@@ -71,12 +71,12 @@ function findUnnecessaryAssertions(
 
 	while ((match = negatedWordBoundaryRegex.exec(pattern)) !== null) {
 		const assertionStart = match.index;
-		const assertionEnd = match.index + match[0].length;
 
 		if (isInsideCharacterClass(pattern, assertionStart)) {
 			continue;
 		}
 
+		const assertionEnd = match.index + match[0].length;
 		const characterBefore = getCharBeforeAssertion(
 			pattern,
 			assertionStart,
@@ -161,32 +161,32 @@ function findUnnecessaryAssertions(
 
 function getCharacterFromEscape(escape: string) {
 	switch (escape) {
-		case "\\\\d":
-		case "\\d":
+		case String.raw`\\d`:
+		case String.raw`\d`:
 			return "0";
 
-		case "\\\\D":
-		case "\\D":
+		case String.raw`\\D`:
+		case String.raw`\D`:
 			return " ";
 
-		case "\\\\s":
-		case "\\s":
+		case String.raw`\\s`:
+		case String.raw`\s`:
 			return " ";
 
-		case "\\\\S":
-		case "\\S":
+		case String.raw`\\S`:
+		case String.raw`\S`:
 			return "a";
 
-		case "\\\\w":
-		case "\\w":
+		case String.raw`\\w`:
+		case String.raw`\w`:
 			return "a";
 
-		case "\\\\W":
-		case "\\W":
+		case String.raw`\\W`:
+		case String.raw`\W`:
 			return " ";
 
 		default:
-			return undefined;
+			return;
 	}
 }
 
@@ -196,7 +196,7 @@ function getCharAfterAssertion(
 	doubleEscaped: boolean,
 ) {
 	if (assertionEnd >= pattern.length) {
-		return undefined;
+		return;
 	}
 
 	const remaining = pattern.slice(assertionEnd);
@@ -212,7 +212,7 @@ function getCharAfterAssertion(
 			return remaining[2];
 		}
 
-		return undefined;
+		return;
 	}
 
 	if (!doubleEscaped && remaining.startsWith("\\")) {
@@ -223,12 +223,12 @@ function getCharAfterAssertion(
 		}
 
 		if (
-			twoCharEscape === "\\b" ||
-			twoCharEscape === "\\B" ||
+			twoCharEscape === String.raw`\b` ||
+			twoCharEscape === String.raw`\B` ||
 			remaining.length < 1 ||
 			!remaining[1]
 		) {
-			return undefined;
+			return;
 		}
 
 		return remaining[1];
@@ -243,7 +243,7 @@ function getCharBeforeAssertion(
 	doubleEscaped: boolean,
 ) {
 	if (assertionStart <= 0) {
-		return undefined;
+		return;
 	}
 
 	if (doubleEscaped) {
@@ -277,11 +277,11 @@ function isInsideCharacterClass(pattern: string, position: number) {
 	let inClass = false;
 	let escaped = false;
 	for (let index = 0; index < position; index++) {
-		const char = pattern[index];
 		if (escaped) {
 			escaped = false;
 			continue;
 		}
+		const char = pattern[index];
 		if (char === "\\") {
 			escaped = true;
 			continue;

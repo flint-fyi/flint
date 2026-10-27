@@ -8,12 +8,12 @@ ruleTester.describe(rule, {
 		{
 			code: `
 {
-    "cafe\u0301": "value"
+    "cafe\u{301}": "value"
 }
 `,
 			snapshot: `
 {
-    "cafe\u0301": "value"
+    "cafe\u{301}": "value"
     ~~~~~~~
     This key is not normalized using the NFC normalization form.
 }
@@ -33,13 +33,13 @@ ruleTester.describe(rule, {
 			code: `
 {
     "résumé": "document",
-    "cafe\u0301": "latte"
+    "cafe\u{301}": "latte"
 }
 `,
 			snapshot: `
 {
     "résumé": "document",
-    "cafe\u0301": "latte"
+    "cafe\u{301}": "latte"
     ~~~~~~~
     This key is not normalized using the NFC normalization form.
 }
@@ -77,7 +77,7 @@ ruleTester.describe(rule, {
 					id: "normalizeKey",
 					updated: `
 {
-    "cafe\u0301": "value"
+    "cafe\u{301}": "value"
 }
 `,
 				},
@@ -108,7 +108,7 @@ ruleTester.describe(rule, {
 					id: "normalizeKey",
 					updated: `
 {
-    "cafe\u0301": "espresso",
+    "cafe\u{301}": "espresso",
     "naïve": "approach"
 }
 `,
@@ -118,7 +118,7 @@ ruleTester.describe(rule, {
 					updated: `
 {
     "café": "espresso",
-    "nai\u0308ve": "approach"
+    "nai\u{308}ve": "approach"
 }
 `,
 				},
@@ -144,7 +144,7 @@ ruleTester.describe(rule, {
 		{
 			code: `
 {
-    "cafe\u0301": "value"
+    "cafe\u{301}": "value"
 }
 `,
 			options: {

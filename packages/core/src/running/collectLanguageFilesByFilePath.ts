@@ -1,8 +1,8 @@
 import { CachedFactory } from "cached-factory";
+import { resolve } from "pathe";
 
-import { makeAbsolute, nullThrows } from "@flint.fyi/utils";
+import { nullThrows } from "@flint.fyi/utils";
 
-import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
 import type {
 	AnyLanguage,
@@ -11,24 +11,11 @@ import type {
 } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 
-export interface CollectLanguageFilesOptions {
-	cached?: Map<string, FileCacheStorage> | undefined;
-	filePaths?: ReadonlySet<string> | undefined;
-	languageFileFactories?:
-		| CachedFactory<AnyLanguage, AnyLanguageFileFactory>
-		| undefined;
-}
-
 export function collectLanguageFilesByFilePath(
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
-	{
-		cached,
-		filePaths,
-		languageFileFactories = new CachedFactory((language: AnyLanguage) =>
-			language.createFileFactory(host),
-		),
-	}: CollectLanguageFilesOptions = {},
+	filePaths: ReadonlySet<string>,
+	languageFileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>,
 ): Map<
 	string,
 	{
@@ -46,8 +33,7 @@ export function collectLanguageFilesByFilePath(
 
 	for (const [rule, optionsByFile] of rulesOptionsByFile) {
 		for (const [filePath] of optionsByFile) {
-			// If the file has cached results, don't bother making files for it
-			if (cached?.has(filePath) || (filePaths && !filePaths.has(filePath))) {
+			if (!filePaths.has(filePath)) {
 				continue;
 			}
 
@@ -66,7 +52,7 @@ export function collectLanguageFilesByFilePath(
 				language,
 				languageFileFactory.createFile({
 					filePath,
-					filePathAbsolute: makeAbsolute(filePath),
+					filePathAbsolute: resolve(host.getCurrentDirectory(), filePath),
 					sourceText: nullThrows(
 						// TODO: switch to read this async
 						host.readFileSync(filePath),
@@ -78,10 +64,11 @@ export function collectLanguageFilesByFilePath(
 	}
 
 	return new Map(
-		Array.from(languageFilesByFilePath.entries()).map(
+		Array.from(
+			languageFilesByFilePath.entries(),
 			([filePath, filesByLanguage]) => [
 				filePath,
-				Array.from(filesByLanguage.entries()).map(([language, file]) => ({
+				Array.from(filesByLanguage, ([language, file]) => ({
 					file,
 					language,
 				})),

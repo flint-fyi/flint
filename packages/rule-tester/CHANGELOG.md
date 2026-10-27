@@ -1,5 +1,59 @@
 # @flint/rule-tester
 
+## 0.21.1
+
+### Patch Changes
+
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
+## 0.21.0
+
+### Minor Changes
+
+- [#3563](https://github.com/flint-fyi/flint/pull/3563) [`6854867`](https://github.com/flint-fyi/flint/commit/68548673ce152e213ac1bf7082d3bf060a3e3d7a) - Use `/` as the working directory for in-memory tests instead of the process cwd.
+
+- [#3530](https://github.com/flint-fyi/flint/pull/3530) [`de47eec`](https://github.com/flint-fyi/flint/commit/de47eecc9154d5b82b4e45489f9ddc0a49d55e46) - Resolve expected cross-file suggestion paths against the test host's current directory, so fixtures can use relative path literals.
+  Rules must report absolute target paths; relative reported targets are no longer accepted.
+  Target CSpell dictionary suggestions at the absolute configuration path used to read the dictionary.
+
+### Patch Changes
+
+- [#3526](https://github.com/flint-fyi/flint/pull/3526) [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001) - Move `createDiskBackedLinterHost` and `isFileSystemCaseSensitive` to a new `@flint.fyi/core/node` entry point, so the main entry no longer imports Node.js built-ins.
+  Invalid-config errors no longer print a `Received:` line.
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+  - @flint.fyi/core@0.29.0
+
+## 0.20.1
+
+### Patch Changes
+
+- [#3470](https://github.com/flint-fyi/flint/pull/3470) [`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39) - Use the host's current directory instead of `process.cwd()` for language report locations and file paths.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+
+- [#3525](https://github.com/flint-fyi/flint/pull/3525) [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db) - Require the `caseSensitive` option for `createVFSLinterHost` when no `baseHost` is given.
+- Updated dependencies [[`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39), [`12ad54b`](https://github.com/flint-fyi/flint/commit/12ad54bb504f1c54d215f9b6041fe8a79c263faf), [`c049ab9`](https://github.com/flint-fyi/flint/commit/c049ab9a74c48b2a3c75c2aac26ca33b99a3d6a3), [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f), [`2df6b52`](https://github.com/flint-fyi/flint/commit/2df6b526d4d503e1f2649a092486c7d540d8adda), [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db)]:
+  - @flint.fyi/core@0.28.0
+
+## 0.20.0
+
+### Minor Changes
+
+- [#3405](https://github.com/flint-fyi/flint/pull/3405) [`2e2b815`](https://github.com/flint-fyi/flint/commit/2e2b8151c33b58462b13dfaacb1d1fa772901762) - Reject incomplete or mismatched cross-file suggestion expectations that were previously accepted.
+  Each expected suggestion must match the corresponding reported suggestion in flattened report order, including its own-file or cross-file variant and exact target-path set.
+  Update tests to list every reported target path, remove paths that the corresponding suggestion does not target, and keep each suggestion's expectations separate.
+  Mixed own-file and cross-file suggestions are now supported in the same test case.
+
+- [#3363](https://github.com/flint-fyi/flint/pull/3363) [`8a37984`](https://github.com/flint-fyi/flint/commit/8a379847d35915d5ac08b51169748fa5d6a7975e) - Reject test cases that repeat an earlier test case's code, fileName, files, and options.
+
+### Patch Changes
+
+- [#3135](https://github.com/flint-fyi/flint/pull/3135) [`fb6ceba`](https://github.com/flint-fyi/flint/commit/fb6ceba45d56c32294e27afff078736ac8e12e07) - Add `withRepositoryRoot` to compose a known repository root onto a host, and use it so disk-backed rule testers resolve `getRepositoryRoot()`.
+- Updated dependencies [[`6a34cee`](https://github.com/flint-fyi/flint/commit/6a34cee256df6c575793bd9ab8b094ed06e0efe4), [`a32109c`](https://github.com/flint-fyi/flint/commit/a32109c1ef55226efd1c05b853a9651c4d4ece6b), [`b071991`](https://github.com/flint-fyi/flint/commit/b0719910c991f7b4b986062ccb182d31722c9fe2), [`fb6ceba`](https://github.com/flint-fyi/flint/commit/fb6ceba45d56c32294e27afff078736ac8e12e07), [`8950424`](https://github.com/flint-fyi/flint/commit/8950424bd54371e56344eff50f752aba1e5752a3), [`07f1ca7`](https://github.com/flint-fyi/flint/commit/07f1ca70461eff08d4bd096ca5d14f2f82dffc68), [`f02543b`](https://github.com/flint-fyi/flint/commit/f02543b8a418ae793b1b0ead1542db899486e7aa)]:
+  - @flint.fyi/core@0.27.0
+
 ## 0.19.1
 
 ### Patch Changes

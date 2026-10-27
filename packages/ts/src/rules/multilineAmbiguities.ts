@@ -124,7 +124,7 @@ function findChildToken(
 			return child;
 		}
 	}
-	return undefined;
+	return;
 }
 
 function getExpressionEnd(

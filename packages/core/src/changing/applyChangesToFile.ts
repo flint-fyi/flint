@@ -6,7 +6,7 @@ import type { FileChange } from "../types/changes.ts";
 import type { LinterHost } from "../types/host.ts";
 import { applyChangesToText } from "./applyChangesToText.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function applyChangesToFile(
 	host: LinterHost,

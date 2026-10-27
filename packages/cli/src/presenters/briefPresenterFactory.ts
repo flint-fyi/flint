@@ -1,8 +1,8 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
+
 import { textTable } from "text-table-fast";
 
 import { formatReport, hasFix } from "@flint.fyi/core";
-import { makeAbsolute } from "@flint.fyi/utils";
 
 import { presentHeader } from "./shared/header.ts";
 import { presentLanguageReports } from "./shared/presentLanguageReports.ts";
@@ -24,7 +24,7 @@ export const briefPresenterFactory: PresenterFactory = {
 				counts.fixable += reports.filter(hasFix).length;
 
 				yield "\n";
-				yield chalk.underline(makeAbsolute(file.filePath));
+				yield styleText("underline", file.filePath);
 				yield "\n";
 
 				yield textTable(
@@ -35,11 +35,12 @@ export const briefPresenterFactory: PresenterFactory = {
 								: a.range.begin.line - b.range.begin.line,
 						)
 						.map((report) => [
-							chalk.gray(
+							styleText(
+								"gray",
 								`  ${report.range.begin.line + 1}:${report.range.begin.column + 1}`,
 							),
 							formatReport(report.data, report.message.primary),
-							chalk.yellow(report.about.id),
+							styleText("yellow", report.about.id),
 							"\n",
 						]),
 				);

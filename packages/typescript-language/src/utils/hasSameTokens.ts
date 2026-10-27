@@ -8,8 +8,8 @@ export function hasSameTokens(
 	nodeB: AST.AnyNode,
 	sourceFile: AST.SourceFile,
 ): boolean {
-	const queueA: ts.Node[] = [unwrapParenthesizedNode(nodeA)];
-	const queueB: ts.Node[] = [unwrapParenthesizedNode(nodeB)];
+	const queueA: AST.AnyNode[] = [unwrapParenthesizedNode(nodeA)];
+	const queueB: AST.AnyNode[] = [unwrapParenthesizedNode(nodeB)];
 
 	while (true) {
 		const currentA = queueA.shift();
@@ -30,8 +30,8 @@ export function hasSameTokens(
 			continue;
 		}
 
-		const childrenA = currentA.getChildren(sourceFile);
-		const childrenB = currentB.getChildren(sourceFile);
+		const childrenA = currentA.getChildren(sourceFile) as AST.AnyNode[];
+		const childrenB = currentB.getChildren(sourceFile) as AST.AnyNode[];
 
 		if (childrenA.length !== childrenB.length) {
 			return false;
@@ -45,17 +45,17 @@ export function hasSameTokens(
 }
 
 function areSameToken(
-	nodeA: ts.Node,
-	nodeB: ts.Node,
+	nodeA: AST.AnyNode,
+	nodeB: AST.AnyNode,
 	sourceFile: AST.SourceFile,
 ): boolean {
 	if (
-		ts.isIdentifier(nodeA) ||
-		ts.isPrivateIdentifier(nodeA) ||
-		ts.isNumericLiteral(nodeA) ||
-		ts.isBigIntLiteral(nodeA) ||
-		ts.isStringLiteral(nodeA) ||
-		ts.isNoSubstitutionTemplateLiteral(nodeA)
+		nodeA.kind === SyntaxKind.Identifier ||
+		nodeA.kind === SyntaxKind.PrivateIdentifier ||
+		nodeA.kind === SyntaxKind.NumericLiteral ||
+		nodeA.kind === SyntaxKind.BigIntLiteral ||
+		nodeA.kind === SyntaxKind.StringLiteral ||
+		nodeA.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 	) {
 		return nodeA.text === (nodeB as typeof nodeA).text;
 	}

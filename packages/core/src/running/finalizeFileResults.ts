@@ -1,6 +1,5 @@
-import { resolve } from "node:path";
-
 import { debugForFile } from "debug-for-file";
+import { resolve } from "pathe";
 
 import { pathKey } from "@flint.fyi/utils";
 
@@ -11,11 +10,11 @@ import type { LanguageReport } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { LanguageAndFile } from "./types.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export interface FinalizedFileResults {
 	dependencies: Set<string>;
-	invalidatesCache?: boolean;
+	isGlobalDependency?: boolean;
 	languageReports: LanguageReport[];
 	reports: FileReport[];
 }
@@ -36,7 +35,7 @@ export function finalizeFileResults(
 	const directivesFilterer = new DirectivesFilterer();
 	const fileDependencies = new Set<string>();
 	const languageReports: LanguageReport[] = [];
-	let invalidatesCache = false;
+	let isGlobalDependency = false;
 
 	for (const { file, language } of languageAndFiles) {
 		if (file.directives) {
@@ -44,10 +43,10 @@ export function finalizeFileResults(
 			directivesFilterer.add(file.directives);
 		}
 
-		const cacheImpacts = language.getFileCacheImpacts?.(file);
+		const cacheImpacts = language.getFileCacheImpacts?.(file, host);
 
-		if (cacheImpacts?.invalidatesCache) {
-			invalidatesCache = true;
+		if (cacheImpacts?.isGlobalDependency) {
+			isGlobalDependency = true;
 			log(
 				'File "%s" contains code that is global in nature and will invalidate the linting cache when changed.',
 				filePath,
@@ -73,7 +72,7 @@ export function finalizeFileResults(
 				language.about.name,
 				filePath,
 			);
-			languageReports.push(...language.getLanguageReports(file));
+			languageReports.push(...language.getLanguageReports(file, host));
 			log(
 				"Retrieved %s language reports for file %s",
 				language.about.name,
@@ -97,7 +96,7 @@ export function finalizeFileResults(
 
 	return {
 		dependencies: fileDependencies,
-		invalidatesCache,
+		isGlobalDependency,
 		languageReports,
 		reports: [
 			...filterResult.reports,

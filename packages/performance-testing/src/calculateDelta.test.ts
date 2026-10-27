@@ -4,10 +4,11 @@ import { calculateDelta } from "./calculateDelta.ts";
 
 describe(calculateDelta, () => {
 	it.each([
-		["1.031 s ± 0.124 s", "909.4 ms ± 120.7 ms", "-11.8%"],
-		["1.049 s ± 0.058 s", "836.9 ms ± 50.4 ms", "-20.2%"],
-		["500.0 ms ± 10.0 ms", "550.0 ms ± 10.0 ms", "+10.0%"],
-	])("compares %s to %s as %s", (eslint, flint, expected) => {
-		expect(calculateDelta(eslint, flint)).toBe(expected);
+		[1.031, 0.9094, "-11.8%"],
+		[1.049, 0.8369, "-20.2%"],
+		[0.5, 0.55, "+10.0%"],
+		[0.5, 0.5, "0.0%"],
+	])("compares %s to %s as %s", (baseline, candidate, expected) => {
+		expect(calculateDelta(baseline, candidate)).toBe(expected);
 	});
 });

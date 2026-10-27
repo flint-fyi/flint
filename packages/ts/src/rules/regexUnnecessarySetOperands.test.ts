@@ -7,7 +7,7 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\w&&\s]/v;
 `,
-			output: String.raw`
+			output: `
 /[^^]/v;
 `,
 			snapshot: String.raw`
@@ -46,7 +46,7 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\d--\w]/v;
 `,
-			output: String.raw`
+			output: `
 /[^^]/v;
 `,
 			snapshot: String.raw`
@@ -69,88 +69,88 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[abc]&&[def]]/v;
 `,
-			output: String.raw`
+			output: `
 /[^^]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[abc]&&[def]]/v;
   ~~~~~~~~~~~~
   This operation can be simplified: '[abc]' and '[def]' are disjoint, so the result is always empty.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[a-z]--[0-9]]/v;
 `,
-			output: String.raw`
+			output: `
 /[a-z]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[a-z]--[0-9]]/v;
   ~~~~~~~~~~~~
   This operation can be simplified: '[a-z]' and '[0-9]' are disjoint, so the subtraction has no effect.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[a-z]&&[a-m]]/v;
 `,
-			output: String.raw`
+			output: `
 /[a-m]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[a-z]&&[a-m]]/v;
   ~~~~~~~~~~~~
   This operation can be simplified: '[a-m]' is a subset of '[a-z]', so the superset operand is redundant.
 `,
 		},
 		{
-			code: `
-new RegExp("[\\\\w&&\\\\s]", "v");
+			code: String.raw`
+new RegExp("[\\w&&\\s]", "v");
 `,
-			snapshot: `
-new RegExp("[\\\\w&&\\\\s]", "v");
+			snapshot: String.raw`
+new RegExp("[\\w&&\\s]", "v");
              ~~~~~~
-             This operation can be simplified: '\\w' and '\\s' are disjoint, so the result is always empty.
+             This operation can be simplified: '\w' and '\s' are disjoint, so the result is always empty.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[abc]--[abc]]/v;
 `,
-			output: String.raw`
+			output: `
 /[^^]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[abc]--[abc]]/v;
   ~~~~~~~~~~~~
   This operation can be simplified: '[abc]' is a subset of '[abc]', so the result is always empty.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[a-f]&&[a-c]]/v;
 `,
-			output: String.raw`
+			output: `
 /[a-c]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[a-f]&&[a-c]]/v;
   ~~~~~~~~~~~~
   This operation can be simplified: '[a-c]' is a subset of '[a-f]', so the superset operand is redundant.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[a-c]&&[a-f]]/v;
 `,
-			output: String.raw`
+			output: `
 /[a-c]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[a-c]&&[a-f]]/v;
   ~~~~~~~~~~~~
   This operation can be simplified: '[a-c]' is a subset of '[a-f]', so the superset operand is redundant.
@@ -160,7 +160,7 @@ new RegExp("[\\\\w&&\\\\s]", "v");
 			code: String.raw`
 /[\s&&\d]/v;
 `,
-			output: String.raw`
+			output: `
 /[^^]/v;
 `,
 			snapshot: String.raw`
@@ -173,7 +173,7 @@ new RegExp("[\\\\w&&\\\\s]", "v");
 			code: String.raw`
 /[\d--\d]/v;
 `,
-			output: String.raw`
+			output: `
 /[^^]/v;
 `,
 			snapshot: String.raw`
@@ -183,26 +183,26 @@ new RegExp("[\\\\w&&\\\\s]", "v");
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[0-5]--[6-9]]/v;
 `,
-			output: String.raw`
+			output: `
 /[0-5]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[0-5]--[6-9]]/v;
   ~~~~~~~~~~~~
   This operation can be simplified: '[0-5]' and '[6-9]' are disjoint, so the subtraction has no effect.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[A-Z]--[a-z]]/v;
 `,
-			output: String.raw`
+			output: `
 /[A-Z]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[A-Z]--[a-z]]/v;
   ~~~~~~~~~~~~
   This operation can be simplified: '[A-Z]' and '[a-z]' are disjoint, so the subtraction has no effect.
@@ -212,7 +212,7 @@ new RegExp("[\\\\w&&\\\\s]", "v");
 			code: String.raw`
 /[\w&&[abc]]/v;
 `,
-			output: String.raw`
+			output: `
 /[abc]/v;
 `,
 			snapshot: String.raw`
@@ -225,7 +225,7 @@ new RegExp("[\\\\w&&\\\\s]", "v");
 			code: String.raw`
 /[[abc]&&\w]/v;
 `,
-			output: String.raw`
+			output: `
 /[abc]/v;
 `,
 			snapshot: String.raw`
@@ -248,23 +248,23 @@ new RegExp("[\\\\w&&\\\\s]", "v");
 `,
 		},
 		{
-			code: `
-new RegExp("[\\\\w--\\\\s]", "v");
+			code: String.raw`
+new RegExp("[\\w--\\s]", "v");
 `,
-			snapshot: `
-new RegExp("[\\\\w--\\\\s]", "v");
+			snapshot: String.raw`
+new RegExp("[\\w--\\s]", "v");
              ~~~~~~
-             This operation can be simplified: '\\w' and '\\s' are disjoint, so the subtraction has no effect.
+             This operation can be simplified: '\w' and '\s' are disjoint, so the subtraction has no effect.
 `,
 		},
 		{
-			code: `
-new RegExp("[\\\\d&&\\\\w]", "v");
+			code: String.raw`
+new RegExp("[\\d&&\\w]", "v");
 `,
-			snapshot: `
-new RegExp("[\\\\d&&\\\\w]", "v");
+			snapshot: String.raw`
+new RegExp("[\\d&&\\w]", "v");
              ~~~~~~
-             This operation can be simplified: '\\d' is a subset of '\\w', so the superset operand is redundant.
+             This operation can be simplified: '\d' is a subset of '\w', so the superset operand is redundant.
 `,
 		},
 	],
@@ -274,9 +274,9 @@ new RegExp("[\\\\d&&\\\\w]", "v");
 		String.raw`/[\w--\d]/v`,
 		String.raw`/[\w\d]/v`,
 		String.raw`/[\w]/v`,
-		String.raw`/[a-z]/v`,
-		String.raw`/[[a-z]--[aeiou]]/v`,
-		String.raw`/test/v`,
+		"/[a-z]/v",
+		"/[[a-z]--[aeiou]]/v",
+		"/test/v",
 		String.raw`new RegExp("[\\w&&\\s]")`,
 		String.raw`new RegExp("[\\w&&\\s]", "u")`,
 	],

@@ -58,12 +58,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				statement.expression.kind !== SyntaxKind.CallExpression ||
 				!isArrayPushCall(statement.expression, typeChecker)
 			) {
-				return undefined;
+				return;
 			}
 
 			const arrayName = getArrayName(statement.expression, sourceFile);
 			if (!arrayName) {
-				return undefined;
+				return;
 			}
 
 			return {

@@ -23,7 +23,7 @@ function getNameTextIfMismatched(functionName: string, name: AST.PropertyName) {
 	const nameText = getNameText(name);
 
 	if (!nameText || nameText === functionName || !isValidIdentifier(nameText)) {
-		return undefined;
+		return;
 	}
 
 	return nameText;

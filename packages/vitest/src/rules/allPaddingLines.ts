@@ -1,19 +1,7 @@
 import {
 	createStatementPaddingRule,
-	getStatementRootName,
+	parseStatementVitestFunctionCall,
 } from "../createStatementPaddingRule.ts";
-
-const statementMatches = new Map([
-	["afterAll", { blockName: "afterAll", category: "afterAll" }],
-	["afterEach", { blockName: "afterEach", category: "afterEach" }],
-	["beforeAll", { blockName: "beforeAll", category: "beforeAll" }],
-	["beforeEach", { blockName: "beforeEach", category: "beforeEach" }],
-	["describe", { blockName: "describe", category: "describe" }],
-	["expect", { blockName: "expect", category: "expect" }],
-	["expectTypeOf", { blockName: "expect", category: "expectTypeOf" }],
-	["it", { blockName: "test", category: "testCase" }],
-	["test", { blockName: "test", category: "testCase" }],
-]);
 
 export default createStatementPaddingRule(
 	{
@@ -22,12 +10,25 @@ export default createStatementPaddingRule(
 		presets: [],
 	},
 	(statement) => {
-		const rootName = getStatementRootName(statement);
-		if (!rootName) {
-			return undefined;
+		const call = parseStatementVitestFunctionCall(statement);
+		if (!call) {
+			return;
 		}
 
-		return statementMatches.get(rootName);
+		switch (call.kind) {
+			case "describe":
+				return { blockName: "describe", category: "describe" };
+
+			case "expect":
+			case "typeAssertion":
+				return { blockName: "expect", category: call.name };
+
+			case "hook":
+				return { blockName: call.name, category: call.name };
+
+			case "test":
+				return { blockName: "test", category: "testCase" };
+		}
 	},
 	(previousMatch, nextMatch) => {
 		if (!previousMatch && !nextMatch) {

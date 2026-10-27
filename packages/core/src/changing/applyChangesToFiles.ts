@@ -5,7 +5,7 @@ import type { FileResults } from "../types/linting.ts";
 import { applyChangesToFile } from "./applyChangesToFile.ts";
 import { resolveChangesByFile } from "./resolveChangesByFile.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function applyChangesToFiles(
 	host: LinterHost,

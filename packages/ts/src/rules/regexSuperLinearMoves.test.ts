@@ -60,7 +60,7 @@ new RegExp("a*b");
 		`/a*/;`,
 		String.raw`/a*[\s\S]*/;`,
 		`declare const variable: string; RegExp(variable);`,
-		`/^\\s+foo/;`,
+		String.raw`/^\s+foo/;`,
 		`/(a)?b/;`,
 		`/a{0,5}b/;`,
 		`/a+b/;`,

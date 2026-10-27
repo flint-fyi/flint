@@ -1,6 +1,7 @@
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
+import type * as AST from "../types/ast.ts";
 import { containsGlobalDeclarations } from "./containsGlobalDeclarations.ts";
 
 describe(containsGlobalDeclarations, () => {
@@ -72,5 +73,5 @@ function getSourceFile(rawFileContent: string) {
 		rawFileContent,
 		ts.ScriptTarget.ESNext,
 		true,
-	);
+	) as unknown as AST.SourceFile;
 }

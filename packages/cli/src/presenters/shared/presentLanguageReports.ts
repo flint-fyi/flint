@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 import type { FileResults } from "@flint.fyi/core";
 
@@ -15,7 +15,8 @@ export function* presentLanguageReports(
 	}
 
 	yield "\n";
-	yield chalk.yellow(
+	yield styleText(
+		"yellow",
 		`⚠️  Additionally found ${pluralize(languageReports.length, "language reports")}:`,
 	);
 	yield "\n\n";

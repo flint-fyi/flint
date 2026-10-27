@@ -26,7 +26,7 @@ if ("CallExpression" in node) {
 <TabItem label="✅ Correct">
 
 ```ts
-if (ts.isCallExpression(node)) {
+if (node.kind === SyntaxKind.CallExpression) {
 }
 ```
 

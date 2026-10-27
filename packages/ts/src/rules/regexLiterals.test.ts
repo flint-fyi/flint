@@ -59,8 +59,8 @@ This \`RegExp\` construction with a static value can be simplified to a regular 
 			code: `
 RegExp("a/b");
 `,
-			output: `
-/a\\/b/;
+			output: String.raw`
+/a\/b/;
 `,
 			snapshot: `
 RegExp("a/b");
@@ -82,11 +82,11 @@ This \`RegExp\` construction with a static value can be simplified to a regular 
 `,
 		},
 		{
-			code: `
-new RegExp("test\\\\d+");
+			code: String.raw`
+new RegExp("test\\d+");
 `,
-			output: `
-/test\\d+/;
+			output: String.raw`
+/test\d+/;
 `,
 			snapshot: `
 new RegExp("test\\\\d+");

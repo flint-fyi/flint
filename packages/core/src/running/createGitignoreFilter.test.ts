@@ -132,7 +132,7 @@ describe("createGitignoreFilter", () => {
 	it("handles escaped exclamation mark at the beginning", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
-			"\\!literal.txt",
+			String.raw`\!literal.txt`,
 		);
 		const literal = path.join(integrationRoot, "!literal.txt");
 

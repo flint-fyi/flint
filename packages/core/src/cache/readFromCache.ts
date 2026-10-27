@@ -9,7 +9,7 @@ import { cacheStorageSchema } from "./cacheSchema.ts";
 import { collectTransitiveDependents } from "./collectTransitiveDependents.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function readFromCache(
 	host: LinterHost,
@@ -74,19 +74,20 @@ export async function readFromCache(
 	const dependencyTouchTimes = new Map<string, number | undefined>();
 	const filePathsToLint = new Set<string>();
 
-	for (const {
-		filePath,
-		touchTime: cachedTouchTime,
-	} of cache.globalInvalidations) {
+	for (const [filePath, fileCached] of cached) {
+		if (!fileCached.isGlobalDependency) {
+			continue;
+		}
+
 		// flint-disable-next-line performance/loopAwaits
 		const currentTouchTime = await host.getFileTouchTime(filePath);
-		if (currentTouchTime == null || currentTouchTime > cachedTouchTime) {
+		if (currentTouchTime == null || currentTouchTime > fileCached.timestamp) {
 			log(
 				"Linting all %d file(s) because cache-invalidating file %s has changed (current: %d, cached: %d)",
 				allFilePaths.size,
 				filePath,
 				currentTouchTime,
-				cachedTouchTime,
+				fileCached.timestamp,
 			);
 			return undefined;
 		}

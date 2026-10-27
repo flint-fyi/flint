@@ -41,24 +41,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onQuantifierEnter(node) {
-					if (!node.greedy && node.min === node.max) {
-						const range = {
-							begin: patternStart + node.start,
-							end: patternStart + node.end,
-						};
-						context.report({
-							data: {
-								count: node.min,
-								raw: node.raw,
-							},
-							fix: {
-								range,
-								text: node.raw.slice(0, -1),
-							},
-							message: "uselessLazy",
-							range,
-						});
+					if (node.greedy || node.min !== node.max) {
+						return;
 					}
+
+					const range = {
+						begin: patternStart + node.start,
+						end: patternStart + node.end,
+					};
+					context.report({
+						data: {
+							count: node.min,
+							raw: node.raw,
+						},
+						fix: {
+							range,
+							text: node.raw.slice(0, -1),
+						},
+						message: "uselessLazy",
+						range,
+					});
 				},
 			});
 		}

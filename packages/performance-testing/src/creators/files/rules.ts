@@ -6,7 +6,6 @@ export interface ComparedRule {
 	eslint: string;
 	flint: string;
 	preset: string | undefined;
-	strictness: string | undefined;
 }
 
 const measuredPresets = new Set(["javascript", "logical", "stylistic"]);
@@ -53,19 +52,16 @@ const comparableRules: ComparedRule[] = ruleData
 				eslint: selectESLintRule(details.eslint),
 				flint: flint.name,
 				preset: flint.preset,
-				strictness: flint.strictness,
 			},
 		];
 	})
-	.sort((a, b) => a.flint.localeCompare(b.flint));
+	.toSorted((a, b) => a.flint.localeCompare(b.flint));
 
 const manyRules = comparableRules.filter(
 	(rule) => rule.preset !== undefined && measuredPresets.has(rule.preset),
 );
 
-const commonRules = manyRules.filter(
-	(rule) => rule.preset === "logical" && !rule.strictness,
-);
+const commonRules = manyRules.filter((rule) => rule.preset === "logical");
 
 const singleRule = manyRules.find((rule) => rule.flint === singleRuleName);
 

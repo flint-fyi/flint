@@ -1,14 +1,12 @@
-import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
-import omitEmpty from "omit-empty";
 
-import type { CacheStorage, GlobalInvalidation } from "../types/cache.ts";
+import type { CacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
-const log = debugForFile(import.meta.filename);
+const log = debugForFile(import.meta.url);
 
 export async function writeToCache(
 	host: LinterHost,
@@ -16,25 +14,7 @@ export async function writeToCache(
 	lintResults: LintResults,
 	cacheLocation: string | undefined,
 ): Promise<void> {
-	const fileDependents = new CachedFactory(() => new Set<string>());
 	const timestamp = Date.now();
-	const globalInvalidations: GlobalInvalidation[] = [];
-
-	for (const [filePath, fileResult] of lintResults.allFileResults) {
-		if (fileResult.invalidatesCache) {
-			globalInvalidations.push({
-				filePath,
-				// Fall back to 0 (not the current time) when the host can't report a
-				// touch time: a fabricated "now" would mask later changes, whereas 0
-				// forces a safe re-validation on the next run.
-				// flint-disable-next-line performance/loopAwaits
-				touchTime: (await host.getFileTouchTime(filePath)) ?? 0,
-			});
-		}
-		for (const dependency of fileResult.dependencies) {
-			fileDependents.get(dependency).add(filePath);
-		}
-	}
 
 	const storage: CacheStorage = {
 		configs: {
@@ -46,19 +26,24 @@ export async function writeToCache(
 		},
 		files: {
 			...Object.fromEntries(
-				Array.from(lintResults.allFileResults).map(
-					([filePath, fileResults]) => [
-						filePath,
-						{
-							...omitEmpty({
-								dependencies: Array.from(fileResults.dependencies).sort(),
-								languageReports: fileResults.languageReports,
-								reports: fileResults.reports,
-							}),
-							timestamp,
-						},
-					],
-				),
+				Array.from(lintResults.allFileResults, ([filePath, fileResults]) => [
+					filePath,
+					{
+						...(fileResults.dependencies.size && {
+							dependencies: Array.from(fileResults.dependencies).toSorted(
+								(a, b) => a.localeCompare(b, "en-US"),
+							),
+						}),
+						...(fileResults.isGlobalDependency && { isGlobalDependency: true }),
+						...(fileResults.languageReports.length && {
+							languageReports: fileResults.languageReports,
+						}),
+						...(fileResults.reports.length && {
+							reports: fileResults.reports,
+						}),
+						timestamp,
+					},
+				]),
 			),
 			...(lintResults.cached &&
 				Object.fromEntries(
@@ -67,7 +52,6 @@ export async function writeToCache(
 					),
 				)),
 		},
-		globalInvalidations,
 	};
 
 	const encoded = cacheStorageSchema.safeEncode(storage);

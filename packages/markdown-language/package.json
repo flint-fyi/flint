@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/markdown-language",
-	"version": "0.17.1",
+	"version": "0.18.1",
 	"description": "[Experimental] Markdown language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist/"
@@ -29,9 +30,7 @@
 		"@flint.fyi/utils": "workspace:^",
 		"@types/mdast": "catalog:prod",
 		"@types/unist": "catalog:prod",
-		"mdast-util-from-markdown": "catalog:prod",
-		"mdast-util-gfm": "catalog:prod",
-		"micromark-extension-gfm": "catalog:prod",
+		"satteri": "catalog:prod",
 		"unist-util-visit": "catalog:prod"
 	},
 	"devDependencies": {
@@ -45,7 +44,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
 		}
 	}
 }

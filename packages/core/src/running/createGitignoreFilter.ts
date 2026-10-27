@@ -1,6 +1,5 @@
-import path from "node:path";
-
 import ignore from "ignore";
+import { dirname, join, relative } from "pathe";
 
 import type { LinterHost } from "../types/host.ts";
 
@@ -9,6 +8,7 @@ export type GitignoreFilter = (filePathAbsolute: string) => boolean;
 export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 	const cwd = host.getCurrentDirectory();
 	const matchers = new Map<string, ignore.Ignore | undefined>();
+	const includedPaths = new Map<string, boolean>();
 
 	function matcherForDirectory(directory: string) {
 		if (matchers.has(directory)) {
@@ -16,7 +16,7 @@ export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 		}
 
 		let matcher: ignore.Ignore | undefined;
-		const gitignorePath = path.posix.join(directory, ".gitignore");
+		const gitignorePath = join(directory, ".gitignore");
 		if (host.fileTypeSync(gitignorePath) === "file") {
 			const content = host.readFileSync(gitignorePath);
 			if (content !== undefined) {
@@ -29,14 +29,13 @@ export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 	}
 
 	function isPathIgnored(pathAbsolute: string, isDirectory: boolean) {
-		let directory = path.posix.dirname(pathAbsolute);
+		let directory = dirname(pathAbsolute);
 		while (directory.startsWith(cwd)) {
 			const matcher = matcherForDirectory(directory);
 			if (matcher) {
-				const relative =
-					path.posix.relative(directory, pathAbsolute) +
-					(isDirectory ? "/" : "");
-				const result = matcher.test(relative);
+				const relativePath =
+					relative(directory, pathAbsolute) + (isDirectory ? "/" : "");
+				const result = matcher.test(relativePath);
 				if (result.ignored || result.unignored) {
 					return result.ignored;
 				}
@@ -44,7 +43,7 @@ export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 			if (directory === cwd) {
 				break;
 			}
-			directory = path.posix.dirname(directory);
+			directory = dirname(directory);
 		}
 		return false;
 	}
@@ -52,13 +51,26 @@ export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 	return (filePathAbsolute: string) => {
 		let current = filePathAbsolute;
 		let isDirectory = false;
+		let included = true;
+		const uncheckedPaths: string[] = [];
 		while (current.startsWith(cwd) && current !== cwd) {
-			if (isPathIgnored(current, isDirectory)) {
-				return false;
+			const key = current + (isDirectory ? "/" : "");
+			const cached = includedPaths.get(key);
+			if (cached !== undefined) {
+				included = cached;
+				break;
 			}
-			current = path.posix.dirname(current);
+			uncheckedPaths.push(key);
+			if (isPathIgnored(current, isDirectory)) {
+				included = false;
+				break;
+			}
+			current = dirname(current);
 			isDirectory = true;
 		}
-		return true;
+		for (const key of uncheckedPaths) {
+			includedPaths.set(key, included);
+		}
+		return included;
 	};
 }

@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import z from "zod/v4";
 
 import {
@@ -10,6 +10,10 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "../ruleCreator.ts";
+import {
+	parseVitestFunctionCall,
+	type VitestFunctionCall,
+} from "../utils/parseVitestFunctionCall.ts";
 import {
 	getTestCallExpressionsFromDeclaredVariables,
 	isVitestTestFunction,
@@ -77,18 +81,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						inPromiseCatch = true;
 					}
 
-					if (options.expectAssertions && inTestCase) {
-						expectAssertions =
-							getExpectAssertionsCount(node) ?? expectAssertions;
+					const vitestCall = parseVitestFunctionCall(node);
+					if (!vitestCall) {
+						return;
 					}
 
-					if (isVitestTestFunction(node)) {
+					if (vitestCall.kind === "test") {
 						inTestCase = true;
 						expectAssertions = 0;
+						return;
 					}
 
-					if (!isExpectCall(node)) {
+					if (vitestCall.kind !== "expect") {
 						return;
+					}
+
+					if (options.expectAssertions && inTestCase) {
+						expectAssertions =
+							getExpectAssertionsCount(node, vitestCall) ?? expectAssertions;
 					}
 
 					const range = getTSNodeRange(node, sourceFile);
@@ -121,10 +131,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				ConditionalExpression: increaseConditionalDepth,
 				"ConditionalExpression:exit": decreaseConditionalDepth,
 				FunctionDeclaration(node, { sourceFile }) {
-					if (isTestCallbackFunction(node, sourceFile)) {
-						inTestCase = true;
-						expectAssertions = 0;
+					if (!isTestCallbackFunction(node, sourceFile)) {
+						return;
 					}
+
+					inTestCase = true;
+					expectAssertions = 0;
 				},
 				"FunctionDeclaration:exit"(node, { sourceFile }) {
 					if (isTestCallbackFunction(node, sourceFile)) {
@@ -142,22 +154,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function getExpectAssertionsCount(
 	node: AST.CallExpression,
+	{ members, name }: VitestFunctionCall,
 ): number | undefined {
-	if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
-		return undefined;
-	}
-	const { expression: object, name: property } = node.expression;
-
-	if (object.kind !== ts.SyntaxKind.Identifier || object.text !== "expect") {
-		return undefined;
-	}
 	if (
-		property.kind !== ts.SyntaxKind.Identifier ||
-		property.text !== "assertions"
+		name !== "expect" ||
+		members.length !== 1 ||
+		members[0] !== "assertions" ||
+		node.arguments.length !== 1
 	) {
-		return undefined;
-	}
-	if (node.arguments.length !== 1) {
 		return undefined;
 	}
 
@@ -179,17 +183,11 @@ function isCatchCall({ expression }: AST.CallExpression): boolean {
 	}
 	if (expression.kind === ts.SyntaxKind.ElementAccessExpression) {
 		return (
-			ts.isStringLiteral(expression.argumentExpression) &&
+			expression.argumentExpression.kind === SyntaxKind.StringLiteral &&
 			expression.argumentExpression.text === "catch"
 		);
 	}
 	return false;
-}
-
-function isExpectCall({ expression }: AST.CallExpression): boolean {
-	return (
-		expression.kind === ts.SyntaxKind.Identifier && expression.text === "expect"
-	);
 }
 
 function isLogicalBinaryExpression({
@@ -216,5 +214,5 @@ function isTestCallbackFunction(
 
 // e.g. 1_000 -> 1000
 function removeNumericSeparators(text: string): string {
-	return text.replace(/_/g, "");
+	return text.replaceAll("_", "");
 }

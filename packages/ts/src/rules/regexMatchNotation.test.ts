@@ -117,7 +117,7 @@ RegExp("[^]");
 			code: `
 /[^]/s;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[^]/s;
  ~~~
  For consistency, prefer '.' over '[^]' to match any character.

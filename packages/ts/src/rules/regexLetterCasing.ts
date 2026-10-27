@@ -16,11 +16,7 @@ import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 type EscapeSequenceKind =
-	| "control"
-	| "hexadecimal"
-	| "none"
-	| "unicode"
-	| "unicodeCodePoint";
+	"control" | "hexadecimal" | "none" | "unicode" | "unicodeCodePoint";
 
 interface Issue {
 	data: {
@@ -148,7 +144,7 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 				caseActual: "uppercase",
 				casePreferred: "lowercase",
 				lettersActual: charNode.raw,
-				lettersPreferred: `\\x${code.toLowerCase()}`,
+				lettersPreferred: String.raw`\x${code.toLowerCase()}`,
 			},
 			end: charNode.end,
 			message: "unexpectedCase",
@@ -175,7 +171,7 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 				caseActual: "lowercase",
 				casePreferred: "uppercase",
 				lettersActual: charNode.raw,
-				lettersPreferred: `\\c${controlChar.toUpperCase()}`,
+				lettersPreferred: String.raw`\c${controlChar.toUpperCase()}`,
 			},
 			end: charNode.end,
 			message: "unexpectedCase",

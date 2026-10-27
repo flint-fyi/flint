@@ -22,12 +22,14 @@
 		"test": "vitest --project performance-testing"
 	},
 	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/rule-data": "workspace:^",
 		"console-table-without-index": "catalog:dev",
 		"debug-for-file": "catalog:dev",
 		"eslint": "catalog:comparisons",
 		"execa": "catalog:dev",
-		"prettier": "catalog:dev"
+		"prettier": "catalog:dev",
+		"zod": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

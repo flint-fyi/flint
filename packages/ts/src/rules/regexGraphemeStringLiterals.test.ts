@@ -96,8 +96,8 @@ This literal contains multiple graphemes in the \`\\q{}\` matcher intended for s
 		String.raw`/[\q{a|b|c}]/v;`,
 		String.raw`/[\q{a|b|c|}]/v;`,
 		String.raw`/[\q{竈|門|禰󠄀|豆|子}\q{煉󠄁|獄|杏|寿|郎}]/v`,
-		String.raw`/[abc]/;`,
-		String.raw`/a|b|c/;`,
-		String.raw`/abc/u;`,
+		"/[abc]/;",
+		"/a|b|c/;",
+		"/abc/u;",
 	],
 });
