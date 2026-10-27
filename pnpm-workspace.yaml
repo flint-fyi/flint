@@ -41,7 +41,7 @@ catalogs:
     jiti: 2.7.0
     knip: 6.43.0
     nano-staged: 1.0.2
-    pkg-pr-new: 0.0.91
+    pkg-pr-new: 0.0.92
     prettier: 3.9.10
     prettier-plugin-astro: 1.1.2
     prettier-plugin-curly: 0.4.1
