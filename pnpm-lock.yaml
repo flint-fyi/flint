@@ -244,8 +244,8 @@ catalogs:
       specifier: 3.23.1
       version: 3.23.1
     eslint-plugin-unicorn:
-      specifier: 78.0.0
-      version: 78.0.0
+      specifier: 79.0.0
+      version: 79.0.0
     eslint-plugin-vue:
       specifier: 10.11.1
       version: 10.11.1
@@ -350,8 +350,8 @@ catalogs:
       specifier: 3.3.1
       version: 3.3.1
     eslint-plugin-unicorn:
-      specifier: 78.0.0
-      version: 78.0.0
+      specifier: 79.0.0
+      version: 79.0.0
     eslint-plugin-yml:
       specifier: 3.9.0
       version: 3.9.0
@@ -729,7 +729,7 @@ importers:
         version: 3.3.1(eslint@10.13.0)
       eslint-plugin-unicorn:
         specifier: catalog:dev
-        version: 78.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 79.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-yml:
         specifier: catalog:dev
         version: 3.9.0(eslint@10.13.0)
@@ -1454,7 +1454,7 @@ importers:
         version: 3.3.1(eslint@10.13.0)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
-        version: 78.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 79.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -1668,7 +1668,7 @@ importers:
         version: 3.23.1(eslint@10.13.0)(svelte@5.57.2)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
-        version: 78.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 79.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-vue:
         specifier: catalog:comparisons
         version: 10.11.1(@typescript-eslint/parser@8.72.0)(eslint@10.13.0)(vue-eslint-parser@10.4.1)
@@ -5261,8 +5261,8 @@ packages:
       svelte:
         optional: true
 
-  eslint-plugin-unicorn@78.0.0:
-    resolution: {integrity: sha512-XTDqxcJeAmh2lhgU75TpuMDdFtPDnAU+DCW56nR5UzXTG+uOyvOGjV80O11my7kNb2bYSCPlWa8c4K8/rwlYog==}
+  eslint-plugin-unicorn@79.0.0:
+    resolution: {integrity: sha512-k7MWrjoVTVCnjKpgaxBuScPNSPomLvDpsd9uADpWrIFzrnwiec27eWhGrmmyuTj1bC3xVNYP4QfG3MEzEw6ifg==}
     engines: {node: '>=22'}
     peerDependencies:
       eslint: '>=10.4'
@@ -11275,7 +11275,7 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  eslint-plugin-unicorn@78.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-unicorn@79.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.13.0)
       '@eslint/css-tree': 4.1.2
