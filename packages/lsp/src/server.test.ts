@@ -15,7 +15,10 @@ import {
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { FileChangeType } from "vscode-languageserver/node.js";
 
-import type { FileResults } from "@flint.fyi/core";
+import type {
+	FileResults,
+	LintSessionChangedLintOptions,
+} from "@flint.fyi/core";
 
 import { normalizeFilePath } from "./lintSessionChanges.ts";
 
@@ -40,11 +43,24 @@ async function flushQueuedWork() {
 
 const mocks = vi.hoisted(() => {
 	const lintFiles = vi.fn();
-	const lintResults: Map<string, FileResults>[] = [];
-	const lintChangedFiles = vi.fn<
-		(filePaths: Iterable<string>) => Promise<Map<string, FileResults>>
-	>(() =>
-		Promise.resolve(lintResults.shift() ?? new Map<string, FileResults>()),
+	const lintPasses: Map<string, FileResults>[][] = [];
+	const lintChangedFiles = vi.fn(
+		async (
+			_filePaths: Iterable<string>,
+			options?: LintSessionChangedLintOptions,
+		) => {
+			const allResults = new Map<string, FileResults>();
+
+			for (const passResults of lintPasses.shift() ?? []) {
+				for (const [filePath, fileResults] of passResults) {
+					allResults.set(filePath, fileResults);
+				}
+				// flint-disable-next-line performance/loopAwaits
+				await options?.onResults?.(passResults);
+			}
+
+			return allResults;
+		},
 	);
 	const state = {
 		connection: undefined as unknown as {
@@ -76,7 +92,7 @@ const mocks = vi.hoisted(() => {
 		},
 		lintChangedFiles,
 		lintFiles,
-		lintResults,
+		lintPasses,
 		lintSessionCreate: vi.fn(),
 		session: {
 			lintChangedFiles,
@@ -244,7 +260,7 @@ describe("startServer", () => {
 		);
 		mocks.lintChangedFiles.mockClear();
 		mocks.lintFiles.mockReset();
-		mocks.lintResults.length = 0;
+		mocks.lintPasses.length = 0;
 		mocks.lintSessionCreate.mockReset();
 		mocks.lintSessionCreate.mockImplementation(() =>
 			Promise.resolve(mocks.session),
@@ -366,7 +382,7 @@ describe("startServer", () => {
 		const openedFileUri = pathToFileURL(openedFilePath).href;
 
 		mocks.lintFiles.mockReturnValue(initialFullLint.promise);
-		mocks.lintResults.push(new Map([[openedFilePath, openedFileResults]]));
+		mocks.lintPasses.push([new Map([[openedFilePath, openedFileResults]])]);
 
 		await startInitializedServer();
 
@@ -404,7 +420,7 @@ describe("startServer", () => {
 		}
 	});
 
-	it("publishes diagnostics for changed files and their dependents", async () => {
+	it("publishes changed diagnostics before dependent diagnostics", async () => {
 		const changedFilePath = normalizeFilePath(
 			path.join(workspaceRoot, "src/b.ts"),
 		);
@@ -420,16 +436,16 @@ describe("startServer", () => {
 			transitiveDependentFilePath,
 		).href;
 
-		mocks.lintResults.push(
+		mocks.lintPasses.push([
+			new Map([[changedFilePath, createFileResults("changed")]]),
 			new Map([
-				[changedFilePath, createFileResults("changed")],
 				[dependentFilePath, createFileResults("dependent")],
 				[
 					transitiveDependentFilePath,
 					createFileResults("transitive dependent"),
 				],
 			]),
-		);
+		]);
 
 		await startInitializedServer();
 		mocks.documents.fireDidChangeContent(
@@ -441,15 +457,16 @@ describe("startServer", () => {
 		expect(Array.from(mocks.lintChangedFiles.mock.calls[0]?.[0] ?? [])).toEqual(
 			[changedFilePath],
 		);
+		expect(mocks.connection.sendDiagnostics.mock.calls[0]?.[0]).toEqual(
+			expect.objectContaining({ uri: changedFileUri }),
+		);
 		expect(
 			new Set(
-				mocks.connection.sendDiagnostics.mock.calls.map(
-					([params]) => params.uri,
-				),
+				mocks.connection.sendDiagnostics.mock.calls
+					.slice(1)
+					.map(([params]) => params.uri),
 			),
-		).toEqual(
-			new Set([changedFileUri, dependentFileUri, transitiveDependentFileUri]),
-		);
+		).toEqual(new Set([dependentFileUri, transitiveDependentFileUri]));
 	});
 
 	it("rediscovers the config file name during structural rebuilds", async () => {
@@ -509,9 +526,9 @@ describe("startServer", () => {
 		const filePath = path.join(workspaceRoot, "src/closed.ts");
 		const fileUri = pathToFileURL(filePath).href;
 
-		mocks.lintResults.push(
-			new Map([[filePath, createFileResults("open buffer diagnostic")]]),
-			new Map([[filePath, createFileResults("disk diagnostic")]]),
+		mocks.lintPasses.push(
+			[new Map([[filePath, createFileResults("open buffer diagnostic")]])],
+			[new Map([[filePath, createFileResults("disk diagnostic")]])],
 		);
 
 		await startInitializedServer();

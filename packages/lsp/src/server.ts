@@ -276,16 +276,24 @@ export function startServer(): void {
 			return;
 		}
 
-		const results = await session.lintChangedFiles(filePaths);
-
-		if (
+		const isStale = () =>
 			expectedStructuralVersion !== structuralVersion ||
-			session !== lintSession
-		) {
-			return;
-		}
+			session !== lintSession;
+		const publishedUris = new Set<string>();
 
-		return publishResults(results);
+		await session.lintChangedFiles(filePaths, {
+			async onResults(results) {
+				if (isStale()) {
+					return;
+				}
+
+				for (const uri of await publishResults(results)) {
+					publishedUris.add(uri);
+				}
+			},
+		});
+
+		return isStale() ? undefined : publishedUris;
 	}
 
 	async function loadConfigDefinition(configFileName: string) {
