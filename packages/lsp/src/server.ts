@@ -12,6 +12,7 @@ import {
 
 import {
 	commonlyIgnoredPaths,
+	configFileNameCandidates,
 	createVFSLinterHost,
 	findConfigFileName,
 	isConfig,
@@ -28,7 +29,6 @@ import { createCodeActions } from "./codeActions.ts";
 import { createLspFileSystemWatcher } from "./createLspFileSystemWatcher.ts";
 import { mapFileResultsToDiagnostics } from "./diagnostics.ts";
 import { filePathToUri } from "./filePathToUri.ts";
-import { isStructuralFilePath } from "./lintSessionChanges.ts";
 
 const LINT_DEBOUNCE_MS = 250;
 const CONFIG_RELOAD_QUERY_PARAMETER = "flintLspCacheBust";
@@ -82,10 +82,7 @@ export function startServer(): void {
 			(filePath, event) => {
 				if (event !== "changed") {
 					requestRebuild();
-				} else if (
-					isStructuralFilePath(filePath, root) ||
-					!isOpenDocument(filePath)
-				) {
+				} else if (isConfigFile(filePath, root) || !isOpenDocument(filePath)) {
 					requestLint(filePath);
 				}
 			},
@@ -109,7 +106,7 @@ export function startServer(): void {
 	}
 
 	function requestLint(filePath: string) {
-		if (workspace && isStructuralFilePath(filePath, workspace.root)) {
+		if (workspace && isConfigFile(filePath, workspace.root)) {
 			requestRebuild();
 			return;
 		}
@@ -298,6 +295,12 @@ function getWorkspaceRoot(initializeParams: InitializeParams) {
 	return uri
 		? fileURLToPath(uri)
 		: (legacyInitializeParams.rootPath ?? undefined);
+}
+
+function isConfigFile(filePath: string, workspaceRoot: string) {
+	return configFileNameCandidates.includes(
+		normalizePath(path.relative(workspaceRoot, filePath)),
+	);
 }
 
 async function loadConfigDefinition(root: string, configFileName: string) {

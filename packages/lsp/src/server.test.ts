@@ -489,6 +489,27 @@ describe("startServer", () => {
 		expect(mocks.lintChangedFiles).not.toHaveBeenCalled();
 	});
 
+	it("relints tsconfig dependents without rebuilding the session", async () => {
+		const tsconfigPath = normalizePath(
+			path.join(workspaceRoot, "tsconfig.json"),
+		);
+
+		await startInitializedServer();
+		mocks.lintSessionCreate.mockClear();
+
+		mocks.connection.callbacks.changeWatchedFiles?.({
+			changes: [
+				{ type: FileChangeType.Changed, uri: pathToFileURL(tsconfigPath).href },
+			],
+		});
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
+		expect(Array.from(mocks.lintChangedFiles.mock.lastCall?.[0] ?? [])).toEqual(
+			[tsconfigPath],
+		);
+	});
+
 	it("rebuilds when an external watched file is created", async () => {
 		await startInitializedServer();
 		await flushQueuedWork();
