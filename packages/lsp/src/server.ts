@@ -310,8 +310,9 @@ async function loadConfigDefinition(root: string, configFileName: string) {
 		Date.now().toString(),
 	);
 
-	const imported = (await import(configUrl.href)) as Record<string, unknown>;
-	const config: unknown = imported.default;
+	const { default: config } = (await import(configUrl.href)) as {
+		default: unknown;
+	};
 
 	if (!isConfig(config)) {
 		throw new Error(`${configFileName} does not export a Flint config.`);

@@ -16,6 +16,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import type * as LanguageServer from "vscode-languageserver/node.js";
 import { FileChangeType } from "vscode-languageserver/node.js";
 
+import type * as Core from "@flint.fyi/core";
 import type {
 	FileResults,
 	LintSessionChangedLintOptions,
@@ -62,6 +63,7 @@ const mocks = vi.hoisted(() => {
 		},
 	);
 	const state = {
+		configFileName: "flint.config.mjs" as string | undefined,
 		connection: undefined as unknown as {
 			callbacks: {
 				changeWatchedFiles?: (event: unknown) => void;
@@ -84,7 +86,6 @@ const mocks = vi.hoisted(() => {
 				(params: { diagnostics: unknown[]; uri: string }) => Promise<void>
 			>;
 		},
-		directoryEntries: [{ name: "flint.config.mjs" }],
 		documents: undefined as unknown as {
 			fireDidChangeContent(document: { getText(): string; uri: string }): void;
 			fireDidClose(document: { getText(): string; uri: string }): void;
@@ -102,26 +103,15 @@ const mocks = vi.hoisted(() => {
 	return state;
 });
 
-vi.mock("@flint.fyi/core", () => {
+vi.mock("@flint.fyi/core", async (importOriginal) => {
 	return {
-		commonlyIgnoredPaths: ["/.git", "/.jj", "/node_modules"],
-		configFileNameCandidates: [
-			"flint.config.ts",
-			"flint.config.mts",
-			"flint.config.cts",
-			"flint.config.mjs",
-			"flint.config.cjs",
-			"flint.config.js",
-		],
+		...(await importOriginal<typeof Core>()),
 		createVFSLinterHost: vi.fn(() => ({
 			readFileSync: vi.fn(() => "const value = 1;\n"),
 			vfsDeleteFile: vi.fn(),
 			vfsUpsertFile: vi.fn(),
 		})),
-		findConfigFileName: vi.fn(() =>
-			Promise.resolve(mocks.directoryEntries[0]?.name),
-		),
-		formatReport: vi.fn((_, text: string) => text),
+		findConfigFileName: vi.fn(() => Promise.resolve(mocks.configFileName)),
 		isConfig: vi.fn(() => true),
 		LintSession: {
 			create: mocks.lintSessionCreate.mockImplementation(() =>
@@ -231,7 +221,7 @@ describe("startServer", () => {
 		mocks.session[Symbol.dispose].mockReset();
 		mocks.validateConfigDefinition.mockReset();
 		mocks.validateConfigDefinition.mockReturnValue(undefined);
-		mocks.directoryEntries = [{ name: "flint.config.mjs" }];
+		mocks.configFileName = "flint.config.mjs";
 	});
 
 	afterEach(() => {
@@ -283,7 +273,7 @@ describe("startServer", () => {
 	});
 
 	it("stops when the workspace has no config", async () => {
-		mocks.directoryEntries = [];
+		mocks.configFileName = undefined;
 
 		await startInitializedServer();
 		await flushQueuedWork();
@@ -422,7 +412,7 @@ describe("startServer", () => {
 		);
 
 		mocks.validateConfigDefinition.mockClear();
-		mocks.directoryEntries = [{ name: nextConfigFileName }];
+		mocks.configFileName = nextConfigFileName;
 		mocks.connection.callbacks.changeWatchedFiles?.({
 			changes: [
 				{
