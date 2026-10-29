@@ -86,7 +86,7 @@ catalogs:
     eslint-plugin-solid: 0.18.1
     eslint-plugin-svelte: 3.23.1
     eslint-plugin-unicorn: 79.0.0
-    eslint-plugin-vue: 10.11.1
+    eslint-plugin-vue: 10.12.0
     eslint-plugin-yml: 3.9.0
     markdownlint: 0.42.0
     oxlint: 1.89.0
