@@ -639,7 +639,7 @@ catalogs:
 
 overrides:
   read-package-up: 12.0.0
-  starlight-blog>satteri: 0.10.5
+  starlight-blog>satteri: 0.11.1
   unicorn-magic: 0.4.1
 
 importers:
@@ -7125,6 +7125,9 @@ packages:
 
   satteri@0.10.5:
     resolution: {integrity: sha512-Ao1LKpAEa9Wdg0otgbVKViZHEq9ebdXe4DMrp3s9vQAU0HNIuHnFEuMuOcm0ZIXyV0Yzxj91NvhLpvXZJO/5ZQ==}
+
+  satteri@0.11.1:
+    resolution: {integrity: sha512-gSWQ0DDu8+fcw96Q4Xb/TE6xU9sBw4wNxk2uzzTae/RTdXdY7mJjXY6Uadur0AUaV9udMA7odMwEpzWZjBEpKQ==}
 
   satteri@0.11.6:
     resolution: {integrity: sha512-ddGCTqSfwL+A+odhdjj8E+ZMu1h0QEnG3VTmu7fPJL2+80GdjxDh1AeCw8mn2aa95eQSosG4e2QBYYfCc5nyiA==}
@@ -13822,6 +13825,13 @@ snapshots:
       '@bruits/satteri-win32-arm64-msvc': 0.10.5
       '@bruits/satteri-win32-x64-msvc': 0.10.5
 
+  satteri@0.11.1:
+    dependencies:
+      '@types/estree-jsx': 1.0.5
+      '@types/hast': 3.0.5
+      '@types/mdast': 4.0.4
+      '@types/unist': 3.0.3
+
   satteri@0.11.6:
     dependencies:
       '@types/estree-jsx': 1.0.5
@@ -14034,7 +14044,7 @@ snapshots:
       hast-util-to-html: 9.0.5
       hast-util-to-string: 3.0.1
       mdast-util-mdx-expression: 2.0.1(supports-color@10.2.2)
-      satteri: 0.10.5
+      satteri: 0.11.1
       schema-dts: 2.1.0
       unist-util-is: 6.0.1
       unist-util-remove: 4.0.0
