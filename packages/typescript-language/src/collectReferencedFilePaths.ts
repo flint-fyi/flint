@@ -1,4 +1,3 @@
-import { relative } from "pathe";
 import ts, { SyntaxKind } from "typescript";
 
 import type * as AST from "./types/ast.ts";
@@ -19,11 +18,8 @@ export function collectReferencedFilePaths(
 			moduleResolutionHost,
 		);
 
-		if (resolved.resolvedModule?.isExternalLibraryImport === false) {
-			return relative(
-				program.getCurrentDirectory(),
-				resolved.resolvedModule.resolvedFileName,
-			);
+		if (resolved.resolvedModule) {
+			return resolved.resolvedModule.resolvedFileName;
 		}
 		return undefined;
 	}
