@@ -50,7 +50,7 @@ catalogs:
     prettier-plugin-sh: 0.20.2
     simple-git-hooks: 2.14.0
     svelte: 5.57.3
-    tsdown: 0.23.1
+    tsdown: 0.23.3
     typescript: 6.0.3
     typescript-eslint: 8.72.1
     vitest: 5.0.5
