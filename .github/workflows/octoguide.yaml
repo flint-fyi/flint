@@ -38,7 +38,7 @@ jobs:
   octoguide:
     runs-on: ubuntu-slim
     steps:
-      - uses: OctoGuide/bot@add13d645618e42f25d8e02e2d032ef41b843e6a # 0.29.2
+      - uses: OctoGuide/bot@14bbfdb68a28fb3b1bc55ff490c86096ccc9e7a3 # 0.29.3
         with:
           config: strict
           github-token: ${{ secrets.GITHUB_TOKEN }}
