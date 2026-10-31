@@ -339,8 +339,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const lastParamDeclaration = lastParam.declarations?.[0] as
-				| AST.AnyNode
-				| undefined;
+				AST.AnyNode | undefined;
 
 			if (
 				lastParamDeclaration?.kind === SyntaxKind.Parameter &&

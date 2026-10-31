@@ -28,7 +28,6 @@ function hasCommentsInArray(
 	array: AST.ArrayLiteralExpression,
 	sourceFile: AST.SourceFile,
 ) {
-	// eslint-disable-next-line unicorn/prefer-set-has -- substring check on a string, not array membership
 	const arrayText = sourceFile.text.slice(
 		array.getStart(sourceFile),
 		array.getEnd(),

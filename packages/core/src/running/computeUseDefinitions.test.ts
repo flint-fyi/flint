@@ -6,6 +6,7 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { normalizePath } from "@flint.fyi/utils";
 
 import { createDiskBackedLinterHost } from "../host/createDiskBackedLinterHost.ts";
+import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import { computeUseDefinitions } from "./computeUseDefinitions.ts";
 
@@ -112,6 +113,48 @@ describe("computeUseDefinitions", () => {
 		expect(result.allFilePaths).not.toContain(ignored);
 		expect([...result.allFilePaths].some((p) => p.includes("/dist/"))).toBe(
 			false,
+		);
+	});
+
+	it("preserves nested ignores across overlapping uses and refreshes between runs", async () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		host.vfsUpsertFile("/root/.gitignore", "*.ts\nblocked/\n");
+		host.vfsUpsertFile("/root/src/.gitignore", "!*.ts\n");
+		host.vfsUpsertFile("/root/blocked/.gitignore", "!*.ts\n");
+		for (const filePath of [
+			"/root/src/first.ts",
+			"/root/src/nested/second.ts",
+			"/root/blocked/third.ts",
+			"/root/other/fourth.ts",
+		]) {
+			host.vfsUpsertFile(filePath, "");
+		}
+		const config = {
+			filePath: "/root/flint.config.ts",
+			use: [
+				{ files: ["**/*.ts"], rules: [] },
+				{ files: ["src/**/*.ts", "blocked/**/*.ts"], rules: [] },
+			],
+		};
+		const expected = new Set([
+			"/root/src/first.ts",
+			"/root/src/nested/second.ts",
+		]);
+
+		const initial = await computeUseDefinitions(host, config);
+		expect(initial.allFilePaths).toEqual(expected);
+		expect(initial.useDefinitions.map(({ found }) => found)).toEqual([
+			expected,
+			expected,
+		]);
+
+		host.vfsUpsertFile("/root/.gitignore", "");
+		const refreshed = await computeUseDefinitions(host, config);
+		expect(refreshed.allFilePaths).toEqual(
+			new Set([...expected, "/root/blocked/third.ts", "/root/other/fourth.ts"]),
+		);
+		expect(refreshed.useDefinitions[1]?.found).toEqual(
+			new Set([...expected, "/root/blocked/third.ts"]),
 		);
 	});
 });

@@ -251,8 +251,7 @@ function getRegexInfoFromExpression(
 		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
 		if (symbol) {
 			const declarations = symbol.getDeclarations() as
-				| AST.AnyNode[]
-				| undefined;
+				AST.AnyNode[] | undefined;
 			if (declarations) {
 				for (const declaration of declarations) {
 					if (

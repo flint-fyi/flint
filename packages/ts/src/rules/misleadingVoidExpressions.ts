@@ -135,9 +135,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkVoidExpression(
 			node:
-				| AST.AwaitExpression
-				| AST.CallExpression
-				| AST.TaggedTemplateExpression,
+				AST.AwaitExpression | AST.CallExpression | AST.TaggedTemplateExpression,
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			const type = getConstrainedTypeAtLocation(node, typeChecker);

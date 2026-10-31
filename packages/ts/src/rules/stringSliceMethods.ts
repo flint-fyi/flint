@@ -31,16 +31,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression(node, { sourceFile, typeChecker }) {
-					if (
-						!(
-							node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-							node.expression.name.text === "substring" &&
-							tsutils.isTypeFlagSet(
-								getConstrainedTypeAtLocation(node, typeChecker),
-								TypeFlags.StringLike,
-							)
+					if (!(
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.name.text === "substring" &&
+						tsutils.isTypeFlagSet(
+							getConstrainedTypeAtLocation(node, typeChecker),
+							TypeFlags.StringLike,
 						)
-					) {
+					)) {
 						return;
 					}
 
