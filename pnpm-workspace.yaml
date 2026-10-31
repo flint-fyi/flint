@@ -107,7 +107,7 @@ catalogs:
     "@types/mdast": ^4.0.4
     "@types/unist": ^3.0.3
     "@typescript-eslint/project-service": ^8.53.0
-    "@volar/language-core": 2.4.28
+    "@volar/language-core": 2.4.30
     "@volar/typescript": 2.4.28
     "@vue/compiler-dom": ^3.5.0
     "@vue/language-core": 3.3.11
