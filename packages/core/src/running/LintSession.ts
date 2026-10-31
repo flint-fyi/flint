@@ -1,7 +1,7 @@
 import { CachedFactory } from "cached-factory";
 import { isAbsolute, resolve } from "pathe";
 
-import { pathKey } from "@flint.fyi/utils";
+import { pathKey, type PromiseOrSync } from "@flint.fyi/utils";
 
 import { collectTransitiveDependents } from "../cache/collectTransitiveDependents.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
@@ -20,6 +20,12 @@ import {
 	type FinalizedFileResults,
 } from "./finalizeFileResults.ts";
 import { runRules } from "./runRules.ts";
+
+export interface LintSessionChangedLintOptions extends LintSessionLintOptions {
+	onResults?: (
+		results: Map<string, FinalizedFileResults>,
+	) => PromiseOrSync<void>;
+}
 
 export interface LintSessionLintOptions {
 	skipLanguageReports?: boolean;
@@ -96,7 +102,7 @@ export class LintSession implements Disposable {
 
 	async lintChangedFiles(
 		filePaths: Iterable<string>,
-		options?: LintSessionLintOptions,
+		options?: LintSessionChangedLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
 		const changedPaths = Array.from(filePaths);
 		const changedKeys = new Set(
@@ -109,15 +115,15 @@ export class LintSession implements Disposable {
 		);
 
 		const lintPass = async (passFilePaths: Set<string>) => {
-			for (const [filePath, fileResults] of await this.lintFiles(
-				passFilePaths,
-				options,
-			)) {
+			const results = await this.lintFiles(passFilePaths, options);
+			for (const [filePath, fileResults] of results) {
 				allResults.set(filePath, fileResults);
 				if (fileResults.isGlobalDependency) {
 					changedGlobalDependency = true;
 				}
 			}
+
+			await options?.onResults?.(results);
 		};
 
 		await lintPass(changedFilePaths);
@@ -133,7 +139,7 @@ export class LintSession implements Disposable {
 		}
 
 		if (changedGlobalDependency) {
-			await lintPass(this.allFilePaths.difference(allResults));
+			await lintPass(new Set(this.storedResults.keys()).difference(allResults));
 		}
 
 		return allResults;
