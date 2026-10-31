@@ -186,10 +186,6 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-minimumReleaseAgeExclude:
-  - unist-util-visit-parents@6.1.0
-  - unist-util-visit@5.2.0
-
 nodeVersion: 26.3.0
 
 overrides:
