@@ -51,7 +51,7 @@ catalogs:
     simple-git-hooks: 2.14.0
     svelte: 5.57.3
     tsdown: 0.23.3
-    typescript: 6.0.3
+    typescript: 7.0.2
     typescript-eslint: 8.72.1
     vitest: 5.0.5
     vitest-ansi-serializer: 0.4.0
@@ -136,7 +136,7 @@ catalogs:
     text-table-fast: ^0.2.0
     tinyglobby: ^0.2.17
     ts-api-utils: ^2.4.0
-    typescript: ^6.0.3
+    typescript: ^7.0.0
     unist-util-visit: ^5.0.0
     wrap-ansi: ^10.0.0
     yaml-unist-parser: ^3.0.0
