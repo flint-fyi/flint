@@ -36,6 +36,9 @@ export async function readFromCache(
 	}
 
 	const cache = decodeResult.data;
+	if (cache.version !== 3) {
+		return undefined;
+	}
 	const caseSensitiveFS = host.isCaseSensitiveFS();
 	const allFilePathKeys = new Set(
 		Array.from(allFilePaths, (filePath) => pathKey(filePath, caseSensitiveFS)),
