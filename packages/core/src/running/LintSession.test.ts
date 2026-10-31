@@ -123,6 +123,38 @@ describe(LintSession, () => {
 		expect(shared).toEqual(originalDependencies);
 	});
 
+	it.each(["add", "remove"])(
+		"keeps reverse dependencies independent after a shared edge is %s",
+		async (change) => {
+			const { configDefinition, dependenciesByFilePath, host, root } =
+				await createTestProject();
+			const aPath = path.posix.join(root, "a.txt");
+			const bPath = path.posix.join(root, "b.txt");
+			const cPath = path.posix.join(root, "c.txt");
+			const first = path.posix.join(root, "first.external");
+			const second = path.posix.join(root, "second.external");
+			dependenciesByFilePath.set(aPath, [first, second]);
+			dependenciesByFilePath.set(bPath, [first, second]);
+			using session = await LintSession.create(configDefinition, host);
+			session.restoreCachedResults(
+				new Map([
+					[aPath, { dependencies: [first, second], timestamp: 1 }],
+					[bPath, { dependencies: [first, second], timestamp: 1 }],
+					[cPath, { timestamp: 1 }],
+				]),
+			);
+			const changed = change === "add" ? cPath : aPath;
+			dependenciesByFilePath.set(changed, [change === "add" ? first : second]);
+			await session.lintFiles([changed]);
+			expect(lintedFileNames(await session.lintChangedFiles([first]))).toEqual(
+				new Set(change === "add" ? ["a.txt", "b.txt", "c.txt"] : ["b.txt"]),
+			);
+			expect(lintedFileNames(await session.lintChangedFiles([second]))).toEqual(
+				new Set(["a.txt", "b.txt"]),
+			);
+		},
+	);
+
 	it("accepts a one-shot iterator of changed files", async () => {
 		const { configDefinition, host, root } = await createTestProject();
 		using session = await LintSession.create(configDefinition, host);

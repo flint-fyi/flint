@@ -64,7 +64,7 @@ async function roundTrip(
 		cacheLocation,
 	);
 
-	return cached?.get(filePath);
+	return cached?.files.get(filePath);
 }
 
 describe(writeToCache, () => {
