@@ -10,10 +10,7 @@ import type {
 
 import type * as AST from "./ast.ts";
 
-export type Checker = CheckerOverrides &
-	Omit<TypeChecker, keyof CheckerOverrides>;
-
-interface CheckerOverrides {
+export interface Checker extends TypeChecker {
 	getResolvedSignature(
 		node:
 			| AST.CallExpression
