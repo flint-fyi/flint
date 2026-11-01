@@ -19,6 +19,7 @@ catalogs:
     "@eslint/markdown": 8.0.3
     "@humanwhocodes/momoa": 3.3.13
     "@ianvs/prettier-plugin-sort-imports": 4.7.1
+    "@prettier/plugin-oxc": 0.2.2
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
     "@types/node": 26.6.6
@@ -190,6 +191,7 @@ overrides:
 
 peerDependencyRules:
   allowedVersions:
+    "@ianvs/prettier-plugin-sort-imports>@prettier/plugin-oxc": 0.2.2
     "@konami-emoji-blast/astro>astro": "7"
     eslint-plugin-import>eslint: "10"
     eslint-plugin-jsx-a11y>eslint: "10"
