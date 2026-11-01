@@ -136,8 +136,18 @@ export type LanguageFile<FileServices extends object> = Disposable &
  */
 export interface LanguageFileBase<FileServices extends object> {
 	about: FileAboutData;
+
+	/**
+	 * Maps a range from the language's analysis text to the original source text.
+	 * @param range The range produced by a rule.
+	 * @param kind `report` maps a diagnostic highlight and may use a language-specific fallback.
+	 * `change` maps an autofix or suggestion replacement and must preserve the edit's meaning;
+	 * the replacement text is applied unchanged to the mapped range.
+	 * @returns The source range, or `null` to discard the diagnostic or individual edit.
+	 */
 	adjustReportRange?: (
 		range: CharacterReportRange,
+		kind: "change" | "report",
 	) => CharacterReportRange | null;
 	directives?: CommentDirective[];
 	reports?: FileReport[];
