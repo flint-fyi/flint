@@ -64,6 +64,58 @@ describe(LintSession, () => {
 		]);
 	});
 
+	it("shares dependency sets across files and replaces them without mutating other results", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		const dependency = path.posix.join(root, "dependency.txt");
+		const otherDependency = path.posix.join(root, "other.txt");
+		dependenciesByFilePath.set(aPath, [dependency, otherDependency]);
+		dependenciesByFilePath.set(bPath, [otherDependency, dependency]);
+		using session = await LintSession.create(configDefinition, host);
+		await session.lintFiles(session.allFilePaths);
+		expect(session.storedResults.get(aPath)?.dependencies).toBe(
+			session.storedResults.get(bPath)?.dependencies,
+		);
+
+		session.restoreCachedResults(
+			new Map([
+				[
+					aPath,
+					{
+						dependencies: [dependency, otherDependency],
+						timestamp: 1,
+					},
+				],
+				[
+					bPath,
+					{
+						dependencies: [otherDependency, dependency],
+						timestamp: 2,
+					},
+				],
+			]),
+		);
+		const shared = session.storedResults.get(bPath)?.dependencies;
+		const originalDependencies = new Set(shared);
+		expect(session.storedResults.get(aPath)?.dependencies).toBe(shared);
+		dependenciesByFilePath.set(aPath, [otherDependency]);
+		await session.lintFiles([aPath]);
+		expect(shared).toEqual(originalDependencies);
+		expect(session.storedResults.get(bPath)?.dependencies).toBe(shared);
+		expect(
+			lintedFileNames(await session.lintChangedFiles([dependency])),
+		).toEqual(new Set(["b.txt"]));
+		dependenciesByFilePath.set(bPath, [otherDependency]);
+		await session.lintFiles([bPath]);
+		expect(session.storedResults.get(aPath)?.dependencies).toBe(
+			session.storedResults.get(bPath)?.dependencies,
+		);
+		expect(await session.lintChangedFiles([dependency])).toEqual(new Map());
+		expect(shared).toEqual(originalDependencies);
+	});
+
 	it("accepts a one-shot iterator of changed files", async () => {
 		const { configDefinition, host, root } = await createTestProject();
 		using session = await LintSession.create(configDefinition, host);
