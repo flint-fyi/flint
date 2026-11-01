@@ -235,8 +235,8 @@ catalogs:
       specifier: 7.1.1
       version: 7.1.1
     eslint-plugin-regexp:
-      specifier: 3.3.1
-      version: 3.3.1
+      specifier: 3.3.2
+      version: 3.3.2
     eslint-plugin-solid:
       specifier: 0.18.1
       version: 0.18.1
@@ -347,8 +347,8 @@ catalogs:
       specifier: 5.13.0
       version: 5.13.0
     eslint-plugin-regexp:
-      specifier: 3.3.1
-      version: 3.3.1
+      specifier: 3.3.2
+      version: 3.3.2
     eslint-plugin-unicorn:
       specifier: 79.0.0
       version: 79.0.0
@@ -726,7 +726,7 @@ importers:
         version: 5.13.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-regexp:
         specifier: catalog:dev
-        version: 3.3.1(eslint@10.13.0)
+        version: 3.3.2(eslint@10.13.0)
       eslint-plugin-unicorn:
         specifier: catalog:dev
         version: 79.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
@@ -1451,7 +1451,7 @@ importers:
         version: 2.32.0(@typescript-eslint/parser@8.72.1)(eslint@10.13.0)(supports-color@10.2.2)
       eslint-plugin-regexp:
         specifier: catalog:comparisons
-        version: 3.3.1(eslint@10.13.0)
+        version: 3.3.2(eslint@10.13.0)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
         version: 79.0.0(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
@@ -1659,7 +1659,7 @@ importers:
         version: 7.1.1(eslint@10.13.0)(supports-color@10.2.2)
       eslint-plugin-regexp:
         specifier: catalog:comparisons
-        version: 3.3.1(eslint@10.13.0)
+        version: 3.3.2(eslint@10.13.0)
       eslint-plugin-solid:
         specifier: catalog:comparisons
         version: 0.18.1(eslint@10.13.0)(supports-color@10.2.2)(typescript@6.0.3)
@@ -5301,8 +5301,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
 
-  eslint-plugin-regexp@3.3.1:
-    resolution: {integrity: sha512-58bGUci/AaWAo1ETj6Lsnmy6QXwnSyVONRA805828nnqp7vrTwdaQMc02vtowmYB3A5OB3SLr3r5HgmfxX4dLg==}
+  eslint-plugin-regexp@3.3.2:
+    resolution: {integrity: sha512-hdkHQVDUtP3+U66PMZSQxw++mburJyJbFY8fu8lryMvJ2glo7xjq1Ov8A/uczxNU+IS87TFXUUBIJ7dxqgcJwg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -11340,7 +11340,7 @@ snapshots:
       string.prototype.matchall: 4.1.0
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-regexp@3.3.1(eslint@10.13.0):
+  eslint-plugin-regexp@3.3.2(eslint@10.13.0):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.13.0)
       '@eslint-community/regexpp': 4.12.2
