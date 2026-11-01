@@ -546,7 +546,7 @@ catalogs:
       specifier: ^6.0.3
       version: 6.0.3
     unist-util-visit:
-      specifier: ^5.0.0
+      specifier: ^5.2.0
       version: 5.2.0
     wrap-ansi:
       specifier: ^10.0.0
@@ -2251,6 +2251,9 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      unist-util-visit:
+        specifier: catalog:prod
+        version: 5.2.0
       yaml-unist-parser:
         specifier: catalog:prod
         version: 3.2.1
