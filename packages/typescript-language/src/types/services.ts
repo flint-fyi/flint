@@ -5,6 +5,7 @@ import type { Checker } from "./checker.ts";
 
 export interface TypeScriptFileServices {
 	program: Program;
+	projectConfigFilePaths?: string[];
 	sourceFile: AST.SourceFile;
 	typeChecker: Checker;
 }
