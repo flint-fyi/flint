@@ -2,10 +2,15 @@ import type {
 	createProjectService,
 	CreateProjectServiceSettings,
 } from "@typescript-eslint/project-service";
+import { join } from "pathe";
 import type ts from "typescript";
 import { describe, expect, it, vi } from "vitest";
 
-import { createVFSLinterHost, type LinterHost } from "@flint.fyi/core";
+import {
+	createVFSLinterHost,
+	type LinterHost,
+	type LinterHostFileWatcherEvent,
+} from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
 import {
@@ -52,6 +57,42 @@ describe("typescriptLanguage", () => {
 			[bPath, "export const b = 1;"],
 		]);
 		expect(closeClientFile.mock.calls).toEqual([[aPath], [bPath]]);
+	});
+
+	it("reapplies the default tsconfig to inferred projects when it changes", () => {
+		const fileWatchers = new Map<
+			string,
+			(event: LinterHostFileWatcherEvent) => void
+		>();
+		const vfs = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		const factory = typescriptLanguage.createFileFactory({
+			...vfs,
+			watchDirectorySync: () => ({ [Symbol.dispose]: vi.fn() }),
+			watchFileSync(filePathAbsolute, callback) {
+				fileWatchers.set(filePathAbsolute, callback);
+				return { [Symbol.dispose]: vi.fn() };
+			},
+		});
+		const setCompilerOptionsForInferredProjects = vi.spyOn(
+			nullThrows(projectServices.at(-1), "Expected a project service"),
+			"setCompilerOptionsForInferredProjects",
+		);
+		const onDefaultProjectChange = nullThrows(
+			fileWatchers.get(join(process.cwd(), "tsconfig.json")),
+			"Expected the default tsconfig to be watched",
+		);
+
+		onDefaultProjectChange("deleted");
+		expect(setCompilerOptionsForInferredProjects).not.toHaveBeenCalled();
+
+		onDefaultProjectChange("changed");
+		expect(
+			setCompilerOptionsForInferredProjects,
+		).toHaveBeenCalledExactlyOnceWith(
+			expect.objectContaining({ noEmit: true }),
+		);
+
+		factory[Symbol.dispose]?.();
 	});
 
 	it("reads updated source text when a changed file is recreated before file watchers fire", () => {

@@ -455,6 +455,9 @@ catalogs:
     '@typescript-eslint/project-service':
       specifier: ^8.53.0
       version: 8.72.1
+    '@typescript-eslint/tsconfig-utils':
+      specifier: ^8.53.0
+      version: 8.72.1
     '@volar/language-core':
       specifier: 2.4.28
       version: 2.4.28
@@ -2025,6 +2028,9 @@ importers:
       '@typescript-eslint/project-service':
         specifier: catalog:prod
         version: 8.72.1(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/tsconfig-utils':
+        specifier: catalog:prod
+        version: 8.72.1(typescript@6.0.3)
       cached-factory:
         specifier: catalog:prod
         version: 0.3.0
