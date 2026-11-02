@@ -10,6 +10,102 @@ import rule from "../ruleCreationMethods";
 
 const ruleTester = new RuleTester();
 
+const files = { "a.ts": "a" };
+ruleTester.describe(rule, {
+    valid: [
+        { files: { ...files } },
+    ],
+    invalid: [],
+});
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+const files = { "a.ts": "a" };
+ruleTester.describe(rule, {
+    valid: [
+        { files: { ...files } },
+                   ~~~~~~~~
+                   Test case code should be a static string literal.
+    ],
+    invalid: [],
+});
+`,
+		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+const files = { "a.ts": "a" };
+ruleTester.describe(rule, {
+    valid: [
+        { files },
+    ],
+    invalid: [],
+});
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+const files = { "a.ts": "a" };
+ruleTester.describe(rule, {
+    valid: [
+        { files },
+          ~~~~~
+          Test case code should be a static string literal.
+    ],
+    invalid: [],
+});
+`,
+		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+const code = "a";
+ruleTester.describe(rule, {
+    valid: [
+        { files: { "a.ts": code } },
+    ],
+    invalid: [],
+});
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+const code = "a";
+ruleTester.describe(rule, {
+    valid: [
+        { files: { "a.ts": code } },
+                           ~~~~
+                           Test case code should be a static string literal.
+    ],
+    invalid: [],
+});
+`,
+		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 const code = "a";
 ruleTester.describe(rule, {
     valid: [code],
@@ -400,7 +496,7 @@ const ruleTester = new RuleTester();
 ruleTester.describe(rule, {
     valid: [
         { code: "a", name: "name" },
-        { code: \`b\`, fileName: "b.ts", name: "file name" },
+        { files: { "b.ts": \`b\` }, name: "file name" },
     ],
     invalid: [
         { code: "a", snapshot: "" },

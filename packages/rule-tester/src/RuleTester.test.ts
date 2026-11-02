@@ -6,8 +6,10 @@ import {
 	createLanguage,
 	RuleCreator,
 	type AnyLanguageFile,
+	type FileAboutData,
 	type LanguageReports,
 	type LinterHost,
+	type RuleContext,
 	type RuleReport,
 } from "@flint.fyi/core";
 
@@ -20,6 +22,31 @@ import {
 } from "./RuleTester.ts";
 
 describe(RuleTester, () => {
+	it.each(["invalid", "valid", "neither"] as const)(
+		"registers only populated child suites when %s has cases",
+		(populated) => {
+			const registerDescribe = vi.fn<TesterSetupDescribe>(
+				(_description, setup) => {
+					setup();
+				},
+			);
+			createTestSetups({
+				testCases: {
+					invalid: populated === "invalid" ? [{ code: "", snapshot: "" }] : [],
+					valid: populated === "valid" ? [""] : [],
+				},
+				testerOptions: { describe: registerDescribe },
+			});
+			expect(
+				registerDescribe.mock.calls.map(([description]) => description),
+			).toEqual(
+				populated === "neither"
+					? ["languageReports"]
+					: ["languageReports", populated],
+			);
+		},
+	);
+
 	it("asserts that test cases contain no language reports by default", async () => {
 		const getLanguageReports = vi.fn(() => [
 			{ text: "A language report." },
@@ -61,7 +88,7 @@ Another language report.`,
 
 		await expect(first()).resolves.toBeUndefined();
 		expect(second).toThrow(
-			"Expected no duplicate test cases, but an earlier test case has the same code, fileName, files, and options.",
+			"Expected no duplicate test cases, but an earlier test case has the same linted files, auxiliary files, and options.",
 		);
 	});
 
@@ -86,7 +113,7 @@ Another language report.`,
 
 		await expect(first()).resolves.toBeUndefined();
 		expect(second).toThrow(
-			"Expected no duplicate test cases, but an earlier test case has the same code, fileName, files, and options.",
+			"Expected no duplicate test cases, but an earlier test case has the same linted files, auxiliary files, and options.",
 		);
 	});
 
@@ -94,7 +121,7 @@ Another language report.`,
 		const [first, second] = createTestSetups({
 			testCases: {
 				invalid: [],
-				valid: ["let a;", { code: "let a;", fileName: "other.ts" }],
+				valid: ["let a;", { files: { "other.ts": "let a;" } }],
 			},
 		});
 		assert.ok(first);
@@ -116,6 +143,259 @@ Another language report.`,
 
 		await expect(first()).resolves.toBeUndefined();
 		await expect(second()).resolves.toBeUndefined();
+	});
+
+	it("recognizes a files-only case equivalent to a code shorthand", async () => {
+		const [first, second] = createTestSetups({
+			testCases: {
+				invalid: [],
+				valid: ["abc", { files: { "file.ts": "abc" } }],
+			},
+		});
+		assert.ok(first);
+		assert.ok(second);
+		await first();
+		expect(second).toThrow("Expected no duplicate test cases");
+	});
+
+	it("checks every file and applies fixes to the corresponding source", async () => {
+		await expect(
+			createTestSetup({
+				testCases: {
+					invalid: [
+						{
+							files: { "a.ts": "abc", "b.ts": "wxyz", "clean.ts": "clean" },
+							output: { "a.ts": "Xbc", "b.ts": "wxY" },
+							snapshot: { "a.ts": "abc\n~\n", "b.ts": "wxyz\n  ~~\n  " },
+						},
+					],
+					valid: [],
+				},
+				visit(file, context) {
+					if (file.about.filePath === "clean.ts") {
+						return;
+					}
+					const first = file.about.filePath === "a.ts";
+					const range = first ? { begin: 0, end: 1 } : { begin: 2, end: 4 };
+					context.report({
+						fix: { range, text: first ? "X" : "Y" },
+						message: "",
+						range,
+					});
+				},
+			})(),
+		).resolves.toBeUndefined();
+	});
+
+	it.each([false, true])(
+		"supports a single named file with mapped expectations: %s",
+		async (mapped) => {
+			await expect(
+				createTestSetup({
+					report: {
+						fix: { range: { begin: 0, end: 1 }, text: "X" },
+						message: "",
+						range: { begin: 0, end: 1 },
+					},
+					testCases: {
+						invalid: [
+							{
+								files: { "named.ts": "abc" },
+								output: mapped ? { "named.ts": "Xbc" } : "Xbc",
+								snapshot: mapped ? { "named.ts": "abc\n~\n" } : "abc\n~\n",
+							},
+						],
+						valid: [],
+					},
+				})(),
+			).resolves.toBeUndefined();
+		},
+	);
+
+	it("keeps all files available through teardown and routes its reports", async () => {
+		const events: string[] = [];
+		const setup = vi.fn(() => {
+			events.push("setup");
+		});
+		const teardown = vi.fn((context: RuleContext<"">) => {
+			events.push("teardown");
+			context.report({
+				filePath: "b.ts",
+				message: "",
+				range: { begin: 1, end: 3 },
+			});
+		});
+		await expect(
+			createTestSetup({
+				createFile(about, host) {
+					expect(host.readFileSync("/a.ts")).toBe("abc");
+					expect(host.readFileSync("/b.ts")).toBe("wxyz");
+					events.push(`create:${about.filePath}`);
+				},
+				disposeFile(about) {
+					events.push(`dispose:${about.filePath}`);
+				},
+				orderFilePaths: (filePaths) => filePaths.toReversed(),
+				setup,
+				teardown,
+				testCases: {
+					invalid: [
+						{
+							files: { "a.ts": "abc", "b.ts": "wxyz" },
+							snapshot: { "b.ts": "wxyz\n ~~\n " },
+						},
+					],
+					valid: [],
+				},
+				visit(file) {
+					events.push(`visit:${file.about.filePath}`);
+				},
+			})(),
+		).resolves.toBeUndefined();
+		expect(setup).toHaveBeenCalledOnce();
+		expect(teardown).toHaveBeenCalledOnce();
+		expect(events).toEqual([
+			"create:b.ts",
+			"create:a.ts",
+			"setup",
+			"visit:b.ts",
+			"visit:a.ts",
+			"teardown",
+			"dispose:a.ts",
+			"dispose:b.ts",
+		]);
+	});
+
+	it("rejects reports targeting files outside the linted inputs", async () => {
+		await expect(
+			createTestSetup({
+				report: {
+					filePath: "auxiliary.ts",
+					message: "",
+					range: { begin: 0, end: 1 },
+				},
+				testCases: {
+					invalid: [],
+					valid: [{ code: "abc", files: { "auxiliary.ts": "abc" } }],
+				},
+			})(),
+		).rejects.toThrow("which is not part of the current test case");
+	});
+
+	it.each(["/file.ts", "./file.ts"])(
+		"rejects a report using the alias %s",
+		async (filePath) => {
+			await expect(
+				createTestSetup({
+					report: { filePath, message: "", range: { begin: 0, end: 1 } },
+					testCases: { invalid: [], valid: ["abc"] },
+				})(),
+			).rejects.toThrow("which is not part of the current test case");
+		},
+	);
+
+	it("accepts an absolute report path when it is the input file name", async () => {
+		await expect(
+			createTestSetup({
+				report: {
+					filePath: "/file.ts",
+					message: "",
+					range: { begin: 0, end: 1 },
+				},
+				testCases: {
+					invalid: [{ files: { "/file.ts": "abc" }, snapshot: "abc\n~\n" }],
+					valid: [],
+				},
+			})(),
+		).resolves.toBeUndefined();
+	});
+
+	it("reports errors in a second valid input", async () => {
+		await expect(
+			createTestSetup({
+				testCases: {
+					invalid: [],
+					valid: [{ files: { "a.ts": "abc", "b.ts": "xyz" } }],
+				},
+				visit(file, context) {
+					if (file.about.filePath === "b.ts") {
+						context.report({ message: "", range: { begin: 0, end: 1 } });
+					}
+				},
+			})(),
+		).rejects.toThrow();
+	});
+
+	it.each([
+		{ files: { "./file.ts": "first", "file.ts": "second" } },
+		{ code: "first", files: { "/file.ts": "second" } },
+	])("rejects file aliases: %j", async (testCase) => {
+		await expect(
+			createTestSetup({ testCases: { invalid: [], valid: [testCase] } })(),
+		).rejects.toThrow("resolve to the same file");
+	});
+
+	it("rejects an empty files-only case", () => {
+		expect(
+			createTestSetup({ testCases: { invalid: [], valid: [{ files: {} }] } }),
+		).toThrow("'files' must have at least one file");
+	});
+
+	it.each(["snapshot", "output"] as const)(
+		"requires a mapped %s for multiple files",
+		async (property) => {
+			await expect(
+				createTestSetup({
+					report: {
+						filePath: "a.ts",
+						message: "",
+						range: { begin: 0, end: 1 },
+					},
+					testCases: {
+						invalid: [
+							{
+								files: { "a.ts": "abc", "b.ts": "xyz" },
+								...(property === "output" && { output: "abc\n~\n" }),
+								snapshot:
+									property === "snapshot" ? "abc\n~\n" : { "a.ts": "abc\n~\n" },
+							},
+						],
+						valid: [],
+					},
+				})(),
+			).rejects.toThrow(`${property} object keyed by file path`);
+		},
+	);
+
+	it("restores default files and removes stale files between test cases", async () => {
+		const observed: (string | undefined)[][] = [];
+		const [first, second] = createTestSetups({
+			setup({ host }) {
+				observed.push([
+					host.readFileSync("/temporary.ts"),
+					host.readFileSync("/config.json"),
+				]);
+			},
+			testCases: {
+				invalid: [],
+				valid: [
+					{
+						code: "first",
+						files: { "config.json": "override", "temporary.ts": "temporary" },
+					},
+					{ files: { "second.ts": "second" } },
+				],
+			},
+			testerOptions: { defaults: { files: { "config.json": "default" } } },
+		});
+		assert.ok(first);
+		assert.ok(second);
+		await first();
+		await second();
+		expect(observed).toEqual([
+			["temporary", "override"],
+			[undefined, "default"],
+		]);
 	});
 
 	it("rejects cross-file suggestion mismatches through the named test callback", async () => {
@@ -180,20 +460,20 @@ Another language report.`,
 						valid: [
 							{
 								code: "abc",
-								fileName: "src/file.ts",
 								files: { "dictionary.json": "case" },
 							},
 						],
 					},
 					testerOptions: {
-						...(withDefaults && {
-							defaults: {
+						defaults: {
+							fileName: "src/file.ts",
+							...(withDefaults && {
 								files: {
 									"default.json": "default",
 									"dictionary.json": "default",
 								},
-							},
-						}),
+							}),
+						},
 					},
 				})(),
 			).resolves.toBeUndefined();
@@ -222,7 +502,6 @@ Another language report.`,
 					invalid: [
 						{
 							code: "abc",
-							fileName: "src/file.ts",
 							files: { "dictionary.json": "case" },
 							snapshot: "abc\n~\n",
 							suggestions: [
@@ -244,14 +523,20 @@ Another language report.`,
 
 interface TestSetupOptions {
 	assertNoLanguageReports?: boolean;
+	createFile?: (about: FileAboutData, host: LinterHost) => void;
+	disposeFile?: (about: FileAboutData) => void;
 	getLanguageReports?: (
 		file: AnyLanguageFile,
 		host: LinterHost,
 	) => LanguageReports;
 	it?: TesterSetupIt;
+	orderFilePaths?: (filePaths: readonly string[], host: LinterHost) => string[];
 	report?: RuleReport<"">;
+	setup?: (context: RuleContext<"">) => void;
+	teardown?: (context: RuleContext<"">) => void;
 	testCases?: TestCases<undefined>;
 	testerOptions?: RuleTesterOptions;
+	visit?: (file: AnyLanguageFile, context: RuleContext<"">) => void;
 }
 
 function createTestSetup(options: TestSetupOptions): () => Promise<void> {
@@ -262,11 +547,17 @@ function createTestSetup(options: TestSetupOptions): () => Promise<void> {
 
 function createTestSetups({
 	assertNoLanguageReports,
+	createFile,
+	disposeFile,
 	getLanguageReports,
 	it: registerTest,
+	orderFilePaths,
 	report,
+	setup,
+	teardown,
 	testCases = { invalid: [], valid: [""] },
 	testerOptions,
+	visit,
 }: TestSetupOptions): (() => Promise<void>)[] {
 	const testSetups: (() => Promise<void>)[] = [];
 	const collectTest: TesterSetupIt = (_description, setup): void => {
@@ -275,13 +566,25 @@ function createTestSetups({
 	const runDescribe: TesterSetupDescribe = (_description, setup): void => {
 		setup();
 	};
+	let ruleContext: RuleContext<""> | undefined;
 	const language = createLanguage({
 		about: { name: "Test" },
-		createFileFactory: () => ({
-			createFile: (about) => ({ about, services: {} }),
+		createFileFactory: (host) => ({
+			createFile: (about) => {
+				createFile?.(about, host);
+				return {
+					about,
+					services: {},
+					[Symbol.dispose]: () => disposeFile?.(about),
+				};
+			},
 		}),
 		...(getLanguageReports && { getLanguageReports }),
-		runFileVisitors: vi.fn(),
+		...(orderFilePaths && { orderFilePaths }),
+		runFileVisitors: (file) => {
+			assert.ok(ruleContext);
+			visit?.(file, ruleContext);
+		},
 	});
 	const rule = new RuleCreator({
 		docs: () => "https://example.com",
@@ -291,10 +594,17 @@ function createTestSetups({
 		about: { description: "", id: "languageReports" },
 		messages: { "": { primary: "", secondary: [], suggestions: [] } },
 		setup: (context) => {
+			ruleContext = context;
+			setup?.(context);
 			if (report) {
 				context.report(report);
 			}
-			return {};
+			return {
+				teardown: () => {
+					teardown?.(context);
+				},
+				visitors: {},
+			};
 		},
 	});
 
@@ -303,7 +613,7 @@ function createTestSetups({
 		...(assertNoLanguageReports === undefined
 			? {}
 			: { assertNoLanguageReports }),
-		describe: runDescribe,
+		describe: testerOptions?.describe ?? runDescribe,
 		it: registerTest ?? collectTest,
 		only: collectTest,
 		skip: collectTest,

@@ -1,24 +1,19 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester } from "./ruleTester.ts";
 import rule from "./unsafeNegations.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 const key = "property";
 const object = {};
 
 !key in object;
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const key = "property";
 const object = {};
 
@@ -26,79 +21,60 @@ const object = {};
 ~
 This negation applies before the \`in\` operator.
 `,
+			},
 		},
 	],
 	valid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 const key = "property";
 const object = {};
 
 !(key in object);
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const object = new Date();
 const Constructor = Date;
 
 !(object instanceof Constructor);
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const key = "property";
 const object = {};
 
 key in object;
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const object = new Date();
 const Constructor = Date;
 
 object instanceof Constructor;
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const flag = false;
 const key = "property";
 const object = {};
 
 !flag && key in object;
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 	],
 });

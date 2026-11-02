@@ -30,7 +30,7 @@ import {
 	type TestCaseNormalized,
 } from "./normalizeTestCase.ts";
 import { resolveReportedSuggestions } from "./resolveReportedSuggestions.ts";
-import { runTestCaseRule } from "./runTestCaseRule.ts";
+import { runTestCaseRule, type TestCaseReport } from "./runTestCaseRule.ts";
 import type { InvalidTestCase, ValidTestCase } from "./types.ts";
 
 export interface RuleTesterDefaults {
@@ -66,7 +66,7 @@ export type TesterSetupIt = (
 
 type TestCaseUniqueProperties = Pick<
 	TestCaseNormalized,
-	"code" | "fileName" | "files" | "options"
+	"auxiliaryFiles" | "lintedFiles" | "options"
 >;
 
 export class RuleTester {
@@ -148,19 +148,23 @@ export class RuleTester {
 		{ invalid, valid }: TestCases<InferredInputObject<OptionsSchema>>,
 	): void {
 		this.#testerOptions.describe(rule.about.id, () => {
-			this.#testerOptions.describe("invalid", () => {
-				const seenTestCases: TestCaseUniqueProperties[] = [];
-				for (const testCase of invalid) {
-					this.#itInvalidCase(rule, testCase, seenTestCases);
-				}
-			});
+			if (invalid.length) {
+				this.#testerOptions.describe("invalid", () => {
+					const seenTestCases: TestCaseUniqueProperties[] = [];
+					for (const testCase of invalid) {
+						this.#itInvalidCase(rule, testCase, seenTestCases);
+					}
+				});
+			}
 
-			this.#testerOptions.describe("valid", () => {
-				const seenTestCases: TestCaseUniqueProperties[] = [];
-				for (const testCase of valid) {
-					this.#itValidCase(rule, testCase, seenTestCases);
-				}
-			});
+			if (valid.length) {
+				this.#testerOptions.describe("valid", () => {
+					const seenTestCases: TestCaseUniqueProperties[] = [];
+					for (const testCase of valid) {
+						this.#itValidCase(rule, testCase, seenTestCases);
+					}
+				});
+			}
 		});
 	}
 
@@ -185,15 +189,23 @@ export class RuleTester {
 				},
 			);
 			assertNoLanguageReports(languageReports);
-			const actualSnapshot = createReportSnapshot(testCase.code, reports);
+			const actualSnapshot = createTestCaseSnapshot(
+				testCaseNormalized,
+				reports,
+			);
 
-			assert.equal(actualSnapshot, testCase.snapshot);
+			assert.deepStrictEqual(actualSnapshot, testCase.snapshot);
+			assert.ok(
+				typeof testCase.output !== "string" ||
+					Object.keys(testCaseNormalized.lintedFiles).length === 1,
+				"Test cases with multiple linted files must use an output object keyed by file path.",
+			);
 
 			const actualOutput = createOutput(reports, testCaseNormalized);
 
-			assert.equal(
-				testCase.output,
+			assert.deepStrictEqual(
 				actualOutput,
+				testCase.output,
 				"Expected `output` property to equal:",
 			);
 
@@ -224,15 +236,20 @@ export class RuleTester {
 
 		test(
 			testCase.name ??
-				("files" in testCase
-					? JSON.stringify(
-							{ [testCase.fileName]: testCase.code, ...testCase.files },
+				(testCase.code !== undefined && testCase.files === undefined
+					? testCase.code
+					: JSON.stringify(
+							{ ...testCase.auxiliaryFiles, ...testCase.lintedFiles },
 							null,
 							2,
-						)
-					: testCase.code),
+						)),
 			() => {
 				assertNoDuplicateTestCase(testCase, seenTestCases);
+				assert.notEqual(
+					Object.keys(testCase.lintedFiles).length,
+					0,
+					`'files' must have at least one file`,
+				);
 				if (testCase.files != null) {
 					assert.notEqual(
 						Object.keys(testCase.files).length,
@@ -269,11 +286,15 @@ export class RuleTester {
 			);
 			assertNoLanguageReports(languageReports);
 
-			if (reports.length) {
-				assert.deepStrictEqual(
-					createReportSnapshot(testCaseNormalized.code, reports),
-					testCaseNormalized.code,
+			for (const [fileName, code] of Object.entries(
+				testCaseNormalized.lintedFiles,
+			)) {
+				const fileReports = reports.filter(
+					(report) => report.fileName === fileName,
 				);
+				if (fileReports.length) {
+					assert.deepStrictEqual(createReportSnapshot(code, fileReports), code);
+				}
 			}
 		});
 	}
@@ -284,9 +305,8 @@ function assertNoDuplicateTestCase(
 	seenTestCases: TestCaseUniqueProperties[],
 ): void {
 	const duplicateProperties = {
-		code: testCase.code,
-		fileName: testCase.fileName,
-		files: testCase.files,
+		auxiliaryFiles: testCase.auxiliaryFiles,
+		lintedFiles: testCase.lintedFiles,
 		options: testCase.options,
 	} satisfies TestCaseUniqueProperties;
 
@@ -296,7 +316,7 @@ function assertNoDuplicateTestCase(
 		)
 	) {
 		assert.fail(
-			"Expected no duplicate test cases, but an earlier test case has the same code, fileName, files, and options.",
+			"Expected no duplicate test cases, but an earlier test case has the same linted files, auxiliary files, and options.",
 		);
 	}
 
@@ -313,6 +333,33 @@ function assertNoLanguageReports(languageReports: LanguageReports) {
 			].join("\n\n"),
 		);
 	}
+}
+
+function createTestCaseSnapshot(
+	testCase: InvalidTestCase & TestCaseNormalized,
+	reports: TestCaseReport[],
+): Record<string, string> | string {
+	const files = Object.entries(testCase.lintedFiles);
+	if (typeof testCase.snapshot === "string") {
+		assert.equal(
+			files.length,
+			1,
+			"Test cases with multiple linted files must use a snapshot object keyed by file path.",
+		);
+		const file = files[0];
+		assert.ok(file);
+		return createReportSnapshot(file[1], reports);
+	}
+	return Object.fromEntries(
+		files.flatMap(([fileName, code]) => {
+			const fileReports = reports.filter(
+				(report) => report.fileName === fileName,
+			);
+			return fileReports.length
+				? [[fileName, createReportSnapshot(code, fileReports)]]
+				: [];
+		}),
+	);
 }
 
 function defaultTo<TesterSetup extends TesterSetupDescribe | TesterSetupIt>(

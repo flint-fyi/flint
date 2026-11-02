@@ -21,7 +21,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary: "Use string shorthand for test cases with only a code property.",
 			secondary: [
 				"String shorthand syntax is more concise: `valid: ['code here']` instead of `valid: [{ code: 'code here' }]`.",
-				"Object literal syntax should be reserved for test cases with additional properties like fileName or options.",
+				"Object literal syntax should be reserved for test cases with additional properties like files or options.",
 			],
 			suggestions: ["Switch the test case to shorthand syntax."],
 		},

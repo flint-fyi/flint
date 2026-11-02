@@ -1,30 +1,30 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
 import rule from "./constantAssignments.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 const value = 1;
 value = 2;
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-				noUnusedLocals: false,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const value = 1;
 value = 2;
 ~~~~~
 Variables declared with const cannot be reassigned; use let or var instead if reassignment is needed.
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`const value = 1; void value;`,
 		`

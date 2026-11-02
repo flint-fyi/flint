@@ -1,17 +1,27 @@
-export interface InvalidTestCase<
-	Options extends object | undefined = object | undefined,
-> extends TestCase<Options> {
-	output?: string;
-	snapshot: string;
-	suggestions?: TestSuggestion[];
+export interface CodeTestCase {
+	code: string;
+	files?: Record<string, string> | undefined;
 }
 
-export interface TestCase<
+export interface FilesTestCase {
+	code?: never;
+	files: Record<string, string>;
+}
+
+export type InvalidTestCase<
+	Options extends object | undefined = object | undefined,
+> = TestCase<Options> & {
+	output?: Record<string, string> | string;
+	snapshot: Record<string, string> | string;
+	suggestions?: TestSuggestion[];
+};
+
+export type TestCase<Options extends object | undefined = object | undefined> =
+	(CodeTestCase | FilesTestCase) & TestCaseBase<Options>;
+
+export interface TestCaseBase<
 	Options extends object | undefined = object | undefined,
 > {
-	code: string;
-	fileName?: string | undefined;
-	files?: Record<string, string> | undefined;
 	name?: string | undefined;
 
 	/**

@@ -9,20 +9,20 @@ import {
 import { getRuleTesterCaseArrays } from "../utils/getRuleTesterCaseArrays.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-function getCodeProperty(node: AST.ObjectLiteralExpression) {
+function getProperty(node: AST.ObjectLiteralExpression, propertyName: string) {
 	return node.properties.find((property) => {
 		if (property.kind === SyntaxKind.PropertyAssignment) {
 			const name = property.name;
 			return (
 				(name.kind === SyntaxKind.Identifier ||
 					name.kind === SyntaxKind.StringLiteral) &&
-				name.text === "code"
+				name.text === propertyName
 			);
 		}
 
 		return (
 			property.kind === SyntaxKind.ShorthandPropertyAssignment &&
-			property.name.text === "code"
+			property.name.text === propertyName
 		);
 	});
 }
@@ -67,6 +67,46 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		function checkFiles(
+			property: AST.ObjectLiteralElementLike,
+			sourceFile: AST.SourceFile,
+		): void {
+			if (
+				property.kind === SyntaxKind.PropertyAssignment &&
+				property.initializer.kind === SyntaxKind.ObjectLiteralExpression
+			) {
+				for (const file of property.initializer.properties) {
+					if (
+						file.kind === SyntaxKind.PropertyAssignment &&
+						(isStaticString(file.initializer) ||
+							isStringRawNoSubstitution(file.initializer))
+					) {
+						continue;
+					}
+					context.report({
+						message: "nonStaticTestCaseCode",
+						range: getTSNodeRange(
+							file.kind === SyntaxKind.PropertyAssignment
+								? file.initializer
+								: file,
+							sourceFile,
+						),
+					});
+				}
+				return;
+			}
+
+			context.report({
+				message: "nonStaticTestCaseCode",
+				range: getTSNodeRange(
+					property.kind === SyntaxKind.PropertyAssignment
+						? property.initializer
+						: property,
+					sourceFile,
+				),
+			});
+		}
+
 		function checkTestCase(
 			testCase: AST.Expression,
 			sourceFile: AST.SourceFile,
@@ -88,8 +128,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const codeProperty = getCodeProperty(testCase);
+			const codeProperty = getProperty(testCase, "code");
 			if (!codeProperty) {
+				const filesProperty = getProperty(testCase, "files");
+				if (filesProperty) {
+					checkFiles(filesProperty, sourceFile);
+					return;
+				}
+
 				// No `code` property, but has a spread assignment ({ ...x })
 				if (
 					testCase.properties.some(

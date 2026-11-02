@@ -5,10 +5,11 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"src/example.txt": `
                 incorect
 `,
-			fileName: "src/example.txt",
+			},
 			snapshot: `
                 incorect
                 ~~~~~~~~
@@ -70,18 +71,21 @@ ruleTester.describe(rule, {
 			],
 		},
 		{
-			code: `
+			files: {
+				"cspell.json": '{"words":["existing"]}',
+				"src/example.txt": `
                 incorect
             
 `,
-			fileName: "src/example.txt",
-			files: { "cspell.json": '{"words":["existing"]}' },
-			snapshot: `
+			},
+			snapshot: {
+				"src/example.txt": `
                 incorect
                 ~~~~~~~~
                 Forbidden or unknown word: "incorect".
             
 `,
+			},
 			suggestions: [
 				{
 					files: {
@@ -289,14 +293,16 @@ ruleTester.describe(rule, {
 		"known-word",
 		"knownWord",
 		{
-			code: "incorect",
-			fileName: "src/example.txt",
-			files: { "cspell.json": '{"words":["incorect"]}' },
+			files: {
+				"cspell.json": '{"words":["incorect"]}',
+				"src/example.txt": "incorect",
+			},
 		},
 		{
-			code: "incorect",
-			fileName: "src/example.txt",
-			files: { "cspell.json": '{"words":["existing","incorect"]}' },
+			files: {
+				"cspell.json": '{"words":["existing","incorect"]}',
+				"src/example.txt": "incorect",
+			},
 		},
 	],
 });

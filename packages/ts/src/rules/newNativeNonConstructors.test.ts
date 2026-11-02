@@ -1,31 +1,33 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
 import rule from "./newNativeNonConstructors.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 new Symbol("description");
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-				noUnusedLocals: false,
-			}),
-			output: `
+			},
+			output: {
+				"file.js": `
 Symbol("description");
 `,
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 new Symbol("description");
 ~~~
 Symbol cannot be called with \`new\`.
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`Symbol("description");`,
 		`BigInt(42);`,

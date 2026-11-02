@@ -6,7 +6,8 @@ import rule from "./repositoryDirectoryValidity.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"packages/example/package.json": `
 {
   "repository": {
     "type": "git",
@@ -15,7 +16,7 @@ ruleTester.describe(rule, {
   }
 }
 `,
-			fileName: "packages/example/package.json",
+			},
 			snapshot: `
 {
   "repository": {
@@ -67,7 +68,8 @@ ruleTester.describe(rule, {
 }
 `,
 		{
-			code: `
+			files: {
+				"packages/example/package.json": `
 {
   "repository": {
     "type": "git",
@@ -76,10 +78,11 @@ ruleTester.describe(rule, {
   }
 }
 `,
-			fileName: "packages/example/package.json",
+			},
 		},
 		{
-			code: `
+			files: {
+				"workspace/packages/example/package.json": `
 {
   "repository": {
     "type": "git",
@@ -88,7 +91,7 @@ ruleTester.describe(rule, {
   }
 }
 `,
-			fileName: "workspace/packages/example/package.json",
+			},
 		},
 	],
 });
@@ -97,7 +100,8 @@ describe("with a known repository root", () => {
 	repositoryRootRuleTester.describe(rule, {
 		invalid: [
 			{
-				code: `
+				files: {
+					"packages/example/package.json": `
 {
   "repository": {
     "type": "git",
@@ -106,7 +110,7 @@ describe("with a known repository root", () => {
   }
 }
 `,
-				fileName: "packages/example/package.json",
+				},
 				snapshot: `
 {
   "repository": {
@@ -134,7 +138,8 @@ describe("with a known repository root", () => {
 				],
 			},
 			{
-				code: `
+				files: {
+					"packages/example/package.json": `
 {
   "repository": {
     "type": "git",
@@ -143,7 +148,7 @@ describe("with a known repository root", () => {
   }
 }
 `,
-				fileName: "packages/example/package.json",
+				},
 				name: "a directory that only matches the trailing path segment",
 				snapshot: `
 {
@@ -172,7 +177,8 @@ describe("with a known repository root", () => {
 				],
 			},
 			{
-				code: `
+				files: {
+					"package.json": `
 {
   "repository": {
     "type": "git",
@@ -181,7 +187,7 @@ describe("with a known repository root", () => {
   }
 }
 `,
-				fileName: "package.json",
+				},
 				name: "a package.json in the repository root itself",
 				snapshot: `
 {
@@ -212,7 +218,8 @@ describe("with a known repository root", () => {
 		],
 		valid: [
 			{
-				code: `
+				files: {
+					"packages/example/package.json": `
 {
   "repository": {
     "type": "git",
@@ -221,10 +228,11 @@ describe("with a known repository root", () => {
   }
 }
 `,
-				fileName: "packages/example/package.json",
+				},
 			},
 			{
-				code: `
+				files: {
+					"package.json": `
 {
   "repository": {
     "type": "git",
@@ -233,7 +241,7 @@ describe("with a known repository root", () => {
   }
 }
 `,
-				fileName: "package.json",
+				},
 				name: "an empty directory for a package.json in the repository root itself",
 			},
 		],

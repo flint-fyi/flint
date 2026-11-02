@@ -5,13 +5,13 @@ import { resolve } from "pathe";
 import {
 	applyChangesToText,
 	isSuggestionForFiles,
-	type NormalizedReport,
 	type SuggestionForFiles,
 } from "@flint.fyi/core";
-import { isTruthy } from "@flint.fyi/utils";
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { TestCaseNormalized } from "./normalizeTestCase.ts";
 import { isTestSuggestionForFiles } from "./predicates.ts";
+import type { TestCaseReport } from "./runTestCaseRule.ts";
 import type {
 	InvalidTestCase,
 	TestSuggestion,
@@ -19,19 +19,22 @@ import type {
 } from "./types.ts";
 
 export function resolveReportedSuggestions(
-	reports: NormalizedReport[],
+	reports: TestCaseReport[],
 	testCaseNormalized: InvalidTestCase & TestCaseNormalized,
 	cwd: string,
 ): TestSuggestion[] | undefined {
-	const suggestionsReported = reports
-		.flatMap((report) => report.suggestions)
-		.filter(isTruthy);
+	const suggestionsReported = reports.flatMap((report) =>
+		(report.suggestions ?? []).map((suggestionReported) => ({
+			fileName: report.fileName,
+			suggestionReported,
+		})),
+	);
 
 	if (!suggestionsReported.length) {
 		return;
 	}
 
-	return suggestionsReported.map((suggestionReported, index) => {
+	return suggestionsReported.map(({ fileName, suggestionReported }, index) => {
 		const suggestionExpected = testCaseNormalized.suggestions?.[index];
 		if (isSuggestionForFiles(suggestionReported)) {
 			return {
@@ -44,6 +47,18 @@ export function resolveReportedSuggestions(
 			};
 		}
 
+		const original = nullThrows(
+			testCaseNormalized.lintedFiles[fileName],
+			`Expected source text for reported file '${fileName}'.`,
+		);
+		const updated = applyChangesToText([suggestionReported], original);
+		if (Object.keys(testCaseNormalized.lintedFiles).length > 1) {
+			return {
+				files: { [fileName]: [{ original, updated }] },
+				id: suggestionReported.id,
+			};
+		}
+
 		if (suggestionExpected && isTestSuggestionForFiles(suggestionExpected)) {
 			throw new Error(
 				"This test case describes a suggestion across files, but the rule is only reporting changes to its own file.",
@@ -52,10 +67,7 @@ export function resolveReportedSuggestions(
 
 		return {
 			id: suggestionReported.id,
-			updated: applyChangesToText(
-				[suggestionReported],
-				testCaseNormalized.code,
-			),
+			updated,
 		};
 	});
 }
