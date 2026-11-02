@@ -163,7 +163,8 @@
         "tool",
         "code",
         "infra",
-        "test"
+        "test",
+        "review"
       ]
     },
     {
