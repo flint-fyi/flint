@@ -1,3 +1,5 @@
+import { join, relative } from "pathe";
+
 import type {
 	LanguageFile,
 	LanguageFileCacheImpacts,
@@ -13,18 +15,28 @@ export function getTypeScriptFileCacheImpacts(
 	file: LanguageFile<TypeScriptFileServices>,
 	host: LinterHost,
 ): LanguageFileCacheImpacts {
+	const { program, sourceFile } = file.services;
+	const { configFile, configFilePath } = program.getCompilerOptions();
+	const packageJsonScope = program.getSourceFile(
+		sourceFile.fileName,
+	)?.packageJsonScope;
+
 	return {
 		dependencies: [
-			// TODO: Add support for multi-TSConfig workspaces.
-			// https://github.com/flint-fyi/flint/issues/64 & more.
-			"tsconfig.json",
-
+			...[
+				configFilePath,
+				...(configFile?.extendedSourceFiles ?? []),
+				packageJsonScope &&
+					join(packageJsonScope.packageDirectory, "package.json"),
+			]
+				.filter((filePath) => filePath !== undefined)
+				.map((filePath) => relative(host.getCurrentDirectory(), filePath)),
 			...collectReferencedFilePaths(
-				file.services.program,
-				file.services.sourceFile,
+				program,
+				sourceFile,
 				createTypeScriptServerHost(host),
 			),
 		],
-		isGlobalDependency: containsGlobalDeclarations(file.services.sourceFile),
+		isGlobalDependency: containsGlobalDeclarations(sourceFile),
 	};
 }

@@ -213,12 +213,8 @@ export async function runCliWatch(
 		}
 
 		async function processChanges(changedFilePaths: string[]) {
-			if (
-				changedFilePaths.some((filePath) =>
-					isStructuralFile(filePath, configFileName, cwd),
-				)
-			) {
-				log("Rebuilding watch session after a structural file change.");
+			if (changedFilePaths.includes(path.resolve(cwd, configFileName))) {
+				log("Rebuilding watch session after a config file change.");
 				await run({ rebuild: true });
 				return;
 			}
@@ -308,18 +304,4 @@ export async function runCliWatch(
 			run({ ignoreCache: values["cache-ignore"] ?? false, rebuild: true }),
 		);
 	});
-}
-
-function isStructuralFile(
-	filePath: string,
-	configFileName: string,
-	cwd: string,
-) {
-	const baseName = path.basename(filePath);
-
-	return (
-		filePath === path.resolve(cwd, configFileName) ||
-		baseName === "package.json" ||
-		/^tsconfig(?:\..+)?\.json$/u.test(baseName)
-	);
 }
