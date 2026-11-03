@@ -4,13 +4,13 @@ import {
 	createVFSLinterHost,
 	LintSession,
 	RuleCreator,
-	type FileResults,
-	type LinterHost,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
 
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
 import { typescriptLanguage } from "./language.ts";
+
+const root = "/workspace/repository/project";
 
 const rule = new RuleCreator({
 	docs: (ruleId) => `https://example.com/${ruleId}`,
@@ -30,7 +30,7 @@ describe(getTypeScriptFileCacheImpacts, () => {
 		const factory = typescriptLanguage.createFileFactory(host);
 		using file = factory.createFile({
 			filePath: "src/a.ts",
-			filePathAbsolute: "/workspace/repository/project/src/a.ts",
+			filePathAbsolute: `${root}/src/a.ts`,
 			sourceText: "export const url = import.meta.url;",
 		});
 
@@ -43,86 +43,56 @@ describe(getTypeScriptFileCacheImpacts, () => {
 		factory[Symbol.dispose]?.();
 	});
 
-	it("relints dependents with new compiler options after an extended tsconfig changes", async () => {
-		const host = createTestHost();
-		using session = await createTestSession(host);
-		await session.lintFiles(session.allFilePaths);
+	it.each([
+		[
+			"tsconfig.base.json",
+			{ compilerOptions: { module: "nodenext", strict: true } },
+			"TS7006",
+		],
+		["package.json", {}, "TS1470"],
+	])(
+		"relints dependents after %s changes",
+		async (fileName, contents, code) => {
+			const host = createTestHost();
+			using session = await LintSession.create(
+				{
+					filePath: `${root}/flint.config.ts`,
+					use: [{ files: ["src/*.ts"], rules: [rule] }],
+				},
+				host,
+			);
+			await session.lintFiles(session.allFilePaths);
 
-		host.vfsUpsertFile(
-			"/workspace/repository/project/tsconfig.base.json",
-			JSON.stringify({ compilerOptions: { module: "nodenext", strict: true } }),
-		);
+			host.vfsUpsertFile(`${root}/${fileName}`, JSON.stringify(contents));
+			const results = await session.lintChangedFiles([`${root}/${fileName}`]);
 
-		expect(
-			languageReportCodes(
-				await session.lintChangedFiles([
-					"/workspace/repository/project/tsconfig.base.json",
-				]),
-			),
-		).toContain("TS7006");
-	});
-
-	it("relints dependents with the new module format after the package.json changes", async () => {
-		const host = createTestHost();
-		using session = await createTestSession(host);
-		await session.lintFiles(session.allFilePaths);
-
-		host.vfsUpsertFile(
-			"/workspace/repository/project/package.json",
-			JSON.stringify({}),
-		);
-
-		expect(
-			languageReportCodes(
-				await session.lintChangedFiles([
-					"/workspace/repository/project/package.json",
-				]),
-			),
-		).toContain("TS1470");
-	});
+			expect(
+				Array.from(results.values()).flatMap((fileResults) =>
+					fileResults.languageReports.map((report) => report.code),
+				),
+			).toContain(code);
+		},
+	);
 });
 
-function createTestHost(): LinterHost & VFSLinterHost {
-	const vfs = createVFSLinterHost({
-		caseSensitive: true,
-		cwd: "/workspace/repository/project",
-	});
-	vfs.vfsUpsertFile(
-		"/workspace/repository/project/package.json",
+function createTestHost(): VFSLinterHost {
+	const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
+	host.vfsUpsertFile(
+		`${root}/package.json`,
 		JSON.stringify({ type: "module" }),
 	);
-	vfs.vfsUpsertFile(
-		"/workspace/repository/project/tsconfig.base.json",
+	host.vfsUpsertFile(
+		`${root}/tsconfig.base.json`,
 		JSON.stringify({ compilerOptions: { module: "nodenext" } }),
 	);
-	vfs.vfsUpsertFile(
-		"/workspace/repository/project/tsconfig.json",
+	host.vfsUpsertFile(
+		`${root}/tsconfig.json`,
 		JSON.stringify({ extends: "./tsconfig.base.json", files: ["src/a.ts"] }),
 	);
-	vfs.vfsUpsertFile(
-		"/workspace/repository/project/src/a.ts",
+	host.vfsUpsertFile(
+		`${root}/src/a.ts`,
 		"export const url = import.meta.url;\nexport function identity(value) {\n\treturn value;\n}\n",
 	);
 
-	return {
-		...vfs,
-		watchDirectorySync: vfs.watchDirectorySync,
-		watchFileSync: vfs.watchFileSync,
-	};
-}
-
-async function createTestSession(host: LinterHost) {
-	return await LintSession.create(
-		{
-			filePath: "/workspace/repository/project/flint.config.ts",
-			use: [{ files: ["src/*.ts"], rules: [rule] }],
-		},
-		host,
-	);
-}
-
-function languageReportCodes(results: Map<string, FileResults>) {
-	return Array.from(results.values()).flatMap((fileResults) =>
-		fileResults.languageReports.map((report) => report.code),
-	);
+	return host;
 }

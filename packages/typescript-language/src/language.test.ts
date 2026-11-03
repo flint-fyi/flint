@@ -60,21 +60,9 @@ describe("typescriptLanguage", () => {
 	});
 
 	it("reapplies the default tsconfig to inferred projects when it changes", () => {
-		const fileWatchers = new Map<
-			string,
-			(event: LinterHostFileWatcherEvent) => void
-		>();
-		const vfs = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
-		const factory = typescriptLanguage.createFileFactory({
-			...vfs,
-			watchDirectorySync: () => ({ [Symbol.dispose]: vi.fn() }),
-			watchFileSync(filePathAbsolute, callback) {
-				fileWatchers.set(filePathAbsolute, callback);
-				return { [Symbol.dispose]: vi.fn() };
-			},
-		});
+		const { factory, fileWatchers, service } = createTestFactory();
 		const setCompilerOptionsForInferredProjects = vi.spyOn(
-			nullThrows(projectServices.at(-1), "Expected a project service"),
+			service,
 			"setCompilerOptionsForInferredProjects",
 		);
 		const onDefaultProjectChange = nullThrows(
@@ -144,19 +132,25 @@ function createTestFactory() {
 	vfs.vfsUpsertFile(aPath, "export const a = 1;");
 	vfs.vfsUpsertFile(bPath, "export const b = 1;");
 
+	const fileWatchers = new Map<
+		string,
+		(event: LinterHostFileWatcherEvent) => void
+	>();
 	const hostWithoutWatchers: LinterHost = {
 		...vfs,
 		watchDirectorySync: () => ({
 			[Symbol.dispose]: vi.fn(),
 		}),
-		watchFileSync: () => ({
-			[Symbol.dispose]: vi.fn(),
-		}),
+		watchFileSync(filePathAbsolute, callback) {
+			fileWatchers.set(filePathAbsolute, callback);
+			return { [Symbol.dispose]: vi.fn() };
+		},
 	};
 	const factory = typescriptLanguage.createFileFactory(hostWithoutWatchers);
 
 	return {
 		factory,
+		fileWatchers,
 		service: nullThrows(
 			projectServices.at(-1),
 			"Expected the factory to create a project service",
