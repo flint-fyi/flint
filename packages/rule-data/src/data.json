@@ -18778,6 +18778,19 @@
 	},
 	{
 		"flint": {
+			"name": "constructorParametersOrder",
+			"plugin": "ts",
+			"preset": "sorting"
+		},
+		"eslint": [
+			{
+				"name": "perfectionist/sort-constructor-parameters",
+				"url": "https://perfectionist.dev/rules/sort-constructor-parameters"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "constructorReturns",
 			"plugin": "ts",
 			"preset": "javascript",
