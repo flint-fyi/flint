@@ -15,7 +15,8 @@
         "tool",
         "bug",
         "test",
-        "blog"
+        "blog",
+        "review"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg ✨",
@@ -108,7 +109,8 @@
         "bug",
         "infra",
         "doc",
-        "test"
+        "test",
+        "review"
       ]
     },
     {
@@ -131,7 +133,8 @@
       "contributions": [
         "infra",
         "maintenance",
-        "code"
+        "code",
+        "review"
       ]
     },
     {
@@ -162,7 +165,8 @@
         "tool",
         "code",
         "infra",
-        "test"
+        "test",
+        "review"
       ]
     },
     {
