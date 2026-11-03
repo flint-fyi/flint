@@ -23095,6 +23095,19 @@
 	},
 	{
 		"flint": {
+			"name": "jsdocRedundantTypeAssertions",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "jsdoc/no-unnecessary-type-assertion",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/no-unnecessary-type-assertion.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "jsdocRedundantTypes",
 			"plugin": "ts",
 			"preset": "stylistic"
@@ -23199,6 +23212,19 @@
 			{
 				"name": "jsdoc/require-returns-type",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-returns-type.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "jsdocSeeLinkStyles",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "jsdoc/normalize-see-links",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/normalize-see-links.md"
 			}
 		]
 	},
@@ -30118,6 +30144,10 @@
 			{
 				"name": "@typescript-eslint/prefer-ts-expect-error",
 				"url": "https://typescript-eslint.io/rules/prefer-ts-expect-error"
+			},
+			{
+				"name": "jsdoc/ts-ban-ts-comment",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/ts-ban-ts-comment.md"
 			}
 		],
 		"oxlint": [
