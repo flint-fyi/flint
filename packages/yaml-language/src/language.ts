@@ -1,3 +1,4 @@
+import { visit } from "unist-util-visit";
 import { parse, type Node, type Root } from "yaml-unist-parser";
 
 import {
@@ -43,24 +44,19 @@ export const yamlLanguage: Language<YamlNodeVisitors, YamlFileServices> =
 				fileVisitors,
 			);
 
-			const visit = (node: Node) => {
-				const entering = enter?.get(node.type);
-				if (entering !== undefined) {
-					runFileVisitorSubscriptions(entering, node);
-				}
-
-				if ("children" in node && Array.isArray(node.children)) {
-					for (const child of node.children as Node[]) {
-						visit(child);
+			visit(file.services.root, {
+				enter(node) {
+					const entering = enter?.get(node.type);
+					if (entering !== undefined) {
+						runFileVisitorSubscriptions(entering, node);
 					}
-				}
-
-				const exiting = exit?.get(node.type);
-				if (exiting !== undefined) {
-					runFileVisitorSubscriptions(exiting, node);
-				}
-			};
-
-			visit(file.services.root);
+				},
+				exit(node) {
+					const exiting = exit?.get(node.type);
+					if (exiting !== undefined) {
+						runFileVisitorSubscriptions(exiting, node);
+					}
+				},
+			});
 		},
 	});
