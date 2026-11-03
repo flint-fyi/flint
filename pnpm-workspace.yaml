@@ -123,7 +123,7 @@ catalogs:
     github-slugger: ^2.0.0
     ignore: ^7.0.5
     language-tags: ^2.1.0
-    package-json-validator: ^1.5.1
+    package-json-validator: ^2.0.0
     pathe: ^2.0.3
     picomatch: ^4.0.4
     regexp-ast-analysis: ^0.7.1
