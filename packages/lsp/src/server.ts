@@ -5,6 +5,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import {
 	CodeActionKind,
 	createConnection,
+	DidChangeWatchedFilesNotification,
 	TextDocuments,
 	TextDocumentSyncKind,
 	type InitializeParams,
@@ -43,12 +44,16 @@ export function startServer(): void {
 	let debounceTimer: NodeJS.Timeout | undefined;
 	let lintSession: LintSession | undefined;
 	let rebuildPending = false;
+	let watchedFilesRegistrationSupported = false;
 	let watchedFilesSubscription: Disposable | undefined;
 	let workspace: undefined | { root: string; vfsHost: VFSLinterHost };
 	let workspaceRoot: string | undefined;
 
 	connection.onInitialize((initializeParams: InitializeParams) => {
 		workspaceRoot = getWorkspaceRoot(initializeParams);
+		watchedFilesRegistrationSupported =
+			initializeParams.capabilities.workspace?.didChangeWatchedFiles
+				?.dynamicRegistration === true;
 
 		return {
 			capabilities: {
@@ -80,14 +85,26 @@ export function startServer(): void {
 		watchedFilesSubscription = fileSystemWatcher.watchDirectorySync(
 			root,
 			(filePath, event) => {
-				if (event !== "changed") {
+				if (event !== "changed" || isConfigFile(filePath, root)) {
 					requestRebuild();
-				} else if (isConfigFile(filePath, root) || !isOpenDocument(filePath)) {
+				} else if (!isOpenDocument(filePath)) {
 					requestLint(filePath);
 				}
 			},
 			{ ignoredPaths: commonlyIgnoredPaths, recursive: true },
 		);
+
+		if (watchedFilesRegistrationSupported) {
+			connection.client
+				.register(DidChangeWatchedFilesNotification.type, {
+					watchers: [{ globPattern: "**/*" }],
+				})
+				.catch((error: unknown) => {
+					connection.console.error(
+						`Could not watch workspace files: ${String(error)}`,
+					);
+				});
+		}
 
 		requestRebuild();
 	});
@@ -106,11 +123,6 @@ export function startServer(): void {
 	}
 
 	function requestLint(filePath: string) {
-		if (workspace && isConfigFile(filePath, workspace.root)) {
-			requestRebuild();
-			return;
-		}
-
 		pendingFilePaths.add(normalizePath(filePath));
 		scheduleLint();
 	}

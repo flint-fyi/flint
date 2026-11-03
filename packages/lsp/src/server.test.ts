@@ -5,7 +5,10 @@ import { pathToFileURL } from "node:url";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type * as LanguageServer from "vscode-languageserver/node.js";
-import { FileChangeType } from "vscode-languageserver/node.js";
+import {
+	DidChangeWatchedFilesNotification,
+	FileChangeType,
+} from "vscode-languageserver/node.js";
 
 import type * as Core from "@flint.fyi/core";
 import type {
@@ -68,6 +71,7 @@ const mocks = vi.hoisted(() => {
 		callbacks,
 		configFileName: "flint.config.mjs" as string | undefined,
 		connection: {
+			client: { register: vi.fn(() => Promise.resolve()) },
 			console: { error: vi.fn(), info: vi.fn() },
 			listen() {
 				return;
@@ -171,8 +175,9 @@ describe(startServer, () => {
 		vi.useRealTimers();
 	});
 
-	function createWorkspaceInitializeParams() {
+	function createWorkspaceInitializeParams(capabilities = {}) {
 		return {
+			capabilities,
 			workspaceFolders: [
 				{ name: "workspace", uri: pathToFileURL(workspaceRoot).href },
 			],
@@ -194,7 +199,7 @@ describe(startServer, () => {
 		startServer();
 		openDocument(filePath);
 		closeDocument(filePath);
-		callback("initialize")({});
+		callback("initialize")({ capabilities: {} });
 		callback("initialized")();
 		await vi.dynamicImportSettled();
 
@@ -236,8 +241,8 @@ describe(startServer, () => {
 		async (rootProperty) => {
 			await startInitializedServer(
 				rootProperty === "rootUri"
-					? { rootUri: pathToFileURL(workspaceRoot).href }
-					: { rootPath: workspaceRoot },
+					? { capabilities: {}, rootUri: pathToFileURL(workspaceRoot).href }
+					: { capabilities: {}, rootPath: workspaceRoot },
 			);
 
 			expect(mocks.lintSessionCreate).toHaveBeenCalled();
@@ -303,6 +308,45 @@ describe(startServer, () => {
 			pathToFileURL(changedFilePath).href,
 			pathToFileURL(dependentFilePath).href,
 		]);
+	});
+
+	it("registers for watched file changes only when the client supports it", async () => {
+		await startInitializedServer();
+
+		expect(mocks.connection.client.register).not.toHaveBeenCalled();
+
+		await startInitializedServer(
+			createWorkspaceInitializeParams({
+				workspace: { didChangeWatchedFiles: { dynamicRegistration: true } },
+			}),
+		);
+
+		expect(mocks.connection.client.register).toHaveBeenCalledExactlyOnceWith(
+			DidChangeWatchedFilesNotification.type,
+			{ watchers: [{ globPattern: "**/*" }] },
+		);
+	});
+
+	it("relints an edited config file without rebuilding until it is saved", async () => {
+		const configFilePath = normalizePath(
+			path.join(workspaceRoot, "flint.config.mjs"),
+		);
+
+		await startInitializedServer();
+		mocks.lintSessionCreate.mockClear();
+
+		openDocument(configFilePath, "export default {};");
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
+		expect(Array.from(mocks.lintChangedFiles.mock.lastCall?.[0] ?? [])).toEqual(
+			[configFilePath],
+		);
+
+		changeWatchedFile(configFilePath);
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).toHaveBeenCalledOnce();
 	});
 
 	it("rediscovers the config file name during structural rebuilds", async () => {
