@@ -35225,8 +35225,7 @@
 	{
 		"flint": {
 			"name": "contentLocation",
-			"plugin": "vue",
-			"status": "skipped"
+			"plugin": "vue"
 		},
 		"eslint": [
 			{
@@ -35372,8 +35371,7 @@
 	{
 		"flint": {
 			"name": "defineModelDefaults",
-			"plugin": "vue",
-			"status": "skipped"
+			"plugin": "vue"
 		},
 		"eslint": [
 			{
@@ -37053,8 +37051,7 @@
 	{
 		"flint": {
 			"name": "propsShadow",
-			"plugin": "vue",
-			"status": "skipped"
+			"plugin": "vue"
 		},
 		"eslint": [
 			{
