@@ -119,7 +119,9 @@ export function startServer(): void {
 		clearTimeout(debounceTimer);
 		debounceTimer = setTimeout(() => {
 			currentTask = currentTask.then(lintPending).catch((error: unknown) => {
-				connection.console.error(`Lint error: ${formatUnknownError(error)}`);
+				connection.console.error(
+					`Lint error: ${error instanceof Error ? error.message : String(error)}`,
+				);
 			});
 		}, LINT_DEBOUNCE_MS);
 	}
@@ -277,10 +279,6 @@ export function startServer(): void {
 
 	documents.listen(connection);
 	connection.listen();
-}
-
-function formatUnknownError(error: unknown) {
-	return error instanceof Error ? error.message : String(error);
 }
 
 function getWorkspaceRoot(initializeParams: InitializeParams) {

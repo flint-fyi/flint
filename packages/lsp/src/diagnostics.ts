@@ -12,12 +12,19 @@ import {
 	type FileReport,
 	type FileResults,
 	type LanguageReport,
-	type ReportInterpolationData,
-	type ReportMessageData,
 } from "@flint.fyi/core";
 
 export const FLINT_DIAGNOSTIC_SOURCE = "flint";
 const LANGUAGE_DIAGNOSTIC_SOURCE = "flint/language";
+
+export function createReportRange(report: FileReport): Range {
+	return Range.create(
+		report.range.begin.line,
+		report.range.begin.column,
+		report.range.end.line,
+		report.range.end.column,
+	);
+}
 
 export function mapFileResultsToDiagnostics(
 	fileResults: FileResults,
@@ -29,15 +36,6 @@ export function mapFileResultsToDiagnostics(
 			mapLanguageReport(report, document),
 		),
 	];
-}
-
-function formatMessage(
-	message: ReportMessageData,
-	data: ReportInterpolationData | undefined,
-) {
-	return [message.primary, ...message.secondary]
-		.map((part) => formatReport(data, part))
-		.join(" ");
 }
 
 function mapLanguageReport(
@@ -67,13 +65,11 @@ function mapReportToDiagnostic(report: FileReport) {
 			codeDescription: { href: report.about.url },
 		}),
 		code: report.about.id,
-		message: formatMessage(report.message, report.data),
-		range: Range.create(
-			report.range.begin.line,
-			report.range.begin.column,
-			report.range.end.line,
-			report.range.end.column,
+		message: formatReport(
+			report.data,
+			[report.message.primary, ...report.message.secondary].join(" "),
 		),
+		range: createReportRange(report),
 		severity: DiagnosticSeverity.Warning,
 		source: FLINT_DIAGNOSTIC_SOURCE,
 	};

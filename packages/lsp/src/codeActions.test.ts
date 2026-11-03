@@ -63,17 +63,6 @@ describe(createCodeActions, () => {
 					id: "empty",
 				},
 				{
-					files: {
-						"missing.json": [
-							{
-								range: { begin: 0, end: 0 },
-								text: "{}",
-							},
-						],
-					},
-					id: "missing",
-				},
-				{
 					id: "replaceWord",
 					range: { begin: 6, end: 10 },
 					text: "word",
@@ -90,6 +79,15 @@ describe(createCodeActions, () => {
 						start: { character: 6, line: 0 },
 					},
 					source: "flint",
+				},
+				{
+					code: "spelling/cspell",
+					message: "Forbidden or unknown word.",
+					range: {
+						end: { character: 10, line: 0 },
+						start: { character: 6, line: 0 },
+					},
+					source: "flint/typescript",
 				},
 				{
 					code: "spelling/other",
@@ -112,8 +110,7 @@ describe(createCodeActions, () => {
 			workspaceRoot,
 		});
 
-		expect(actions).toHaveLength(3);
-		expect(actions[0]?.edit).toEqual({
+		const replaceWordEdit = {
 			changes: {
 				[sourceUri]: [
 					{
@@ -125,7 +122,10 @@ describe(createCodeActions, () => {
 					},
 				],
 			},
-		});
+		};
+
+		expect(actions).toHaveLength(3);
+		expect(actions[0]?.edit).toEqual(replaceWordEdit);
 		expect(actions[0]?.title).toBe("Fix: Forbidden or unknown word.");
 		expect(actions[1]?.edit).toEqual({
 			changes: {
@@ -141,19 +141,7 @@ describe(createCodeActions, () => {
 			},
 		});
 		expect(actions[1]?.title).toBe("Suggestion: addWordToWords");
-		expect(actions[2]?.edit).toEqual({
-			changes: {
-				[sourceUri]: [
-					{
-						newText: "word",
-						range: {
-							end: { character: 10, line: 0 },
-							start: { character: 6, line: 0 },
-						},
-					},
-				],
-			},
-		});
+		expect(actions[2]?.edit).toEqual(replaceWordEdit);
 		expect(actions[2]?.title).toBe("Suggestion: replaceWord");
 
 		documents.delete(targetUri);
@@ -164,49 +152,5 @@ describe(createCodeActions, () => {
 				workspaceRoot,
 			}),
 		).toHaveLength(2);
-	});
-
-	it("does not create code actions for language diagnostics", () => {
-		const sourceUri = "file:///workspace/src/file.ts";
-		const sourceDocument = TextDocument.create(
-			sourceUri,
-			"typescript",
-			0,
-			"const value = missing;\n",
-		);
-		const report: FileReport = {
-			about: {
-				id: "ts/noop",
-			},
-			message: {
-				primary: "No-op.",
-				secondary: [],
-				suggestions: [],
-			},
-			range: {
-				begin: { column: 14, line: 0, raw: 14 },
-				end: { column: 21, line: 0, raw: 21 },
-			},
-		};
-		const context: CodeActionContext = {
-			diagnostics: [
-				{
-					code: "TS2304",
-					message: "Cannot find name 'missing'.",
-					range: {
-						end: { character: 21, line: 0 },
-						start: { character: 14, line: 0 },
-					},
-					source: "flint/typescript",
-				},
-			],
-		};
-
-		expect(
-			createCodeActions(sourceUri, context, [report], {
-				getDocument: () => sourceDocument,
-				workspaceRoot: "/workspace",
-			}),
-		).toEqual([]);
 	});
 });

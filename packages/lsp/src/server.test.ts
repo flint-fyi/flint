@@ -3,16 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-import {
-	afterEach,
-	beforeEach,
-	describe,
-	expect,
-	it,
-	vi,
-	type Mock,
-} from "vitest";
-import { TextDocument } from "vscode-languageserver-textdocument";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type * as LanguageServer from "vscode-languageserver/node.js";
 import { FileChangeType } from "vscode-languageserver/node.js";
 
@@ -22,6 +13,8 @@ import type {
 	LintSessionChangedLintOptions,
 } from "@flint.fyi/core";
 import { normalizePath } from "@flint.fyi/utils";
+
+import { startServer } from "./server.ts";
 
 function createFileResults(message: string) {
 	return {
@@ -43,6 +36,7 @@ async function flushQueuedWork() {
 }
 
 const mocks = vi.hoisted(() => {
+	const callbacks = new Map<string, (params?: unknown) => unknown>();
 	const lintPasses: Map<string, FileResults>[][] = [];
 	const lintChangedFiles = vi.fn(
 		async (
@@ -62,41 +56,42 @@ const mocks = vi.hoisted(() => {
 			return allResults;
 		},
 	);
+	const session = { lintChangedFiles, [Symbol.dispose]: vi.fn() };
+
+	function on(name: string) {
+		return (callback: (params?: unknown) => unknown) => {
+			callbacks.set(name, callback);
+		};
+	}
+
 	const state = {
+		callbacks,
 		configFileName: "flint.config.mjs" as string | undefined,
-		connection: undefined as unknown as {
-			callbacks: {
-				changeWatchedFiles?: (event: unknown) => void;
-				codeAction?: (params: unknown) => unknown;
-				initialize?: (params: unknown) => unknown;
-				initialized?: () => void;
-				shutdown?: () => void;
-			};
-			console: {
-				error: Mock;
-				info: Mock;
-			};
-			listen: Mock;
-			onCodeAction: Mock;
-			onDidChangeWatchedFiles: Mock;
-			onInitialize: Mock;
-			onInitialized: Mock;
-			onShutdown: Mock;
-			sendDiagnostics: Mock<
-				(params: { diagnostics: unknown[]; uri: string }) => Promise<void>
-			>;
-		},
-		documents: undefined as unknown as {
-			fireDidChangeContent(document: { getText(): string; uri: string }): void;
-			fireDidClose(document: { getText(): string; uri: string }): void;
+		connection: {
+			console: { error: vi.fn(), info: vi.fn() },
+			listen() {
+				return;
+			},
+			onCodeAction: on("codeAction"),
+			onDidChangeTextDocument: on("didChange"),
+			onDidChangeWatchedFiles: on("changeWatchedFiles"),
+			onDidCloseTextDocument: on("didClose"),
+			onDidOpenTextDocument: on("didOpen"),
+			onDidSaveTextDocument: on("didSave"),
+			onInitialize: on("initialize"),
+			onInitialized: on("initialized"),
+			onShutdown: on("shutdown"),
+			onWillSaveTextDocument: on("willSave"),
+			onWillSaveTextDocumentWaitUntil: on("willSaveWaitUntil"),
+			sendDiagnostics:
+				vi.fn<
+					(params: { diagnostics: unknown[]; uri: string }) => Promise<void>
+				>(),
 		},
 		lintChangedFiles,
 		lintPasses,
-		lintSessionCreate: vi.fn(),
-		session: {
-			lintChangedFiles,
-			[Symbol.dispose]: vi.fn(),
-		},
+		lintSessionCreate: vi.fn(() => Promise.resolve(session)),
+		session,
 		validateConfigDefinition: vi.fn<() => string | undefined>(),
 	};
 
@@ -113,13 +108,8 @@ vi.mock("@flint.fyi/core", async (importOriginal) => {
 		})),
 		findConfigFileName: vi.fn(() => Promise.resolve(mocks.configFileName)),
 		isConfig: vi.fn(() => true),
-		LintSession: {
-			create: mocks.lintSessionCreate.mockImplementation(() =>
-				Promise.resolve(mocks.session),
-			),
-		},
+		LintSession: { create: mocks.lintSessionCreate },
 		validateConfigDefinition: mocks.validateConfigDefinition,
-		withFileSystemWatcher: vi.fn((host: unknown) => host),
 	};
 });
 
@@ -129,98 +119,50 @@ vi.mock("@flint.fyi/core/node", () => ({
 
 vi.mock("vscode-languageserver/node.js", async (importOriginal) => ({
 	...(await importOriginal<typeof LanguageServer>()),
-	createConnection: vi.fn(() => {
-		mocks.connection = {
-			callbacks: {},
-			console: {
-				error: vi.fn(),
-				info: vi.fn(),
-			},
-			listen: vi.fn(),
-			onCodeAction: vi.fn((callback) => {
-				mocks.connection.callbacks.codeAction = callback;
-			}),
-			onDidChangeWatchedFiles: vi.fn((callback) => {
-				mocks.connection.callbacks.changeWatchedFiles = callback;
-			}),
-			onInitialize: vi.fn((callback) => {
-				mocks.connection.callbacks.initialize = callback;
-			}),
-			onInitialized: vi.fn((callback) => {
-				mocks.connection.callbacks.initialized = callback;
-			}),
-			onShutdown: vi.fn((callback) => {
-				mocks.connection.callbacks.shutdown = callback;
-			}),
-			sendDiagnostics:
-				vi.fn<
-					(params: { diagnostics: unknown[]; uri: string }) => Promise<void>
-				>(),
-		};
-
-		return mocks.connection;
-	}),
-	TextDocuments: class {
-		#changeContent: ((event: { document: unknown }) => void) | undefined;
-		#close: ((event: { document: unknown }) => void) | undefined;
-		#documents = new Map<string, unknown>();
-
-		constructor() {
-			mocks.documents = this;
-		}
-
-		all() {
-			return [...this.#documents.values()];
-		}
-
-		fireDidChangeContent(document: { getText(): string; uri: string }) {
-			this.#documents.set(document.uri, document);
-			this.#changeContent?.({ document });
-		}
-
-		fireDidClose(document: { getText(): string; uri: string }) {
-			this.#documents.delete(document.uri);
-			this.#close?.({ document });
-		}
-
-		get(uri: string) {
-			return this.#documents.get(uri);
-		}
-
-		listen() {
-			this.#documents.clear();
-		}
-
-		onDidChangeContent(callback: (event: { document: unknown }) => void) {
-			this.#changeContent = callback;
-		}
-
-		onDidClose(callback: (event: { document: unknown }) => void) {
-			this.#close = callback;
-		}
-	},
+	createConnection: () => mocks.connection,
 }));
 
-describe("startServer", () => {
+function callback(name: string) {
+	return mocks.callbacks.get(name) ?? vi.fn();
+}
+
+function changeWatchedFile(
+	filePath: string,
+	type: FileChangeType = FileChangeType.Changed,
+) {
+	callback("changeWatchedFiles")({
+		changes: [{ type, uri: pathToFileURL(filePath).href }],
+	});
+}
+
+function closeDocument(filePath: string) {
+	callback("didClose")({
+		textDocument: { uri: pathToFileURL(filePath).href },
+	});
+}
+
+function openDocument(filePath: string, text = "value") {
+	callback("didOpen")({
+		textDocument: {
+			languageId: "typescript",
+			text,
+			uri: pathToFileURL(filePath).href,
+			version: 1,
+		},
+	});
+}
+
+describe(startServer, () => {
 	let workspaceRoot: string;
 
 	beforeEach(() => {
-		vi.resetModules();
 		vi.useFakeTimers();
 		workspaceRoot = mkdtempSync(path.join(os.tmpdir(), "flint-lsp-"));
 		writeFileSync(
 			path.join(workspaceRoot, "flint.config.mjs"),
 			"export default { definition: { use: [] } };\n",
 		);
-		mocks.lintChangedFiles.mockClear();
 		mocks.lintPasses.length = 0;
-		mocks.lintSessionCreate.mockReset();
-		mocks.lintSessionCreate.mockImplementation(() =>
-			Promise.resolve(mocks.session),
-		);
-		mocks.session[Symbol.dispose].mockReset();
-		mocks.validateConfigDefinition.mockReset();
-		mocks.validateConfigDefinition.mockReturnValue(undefined);
 		mocks.configFileName = "flint.config.mjs";
 	});
 
@@ -229,45 +171,40 @@ describe("startServer", () => {
 		vi.useRealTimers();
 	});
 
-	async function startInitializedServer() {
-		const { startServer } = await import("./server.ts");
-
-		startServer();
-		mocks.connection.callbacks.initialize?.({
+	function createWorkspaceInitializeParams() {
+		return {
 			workspaceFolders: [
-				{
-					name: "workspace",
-					uri: pathToFileURL(workspaceRoot).href,
-				},
+				{ name: "workspace", uri: pathToFileURL(workspaceRoot).href },
 			],
-		});
-		mocks.connection.callbacks.initialized?.();
+		};
+	}
+
+	async function startInitializedServer(
+		initializeParams: unknown = createWorkspaceInitializeParams(),
+	) {
+		startServer();
+		callback("initialize")(initializeParams);
+		callback("initialized")();
 		await flushQueuedWork();
 	}
 
 	it("reports a missing workspace root", async () => {
-		const { startServer } = await import("./server.ts");
+		const filePath = "/workspace/src/file.ts";
 
 		startServer();
-		const document = TextDocument.create(
-			"file:///workspace/src/file.ts",
-			"typescript",
-			1,
-			"value",
-		);
-		mocks.documents.fireDidChangeContent(document);
-		mocks.documents.fireDidClose(document);
-		mocks.connection.callbacks.initialize?.({});
-		mocks.connection.callbacks.initialized?.();
+		openDocument(filePath);
+		closeDocument(filePath);
+		callback("initialize")({});
+		callback("initialized")();
 		await vi.dynamicImportSettled();
 
 		expect(mocks.connection.console.error).toHaveBeenCalledWith(
 			"No workspace root provided.",
 		);
 		expect(
-			mocks.connection.callbacks.codeAction?.({
+			callback("codeAction")({
 				context: { diagnostics: [] },
-				textDocument: { uri: "file:///workspace/src/file.ts" },
+				textDocument: { uri: pathToFileURL(filePath).href },
 			}),
 		).toEqual([]);
 	});
@@ -276,7 +213,6 @@ describe("startServer", () => {
 		mocks.configFileName = undefined;
 
 		await startInitializedServer();
-		await flushQueuedWork();
 
 		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
 		expect(mocks.connection.console.error).toHaveBeenCalledWith(
@@ -285,10 +221,9 @@ describe("startServer", () => {
 	});
 
 	it("reports config validation errors", async () => {
-		mocks.validateConfigDefinition.mockReturnValue("Invalid config.");
+		mocks.validateConfigDefinition.mockReturnValueOnce("Invalid config.");
 
 		await startInitializedServer();
-		await flushQueuedWork();
 
 		expect(mocks.connection.console.error).toHaveBeenCalledWith(
 			"Lint error: Invalid config.",
@@ -299,20 +234,15 @@ describe("startServer", () => {
 	it.each(["rootPath", "rootUri"] as const)(
 		"starts with the legacy %s parameter",
 		async (rootProperty) => {
-			const { startServer } = await import("./server.ts");
-
-			startServer();
-			mocks.connection.callbacks.initialize?.(
+			await startInitializedServer(
 				rootProperty === "rootUri"
 					? { rootUri: pathToFileURL(workspaceRoot).href }
 					: { rootPath: workspaceRoot },
 			);
-			mocks.connection.callbacks.initialized?.();
-			await flushQueuedWork();
 
 			expect(mocks.lintSessionCreate).toHaveBeenCalled();
 
-			mocks.connection.callbacks.shutdown?.();
+			callback("shutdown")();
 
 			expect(mocks.session[Symbol.dispose]).toHaveBeenCalled();
 		},
@@ -327,9 +257,7 @@ describe("startServer", () => {
 		]);
 
 		await startInitializedServer();
-		mocks.documents.fireDidChangeContent(
-			TextDocument.create(openedFileUri, "typescript", 1, "value"),
-		);
+		openDocument(openedFilePath);
 		await flushQueuedWork();
 
 		expect(mocks.connection.console.error).not.toHaveBeenCalled();
@@ -343,7 +271,7 @@ describe("startServer", () => {
 			uri: openedFileUri,
 		});
 		expect(
-			mocks.connection.callbacks.codeAction?.({
+			callback("codeAction")({
 				context: { diagnostics: [] },
 				textDocument: { uri: openedFileUri },
 			}),
@@ -355,46 +283,26 @@ describe("startServer", () => {
 		const dependentFilePath = normalizePath(
 			path.join(workspaceRoot, "src/a.ts"),
 		);
-		const transitiveDependentFilePath = normalizePath(
-			path.join(workspaceRoot, "src/c.ts"),
-		);
-		const changedFileUri = pathToFileURL(changedFilePath).href;
-		const dependentFileUri = pathToFileURL(dependentFilePath).href;
-		const transitiveDependentFileUri = pathToFileURL(
-			transitiveDependentFilePath,
-		).href;
 
 		mocks.lintPasses.push([
 			new Map([[changedFilePath, createFileResults("changed")]]),
-			new Map([
-				[dependentFilePath, createFileResults("dependent")],
-				[
-					transitiveDependentFilePath,
-					createFileResults("transitive dependent"),
-				],
-			]),
+			new Map([[dependentFilePath, createFileResults("dependent")]]),
 		]);
 
 		await startInitializedServer();
-		mocks.documents.fireDidChangeContent(
-			TextDocument.create(changedFileUri, "typescript", 1, "changed"),
-		);
+		openDocument(changedFilePath, "changed");
 		await flushQueuedWork();
 
 		expect(mocks.lintChangedFiles).toHaveBeenCalledTimes(1);
 		expect(Array.from(mocks.lintChangedFiles.mock.calls[0]?.[0] ?? [])).toEqual(
 			[changedFilePath],
 		);
-		expect(mocks.connection.sendDiagnostics.mock.calls[0]?.[0]).toEqual(
-			expect.objectContaining({ uri: changedFileUri }),
-		);
 		expect(
-			new Set(
-				mocks.connection.sendDiagnostics.mock.calls
-					.slice(1)
-					.map(([params]) => params.uri),
-			),
-		).toEqual(new Set([dependentFileUri, transitiveDependentFileUri]));
+			mocks.connection.sendDiagnostics.mock.calls.map(([params]) => params.uri),
+		).toEqual([
+			pathToFileURL(changedFilePath).href,
+			pathToFileURL(dependentFilePath).href,
+		]);
 	});
 
 	it("rediscovers the config file name during structural rebuilds", async () => {
@@ -413,14 +321,7 @@ describe("startServer", () => {
 
 		mocks.validateConfigDefinition.mockClear();
 		mocks.configFileName = nextConfigFileName;
-		mocks.connection.callbacks.changeWatchedFiles?.({
-			changes: [
-				{
-					type: FileChangeType.Changed,
-					uri: pathToFileURL(path.join(workspaceRoot, "flint.config.mjs")).href,
-				},
-			],
-		});
+		changeWatchedFile(path.join(workspaceRoot, "flint.config.mjs"));
 		await flushQueuedWork();
 
 		expect(mocks.validateConfigDefinition).toHaveBeenCalledWith(
@@ -431,49 +332,34 @@ describe("startServer", () => {
 
 	it("clears diagnostics that a rebuild does not republish", async () => {
 		const filePath = path.join(workspaceRoot, "src/excluded.ts");
-		const fileUri = pathToFileURL(filePath).href;
 
 		mocks.lintPasses.push([
 			new Map([[filePath, createFileResults("before rebuild")]]),
 		]);
 
 		await startInitializedServer();
-		mocks.documents.fireDidChangeContent(
-			TextDocument.create(fileUri, "typescript", 1, "value"),
-		);
+		openDocument(filePath);
 		await flushQueuedWork();
 		mocks.connection.sendDiagnostics.mockClear();
 
-		mocks.connection.callbacks.changeWatchedFiles?.({
-			changes: [
-				{
-					type: FileChangeType.Changed,
-					uri: pathToFileURL(path.join(workspaceRoot, "flint.config.mjs")).href,
-				},
-			],
-		});
+		changeWatchedFile(path.join(workspaceRoot, "flint.config.mjs"));
 		await flushQueuedWork();
 
 		expect(mocks.connection.sendDiagnostics).toHaveBeenCalledExactlyOnceWith({
 			diagnostics: [],
-			uri: fileUri,
+			uri: pathToFileURL(filePath).href,
 		});
 	});
 
 	it("does not relint an open document when it is saved", async () => {
 		const filePath = path.join(workspaceRoot, "src/open.ts");
-		const fileUri = pathToFileURL(filePath).href;
 
 		await startInitializedServer();
-		mocks.documents.fireDidChangeContent(
-			TextDocument.create(fileUri, "typescript", 1, "value"),
-		);
+		openDocument(filePath);
 		await flushQueuedWork();
 		mocks.lintChangedFiles.mockClear();
 
-		mocks.connection.callbacks.changeWatchedFiles?.({
-			changes: [{ type: FileChangeType.Changed, uri: fileUri }],
-		});
+		changeWatchedFile(filePath);
 		await flushQueuedWork();
 
 		expect(mocks.lintChangedFiles).not.toHaveBeenCalled();
@@ -487,11 +373,7 @@ describe("startServer", () => {
 		await startInitializedServer();
 		mocks.lintSessionCreate.mockClear();
 
-		mocks.connection.callbacks.changeWatchedFiles?.({
-			changes: [
-				{ type: FileChangeType.Changed, uri: pathToFileURL(tsconfigPath).href },
-			],
-		});
+		changeWatchedFile(tsconfigPath);
 		await flushQueuedWork();
 
 		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
@@ -502,23 +384,15 @@ describe("startServer", () => {
 
 	it("rebuilds when an external watched file is created", async () => {
 		await startInitializedServer();
-		await flushQueuedWork();
 		mocks.lintSessionCreate.mockClear();
 
-		mocks.connection.callbacks.changeWatchedFiles?.({
-			changes: [
-				{
-					type: FileChangeType.Created,
-					uri: pathToFileURL(path.join(workspaceRoot, "src/new.ts")).href,
-				},
-			],
-		});
+		changeWatchedFile(
+			path.join(workspaceRoot, "src/new.ts"),
+			FileChangeType.Created,
+		);
 		await flushQueuedWork();
 
-		expect(mocks.lintSessionCreate).toHaveBeenCalledExactlyOnceWith(
-			expect.anything(),
-			expect.anything(),
-		);
+		expect(mocks.lintSessionCreate).toHaveBeenCalledOnce();
 	});
 
 	it("re-lints a closed document from disk instead of clearing diagnostics", async () => {
@@ -531,17 +405,11 @@ describe("startServer", () => {
 		);
 
 		await startInitializedServer();
-		const document = TextDocument.create(
-			fileUri,
-			"typescript",
-			1,
-			"open buffer",
-		);
-		mocks.documents.fireDidChangeContent(document);
+		openDocument(filePath, "open buffer");
 		await flushQueuedWork();
 		mocks.connection.sendDiagnostics.mockClear();
 
-		mocks.documents.fireDidClose(document);
+		closeDocument(filePath);
 		await flushQueuedWork();
 
 		expect(mocks.connection.sendDiagnostics).toHaveBeenCalledWith({

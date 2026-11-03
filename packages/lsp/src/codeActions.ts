@@ -5,6 +5,7 @@ import {
 	type CodeAction,
 	type CodeActionContext,
 	type Diagnostic,
+	type Range,
 } from "vscode-languageserver/node.js";
 
 import {
@@ -13,7 +14,7 @@ import {
 	type FileReport,
 } from "@flint.fyi/core";
 
-import { FLINT_DIAGNOSTIC_SOURCE } from "./diagnostics.ts";
+import { createReportRange, FLINT_DIAGNOSTIC_SOURCE } from "./diagnostics.ts";
 import { filePathToUri } from "./filePathToUri.ts";
 
 export interface CodeActionOptions {
@@ -29,13 +30,7 @@ export function createCodeActions(
 ): CodeAction[] {
 	const reportsByKey = new Map(
 		reports.map((report) => [
-			diagnosticKey(
-				report.about.id,
-				report.range.begin.line,
-				report.range.begin.column,
-				report.range.end.line,
-				report.range.end.column,
-			),
+			diagnosticKey(report.about.id, createReportRange(report)),
 			report,
 		]),
 	);
@@ -46,13 +41,7 @@ export function createCodeActions(
 		}
 
 		const report = reportsByKey.get(
-			diagnosticKey(
-				diagnostic.code,
-				diagnostic.range.start.line,
-				diagnostic.range.start.character,
-				diagnostic.range.end.line,
-				diagnostic.range.end.character,
-			),
+			diagnosticKey(diagnostic.code, diagnostic.range),
 		);
 		if (!report) {
 			return [];
@@ -130,11 +119,8 @@ function createAction(
 }
 
 function diagnosticKey(
-	id: number | string | undefined,
-	beginLine: number,
-	beginColumn: number,
-	endLine: number,
-	endColumn: number,
+	code: number | string | undefined,
+	{ end, start }: Range,
 ) {
-	return [id, beginLine, beginColumn, endLine, endColumn].join("|");
+	return [code, start.line, start.character, end.line, end.character].join("|");
 }
