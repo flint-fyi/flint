@@ -18780,14 +18780,15 @@
 		"flint": {
 			"name": "constructorParametersOrder",
 			"plugin": "ts",
-			"preset": "sorting"
+			"status": "skipped"
 		},
 		"eslint": [
 			{
 				"name": "perfectionist/sort-constructor-parameters",
 				"url": "https://perfectionist.dev/rules/sort-constructor-parameters"
 			}
-		]
+		],
+		"notes": "Reordering constructor parameters changes the positional API and can break existing callers."
 	},
 	{
 		"flint": {
