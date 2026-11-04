@@ -23095,19 +23095,6 @@
 	},
 	{
 		"flint": {
-			"name": "jsdocRedundantTypeAssertions",
-			"plugin": "ts",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "jsdoc/no-unnecessary-type-assertion",
-				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/no-unnecessary-type-assertion.md"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "jsdocRedundantTypes",
 			"plugin": "ts",
 			"preset": "stylistic"
@@ -23219,7 +23206,7 @@
 		"flint": {
 			"name": "jsdocSeeLinkStyles",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylisticStrict"
 		},
 		"eslint": [
 			{
@@ -31450,6 +31437,10 @@
 			{
 				"name": "@typescript-eslint/no-unnecessary-type-assertion",
 				"url": "https://typescript-eslint.io/rules/no-unnecessary-type-assertion"
+			},
+			{
+				"name": "jsdoc/no-unnecessary-type-assertion",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/no-unnecessary-type-assertion.md"
 			}
 		],
 		"oxlint": [
