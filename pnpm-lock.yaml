@@ -380,8 +380,8 @@ catalogs:
       specifier: 0.4.1
       version: 0.4.1
     prettier-plugin-packagejson:
-      specifier: 3.0.3
-      version: 3.0.3
+      specifier: 3.1.0
+      version: 3.1.0
     prettier-plugin-sentences-per-line:
       specifier: 0.2.5
       version: 0.2.5
@@ -759,7 +759,7 @@ importers:
         version: 0.4.1(prettier@3.9.10)
       prettier-plugin-packagejson:
         specifier: catalog:dev
-        version: 3.0.3(prettier@3.9.10)
+        version: 3.1.0(prettier@3.9.10)
       prettier-plugin-sentences-per-line:
         specifier: catalog:dev
         version: 0.2.5(prettier@3.9.10)
@@ -6856,8 +6856,9 @@ packages:
     peerDependencies:
       prettier: ^3
 
-  prettier-plugin-packagejson@3.0.3:
-    resolution: {integrity: sha512-qhxhcs3/ppNH8ZhFMbMnucE9VqITVn3Vvu/LF0jcWfVJqlgEo1c9eoiTr1WiaMIKbEEqQb4JTZ8MBZGtGRfAoQ==}
+  prettier-plugin-packagejson@3.1.0:
+    resolution: {integrity: sha512-KxH8E68UGYVW4IDxZk7lLXKxVd8uY6g8ctfu+fNwA+bAKgCN66ZoRIcPtOHXDa1kDj/nLBZIgH8srP/1Yaz9iA==}
+    engines: {node: '>=22'}
     peerDependencies:
       prettier: ^3
     peerDependenciesMeta:
@@ -13452,7 +13453,7 @@ snapshots:
     dependencies:
       prettier: 3.9.10
 
-  prettier-plugin-packagejson@3.0.3(prettier@3.9.10):
+  prettier-plugin-packagejson@3.1.0(prettier@3.9.10):
     dependencies:
       sort-package-json: 4.1.0
     optionalDependencies:
