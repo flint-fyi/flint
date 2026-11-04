@@ -23244,6 +23244,19 @@
 	},
 	{
 		"flint": {
+			"name": "jsdocSeeLinkStyles",
+			"plugin": "ts",
+			"preset": "stylisticStrict"
+		},
+		"eslint": [
+			{
+				"name": "jsdoc/normalize-see-links",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/normalize-see-links.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "jsdocTagLines",
 			"plugin": "ts",
 			"status": "skipped"
@@ -30158,6 +30171,10 @@
 			{
 				"name": "@typescript-eslint/prefer-ts-expect-error",
 				"url": "https://typescript-eslint.io/rules/prefer-ts-expect-error"
+			},
+			{
+				"name": "jsdoc/ts-ban-ts-comment",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/ts-ban-ts-comment.md"
 			}
 		],
 		"oxlint": [
@@ -31460,6 +31477,10 @@
 			{
 				"name": "@typescript-eslint/no-unnecessary-type-assertion",
 				"url": "https://typescript-eslint.io/rules/no-unnecessary-type-assertion"
+			},
+			{
+				"name": "jsdoc/no-unnecessary-type-assertion",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/no-unnecessary-type-assertion.md"
 			}
 		],
 		"oxlint": [
