@@ -11708,6 +11708,19 @@
 	},
 	{
 		"flint": {
+			"name": "packageManagerDeclaration",
+			"plugin": "package-json",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "package-json/consistent-package-manager-declaration",
+				"url": "https://eslint-plugin-package-json.dev/rules/consistent-package-manager-declaration"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "packageManagerPresence",
 			"plugin": "package-json",
 			"status": "implemented"
@@ -11852,6 +11865,19 @@
 			{
 				"name": "package-json/valid-private",
 				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-private"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "propertyAliasStyles",
+			"plugin": "package-json",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "package-json/consistent-property-aliases",
+				"url": "https://eslint-plugin-package-json.dev/rules/consistent-property-aliases"
 			}
 		]
 	},
