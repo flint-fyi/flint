@@ -321,6 +321,15 @@
         "ideas",
         "code"
       ]
+    },
+    {
+      "login": "dh1011",
+      "name": "Duy Hua",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1806772?v=4",
+      "profile": "https://duy.run",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
