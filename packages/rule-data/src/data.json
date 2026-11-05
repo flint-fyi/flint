@@ -9513,6 +9513,19 @@
 	},
 	{
 		"flint": {
+			"name": "locationAssignRelativeDestinations",
+			"plugin": "next",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "@next/next/no-location-assign-relative-destination",
+				"url": "https://nextjs.org/docs/messages/no-location-assign-relative-destination"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "moduleAssignments",
 			"plugin": "next",
 			"preset": "javascript"
