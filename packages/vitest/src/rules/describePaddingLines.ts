@@ -6,5 +6,5 @@ export default createBlockPaddingRule(
 		id: "describePaddingLines",
 		presets: [],
 	},
-	["describe"],
+	["describe", "suite"],
 );

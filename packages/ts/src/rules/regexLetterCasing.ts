@@ -16,11 +16,7 @@ import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 type EscapeSequenceKind =
-	| "control"
-	| "hexadecimal"
-	| "none"
-	| "unicode"
-	| "unicodeCodePoint";
+	"control" | "hexadecimal" | "none" | "unicode" | "unicodeCodePoint";
 
 interface Issue {
 	data: {

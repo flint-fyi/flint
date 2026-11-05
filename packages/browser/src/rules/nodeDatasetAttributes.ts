@@ -12,10 +12,7 @@ import { nullThrows } from "@flint.fyi/utils";
 import { ruleCreator } from "./ruleCreator.ts";
 
 type AttributeMethodName =
-	| "getAttribute"
-	| "hasAttribute"
-	| "removeAttribute"
-	| "setAttribute";
+	"getAttribute" | "hasAttribute" | "removeAttribute" | "setAttribute";
 
 function convertDataAttributeToDatasetKey(
 	attributeName: string,

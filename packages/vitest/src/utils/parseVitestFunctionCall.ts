@@ -11,7 +11,7 @@ const vitestFunctionKinds = {
 	beforeEach: "hook",
 	describe: "describe",
 	expect: "expect",
-	expectTypeOf: "expect",
+	expectTypeOf: "typeAssertion",
 	it: "test",
 	suite: "describe",
 	test: "test",
@@ -30,7 +30,7 @@ interface VitestKindMembers {
 }
 
 const vitestKindMembers: Record<
-	Exclude<VitestFunctionKind, "expect">,
+	Exclude<VitestFunctionKind, "expect" | "typeAssertion">,
 	VitestKindMembers
 > = {
 	describe: {
@@ -114,11 +114,7 @@ export function parseVitestFunctionCall(
 	}
 
 	const kind = vitestFunctionKinds[name];
-	if (
-		kind === "expect"
-			? !isValidExpectChain(chain)
-			: !isValidChain(chain, vitestKindMembers[kind])
-	) {
+	if (!isValidChainForKind(chain, kind)) {
 		return;
 	}
 
@@ -156,6 +152,22 @@ function isValidChain(
 	);
 }
 
+function isValidChainForKind(
+	chain: CalleeChain,
+	kind: VitestFunctionKind,
+): boolean {
+	switch (kind) {
+		case "expect":
+			return isValidExpectChain(chain);
+
+		case "typeAssertion":
+			return isValidTypeAssertionChain(chain);
+
+		default:
+			return isValidChain(chain, vitestKindMembers[kind]);
+	}
+}
+
 function isValidExpectChain({ headInvoked, links }: CalleeChain): boolean {
 	if (headInvoked) {
 		return !!links.length;
@@ -169,6 +181,13 @@ function isValidExpectChain({ headInvoked, links }: CalleeChain): boolean {
 	return first.invoked
 		? expectFactories.has(first.member) && !!rest.length
 		: expectUtilities.has(first.member) && !rest.length;
+}
+
+function isValidTypeAssertionChain({
+	headInvoked,
+	links,
+}: CalleeChain): boolean {
+	return headInvoked && !!links.length;
 }
 
 function isVitestFunctionName(name: string): name is VitestFunctionName {

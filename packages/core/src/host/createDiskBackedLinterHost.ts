@@ -14,7 +14,7 @@ import type {
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
-	const caseSensitiveFS = isFileSystemCaseSensitive();
+	const caseSensitiveFs = isFileSystemCaseSensitive();
 	cwd = normalizePath(cwd);
 	const foundRepositoryRoot = findRootSync(cwd);
 	const repositoryRoot =
@@ -30,6 +30,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			normalizedChangedFilePath: null | string,
 			event: LinterHostFileWatcherEvent,
 		) => void,
+		ignore?: (relativePath: string) => boolean,
 	): Disposable {
 		const normalizedWatchBasename = normalizedWatchPath.slice(
 			normalizedWatchPath.lastIndexOf("/") + 1,
@@ -60,7 +61,18 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const watcher = fs
 				.watch(
 					normalizedWatchPath,
-					{ persistent: false, recursive },
+					{
+						ignore:
+							ignore &&
+							((filename) =>
+								// Root deletion can report a basename or Windows namespaced path.
+								// Let the callback handle it so watching resumes after recreation.
+								filename !== normalizedWatchBasename &&
+								!filename.startsWith("\\\\?\\") &&
+								ignore(filename)),
+						persistent: false,
+						recursive,
+					},
 					(_event, filename) => {
 						if (unwatched) {
 							return;
@@ -189,7 +201,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return entries.map((entry) => normalizePath(entry));
 		},
 		isCaseSensitiveFS() {
-			return caseSensitiveFS;
+			return caseSensitiveFs;
 		},
 		async readDirectory(directoryPathAbsolute) {
 			const dirents = await fs.promises.readdir(directoryPathAbsolute, {
@@ -252,8 +264,23 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
-			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFS);
-			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFS);
+			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFs);
+			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFs);
+
+			function isIgnoredPath(normalizedChangedFilePath: string): boolean {
+				const changedKey = pathKey(normalizedChangedFilePath, caseSensitiveFs);
+				if (changedKey === dirKey) {
+					return false;
+				}
+				let relative = normalizedChangedFilePath;
+				if (changedKey.startsWith(dirKeySlash)) {
+					relative = relative.slice(directoryPathAbsolute.length);
+				}
+				return options.ignoredPaths.some(
+					(ignored) =>
+						relative.endsWith(ignored) || relative.includes(ignored + "/"),
+				);
+			}
 
 			return createWatcher(
 				directoryPathAbsolute,
@@ -261,30 +288,21 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				options.pollingInterval ?? 2000,
 				(normalizedChangedFilePath) => {
 					normalizedChangedFilePath ??= directoryPathAbsolute;
-					const changedKey = pathKey(
-						normalizedChangedFilePath,
-						caseSensitiveFS,
-					);
-					if (changedKey !== dirKey) {
-						let relative = normalizedChangedFilePath;
-						if (changedKey.startsWith(dirKeySlash)) {
-							relative = relative.slice(directoryPathAbsolute.length);
-						}
-						for (const ignored of options.ignoredPaths) {
-							if (
-								relative.endsWith(ignored) ||
-								relative.includes(ignored + "/")
-							) {
-								return;
-							}
-						}
+					if (isIgnoredPath(normalizedChangedFilePath)) {
+						return;
 					}
 					callback(normalizedChangedFilePath);
 				},
+				options.ignoredPaths.length
+					? (relativePath) =>
+							isIgnoredPath(
+								normalizePath(resolve(directoryPathAbsolute, relativePath)),
+							)
+					: undefined,
 			);
 		},
 		watchFileSync(filePathAbsolute, callback, options) {
-			const watchKey = pathKey(filePathAbsolute, caseSensitiveFS);
+			const watchKey = pathKey(filePathAbsolute, caseSensitiveFs);
 
 			return createWatcher(
 				filePathAbsolute,
@@ -293,7 +311,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				(normalizedChangedFilePath, event) => {
 					if (
 						normalizedChangedFilePath != null &&
-						pathKey(normalizedChangedFilePath, caseSensitiveFS) === watchKey
+						pathKey(normalizedChangedFilePath, caseSensitiveFs) === watchKey
 					) {
 						callback(event);
 					}

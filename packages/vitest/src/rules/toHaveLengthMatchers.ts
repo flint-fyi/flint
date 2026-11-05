@@ -9,8 +9,7 @@ import {
 import { ruleCreator } from "../ruleCreator.ts";
 
 type AccessExpression =
-	| AST.ElementAccessExpression
-	| AST.PropertyAccessExpression;
+	AST.ElementAccessExpression | AST.PropertyAccessExpression;
 
 const equalityMatchers = new Set(["toBe", "toEqual", "toStrictEqual"]);
 

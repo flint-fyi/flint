@@ -39,11 +39,7 @@ export default ruleCreator.createRule(svelteLanguage, {
 					};
 					function visit(
 						node:
-							| AST.Block
-							| AST.Comment
-							| AST.ElementLike
-							| AST.Tag
-							| AST.Text,
+							AST.Block | AST.Comment | AST.ElementLike | AST.Tag | AST.Text,
 					) {
 						if (node.type === "RegularElement") {
 							switch (node.name) {

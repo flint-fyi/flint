@@ -5,6 +5,32 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+const value = 1;
+expectTypeOf(value).toBeNumber();
+expectTypeOf(value).toEqualTypeOf<number>();
+console.log(value);
+`,
+			output: `
+const value = 1;
+
+expectTypeOf(value).toBeNumber();
+expectTypeOf(value).toEqualTypeOf<number>();
+
+console.log(value);
+`,
+			snapshot: `
+const value = 1;
+expectTypeOf(value).toBeNumber();
+~~~~~~~~~~~~
+This statement should be separated from a neighboring \`expect\` block by a blank line.
+expectTypeOf(value).toEqualTypeOf<number>();
+console.log(value);
+~~~~~~~
+This statement should be separated from a neighboring \`expect\` block by a blank line.
+`,
+		},
+		{
+			code: `
 const someText = 'abc';
 xyz:
 afterEach(() => {});
@@ -98,6 +124,41 @@ This statement should be separated from a neighboring \`test\` block by a blank 
       console.log(\`$\{value}.\`);
   }
 });
+`,
+		},
+		{
+			code: `
+const value = 1;
+suite('someText', () => {});
+aroundAll(() => {});
+aroundEach(() => {});
+test.each\`a\`('name', () => {});
+`,
+			output: `
+const value = 1;
+
+suite('someText', () => {});
+
+aroundAll(() => {});
+
+aroundEach(() => {});
+
+test.each\`a\`('name', () => {});
+`,
+			snapshot: `
+const value = 1;
+suite('someText', () => {});
+~~~~~
+This statement should be separated from a neighboring \`describe\` block by a blank line.
+aroundAll(() => {});
+~~~~~~~~~
+This statement should be separated from a neighboring \`aroundAll\` block by a blank line.
+aroundEach(() => {});
+~~~~~~~~~~
+This statement should be separated from a neighboring \`aroundEach\` block by a blank line.
+test.each\`a\`('name', () => {});
+~~~~
+This statement should be separated from a neighboring \`test\` block by a blank line.
 `,
 		},
 	],

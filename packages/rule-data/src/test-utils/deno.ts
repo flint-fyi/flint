@@ -4,7 +4,7 @@ import { ruleData } from "../index.ts";
 import type { LinterRuleReference } from "../schemas.ts";
 
 const schemaUrl =
-	"https://raw.githubusercontent.com/denoland/deno/v2.9.7/cli/schemas/lint-rules.v1.json";
+	"https://raw.githubusercontent.com/denoland/deno/v2.9.8/cli/schemas/lint-rules.v1.json";
 
 const lintRulesSchema = z.object({
 	oneOf: z.tuple([

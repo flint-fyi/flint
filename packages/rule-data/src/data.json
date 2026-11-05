@@ -11708,6 +11708,19 @@
 	},
 	{
 		"flint": {
+			"name": "packageManagerDeclaration",
+			"plugin": "package-json",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "package-json/consistent-package-manager-declaration",
+				"url": "https://eslint-plugin-package-json.dev/rules/consistent-package-manager-declaration"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "packageManagerPresence",
 			"plugin": "package-json",
 			"status": "implemented"
@@ -11852,6 +11865,19 @@
 			{
 				"name": "package-json/valid-private",
 				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-private"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "propertyAliasStyles",
+			"plugin": "package-json",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "package-json/consistent-property-aliases",
+				"url": "https://eslint-plugin-package-json.dev/rules/consistent-property-aliases"
 			}
 		]
 	},
@@ -18778,6 +18804,20 @@
 	},
 	{
 		"flint": {
+			"name": "constructorParametersOrder",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "perfectionist/sort-constructor-parameters",
+				"url": "https://perfectionist.dev/rules/sort-constructor-parameters"
+			}
+		],
+		"notes": "Reordering constructor parameters changes the positional API and can break existing callers."
+	},
+	{
+		"flint": {
 			"name": "constructorReturns",
 			"plugin": "ts",
 			"preset": "javascript",
@@ -23199,6 +23239,19 @@
 			{
 				"name": "jsdoc/require-returns-type",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-returns-type.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "jsdocSeeLinkStyles",
+			"plugin": "ts",
+			"preset": "stylisticStrict"
+		},
+		"eslint": [
+			{
+				"name": "jsdoc/normalize-see-links",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/normalize-see-links.md"
 			}
 		]
 	},
@@ -30118,6 +30171,10 @@
 			{
 				"name": "@typescript-eslint/prefer-ts-expect-error",
 				"url": "https://typescript-eslint.io/rules/prefer-ts-expect-error"
+			},
+			{
+				"name": "jsdoc/ts-ban-ts-comment",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/ts-ban-ts-comment.md"
 			}
 		],
 		"oxlint": [
@@ -31420,6 +31477,10 @@
 			{
 				"name": "@typescript-eslint/no-unnecessary-type-assertion",
 				"url": "https://typescript-eslint.io/rules/no-unnecessary-type-assertion"
+			},
+			{
+				"name": "jsdoc/no-unnecessary-type-assertion",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/no-unnecessary-type-assertion.md"
 			}
 		],
 		"oxlint": [
@@ -38264,6 +38325,20 @@
 	},
 	{
 		"flint": {
+			"name": "booleanKeys",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "yml/no-boolean-key",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/no-boolean-key.html"
+			}
+		],
+		"notes": "Covered by stringMappingKeys."
+	},
+	{
+		"flint": {
 			"name": "emptyDocuments",
 			"plugin": "yaml",
 			"preset": "logical",
@@ -38511,7 +38586,8 @@
 		"flint": {
 			"name": "stringMappingKeys",
 			"plugin": "yaml",
-			"preset": "logicalStrict"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -38530,6 +38606,20 @@
 			{
 				"name": "yml/no-tab-indent",
 				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/no-tab-indent.html"
+			}
+		],
+		"notes": "Formatting rule."
+	},
+	{
+		"flint": {
+			"name": "trailingSpaces",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "yml/no-trailing-spaces",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/no-trailing-spaces.html"
 			}
 		],
 		"notes": "Formatting rule."

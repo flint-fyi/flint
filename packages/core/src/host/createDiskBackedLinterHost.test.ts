@@ -499,6 +499,32 @@ describe("createDiskBackedLinterHost", () => {
 	});
 
 	describe("watchDirectorySync", () => {
+		it.skipIf(process.platform !== "linux" || process.getuid?.() === 0)(
+			"watches directories containing unreadable ignored subtrees",
+			async () => {
+				const host = createDiskBackedLinterHost(integrationRoot);
+				const ignoredPath = path.join(integrationRoot, "node_modules");
+				fs.mkdirSync(ignoredPath);
+				fs.chmodSync(ignoredPath, 0);
+
+				try {
+					const onEvent = vi.fn();
+					using _ = host.watchDirectorySync(integrationRoot, onEvent, {
+						ignoredPaths: ["/node_modules"],
+						recursive: true,
+					});
+					const filePath = path.join(integrationRoot, "file.ts");
+					fs.writeFileSync(filePath, "content");
+
+					await vi.waitFor(() => {
+						expect(onEvent).toHaveBeenCalledWith(normalizePath(filePath));
+					});
+				} finally {
+					fs.chmodSync(ignoredPath, 0o755);
+				}
+			},
+		);
+
 		it("watches directories non-recursively", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const directoryPath = path.join(integrationRoot, "dir");
@@ -555,7 +581,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.mkdirSync(baseDir, { recursive: true });
 			const onEvent = vi.fn();
 			using _ = host.watchDirectorySync(baseDir, onEvent, {
-				ignoredPaths: [],
+				ignoredPaths: ["/.git"],
 				recursive: true,
 			});
 
@@ -570,6 +596,9 @@ describe("createDiskBackedLinterHost", () => {
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 			});
+			expect(onEvent).not.toHaveBeenCalledWith(
+				normalizePath(path.join(baseDir, ".git")),
+			);
 		});
 
 		it("ignores node_modules directories within watched paths", async () => {
@@ -578,7 +607,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.mkdirSync(baseDir, { recursive: true });
 			const onEvent = vi.fn();
 			using _ = host.watchDirectorySync(baseDir, onEvent, {
-				ignoredPaths: [],
+				ignoredPaths: ["/node_modules"],
 				recursive: true,
 			});
 
@@ -598,6 +627,41 @@ describe("createDiskBackedLinterHost", () => {
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 			});
+			expect(onEvent).not.toHaveBeenCalledWith(
+				normalizePath(path.join(baseDir, "node_modules")),
+			);
+		});
+
+		it("matches ignored directory segments at any depth without matching lookalikes", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const ignoredFiles = ["tests/file.ts", "nested/tests/file.ts"].map(
+				(filePath) => normalizePath(path.join(integrationRoot, filePath)),
+			);
+			const visibleFiles = ["mytests/file.ts", "tests-extra/file.ts"].map(
+				(filePath) => normalizePath(path.join(integrationRoot, filePath)),
+			);
+			for (const filePath of [...ignoredFiles, ...visibleFiles]) {
+				fs.mkdirSync(path.dirname(filePath), { recursive: true });
+			}
+			const onEvent = vi.fn();
+			using _ = host.watchDirectorySync(integrationRoot, onEvent, {
+				ignoredPaths: ["/tests"],
+				recursive: true,
+			});
+
+			for (const filePath of [...ignoredFiles, ...visibleFiles]) {
+				fs.writeFileSync(filePath, "content");
+			}
+
+			await vi.waitFor(() => {
+				for (const filePath of visibleFiles) {
+					expect(onEvent).toHaveBeenCalledWith(filePath);
+				}
+			});
+			await sleep(50);
+			for (const filePath of ignoredFiles) {
+				expect(onEvent).not.toHaveBeenCalledWith(filePath);
+			}
 		});
 
 		it("does not ignore lookalike names such as .gitignore", async () => {
@@ -606,7 +670,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.mkdirSync(baseDir, { recursive: true });
 			const onEvent = vi.fn();
 			using _ = host.watchDirectorySync(baseDir, onEvent, {
-				ignoredPaths: [],
+				ignoredPaths: ["/.git"],
 				recursive: true,
 			});
 
@@ -697,51 +761,54 @@ describe("createDiskBackedLinterHost", () => {
 			onEvent.mockClear();
 		});
 
-		it("reattaches watchers after deletion and recreation", async () => {
-			const host = createDiskBackedLinterHost(integrationRoot);
-			const directoryPath = path.join(integrationRoot, "recreate-dir");
-			const onEvent = vi.fn();
-			fs.mkdirSync(directoryPath, { recursive: true });
-			using _ = host.watchDirectorySync(directoryPath, onEvent, {
-				ignoredPaths: [],
-				pollingInterval: 10,
-				recursive: false,
-			});
+		it.each([{ recursive: false }, { recursive: true }])(
+			"reattaches watchers when the watched root has an ignored name (recursive: $recursive)",
+			async ({ recursive }) => {
+				const host = createDiskBackedLinterHost(integrationRoot);
+				const directoryPath = path.join(integrationRoot, "node_modules");
+				const onEvent = vi.fn();
+				fs.mkdirSync(directoryPath, { recursive: true });
+				using _ = host.watchDirectorySync(directoryPath, onEvent, {
+					ignoredPaths: ["/node_modules"],
+					pollingInterval: 10,
+					recursive,
+				});
 
-			await sleep(50);
+				await sleep(50);
 
-			const firstFile = path.join(directoryPath, "first.txt");
-			fs.writeFileSync(firstFile, "first");
+				const firstFile = path.join(directoryPath, "first.txt");
+				fs.writeFileSync(firstFile, "first");
 
-			const normalizedFirst = normalizePath(firstFile);
+				const normalizedFirst = normalizePath(firstFile);
 
-			await vi.waitFor(() => {
-				expect(onEvent).toHaveBeenCalledWith(normalizedFirst);
-			});
-			onEvent.mockClear();
+				await vi.waitFor(() => {
+					expect(onEvent).toHaveBeenCalledWith(normalizedFirst);
+				});
+				onEvent.mockClear();
 
-			fs.rmSync(directoryPath, { force: true, recursive: true });
+				fs.rmSync(directoryPath, { force: true, recursive: true });
 
-			const normalizedDirectory = normalizePath(directoryPath);
-			await vi.waitFor(() => {
-				expect(onEvent).toHaveBeenCalledWith(normalizedDirectory);
-			});
-			onEvent.mockClear();
+				const normalizedDirectory = normalizePath(directoryPath);
+				await vi.waitFor(() => {
+					expect(onEvent).toHaveBeenCalledWith(normalizedDirectory);
+				});
+				onEvent.mockClear();
 
-			fs.mkdirSync(directoryPath, { recursive: true });
-			await vi.waitFor(() => {
-				expect(onEvent).toHaveBeenCalledWith(normalizedDirectory);
-			});
-			onEvent.mockClear();
+				fs.mkdirSync(directoryPath, { recursive: true });
+				await vi.waitFor(() => {
+					expect(onEvent).toHaveBeenCalledWith(normalizedDirectory);
+				});
+				onEvent.mockClear();
 
-			const secondFile = path.join(directoryPath, "second.txt");
-			fs.writeFileSync(secondFile, "second");
+				const secondFile = path.join(directoryPath, "second.txt");
+				fs.writeFileSync(secondFile, "second");
 
-			const normalizedSecond = normalizePath(secondFile);
-			await vi.waitFor(() => {
-				expect(onEvent).toHaveBeenCalledWith(normalizedSecond);
-			});
-		});
+				const normalizedSecond = normalizePath(secondFile);
+				await vi.waitFor(() => {
+					expect(onEvent).toHaveBeenCalledWith(normalizedSecond);
+				});
+			},
+		);
 
 		it("correctly reports when dir and its child have the same name", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);

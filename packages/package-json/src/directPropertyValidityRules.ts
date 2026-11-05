@@ -131,5 +131,7 @@ export const directPropertyValidityRules = Object.fromEntries(
 		return [id, rule] as const;
 	}),
 ) as {
-	[PropertyName in ValidityProperty as ValidityRuleName<PropertyName>]: ValidityRule<PropertyName>;
+	[
+		PropertyName in ValidityProperty as ValidityRuleName<PropertyName>
+	]: ValidityRule<PropertyName>;
 };

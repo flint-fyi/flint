@@ -14,9 +14,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 type IgnorePrimitives =
-	| boolean
-	| Record<string, boolean | undefined>
-	| undefined;
+	boolean | Record<string, boolean | undefined> | undefined;
 
 type NullishCheckOperator = "!" | "!=" | "!==" | "" | "==" | "===";
 

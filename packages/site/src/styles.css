@@ -168,6 +168,14 @@ header.header {
 	border-block-end: 1px solid var(--sl-color-gray-5);
 }
 
+@media (min-width: 50rem) {
+	header.header > .header {
+		grid-template-columns:
+			calc(var(--sl-sidebar-width) - var(--sl-nav-pad-x))
+			1fr auto;
+	}
+}
+
 .site-title {
 	font-size: var(--sl-text-xl);
 }

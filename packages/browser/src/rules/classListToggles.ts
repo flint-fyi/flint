@@ -150,12 +150,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (
-						!(
-							(thenCall.method === "add" && elseCall.method === "remove") ||
-							(thenCall.method === "remove" && elseCall.method === "add")
-						)
-					) {
+					if (!(
+						(thenCall.method === "add" && elseCall.method === "remove") ||
+						(thenCall.method === "remove" && elseCall.method === "add")
+					)) {
 						return;
 					}
 

@@ -7,10 +7,7 @@ export const ruleCreator = new RuleCreator({
 });
 
 export type VitestPreset =
-	| "logical"
-	| "logicalStrict"
-	| "stylistic"
-	| "stylisticStrict";
+	"logical" | "logicalStrict" | "stylistic" | "stylisticStrict";
 
 export interface VitestRuleAbout extends RuleCreatorAbout<VitestPreset> {
 	presets: VitestPreset[];

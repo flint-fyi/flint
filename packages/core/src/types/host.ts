@@ -65,6 +65,10 @@ export interface WatchDirectoryOptions extends WatchOptions {
 }
 
 export interface WatchOptions {
+	/**
+	 * Literal, slash-prefixed path fragments excluded by disk directory watchers
+	 * at any depth, such as "/node_modules". Not glob patterns or cwd-relative paths.
+	 */
 	ignoredPaths: string[];
 	pollingInterval?: number;
 }
