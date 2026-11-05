@@ -15,9 +15,9 @@ export default defineConfig({
 		starlight({
 			components: {
 				Head: "./src/components/Head.astro",
+				Header: "./src/components/Header.astro",
 				Hero: "./src/components/Hero.astro",
 				Pagination: "./src/components/Pagination.astro",
-				ThemeSelect: "./src/components/ThemeSelect.astro",
 			},
 			customCss: ["./src/styles.css"],
 			favicon: "/logo.png",
