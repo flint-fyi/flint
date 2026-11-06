@@ -331,6 +331,15 @@
         "doc",
         "ideas"
       ]
+    },
+    {
+      "login": "marst313",
+      "name": "I Nyoman Karma Dharma Nalendra Wardana",
+      "avatar_url": "https://avatars.githubusercontent.com/u/50996212?v=4",
+      "profile": "https://inyomandharma.vercel.app/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
