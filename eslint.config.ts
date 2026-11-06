@@ -237,6 +237,13 @@ const config: ConfigObject[] = defineConfig(
 			],
 		},
 	},
+	// The site's source runs in browsers, so Node.js builtin availability doesn't apply
+	{
+		files: ["packages/site/src/**/*.ts"],
+		rules: {
+			"n/no-unsupported-features/node-builtins": "off",
+		},
+	},
 	{
 		files: ["packages/site/**/*.ts"],
 		rules: {

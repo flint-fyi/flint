@@ -42,8 +42,7 @@ export interface PlaygroundRequest {
 }
 
 export type PlaygroundResponse =
-	| PlaygroundResponseFailure
-	| PlaygroundResponseSuccess;
+	PlaygroundResponseFailure | PlaygroundResponseSuccess;
 
 export interface PlaygroundResponseFailure {
 	error: string;

@@ -104,18 +104,16 @@ export async function lintPlaygroundFiles(
 					`${playgroundDirectory}/${fileName}`,
 				);
 				const reports = [
-					...(fileResults?.reports ?? []).map(
-						(report): PlaygroundReport => ({
-							begin: report.range.begin.raw,
-							column: report.range.begin.column,
-							end: report.range.end.raw,
-							id: report.about.id,
-							line: report.range.begin.line,
-							message: formatReport(report.data, report.message.primary),
-							source: "flint",
-							...(report.about.url && { url: report.about.url }),
-						}),
-					),
+					...(fileResults?.reports ?? []).map((report): PlaygroundReport => ({
+						begin: report.range.begin.raw,
+						column: report.range.begin.column,
+						end: report.range.end.raw,
+						id: report.about.id,
+						line: report.range.begin.line,
+						message: formatReport(report.data, report.message.primary),
+						source: "flint",
+						...(report.about.url && { url: report.about.url }),
+					})),
 					...(parsedFile.convertLanguageReport
 						? (fileResults?.languageReports ?? []).map(
 								parsedFile.convertLanguageReport,
