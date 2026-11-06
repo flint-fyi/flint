@@ -11683,8 +11683,7 @@
 	{
 		"flint": {
 			"name": "overrideRestrictions",
-			"plugin": "package-json",
-			"preset": "logical"
+			"plugin": "package-json"
 		},
 		"eslint": [
 			{
