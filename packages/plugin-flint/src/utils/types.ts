@@ -5,9 +5,9 @@ import type {
 	StringRawNoSubstitution,
 } from "@flint.fyi/typescript-language";
 
-export interface ParsedTestCase extends TestCase {
+export type ParsedTestCase = TestCase & {
 	nodes: ParsedTestCaseNodes;
-}
+};
 
 export type ParsedTestCaseCodeNode =
 	| AST.NoSubstitutionTemplateLiteral
@@ -16,21 +16,22 @@ export type ParsedTestCaseCodeNode =
 			template: AST.NoSubstitutionTemplateLiteral;
 	  });
 
-export interface ParsedTestCaseInvalid extends InvalidTestCase {
+export type ParsedTestCaseInvalid = InvalidTestCase & {
 	nodes: ParsedTestCaseNodesInvalid;
-}
+};
 
 export interface ParsedTestCaseNodes {
 	case: AST.ObjectLiteralExpression | StaticString | StringRawNoSubstitution;
-	code: ParsedTestCaseCodeNode;
-	fileName?: ParsedTestCaseStaticStringNode | undefined;
+	code?: ParsedTestCaseCodeNode | undefined;
+	fileCodes?: Record<string, ParsedTestCaseCodeNode> | undefined;
 	files?: AST.ObjectLiteralExpression | undefined;
 	name?: ParsedTestCaseStaticStringNode | undefined;
 	options?: AST.ObjectLiteralExpression | undefined;
 }
 
 export interface ParsedTestCaseNodesInvalid extends ParsedTestCaseNodes {
-	snapshot: ParsedTestCaseCodeNode;
+	snapshot: AST.ObjectLiteralExpression | ParsedTestCaseCodeNode;
+	snapshotFiles?: Record<string, ParsedTestCaseCodeNode> | undefined;
 }
 export type ParsedTestCaseStaticStringNode =
 	AST.NoSubstitutionTemplateLiteral | AST.StringLiteral;

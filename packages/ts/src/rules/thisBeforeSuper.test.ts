@@ -1,12 +1,11 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
-import { domLibRuleTester } from "./ruleTester.ts";
+import { domLibRuleTester, javascriptRuleTester } from "./ruleTester.ts";
 import rule from "./thisBeforeSuper.ts";
 
-domLibRuleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 class Parent { value = 0; }
 class Child extends Parent {
     constructor() {
@@ -15,14 +14,9 @@ class Child extends Parent {
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-				noUnusedLocals: false,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 class Parent { value = 0; }
 class Child extends Parent {
     constructor() {
@@ -33,8 +27,14 @@ class Child extends Parent {
     }
 }
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+domLibRuleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`class A { } void A;`,
 		`class A { constructor() { } } void A;`,

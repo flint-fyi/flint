@@ -1,32 +1,32 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 import rule from "./withStatements.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 with (container.property) {
   property.value = true;
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-				noUnusedLocals: false,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 with (container.property) {
 ~~~~
 \`with\` statements are deprecated, unreliable, and difficult to reason about.
   property.value = true;
 }
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`
 const container = { property: { value: false } };

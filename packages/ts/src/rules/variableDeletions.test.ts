@@ -1,28 +1,28 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 import rule from "./variableDeletions.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 delete value;
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-				noUnusedLocals: false,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 delete value;
 ~~~~~~~~~~~~
 Deleting a variable with the delete operator outside of strict mode will silently fail and return false.
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`const obj: { prop?: number } = { prop: 1 }; delete obj.prop;`,
 		`

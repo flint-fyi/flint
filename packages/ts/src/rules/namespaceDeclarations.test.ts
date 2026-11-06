@@ -94,8 +94,9 @@ declare global {
 			options: { allowDeclarations: true },
 		},
 		{
-			code: `declare namespace name {}`,
-			fileName: "file.d.ts",
+			files: {
+				"file.d.ts": `declare namespace name {}`,
+			},
 			options: { allowDefinitionFiles: true },
 		},
 	],

@@ -1,131 +1,87 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
 import rule from "./classAssignments.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 class A {}
 A = 0;
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 class A {}
 A = 0;
 ~
 Reassigning a class declaration is misleading and makes the class harder to use.
 `,
+			},
 		},
 	],
 	valid: [
 		{
-			code: `class A {}`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `class A {}`,
+			},
 		},
 		{
-			code: `class MyClass {} const instance = new MyClass();`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `class MyClass {} const instance = new MyClass();`,
+			},
 		},
 		{
-			code: `class Counter {} const value = Counter;`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `class Counter {} const value = Counter;`,
+			},
 		},
 		{
-			code: `class Example {} if (Example) { void Example; }`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `class Example {} if (Example) { void Example; }`,
+			},
 		},
 		{
-			code: `const A = 0;`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `const A = 0;`,
+			},
 		},
 		{
-			code: `class A {} function inner() { let A = "shadowed"; A = "reassigning shadowed is ok"; }`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `class A {} function inner() { let A = "shadowed"; A = "reassigning shadowed is ok"; }`,
+			},
 		},
 		{
-			code: `let A = "outer"; { class A {} } A = "reassigning outer is ok";`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `let A = "outer"; { class A {} } A = "reassigning outer is ok";`,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class MyClass {}
 const derived = class extends MyClass {};
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Base {}
 class Derived extends Base {}
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class MyClass {
     property = "";
 }
 const instance = new MyClass();
 instance.property = "value";
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 	],
 });

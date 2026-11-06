@@ -1,30 +1,30 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
 import rule from "./functionAssignments.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 function myFunction() {}
 myFunction = function() {};
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-				noUnusedLocals: false,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 function myFunction() {}
 myFunction = function() {};
 ~~~~~~~~~~
 Variables declared with function declarations should not be reassigned.
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`function myFunction() { return 42; } void myFunction;`,
 		`

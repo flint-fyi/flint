@@ -11,6 +11,38 @@ import rule from "../ruleCreationMethods";
 const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
+    valid: [
+        { files: { "a.ts": "a", "b.ts": "b" } },
+        { files: { "b.ts": "b", "a.ts": "a" } },
+    ],
+    invalid: [],
+});
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { files: { "a.ts": "a", "b.ts": "b" } },
+        { files: { "b.ts": "b", "a.ts": "a" } },
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: [],
+});
+`,
+		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: []
 });
@@ -40,8 +72,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule as any, {
     valid: [
-        { code: "a", fileName: "b.ts", options: { c: "d" } },
-        { code: "a", fileName: "b.ts", options: { c: "d" } },
+        { files: { "b.ts": "a" }, options: { c: "d" } },
+        { files: { "b.ts": "a" }, options: { c: "d" } },
     ],
     invalid: []
 });
@@ -55,9 +87,9 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule as any, {
     valid: [
-        { code: "a", fileName: "b.ts", options: { c: "d" } },
-        { code: "a", fileName: "b.ts", options: { c: "d" } },
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        { files: { "b.ts": "a" }, options: { c: "d" } },
+        { files: { "b.ts": "a" }, options: { c: "d" } },
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         This test code already appeared in a previous test.
     ],
     invalid: []
@@ -278,8 +310,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
     valid: [
-        { code: "a", fileName: "b.ts" },
-        { code: "a", fileName: "b.ts" },
+        { files: { "b.ts": "a" } },
+        { files: { "b.ts": "a" } },
     ],
     invalid: []
 });
@@ -293,9 +325,9 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
     valid: [
-        { code: "a", fileName: "b.ts" },
-        { code: "a", fileName: "b.ts" },
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        { files: { "b.ts": "a" } },
+        { files: { "b.ts": "a" } },
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~
         This test code already appeared in a previous test.
     ],
     invalid: []
@@ -312,8 +344,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
     valid: [
-        { code: "a", fileName: "b.ts", name: "first" },
-        { code: "a", fileName: "b.ts", name: "second" },
+        { files: { "b.ts": "a" }, name: "first" },
+        { files: { "b.ts": "a" }, name: "second" },
     ],
     invalid: []
 });
@@ -327,9 +359,9 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
     valid: [
-        { code: "a", fileName: "b.ts", name: "first" },
-        { code: "a", fileName: "b.ts", name: "second" },
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        { files: { "b.ts": "a" }, name: "first" },
+        { files: { "b.ts": "a" }, name: "second" },
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         This test code already appeared in a previous test.
     ],
     invalid: []
@@ -408,6 +440,22 @@ ruleTester.describe(rule, {
 	],
 	valid: [
 		`
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+const first = { code: "a" };
+const second = { code: "b" };
+
+ruleTester.describe(rule, {
+    valid: [
+        { ...first, files: { "auxiliary.ts": "same" } },
+        { ...second, files: { "auxiliary.ts": "same" } },
+    ],
+    invalid: [],
+});
+`,
+		`
 import { describe } from "vitest";
 
 import rule from "../ruleCreationMethods";
@@ -439,8 +487,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
     valid: [
-        { code: \`a\`, fileName: "b.ts" },
-        { code: \`a\`, fileName: "c.ts" },
+        { files: { "b.ts": \`a\` } },
+        { files: { "c.ts": \`a\` } },
     ],
     invalid: []
 });
@@ -453,8 +501,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule as any, {
     valid: [
-        { code: \`a\`, fileName: "b.ts", options: { c: "d" } },
-        { code: \`a\`, fileName: "b.ts", options: { c: "e" } },
+        { files: { "b.ts": \`a\` }, options: { c: "d" } },
+        { files: { "b.ts": \`a\` }, options: { c: "e" } },
     ],
     invalid: []
 });
@@ -467,8 +515,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule as any, {
     valid: [
-        { code: \`a\`, fileName: "b.ts", options: { c: "d" } },
-        { code: \`a\`, fileName: "c.ts", options: { c: "d" } },
+        { files: { "b.ts": \`a\` }, options: { c: "d" } },
+        { files: { "c.ts": \`a\` }, options: { c: "d" } },
     ],
     invalid: []
 });

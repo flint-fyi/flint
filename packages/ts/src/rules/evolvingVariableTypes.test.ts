@@ -104,8 +104,9 @@ const obj = { key: "value" };
 for (let key in obj) {}
 `,
 		{
-			code: `declare let value: unknown;`,
-			fileName: "file.d.ts",
+			files: {
+				"file.d.ts": `declare let value: unknown;`,
+			},
 		},
 	],
 });

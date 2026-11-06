@@ -1,139 +1,126 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
 import rule from "./globalObjectCalls.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 const result = Math();
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const result = Math();
                ~~~~
                Math is not a function and cannot be called directly.
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const data = JSON();
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const data = JSON();
              ~~~~
              JSON is not a function and cannot be called directly.
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const reflected = Reflect();
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const reflected = Reflect();
                   ~~~~~~~
                   Reflect is not a function and cannot be called directly.
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const atomic = Atomics();
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const atomic = Atomics();
                ~~~~~~~
                Atomics is not a function and cannot be called directly.
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const instance = new Math();
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const instance = new Math();
                      ~~~~
                      Math is not a function and cannot be called directly.
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const instance = new JSON();
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const instance = new JSON();
                      ~~~~
                      JSON is not a function and cannot be called directly.
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const instance = new Reflect();
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const instance = new Reflect();
                      ~~~~~~~
                      Reflect is not a function and cannot be called directly.
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const instance = new Atomics();
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const instance = new Atomics();
                      ~~~~~~~
                      Atomics is not a function and cannot be called directly.
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`const value = Math.abs(-5); void value;`,
 		`const parsed = JSON.parse("{}"); void parsed;`,

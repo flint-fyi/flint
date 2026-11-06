@@ -1,28 +1,30 @@
 import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
 
 import rule from "./objectKeyDuplicates.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 const object = { a: 1, a: 2 };
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-				noUnusedLocals: false,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const object = { a: 1, a: 2 };
                  ~
                  This key is made redundant by an identical key later in the object.
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		{
 			code: `const object = {};`,

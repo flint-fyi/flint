@@ -1,25 +1,22 @@
 import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
 
 import rule from "./constructorSupers.ts";
-import { domLibRuleTester } from "./ruleTester.ts";
+import { domLibRuleTester, javascriptRuleTester } from "./ruleTester.ts";
 
-domLibRuleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 class Parent {}
 class Child extends Parent {
     constructor() {
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 class Parent {}
 class Child extends Parent {
     constructor() {
@@ -28,22 +25,20 @@ class Child extends Parent {
     }
 }
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Example {
     constructor() {
         super();
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 class Example {
     constructor() {
         super();
@@ -52,8 +47,14 @@ class Example {
     }
 }
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+domLibRuleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		{
 			code: `class Parent {} class Child extends Parent { constructor() { super(); } }`,

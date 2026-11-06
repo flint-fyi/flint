@@ -38,8 +38,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			for (const testCase of testCases) {
 				const key = JSON.stringify({
 					code: testCase.code,
-					fileName: testCase.fileName,
-					files: testCase.files,
+					files:
+						testCase.files &&
+						Object.fromEntries(
+							Object.entries(testCase.files).toSorted(([left], [right]) =>
+								left.localeCompare(right),
+							),
+						),
 					options: testCase.options,
 				});
 
