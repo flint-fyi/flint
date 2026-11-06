@@ -11682,6 +11682,18 @@
 	},
 	{
 		"flint": {
+			"name": "overrideRestrictions",
+			"plugin": "package-json"
+		},
+		"eslint": [
+			{
+				"name": "package-json/require-override-restrictions",
+				"url": "https://eslint-plugin-package-json.dev/rules/require-override-restrictions"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "packageCollectionsOrder",
 			"plugin": "package-json",
 			"preset": "sorting"
