@@ -36,7 +36,7 @@ catalogs:
     eslint-plugin-perfectionist: 5.13.0
     eslint-plugin-regexp: 3.3.3
     eslint-plugin-unicorn: 79.0.0
-    eslint-plugin-yml: 3.9.0
+    eslint-plugin-yml: 3.10.0
     execa: 10.2.1
     jiti: 2.7.0
     knip: 6.44.1
@@ -87,7 +87,7 @@ catalogs:
     eslint-plugin-svelte: 3.24.0
     eslint-plugin-unicorn: 79.0.0
     eslint-plugin-vue: 10.12.0
-    eslint-plugin-yml: 3.9.0
+    eslint-plugin-yml: 3.10.0
     markdownlint: 0.42.0
     oxlint: 1.91.0
     typescript-eslint: 8.72.1
