@@ -4,10 +4,12 @@ import type { FileReport } from "./reports.ts";
 export interface CacheStorage {
 	configs: Record<string, number>;
 	files: Record<string, FileCacheStorage>;
+	version?: 3;
 }
 
 export interface FileCacheImpacts {
-	dependencies?: string[];
+	dependencies?: readonly string[];
+	structuralDependencies?: readonly string[];
 }
 
 export interface FileCacheStorage extends FileCacheImpacts {

@@ -6,11 +6,15 @@ import z from "zod/v4";
 
 export const jsonCodec = <T extends z.core.$ZodType>(
 	schema: T,
+	serialization: {
+		parse(text: string): unknown;
+		stringify(value: unknown): string;
+	} = JSON,
 ): z.ZodCodec<z.ZodString, T> =>
 	z.codec(z.string(), schema, {
 		decode: (jsonString, ctx) => {
 			try {
-				return JSON.parse(jsonString) as z.input<T>;
+				return serialization.parse(jsonString) as z.input<T>;
 			} catch (error) {
 				ctx.issues.push({
 					code: "invalid_format",
@@ -21,5 +25,5 @@ export const jsonCodec = <T extends z.core.$ZodType>(
 				return z.NEVER;
 			}
 		},
-		encode: (value) => JSON.stringify(value),
+		encode: (value) => serialization.stringify(value),
 	});
