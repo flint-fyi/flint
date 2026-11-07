@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
+import { LintSessionResults } from "../running/LintSessionResults.ts";
 import type { CacheStorage } from "../types/cache.ts";
 import type { VFSLinterHost } from "../types/host.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
@@ -37,12 +38,28 @@ function createHostWithCache(
 	return host;
 }
 
-function read(host: VFSLinterHost, allFilePaths: string[]) {
-	return readFromCache(
+async function read(host: VFSLinterHost, allFilePaths: string[]) {
+	const checkpoint = await readFromCache(
 		host,
 		new Set(allFilePaths),
 		configFilePath,
 		cacheFilePath,
+	);
+	if (!checkpoint) {
+		return;
+	}
+	const results = new LintSessionResults(
+		new Set(allFilePaths),
+		host.getCurrentDirectory(),
+		host.isCaseSensitiveFS(),
+	);
+	results.restoreCheckpoint(checkpoint.files);
+	const affected = results.getAffectedFilePaths(checkpoint.changedFilePaths);
+	return new Map(
+		Array.from(checkpoint.files).filter(
+			([filePath]) =>
+				allFilePaths.includes(filePath) && !affected.has(filePath),
+		),
 	);
 }
 

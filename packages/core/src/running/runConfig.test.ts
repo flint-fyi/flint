@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { writeToCache } from "../cache/writeToCache.ts";
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
+import { LintSession } from "./LintSession.ts";
 import { runConfig } from "./runConfig.ts";
 
 const ruleCreator = new RuleCreator({
@@ -14,6 +16,67 @@ const ruleCreator = new RuleCreator({
 describe(runConfig, () => {
 	afterEach(() => {
 		vi.restoreAllMocks();
+	});
+
+	it("retains each result's lint time when writing a later session checkpoint", async () => {
+		const clock = vi.spyOn(Date, "now").mockReturnValue(1000);
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		const language = createLanguage<object>({
+			about: { name: "test" },
+			createFileFactory: () => ({
+				createFile: (about) => ({ about, services: {} }),
+			}),
+			getLanguageReports: (file) => [{ text: file.about.sourceText }],
+			runFileVisitors() {
+				/* Diagnostics provide the observable results. */
+			},
+		});
+		const config = {
+			filePath: "/root/flint.config.js",
+			use: [
+				{
+					files: ["*.txt"],
+					rules: [
+						ruleCreator.createRule(language, {
+							about: { description: "Test.", id: "test" },
+							messages: {},
+							setup: () => ({}),
+						}),
+					],
+				},
+			],
+		};
+		host.vfsUpsertFile(config.filePath, "");
+		host.vfsUpsertFile("/root/a.txt", "a1");
+		host.vfsUpsertFile("/root/b.txt", "b1");
+		using session = await LintSession.create(config, host);
+		await session.lintFiles(session.allFilePaths);
+		clock.mockReturnValue(2000);
+		host.vfsUpsertFile("/root/b.txt", "b2");
+		await session.lintChangedFiles(["/root/a.txt"]);
+		const snapshot = session.getResults();
+		clock.mockReturnValue(3000);
+		await writeToCache(host, config.filePath, snapshot, undefined);
+		const restored = await runConfig(config, host, {});
+		expect(new Set(restored.cached?.keys())).toEqual(new Set(["/root/a.txt"]));
+		expect(restored.allFileResults.get("/root/b.txt")?.languageReports).toEqual(
+			[{ text: "b2" }],
+		);
+		expect(snapshot.allFileResults.get("/root/b.txt")?.languageReports).toEqual(
+			[{ text: "b1" }],
+		);
+	});
+
+	it("finishes checkpoint restoration for matched files with no enabled rules", async () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		const config = {
+			filePath: "/root/flint.config.js",
+			use: [{ files: ["*.txt"], rules: [] }],
+		};
+		host.vfsUpsertFile(config.filePath, "");
+		host.vfsUpsertFile("/root/a.txt", "a1");
+		await runConfig(config, host, {});
+		expect((await runConfig(config, host, {})).allFileResults.size).toBe(0);
 	});
 
 	it("counts only rules with matched files", async () => {
@@ -52,13 +115,17 @@ describe(runConfig, () => {
 		expect(results.ruleCount).toBe(1);
 	});
 
-	it.each(["changed", "deleted"])(
+	it.each(["changed", "deleted", "introduced", "stopped"])(
 		"re-lints unrelated files when a global declaration is %s after a cache hit",
 		async (change) => {
 			const clock = vi.spyOn(Date, "now").mockReturnValue(1000);
 			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 			const globalPath = "/root/global.d.ts";
 			const unrelatedPath = "/root/unrelated.ts";
+			const initialDeclaration =
+				change === "introduced" ? "export {};" : "declare const value: string;";
+			const finalDeclaration =
+				change === "stopped" ? "export {};" : "declare const value: number;";
 			const visited: string[] = [];
 			const language = createLanguage<{ text: string }>({
 				about: { name: "test" },
@@ -67,7 +134,9 @@ describe(runConfig, () => {
 				}),
 				getFileCacheImpacts: (file) => ({
 					dependencies: [],
-					isGlobalDependency: file.about.filePath === globalPath,
+					isGlobalDependency:
+						file.about.filePath === globalPath &&
+						file.about.sourceText.startsWith("declare"),
 				}),
 				runFileVisitors(file, fileVisitors): void {
 					visited.push(file.about.filePath);
@@ -105,9 +174,7 @@ describe(runConfig, () => {
 			};
 			const options = { cacheLocation: "/root/cache.json" };
 			host.vfsUpsertFile(config.filePath, "");
-			// Cache config validation currently looks up this relative path.
-			host.vfsUpsertFile("package.json", "{}");
-			host.vfsUpsertFile(globalPath, "declare const value: string;");
+			host.vfsUpsertFile(globalPath, initialDeclaration);
 			host.vfsUpsertFile(unrelatedPath, "value;");
 
 			const initial = await runConfig(config, host, options);
@@ -118,7 +185,7 @@ describe(runConfig, () => {
 			expect(
 				initial.allFileResults.get(unrelatedPath)?.reports[0]?.data,
 			).toEqual({
-				declaration: "declare const value: string;",
+				declaration: initialDeclaration,
 			});
 			visited.length = 0;
 			clock.mockReturnValue(2000);
@@ -129,12 +196,12 @@ describe(runConfig, () => {
 			expect(unchanged.cached?.has(unrelatedPath)).toBe(true);
 			expect(
 				unchanged.allFileResults.get(unrelatedPath)?.reports[0]?.data,
-			).toEqual({ declaration: "declare const value: string;" });
+			).toEqual({ declaration: initialDeclaration });
 			clock.mockReturnValue(3000);
-			if (change === "changed") {
-				host.vfsUpsertFile(globalPath, "declare const value: number;");
-			} else {
+			if (change === "deleted") {
 				host.vfsDeleteFile(globalPath);
+			} else {
+				host.vfsUpsertFile(globalPath, finalDeclaration);
 			}
 
 			const changed = await runConfig(config, host, options);
@@ -142,8 +209,7 @@ describe(runConfig, () => {
 			expect(
 				changed.allFileResults.get(unrelatedPath)?.reports[0]?.data,
 			).toEqual({
-				declaration:
-					change === "changed" ? "declare const value: number;" : "missing",
+				declaration: change === "deleted" ? "missing" : finalDeclaration,
 			});
 		},
 	);
