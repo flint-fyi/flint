@@ -1,0 +1,56 @@
+{
+	"name": "@flint.fyi/lsp",
+	"version": "0.1.0",
+	"description": "[Experimental] Language Server Protocol implementation for Flint.",
+	"homepage": "https://flint.fyi",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/lsp"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
+	},
+	"bin": {
+		"flint-lsp": "./src/bin/index.ts"
+	},
+	"files": [
+		"dist/"
+	],
+	"scripts": {
+		"test": "vitest --project lsp"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts-patch": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
+		"vscode-languageserver": "^9.0.1",
+		"vscode-languageserver-textdocument": "^1.0.12"
+	},
+	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=26.1.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"bin": {
+			"flint-lsp": "./dist/bin/index.mjs"
+		},
+		"exports": {
+			".": "./dist/index.mjs",
+			"./package.json": "./package.json"
+		}
+	}
+}

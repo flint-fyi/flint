@@ -1,0 +1,156 @@
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
+import { describe, expect, it } from "vitest";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import type { CodeActionContext } from "vscode-languageserver/node.js";
+
+import type { FileReport } from "@flint.fyi/core";
+
+import { createCodeActions } from "./codeActions.ts";
+
+describe(createCodeActions, () => {
+	it("creates fixes and suggestion edits", () => {
+		const workspaceRoot = path.resolve("workspace");
+		const sourceUri = pathToFileURL(
+			path.join(workspaceRoot, "src/file.ts"),
+		).href;
+		const targetUri = pathToFileURL(
+			path.join(workspaceRoot, "cspell.json"),
+		).href;
+		const sourceDocument = TextDocument.create(
+			sourceUri,
+			"typescript",
+			0,
+			"const typo = true;\n",
+		);
+		const targetDocument = TextDocument.create(targetUri, "json", 0, "{}");
+		const report: FileReport = {
+			about: {
+				id: "spelling/cspell",
+			},
+			fix: [
+				{
+					range: { begin: 6, end: 10 },
+					text: "word",
+				},
+			],
+			message: {
+				primary: "Forbidden or unknown word.",
+				secondary: [],
+				suggestions: [],
+			},
+			range: {
+				begin: { column: 6, line: 0, raw: 6 },
+				end: { column: 10, line: 0, raw: 10 },
+			},
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{
+								range: { begin: 0, end: 2 },
+								text: '{"words":["typo"]}',
+							},
+						],
+					},
+					id: "addWordToWords",
+				},
+				{
+					files: {
+						"empty.json": [],
+					},
+					id: "empty",
+				},
+				{
+					id: "replaceWord",
+					range: { begin: 6, end: 10 },
+					text: "word",
+				},
+			],
+		};
+		const context: CodeActionContext = {
+			diagnostics: [
+				{
+					code: "spelling/cspell",
+					message: "Forbidden or unknown word.",
+					range: {
+						end: { character: 10, line: 0 },
+						start: { character: 6, line: 0 },
+					},
+					source: "flint",
+				},
+				{
+					code: "spelling/cspell",
+					message: "Forbidden or unknown word.",
+					range: {
+						end: { character: 10, line: 0 },
+						start: { character: 6, line: 0 },
+					},
+					source: "flint/typescript",
+				},
+				{
+					code: "spelling/other",
+					message: "Other report.",
+					range: {
+						end: { character: 10, line: 0 },
+						start: { character: 6, line: 0 },
+					},
+					source: "flint",
+				},
+			],
+		};
+
+		const documents = new Map([
+			[sourceUri, sourceDocument],
+			[targetUri, targetDocument],
+		]);
+		const actions = createCodeActions(sourceUri, context, [report], {
+			getDocument: (uri) => documents.get(uri),
+			workspaceRoot,
+		});
+
+		const replaceWordEdit = {
+			changes: {
+				[sourceUri]: [
+					{
+						newText: "word",
+						range: {
+							end: { character: 10, line: 0 },
+							start: { character: 6, line: 0 },
+						},
+					},
+				],
+			},
+		};
+
+		expect(actions).toHaveLength(3);
+		expect(actions[0]?.edit).toEqual(replaceWordEdit);
+		expect(actions[0]?.title).toBe("Fix: Forbidden or unknown word.");
+		expect(actions[1]?.edit).toEqual({
+			changes: {
+				[targetUri]: [
+					{
+						newText: '{"words":["typo"]}',
+						range: {
+							end: { character: 2, line: 0 },
+							start: { character: 0, line: 0 },
+						},
+					},
+				],
+			},
+		});
+		expect(actions[1]?.title).toBe("Suggestion: addWordToWords");
+		expect(actions[2]?.edit).toEqual(replaceWordEdit);
+		expect(actions[2]?.title).toBe("Suggestion: replaceWord");
+
+		documents.delete(targetUri);
+
+		expect(
+			createCodeActions(sourceUri, context, [report], {
+				getDocument: (uri) => documents.get(uri),
+				workspaceRoot,
+			}),
+		).toHaveLength(2);
+	});
+});

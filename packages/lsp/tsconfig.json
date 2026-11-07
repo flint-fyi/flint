@@ -1,0 +1,15 @@
+{
+	"extends": "@flint.fyi/build/tsconfig.base.json",
+	"compilerOptions": {
+		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json",
+		"rootDir": "src/",
+		"outDir": "lib/",
+		"types": ["node"]
+	},
+	"include": ["src"],
+	"references": [
+		{ "path": "../core/tsconfig.src.json" },
+		{ "path": "../ts-patch" },
+		{ "path": "../utils" }
+	]
+}
