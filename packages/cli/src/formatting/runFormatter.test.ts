@@ -42,10 +42,15 @@ describe(runFormatter, () => {
 				formatted: "const value = 1;\n",
 			});
 			vi.mocked(resolveFormatter).mockResolvedValue({
+				checker: vi.fn(),
 				formatText,
 				name: "biome",
 				runner: vi.fn(),
-				testers: { configFile: /biome/, script: /biome/ },
+				testers: {
+					configFile: /biome/,
+					formatScript: /biome/,
+					script: /biome/,
+				},
 			});
 
 			expect(
@@ -86,10 +91,11 @@ describe(runFormatter, () => {
 		host.vfsUpsertFile("/root/index.ts", "const invalid =");
 		const error = new Error("Cannot format invalid syntax");
 		vi.mocked(resolveFormatter).mockResolvedValue({
+			checker: vi.fn(),
 			formatText: vi.fn().mockResolvedValue({ error }),
 			name: "biome",
 			runner: vi.fn(),
-			testers: { configFile: /biome/, script: /biome/ },
+			testers: { configFile: /biome/, formatScript: /biome/, script: /biome/ },
 		});
 
 		await expect(
