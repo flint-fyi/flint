@@ -568,8 +568,8 @@ catalogs:
       specifier: 7.1.2
       version: 7.1.2
     '@astrojs/starlight':
-      specifier: 0.42.8
-      version: 0.42.8
+      specifier: 0.42.9
+      version: 0.42.9
     '@expressive-code/core':
       specifier: 0.44.3
       version: 0.44.3
@@ -1720,7 +1720,7 @@ importers:
     dependencies:
       '@astrojs/starlight':
         specifier: catalog:site
-        version: 0.42.8(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 0.42.9(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
       '@flint.fyi/rule-data':
         specifier: workspace:^
         version: link:../rule-data
@@ -1750,7 +1750,7 @@ importers:
         version: 19.3.1
       starlight-package-managers:
         specifier: catalog:site
-        version: 0.13.0(@astrojs/starlight@0.42.8)
+        version: 0.13.0(@astrojs/starlight@0.42.9)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -1799,13 +1799,13 @@ importers:
         version: 0.35.5(@types/node@26.6.6)
       starlight-blog:
         specifier: catalog:site
-        version: 0.30.2(@astrojs/starlight@0.42.8)(astro@7.4.5)(supports-color@10.2.2)
+        version: 0.30.2(@astrojs/starlight@0.42.9)(astro@7.4.5)(supports-color@10.2.2)
       starlight-links-validator:
         specifier: catalog:site
-        version: 0.27.0(@astrojs/starlight@0.42.8)(astro@7.4.5)(supports-color@10.2.2)
+        version: 0.27.0(@astrojs/starlight@0.42.9)(astro@7.4.5)(supports-color@10.2.2)
       starlight-sidebar-topics:
         specifier: catalog:site
-        version: 0.9.0(@astrojs/starlight@0.42.8)(astro@7.4.5)
+        version: 0.9.0(@astrojs/starlight@0.42.9)(astro@7.4.5)
       zod:
         specifier: catalog:site
         version: 4.6.7
@@ -2422,8 +2422,8 @@ packages:
   '@astrojs/sitemap@3.7.4':
     resolution: {integrity: sha512-LbKNC24bdUWcQf/pThB6qLlSqHojxGjZDURIzFocY8rlWnAn2t74nnhnK6S5x0NHriHoAduLEpVjRykmeGiVvA==}
 
-  '@astrojs/starlight@0.42.8':
-    resolution: {integrity: sha512-BGP8bmTbdky4OFCV9BNWZedLuzONyUtz754q+hie+li/2TQ5XJ6nvfO8fhRhIMcCpUEsA5Ynf4qTTFf/ft/3Pg==}
+  '@astrojs/starlight@0.42.9':
+    resolution: {integrity: sha512-kMqDdFDWBClBNY9fc3pWAlR+eFh6JhOd7lIr4RczNDXUVk9EzzxVQvYizRuxlx0aVbSk8Gb1rVHiJlxgybwc/g==}
     peerDependencies:
       '@astrojs/markdown-remark': ^7.3.0
       astro: ^7.2.10
@@ -4112,9 +4112,6 @@ packages:
 
   '@types/hast@3.0.5':
     resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
-
-  '@types/js-yaml@4.0.9':
-    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -8357,14 +8354,13 @@ snapshots:
       sitemap: 9.0.1
       zod: 4.6.7
 
-  '@astrojs/starlight@0.42.8(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)':
+  '@astrojs/starlight@0.42.9(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@astrojs/markdown-satteri': 0.4.6
       '@astrojs/mdx': 8.1.2(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)
       '@astrojs/sitemap': 3.7.4
       '@pagefind/default-ui': 1.5.2
       '@types/hast': 3.0.5
-      '@types/js-yaml': 4.0.9
       '@types/mdast': 4.0.4
       astro: 7.4.5(@astrojs/markdown-remark@7.3.5)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
       astro-expressive-code: 0.44.3(astro@7.4.5)
@@ -8375,7 +8371,6 @@ snapshots:
       hast-util-to-string: 3.0.1
       hastscript: 9.0.3
       i18next: 26.6.0(typescript@6.0.3)
-      js-yaml: 4.3.2
       klona: 2.0.6
       magic-string: 1.4.5
       mdast-util-directive: 3.2.0(supports-color@10.2.2)
@@ -8388,6 +8383,7 @@ snapshots:
       unified: 11.0.5
       unist-util-visit: 5.2.0
       vfile: 6.0.3
+      yaml: 2.9.1
     optionalDependencies:
       '@astrojs/markdown-remark': 7.3.5(supports-color@10.2.2)
     transitivePeerDependencies:
@@ -9902,8 +9898,6 @@ snapshots:
   '@types/hast@3.0.5':
     dependencies:
       '@types/unist': 3.0.3
-
-  '@types/js-yaml@4.0.9': {}
 
   '@types/json-schema@7.0.15': {}
 
@@ -14031,12 +14025,12 @@ snapshots:
 
   spdx-license-ids@3.0.24: {}
 
-  starlight-blog@0.30.2(@astrojs/starlight@0.42.8)(astro@7.4.5)(supports-color@10.2.2):
+  starlight-blog@0.30.2(@astrojs/starlight@0.42.9)(astro@7.4.5)(supports-color@10.2.2):
     dependencies:
       '@astrojs/markdown-remark': 7.3.5(supports-color@10.2.2)
       '@astrojs/mdx': 8.1.2(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)
       '@astrojs/rss': 4.0.19
-      '@astrojs/starlight': 0.42.8(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
+      '@astrojs/starlight': 0.42.9(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
       github-slugger: 2.0.0
       hast-util-from-html: 2.0.3
       hast-util-to-html: 9.0.6
@@ -14051,10 +14045,10 @@ snapshots:
       - astro
       - supports-color
 
-  starlight-links-validator@0.27.0(@astrojs/starlight@0.42.8)(astro@7.4.5)(supports-color@10.2.2):
+  starlight-links-validator@0.27.0(@astrojs/starlight@0.42.9)(astro@7.4.5)(supports-color@10.2.2):
     dependencies:
       '@astrojs/markdown-satteri': 0.4.6
-      '@astrojs/starlight': 0.42.8(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
+      '@astrojs/starlight': 0.42.9(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
       astro: 7.4.5(@astrojs/markdown-remark@7.3.5)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
       github-slugger: 2.0.0
       hast-util-from-html: 2.0.3
@@ -14069,13 +14063,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  starlight-package-managers@0.13.0(@astrojs/starlight@0.42.8):
+  starlight-package-managers@0.13.0(@astrojs/starlight@0.42.9):
     dependencies:
-      '@astrojs/starlight': 0.42.8(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
+      '@astrojs/starlight': 0.42.9(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
 
-  starlight-sidebar-topics@0.9.0(@astrojs/starlight@0.42.8)(astro@7.4.5):
+  starlight-sidebar-topics@0.9.0(@astrojs/starlight@0.42.9)(astro@7.4.5):
     dependencies:
-      '@astrojs/starlight': 0.42.8(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
+      '@astrojs/starlight': 0.42.9(@astrojs/markdown-remark@7.3.5)(astro@7.4.5)(supports-color@10.2.2)(typescript@6.0.3)
       astro: 7.4.5(@astrojs/markdown-remark@7.3.5)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
       picomatch: 4.0.7
 
