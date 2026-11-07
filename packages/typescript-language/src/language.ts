@@ -120,6 +120,7 @@ export const typescriptLanguage: Language<
 					about: data,
 					language: typescriptLanguage,
 					services: {
+						filePath: data.filePath,
 						program,
 						sourceFile: sourceFile as AST.SourceFile,
 						// ew, I don't like this. the ts -> AST type story is not great
