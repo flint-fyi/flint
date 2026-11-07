@@ -495,8 +495,8 @@ catalogs:
       specifier: ^4.0.1
       version: 4.0.1
     formatly:
-      specifier: ^0.9.0
-      version: 0.9.1
+      specifier: ^0.11.4
+      version: 0.11.4
     github-slugger:
       specifier: ^2.0.0
       version: 2.0.0
@@ -952,7 +952,7 @@ importers:
         version: 0.5.0(supports-color@10.2.2)
       formatly:
         specifier: catalog:prod
-        version: 0.9.1
+        version: 0.11.4
       text-table-fast:
         specifier: catalog:prod
         version: 0.2.0
@@ -5587,11 +5587,6 @@ packages:
   formatly@0.11.4:
     resolution: {integrity: sha512-TeCC10lP8KCgoX+Fe5lryILIT0/Dy+nP0OSVnsuB5CwXoLuOdqxCYlPFF1inR8S/zTy1ec7TjhS2TeRKWzzImA==}
     engines: {node: '>=18.14.0'}
-    hasBin: true
-
-  formatly@0.9.1:
-    resolution: {integrity: sha512-gkwhjqCgO4ZcOhRcdIJKdjOtRwYpv9ic8mVjKP5+X41zfFkPajtXdWy8be45Abh5cTiLkrlQDWS2J/pc0KS1eQ==}
-    engines: {node: '>=18.3.0'}
     hasBin: true
 
   fsevents@2.3.3:
@@ -11754,11 +11749,6 @@ snapshots:
   format@0.2.2: {}
 
   formatly@0.11.4:
-    dependencies:
-      fd-package-json: 2.0.0
-      package-manager-detector: 1.9.0
-
-  formatly@0.9.1:
     dependencies:
       fd-package-json: 2.0.0
       package-manager-detector: 1.9.0
