@@ -1,0 +1,20 @@
+---
+const isPlayground = Astro.url.pathname.replace(/\/$/, "") === "/playground";
+---
+
+<a
+	aria-current={isPlayground ? "page" : undefined}
+	class="playground-link"
+	href="/playground/"
+>
+	Playground
+</a>
+
+<style>
+	.playground-link {
+		color: var(--sl-color-text-accent);
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+</style>

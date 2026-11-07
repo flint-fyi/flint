@@ -1,0 +1,97 @@
+---
+import LanguageSelect from "@astrojs/starlight/components/LanguageSelect.astro";
+import Search from "@astrojs/starlight/components/Search.astro";
+import SocialIcons from "@astrojs/starlight/components/SocialIcons.astro";
+import SiteTitle from "starlight-blog/overrides/SiteTitle.astro";
+import ThemeSelect from "starlight-blog/overrides/ThemeSelect.astro";
+
+import PlaygroundLink from "./PlaygroundLink.astro";
+
+// Mirrors Starlight's default Header, adding a Playground link to the right group.
+---
+
+<div class="header">
+	<div class="title-wrapper sl-flex">
+		<SiteTitle />
+	</div>
+	<div class="sl-flex print:hidden">
+		<Search />
+	</div>
+	<div class="sl-hidden md:sl-flex print:hidden right-group">
+		<div class="sl-flex social-icons">
+			<SocialIcons />
+		</div>
+		<PlaygroundLink />
+		<ThemeSelect />
+		<LanguageSelect />
+	</div>
+</div>
+
+<style>
+	@layer starlight.core {
+		.header {
+			align-items: center;
+			display: flex;
+			gap: var(--sl-nav-gap);
+			height: 100%;
+			justify-content: space-between;
+		}
+
+		.title-wrapper {
+			margin: -0.25rem;
+			min-width: 0;
+			overflow: clip;
+			padding: 0.25rem;
+		}
+
+		.right-group,
+		.social-icons {
+			align-items: center;
+			gap: 1rem;
+		}
+
+		.social-icons::after {
+			border-inline-end: 1px solid var(--sl-color-gray-5);
+			content: "";
+			height: 2rem;
+		}
+
+		@media (min-width: 50rem) {
+			:global(:root[data-has-sidebar]) {
+				--__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
+			}
+
+			:global(:root:not([data-has-toc])) {
+				--__toc-width: 0rem;
+			}
+
+			.header {
+				--__sidebar-width: max(
+					0rem,
+					var(--sl-content-inline-start, 0rem) - var(--sl-nav-pad-x)
+				);
+				--__main-column-fr: calc(
+					(
+							100% + var(--__sidebar-pad, 0rem) -
+								var(--__toc-width, var(--sl-sidebar-width)) -
+								(2 * var(--__toc-width, var(--sl-nav-pad-x))) -
+								var(--sl-content-inline-start, 0rem) - var(--sl-content-width)
+						) /
+						2
+				);
+				align-content: center;
+				display: grid;
+				grid-template-columns:
+					minmax(
+						calc(
+							var(--__sidebar-width) +
+								max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))
+						),
+						auto
+					)
+					1fr
+					auto;
+			}
+		}
+	}
+</style>

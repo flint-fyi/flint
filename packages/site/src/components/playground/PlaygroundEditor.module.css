@@ -1,0 +1,23 @@
+.editor {
+	flex: 1;
+	min-block-size: 0;
+	position: relative;
+}
+
+.fallback {
+	background: var(--sl-color-black);
+	block-size: 100%;
+	border: none;
+	/* Matches CodeMirror's line number, fold, and lint gutters plus their border. */
+	border-inline-start: calc(23px + 0.6 * var(--sl-text-code) + 1.4em) solid
+		var(--sl-color-gray-6);
+	color: var(--sl-color-white);
+	font-family: var(--__sl-font-mono);
+	font-size: var(--playground-code-size);
+	inset: 0;
+	line-height: 1.4;
+	margin: 0;
+	padding: 0.25rem 0.375rem;
+	position: absolute;
+	tab-size: 4;
+}

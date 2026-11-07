@@ -10,10 +10,14 @@
 	"include": [".astro/types.d.ts", "*.config.*", "src"],
 	"references": [
 		{ "path": "../browser" },
+		{ "path": "../core" },
+		{ "path": "../json" },
+		{ "path": "../jsx" },
 		{ "path": "../node" },
 		{ "path": "../performance" },
 		{ "path": "../plugin-flint" },
 		{ "path": "../rule-data" },
-		{ "path": "../spelling" }
+		{ "path": "../spelling" },
+		{ "path": "../ts" }
 	]
 }

@@ -1,0 +1,88 @@
+.ast,
+.children {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.ast {
+	font-family: var(--__sl-font-mono);
+	font-size: var(--sl-text-code-sm);
+	padding: 0.75rem 1rem;
+}
+
+.children {
+	border-inline-start: 1px solid var(--sl-color-hairline);
+	margin-inline-start: 0.5rem;
+	padding-inline-start: 0.5rem;
+}
+
+.branch,
+.leaf {
+	line-height: 1.75;
+	margin: 0;
+}
+
+.leaf {
+	padding-inline-start: 1.25rem;
+}
+
+.toggle {
+	background: none;
+	border: none;
+	border-radius: 0.25rem;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	display: inline-block;
+	inline-size: 1.25rem;
+	padding: 0;
+	text-align: center;
+	transition: color 120ms ease-out;
+}
+
+.toggle::before {
+	content: "▸";
+	display: inline-block;
+	transition: transform 100ms;
+}
+
+.toggle[aria-expanded="true"]::before {
+	transform: rotate(90deg);
+}
+
+.toggle:hover {
+	color: var(--sl-color-white);
+}
+
+.label {
+	color: var(--sl-color-gray-2);
+}
+
+.kind {
+	background: none;
+	border: none;
+	color: var(--playground-syntax-type);
+	cursor: pointer;
+	font: inherit;
+	padding: 0;
+}
+
+.kind:hover,
+.kind:focus-visible {
+	text-decoration: underline;
+}
+
+.text {
+	color: var(--playground-syntax-string);
+}
+
+.range {
+	color: var(--sl-color-gray-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.toggle,
+	.toggle::before {
+		transition: none;
+	}
+}

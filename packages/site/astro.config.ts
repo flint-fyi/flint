@@ -15,6 +15,7 @@ export default defineConfig({
 		starlight({
 			components: {
 				Head: "./src/components/Head.astro",
+				Header: "./src/components/Header.astro",
 				Hero: "./src/components/Hero.astro",
 				Pagination: "./src/components/Pagination.astro",
 			},
@@ -122,8 +123,13 @@ export default defineConfig({
 							label: "Rules",
 							link: "rules",
 						},
+						{
+							icon: "laptop",
+							label: "Playground",
+							link: "playground",
+						},
 					],
-					{ exclude: ["/blog", "/blog/**/*"] },
+					{ exclude: ["/blog", "/blog/**/*", "/playground"] },
 				),
 			],
 			social: [
@@ -170,6 +176,9 @@ export default defineConfig({
 				"css-tree": "css-tree/dist/csstree.esm",
 			},
 			conditions: ["node", "import", "default", "browser"],
+		},
+		worker: {
+			format: "es",
 		},
 	},
 });
