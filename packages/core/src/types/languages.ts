@@ -114,6 +114,8 @@ export interface LanguageDefinition<
 export interface LanguageFileCacheImpacts {
 	dependencies: string[];
 	isGlobalDependency: boolean;
+	/** Inputs whose changes require recreating language/project state. */
+	structuralDependencies?: string[];
 }
 
 /**

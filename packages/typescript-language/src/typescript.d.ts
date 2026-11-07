@@ -1,6 +1,16 @@
 import "typescript";
 
 declare module "typescript" {
+	namespace server {
+		interface ProjectService {
+			// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/server/editorServices.ts#L1359-L1368
+			readonly configFileExistenceInfoCache: ReadonlyMap<
+				NormalizedPath,
+				{ openFilesImpactedByConfigFile?: ReadonlySet<Path> }
+			>;
+		}
+	}
+
 	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/utilities.ts#L9780-L9784
 	interface FileSystemEntries {
 		readonly directories: readonly string[];
