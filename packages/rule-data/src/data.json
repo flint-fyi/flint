@@ -12796,19 +12796,6 @@
 	},
 	{
 		"flint": {
-			"name": "compilerDiagnostics",
-			"plugin": "react",
-			"status": "skipped"
-		},
-		"oxlint": [
-			{
-				"name": "react/react-compiler",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/react-compiler.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "compilerOptions",
 			"plugin": "react",
 			"preset": "logical"
