@@ -31738,6 +31738,25 @@
 	},
 	{
 		"flint": {
+			"name": "unsafeEnumAssignments",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "@typescript-eslint/no-unsafe-enum-assignment",
+				"url": "https://typescript-eslint.io/rules/no-unsafe-enum-assignment"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "typescript/no-unsafe-enum-assignment",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-enum-assignment.html"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "unsafeEnumComparisons",
 			"plugin": "ts",
 			"preset": "logical"
