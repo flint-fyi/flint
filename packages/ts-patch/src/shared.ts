@@ -1,4 +1,16 @@
+import { createRequire } from "node:module";
+
 import "./proxy-program.ts";
+
+export function resolveTypeScriptPath(): string {
+	const require = createRequire(import.meta.url);
+	const typescriptPath = require.resolve("typescript");
+	try {
+		return createRequire(typescriptPath).resolve("@typescript/old");
+	} catch {
+		return typescriptPath;
+	}
+}
 
 function replaceOrThrow(
 	source: string,
