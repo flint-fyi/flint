@@ -18454,7 +18454,7 @@
 		},
 		"biome": [
 			{
-				"name": "useSortedClasses",
+				"name": "useTailwindSortedClasses",
 				"url": "https://biomejs.dev/linter/rules/use-tailwind-sorted-classes/javascript/"
 			}
 		],
@@ -25335,10 +25335,6 @@
 			"status": "implemented"
 		},
 		"biome": [
-			{
-				"name": "noFloatingClasses",
-				"url": "https://biomejs.dev/linter/rules/no-unused-instantiation/javascript/"
-			},
 			{
 				"name": "noUnusedInstantiation",
 				"url": "https://biomejs.dev/linter/rules/no-unused-instantiation/javascript/"
