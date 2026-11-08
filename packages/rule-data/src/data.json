@@ -7213,7 +7213,7 @@
 		"biome": [
 			{
 				"name": "noUnsafeIframeSandbox",
-				"url": "https://biomejs.dev/linter/rules/no-unsafe-iframe-sandbox"
+				"url": "https://biomejs.dev/linter/rules/no-unsafe-iframe-sandbox/javascript/"
 			}
 		],
 		"eslint": [
@@ -39066,7 +39066,7 @@
 		"biome": [
 			{
 				"name": "noYamlBooleanKeys",
-				"url": "https://biomejs.dev/linter/rules/no-yaml-boolean-keys"
+				"url": "https://biomejs.dev/linter/rules/no-yaml-boolean-keys/yaml/"
 			}
 		],
 		"eslint": [
