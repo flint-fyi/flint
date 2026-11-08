@@ -13327,6 +13327,12 @@
 				"name": "@eslint-react/set-state-in-effect",
 				"url": "https://eslint-react.xyz/docs/rules/set-state-in-effect"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "react/set-state-in-effect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/set-state-in-effect.html"
+			}
 		]
 	},
 	{
@@ -13343,6 +13349,12 @@
 			{
 				"name": "@eslint-react/error-boundaries",
 				"url": "https://eslint-react.xyz/docs/rules/error-boundaries"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "react/error-boundaries",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/error-boundaries.html"
 			}
 		]
 	},
@@ -13543,6 +13555,12 @@
 				"name": "@eslint-react/globals",
 				"url": "https://eslint-react.xyz/docs/rules/globals"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "react/globals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/globals.html"
+			}
 		]
 	},
 	{
@@ -13572,6 +13590,12 @@
 			{
 				"name": "@eslint-react/immutability",
 				"url": "https://eslint-react.xyz/docs/rules/immutability"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "react/immutability",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/immutability.html"
 			}
 		]
 	},
@@ -13621,6 +13645,12 @@
 			{
 				"name": "react-hooks/incompatible-library",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/incompatible-library"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "react/incompatible-library",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/incompatible-library.html"
 			}
 		]
 	},
@@ -13716,6 +13746,12 @@
 			{
 				"name": "react-hooks/preserve-manual-memoization",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/preserve-manual-memoization"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "react/preserve-manual-memoization",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/preserve-manual-memoization.html"
 			}
 		]
 	},
@@ -13889,6 +13925,12 @@
 				"name": "@eslint-react/purity",
 				"url": "https://eslint-react.xyz/docs/rules/purity"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "react/purity",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/purity.html"
+			}
 		]
 	},
 	{
@@ -13980,6 +14022,12 @@
 				"name": "@eslint-react/refs",
 				"url": "https://eslint-react.xyz/docs/rules/refs"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "react/refs",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/refs.html"
+			}
 		]
 	},
 	{
@@ -14051,6 +14099,12 @@
 			{
 				"name": "@eslint-react/set-state-in-render",
 				"url": "https://eslint-react.xyz/docs/rules/set-state-in-render"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "react/set-state-in-render",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/set-state-in-render.html"
 			}
 		]
 	},
@@ -14300,6 +14354,12 @@
 				"name": "@eslint-react/static-components",
 				"url": "https://eslint-react.xyz/docs/rules/static-components"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "react/static-components",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/static-components.html"
+			}
 		]
 	},
 	{
@@ -14417,6 +14477,12 @@
 				"name": "@eslint-react/unsupported-syntax",
 				"url": "https://eslint-react.xyz/docs/rules/unsupported-syntax"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "react/unsupported-syntax",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/unsupported-syntax.html"
+			}
 		]
 	},
 	{
@@ -14528,6 +14594,12 @@
 			{
 				"name": "@eslint-react/use-memo",
 				"url": "https://eslint-react.xyz/docs/rules/use-memo"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "react/use-memo",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/use-memo.html"
 			}
 		]
 	},
@@ -22685,6 +22757,12 @@
 				"name": "jsdoc/no-blank-blocks",
 				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/no-blank-blocks.md"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "jsdoc/no-blank-blocks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/no-blank-blocks.html"
+			}
 		]
 	},
 	{
@@ -29077,6 +29155,12 @@
 			{
 				"name": "one-var",
 				"url": "https://eslint.org/docs/latest/rules/one-var"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "eslint/one-var",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/one-var.html"
 			}
 		]
 	},
