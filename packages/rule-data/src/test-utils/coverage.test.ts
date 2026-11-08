@@ -7,6 +7,7 @@ import {
 	hasRuleCoverageGaps,
 	ruleCoverageSources,
 } from "./coverage.ts";
+import * as oxlint from "./oxlint.ts";
 
 describe(collectRuleCoverageReports, () => {
 	afterEach(() => {
@@ -27,6 +28,28 @@ describe(collectRuleCoverageReports, () => {
 		expect(reports.map(({ linter }) => linter)).toEqual(
 			ruleCoverageSources.map(({ linter }) => linter),
 		);
+	});
+
+	it("excludes internal Oxlint React Compiler diagnostics but retains public and non-React rules", async () => {
+		vi.spyOn(oxlint, "getOxlintLintRules").mockResolvedValue([
+			"react/capitalized-calls",
+			"react/error-boundaries",
+			"react/hooks",
+			"typescript/hooks",
+		]);
+		vi.spyOn(oxlint, "findOxlintRulesInFlint").mockReturnValue([]);
+
+		const source = ruleCoverageSources.find(
+			({ linter }) => linter === "Oxlint",
+		);
+
+		expect(await source?.collect()).toEqual({
+			missing: [
+				{ name: "react/error-boundaries", url: undefined },
+				{ name: "typescript/hooks", url: undefined },
+			],
+			stale: [],
+		});
 	});
 });
 
