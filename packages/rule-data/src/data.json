@@ -4118,7 +4118,7 @@
 		"eslint": [
 			{
 				"name": "eslint-plugin/require-meta-docs-recommended",
-				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-docs-recommended"
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-docs-recommended.md"
 			}
 		]
 	},
@@ -6103,7 +6103,7 @@
 		"oxlint": [
 			{
 				"name": "jsx-a11y/anchor-ambiguous-text",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx-a11y/anchor-ambiguous-text.html"
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/anchor-ambiguous-text.html"
 			}
 		]
 	},
@@ -10046,7 +10046,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/buffer",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/buffer.md"
 			}
 		]
 	},
@@ -10059,7 +10059,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/console",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/console.md"
 			}
 		]
 	},
@@ -10096,7 +10096,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/process",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/process.md"
 			}
 		]
 	},
@@ -10109,7 +10109,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/text-decoder",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/text-decoder.md"
 			}
 		]
 	},
@@ -10122,7 +10122,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/text-encoder",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/text-encoder.md"
 			}
 		]
 	},
@@ -10454,7 +10454,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-promises/dns",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-promises.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-promises/dns.md"
 			}
 		]
 	},
@@ -10467,7 +10467,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-promises/fs",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-promises.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-promises/fs.md"
 			}
 		]
 	},
@@ -10698,7 +10698,7 @@
 		"eslint": [
 			{
 				"name": "n/no-unsupported-features/es-builtins",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features/es-builtins.md"
 			}
 		]
 	},
@@ -10711,7 +10711,7 @@
 		"eslint": [
 			{
 				"name": "n/no-unsupported-features/node-builtins",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features/node-builtins.md"
 			}
 		]
 	},
@@ -10724,7 +10724,7 @@
 		"eslint": [
 			{
 				"name": "n/no-unsupported-features/es-syntax",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features/es-syntax.md"
 			}
 		]
 	},
