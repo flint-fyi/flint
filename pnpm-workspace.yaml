@@ -91,7 +91,7 @@ catalogs:
     markdownlint: 0.42.0
     oxlint: 1.91.0
     typescript-eslint: 8.72.1
-    vue-eslint-parser: 10.4.1
+    vue-eslint-parser: 10.4.2
 
   prod:
     "@altano/repository-tools": ^2.1.1
