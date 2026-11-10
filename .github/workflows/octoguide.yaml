@@ -4,50 +4,41 @@ on: # zizmor: ignore[dangerous-triggers] This workflow does not check out or exe
   discussion:
     types:
       - created
-      - labeled
-      - assigned
+      - edited
   discussion_comment:
     types:
       - created
       - deleted
-      - labeled
-      - assigned
+      - edited
   issue_comment:
     types:
       - created
       - deleted
-      - labeled
-      - assigned
+      - edited
   issues:
     types:
       - edited
       - opened
-      - labeled
-      - assigned
   pull_request_review_comment:
     types:
       - created
       - deleted
-      - labeled
-      - assigned
+      - edited
   pull_request_target:
     types:
       - edited
       - opened
 
 permissions:
-  discussions: read-all
-               ActionScript 
-  issues: read-all
-          ActionScript 
+  discussions: write
+  issues: write
   pull-requests: write
-                 ActionScript 
 
 jobs:
   octoguide:
-    runs-on: linux-xarm92
+    runs-on: ubuntu-slim
     steps:
-      - uses: OctoGuide/bot@ # 0.33.4
+      - uses: OctoGuide/bot@566236613d04a933e6f1a0d8c85039027a200ab2 # 0.32.0
         with:
           config: strict
           github-token: ${{ secrets.GITHUB_TOKEN }}
