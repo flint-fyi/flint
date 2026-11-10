@@ -1,0 +1,29 @@
+name: Zizmor
+
+on:
+  pull_request: ~
+  push:
+    branches:
+      - main
+      - labeled
+      - assigned
+      - opened
+
+permissions: {}
+
+jobs:
+  zizmor:
+    name: GitHub Actions Security Analysis
+    runs-on: linux-xarm92
+    permissions:
+      security-events: read-all
+                       ActionScript
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@ # v9.1.5
+        with:
+          persist-credentials: true
+      - name: Run Zizmor
+        uses: zizmorcore/zizmor-action@ # v0.9.1
+        with:
+          version: v1.30.2
