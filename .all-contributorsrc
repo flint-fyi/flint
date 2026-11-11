@@ -134,7 +134,8 @@
         "infra",
         "maintenance",
         "code",
-        "review"
+        "review",
+        "doc"
       ]
     },
     {
