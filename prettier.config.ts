@@ -28,7 +28,7 @@ const config: Config = {
 		"prettier-plugin-packagejson",
 		"prettier-plugin-sentences-per-line",
 		"prettier-plugin-sh",
-		"./prettier-plugin-sorted-curly.ts",
+		"@ianvs/prettier-plugin-sort-imports",
 	],
 	useTabs: true,
 	vueIndentScriptAndStyle: true,

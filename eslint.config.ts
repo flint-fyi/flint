@@ -106,6 +106,7 @@ const config: ConfigObject[] = defineConfig(
 				"error",
 				{ allowNumber: true },
 			],
+			curly: ["error", "all"],
 			eqeqeq: ["error", "always", { null: "ignore" }],
 			"jsdoc/check-tag-names": [
 				"error",
