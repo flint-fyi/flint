@@ -30,13 +30,13 @@
 		"@flint.fyi/content-mapper": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",
 		"@vue/compiler-dom": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@flint.fyi/typescript-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
 		"vue": "catalog:dev"

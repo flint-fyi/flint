@@ -2048,6 +2048,9 @@ importers:
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       '@flint.fyi/vue-language':
         specifier: workspace:^
         version: link:../vue-language
@@ -2061,9 +2064,6 @@ importers:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
         version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
