@@ -1,6 +1,6 @@
+import type { Project, Snapshot } from "typescript-native/sync";
 import { describe, expect, it, vi } from "vitest";
 
-import type { Project, Snapshot } from "./native/sync.ts";
 import { createDefaultProjectResolver } from "./resolveDefaultProjectForFile.ts";
 
 const sourceFileNamesByProject = new WeakMap<Project, string[]>();

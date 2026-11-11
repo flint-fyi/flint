@@ -1,4 +1,5 @@
-import { NodeFlags, SyntaxKind } from "../native/ast.ts";
+import { NodeFlags, SyntaxKind } from "typescript-native/ast";
+
 import type * as AST from "../types/ast.ts";
 import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
 

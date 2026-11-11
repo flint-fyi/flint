@@ -1,3 +1,5 @@
+import { SyntaxKind } from "typescript-native/ast";
+import type { Checker } from "typescript-native/sync";
 import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
@@ -8,8 +10,6 @@ import {
 	type BatchRequests,
 } from "./createCachedChecker.ts";
 import { createTypeScriptProjectSession } from "./createTypeScriptProjectSession.ts";
-import { SyntaxKind } from "./native/ast.ts";
-import type { Checker } from "./native/sync.ts";
 import type * as AST from "./types/ast.ts";
 import { forEachChild } from "./utils/forEachChild.ts";
 

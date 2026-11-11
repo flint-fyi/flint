@@ -251,6 +251,23 @@ const config: ConfigObject[] = defineConfig(
 		},
 	},
 	{
+		files: ["packages/typescript-language/src/**/*.ts"],
+		rules: {
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					patterns: [
+						{
+							message:
+								"Import from typescript-native instead: the bundler reads these re-exports through getters, which more than doubled lint time.",
+							regex: String.raw`/native/[a-z]+\.ts$`,
+						},
+					],
+				},
+			],
+		},
+	},
+	{
 		files: ["packages/site/**/*.ts"],
 		rules: {
 			"@typescript-eslint/no-restricted-imports": [

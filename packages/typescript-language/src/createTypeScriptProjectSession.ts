@@ -1,4 +1,10 @@
 import path from "pathe";
+import {
+	API,
+	type ParsedCommandLine,
+	type Project,
+	type Snapshot,
+} from "typescript-native/sync";
 
 import type { LinterHost } from "@flint.fyi/core";
 import { isUnderDirectory } from "@flint.fyi/utils";
@@ -11,12 +17,6 @@ import type { BatchRequests } from "./createCachedChecker.ts";
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 import { createTypeScriptOverlayConfig } from "./createTypeScriptOverlayConfig.ts";
 import { createVirtualFiles } from "./createVirtualFiles.ts";
-import {
-	API,
-	type ParsedCommandLine,
-	type Project,
-	type Snapshot,
-} from "./native/sync.ts";
 import { createDefaultProjectResolver } from "./resolveDefaultProjectForFile.ts";
 
 export interface TypeScriptProjectChanges {

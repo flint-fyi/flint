@@ -1,6 +1,6 @@
-import type { LanguageReport } from "@flint.fyi/core";
+import type { Diagnostic } from "typescript-native/sync";
 
-import type { Diagnostic } from "./native/sync.ts";
+import type { LanguageReport } from "@flint.fyi/core";
 
 export type TSDiagnostic = Diagnostic;
 

@@ -1,6 +1,6 @@
-import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript-native/ast";
 
-import { SyntaxKind } from "../native/ast.ts";
+import type { AST } from "@flint.fyi/typescript-language";
 
 export interface StringRawNoSubstitution extends AST.TaggedTemplateExpression {
 	template: AST.NoSubstitutionTemplateLiteral;

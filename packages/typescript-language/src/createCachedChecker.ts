@@ -1,6 +1,5 @@
 import { debugForFile } from "debug-for-file";
-
-import { isExpression, SyntaxKind, type Node } from "./native/ast.ts";
+import { isExpression, SyntaxKind, type Node } from "typescript-native/ast";
 import {
 	ObjectFlags,
 	SymbolFlags,
@@ -14,7 +13,8 @@ import {
 	type Symbol,
 	type Type,
 	type TypeReference,
-} from "./native/sync.ts";
+} from "typescript-native/sync";
+
 import type * as AST from "./types/ast.ts";
 import { forEachChild } from "./utils/forEachChild.ts";
 import { getTypeProperty } from "./utils/getTypeProperty.ts";

@@ -1,9 +1,9 @@
+import { serverFS } from "typescript-native/fs";
+import { toRootedFilePath } from "typescript-native/path";
+import { API, type Diagnostic, type Program } from "typescript-native/sync";
 import { describe, expect, it, vi } from "vitest";
 
 import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
-import { serverFS } from "./native/fs.ts";
-import { toRootedFilePath } from "./native/path.ts";
-import { API, type Diagnostic, type Program } from "./native/sync.ts";
 
 const fileName = toRootedFilePath("/repo/index.ts", undefined);
 const sourceText = `

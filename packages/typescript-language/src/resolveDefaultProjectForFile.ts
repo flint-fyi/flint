@@ -1,5 +1,6 @@
+import type { Project, Snapshot } from "typescript-native/sync";
+
 import { isInferredProject } from "./isInferredProject.ts";
-import type { Project, Snapshot } from "./native/sync.ts";
 
 export type DefaultProjectResolver = (
 	snapshot: Snapshot,

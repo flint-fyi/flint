@@ -1,10 +1,10 @@
 import { stripVTControlCharacters } from "node:util";
 
+import { toRootedFilePath } from "typescript-native/path";
+import type { Diagnostic } from "typescript-native/sync";
 import { describe, expect, it } from "vitest";
 
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
-import { toRootedFilePath } from "./native/path.ts";
-import type { Diagnostic } from "./native/sync.ts";
 
 describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 	it("indents nested message-chain entries by two spaces per depth", () => {

@@ -1,7 +1,8 @@
 import path from "node:path";
 
-import { SyntaxKind } from "./native/ast.ts";
-import type { Checker, Program } from "./native/sync.ts";
+import { SyntaxKind } from "typescript-native/ast";
+import type { Checker, Program } from "typescript-native/sync";
+
 import type * as AST from "./types/ast.ts";
 import { forEachChild } from "./utils/forEachChild.ts";
 

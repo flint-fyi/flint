@@ -1,4 +1,5 @@
-import type { Program } from "../native/sync.ts";
+import type { Program } from "typescript-native/sync";
+
 import type * as AST from "../types/ast.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 

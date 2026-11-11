@@ -1,7 +1,6 @@
+import { serverFS } from "typescript-native/fs";
+import { API } from "typescript-native/sync";
 import { describe, expect, it } from "vitest";
-
-import { serverFS } from "./native/fs.ts";
-import { API } from "./native/sync.ts";
 
 describe("TypeScript native API", () => {
 	it("creates and checks a program", () => {

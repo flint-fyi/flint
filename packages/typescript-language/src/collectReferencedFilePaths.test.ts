@@ -1,12 +1,12 @@
 import path from "node:path";
 
+import { serverFS } from "typescript-native/fs";
+import { API, JsxEmit } from "typescript-native/sync";
 import { describe, expect, it, vi } from "vitest";
 
 import { nullThrows } from "@flint.fyi/utils";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
-import { serverFS } from "./native/fs.ts";
-import { API, JsxEmit } from "./native/sync.ts";
 import type * as AST from "./types/ast.ts";
 
 describe(collectReferencedFilePaths, () => {

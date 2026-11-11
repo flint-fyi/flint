@@ -1,10 +1,14 @@
+import {
+	SpanMap,
+	SpanMapKind,
+	type RootedFilePath,
+} from "typescript-native/ast";
+import type { Diagnostic } from "typescript-native/sync";
 import { describe, expect, it, vi } from "vitest";
 
 import { createDiskBackedLinterHost } from "@flint.fyi/core";
 
 import { typescriptLanguage } from "./language.ts";
-import { SpanMap, SpanMapKind, type RootedFilePath } from "./native/ast.ts";
-import type { Diagnostic } from "./native/sync.ts";
 
 const spanMap = new SpanMap([
 	{

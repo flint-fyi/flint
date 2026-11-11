@@ -1,6 +1,6 @@
 import { WeakCachedFactory } from "cached-factory";
+import { SyntaxKind } from "typescript-native/ast";
 
-import { SyntaxKind } from "../native/ast.ts";
 import type * as AST from "../types/ast.ts";
 import { forEachChild } from "../utils/forEachChild.ts";
 import {

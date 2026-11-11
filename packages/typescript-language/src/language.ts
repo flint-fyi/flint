@@ -1,6 +1,15 @@
 import path from "node:path";
 
 import { debugForFile } from "debug-for-file";
+import { SpanMap, type Node as NativeNode } from "typescript-native/ast";
+import { toRootedFilePath } from "typescript-native/path";
+import type {
+	Checker,
+	Diagnostic,
+	Program,
+	Project,
+	Snapshot,
+} from "typescript-native/sync";
 
 import {
 	createLanguage,
@@ -28,15 +37,6 @@ import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
 import { isInferredProject } from "./isInferredProject.ts";
 import { isNativeProcessFailure } from "./isNativeProcessFailure.ts";
-import { SpanMap, type Node as NativeNode } from "./native/ast.ts";
-import { toRootedFilePath } from "./native/path.ts";
-import type {
-	Checker,
-	Diagnostic,
-	Program,
-	Project,
-	Snapshot,
-} from "./native/sync.ts";
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";

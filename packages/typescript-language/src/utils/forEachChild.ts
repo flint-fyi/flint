@@ -1,4 +1,5 @@
-import { NodeFlags, type Node, type NodeArray } from "../native/ast.ts";
+import { NodeFlags, type Node, type NodeArray } from "typescript-native/ast";
+
 import type * as AST from "../types/ast.ts";
 import { getAuthoredNode } from "./getAuthoredNode.ts";
 

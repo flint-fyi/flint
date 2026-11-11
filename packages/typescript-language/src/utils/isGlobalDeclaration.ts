@@ -1,6 +1,7 @@
+import type { Program } from "typescript-native/sync";
+
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 
-import type { Program } from "../native/sync.ts";
 import { getDeclarationsIfGlobal } from "./getDeclarationsIfGlobal.ts";
 
 export function isGlobalDeclaration(

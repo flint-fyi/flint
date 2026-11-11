@@ -1,10 +1,10 @@
+import { serverFS } from "typescript-native/fs";
 import { describe, expect, it } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
 
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 import { createVirtualFiles } from "./createVirtualFiles.ts";
-import { serverFS } from "./native/fs.ts";
 
 describe(createTypeScriptFileSystem, () => {
 	it("reads file contents and reports definite absence", () => {

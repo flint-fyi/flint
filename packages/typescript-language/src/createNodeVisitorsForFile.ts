@@ -1,3 +1,5 @@
+import { NodeFlags, type Node, type SyntaxKind } from "typescript-native/ast";
+
 import {
 	groupFileVisitors,
 	runFileVisitorSubscriptions,
@@ -5,7 +7,6 @@ import {
 	type FileVisitorSubscription,
 } from "@flint.fyi/core";
 
-import { NodeFlags, type Node, type SyntaxKind } from "./native/ast.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
 import { getAuthoredNode } from "./utils/getAuthoredNode.ts";

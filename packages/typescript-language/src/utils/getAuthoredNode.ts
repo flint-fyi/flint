@@ -1,4 +1,5 @@
-import { NodeFlags, SyntaxKind, type Node } from "../native/ast.ts";
+import { NodeFlags, SyntaxKind, type Node } from "typescript-native/ast";
+
 import type * as AST from "../types/ast.ts";
 
 /**
