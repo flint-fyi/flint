@@ -861,19 +861,6 @@
 	},
 	{
 		"flint": {
-			"name": "datasetAccesses",
-			"plugin": "browser",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/dom-node-dataset",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/dom-node-dataset.md"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "documentCookies",
 			"plugin": "browser",
 			"preset": "logicalStrict",
@@ -1090,8 +1077,8 @@
 		},
 		"eslint": [
 			{
-				"name": "unicorn/prefer-dom-node-dataset",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-dom-node-dataset.md"
+				"name": "unicorn/dom-node-dataset",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/dom-node-dataset.md"
 			}
 		],
 		"oxlint": [
@@ -2073,8 +2060,8 @@
 		},
 		"eslint": [
 			{
-				"name": "unicorn/prefer-explicit-viewport-units",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-explicit-viewport-units.md"
+				"name": "cssicorn/prefer-explicit-viewport-units",
+				"url": "https://github.com/sindresorhus/eslint-cssicorn/blob/main/docs/rules/prefer-explicit-viewport-units.md"
 			}
 		]
 	},
@@ -3514,20 +3501,6 @@
 	},
 	{
 		"flint": {
-			"name": "singleLineDeclarationLimits",
-			"plugin": "css",
-			"status": "skipped"
-		},
-		"stylelint": [
-			{
-				"name": "declaration-block-single-line-max-declarations",
-				"url": "https://stylelint.io/user-guide/rules/declaration-block-single-line-max-declarations"
-			}
-		],
-		"notes": "Overly opinionated."
-	},
-	{
-		"flint": {
 			"name": "stringValidity",
 			"plugin": "css",
 			"preset": "logical"
@@ -4154,7 +4127,7 @@
 		"eslint": [
 			{
 				"name": "eslint-plugin/require-meta-docs-recommended",
-				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-docs-recommended"
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-docs-recommended.md"
 			}
 		]
 	},
@@ -6169,7 +6142,7 @@
 		"oxlint": [
 			{
 				"name": "jsx-a11y/anchor-ambiguous-text",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx-a11y/anchor-ambiguous-text.html"
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/anchor-ambiguous-text.html"
 			}
 		]
 	},
@@ -10134,10 +10107,11 @@
 		},
 		"eslint": [
 			{
-				"name": "unicorn/prefer-json-parse-buffer",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-json-parse-buffer.md"
+				"name": "unicorn/consistent-json-file-read",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-json-file-read.md"
 			}
-		]
+		],
+		"notes": "Equivalent to unicorn/consistent-json-file-read with the buffer option."
 	},
 	{
 		"flint": {
@@ -10148,7 +10122,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/buffer",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/buffer.md"
 			}
 		]
 	},
@@ -10161,7 +10135,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/console",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/console.md"
 			}
 		]
 	},
@@ -10198,7 +10172,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/process",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/process.md"
 			}
 		]
 	},
@@ -10211,7 +10185,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/text-decoder",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/text-decoder.md"
 			}
 		]
 	},
@@ -10224,7 +10198,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/text-encoder",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/text-encoder.md"
 			}
 		]
 	},
@@ -10306,25 +10280,6 @@
 			{
 				"name": "import/extensions",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/extensions.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "jsonFileReads",
-			"plugin": "node",
-			"preset": "stylistic"
-		},
-		"biome": [
-			{
-				"name": "useConsistentJsonFileRead",
-				"url": "https://biomejs.dev/linter/rules/use-consistent-json-file-read/javascript/"
-			}
-		],
-		"eslint": [
-			{
-				"name": "unicorn/consistent-json-file-read",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-json-file-read.md"
 			}
 		]
 	},
@@ -10580,7 +10535,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-promises/dns",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-promises.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-promises/dns.md"
 			}
 		]
 	},
@@ -10593,7 +10548,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-promises/fs",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-promises.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-promises/fs.md"
 			}
 		]
 	},
@@ -10824,7 +10779,7 @@
 		"eslint": [
 			{
 				"name": "n/no-unsupported-features/es-builtins",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features/es-builtins.md"
 			}
 		]
 	},
@@ -10837,7 +10792,7 @@
 		"eslint": [
 			{
 				"name": "n/no-unsupported-features/node-builtins",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features/node-builtins.md"
 			}
 		]
 	},
@@ -10850,7 +10805,7 @@
 		"eslint": [
 			{
 				"name": "n/no-unsupported-features/es-syntax",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-unsupported-features/es-syntax.md"
 			}
 		]
 	},
@@ -16326,19 +16281,6 @@
 	},
 	{
 		"flint": {
-			"name": "abbreviations",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/prevent-abbreviations",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prevent-abbreviations.md"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "abortSignalAnys",
 			"plugin": "ts",
 			"preset": "stylistic"
@@ -17136,19 +17078,6 @@
 	},
 	{
 		"flint": {
-			"name": "arrayInstanceOfChecks",
-			"plugin": "ts",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/no-instanceof-array",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/deleted-and-deprecated-rules.md#no-instanceof-array"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "arrayIterableMethods",
 			"plugin": "ts",
 			"preset": "stylistic"
@@ -17304,19 +17233,6 @@
 			{
 				"name": "unicorn/no-array-sort",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-sort.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "arrayPushCalls",
-			"plugin": "ts",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/no-array-push-push",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/deleted-and-deprecated-rules.md#no-array-push-push"
 			}
 		]
 	},
@@ -21847,12 +21763,6 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"eslint": [
-			{
-				"name": "unicorn/no-hex-escape",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-hex-escape.md"
-			}
-		],
 		"oxlint": [
 			{
 				"name": "unicorn/no-hex-escape",
@@ -24077,6 +23987,19 @@
 			{
 				"name": "eslint/no-label-var",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-label-var.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "literalAsciiCharacters",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/prefer-literal-ascii",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-literal-ascii.md"
 			}
 		]
 	},
@@ -27498,20 +27421,6 @@
 	},
 	{
 		"flint": {
-			"name": "regexConciseness",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/better-regex",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/better-regex.md"
-			}
-		],
-		"notes": "Superseded by other regex cleanliness rules."
-	},
-	{
-		"flint": {
 			"name": "regexConsecutiveSpaces",
 			"plugin": "ts",
 			"status": "skipped"
@@ -29593,19 +29502,6 @@
 			{
 				"name": "unicorn/explicit-length-check",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/explicit-length-check.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "sliceEndLengths",
-			"plugin": "ts",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/no-length-as-slice-end",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/deleted-and-deprecated-rules.md#no-length-as-slice-end"
 			}
 		]
 	},
@@ -32491,14 +32387,14 @@
 	},
 	{
 		"flint": {
-			"name": "unusedArrayMethodReturns",
+			"name": "unusedBuiltinMethodReturns",
 			"plugin": "ts",
 			"preset": "logical"
 		},
 		"eslint": [
 			{
-				"name": "unicorn/no-unused-array-method-return",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unused-array-method-return.md"
+				"name": "unicorn/no-unused-builtin-method-return",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unused-builtin-method-return.md"
 			}
 		]
 	},
