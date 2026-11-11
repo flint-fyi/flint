@@ -11,18 +11,24 @@ import {
 	nativeScenarios,
 } from "./nativeScenarios.ts";
 import { prepareConsumer } from "./prepareConsumer.ts";
-import { testCaseEntries, testCasesPath, type TestCase } from "./testCases.ts";
+import {
+	baselineFlintPath,
+	baselineTestCasesPath,
+	testCaseEntries,
+	testCasesPath,
+	type TestCase,
+} from "./testCases.ts";
 import { writeFile } from "./writing/writeFile.ts";
 import { writeStructure } from "./writing/writeStructure.ts";
 
 const log = debugForFile(import.meta.url);
 
-async function createCase(testCase: TestCase) {
+async function createCase(casesPath: string, testCase: TestCase) {
 	const testCaseSlug = createTestCaseSlug({
 		files: testCase.files,
 		rules: testCase.rules,
 	});
-	const directory = path.join(testCasesPath, testCaseSlug);
+	const directory = path.join(casesPath, testCaseSlug);
 
 	log(`Populating ${testCaseSlug}...`);
 
@@ -39,24 +45,38 @@ async function createCase(testCase: TestCase) {
 	log("Created", createdFiles, "files");
 }
 
-await fs.rm(testCasesPath, { force: true, recursive: true });
-await prepareConsumer(
-	path.resolve(import.meta.dirname, "../../.."),
-	path.resolve(testCasesPath),
-	["@flint.fyi/astro", "@flint.fyi/svelte", "@flint.fyi/vue", "flint"],
-);
+async function createCases(
+	rootPath: string,
+	casesPath: string,
+	packageNames: readonly string[],
+) {
+	await fs.rm(casesPath, { force: true, recursive: true });
+	await prepareConsumer(rootPath, path.resolve(casesPath), packageNames);
 
-for (const files of testCaseEntries[0].values) {
-	for (const rules of testCaseEntries[1].values) {
-		// flint-disable-next-line performance/loopAwaits
-		await createCase({ files, rules });
+	for (const files of testCaseEntries[0].values) {
+		for (const rules of testCaseEntries[1].values) {
+			// flint-disable-next-line performance/loopAwaits
+			await createCase(casesPath, { files, rules });
+		}
 	}
 }
+
+await createCases(
+	path.resolve(import.meta.dirname, "../../.."),
+	testCasesPath,
+	["@flint.fyi/astro", "@flint.fyi/svelte", "@flint.fyi/vue", "flint"],
+);
 
 for (const scenario of nativeScenarios) {
 	const directory = path.join(testCasesPath, `native-${scenario.slug}`);
 	// flint-disable-next-line performance/loopAwaits
 	await writeStructure(directory, createNativeScenarioFiles(scenario));
+}
+
+if (baselineFlintPath) {
+	await createCases(path.resolve(baselineFlintPath), baselineTestCasesPath, [
+		"flint",
+	]);
 }
 
 log("Seeded cases.");

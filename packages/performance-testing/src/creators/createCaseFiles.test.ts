@@ -6,7 +6,7 @@ import type { Structure } from "../writing/writeStructure.ts";
 import { countCaseFiles, createCaseFiles } from "./createCaseFiles.ts";
 
 describe(countCaseFiles, () => {
-	it.for([2, 256, 1024])(
+	it.for([2, 128, 1024, 4096, 8192])(
 		"counts source files matching the requested count when files is %i",
 		(files) => {
 			const actual = countCaseFiles({ files, rules: 1 });

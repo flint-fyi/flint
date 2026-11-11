@@ -86,7 +86,10 @@ function createIndexFile(topLevelWidth: number): string {
 }
 
 function createSourceFiles(testCase: TestCase): Structure {
-	const topLevelWidth = Math.max(1, Math.floor(Math.log(testCase.files) * 1.7));
+	// Each example directory holds as many files as every directory before it
+	// combined, so the file count doubles with each one.
+	const topLevelWidth =
+		testCase.files <= 2 ? 1 : Math.round(Math.log2(testCase.files)) + 1;
 	const createModule = createModuleCycle();
 
 	return {
