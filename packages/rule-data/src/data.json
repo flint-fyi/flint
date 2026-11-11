@@ -1070,7 +1070,7 @@
 	},
 	{
 		"flint": {
-			"name": "nodeDatasetAttributes",
+			"name": "nodeDatasetAccesses",
 			"plugin": "browser",
 			"preset": "logicalStrict",
 			"status": "implemented"
