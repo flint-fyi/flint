@@ -10100,21 +10100,6 @@
 	},
 	{
 		"flint": {
-			"name": "fileReadJSONBuffers",
-			"plugin": "node",
-			"preset": "stylisticStrict",
-			"status": "implemented"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/consistent-json-file-read",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-json-file-read.md"
-			}
-		],
-		"notes": "Equivalent to unicorn/consistent-json-file-read with the buffer option."
-	},
-	{
-		"flint": {
 			"name": "globalBuffer",
 			"plugin": "node",
 			"status": "skipped"
@@ -10282,6 +10267,21 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/extensions.html"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "jsonFileReads",
+			"plugin": "node",
+			"preset": "stylisticStrict",
+			"status": "implemented"
+		},
+		"eslint": [
+			{
+				"name": "unicorn/consistent-json-file-read",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/consistent-json-file-read.md"
+			}
+		],
+		"notes": "Equivalent to unicorn/consistent-json-file-read with the buffer option."
 	},
 	{
 		"flint": {

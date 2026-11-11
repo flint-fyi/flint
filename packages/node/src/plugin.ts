@@ -8,7 +8,7 @@ import consoleSpaces from "./rules/consoleSpaces.ts";
 import eventClasses from "./rules/eventClasses.ts";
 import exportsAssignments from "./rules/exportsAssignments.ts";
 import filePathsFromImportMeta from "./rules/filePathsFromImportMeta.ts";
-import fileReadJSONBuffers from "./rules/fileReadJSONBuffers.ts";
+import jsonFileReads from "./rules/jsonFileReads.ts";
 import nodeProtocols from "./rules/nodeProtocols.ts";
 import processExits from "./rules/processExits.ts";
 
@@ -23,7 +23,7 @@ export const node = createPlugin({
 		eventClasses,
 		exportsAssignments,
 		filePathsFromImportMeta,
-		fileReadJSONBuffers,
+		jsonFileReads,
 		nodeProtocols,
 		processExits,
 	],
