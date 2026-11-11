@@ -29,7 +29,7 @@ catalogs:
     console-table-without-index: 0.1.1
     debug-for-file: 0.5.0
     eslint: 10.14.0
-    eslint-plugin-jsdoc: 65.4.4
+    eslint-plugin-jsdoc: 65.4.5
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-n: 18.5.0
     eslint-plugin-package-json: 1.14.0
@@ -39,7 +39,7 @@ catalogs:
     eslint-plugin-yml: 3.10.0
     execa: 10.2.1
     jiti: 2.7.0
-    knip: 6.44.1
+    knip: 6.44.2
     nano-staged: 1.0.2
     pkg-pr-new: 0.0.93
     prettier: 3.9.10
@@ -59,7 +59,7 @@ catalogs:
     yaml-unist-parser: 3.2.1
 
   comparisons:
-    "@biomejs/biome": 2.6.5
+    "@biomejs/biome": 2.6.6
     "@eslint-community/eslint-plugin-eslint-comments": 4.8.1
     "@eslint/json": 2.1.1
     "@eslint/markdown": 8.0.3
@@ -73,7 +73,7 @@ catalogs:
     eslint-plugin-astro: 3.2.1
     eslint-plugin-eslint-plugin: 7.6.2
     eslint-plugin-import: 2.32.0
-    eslint-plugin-jsdoc: 65.4.4
+    eslint-plugin-jsdoc: 65.4.5
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.5.0
@@ -83,15 +83,15 @@ catalogs:
     eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: 7.1.1
     eslint-plugin-regexp: 3.3.3
-    eslint-plugin-solid: 0.18.1
-    eslint-plugin-svelte: 3.24.0
+    eslint-plugin-solid: 0.19.0
+    eslint-plugin-svelte: 3.24.1
     eslint-plugin-unicorn: 79.0.0
     eslint-plugin-vue: 10.12.0
     eslint-plugin-yml: 3.10.0
-    markdownlint: 0.42.0
-    oxlint: 1.91.0
+    markdownlint: 0.42.1
+    oxlint: 1.92.0
     typescript-eslint: 8.72.1
-    vue-eslint-parser: 10.4.1
+    vue-eslint-parser: 10.4.2
 
   prod:
     "@altano/repository-tools": ^2.1.1
@@ -107,8 +107,8 @@ catalogs:
     "@types/mdast": ^4.0.4
     "@types/unist": ^3.0.3
     "@typescript-eslint/project-service": ^8.53.0
-    "@volar/language-core": 2.4.30
-    "@volar/typescript": 2.4.30
+    "@volar/language-core": 2.4.31
+    "@volar/typescript": 2.4.31
     "@vue/compiler-dom": ^3.5.0
     "@vue/language-core": 3.3.14
     cached-factory: ^0.3.0
@@ -151,7 +151,7 @@ catalogs:
     "@astrojs/check": 0.9.12
     "@astrojs/markdown-remark": 7.3.6
     "@astrojs/react": 7.1.4
-    "@astrojs/starlight": 0.42.9
+    "@astrojs/starlight": 0.42.10
     "@expressive-code/core": 0.44.3
     "@konami-emoji-blast/astro": 0.3.0
     "@types/react": 19.3.0
