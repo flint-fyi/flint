@@ -1,11 +1,13 @@
-import { SyntaxKind, type NodeArray } from "typescript-native/unstable/ast";
-
 import {
 	getStaticStringValue,
 	isGlobalDeclarationOfName,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type NodeArray,
+} from "@flint.fyi/typescript-language/native/ast";
 
 export interface RegExpConstruction {
 	args: NodeArray<AST.Expression>;

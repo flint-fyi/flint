@@ -1,5 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
+import { SyntaxKind } from "../native/ast.ts";
 import type * as AST from "../types/ast.ts";
 
 export function unwrapParenthesizedNode(node: AST.AnyNode): AST.AnyNode {

@@ -1,9 +1,10 @@
 import { stripVTControlCharacters } from "node:util";
 
-import type { Diagnostic } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+import { toRootedFilePath } from "./native/path.ts";
+import type { Diagnostic } from "./native/sync.ts";
 
 describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 	it("indents nested message-chain entries by two spaces per depth", () => {
@@ -49,7 +50,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 			code: 1234,
 			end: 44,
 			endPosition: { character: 7, line: 5 },
-			fileName: "/root/source.ts",
+			fileName: toRootedFilePath("/root/source.ts", undefined),
 			messageChain: [
 				{
 					category: 1,
@@ -69,7 +70,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 					code: 1235,
 					end: 5,
 					endPosition: { character: 5, line: 0 },
-					fileName: "/root/related.ts",
+					fileName: toRootedFilePath("/root/related.ts", undefined),
 					pos: 0,
 					sourceLines: [{ line: 0, text: "value   " }],
 					startPosition: { character: 0, line: 0 },
@@ -121,7 +122,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 				category: 1,
 				code: 1006,
 				end: 5,
-				fileName: "/root/Component.astro",
+				fileName: toRootedFilePath("/root/Component.astro", undefined),
 				pos: 0,
 				source: "astro",
 				startPosition: { character: 0, line: 0 },
@@ -142,7 +143,7 @@ describe("convertTypeScriptDiagnosticToLanguageReport", () => {
 				category: 1,
 				code: 1234,
 				end: 5,
-				fileName: "/root/src/a.ts",
+				fileName: toRootedFilePath("/root/src/a.ts", undefined),
 				pos: 4,
 				startPosition: { character: 4, line: 0 },
 				text: "TypeScript diagnostic",

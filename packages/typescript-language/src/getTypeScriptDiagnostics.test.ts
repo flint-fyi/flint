@@ -1,14 +1,11 @@
-import { serverFS } from "typescript-native/unstable/fs";
-import {
-	API,
-	type Diagnostic,
-	type Program,
-} from "typescript-native/unstable/sync";
 import { describe, expect, it, vi } from "vitest";
 
 import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
+import { serverFS } from "./native/fs.ts";
+import { toRootedFilePath } from "./native/path.ts";
+import { API, type Diagnostic, type Program } from "./native/sync.ts";
 
-const fileName = "/repo/index.ts";
+const fileName = toRootedFilePath("/repo/index.ts", undefined);
 const sourceText = `
 export const syntax = ;
 let duplicate;

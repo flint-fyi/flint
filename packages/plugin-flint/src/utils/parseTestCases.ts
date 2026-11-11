@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	isStaticString,
 	isStringRawNoSubstitution,
@@ -7,6 +5,7 @@ import {
 	type StaticString,
 	type StringRawNoSubstitution,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { findProperty } from "./findProperty.ts";
 import { tsAstToLiteral } from "./tsAstToLiteral.ts";

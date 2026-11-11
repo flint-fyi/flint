@@ -1,8 +1,10 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import { TypeFlags, type Type } from "typescript-native/unstable/sync";
-
 import { astroLanguage } from "@flint.fyi/astro-language";
 import { getTSNodeRange, type Checker } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	TypeFlags,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

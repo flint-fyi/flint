@@ -1,6 +1,6 @@
-import { LanguageVariant, SyntaxKind } from "typescript-native/unstable/ast";
 import { describe, expect, it } from "vitest";
 
+import { LanguageVariant, SyntaxKind } from "../native/ast.ts";
 import { createScanner } from "./createScanner.ts";
 
 function scanAll(text: string, languageVariant = LanguageVariant.Standard) {

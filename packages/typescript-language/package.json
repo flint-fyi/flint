@@ -17,6 +17,11 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
+		"./native/ast": "./src/native/ast.ts",
+		"./native/fs": "./src/native/fs.ts",
+		"./native/path": "./src/native/path.ts",
+		"./native/scanner": "./src/native/scanner.ts",
+		"./native/sync": "./src/native/sync.ts",
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -48,6 +53,11 @@
 		"access": "public",
 		"exports": {
 			".": "./dist/index.mjs",
+			"./native/ast": "./dist/native/ast.mjs",
+			"./native/fs": "./dist/native/fs.mjs",
+			"./native/path": "./dist/native/path.mjs",
+			"./native/scanner": "./dist/native/scanner.mjs",
+			"./native/sync": "./dist/native/sync.mjs",
 			"./package.json": "./package.json"
 		}
 	}

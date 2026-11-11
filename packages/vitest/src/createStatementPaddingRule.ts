@@ -1,16 +1,15 @@
-import {
-	getLeadingCommentRanges,
-	getTokenAtPosition,
-	getTrailingCommentRanges,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
-
 import type { PluginRuleAbout, Rule } from "@flint.fyi/core";
 import {
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	getLeadingCommentRanges,
+	getTokenAtPosition,
+	getTrailingCommentRanges,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import {
 	ruleCreator,

@@ -1,12 +1,14 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import type { Type, TypeReference } from "typescript-native/unstable/sync";
-
 import {
 	getTypeProperty,
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type {
+	Type,
+	TypeReference,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";

@@ -1,8 +1,6 @@
-import {
-	isExpression,
-	SyntaxKind,
-	type Node,
-} from "typescript-native/unstable/ast";
+import { debugForFile } from "debug-for-file";
+
+import { isExpression, SyntaxKind, type Node } from "./native/ast.ts";
 import {
 	ObjectFlags,
 	SymbolFlags,
@@ -16,11 +14,12 @@ import {
 	type Symbol,
 	type Type,
 	type TypeReference,
-} from "typescript-native/unstable/sync";
-
+} from "./native/sync.ts";
 import type * as AST from "./types/ast.ts";
 import { forEachChild } from "./utils/forEachChild.ts";
 import { getTypeProperty } from "./utils/getTypeProperty.ts";
+
+const log = debugForFile(import.meta.filename);
 
 /**
  * Single-node `getTypeAtLocation` misses in one file before the rest of the
@@ -231,7 +230,8 @@ export function createCachedChecker(
 		}
 		try {
 			return batch(generators);
-		} catch {
+		} catch (error) {
+			log("Batched checker request failed; asking individually: %o", error);
 			return undefined;
 		}
 	};

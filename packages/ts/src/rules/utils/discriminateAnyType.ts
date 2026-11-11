@@ -1,11 +1,10 @@
-import type { Node } from "typescript-native/unstable/ast";
+import { getTypeProperty, type Checker } from "@flint.fyi/typescript-language";
+import type { Node } from "@flint.fyi/typescript-language/native/ast";
 import {
 	TypeFlags,
 	type Type,
 	type TypeReference,
-} from "typescript-native/unstable/sync";
-
-import { getTypeProperty, type Checker } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/native/sync";
 import { nullThrows } from "@flint.fyi/utils";
 
 export const AnyType = {

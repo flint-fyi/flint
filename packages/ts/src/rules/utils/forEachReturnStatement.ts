@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 // Copied from typescript https://github.com/microsoft/TypeScript/blob/42b0e3c4630c129ca39ce0df9fff5f0d1b4dd348/src/compiler/utilities.ts#L1335
 // Warning: This has the same semantics as the forEach family of functions,

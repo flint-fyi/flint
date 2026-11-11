@@ -1,16 +1,15 @@
 import {
-	TypeFlags,
-	type Program,
-	type Type,
-} from "typescript-native/unstable/sync";
-
-import {
 	declarationIncludesGlobal,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	TypeFlags,
+	type Program,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";

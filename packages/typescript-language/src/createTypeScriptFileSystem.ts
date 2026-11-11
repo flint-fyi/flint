@@ -1,14 +1,10 @@
 import path from "node:path";
 
-import {
-	serverFS,
-	type FileSystemCallbacks,
-} from "typescript-native/unstable/fs";
-
 import type { LinterHost } from "@flint.fyi/core";
 import { getPathInsideDirectory } from "@flint.fyi/utils";
 
 import { createVirtualFiles, type VirtualFiles } from "./createVirtualFiles.ts";
+import { serverFS, type FileSystemCallbacks } from "./native/fs.ts";
 
 export interface TypeScriptFileSystemOptions {
 	/**

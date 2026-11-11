@@ -1,10 +1,5 @@
-import type { SpanMap } from "typescript-native/unstable/ast";
-import type {
-	Program,
-	Project,
-	Snapshot,
-} from "typescript-native/unstable/sync";
-
+import type { SpanMap } from "../native/ast.ts";
+import type { Program, Project, Snapshot } from "../native/sync.ts";
 import type * as AST from "./ast.ts";
 import type { Checker } from "./checker.ts";
 

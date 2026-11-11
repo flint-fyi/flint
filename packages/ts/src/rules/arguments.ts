@@ -1,9 +1,11 @@
-import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type Node,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

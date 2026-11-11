@@ -1,6 +1,6 @@
-import { ScriptKind, SyntaxKind } from "typescript-native/unstable/ast";
 import { describe, expect, it } from "vitest";
 
+import { ScriptKind, SyntaxKind } from "../native/ast.ts";
 import { createNativeSourceFile } from "../test/createNativeSourceFile.testUtils.ts";
 import type * as AST from "../types/ast.ts";
 import { forEachChild } from "../utils/forEachChild.ts";

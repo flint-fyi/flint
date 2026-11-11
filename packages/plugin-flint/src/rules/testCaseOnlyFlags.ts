@@ -1,10 +1,9 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { findProperty } from "../utils/findProperty.ts";
 import { getRuleTesterCaseArrays } from "../utils/getRuleTesterCaseArrays.ts";

@@ -1,14 +1,3 @@
-import * as ts from "typescript-native/unstable/ast";
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import {
-	SymbolFlags,
-	TypeFlags,
-	type JSDocTagInfo,
-	type Signature,
-	type Symbol,
-	type Type,
-} from "typescript-native/unstable/sync";
-
 import {
 	getTSNodeRange,
 	getTypeProperty,
@@ -16,6 +5,16 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import * as ts from "@flint.fyi/typescript-language/native/ast";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	SymbolFlags,
+	TypeFlags,
+	type JSDocTagInfo,
+	type Signature,
+	type Symbol,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

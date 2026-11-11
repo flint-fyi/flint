@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import type { Program } from "typescript-native/unstable/sync";
-
 import {
 	isGlobalDeclaration,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 const builtinErrorNames = new Set([
 	"Error",

@@ -1,9 +1,8 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	unwrapParenthesizedNode,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 export type EqualityOperator = "!=" | "!==" | "==" | "===";
 

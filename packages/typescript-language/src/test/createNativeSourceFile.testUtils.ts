@@ -1,6 +1,5 @@
-import { serverFS } from "typescript-native/unstable/fs";
-import { API, JsxEmit } from "typescript-native/unstable/sync";
-
+import { serverFS } from "../native/fs.ts";
+import { API, JsxEmit } from "../native/sync.ts";
 import type * as AST from "../types/ast.ts";
 
 const files = new Map<string, string>();

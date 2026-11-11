@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	typescriptLanguage,
 	type AST,
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

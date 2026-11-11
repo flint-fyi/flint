@@ -1,12 +1,11 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import { SymbolFlags } from "typescript-native/unstable/sync";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { SymbolFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { findProperty } from "../utils/findProperty.ts";
 import { ruleCreator } from "./ruleCreator.ts";

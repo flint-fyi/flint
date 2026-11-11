@@ -444,9 +444,6 @@ catalogs:
     typescript-eslint:
       specifier: 8.70.1
       version: 8.70.1
-    typescript-native:
-      specifier: npm:typescript@7.1.0-dev.20261001.1
-      version: 7.1.0-dev.20261001.1
     vitest:
       specifier: 5.0.1
       version: 5.0.1
@@ -584,14 +581,14 @@ catalogs:
       specifier: npm:@typescript/typescript6@6.0.2
       version: 6.0.2
     typescript-native:
-      specifier: npm:typescript@7.1.0-dev.20261001.1
-      version: 7.1.0-dev.20261001.1
+      specifier: npm:typescript@7.1.0-beta
+      version: 7.1.0-beta
     unist-util-visit:
       specifier: ^5.0.0
       version: 5.1.0
     vize:
-      specifier: 0.387.0
-      version: 0.387.0
+      specifier: 0.458.0
+      version: 0.458.0
     wrap-ansi:
       specifier: ^10.0.0
       version: 10.0.1
@@ -849,9 +846,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
     devDependencies:
       '@astrojs/compiler':
         specifier: catalog:dev
@@ -864,7 +858,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -911,9 +905,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -923,7 +914,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -1214,9 +1205,6 @@ importers:
       language-tags:
         specifier: catalog:prod
         version: 2.1.0
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1229,7 +1217,7 @@ importers:
         version: 1.0.4
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -1326,9 +1314,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1338,7 +1323,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -1413,9 +1398,6 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1425,7 +1407,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -1481,9 +1463,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1963,9 +1942,6 @@ importers:
       scslre:
         specifier: catalog:prod
         version: 0.3.0
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
       zod:
         specifier: catalog:prod
         version: 4.6.4
@@ -1978,7 +1954,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -2002,7 +1978,7 @@ importers:
         version: 2.0.3
       typescript-native:
         specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
+        version: typescript@7.1.0-beta
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -2012,7 +1988,7 @@ importers:
         version: 3.8.1
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-beta)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -2044,9 +2020,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
       zod:
         specifier: catalog:prod
         version: 4.6.4
@@ -2059,7 +2032,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -2081,9 +2054,6 @@ importers:
       '@vue/compiler-dom':
         specifier: catalog:prod
         version: 3.5.42
-      typescript-native:
-        specifier: catalog:prod
-        version: typescript@7.1.0-dev.20261001.1
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -2096,13 +2066,13 @@ importers:
         version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
       vue:
         specifier: catalog:dev
-        version: 3.5.43(typescript@7.1.0-dev.20261001.1)
+        version: 3.5.43(@typescript/typescript6@6.0.2)
 
   packages/vue-language:
     dependencies:
@@ -2120,17 +2090,14 @@ importers:
         version: 3.5.42
       vize:
         specifier: catalog:prod
-        version: 0.387.0(vue@3.5.43)
+        version: 0.458.0(vue@3.5.43)
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1)
-      typescript-native:
-        specifier: catalog:dev
-        version: typescript@7.1.0-dev.20261001.1
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.0.1(@types/node@26.6.2)(@vitest/coverage-v8@5.0.1)(vite@8.3.0)
@@ -4408,14 +4375,26 @@ packages:
     resolution: {integrity: sha512-Vwj9lUIW5Xq3wQ9w6gv3R86g1hMK8f2zNOdGTAgeXUMMXFK78G9ruCjjqutHMNJc0+CH7LYRnHeUB9IT8wFmcw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@typescript/typescript-aix-ppc64@7.1.0-beta':
+    resolution: {integrity: sha512-DXDG+jIWxBHGdoO70tcHON33rCnSzsEZj9P13oyf/r/KEGIo6awsdSNVNjAw0uMwEpqRu75IrgCcW58YcVkZHg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [ppc64]
+    os: [aix]
+
+  '@typescript/typescript-android-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-UZx6PxoQavuvaVTrSf3aw0Oy/J/uJpRylipA0kzc038jMvZXh0UtE8vnQp20FqtdgD5bhXZ0aJrRJyoTSUO58Q==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [android]
+
   '@typescript/typescript-darwin-arm64@7.0.2':
     resolution: {integrity: sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [darwin]
 
-  '@typescript/typescript-darwin-arm64@7.1.0-dev.20261001.1':
-    resolution: {integrity: sha512-LKHKuZcqmrl2bVgAufg3nbajpzoqi8cZzTs4gFi2G9P818TzbVE0WqdttpeeS2kVtLRIgEzSAtz4cIYJVf2Tpw==}
+  '@typescript/typescript-darwin-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-q7mxblcyX0E7hXsY4k+Q6KWKK5mGmfVq+BDesdTgRVgjodk27aIxER77Zyj9+TgSTlCje8F7+JM6f6hl2BuNdw==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [darwin]
@@ -4426,11 +4405,23 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@typescript/typescript-darwin-x64@7.1.0-dev.20261001.1':
-    resolution: {integrity: sha512-V5mCrDb+rwsd/FaL/9LVa7xi+SrfGdFMXTkKVSAPf7X/6W9IaVhgbI3ls2DJmwAJz+aj61mzWGrbCpscNyQ9lw==}
+  '@typescript/typescript-darwin-x64@7.1.0-beta':
+    resolution: {integrity: sha512-D5EYqG5Wm/guw9+0j8+Mn1Jbr/gfS/VtFTuoH8PJtFbcqeDaQGMulc7SW8q51QG6Y3wGOGX3nbsTOw6fIKWWAA==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [darwin]
+
+  '@typescript/typescript-freebsd-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-9A0XX0tcnH9qPdolSKKzSjTb93dlB0UEcAJbHYEsrFX2fkFNSum9+dvkQQJ9vLc+7vxHetDPujq9Qe6wx+Xhow==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [freebsd]
+
+  '@typescript/typescript-freebsd-x64@7.1.0-beta':
+    resolution: {integrity: sha512-EDf/dBHfY0TxX3NmUTek0hbffeyZlh3+ls6WQW3ICB8vYxwYLFnzg7wkgEUvl9eRlpiJ/nmc2S8arPMzINJ7rg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [freebsd]
 
   '@typescript/typescript-linux-arm64@7.0.2':
     resolution: {integrity: sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==}
@@ -4438,16 +4429,46 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@typescript/typescript-linux-arm64@7.1.0-dev.20261001.1':
-    resolution: {integrity: sha512-mLp3CyqlvUIAaEBukoO3g2XDKrrp3nhSPhuiBJY0jgL3sNXBnDftT3HKpxwo9Vcob8Nm81STwpZqlaVu2Ac3JA==}
+  '@typescript/typescript-linux-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-hNqQBgQ5b5oGqN76QqbAU6CwYhJZ6iOcWc2kPTUs2OentgpxZktETziH6KIyRFJPaiBncognwn2ZLu3DNhHiWw==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [linux]
 
-  '@typescript/typescript-linux-arm@7.1.0-dev.20261001.1':
-    resolution: {integrity: sha512-E6IrllW2irit2sfxf3uF9tnr7TEM/qTdCW4t8f6G2P1AkG8JrqmUzEFENBsjawQDK7qsI0r9qrDEH0HbQ3kXyw==}
+  '@typescript/typescript-linux-arm@7.1.0-beta':
+    resolution: {integrity: sha512-AvN9HmzOQh46G4312ooSgMHhbB7DtnLwg8D9mo324X49B7weMwtJrBG1MxT9IyI8kzDd7YRtW+1hWGun7WG7Qw==}
     engines: {node: '>=16.20.0'}
     cpu: [arm]
+    os: [linux]
+
+  '@typescript/typescript-linux-loong64@7.1.0-beta':
+    resolution: {integrity: sha512-xbUustlBrFflt2pNEyG5ye+d4WGPc/rfr2xK29MXeobPSw297JqwuKRrvbKM5o3fE/eUM/c+urVm6jQ3IaMVTw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [loong64]
+    os: [linux]
+
+  '@typescript/typescript-linux-mips64el@7.1.0-beta':
+    resolution: {integrity: sha512-fS4/G7/0bXZ3NSq3nBMAXyg65I3tO4S7j08VNQ2g1aNC/qq79gE7Qne1BNjVsjMFfHBVBFjQYoTQCjmVU2iFlg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [mips64el]
+    os: [linux]
+
+  '@typescript/typescript-linux-ppc64@7.1.0-beta':
+    resolution: {integrity: sha512-0upCCxYPX8X6gOwkvfv+Ee7/ufyy7k97mTrGE0e5BxLlnUEa+w+rtgnv2dsKcxFdwdeZYVlZKCqgN/xCBV08+A==}
+    engines: {node: '>=16.20.0'}
+    cpu: [ppc64]
+    os: [linux]
+
+  '@typescript/typescript-linux-riscv64@7.1.0-beta':
+    resolution: {integrity: sha512-0jKU9YRgOPRgiy5V/UWv37kB53PaTpIbwGCbbOMUPPAkrjVRNOIAJaz7Wa7s3H7mdDebX1LopUEPEJR+7Xa7zg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [riscv64]
+    os: [linux]
+
+  '@typescript/typescript-linux-s390x@7.1.0-beta':
+    resolution: {integrity: sha512-j+d04s2kxaPQh6DLPb01sknAQfzsrdSZy15jBRHyLEZoaaQ19dVjbFRlkNVvYwUG7ZdP8+y5b/7RmPxdtHUKdQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [s390x]
     os: [linux]
 
   '@typescript/typescript-linux-x64@7.0.2':
@@ -4456,11 +4477,41 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@typescript/typescript-linux-x64@7.1.0-dev.20261001.1':
-    resolution: {integrity: sha512-eeQeMpclyWrop39qgNdYH8kv3bemwWCgcDTxdPro8BlVmdcbGTj0ZZ2gn4k7+2VsdUNgLaV/RBF6D8hbZlC3fQ==}
+  '@typescript/typescript-linux-x64@7.1.0-beta':
+    resolution: {integrity: sha512-kcD51ihf+pnI5KT4uQQYG04OpwznaZYBlIQhDhl8fflFd27NktxXsUeguxZyvUMyWfum7IF2bBS6Jv7ox0AgFQ==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [linux]
+
+  '@typescript/typescript-netbsd-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-8W85YyoGK+rgGoSU9jJQUpELbrKcZcbdJk2jPNQ6UKDKI7ryPlPFTrV2jCE5RQuv4Tt96hMDTc33s4YfRrLFBA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [netbsd]
+
+  '@typescript/typescript-netbsd-x64@7.1.0-beta':
+    resolution: {integrity: sha512-iGsTE0ve2PG0AcyZinwAR0LnGEZhu/y4dceS0hZsYCaKdYETvQtvtlNWlmYKempsBr6C7Il7dMXHVk+VFm9u0g==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [netbsd]
+
+  '@typescript/typescript-openbsd-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-Z2FERdHB9fAKI+KGqdWn04O7uNlnB+VYiEm6INE1aZuzzLNd3KBqQ6IpKUJF2ny4GigGU6nVu75XD9tAUODPng==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [openbsd]
+
+  '@typescript/typescript-openbsd-x64@7.1.0-beta':
+    resolution: {integrity: sha512-NVG3qeyCq/rJEOhaRjR3LsWgjrjo5vJW25omVLeHAVnpKIG4pE4cenwwKGR06DiJ1s0QTOymcJeKXMEpsiNBVg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [openbsd]
+
+  '@typescript/typescript-sunos-x64@7.1.0-beta':
+    resolution: {integrity: sha512-ovAdoWXEn2B5/fyWG69pLU3FWmQwPWOjQV5TFbcxtpnOv+R3g8ySGHl1NYRq7Lb/GYdFDvaGcZ+SiU7iKuiMsA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [sunos]
 
   '@typescript/typescript-win32-arm64@7.0.2':
     resolution: {integrity: sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==}
@@ -4468,8 +4519,8 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@typescript/typescript-win32-arm64@7.1.0-dev.20261001.1':
-    resolution: {integrity: sha512-IDYs+tMs2meMaDmxF9jrU83dAlKtAWdY7VZi28iyF56wIG9mVhkk3vSqz5kpv0H8ZdiS3RbM9zsVNomkeZLqdA==}
+  '@typescript/typescript-win32-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-lJbo71IEOfL7ZZIZnArRaOLqjn9BAfoSzyUQn0aSjfSpDZL4ru0afUsdBfo6PQEjD6ssdmi0n/RwaPADX6bsvQ==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [win32]
@@ -4480,8 +4531,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@typescript/typescript-win32-x64@7.1.0-dev.20261001.1':
-    resolution: {integrity: sha512-bBsPJS1vjRXp/2w/Ls7egCEkGHYRd2YBoowpPUb1FKZNhyyHh8UKe/WU9GeC8iOE/kjehZoW/ik/T3AFk3aqMg==}
+  '@typescript/typescript-win32-x64@7.1.0-beta':
+    resolution: {integrity: sha512-UKcHvbybY2tDTvFW2b1vwiAvDlIRooo69lh8CXWVhOQejcvpM5+IgbiFW9EIwR5Wi5X/v+BdN7gdWbigBuJ3rw==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [win32]
@@ -4556,60 +4607,60 @@ packages:
   '@vitest/spy@5.0.1':
     resolution: {integrity: sha512-rbto/mF/SGERxEgYOek7Xm6B9b+y+mVoo+f4b2LymYO8zM1b7uB5nHuhVMTP2hxdzgxvGiZYGxGIaMvL5y180Q==}
 
-  '@vizejs/native-darwin-arm64@0.387.0':
-    resolution: {integrity: sha512-QybE7/KV4SFzfEGOljd3xEWBZxXqjdnuvlIXGtd0Ub0Mbvly3v1PmlGB/1YoHcIYAvr7nuXntKJRtv8xXvWzMQ==}
+  '@vizejs/native-darwin-arm64@0.458.0':
+    resolution: {integrity: sha512-CNpdMyN5F8fMwTVvL03CuWR9GM0TD7Y3dDxh5mSgBIQdoS8Kd9bKbQBV8r06XOOqCHYgBrw28lqhhsnsyJSdrQ==}
     engines: {node: '>=22'}
     cpu: [arm64]
     os: [darwin]
 
-  '@vizejs/native-darwin-x64@0.387.0':
-    resolution: {integrity: sha512-hv/3OOChPu/WaXAebtBIZXnOtp82Vr3AdjT8PWS5W1NVG1BKmZlL/iSG98I83/clbE+2TTGegBoYautprWNP5Q==}
+  '@vizejs/native-darwin-x64@0.458.0':
+    resolution: {integrity: sha512-hQ61Z0wT4Jmnj7S93JS9zALZ/sNzLVYeaj1nF+VR8hGbcaDVvATchPINVWwc22W696Cn3iC9rFkBryhTo8BRhA==}
     engines: {node: '>=22'}
     cpu: [x64]
     os: [darwin]
 
-  '@vizejs/native-linux-arm64-gnu@0.387.0':
-    resolution: {integrity: sha512-EyB4pPtrcTLH8XgHMcnllKd9gfUVD6THUJ7uDZZb80jOQZoEn2zrG5slXwgJR4HiEZMMPnWOCnD4FRoBH5oV2Q==}
+  '@vizejs/native-linux-arm64-gnu@0.458.0':
+    resolution: {integrity: sha512-e0QQxHOwZe0MWDIlzpL/sgVK1woriq0c0oL/YWlQcrrdmk/mP2dfin1sztI+R0uHAGa2K24Hv3D7uEgpgC2cTg==}
     engines: {node: '>=22'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@vizejs/native-linux-arm64-musl@0.387.0':
-    resolution: {integrity: sha512-fexJnSpLNYHpBb8k2adCvQQ8VUm3hKoPI5/acGyDbnK2Ccg/qCxUW5pH6v0cRIW5jCiB7AjN7PkKNWqiZoBLpQ==}
+  '@vizejs/native-linux-arm64-musl@0.458.0':
+    resolution: {integrity: sha512-NEc6vzZVui5UtISfuRSL7WEMm/pR7GQ0lIWO+lXS3zgrNoptSoK3rcqSYAfLa/ftVXGCydXg7W8KnXs0nv06yQ==}
     engines: {node: '>=22'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@vizejs/native-linux-x64-gnu@0.387.0':
-    resolution: {integrity: sha512-AVeVvAG/2f1NZ/3fbKNjXWkyi3uwn80fPYgI1r0iSjc7JABjOb1uC4vhTuQG3pqUltXlUmxeTx6gcrX5Zm1u/w==}
+  '@vizejs/native-linux-x64-gnu@0.458.0':
+    resolution: {integrity: sha512-e7w6Rg48s5L+3o5kF00CCo+caIyjNMHE45kdlKODLd+3mguj41ZsoL1BxBoi36tmezhsjh0Cr5cr70CPcl5n/Q==}
     engines: {node: '>=22'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@vizejs/native-linux-x64-musl@0.387.0':
-    resolution: {integrity: sha512-N1Ui3iwxWxLZarzmXt6jah4LpBU210eqEbj3ujxfni4gq4yINC7aCJAJ7mWp/09FbbmGdbzC1AXJ++eUMBQo+g==}
+  '@vizejs/native-linux-x64-musl@0.458.0':
+    resolution: {integrity: sha512-1HBAESI8+vZ0M/owSzHLNwLv8ZZnAfYBxvEvgY4VC5XD5dAspkZmA+JbPt5dORkDIyGuP6k95snNc5wkw5I8sA==}
     engines: {node: '>=22'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@vizejs/native-win32-arm64-msvc@0.387.0':
-    resolution: {integrity: sha512-mmpskDhyDVJVhA1EduIJErUHr50vhjavaiBZjy+Xvcxf7084xy2pS2OqLEs7Ze8dPsYfXk69knhDYoM9kEytnQ==}
+  '@vizejs/native-win32-arm64-msvc@0.458.0':
+    resolution: {integrity: sha512-rrbi6ST4FLVIrYmhJsy6CUs6IfU12k5FMRMy3TNY+G9r4BJ6iJExy7tESIZIflVetktrPpKfqLWwjl1RNmsvHw==}
     engines: {node: '>=22'}
     cpu: [arm64]
     os: [win32]
 
-  '@vizejs/native-win32-x64-msvc@0.387.0':
-    resolution: {integrity: sha512-U7R1YG/N/XSbX6tPREbpWdjotU7luJ4G+McOQKQJhz4O4JHsBCRzSU0p/ZP5pOkWnZfUgDDKBh96TIxs45L5QA==}
+  '@vizejs/native-win32-x64-msvc@0.458.0':
+    resolution: {integrity: sha512-OHDXtsmDfEMy+NK0BN6q3ubfYi9UwjXtRwT6omaK2OOWTv5t01VadKd5W4WDlv/yEMIR7KcyYW0DihkbysSzZg==}
     engines: {node: '>=22'}
     cpu: [x64]
     os: [win32]
 
-  '@vizejs/native@0.387.0':
-    resolution: {integrity: sha512-ezmnV5FLWHkYv3WcKQUexu1PI5yEPXLFzODrSA/W+VLZExKqb3VofKYh+zhAPMvusrrCNYxSkCsEb1d2SjYi1Q==}
+  '@vizejs/native@0.458.0':
+    resolution: {integrity: sha512-3HeLunEXdf7n+2dE6B2G9PHD6VH7cBdXzHVrNxkhRUuIkFwVl8RmABzDxlbS+fLLReFZi+QxKzi7NbOzwfd7+w==}
     engines: {node: '>=22'}
 
   '@volar/kit@2.4.28':
@@ -8061,8 +8112,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@7.1.0-dev.20261001.1:
-    resolution: {integrity: sha512-dxDPNCeLRo5mAIqgbE0tg7dLVIqOGatg54SzZnGFT6DjQwlqfyeg+QlLDTBIevbD2Zp2TFghekNpfMkBp6xdpA==}
+  typescript@7.1.0-beta:
+    resolution: {integrity: sha512-cjWjZAJDsmZzsNC5GwHNlW0YPM65jZa5oR0KyQcYX3KSVIfTvtBq//vewISyatKk4OLi5grZjHhIVE9fdrw1UQ==}
     engines: {node: '>=16.20.0'}
     hasBin: true
 
@@ -8345,13 +8396,13 @@ packages:
       jsdom:
         optional: true
 
-  vize@0.387.0:
-    resolution: {integrity: sha512-Oa9/EF3ItXh2odXcOQeMJUGq/hj1XOGRcJmI5iR3BC0JxvbLWu2LRCChzLv1Wsm+l9sAgfpideG89BHg0E0zJQ==}
+  vize@0.458.0:
+    resolution: {integrity: sha512-VbWdAvoEvWvIdAVjNvWo+4UacYQgPM20Pp4xuNUsghfnZxBi8LThIwAJffuufsiXv3nTIiscQm4TgFezT4OHQQ==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
       '@pkl-community/pkl': 0.30.2
-      vue: '>=2.6.0'
+      vue: '>=2.6.0 || >=3.6.0-0'
     peerDependenciesMeta:
       '@pkl-community/pkl':
         optional: true
@@ -10738,43 +10789,85 @@ snapshots:
       '@typescript-eslint/types': 8.70.1
       eslint-visitor-keys: 5.0.1
 
+  '@typescript/typescript-aix-ppc64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-android-arm64@7.1.0-beta':
+    optional: true
+
   '@typescript/typescript-darwin-arm64@7.0.2':
     optional: true
 
-  '@typescript/typescript-darwin-arm64@7.1.0-dev.20261001.1':
+  '@typescript/typescript-darwin-arm64@7.1.0-beta':
     optional: true
 
   '@typescript/typescript-darwin-x64@7.0.2':
     optional: true
 
-  '@typescript/typescript-darwin-x64@7.1.0-dev.20261001.1':
+  '@typescript/typescript-darwin-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-freebsd-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-freebsd-x64@7.1.0-beta':
     optional: true
 
   '@typescript/typescript-linux-arm64@7.0.2':
     optional: true
 
-  '@typescript/typescript-linux-arm64@7.1.0-dev.20261001.1':
+  '@typescript/typescript-linux-arm64@7.1.0-beta':
     optional: true
 
-  '@typescript/typescript-linux-arm@7.1.0-dev.20261001.1':
+  '@typescript/typescript-linux-arm@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-loong64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-mips64el@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-ppc64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-riscv64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-s390x@7.1.0-beta':
     optional: true
 
   '@typescript/typescript-linux-x64@7.0.2':
     optional: true
 
-  '@typescript/typescript-linux-x64@7.1.0-dev.20261001.1':
+  '@typescript/typescript-linux-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-netbsd-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-netbsd-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-openbsd-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-openbsd-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-sunos-x64@7.1.0-beta':
     optional: true
 
   '@typescript/typescript-win32-arm64@7.0.2':
     optional: true
 
-  '@typescript/typescript-win32-arm64@7.1.0-dev.20261001.1':
+  '@typescript/typescript-win32-arm64@7.1.0-beta':
     optional: true
 
   '@typescript/typescript-win32-x64@7.0.2':
     optional: true
 
-  '@typescript/typescript-win32-x64@7.1.0-dev.20261001.1':
+  '@typescript/typescript-win32-x64@7.1.0-beta':
     optional: true
 
   '@typescript/typescript6@6.0.2':
@@ -10829,40 +10922,40 @@ snapshots:
 
   '@vitest/spy@5.0.1': {}
 
-  '@vizejs/native-darwin-arm64@0.387.0':
+  '@vizejs/native-darwin-arm64@0.458.0':
     optional: true
 
-  '@vizejs/native-darwin-x64@0.387.0':
+  '@vizejs/native-darwin-x64@0.458.0':
     optional: true
 
-  '@vizejs/native-linux-arm64-gnu@0.387.0':
+  '@vizejs/native-linux-arm64-gnu@0.458.0':
     optional: true
 
-  '@vizejs/native-linux-arm64-musl@0.387.0':
+  '@vizejs/native-linux-arm64-musl@0.458.0':
     optional: true
 
-  '@vizejs/native-linux-x64-gnu@0.387.0':
+  '@vizejs/native-linux-x64-gnu@0.458.0':
     optional: true
 
-  '@vizejs/native-linux-x64-musl@0.387.0':
+  '@vizejs/native-linux-x64-musl@0.458.0':
     optional: true
 
-  '@vizejs/native-win32-arm64-msvc@0.387.0':
+  '@vizejs/native-win32-arm64-msvc@0.458.0':
     optional: true
 
-  '@vizejs/native-win32-x64-msvc@0.387.0':
+  '@vizejs/native-win32-x64-msvc@0.458.0':
     optional: true
 
-  '@vizejs/native@0.387.0':
+  '@vizejs/native@0.458.0':
     optionalDependencies:
-      '@vizejs/native-darwin-arm64': 0.387.0
-      '@vizejs/native-darwin-x64': 0.387.0
-      '@vizejs/native-linux-arm64-gnu': 0.387.0
-      '@vizejs/native-linux-arm64-musl': 0.387.0
-      '@vizejs/native-linux-x64-gnu': 0.387.0
-      '@vizejs/native-linux-x64-musl': 0.387.0
-      '@vizejs/native-win32-arm64-msvc': 0.387.0
-      '@vizejs/native-win32-x64-msvc': 0.387.0
+      '@vizejs/native-darwin-arm64': 0.458.0
+      '@vizejs/native-darwin-x64': 0.458.0
+      '@vizejs/native-linux-arm64-gnu': 0.458.0
+      '@vizejs/native-linux-arm64-musl': 0.458.0
+      '@vizejs/native-linux-x64-gnu': 0.458.0
+      '@vizejs/native-linux-x64-musl': 0.458.0
+      '@vizejs/native-win32-arm64-msvc': 0.458.0
+      '@vizejs/native-win32-x64-msvc': 0.458.0
 
   '@volar/kit@2.4.28(typescript@6.0.3)':
     dependencies:
@@ -10918,13 +11011,13 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  '@volar/typescript@2.4.28(typescript@7.1.0-dev.20261001.1)':
+  '@volar/typescript@2.4.28(typescript@7.1.0-beta)':
     dependencies:
       '@volar/language-core': 2.4.28
       path-browserify: 1.0.1
       vscode-uri: 3.2.0
     optionalDependencies:
-      typescript: 7.1.0-dev.20261001.1
+      typescript: 7.1.0-beta
     optional: true
 
   '@vscode/emmet-helper@2.11.0':
@@ -14694,7 +14787,7 @@ snapshots:
     transitivePeerDependencies:
       - oxc-resolver
 
-  rolldown-plugin-dts@0.28.5(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(rolldown@1.2.8)(typescript@7.1.0-dev.20261001.1):
+  rolldown-plugin-dts@0.28.5(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(rolldown@1.2.8)(typescript@7.1.0-beta):
     dependencies:
       dts-resolver: 3.0.0(oxc-resolver@11.24.2)
       get-tsconfig: 5.0.0-beta.6
@@ -14704,8 +14797,8 @@ snapshots:
       yuku-codegen: 0.9.5
       yuku-parser: 0.9.5
     optionalDependencies:
-      '@volar/typescript': 2.4.28(typescript@7.1.0-dev.20261001.1)
-      typescript: 7.1.0-dev.20261001.1
+      '@volar/typescript': 2.4.28(typescript@7.1.0-beta)
+      typescript: 7.1.0-beta
     transitivePeerDependencies:
       - oxc-resolver
 
@@ -15311,7 +15404,7 @@ snapshots:
       - oxc-resolver
       - vue-tsc
 
-  tsdown@0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261001.1):
+  tsdown@0.23.0(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@7.1.0-beta):
     dependencies:
       cac: 7.0.0
       defu: 6.1.7
@@ -15321,7 +15414,7 @@ snapshots:
       obug: 2.2.1
       picomatch: 4.0.7
       rolldown: 1.2.8
-      rolldown-plugin-dts: 0.28.5(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(rolldown@1.2.8)(typescript@7.1.0-dev.20261001.1)
+      rolldown-plugin-dts: 0.28.5(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(rolldown@1.2.8)(typescript@7.1.0-beta)
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tree-kill: 1.2.2
@@ -15329,7 +15422,7 @@ snapshots:
       verkit: 0.4.0
     optionalDependencies:
       '@arethetypeswrong/core': 0.18.5
-      typescript: 7.1.0-dev.20261001.1
+      typescript: 7.1.0-beta
     transitivePeerDependencies:
       - '@typescript/native-preview'
       - '@volar/typescript'
@@ -15405,15 +15498,29 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  typescript@7.1.0-dev.20261001.1:
+  typescript@7.1.0-beta:
     optionalDependencies:
-      '@typescript/typescript-darwin-arm64': 7.1.0-dev.20261001.1
-      '@typescript/typescript-darwin-x64': 7.1.0-dev.20261001.1
-      '@typescript/typescript-linux-arm': 7.1.0-dev.20261001.1
-      '@typescript/typescript-linux-arm64': 7.1.0-dev.20261001.1
-      '@typescript/typescript-linux-x64': 7.1.0-dev.20261001.1
-      '@typescript/typescript-win32-arm64': 7.1.0-dev.20261001.1
-      '@typescript/typescript-win32-x64': 7.1.0-dev.20261001.1
+      '@typescript/typescript-aix-ppc64': 7.1.0-beta
+      '@typescript/typescript-android-arm64': 7.1.0-beta
+      '@typescript/typescript-darwin-arm64': 7.1.0-beta
+      '@typescript/typescript-darwin-x64': 7.1.0-beta
+      '@typescript/typescript-freebsd-arm64': 7.1.0-beta
+      '@typescript/typescript-freebsd-x64': 7.1.0-beta
+      '@typescript/typescript-linux-arm': 7.1.0-beta
+      '@typescript/typescript-linux-arm64': 7.1.0-beta
+      '@typescript/typescript-linux-loong64': 7.1.0-beta
+      '@typescript/typescript-linux-mips64el': 7.1.0-beta
+      '@typescript/typescript-linux-ppc64': 7.1.0-beta
+      '@typescript/typescript-linux-riscv64': 7.1.0-beta
+      '@typescript/typescript-linux-s390x': 7.1.0-beta
+      '@typescript/typescript-linux-x64': 7.1.0-beta
+      '@typescript/typescript-netbsd-arm64': 7.1.0-beta
+      '@typescript/typescript-netbsd-x64': 7.1.0-beta
+      '@typescript/typescript-openbsd-arm64': 7.1.0-beta
+      '@typescript/typescript-openbsd-x64': 7.1.0-beta
+      '@typescript/typescript-sunos-x64': 7.1.0-beta
+      '@typescript/typescript-win32-arm64': 7.1.0-beta
+      '@typescript/typescript-win32-x64': 7.1.0-beta
 
   uc.micro@3.0.0: {}
 
@@ -15610,9 +15717,9 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
-  vize@0.387.0(vue@3.5.43):
+  vize@0.458.0(vue@3.5.43):
     dependencies:
-      '@vizejs/native': 0.387.0
+      '@vizejs/native': 0.458.0
       oxc-transform: 0.144.0
     optionalDependencies:
       '@typescript/typescript-darwin-arm64': 7.0.2
@@ -15621,7 +15728,7 @@ snapshots:
       '@typescript/typescript-linux-x64': 7.0.2
       '@typescript/typescript-win32-arm64': 7.0.2
       '@typescript/typescript-win32-x64': 7.0.2
-      vue: 3.5.43(typescript@7.1.0-dev.20261001.1)
+      vue: 3.5.43(@typescript/typescript6@6.0.2)
 
   volar-service-css@0.0.71(@volar/language-service@2.4.28):
     dependencies:
@@ -15743,7 +15850,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vue@3.5.43(typescript@7.1.0-dev.20261001.1):
+  vue@3.5.43(@typescript/typescript6@6.0.2):
     dependencies:
       '@vue/compiler-dom': 3.5.43
       '@vue/compiler-sfc': 3.5.43
@@ -15751,7 +15858,7 @@ snapshots:
       '@vue/server-renderer': 3.5.43
       '@vue/shared': 3.5.43
     optionalDependencies:
-      typescript: 7.1.0-dev.20261001.1
+      typescript: '@typescript/typescript6@6.0.2'
 
   walk-up-path@4.0.0: {}
 

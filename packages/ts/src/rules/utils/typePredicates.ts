@@ -1,10 +1,9 @@
+import type { Checker } from "@flint.fyi/typescript-language";
 import {
 	TypeFlags,
 	type Type,
 	type TypeReference,
-} from "typescript-native/unstable/sync";
-
-import type { Checker } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/native/sync";
 
 export function isIntrinsicErrorType(type: Type): boolean {
 	return type.isIntrinsicType() && type.intrinsicName === "error";

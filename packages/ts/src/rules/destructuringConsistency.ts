@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	getScopeManager,
 	getTSNodeRange,
@@ -7,6 +5,7 @@ import {
 	type AST,
 	type Scope,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

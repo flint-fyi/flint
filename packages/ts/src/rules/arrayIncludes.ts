@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	getStaticNumberValue,
 	getTSNodeRange,
@@ -8,6 +6,7 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";

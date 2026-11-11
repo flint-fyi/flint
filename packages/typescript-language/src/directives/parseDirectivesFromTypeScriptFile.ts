@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	DirectivesCollector,
 	type DirectiveCollection,
@@ -7,6 +5,7 @@ import {
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
+import { SyntaxKind } from "../native/ast.ts";
 import { normalizeRange } from "../normalizeRange.ts";
 import type * as AST from "../types/ast.ts";
 import { collectComments } from "../utils/collectComments.ts";

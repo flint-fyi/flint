@@ -32,7 +32,6 @@
 		"@flint.fyi/utils": "workspace:^",
 		"regexp-ast-analysis": "catalog:prod",
 		"scslre": "catalog:prod",
-		"typescript-native": "catalog:prod",
 		"zod": "catalog:prod"
 	},
 	"devDependencies": {

@@ -1,14 +1,13 @@
 import {
-	isAssignmentOperator,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
-
-import {
 	getTSNodeRange,
 	typescriptLanguage,
 	unwrapParenthesizedNode,
 	unwrapParentParenthesizedExpressions,
 } from "@flint.fyi/typescript-language";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

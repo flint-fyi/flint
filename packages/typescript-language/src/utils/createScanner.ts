@@ -3,7 +3,7 @@ import {
 	SyntaxKind,
 	type LanguageVariant,
 	type Scanner,
-} from "typescript-native/unstable/ast";
+} from "../native/ast.ts";
 
 /**
  * Creates a `typescript-native` scanner whose `scan()` always makes progress.

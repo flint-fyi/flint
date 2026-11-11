@@ -1,6 +1,6 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import type { AST, Checker } from "@flint.fyi/typescript-language";
+
+import { SyntaxKind } from "../native/ast.ts";
 
 export type BuiltInArrayMethodNode = AST.CallExpression & {
 	expression: AST.PropertyAccessExpression & {

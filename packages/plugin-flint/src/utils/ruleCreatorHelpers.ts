@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import type { AST, Checker } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 export function isLanguageCreateRule(
 	node: AST.CallExpression,

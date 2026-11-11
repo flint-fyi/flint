@@ -1,10 +1,10 @@
-import { SpanMap, SpanMapKind } from "typescript-native/unstable/ast";
-import type { Diagnostic } from "typescript-native/unstable/sync";
 import { describe, expect, it, vi } from "vitest";
 
 import { createDiskBackedLinterHost } from "@flint.fyi/core";
 
 import { typescriptLanguage } from "./language.ts";
+import { SpanMap, SpanMapKind, type RootedFilePath } from "./native/ast.ts";
+import type { Diagnostic } from "./native/sync.ts";
 
 const spanMap = new SpanMap([
 	{
@@ -21,7 +21,7 @@ const sourceText = "01234567890123456789";
 
 function getLanguageReports(
 	fileName: string,
-	diagnostics: (fileName: string) => Diagnostic[],
+	diagnostics: (fileName: RootedFilePath) => Diagnostic[],
 	supplementalFileName?: string,
 ) {
 	const supplemental = supplementalFileName

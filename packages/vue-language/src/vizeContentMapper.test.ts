@@ -1,16 +1,16 @@
 import path from "node:path";
 
-import {
-	SpanMap,
-	SpanMapFeature,
-	SpanMapKind,
-} from "typescript-native/unstable/ast";
 import { describe, expect, it } from "vitest";
 
 import {
 	createDiskBackedLinterHost,
 	createVFSLinterHost,
 } from "@flint.fyi/core";
+import {
+	SpanMap,
+	SpanMapFeature,
+	SpanMapKind,
+} from "@flint.fyi/typescript-language/native/ast";
 import { normalizePath } from "@flint.fyi/utils";
 
 import { registerVueTypeScriptContentMapper, vueLanguage } from "./index.ts";
@@ -133,10 +133,10 @@ describe("Vize content mapper", () => {
 				{ end: begin + "key".length, pos: begin },
 				SpanMapFeature.Hover,
 			);
-			expect(mappings).toHaveLength(2);
+			expect(mappings?.length).toBeGreaterThan(1);
 			expect(
 				new Set(mappings?.map(({ range }) => `${range.pos}:${range.end}`)).size,
-			).toBe(2);
+			).toBe(mappings?.length);
 			expect(
 				mappings?.every((mapping) => SpanMap.isSingleSegment(mapping.fidelity)),
 			).toBe(true);

@@ -32,8 +32,7 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"@flint.fyi/utils": "workspace:^",
-		"typescript-native": "catalog:prod"
+		"@flint.fyi/utils": "workspace:^"
 	},
 	"devDependencies": {
 		"@astrojs/compiler": "catalog:dev",

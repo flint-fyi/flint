@@ -36,7 +36,6 @@
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
-		"typescript-native": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {

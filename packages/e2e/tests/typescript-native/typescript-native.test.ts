@@ -82,7 +82,7 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 					"prettier-plugin-svelte": "^3.4.0",
 					svelte: "5.56.10",
 					typescript: "npm:@typescript/typescript6@6.0.2",
-					"typescript-native": "npm:typescript@7.1.0-dev.20261001.1",
+					"typescript-native": "npm:typescript@7.1.0-beta",
 				},
 				private: true,
 				type: "module",

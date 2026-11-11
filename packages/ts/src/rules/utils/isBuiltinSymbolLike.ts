@@ -3,7 +3,7 @@ import {
 	type Program,
 	type Symbol,
 	type Type,
-} from "typescript-native/unstable/sync";
+} from "@flint.fyi/typescript-language/native/sync";
 
 export function isBuiltinSymbolLike(
 	program: Program,

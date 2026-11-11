@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import type { Checker } from "typescript-native/unstable/sync";
 import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
@@ -10,6 +8,8 @@ import {
 	type BatchRequests,
 } from "./createCachedChecker.ts";
 import { createTypeScriptProjectSession } from "./createTypeScriptProjectSession.ts";
+import { SyntaxKind } from "./native/ast.ts";
+import type { Checker } from "./native/sync.ts";
 import type * as AST from "./types/ast.ts";
 import { forEachChild } from "./utils/forEachChild.ts";
 
@@ -322,6 +322,28 @@ describe(createCachedChecker, () => {
 		expect(expected.flat().map(({ name }) => name)).toContain("deprecated");
 		expect(spies.getJsDocTagsOfSymbol).not.toHaveBeenCalled();
 		expect(batchSpy).toHaveBeenCalledOnce();
+	});
+
+	it("answers JSDoc tags one symbol at a time when the batch fails", () => {
+		using fixture = createFixture();
+		const { checker, indexFile, spies } = fixture;
+		const cached = createCachedChecker(checker, indexFile, () => {
+			throw new Error("Batch failed.");
+		});
+		const symbols = collectReferences(indexFile)
+			.map((node) => cached.getSymbolAtLocation(node))
+			.filter((symbol) => symbol !== undefined);
+		const expected = symbols.map((symbol) =>
+			checker.getJsDocTagsOfSymbol(symbol),
+		);
+		spies.getJsDocTagsOfSymbol.mockClear();
+
+		expect(symbols.map((symbol) => symbol.getJsDocTags(cached))).toEqual(
+			expected,
+		);
+		expect(spies.getJsDocTagsOfSymbol).toHaveBeenCalledTimes(
+			new Set(symbols).size,
+		);
 	});
 
 	it("resolves a file's imports from one batch when a rule resolves one", () => {

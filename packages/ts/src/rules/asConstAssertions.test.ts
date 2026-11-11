@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./asConstAssertions.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -64,5 +66,28 @@ const value: true = true;
 		`let value: string = "hello";`,
 		`let value = 42;`,
 		`const object = { key: "value" };`,
+		{
+			code: `
+/** @type {"hello"} */
+let value = "hello";
+`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: true,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `
+let value = /** @type {"hello"} */ ("hello");
+`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: true,
+				noEmit: true,
+			}),
+		},
 	],
 });

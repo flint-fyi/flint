@@ -1,10 +1,9 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import {
 	SyntaxKind,
 	type Expression,
 	type SourceFile,
-} from "typescript-native/unstable/ast";
-
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

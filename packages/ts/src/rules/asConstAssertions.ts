@@ -1,10 +1,12 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	NodeFlags,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -99,7 +101,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 
 				VariableDeclaration: (node, { sourceFile }) => {
-					if (node.initializer && node.type && isLiteralType(node.type)) {
+					if (
+						node.initializer &&
+						node.type &&
+						!(node.type.flags & NodeFlags.Reparsed) &&
+						isLiteralType(node.type)
+					) {
 						compareTypes(
 							node.initializer,
 							node.type,

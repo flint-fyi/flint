@@ -185,7 +185,7 @@ function createComplexModule(
 function createDependencyTotal(
 	dependencies: readonly ModuleDependency[],
 ): string {
-	if (dependencies.length === 0) {
+	if (!dependencies.length) {
 		return "const dependencyTotal = 0;";
 	}
 

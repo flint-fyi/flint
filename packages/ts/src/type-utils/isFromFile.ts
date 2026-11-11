@@ -1,7 +1,7 @@
 import path from "node:path";
 
-import type { SourceFile } from "typescript-native/unstable/ast";
-import type { Program } from "typescript-native/unstable/sync";
+import type { SourceFile } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 export function isFromFile(
 	sourceFile: SourceFile,

@@ -1,4 +1,4 @@
-import type { Type } from "typescript-native/unstable/sync";
+import type { Type } from "@flint.fyi/typescript-language/native/sync";
 
 export function isTypeRecursive(
 	type: Type,

@@ -1,1 +1,1 @@
-export type { Checker } from "typescript-native/unstable/sync";
+export type { Checker } from "../native/sync.ts";

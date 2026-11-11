@@ -1,8 +1,3 @@
-import {
-	SyntaxKind,
-	type DeclarationBase,
-} from "typescript-native/unstable/ast";
-import { TypeFlags } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
 import {
@@ -11,6 +6,11 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type DeclarationBase,
+} from "@flint.fyi/typescript-language/native/ast";
+import { TypeFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

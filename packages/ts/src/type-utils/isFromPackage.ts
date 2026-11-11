@@ -1,9 +1,8 @@
 import path from "node:path";
 
-import type { Program } from "typescript-native/unstable/sync";
-
 import type { LinterHost } from "@flint.fyi/core";
 import type { AST } from "@flint.fyi/typescript-language";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 import { parseJsonSafe } from "@flint.fyi/utils";
 
 import { isDeclaredInModuleBlock } from "./isDeclaredInModuleBlock.ts";

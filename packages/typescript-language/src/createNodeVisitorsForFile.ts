@@ -1,5 +1,3 @@
-import type { Node, SyntaxKind } from "typescript-native/unstable/ast";
-
 import {
 	groupFileVisitors,
 	runFileVisitorSubscriptions,
@@ -7,8 +5,10 @@ import {
 	type FileVisitorSubscription,
 } from "@flint.fyi/core";
 
+import { NodeFlags, type Node, type SyntaxKind } from "./native/ast.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
+import { getAuthoredNode } from "./utils/getAuthoredNode.ts";
 
 /**
  * All visitor subscriptions for a file, along with the callback to run on them.
@@ -44,47 +44,46 @@ export function createNodeVisitorsForFile(
 	const enter = grouped.enter && createSubscriptionsByKind(grouped.enter);
 	const exit = grouped.exit && createSubscriptionsByKind(grouped.exit);
 
-	if (enter) {
-		const visit = exit
-			? (node: Node) => {
-					const entering = enter[node.kind];
-					if (entering !== undefined) {
-						runFileVisitorSubscriptions(entering, node);
-					}
-
-					node.forEachChild(visit);
-
-					const exiting = exit[node.kind];
-					if (exiting !== undefined) {
-						runFileVisitorSubscriptions(exiting, node);
-					}
-				}
-			: (node: Node) => {
-					const entering = enter[node.kind];
-					if (entering !== undefined) {
-						runFileVisitorSubscriptions(entering, node);
-					}
-
-					node.forEachChild(visit);
-				};
-
-		return { enter, exit, visit };
+	if (!enter && !exit) {
+		return undefined;
 	}
 
-	if (exit) {
-		const visit = (node: Node) => {
-			node.forEachChild(visit);
+	const visitTypeScript = createVisit(enter, exit);
 
-			const exiting = exit[node.kind];
-			if (exiting !== undefined) {
-				runFileVisitorSubscriptions(exiting, node);
+	const visitJavaScript = (node: Node): void => {
+		const entering = enter?.[node.kind];
+		if (entering !== undefined) {
+			runFileVisitorSubscriptions(entering, node);
+		}
+
+		node.forEachChild(visitJavaScriptChild);
+
+		const exiting = exit?.[node.kind];
+		if (exiting !== undefined) {
+			runFileVisitorSubscriptions(exiting, node);
+		}
+	};
+
+	const visitJavaScriptChild = (child: Node): void => {
+		const authored = getAuthoredNode(child);
+		if (authored) {
+			visitJavaScript(authored);
+		}
+	};
+
+	return {
+		enter,
+		exit,
+		// Only JavaScript files contain nodes reparsed from JSDoc, so every
+		// other file skips checking each node for them.
+		visit: (node) => {
+			if (node.flags & NodeFlags.JavaScriptFile) {
+				visitJavaScript(node);
+			} else {
+				visitTypeScript(node);
 			}
-		};
-
-		return { enter, exit, visit };
-	}
-
-	return undefined;
+		},
+	};
 }
 
 function createSubscriptionsByKind(
@@ -101,4 +100,47 @@ function createSubscriptionsByKind(
 	}
 
 	return byKind;
+}
+
+function createVisit(
+	enter: NodeVisitorSubscriptionsByKind | undefined,
+	exit: NodeVisitorSubscriptionsByKind | undefined,
+): (node: Node) => void {
+	if (!enter) {
+		const visit = (node: Node): void => {
+			node.forEachChild(visit);
+
+			const exiting = exit?.[node.kind];
+			if (exiting !== undefined) {
+				runFileVisitorSubscriptions(exiting, node);
+			}
+		};
+
+		return visit;
+	}
+
+	const visit = exit
+		? (node: Node): void => {
+				const entering = enter[node.kind];
+				if (entering !== undefined) {
+					runFileVisitorSubscriptions(entering, node);
+				}
+
+				node.forEachChild(visit);
+
+				const exiting = exit[node.kind];
+				if (exiting !== undefined) {
+					runFileVisitorSubscriptions(exiting, node);
+				}
+			}
+		: (node: Node): void => {
+				const entering = enter[node.kind];
+				if (entering !== undefined) {
+					runFileVisitorSubscriptions(entering, node);
+				}
+
+				node.forEachChild(visit);
+			};
+
+	return visit;
 }

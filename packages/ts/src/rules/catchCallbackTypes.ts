@@ -1,16 +1,15 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import {
-	TypeFlags,
-	type Checker,
-	type Program,
-	type Type,
-} from "typescript-native/unstable/sync";
-
 import {
 	declarationIncludesGlobal,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	TypeFlags,
+	type Checker,
+	type Program,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";

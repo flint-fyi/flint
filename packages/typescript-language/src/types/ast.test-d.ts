@@ -1,6 +1,6 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
 import { expectTypeOf } from "vitest";
 
+import { SyntaxKind } from "../native/ast.ts";
 import type {
 	AssignmentOperatorToken,
 	CallExpression,

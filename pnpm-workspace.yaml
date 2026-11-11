@@ -57,7 +57,6 @@ catalogs:
     svelte: 5.57.1
     tsdown: 0.23.0
     typescript: npm:@typescript/typescript6@6.0.2
-    typescript-native: npm:typescript@7.1.0-dev.20261001.1
     typescript-eslint: 8.70.1
     vitest: 5.0.1
     vitest-ansi-serializer: 0.3.1
@@ -140,9 +139,9 @@ catalogs:
     text-table-fast: ^0.2.0
     tinyglobby: ^0.2.17
     typescript: npm:@typescript/typescript6@6.0.2
-    typescript-native: npm:typescript@7.1.0-dev.20261001.1
+    typescript-native: npm:typescript@7.1.0-beta
     unist-util-visit: ^5.0.0
-    vize: 0.387.0
+    vize: 0.458.0
     wrap-ansi: ^10.0.0
     yaml-unist-parser: ^3.0.0
     zod: ^4.5.4
@@ -186,16 +185,6 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-minimumReleaseAgeExclude:
-  - "@typescript/typescript-darwin-arm64@7.1.0-dev.20261001.1"
-  - "@typescript/typescript-darwin-x64@7.1.0-dev.20261001.1"
-  - "@typescript/typescript-linux-arm64@7.1.0-dev.20261001.1"
-  - "@typescript/typescript-linux-arm@7.1.0-dev.20261001.1"
-  - "@typescript/typescript-linux-x64@7.1.0-dev.20261001.1"
-  - "@typescript/typescript-win32-arm64@7.1.0-dev.20261001.1"
-  - "@typescript/typescript-win32-x64@7.1.0-dev.20261001.1"
-  - typescript@7.1.0-dev.20261001.1
-
 nodeVersion: 26.7.0
 
 overrides:
@@ -212,7 +201,7 @@ peerDependencyRules:
     eslint-plugin-solid>eslint: "10"
     expressive-code-twoslash>@expressive-code/core: "0.44"
     expressive-code-twoslash>expressive-code: "0.44"
-    typescript: "6 || 7.1.0-dev.20261001.1"
+    typescript: "6 || 7.1.0-beta"
     # https://github.com/43081j/vitest-ansi-serializer/issues/113
     vitest-ansi-serializer>vitest: "5"
 

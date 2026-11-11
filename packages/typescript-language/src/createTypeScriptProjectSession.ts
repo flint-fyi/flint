@@ -1,10 +1,4 @@
 import path from "pathe";
-import {
-	API,
-	type ParsedCommandLine,
-	type Project,
-	type Snapshot,
-} from "typescript-native/unstable/sync";
 
 import type { LinterHost } from "@flint.fyi/core";
 import { isUnderDirectory } from "@flint.fyi/utils";
@@ -17,6 +11,12 @@ import type { BatchRequests } from "./createCachedChecker.ts";
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 import { createTypeScriptOverlayConfig } from "./createTypeScriptOverlayConfig.ts";
 import { createVirtualFiles } from "./createVirtualFiles.ts";
+import {
+	API,
+	type ParsedCommandLine,
+	type Project,
+	type Snapshot,
+} from "./native/sync.ts";
 import { createDefaultProjectResolver } from "./resolveDefaultProjectForFile.ts";
 
 export interface TypeScriptProjectChanges {
@@ -35,6 +35,15 @@ export interface TypeScriptProjectSession extends Disposable {
 	update(changes: TypeScriptProjectChanges): Snapshot;
 }
 
+export interface TypeScriptProjectSessionOptions {
+	/**
+	 * Whether TypeScript may run the code that configs name, such as content
+	 * mappers. Like `tsc --runExternalCode`, it is off unless asked for:
+	 * by default, only once a Flint plugin has registered a content mapper.
+	 */
+	runExternalCode?: boolean;
+}
+
 interface SnapshotChanges {
 	closeFiles?: string[];
 	closeProjects?: string[];
@@ -49,6 +58,9 @@ interface SnapshotChanges {
 
 export function createTypeScriptProjectSession(
 	host: LinterHost,
+	{
+		runExternalCode = !!getTypeScriptContentMapperRegistrations().length,
+	}: TypeScriptProjectSessionOptions = {},
 ): TypeScriptProjectSession {
 	// Tracks the last-seen modification time of every real file the TypeScript
 	// file system has touched. Change detection compares these timestamps rather
@@ -64,8 +76,12 @@ export function createTypeScriptProjectSession(
 	const openedOverlayPaths = new Set<string>();
 	const overlayPathByAuthoredConfigPath = new Map<string, string>();
 	const virtualFiles = createVirtualFiles();
-	// Memoizes parsed configs for a single update cycle so resolving a mapped
-	// file's owning project does not re-parse the same configs for every file.
+	const loadedExcludingConfigPaths = new Set<string>();
+	// Memoizes nearest configs and parsed configs for a single update cycle so
+	// resolving a file's owning project does not repeat the same directory
+	// walks and config parses for every file.
+	let includedFilePathsCache = new Map<string, Set<string>>();
+	let nearestConfigCache = new Map<string, string | undefined>();
 	let parsedConfigCache = new Map<string, ParsedCommandLine | undefined>();
 	const api = new API({
 		cwd: host.getCurrentDirectory(),
@@ -83,7 +99,7 @@ export function createTypeScriptProjectSession(
 			virtualFiles,
 			{ diskBacked: !!host.isDiskBacked },
 		),
-		runExternalCode: true,
+		runExternalCode,
 	});
 	const resolveDefaultProject = createDefaultProjectResolver((fileName) =>
 		api.getCanonicalFileName(fileName),
@@ -219,20 +235,28 @@ export function createTypeScriptProjectSession(
 		return overlay.filePath;
 	};
 	const findNearestConfigFile = (filePath: string): string | undefined => {
+		const visitedDirectories: string[] = [];
 		let directory = path.dirname(filePath);
+		let nearest: string | undefined;
 		while (true) {
-			for (const configName of ["tsconfig.json", "jsconfig.json"]) {
-				const configFilePath = path.join(directory, configName);
-				if (host.fileTypeSync(configFilePath) === "file") {
-					return configFilePath;
-				}
+			if (nearestConfigCache.has(directory)) {
+				nearest = nearestConfigCache.get(directory);
+				break;
 			}
+			visitedDirectories.push(directory);
+			nearest = ["tsconfig.json", "jsconfig.json"]
+				.map((configName) => path.join(directory, configName))
+				.find((configFilePath) => host.fileTypeSync(configFilePath) === "file");
 			const parent = path.dirname(directory);
-			if (parent === directory) {
-				return undefined;
+			if (nearest || parent === directory) {
+				break;
 			}
 			directory = parent;
 		}
+		for (const visitedDirectory of visitedDirectories) {
+			nearestConfigCache.set(visitedDirectory, nearest);
+		}
+		return nearest;
 	};
 	const parseConfigSafely = (
 		configFilePath: string,
@@ -248,6 +272,17 @@ export function createTypeScriptProjectSession(
 		}
 		parsedConfigCache.set(configFilePath, parsed);
 		return parsed;
+	};
+	const isIncludedByConfig = (
+		configFilePath: string,
+		filePath: string,
+	): boolean => {
+		let includedFilePaths = includedFilePathsCache.get(configFilePath);
+		if (!includedFilePaths) {
+			includedFilePaths = new Set(parseConfigSafely(configFilePath)?.fileNames);
+			includedFilePathsCache.set(configFilePath, includedFilePaths);
+		}
+		return includedFilePaths.has(filePath);
 	};
 	const countFilesUnder = (
 		fileNames: readonly string[],
@@ -373,7 +408,9 @@ export function createTypeScriptProjectSession(
 		update({ changed, closeFiles, created, deleted, openFiles, openProjects }) {
 			assertActive();
 			// Configs may have changed on disk since the last update, so drop the
-			// per-cycle parse cache used for mapped-file project resolution.
+			// per-cycle caches used for project resolution.
+			includedFilePathsCache = new Map();
+			nearestConfigCache = new Map();
 			parsedConfigCache = new Map();
 			const detectedChanged: string[] = [];
 			const detectedCreated: string[] = [];
@@ -535,6 +572,29 @@ export function createTypeScriptProjectSession(
 					for (const authoredConfigPath of authoredConfigPaths) {
 						authoredConfigPathsToOpen.add(authoredConfigPath);
 					}
+				}
+			}
+			// TypeScript's native process exits when it opens a file whose nearest
+			// config it has not loaded and that config sends it looking elsewhere
+			// for the file's project: a solution-style config, a composite config,
+			// or a config that includes no files. Loading the config first avoids
+			// that lookup. Configs that include the file are left for TypeScript
+			// to load, as it reloads those once their last open file is closed.
+			const configPathsToLoad = new Set<string>();
+			for (const filePath of nativeOpenFiles ?? []) {
+				const configPath = findNearestConfigFile(filePath);
+				if (
+					configPath &&
+					!loadedExcludingConfigPaths.has(configPath) &&
+					!isIncludedByConfig(configPath, filePath)
+				) {
+					configPathsToLoad.add(configPath);
+				}
+			}
+			if (configPathsToLoad.size) {
+				replaceSnapshot({ openProjects: [...configPathsToLoad] });
+				for (const configPath of configPathsToLoad) {
+					loadedExcludingConfigPaths.add(configPath);
 				}
 			}
 			const replacement = replaceSnapshot({

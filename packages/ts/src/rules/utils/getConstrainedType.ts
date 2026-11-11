@@ -1,6 +1,8 @@
-import { TypeFlags, type Type } from "typescript-native/unstable/sync";
-
 import type { AST, Checker } from "@flint.fyi/typescript-language";
+import {
+	TypeFlags,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 // The only types whose base constraint can differ from the type itself:
 // TypeScript's getBaseConstraintOfType resolves a constraint for these and

@@ -1,10 +1,10 @@
-import { serverFS } from "typescript-native/unstable/fs";
 import { describe, expect, it } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
 
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 import { createVirtualFiles } from "./createVirtualFiles.ts";
+import { serverFS } from "./native/fs.ts";
 
 describe(createTypeScriptFileSystem, () => {
 	it("reads file contents and reports definite absence", () => {
@@ -160,13 +160,13 @@ describe(createTypeScriptFileSystem, () => {
 	});
 });
 
-function callback<Value>(
-	value: Value,
-): Extract<Value, (...args: never[]) => unknown> {
+function callback<Result>(
+	value: ((path: never) => Result) | symbol | undefined,
+): (path: string) => Result {
 	if (typeof value !== "function") {
 		throw new TypeError("Expected a file system callback.");
 	}
-	return value as Extract<Value, (...args: never[]) => unknown>;
+	return value as (path: string) => Result;
 }
 
 function virtualFilesOf(entries: [string, string][]) {

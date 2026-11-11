@@ -1,5 +1,4 @@
-import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
-
+import { NodeFlags, SyntaxKind } from "../native/ast.ts";
 import type * as AST from "../types/ast.ts";
 import type {
 	FunctionWithParameters,

@@ -1,6 +1,3 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import type { Checker, Symbol, Type } from "typescript-native/unstable/sync";
-
 import {
 	forEachChild,
 	getTSNodeRange,
@@ -9,6 +6,12 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type {
+	Checker,
+	Symbol,
+	Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

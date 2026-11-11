@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 import {
 	TypeFlags,
 	type Checker,
 	type Type,
-} from "typescript-native/unstable/sync";
-
-import type { AST } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/native/sync";
 import { nullThrows } from "@flint.fyi/utils";
 
 /**

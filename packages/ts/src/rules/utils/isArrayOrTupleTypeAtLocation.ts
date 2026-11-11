@@ -1,6 +1,5 @@
-import type { Type } from "typescript-native/unstable/sync";
-
 import type { AST, Checker } from "@flint.fyi/typescript-language";
+import type { Type } from "@flint.fyi/typescript-language/native/sync";
 
 import { getConstrainedTypeAtLocation } from "./getConstrainedType.ts";
 import { isTypeRecursive } from "./isTypeRecursive.ts";

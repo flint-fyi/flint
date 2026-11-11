@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import type { Program } from "typescript-native/unstable/sync";
-
+import { SyntaxKind } from "../native/ast.ts";
+import type { Program } from "../native/sync.ts";
 import type * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";

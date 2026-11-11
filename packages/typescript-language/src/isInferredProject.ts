@@ -1,4 +1,4 @@
-import type { Project } from "typescript-native/unstable/sync";
+import type { Project } from "./native/sync.ts";
 
 // The ID TypeScript gives the project it synthesizes for files that no
 // tsconfig contains. It is not exposed by the API, only by convention.

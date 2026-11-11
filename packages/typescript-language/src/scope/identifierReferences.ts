@@ -1,8 +1,4 @@
-import {
-	isAssignmentOperator,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
-
+import { isAssignmentOperator, SyntaxKind } from "../native/ast.ts";
 import type * as AST from "../types/ast.ts";
 
 export function isNonReferenceIdentifier(identifier: AST.Identifier): boolean {

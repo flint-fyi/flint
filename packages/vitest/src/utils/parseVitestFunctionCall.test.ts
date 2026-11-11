@@ -1,9 +1,9 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import { serverFS } from "typescript-native/unstable/fs";
-import { API } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { serverFS } from "@flint.fyi/typescript-language/native/fs";
+import { API } from "@flint.fyi/typescript-language/native/sync";
 
 import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
 

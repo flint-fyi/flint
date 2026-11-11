@@ -18,7 +18,7 @@ const mocks = vi.hoisted(() => ({
 	snapshotErrors: [] as (Error | undefined)[],
 }));
 
-vi.mock("typescript-native/unstable/sync", () => ({
+vi.mock("typescript-native/sync", () => ({
 	API: class {
 		close = vi.fn(() => {
 			if (mocks.closeError) {
@@ -41,9 +41,6 @@ vi.mock("typescript-native/unstable/sync", () => ({
 			mocks.fileSystems.push(options.fs);
 		}
 
-		// Mirrors an instance method of the native API, which callers invoke on
-		// the instance, so it can't be static even though this stub ignores state.
-		// flint-disable-next-line ts/classMethodsThis
 		createSnapshot(changes?: unknown) {
 			mocks.snapshotCalls.push(changes);
 			for (const projectPath of (
@@ -67,6 +64,9 @@ vi.mock("typescript-native/unstable/sync", () => ({
 			};
 		}
 
+		// Mirrors an instance method of the native API, which callers invoke on
+		// the instance, so it can't be static even though this stub ignores state.
+		// flint-disable-next-line ts/classMethodsThis
 		parseConfigFile() {
 			return { fileNames: [] };
 		}

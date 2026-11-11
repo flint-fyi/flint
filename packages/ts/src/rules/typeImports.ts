@@ -1,5 +1,3 @@
-import { isTypeNode, SyntaxKind } from "typescript-native/unstable/ast";
-import { SymbolFlags, type Symbol } from "typescript-native/unstable/sync";
 import { z } from "zod/v4";
 
 import {
@@ -10,6 +8,14 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	isTypeNode,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
+import {
+	SymbolFlags,
+	type Symbol,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

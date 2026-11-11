@@ -1,10 +1,4 @@
 import {
-	isClassLikeDeclaration,
-	isFunctionLikeDeclaration,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
-
-import {
 	getScopeManager,
 	getTSNodeRange,
 	typescriptLanguage,
@@ -12,6 +6,11 @@ import {
 	type ScopeManager,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	isClassLikeDeclaration,
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getFunctionName } from "./utils/getFunctionName.ts";

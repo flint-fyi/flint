@@ -1,14 +1,13 @@
 import {
-	isFunctionLikeDeclaration,
-	SyntaxKind,
-} from "typescript-native/unstable/ast";
-
-import {
 	findTokenInRange,
 	forEachChild,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

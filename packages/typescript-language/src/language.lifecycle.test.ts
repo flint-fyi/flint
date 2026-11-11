@@ -196,6 +196,65 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		expect(mocks.session[Symbol.dispose]).not.toHaveBeenCalled();
 	});
 
+	it("opens the file in a new session when the native process exits during an update", () => {
+		mockSnapshot({ "/repo/first.ts": { fileName: "/repo/first.ts" } });
+		mocks.session.update.mockImplementationOnce(() => {
+			throw new Error("Unexpected EOF while reading from child process");
+		});
+		const factory = createFactory();
+
+		const first = factory.createFile(fileData("/repo/first.ts"));
+
+		expect(first.services.sourceFile).toHaveProperty(
+			"fileName",
+			"/repo/first.ts",
+		);
+		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledTimes(2);
+		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
+	});
+
+	it("fails only the file when the native process exits each time the file is opened", () => {
+		mockSnapshot({ "/repo/second.ts": { fileName: "/repo/second.ts" } });
+		mocks.session.update
+			.mockImplementationOnce(() => {
+				throw new Error("Unexpected EOF while reading from child process");
+			})
+			.mockImplementationOnce(() => {
+				throw new Error("EPIPE: broken pipe, write");
+			});
+		const factory = createFactory();
+
+		expect(() => factory.createFile(fileData("/repo/first.ts"))).toThrow(
+			"TypeScript's native process exited while opening /repo/first.ts.",
+		);
+
+		const second = factory.createFile(fileData("/repo/second.ts"));
+
+		expect(second.services.sourceFile).toHaveProperty(
+			"fileName",
+			"/repo/second.ts",
+		);
+		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledTimes(3);
+	});
+
+	it("opens files in a new session when the native process exits during preparation", () => {
+		mockSnapshot({ "/repo/first.ts": { fileName: "/repo/first.ts" } });
+		mocks.session.update.mockImplementationOnce(() => {
+			throw new Error("Unexpected EOF while reading from child process");
+		});
+		const factory = createFactory();
+
+		factory.prepareFiles?.(["/repo/first.ts"]);
+		const first = factory.createFile(fileData("/repo/first.ts"));
+
+		expect(first.services.sourceFile).toHaveProperty(
+			"fileName",
+			"/repo/first.ts",
+		);
+		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledTimes(2);
+		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
+	});
+
 	it("aggregates an update failure with a session cleanup failure", () => {
 		mockSnapshot({});
 		mocks.session.update.mockImplementationOnce(() => {
@@ -261,6 +320,49 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		).toThrow("directive failed");
 		expect(mocks.session.update).toHaveBeenCalledOnce();
 		expect(mocks.session[Symbol.dispose]).not.toHaveBeenCalled();
+	});
+
+	it("replaces an idle session when the first mapper is registered after the session started", () => {
+		mockSnapshot({
+			"/repo/first.ts": { fileName: "/repo/first.ts" },
+			"/repo/second.ts": { fileName: "/repo/second.ts" },
+		});
+		const factory = createFactory();
+		factory.createFile(fileData("/repo/first.ts"))[Symbol.dispose]();
+		using unregister = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				extensions: [".mapped"],
+				packageName: "mapper",
+			}),
+		};
+
+		factory.createFile(fileData("/repo/second.ts"));
+
+		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
+		expect(mocks.createTypeScriptProjectSession.mock.calls).toEqual([
+			[expect.anything(), { runExternalCode: false }],
+			[expect.anything(), { runExternalCode: true }],
+		]);
+	});
+
+	it("keeps a session started without mappers when a mapper is registered while a file is active", () => {
+		mockSnapshot({
+			"/repo/first.ts": { fileName: "/repo/first.ts" },
+			"/repo/second.ts": { fileName: "/repo/second.ts" },
+		});
+		const factory = createFactory();
+		factory.createFile(fileData("/repo/first.ts"));
+		using unregister = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				extensions: [".mapped"],
+				packageName: "mapper",
+			}),
+		};
+
+		factory.createFile(fileData("/repo/second.ts"));
+
+		expect(mocks.session[Symbol.dispose]).not.toHaveBeenCalled();
+		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledOnce();
 	});
 
 	it("fails an unsupported extension without opening a session", () => {

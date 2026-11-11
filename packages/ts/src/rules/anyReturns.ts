@@ -1,17 +1,16 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import {
-	TypeFlags,
-	type Signature,
-	type Type,
-	type TypeReference,
-} from "typescript-native/unstable/sync";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	TypeFlags,
+	type Signature,
+	type Type,
+	type TypeReference,
+} from "@flint.fyi/typescript-language/native/sync";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";

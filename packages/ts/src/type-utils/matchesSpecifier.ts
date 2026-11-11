@@ -1,10 +1,9 @@
-import type { Program } from "typescript-native/unstable/sync";
-
 import type { LinterHost } from "@flint.fyi/core";
 import {
 	declarationIncludesGlobal,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { getSpecifierNames } from "./getSpecifierNames.ts";
 import { isFromFile } from "./isFromFile.ts";

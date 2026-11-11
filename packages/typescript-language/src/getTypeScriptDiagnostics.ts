@@ -1,4 +1,4 @@
-import type { Diagnostic, Program } from "typescript-native/unstable/sync";
+import type { Diagnostic, Program } from "./native/sync.ts";
 
 export interface GetTypeScriptDiagnosticsOptions {
 	/**

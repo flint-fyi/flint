@@ -1,10 +1,9 @@
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 import {
 	getLeadingCommentRanges,
 	getTrailingCommentRanges,
 	SyntaxKind,
-} from "typescript-native/unstable/ast";
-
-import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

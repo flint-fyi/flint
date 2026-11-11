@@ -1,5 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-
+import { SyntaxKind } from "../native/ast.ts";
 import type * as AST from "../types/ast.ts";
 import { createScanner } from "./createScanner.ts";
 import { forEachChild } from "./forEachChild.ts";

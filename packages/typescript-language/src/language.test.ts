@@ -1,6 +1,3 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import { serverFS } from "typescript-native/unstable/fs";
-import { API } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
@@ -10,6 +7,9 @@ import {
 	typescriptLanguage,
 	visitTypeScriptNodes,
 } from "./language.ts";
+import { SyntaxKind } from "./native/ast.ts";
+import { serverFS } from "./native/fs.ts";
+import { API } from "./native/sync.ts";
 import type * as AST from "./types/ast.ts";
 
 describe("typescriptLanguage file lifecycle", () => {

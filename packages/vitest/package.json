@@ -29,7 +29,6 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"typescript-native": "catalog:prod",
 		"zod": "catalog:prod"
 	},
 	"devDependencies": {

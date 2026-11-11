@@ -31,8 +31,7 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",
-		"@vue/compiler-dom": "catalog:prod",
-		"typescript-native": "catalog:prod"
+		"@vue/compiler-dom": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",

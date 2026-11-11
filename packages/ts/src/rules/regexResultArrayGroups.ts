@@ -3,14 +3,6 @@ import type {
 	CapturingGroup,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
-import { SyntaxKind } from "typescript-native/unstable/ast";
-import {
-	SymbolFlags,
-	TypeFlags,
-	type Program,
-	type Symbol,
-	type Type,
-} from "typescript-native/unstable/sync";
 
 import {
 	forEachChild,
@@ -20,6 +12,14 @@ import {
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	SymbolFlags,
+	TypeFlags,
+	type Program,
+	type Symbol,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";

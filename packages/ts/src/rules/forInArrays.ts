@@ -1,10 +1,12 @@
-import { TypeFlags, type Type } from "typescript-native/unstable/sync";
-
 import {
 	getTypeProperty,
 	typescriptLanguage,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	TypeFlags,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";

@@ -5,6 +5,7 @@
 		"types": ["node"]
 	},
 	"include": [
+		"src/native/ast.ts",
 		"src/nodes.test-d.ts",
 		"src/nodes.ts",
 		"src/types/ast.test-d.ts",

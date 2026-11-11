@@ -1,15 +1,15 @@
 import * as vue from "@vue/compiler-dom";
+
+import { reportSourceCode } from "@flint.fyi/content-mapper";
+import type { CharacterReportRange } from "@flint.fyi/core";
+import type { AST } from "@flint.fyi/typescript-language";
 import {
 	SpanMap,
 	SpanMapFeature,
 	SyntaxKind,
 	type Node,
 	type ReadonlyTextRange,
-} from "typescript-native/unstable/ast";
-
-import { reportSourceCode } from "@flint.fyi/content-mapper";
-import type { CharacterReportRange } from "@flint.fyi/core";
-import type { AST } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/native/ast";
 import { vueLanguage, type VueServices } from "@flint.fyi/vue-language";
 
 import { ruleCreator } from "./ruleCreator.ts";

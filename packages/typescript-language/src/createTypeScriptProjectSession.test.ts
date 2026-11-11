@@ -271,7 +271,7 @@ describe(createTypeScriptProjectSession, () => {
 			secondSnapshot
 				.getProjects()
 				.find((project) =>
-					project.configFileName.endsWith(".flint-overlay.json"),
+					project.configFileName?.endsWith(".flint-overlay.json"),
 				)?.parsedCommandLine.projectReferences,
 		).toMatchObject([{ path: "/repo/second" }]);
 	});
@@ -304,6 +304,76 @@ describe(createTypeScriptProjectSession, () => {
 			"/dev/null/inferred",
 		);
 	});
+
+	it.each([
+		["a solution-style config", { files: [], references: [{ path: "./src" }] }],
+		[
+			"a composite config",
+			{
+				compilerOptions: { composite: true, noLib: true },
+				files: ["src/index.ts"],
+			},
+		],
+		["an empty config", { include: [] }],
+	])(
+		"resolves a file to the inferred project when its nearest config is %s that excludes the file",
+		(_, nearestConfig) => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+			const looseFilePath = "/repo/build.config.ts";
+			host.vfsUpsertFile(configFilePath, JSON.stringify(nearestConfig));
+			host.vfsUpsertFile(
+				"/repo/src/tsconfig.json",
+				JSON.stringify({
+					compilerOptions: { composite: true, noLib: true },
+					files: ["index.ts"],
+				}),
+			);
+			host.vfsUpsertFile(indexFilePath, "export const value = 1;");
+			host.vfsUpsertFile(looseFilePath, "export const loose = 1;");
+			using session = createTypeScriptProjectSession(host);
+
+			session.update({ openFiles: [looseFilePath] });
+
+			expect(session.getProjectForFile(looseFilePath)?.id).toBe(
+				"/dev/null/inferred",
+			);
+		},
+	);
+
+	it.each([
+		// TS18068: Content mappers require the '--runExternalCode' command line flag to be enabled.
+		[18_068, "does not run", false],
+		// TS18075: The content mapper package could not be resolved.
+		[18_075, "runs", true],
+	])(
+		"reports TS%s when the session %s external code and a config names a content mapper",
+		(code, _, runExternalCode) => {
+			const host = createHost();
+			host.vfsUpsertFile(
+				configFilePath,
+				JSON.stringify({
+					compilerOptions: { noLib: true },
+					contentMappers: [
+						{ extensions: [".mapped"], package: "unresolved-mapper" },
+					],
+					include: ["src"],
+				}),
+			);
+			using session = createTypeScriptProjectSession(host, { runExternalCode });
+
+			session.update({ openFiles: [indexFilePath] });
+
+			expect(
+				getTypeScriptDiagnostics(
+					nullThrows(
+						session.getProjectForFile(indexFilePath),
+						"Expected the configured project.",
+					).program,
+					indexFilePath,
+				).map((diagnostic) => diagnostic.code),
+			).toContain(code);
+		},
+	);
 
 	it("keeps answering existence probes for hosts that may shadow the disk", () => {
 		const host = createHost();

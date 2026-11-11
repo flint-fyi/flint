@@ -1,8 +1,3 @@
-import {
-	SyntaxKind,
-	type NodeArray,
-	type TypeNode,
-} from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
@@ -11,6 +6,11 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type NodeArray,
+	type TypeNode,
+} from "@flint.fyi/typescript-language/native/ast";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";

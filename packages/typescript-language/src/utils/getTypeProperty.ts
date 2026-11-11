@@ -1,4 +1,4 @@
-import type { Symbol, Type } from "typescript-native/unstable/sync";
+import type { Symbol, Type } from "../native/sync.ts";
 
 // Type objects are handed out once per snapshot by the native API's registry,
 // so answers keyed by them never outlive the snapshot they came from.

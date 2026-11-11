@@ -1,5 +1,4 @@
-import type { Program } from "typescript-native/unstable/sync";
-
+import type { Program } from "../native/sync.ts";
 import type * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
 import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
