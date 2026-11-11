@@ -53,6 +53,10 @@
 			"groupName": "astro"
 		},
 		{
+			"matchPackageNames": ["@volar/*"],
+			"groupName": "volar"
+		},
+		{
 			"matchDepTypes": [
 				"pnpm.catalog.comparisons",
 				"pnpm.catalog.dev",

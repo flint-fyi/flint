@@ -11,21 +11,21 @@ describe("directives", () => {
 		expect(exitCode).toBe(1);
 		// cspell:disable
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
-			"<dim>Linting with <cyan><bold>flint.config.ts</bold><dim>...</fg>
+			"<grey>Linting with <cyan><bold>flint.config.ts</bold><grey>...</fg>
 
 			<underline><cwd>/fixtures/src/empty-line-boundary.ts</underline>
-			<dim>  1:1</fg>  The flint-disable-next-line comment directive selecting "spelling/cspell" did not match any reports.  <yellow>commentDirectiveUnused</fg>
-			<dim>  3:4</fg>  Forbidden or unknown word: "functon".                                                                 <yellow>spelling/cspell</fg>
+			<grey>  1:1</fg>  The flint-disable-next-line comment directive selecting "spelling/cspell" did not match any reports.  <yellow>commentDirectiveUnused</fg>
+			<grey>  3:4</fg>  Forbidden or unknown word: "functon".                                                                 <yellow>spelling/cspell</fg>
 
 			<underline><cwd>/fixtures/src/unsuppressed-code.ts</underline>
-			<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+			<grey>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 			<underline><cwd>/fixtures/src/unsuppressed-comment.ts</underline>
-			<dim>  1:4</fg>  Forbidden or unknown word: "functon".  <yellow>spelling/cspell</fg>
+			<grey>  1:4</fg>  Forbidden or unknown word: "functon".  <yellow>spelling/cspell</fg>
 
 			<red>✖ Found <bold>4 reports</bold> across <bold>3 files</bold>.
 			</fg>
-			<dim>Finished in <time> on 4 files with 138 rules.
+			<grey>Finished in <time> on 4 files with 138 rules.
 			</fg>"
 		`);
 		// cspell:enable

@@ -28,6 +28,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
+		"unist-util-visit": "catalog:prod",
 		"yaml-unist-parser": "catalog:prod"
 	},
 	"devDependencies": {

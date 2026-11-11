@@ -38,26 +38,20 @@ export interface RuleCoverageSource {
 	linter: string;
 }
 
-const excludedESLintRulesByPluginName = new Map([
-	// These rules are exported in the React plugin but not mentioned on react.dev.
-	// We're treating them as an internal implementation detail for now.
-	[
-		"react-hooks",
-		new Set([
-			"capitalized-calls",
-			"exhaustive-effect-dependencies",
-			"fbt",
-			"hooks",
-			"invariant",
-			"memo-dependencies",
-			"memoized-effect-dependencies",
-			"no-deriving-state-in-effects",
-			"rule-suppression",
-			"syntax",
-			"todo",
-			"void-use-memo",
-		]),
-	],
+// These React Compiler diagnostics are internal and not documented on react.dev.
+const excludedReactCompilerRuleNames = new Set([
+	"capitalized-calls",
+	"exhaustive-effect-dependencies",
+	"fbt",
+	"hooks",
+	"invariant",
+	"memo-dependencies",
+	"memoized-effect-dependencies",
+	"no-deriving-state-in-effects",
+	"rule-suppression",
+	"syntax",
+	"todo",
+	"void-use-memo",
 ]);
 
 export async function collectRuleCoverageReports(): Promise<
@@ -154,7 +148,8 @@ function collectESLintPluginCoverage(
 	pluginName: string,
 	rules: object,
 ): RuleCoverage {
-	const excludedRuleNames = excludedESLintRulesByPluginName.get(pluginName);
+	const excludedRuleNames =
+		pluginName === "react-hooks" ? excludedReactCompilerRuleNames : undefined;
 
 	return compareRuleCoverage(
 		Object.entries(rules as Record<string, Rule.RuleModule>)
@@ -178,7 +173,13 @@ async function collectMarkdownlintCoverage(): Promise<RuleCoverage> {
 
 async function collectOxlintCoverage(): Promise<RuleCoverage> {
 	return compareRuleCoverage(
-		(await getOxlintLintRules()).map((name) => ({ name, url: undefined })),
+		(await getOxlintLintRules())
+			.filter(
+				(name) =>
+					!name.startsWith("react/") ||
+					!excludedReactCompilerRuleNames.has(name.slice("react/".length)),
+			)
+			.map((name) => ({ name, url: undefined })),
 		findOxlintRulesInFlint().map((rule) => getOxlintRuleConfigName(rule.name)),
 	);
 }

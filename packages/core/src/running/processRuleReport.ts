@@ -26,14 +26,14 @@ export function processRuleReport(
 	let suggestions = ruleReport.suggestions;
 	const { adjustReportRange } = currentFile;
 	if (adjustReportRange != null) {
-		const adjustedRange = adjustReportRange(ruleReport.range);
+		const adjustedRange = adjustReportRange(ruleReport.range, "report");
 		if (adjustedRange == null) {
 			return null;
 		}
 		range = adjustedRange;
 		fix &&= fix
 			.map((fix) => {
-				const range = adjustReportRange(fix.range);
+				const range = adjustReportRange(fix.range, "change");
 				return (
 					range && {
 						...fix,
@@ -49,7 +49,7 @@ export function processRuleReport(
 					// TODO: support cross-file suggestions
 					return null;
 				}
-				const range = adjustReportRange(s.range);
+				const range = adjustReportRange(s.range, "change");
 				return (
 					range && {
 						...s,
