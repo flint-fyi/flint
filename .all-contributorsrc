@@ -15,7 +15,8 @@
         "tool",
         "bug",
         "test",
-        "blog"
+        "blog",
+        "review"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg ✨",
@@ -108,7 +109,8 @@
         "bug",
         "infra",
         "doc",
-        "test"
+        "test",
+        "review"
       ]
     },
     {
@@ -131,7 +133,9 @@
       "contributions": [
         "infra",
         "maintenance",
-        "code"
+        "code",
+        "review",
+        "doc"
       ]
     },
     {
@@ -162,7 +166,8 @@
         "tool",
         "code",
         "infra",
-        "test"
+        "test",
+        "review"
       ]
     },
     {
@@ -316,6 +321,25 @@
       "contributions": [
         "ideas",
         "code"
+      ]
+    },
+    {
+      "login": "dh1011",
+      "name": "Duy Hua",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1806772?v=4",
+      "profile": "https://duy.run",
+      "contributions": [
+        "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "marst313",
+      "name": "I Nyoman Karma Dharma Nalendra Wardana",
+      "avatar_url": "https://avatars.githubusercontent.com/u/50996212?v=4",
+      "profile": "https://inyomandharma.vercel.app/",
+      "contributions": [
+        "doc"
       ]
     }
   ],
