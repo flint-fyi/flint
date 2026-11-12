@@ -11,6 +11,7 @@ import {
 	type OptionDiagnostic,
 } from "@flint.fyi/content-mapper";
 
+import { svelteConfigFileNames } from "./svelteConfigFileNames.ts";
 import {
 	transformSvelte,
 	type SvelteTransformOptions,
@@ -58,11 +59,7 @@ export async function openSvelteProject(
 function findConfig(start: string): string | undefined {
 	let directory = start;
 	while (true) {
-		for (const name of [
-			"svelte.config.js",
-			"svelte.config.mjs",
-			"svelte.config.cjs",
-		]) {
+		for (const name of svelteConfigFileNames) {
 			const candidate = path.join(directory, name);
 			if (fs.existsSync(candidate)) {
 				return candidate;

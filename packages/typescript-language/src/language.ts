@@ -397,6 +397,11 @@ export const typescriptLanguage: Language<
 				}
 				fileDisposed = true;
 				currentSessionState.activeFiles -= 1;
+				// Files linted again later may have changed by then, so each pass
+				// has to be prepared again rather than trusting this one's snapshot.
+				if (!currentSessionState.activeFiles) {
+					currentSessionState.prepared = false;
+				}
 			};
 			try {
 				const sourceFile = getSourceFile();
@@ -574,7 +579,10 @@ export const typescriptLanguage: Language<
 			file.services.program,
 			file.services.sourceFile,
 		)) {
-			const adjustReportRange = file.adjustReportRange;
+			const adjustReportRange =
+				sourceFile === file.services.sourceFile
+					? undefined
+					: file.adjustReportRange;
 			if (adjustReportRange) {
 				file.adjustReportRange = (range, kind) =>
 					adjustMappedRange(range, kind, sourceFile.spanMap);
@@ -597,8 +605,8 @@ export const typescriptLanguage: Language<
 							}));
 				createNodeVisitorsForFile(sourceFileVisitors)?.visit(sourceFile);
 			} finally {
-				// Only mapped files had their adjuster swapped above, so only those
-				// need it restored.
+				// Only supplemental source files had the adjuster swapped above, so
+				// only those need it restored.
 				if (adjustReportRange) {
 					file.adjustReportRange = adjustReportRange;
 				}

@@ -1,7 +1,7 @@
 import path from "node:path";
 
 import { serverFS } from "typescript-native/fs";
-import { API, JsxEmit } from "typescript-native/sync";
+import { API, JsxEmit, ModuleResolutionKind } from "typescript-native/sync";
 import { describe, expect, it, vi } from "vitest";
 
 import { nullThrows } from "@flint.fyi/utils";
@@ -61,7 +61,7 @@ describe(collectReferencedFilePaths, () => {
 		const program = api.createProgram(["/repo/src/index.ts"], {
 			allowJs: true,
 			jsx: JsxEmit.Preserve,
-			moduleResolution: 2,
+			moduleResolution: ModuleResolutionKind.Node10,
 			paths: { "@alias/*": ["src/aliased.ts"] },
 			resolveJsonModule: true,
 		});

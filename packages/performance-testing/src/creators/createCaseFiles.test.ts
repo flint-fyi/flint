@@ -42,8 +42,8 @@ describe(createCaseFiles, () => {
 			);
 
 			const actual = [...sourceFiles].flatMap(([filePath, source]) =>
-				Array.from(source.matchAll(/from "(\.[^"]+)"/g), ([, specifier]) =>
-					path.posix.join(path.posix.dirname(filePath), specifier ?? ""),
+				Array.from(source.matchAll(/from "(\.[^"]+)"/g), ([, specifier = ""]) =>
+					path.posix.join(path.posix.dirname(filePath), specifier),
 				).filter((resolved) => !sourceFiles.has(resolved)),
 			);
 

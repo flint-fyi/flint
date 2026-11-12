@@ -1,4 +1,4 @@
-import path from "node:path";
+import path from "pathe";
 
 import type { LinterHost } from "@flint.fyi/core";
 

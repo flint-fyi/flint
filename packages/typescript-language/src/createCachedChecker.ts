@@ -49,7 +49,7 @@ const typePrefetchMaxExpressions = 4000;
  */
 interface CheckerMemos {
 	aliasedBySymbol: WeakMap<Symbol, Symbol>;
-	apparentByPrimitiveFlags: Map<TypeFlags, Type>;
+	apparentByPrimitiveFlags: Map<number, Type>;
 	baseConstraintByType: WeakMap<Type, Type | undefined>;
 	immediateAliasedBySymbol: WeakMap<Symbol, Symbol | undefined>;
 	isArrayByTarget: Map<number, boolean>;

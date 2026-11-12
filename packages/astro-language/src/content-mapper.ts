@@ -32,8 +32,10 @@ export function transformAstro({
 	content,
 	fileName,
 }: TransformParams): TransformResult {
+	// The Astro compiler embeds the file name in JSON without escaping it, so
+	// Windows backslashes would corrupt its output.
 	const { diagnostics: transformDiagnostics, virtualFile: serviceScript } =
-		astro2tsx(content, fileName);
+		astro2tsx(content, fileName.replaceAll("\\", "/"));
 	// The imports go after the generated TSX so its mappings keep their offsets.
 	const text =
 		serviceScript.snapshot.getText(0, serviceScript.snapshot.getLength()) +

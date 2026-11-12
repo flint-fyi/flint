@@ -9,6 +9,7 @@ import type {
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
 import { getTypeScriptContentMapperRegistrations } from "./contentMappers.ts";
 import { findNearestConfigFile } from "./findNearestConfigFile.ts";
+import { isInferredProject } from "./isInferredProject.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
 import { containsGlobalDeclarations } from "./utils/containsGlobalDeclarations.ts";
 
@@ -16,10 +17,7 @@ export function getTypeScriptFileCacheImpacts(
 	file: LanguageFile<TypeScriptFileServices>,
 	host: LinterHost,
 ): LanguageFileCacheImpacts {
-	const mapperConfigFilePath = findMapperConfigFile(
-		file.about.filePathAbsolute,
-		host,
-	);
+	const mapperConfigFilePath = findMapperConfigFile(file, host);
 
 	return {
 		dependencies: [
@@ -27,9 +25,7 @@ export function getTypeScriptFileCacheImpacts(
 			// https://github.com/flint-fyi/flint/issues/64 & more.
 			"tsconfig.json",
 
-			...(mapperConfigFilePath
-				? [path.relative(host.getCurrentDirectory(), mapperConfigFilePath)]
-				: []),
+			...(mapperConfigFilePath ? [mapperConfigFilePath] : []),
 
 			...collectReferencedFilePaths(
 				file.services.program,
@@ -42,11 +38,15 @@ export function getTypeScriptFileCacheImpacts(
 }
 
 // A content mapper may read its own config, such as `svelte.config.js`, which
-// changes the file's mapped text without the file itself changing.
+// changes the file's mapped text without the file itself changing. Mappers look
+// for it from their project's config, so this does too. A config created after
+// the file was cached is not noticed until the file itself changes.
 function findMapperConfigFile(
-	filePathAbsolute: string,
+	file: LanguageFile<TypeScriptFileServices>,
 	host: LinterHost,
 ): string | undefined {
+	const { filePathAbsolute } = file.about;
+	const { project } = file.services;
 	const configFileNames = getTypeScriptContentMapperRegistrations().find(
 		(registration) =>
 			registration.extensions.includes(path.extname(filePathAbsolute)),
@@ -54,6 +54,12 @@ function findMapperConfigFile(
 
 	return (
 		configFileNames &&
-		findNearestConfigFile(host, filePathAbsolute, new Map(), configFileNames)
+		findNearestConfigFile(
+			host,
+			(!isInferredProject(project) && project.configFileName) ||
+				filePathAbsolute,
+			new Map(),
+			configFileNames,
+		)
 	);
 }
