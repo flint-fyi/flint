@@ -693,6 +693,58 @@ class B extends A {
 		},
 		{
 			code: `
+class Base {
+    /** @deprecated */
+    method() {}
+}
+class Derived extends Base {
+    method() {}
+}
+declare const derived: Derived;
+derived.method();
+`,
+			snapshot: `
+class Base {
+    /** @deprecated */
+    method() {}
+}
+class Derived extends Base {
+    method() {}
+}
+declare const derived: Derived;
+derived.method();
+        ~~~~~~
+        This is deprecated.
+`,
+		},
+		{
+			code: `
+interface Base {
+    /** @deprecated */
+    value: string;
+}
+interface Derived extends Base {
+    value: string;
+}
+declare const derived: Derived;
+void derived.value;
+`,
+			snapshot: `
+interface Base {
+    /** @deprecated */
+    value: string;
+}
+interface Derived extends Base {
+    value: string;
+}
+declare const derived: Derived;
+void derived.value;
+             ~~~~~
+             This is deprecated.
+`,
+		},
+		{
+			code: `
 /** @deprecated */
 declare const test: string;
 const bar = {
@@ -966,6 +1018,12 @@ const c = a[2];
 	],
 	valid: [
 		"function active() {} active();",
+		{
+			code: `export * as deprecatedModule from "./deprecated-module";`,
+			files: {
+				"deprecated-module.ts": `/** @deprecated */ export const value = 1;`,
+			},
+		},
 		"class Active { method() { this.method(); } }",
 		`/** @deprecated */
 function unused() {}
@@ -1035,6 +1093,18 @@ function a(value: 'c' | undefined): void;
 function a(value: string | undefined): void {
 }
 a('b');
+`,
+		`
+class Base {
+    /** @deprecated */
+    method() {}
+}
+class Derived extends Base {
+    /** @see Base#method */
+    method() {}
+}
+declare const derived: Derived;
+derived.method();
 `,
 		`
 interface Props {
@@ -1120,6 +1190,12 @@ namespace A {
 export type D = A.C | A.D;
 `,
 		`function fn(/** @deprecated */ foo = 4) {}`,
+		`
+/** @deprecated */
+interface Foo {}
+interface Wrapper<T> {}
+class Bar implements Wrapper<Foo> {}
+`,
 		`
 class Foo implements Foo {
     get bar(): number {

@@ -1,12 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
 import {
 	forEachChild,
+	isFunctionScopeBoundary,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -85,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			switch (name.kind) {
 				case SyntaxKind.ArrayBindingPattern: {
 					for (const element of name.elements) {
-						if (element.kind === SyntaxKind.BindingElement) {
+						if (element.name) {
 							addBindingNames(element.name, variables);
 						}
 					}
@@ -99,6 +98,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 				case SyntaxKind.ObjectBindingPattern: {
 					for (const element of name.elements) {
+						if (!element.name) {
+							continue;
+						}
+
 						addBindingNames(element.name, variables);
 					}
 
@@ -117,7 +120,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			return forEachChild(node, (child) => {
 				return (
-					!tsutils.isFunctionScopeBoundary(child) &&
+					!isFunctionScopeBoundary(child) &&
 					child.kind !== SyntaxKind.DoStatement &&
 					child.kind !== SyntaxKind.ForInStatement &&
 					child.kind !== SyntaxKind.ForOfStatement &&
@@ -139,7 +142,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			loopVariables: Set<string>,
 			sourceFile: AST.SourceFile,
 		): void {
-			if (tsutils.isFunctionScopeBoundary(node)) {
+			if (isFunctionScopeBoundary(node)) {
 				if (referencesLoopVariable(node, loopVariables)) {
 					const start = node.getStart(sourceFile);
 					let keyword = "function";
@@ -150,11 +153,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					) {
 						keyword = "function";
 					} else if (node.kind === SyntaxKind.ArrowFunction) {
-						const firstToken = node.getFirstToken(sourceFile) as
-							AST.AnyNode | undefined;
+						const firstParameter = node.parameters[0];
 						keyword =
-							firstToken?.kind === SyntaxKind.Identifier
-								? firstToken.text
+							firstParameter?.name.kind === SyntaxKind.Identifier &&
+							firstParameter.name.getStart(sourceFile) === start
+								? firstParameter.name.text
 								: "(";
 					}
 

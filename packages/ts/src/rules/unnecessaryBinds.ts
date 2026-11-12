@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

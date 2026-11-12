@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -31,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function getCalleeNameAndNode(node: AST.LeftHandSideExpression) {
+		function getCalleeNameAndNode(node: AST.Node) {
 			if (node.kind === SyntaxKind.Identifier) {
 				return { name: node.text, node };
 			}

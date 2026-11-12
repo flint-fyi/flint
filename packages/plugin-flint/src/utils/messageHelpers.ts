@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript";
-
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 interface MessageStringVisitorContext {
 	isInArray: boolean;
@@ -25,11 +24,9 @@ export function findMessagesProperty(
 		);
 	});
 
-	if (messagesProperty?.kind === SyntaxKind.PropertyAssignment) {
-		return messagesProperty;
-	}
-
-	return undefined;
+	return messagesProperty?.kind === SyntaxKind.PropertyAssignment
+		? messagesProperty
+		: undefined;
 }
 
 export function* forEachMessageString(

@@ -46,7 +46,9 @@ const config: ConfigObject[] = defineConfig(
 		"packages/*/lib",
 		"packages/fixtures",
 		"packages/performance-testing/cases",
+		"packages/performance-testing/cases-baseline",
 		"packages/e2e/tests/**/fixtures/**",
+		"packages/e2e/tests/typescript-native/svelte.config.js",
 		"pnpm-lock.yaml",
 		"coverage",
 	]),
@@ -181,13 +183,23 @@ const config: ConfigObject[] = defineConfig(
 	{
 		files: [
 			"packages/*-language/src/language.ts",
+			"packages/astro/src/plugin.ts",
+			"packages/svelte/src/plugin.ts",
+			"packages/vue/src/plugin.ts",
 			"packages/*/src/rules/*.ts",
 			"packages/site/astro.config.ts",
 		],
 		rules: {
-			// Language entry points register extensions and enforce single-instance invariants.
+			// Language entry points register extensions and content mappers, and enforce single-instance invariants.
 			// Rule modules and Astro configuration construct exports using factory calls.
 			"unicorn/no-top-level-side-effects": "off",
+		},
+	},
+	{
+		files: ["packages/content-mapper/src/content-mapper/**/*.ts"],
+		rules: {
+			// Position encodings are LSP-style protocol identifiers, not Node.js buffer encodings.
+			"unicorn/text-encoding-identifier-case": "off",
 		},
 	},
 	{
@@ -233,6 +245,23 @@ const config: ConfigObject[] = defineConfig(
 					message:
 						"Use Standard Schema for abstractions or Zod Core for parsing.",
 					name: "zod/v4",
+				},
+			],
+		},
+	},
+	{
+		files: ["packages/typescript-language/src/**/*.ts"],
+		rules: {
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					patterns: [
+						{
+							message:
+								"Import from typescript-native instead: the bundler reads these re-exports through getters, which more than doubled lint time.",
+							regex: String.raw`/native/[a-z]+\.ts$`,
+						},
+					],
 				},
 			],
 		},

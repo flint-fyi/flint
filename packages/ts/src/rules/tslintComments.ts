@@ -1,6 +1,7 @@
-import * as tsutils from "ts-api-utils";
-
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	collectComments,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -30,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				SourceFile: (node) => {
-					const comments = tsutils.iterateComments(node);
+					const comments = collectComments(node);
 
 					for (const { end, pos, text } of comments) {
 						const commentContent = text

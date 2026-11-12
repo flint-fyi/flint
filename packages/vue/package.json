@@ -17,6 +17,7 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
+		"./content-mapper": "./src/content-mapper.ts",
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -26,18 +27,16 @@
 		"test": "vitest --project vue"
 	},
 	"dependencies": {
+		"@flint.fyi/content-mapper": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
-		"@flint.fyi/utils": "workspace:^",
-		"@flint.fyi/volar-language": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",
-		"@vue/compiler-dom": "catalog:prod",
-		"typescript": "catalog:prod"
+		"@vue/compiler-dom": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@flint.fyi/typescript-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
 		"vue": "catalog:dev"
@@ -49,7 +48,19 @@
 		"access": "public",
 		"exports": {
 			".": "./dist/index.mjs",
+			"./content-mapper": "./dist/content-mapper.mjs",
 			"./package.json": "./package.json"
+		}
+	},
+	"typescript": {
+		"contentMapper": {
+			"exec": [
+				"node",
+				"./dist/content-mapper.mjs"
+			],
+			"compilerOptions": [
+				"noUnusedLocals"
+			]
 		}
 	}
 }

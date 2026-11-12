@@ -1,10 +1,10 @@
-import { SyntaxKind, type TypeChecker } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Checker } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -57,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function checkFilterLengthComparison(
 	node: AST.BinaryExpression,
-	typeChecker: TypeChecker,
+	typeChecker: Checker,
 ) {
 	const lengthAccess = isNonZeroLengthCheck(node) && getLengthAccess(node);
 	return lengthAccess
@@ -67,7 +67,7 @@ function checkFilterLengthComparison(
 
 function checkFindIndexComparison(
 	node: AST.BinaryExpression,
-	typeChecker: TypeChecker,
+	typeChecker: Checker,
 ) {
 	return (
 		isFindIndexNegativeOneCheck(node) &&
@@ -76,10 +76,7 @@ function checkFindIndexComparison(
 	);
 }
 
-function getFilterCall(
-	node: AST.LeftHandSideExpression,
-	typeChecker: TypeChecker,
-) {
+function getFilterCall(node: AST.Expression, typeChecker: Checker) {
 	if (
 		node.kind !== SyntaxKind.CallExpression ||
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
@@ -97,7 +94,7 @@ function getFilterCall(
 	};
 }
 
-function getFindIndexCall(node: AST.CallExpression, typeChecker: TypeChecker) {
+function getFindIndexCall(node: AST.CallExpression, typeChecker: Checker) {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		!["findIndex", "findLastIndex"].includes(node.expression.name.text) ||
@@ -124,7 +121,7 @@ function getLengthAccess(node: AST.BinaryExpression) {
 	);
 }
 
-function isArrayType(node: AST.Expression, typeChecker: TypeChecker) {
+function isArrayType(node: AST.Expression, typeChecker: Checker) {
 	const type = typeChecker.getTypeAtLocation(node);
 	return typeChecker.isArrayType(type);
 }

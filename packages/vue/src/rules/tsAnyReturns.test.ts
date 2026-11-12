@@ -162,7 +162,14 @@ const foo = 1 as any;
 <template><MyComponent :foo="() => foo" /></template>
 `,
 				files: myComponentFixture,
-				name: "reports generated unwrap calls without offering wrapper edits",
+				name: "applies edits to a template expression when it maps exactly to authored text",
+				output: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => 'safe'" /></template>
+`,
 				snapshot: `
 <script setup lang="ts">
 import MyComponent from './MyComponent.vue';
@@ -172,6 +179,18 @@ const foo = 1 as any;
                                    ~~~
                                    Unsafe return of a value of type \`any\`.
 `,
+				suggestions: [
+					{
+						id: "replace",
+						updated: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => 'safe'" /></template>
+`,
+					},
+				],
 			},
 		],
 		valid: [

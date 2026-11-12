@@ -7,7 +7,7 @@
 		"types": ["node"]
 	},
 	"include": ["src"],
-	"exclude": ["src/**/*.test.ts"],
+	"exclude": ["src/**/*.test.ts", "src/**/*.testUtils.ts"],
 	"references": [
 		{ "path": "../core/tsconfig.src.json" },
 		{ "path": "../utils" }

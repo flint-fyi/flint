@@ -1,10 +1,12 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	isLiteralExpression,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -17,7 +19,7 @@ function isLiteralValue(node: AST.AnyNode) {
 		node.kind === SyntaxKind.TrueKeyword ||
 		node.kind === SyntaxKind.FalseKeyword ||
 		node.kind === SyntaxKind.NullKeyword ||
-		ts.isLiteralExpression(node)
+		isLiteralExpression(node)
 	);
 }
 

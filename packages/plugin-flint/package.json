@@ -28,13 +28,12 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"@flint.fyi/utils": "workspace:^",
-		"typescript": "catalog:prod"
+		"@flint.fyi/utils": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
+		"@flint.fyi/content-mapper": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@flint.fyi/volar-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

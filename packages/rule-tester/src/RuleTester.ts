@@ -39,6 +39,7 @@ export interface RuleTesterDefaults {
 }
 
 export interface RuleTesterOptions {
+	afterAll?: TesterSetupAfterAll;
 	assertNoLanguageReports?: boolean;
 	defaults?: RuleTesterDefaults;
 	describe?: TesterSetupDescribe;
@@ -53,6 +54,8 @@ export interface TestCases<Options extends object | undefined> {
 	invalid: InvalidTestCase<Options>[];
 	valid: ValidTestCase<Options>[];
 }
+
+export type TesterSetupAfterAll = (setup: () => void) => void;
 
 export type TesterSetupDescribe = (
 	description: string,
@@ -69,12 +72,21 @@ type TestCaseUniqueProperties = Pick<
 	"code" | "fileName" | "files" | "options"
 >;
 
+interface TesterSetupsByKey {
+	afterAll: TesterSetupAfterAll;
+	describe: TesterSetupDescribe;
+	it: TesterSetupIt;
+}
+
 export class RuleTester {
 	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
 	#linterHost: VFSLinterHost;
-	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
+	#testerOptions: Required<
+		Omit<RuleTesterOptions, "afterAll" | "diskBackedFSRoot">
+	>;
 
 	constructor({
+		afterAll,
 		assertNoLanguageReports = true,
 		defaults = {},
 		describe,
@@ -116,6 +128,12 @@ export class RuleTester {
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
 		);
+		const afterAllSetup = defaultTo(afterAll, scope, "afterAll");
+		afterAllSetup(() => {
+			for (const [, fileFactory] of this.#fileFactories.entries()) {
+				fileFactory[Symbol.dispose]?.();
+			}
+		});
 
 		it = defaultTo(it, scope, "it");
 
@@ -315,17 +333,17 @@ function assertNoLanguageReports(languageReports: LanguageReports) {
 	}
 }
 
-function defaultTo<TesterSetup extends TesterSetupDescribe | TesterSetupIt>(
-	provided: TesterSetup | undefined,
+function defaultTo<ScopeKey extends keyof TesterSetupsByKey>(
+	provided: TesterSetupsByKey[ScopeKey] | undefined,
 	scope: Record<string, unknown>,
-	scopeKey: string,
-): TesterSetup {
+	scopeKey: ScopeKey,
+): TesterSetupsByKey[ScopeKey] {
 	if (provided) {
 		return provided;
 	}
 
 	if (scopeKey in scope && typeof scope[scopeKey] === "function") {
-		return scope[scopeKey] as TesterSetup;
+		return scope[scopeKey] as TesterSetupsByKey[ScopeKey];
 	}
 
 	throw new Error(`No ${scopeKey} function found`);

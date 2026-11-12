@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getScopeManager,
 	getTSNodeRange,
@@ -7,6 +5,7 @@ import {
 	type AST,
 	type Scope,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -178,6 +177,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const properties = new Map<string, null | string>();
 					for (const element of node.name.elements) {
+						if (!element.name) {
+							continue;
+						}
+
 						if (element.propertyName) {
 							if (element.propertyName.kind === SyntaxKind.Identifier) {
 								if (

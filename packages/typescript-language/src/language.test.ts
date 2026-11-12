@@ -1,74 +1,148 @@
-import type {
-	createProjectService,
-	CreateProjectServiceSettings,
-} from "@typescript-eslint/project-service";
-import type ts from "typescript";
-import { describe, expect, it, vi } from "vitest";
+import { SyntaxKind } from "typescript-native/ast";
+import { describe, expect, it } from "vitest";
 
-import { createVFSLinterHost, type LinterHost } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
+import { createVFSLinterHost } from "@flint.fyi/core";
 
 import {
 	throwUnknownLanguageExtension,
 	typescriptLanguage,
 } from "./language.ts";
 
-const projectServices = vi.hoisted(() => [] as ts.server.ProjectService[]);
-
-vi.mock("@typescript-eslint/project-service", async (importOriginal) => {
-	const original = await importOriginal<{
-		createProjectService: typeof createProjectService;
-	}>();
-
-	return {
-		...original,
-		createProjectService(settings?: CreateProjectServiceSettings) {
-			const result = original.createProjectService(settings);
-			projectServices.push(result.service);
-			return result;
-		},
-	};
-});
-
-const aPath = "/root/a.ts";
-const bPath = "/root/b.ts";
-
-describe("typescriptLanguage", () => {
-	it("closes remaining open client files when the factory is disposed", () => {
-		const { factory, service } = createTestFactory();
-		const closeClientFile = vi.spyOn(service, "closeClientFile");
-		const openClientFile = vi.spyOn(service, "openClientFile");
-
-		const aFile = factory.createFile(
-			createAboutData(aPath, "export const a = 1;"),
+describe("typescriptLanguage file lifecycle", () => {
+	it("keeps every file on the final snapshot until LIFO finalization", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile(
+			"/repo/tsconfig.json",
+			JSON.stringify({
+				compilerOptions: { noLib: true },
+				files: ["first.ts", "second.ts"],
+			}),
 		);
-		factory.createFile(createAboutData(bPath, "export const b = 1;"));
+		host.vfsUpsertFile("/repo/first.ts", "export const first = 1;");
+		host.vfsUpsertFile("/repo/second.ts", "export const second = 2;");
+		const factory = typescriptLanguage.createFileFactory(host);
+		const first = factory.createFile({
+			filePath: "/repo/first.ts",
+			filePathAbsolute: "/repo/first.ts",
+			sourceText: "export const first = 1;",
+		});
+		const firstProgram = first.services.program;
+		const second = factory.createFile({
+			filePath: "/repo/second.ts",
+			filePathAbsolute: "/repo/second.ts",
+			sourceText: "export const second = 2;",
+		});
 
-		aFile[Symbol.dispose]();
+		expect(first.services.program).not.toBe(firstProgram);
+		expect(first.services.program).toBe(second.services.program);
+		expect(first.services.sourceFile.fileName).toBe("/repo/first.ts");
+		expect(second.services.sourceFile.fileName).toBe("/repo/second.ts");
+		expect(first.services.project).toBeDefined();
+		expect(first.services.program).toBeDefined();
+		expect(first.services.typeChecker).toBeDefined();
+
+		second[Symbol.dispose]();
+		expect(first.services.sourceFile.fileName).toBe("/repo/first.ts");
+		first[Symbol.dispose]();
+		expect(first.services.program).toBeDefined();
 		factory[Symbol.dispose]?.();
-
-		expect(openClientFile.mock.calls).toEqual([
-			[aPath, "export const a = 1;"],
-			[bPath, "export const b = 1;"],
-		]);
-		expect(closeClientFile.mock.calls).toEqual([[aPath], [bPath]]);
+		expect(() => first.services.program).toThrow("disposed");
 	});
 
-	it("reads updated source text when a changed file is recreated before file watchers fire", () => {
-		const { factory, vfs } = createTestFactory();
-
-		const first = factory.createFile(
-			createAboutData(aPath, "export const a = 1;"),
-		);
-		expect(first.services.sourceFile.text).toBe("export const a = 1;");
+	it("reads updated source text when a prepared file changes before it is recreated", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile("/repo/index.ts", "export const value = 1;");
+		const factory = typescriptLanguage.createFileFactory(host);
+		factory.prepareFiles?.(["/repo/index.ts"]);
+		const first = factory.createFile({
+			filePath: "/repo/index.ts",
+			filePathAbsolute: "/repo/index.ts",
+			sourceText: "export const value = 1;",
+		});
+		expect(first.services.sourceFile.text).toBe("export const value = 1;");
 		first[Symbol.dispose]();
 
-		vfs.vfsUpsertFile(aPath, "export const a = 2;");
-		const second = factory.createFile(
-			createAboutData(aPath, "export const a = 2;"),
-		);
+		host.vfsUpsertFile("/repo/index.ts", "export const value = 2;");
+		factory.prepareFiles?.(["/repo/index.ts"]);
+		const second = factory.createFile({
+			filePath: "/repo/index.ts",
+			filePathAbsolute: "/repo/index.ts",
+			sourceText: "export const value = 2;",
+		});
 
-		expect(second.services.sourceFile.text).toBe("export const a = 2;");
+		expect(second.services.sourceFile.text).toBe("export const value = 2;");
+		second[Symbol.dispose]();
+		factory[Symbol.dispose]?.();
+	});
+
+	it("updates a repeated target file after a zero-active-file gap", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile(
+			"/repo/index.ts",
+			'location.href = "javascript:void(0)";',
+		);
+		const factory = typescriptLanguage.createFileFactory(host);
+		const first = factory.createFile({
+			filePath: "/repo/index.ts",
+			filePathAbsolute: "/repo/index.ts",
+			sourceText: 'location.href = "javascript:void(0)";',
+		});
+		expect(first.services.sourceFile.statements[0]?.kind).toBe(
+			SyntaxKind.ExpressionStatement,
+		);
+		first[Symbol.dispose]();
+
+		host.vfsUpsertFile("/repo/index.ts", "export const value = 2;");
+		const second = factory.createFile({
+			filePath: "/repo/index.ts",
+			filePathAbsolute: "/repo/index.ts",
+			sourceText: "export const value = 2;",
+		});
+		expect(second.services.sourceFile.text).toContain("value = 2");
+		expect(second.services.sourceFile.statements[0]?.kind).toBe(
+			SyntaxKind.VariableStatement,
+		);
+		second[Symbol.dispose]();
+		factory[Symbol.dispose]?.();
+	});
+
+	it("updates created, changed, and deleted auxiliary project files", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile("/repo/index.ts", 'import "./auxiliary";');
+		const factory = typescriptLanguage.createFileFactory(host);
+		const createTarget = () =>
+			factory.createFile({
+				filePath: "/repo/index.ts",
+				filePathAbsolute: "/repo/index.ts",
+				sourceText: 'import "./auxiliary";',
+			});
+		const first = createTarget();
+		expect(
+			first.services.program.getSourceFile("/repo/auxiliary.ts"),
+		).toBeUndefined();
+		first[Symbol.dispose]();
+
+		host.vfsUpsertFile("/repo/auxiliary.ts", "export const value = 1;");
+		const second = createTarget();
+		expect(
+			second.services.program.getSourceFile("/repo/auxiliary.ts")?.text,
+		).toContain("value = 1");
+		second[Symbol.dispose]();
+
+		host.vfsUpsertFile("/repo/auxiliary.ts", "export const value = 2;");
+		const third = createTarget();
+		expect(
+			third.services.program.getSourceFile("/repo/auxiliary.ts")?.text,
+		).toContain("value = 2");
+		third[Symbol.dispose]();
+
+		host.vfsDeleteFile("/repo/auxiliary.ts");
+		const fourth = createTarget();
+		expect(
+			fourth.services.program.getSourceFile("/repo/auxiliary.ts"),
+		).toBeUndefined();
+		fourth[Symbol.dispose]();
+		factory[Symbol.dispose]?.();
 	});
 });
 
@@ -85,41 +159,3 @@ describe(throwUnknownLanguageExtension, () => {
 		);
 	});
 });
-
-function createAboutData(filePathAbsolute: string, sourceText: string) {
-	return {
-		filePath: filePathAbsolute,
-		filePathAbsolute,
-		sourceText,
-	};
-}
-
-function createTestFactory() {
-	const vfs = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
-	vfs.vfsUpsertFile(
-		"/root/tsconfig.json",
-		JSON.stringify({ files: ["a.ts", "b.ts"] }),
-	);
-	vfs.vfsUpsertFile(aPath, "export const a = 1;");
-	vfs.vfsUpsertFile(bPath, "export const b = 1;");
-
-	const hostWithoutWatchers: LinterHost = {
-		...vfs,
-		watchDirectorySync: () => ({
-			[Symbol.dispose]: vi.fn(),
-		}),
-		watchFileSync: () => ({
-			[Symbol.dispose]: vi.fn(),
-		}),
-	};
-	const factory = typescriptLanguage.createFileFactory(hostWithoutWatchers);
-
-	return {
-		factory,
-		service: nullThrows(
-			projectServices.at(-1),
-			"Expected the factory to create a project service",
-		),
-		vfs,
-	};
-}

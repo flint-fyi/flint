@@ -1,10 +1,22 @@
-import ts from "typescript";
+import { NodeFlags } from "typescript-native/ast";
 
 import type * as AST from "../types/ast.ts";
+import { getAuthoredNode } from "./getAuthoredNode.ts";
 
-// TODO (#2772): Fill out remaining TypeScript APIs
-export const forEachChild = ts.forEachChild as unknown as <T>(
+/**
+ * `node.forEachChild`, without the nodes TypeScript reparses from JSDoc in
+ * JavaScript files.
+ */
+export function forEachChild<Result>(
 	node: AST.AnyNode,
-	cbNode: (node: AST.AnyNode) => T | undefined,
-	cbNodes?: (nodes: ts.NodeArray<AST.AnyNode>) => T | undefined,
-) => T | undefined;
+	visitor: (node: AST.AnyNode) => Result | undefined,
+): Result | undefined {
+	if (!(node.flags & NodeFlags.JavaScriptFile)) {
+		return node.forEachChild(visitor);
+	}
+
+	return node.forEachChild((child) => {
+		const authored = getAuthoredNode(child);
+		return authored && visitor(authored as AST.AnyNode);
+	});
+}

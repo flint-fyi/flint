@@ -13,7 +13,6 @@ export async function loadConfigDefinition(
 	configFileName: string,
 	importVersion?: number,
 ): Promise<ProcessedConfigDefinition | undefined> {
-	await import("@flint.fyi/ts-patch/install-patch");
 	const configUrl = pathToFileURL(
 		path.join(host.getCurrentDirectory(), configFileName),
 	);

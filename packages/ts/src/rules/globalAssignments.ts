@@ -1,11 +1,12 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	isGlobalVariable,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -36,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
-						tsutils.isAssignmentKind(node.operatorToken.kind) &&
+						isAssignmentOperator(node.operatorToken.kind) &&
 						isGlobalVariable(node.left, typeChecker, program)
 					) {
 						context.report({

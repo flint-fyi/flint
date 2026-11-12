@@ -1,5 +1,3 @@
-import { SyntaxKind, type Program } from "typescript";
-
 import {
 	getTSNodeRange,
 	isGlobalDeclaration,
@@ -9,6 +7,8 @@ import {
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

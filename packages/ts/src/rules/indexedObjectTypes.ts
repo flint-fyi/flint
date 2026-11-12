@@ -1,4 +1,3 @@
-import { SyntaxKind, type NodeArray } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -7,6 +6,10 @@ import {
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type NodeArray,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

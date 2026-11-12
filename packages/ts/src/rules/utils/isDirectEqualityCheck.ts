@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript";
-
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 export function isDirectEqualityCheck(
 	node: AST.ArrowFunction | AST.FunctionExpression,

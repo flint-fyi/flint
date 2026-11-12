@@ -1,10 +1,12 @@
-import { SyntaxKind, type Node } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type Node,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -76,10 +78,6 @@ function getNameText(name: AST.PropertyName) {
 		return name.text;
 	}
 
-	if (name.kind === SyntaxKind.PrivateIdentifier) {
-		return `#${name.text}`;
-	}
-
 	return;
 }
 
@@ -88,7 +86,7 @@ function getPropertyKeyName(property: AST.ObjectLiteralElementLike) {
 		return {
 			group: "values",
 			node: property.name,
-			text: property.name.text,
+			text: (property.name as AST.Identifier).text,
 		} as const;
 	}
 

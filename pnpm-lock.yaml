@@ -388,6 +388,9 @@ catalogs:
     prettier-plugin-sh:
       specifier: 0.20.2
       version: 0.20.2
+    prettier-plugin-svelte:
+      specifier: 3.4.0
+      version: 3.4.0
     simple-git-hooks:
       specifier: 2.14.0
       version: 2.14.0
@@ -398,8 +401,8 @@ catalogs:
       specifier: 0.23.4
       version: 0.23.4
     typescript:
-      specifier: 6.0.3
-      version: 6.0.3
+      specifier: npm:@typescript/typescript6@6.0.2
+      version: 6.0.2
     typescript-eslint:
       specifier: 8.72.1
       version: 8.72.1
@@ -452,21 +455,9 @@ catalogs:
     '@types/unist':
       specifier: ^3.0.3
       version: 3.0.3
-    '@typescript-eslint/project-service':
-      specifier: ^8.53.0
-      version: 8.72.1
-    '@volar/language-core':
-      specifier: 2.4.31
-      version: 2.4.31
-    '@volar/typescript':
-      specifier: 2.4.31
-      version: 2.4.31
     '@vue/compiler-dom':
       specifier: ^3.5.0
       version: 3.5.45
-    '@vue/language-core':
-      specifier: 3.3.14
-      version: 3.3.14
     cached-factory:
       specifier: ^0.3.0
       version: 0.3.0
@@ -539,15 +530,18 @@ catalogs:
     tinyglobby:
       specifier: ^0.2.17
       version: 0.2.17
-    ts-api-utils:
-      specifier: ^2.4.0
-      version: 2.5.0
     typescript:
-      specifier: ^6.0.3
-      version: 6.0.3
+      specifier: npm:@typescript/typescript6@6.0.2
+      version: 6.0.2
+    typescript-native:
+      specifier: npm:typescript@7.1.0-beta
+      version: 7.1.0-beta
     unist-util-visit:
       specifier: ^5.2.0
       version: 5.2.0
+    vize:
+      specifier: 0.458.0
+      version: 0.458.0
     wrap-ansi:
       specifier: ^10.0.0
       version: 10.0.2
@@ -633,6 +627,9 @@ catalogs:
     starlight-sidebar-topics:
       specifier: 0.9.0
       version: 0.9.0
+    typescript:
+      specifier: 6.0.3
+      version: 6.0.3
     zod:
       specifier: 4.6.7
       version: 4.6.7
@@ -685,9 +682,6 @@ importers:
       '@flint.fyi/spelling':
         specifier: workspace:^
         version: link:packages/spelling
-      '@flint.fyi/ts-patch':
-        specifier: workspace:^
-        version: link:packages/ts-patch
       '@flint.fyi/vitest':
         specifier: workspace:^
         version: link:packages/vitest
@@ -702,7 +696,7 @@ importers:
         version: 5.1.0(vitest@5.1.0)
       '@vitest/eslint-plugin':
         specifier: catalog:dev
-        version: 1.6.28(@typescript-eslint/eslint-plugin@8.72.1)(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)(vitest@5.1.0)
+        version: 1.6.28(@typescript-eslint/eslint-plugin@8.72.1)(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)(vitest@5.1.0)
       console-fail-test:
         specifier: catalog:dev
         version: 0.10.0
@@ -711,25 +705,25 @@ importers:
         version: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-jsdoc:
         specifier: catalog:dev
-        version: 65.4.5(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 65.4.5(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint-plugin-jsonc:
         specifier: catalog:dev
         version: 3.4.2(@eslint/json@2.1.1)(eslint@10.14.0)
       eslint-plugin-n:
         specifier: catalog:dev
-        version: 18.5.0(eslint@10.14.0)(typescript@6.0.3)
+        version: 18.5.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)
       eslint-plugin-package-json:
         specifier: catalog:dev
         version: 1.14.0(@eslint/json@2.1.1)(eslint@10.14.0)
       eslint-plugin-perfectionist:
         specifier: catalog:dev
-        version: 5.13.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 5.13.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint-plugin-regexp:
         specifier: catalog:dev
         version: 3.3.3(eslint@10.14.0)
       eslint-plugin-unicorn:
         specifier: catalog:dev
-        version: 79.0.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 79.0.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint-plugin-yml:
         specifier: catalog:dev
         version: 3.10.0(eslint@10.14.0)
@@ -766,18 +760,21 @@ importers:
       prettier-plugin-sh:
         specifier: catalog:dev
         version: 0.20.2(prettier@3.9.10)
+      prettier-plugin-svelte:
+        specifier: catalog:dev
+        version: 3.4.0(prettier@3.9.10)(svelte@5.57.3)
       simple-git-hooks:
         specifier: catalog:dev
         version: 2.14.0
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       typescript:
         specifier: catalog:dev
-        version: 6.0.3
+        version: '@typescript/typescript6@6.0.2'
       typescript-eslint:
         specifier: catalog:dev
-        version: 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -790,6 +787,9 @@ importers:
       '@flint.fyi/astro-language':
         specifier: workspace:^
         version: link:../astro-language
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -802,12 +802,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@astrojs/compiler':
         specifier: catalog:dev
@@ -820,7 +814,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -832,32 +826,26 @@ importers:
         version: 4.0.0
       '@astrojs/ts-plugin':
         specifier: catalog:prod
-        version: 1.10.12(typescript@6.0.3)
+        version: 1.10.12(@typescript/typescript6@6.0.2)
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/ts-patch':
-        specifier: workspace:^
-        version: link:../ts-patch
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -873,9 +861,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -885,7 +870,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -894,7 +879,7 @@ importers:
     dependencies:
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
 
   packages/changesets:
     dependencies:
@@ -919,7 +904,7 @@ importers:
         version: 4.0.4
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -929,9 +914,6 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/ts-patch':
-        specifier: workspace:^
-        version: link:../ts-patch
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -953,9 +935,6 @@ importers:
       text-table-fast:
         specifier: catalog:prod
         version: 0.2.0
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
       wrap-ansi:
         specifier: catalog:prod
         version: 10.0.2
@@ -968,7 +947,23 @@ importers:
         version: 3.9.10
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
+
+  packages/content-mapper:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+    devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
+      tsdown:
+        specifier: catalog:dev
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
+      vitest:
+        specifier: catalog:dev
+        version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
 
   packages/core:
     dependencies:
@@ -1011,7 +1006,7 @@ importers:
         version: 4.0.3
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1024,9 +1019,6 @@ importers:
       '@flint.fyi/css-language':
         specifier: workspace:^
         version: link:../css-language
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1036,7 +1028,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1052,34 +1044,40 @@ importers:
       css-tree:
         specifier: catalog:prod
         version: 3.2.1
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
 
   packages/e2e:
     devDependencies:
+      '@flint.fyi/astro':
+        specifier: workspace:^
+        version: link:../astro
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       '@flint.fyi/spelling':
         specifier: workspace:^
         version: link:../spelling
+      '@flint.fyi/svelte':
+        specifier: workspace:^
+        version: link:../svelte
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      '@flint.fyi/vue':
+        specifier: workspace:^
+        version: link:../vue
       execa:
         specifier: catalog:dev
         version: 10.2.1
@@ -1113,15 +1111,9 @@ importers:
       '@flint.fyi/ts':
         specifier: 'workspace:'
         version: link:../ts
-      '@flint.fyi/ts-patch':
-        specifier: 'workspace:'
-        version: link:../ts-patch
       '@flint.fyi/yaml':
         specifier: 'workspace:'
         version: link:../yaml
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1131,7 +1123,7 @@ importers:
         version: 3.9.10
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
 
   packages/json:
     dependencies:
@@ -1156,7 +1148,7 @@ importers:
         version: 3.3.13
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1175,7 +1167,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1194,9 +1186,6 @@ importers:
       language-tags:
         specifier: catalog:prod
         version: 2.1.0
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1209,7 +1198,7 @@ importers:
         version: 1.0.4
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1240,7 +1229,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1271,7 +1260,7 @@ importers:
         version: 4.0.4
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1281,16 +1270,13 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
 
   packages/node:
     dependencies:
@@ -1303,9 +1289,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1315,7 +1298,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1325,16 +1308,13 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
 
   packages/package-json:
     dependencies:
@@ -1380,10 +1360,7 @@ importers:
         version: 3.3.13
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
-      typescript:
-        specifier: catalog:dev
-        version: 6.0.3
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1396,12 +1373,6 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
-      ts-api-utils:
-        specifier: catalog:prod
-        version: 2.5.0(typescript@6.0.3)
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1411,7 +1382,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1454,13 +1425,10 @@ importers:
         version: 3.3.3(eslint@10.14.0)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
-        version: 79.0.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
-      typescript:
-        specifier: catalog:dev
-        version: 6.0.3
+        version: 79.0.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       typescript-eslint:
         specifier: catalog:comparisons
-        version: 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1476,22 +1444,19 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1514,16 +1479,13 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
 
   packages/rule-data:
     dependencies:
@@ -1605,7 +1567,7 @@ importers:
         version: 16.4.5(eslint@10.14.0)
       '@nuxt/eslint-plugin':
         specifier: catalog:comparisons
-        version: 1.17.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 1.17.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       '@types/eslint-plugin-jsx-a11y':
         specifier: catalog:comparisons
         version: 6.10.1(jiti@2.7.0)(supports-color@10.2.2)
@@ -1614,10 +1576,10 @@ importers:
         version: 7.3.0
       '@typescript-eslint/eslint-plugin':
         specifier: catalog:comparisons
-        version: 8.72.1(@typescript-eslint/parser@8.72.1)(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 8.72.1(@typescript-eslint/parser@8.72.1)(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       '@vitest/eslint-plugin':
         specifier: catalog:comparisons
-        version: 1.6.28(@typescript-eslint/eslint-plugin@8.72.1)(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)(vitest@5.1.0)
+        version: 1.6.28(@typescript-eslint/eslint-plugin@8.72.1)(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)(vitest@5.1.0)
       eslint:
         specifier: catalog:comparisons
         version: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
@@ -1632,7 +1594,7 @@ importers:
         version: 2.32.0(@typescript-eslint/parser@8.72.1)(eslint@10.14.0)(supports-color@10.2.2)
       eslint-plugin-jsdoc:
         specifier: catalog:comparisons
-        version: 65.4.5(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 65.4.5(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint-plugin-jsonc:
         specifier: catalog:comparisons
         version: 3.4.2(@eslint/json@2.1.1)(eslint@10.14.0)
@@ -1641,13 +1603,13 @@ importers:
         version: 6.10.2(eslint@10.14.0)
       eslint-plugin-n:
         specifier: catalog:comparisons
-        version: 18.5.0(eslint@10.14.0)(typescript@6.0.3)
+        version: 18.5.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)
       eslint-plugin-package-json:
         specifier: catalog:comparisons
         version: 1.14.0(@eslint/json@2.1.1)(eslint@10.14.0)
       eslint-plugin-perfectionist:
         specifier: catalog:comparisons
-        version: 5.13.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 5.13.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint-plugin-promise:
         specifier: catalog:comparisons
         version: 7.3.0(eslint@10.14.0)
@@ -1668,7 +1630,7 @@ importers:
         version: 3.24.1(eslint@10.14.0)(svelte@5.57.3)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
-        version: 79.0.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 79.0.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint-plugin-vue:
         specifier: catalog:comparisons
         version: 10.12.0(@typescript-eslint/parser@8.72.1)(eslint@10.14.0)(vue-eslint-parser@10.4.2)
@@ -1683,7 +1645,7 @@ importers:
         version: 1.93.0
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1711,7 +1673,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1751,9 +1713,6 @@ importers:
       starlight-package-managers:
         specifier: catalog:site
         version: 0.13.0(@astrojs/starlight@0.42.10)
-      typescript:
-        specifier: catalog:dev
-        version: 6.0.3
     devDependencies:
       '@astrojs/check':
         specifier: catalog:site
@@ -1806,6 +1765,9 @@ importers:
       starlight-sidebar-topics:
         specifier: catalog:site
         version: 0.9.0(@astrojs/starlight@0.42.10)(astro@7.4.8)
+      typescript:
+        specifier: catalog:site
+        version: 6.0.3
       zod:
         specifier: catalog:site
         version: 4.6.7
@@ -1815,16 +1777,13 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
 
   packages/spelling:
     dependencies:
@@ -1855,13 +1814,16 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
 
   packages/svelte:
     dependencies:
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1871,12 +1833,6 @@ importers:
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1892,53 +1848,44 @@ importers:
         version: 5.57.3(@typescript-eslint/types@8.72.1)
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
 
   packages/svelte-language:
     dependencies:
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/ts-patch':
-        specifier: workspace:^
-        version: link:../ts-patch
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
       '@jridgewell/sourcemap-codec':
         specifier: catalog:prod
         version: 1.6.0
-      '@volar/language-core':
-        specifier: catalog:prod
-        version: 2.4.31
-      pathe:
-        specifier: catalog:prod
-        version: 2.0.3
       svelte:
         specifier: catalog:prod
         version: 5.57.3(@typescript-eslint/types@8.72.1)
       svelte2tsx:
         specifier: catalog:prod
-        version: 0.7.62(svelte@5.57.3)(typescript@6.0.3)
+        version: 0.7.62(@typescript/typescript6@6.0.2)(svelte@5.57.3)
       typescript:
         specifier: catalog:prod
-        version: 6.0.3
+        version: '@typescript/typescript6@6.0.2'
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -1954,7 +1901,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
 
   packages/ts:
     dependencies:
@@ -1970,21 +1917,12 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      pathe:
-        specifier: catalog:prod
-        version: 2.0.3
       regexp-ast-analysis:
         specifier: catalog:prod
         version: 0.7.1
       scslre:
         specifier: catalog:prod
         version: 0.3.0
-      ts-api-utils:
-        specifier: catalog:prod
-        version: 2.5.0(typescript@6.0.3)
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
       zod:
         specifier: catalog:prod
         version: 4.6.7
@@ -1997,22 +1935,10 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
-
-  packages/ts-patch:
-    devDependencies:
-      '@flint.fyi/build':
-        specifier: workspace:^
-        version: link:../build
-      tsdown:
-        specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
-      typescript:
-        specifier: catalog:dev
-        version: 6.0.3
 
   packages/typescript-language:
     dependencies:
@@ -2022,9 +1948,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@typescript-eslint/project-service':
-        specifier: catalog:prod
-        version: 8.72.1(supports-color@10.2.2)(typescript@6.0.3)
       cached-factory:
         specifier: catalog:prod
         version: 0.3.0
@@ -2034,19 +1957,19 @@ importers:
       pathe:
         specifier: catalog:prod
         version: 2.0.3
-      ts-api-utils:
+      typescript-native:
         specifier: catalog:prod
-        version: 2.5.0(typescript@6.0.3)
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
+        version: typescript@7.1.0-beta
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
+      prettier:
+        specifier: catalog:dev
+        version: 3.9.10
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@7.1.0-beta)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -2062,7 +1985,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -2078,9 +2001,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
       zod:
         specifier: catalog:prod
         version: 4.6.7
@@ -2093,68 +2013,31 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
-      vitest:
-        specifier: catalog:dev
-        version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
-
-  packages/volar-language:
-    dependencies:
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
-      '@flint.fyi/ts-patch':
-        specifier: workspace:^
-        version: link:../ts-patch
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
-      '@flint.fyi/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@volar/language-core':
-        specifier: catalog:prod
-        version: 2.4.31
-      '@volar/typescript':
-        specifier: catalog:prod
-        version: 2.4.31(typescript@6.0.3)
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
-    devDependencies:
-      '@flint.fyi/build':
-        specifier: workspace:^
-        version: link:../build
-      tsdown:
-        specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
 
   packages/vue:
     dependencies:
+      '@flint.fyi/content-mapper':
+        specifier: workspace:^
+        version: link:../content-mapper
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
-      '@flint.fyi/utils':
+      '@flint.fyi/typescript-language':
         specifier: workspace:^
-        version: link:../utils
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
+        version: link:../typescript-language
       '@flint.fyi/vue-language':
         specifier: workspace:^
         version: link:../vue-language
       '@vue/compiler-dom':
         specifier: catalog:prod
         version: 3.5.45
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -2162,55 +2045,40 @@ importers:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
       vue:
         specifier: catalog:dev
-        version: 3.5.45(typescript@6.0.3)
+        version: 3.5.45(@typescript/typescript6@6.0.2)
 
   packages/vue-language:
     dependencies:
-      '@flint.fyi/ts-patch':
+      '@flint.fyi/core':
         specifier: workspace:^
-        version: link:../ts-patch
+        version: link:../core
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@flint.fyi/volar-language':
-        specifier: workspace:^
-        version: link:../volar-language
-      '@volar/language-core':
-        specifier: catalog:prod
-        version: 2.4.31
       '@vue/compiler-dom':
         specifier: catalog:prod
         version: 3.5.45
-      '@vue/language-core':
+      vize:
         specifier: catalog:prod
-        version: 3.3.14
-      typescript:
-        specifier: catalog:prod
-        version: 6.0.3
+        version: 0.458.0(vue@3.5.45)
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -2235,7 +2103,7 @@ importers:
         version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -2263,7 +2131,7 @@ importers:
         version: link:../build
       tsdown:
         specifier: catalog:dev
-        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
         version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
@@ -3733,6 +3601,128 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@oxc-transform/binding-android-arm-eabi@0.144.0':
+    resolution: {integrity: sha512-Sskiy+uGMIjOFI9D1OZdYgT2NzVuvkOU5HDWAdp36BNuBbOoBFpNTVAT2D9PGfRQJEKJ/K/Wb2L0gA2VC23UUA==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm]
+    os: [android]
+
+  '@oxc-transform/binding-android-arm64@0.144.0':
+    resolution: {integrity: sha512-osVA5RRHE63G9effQf2ME3HOscX0zDTTG1O9Xz6tIdxY11y+Pj51l6XD2lk4m3scUa8biI6qUhDInH7IKGUopw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [android]
+
+  '@oxc-transform/binding-darwin-arm64@0.144.0':
+    resolution: {integrity: sha512-gRpF9QorjIHzvPQ+ix7Tu0gDViikaU8iGZN/FkZSW8AJCqJrlInJpnugZisgmBDmWlPD9XuEuWPR0kXDI70nww==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@oxc-transform/binding-darwin-x64@0.144.0':
+    resolution: {integrity: sha512-EyxYXw5qm/Z1wi2DJQr2IXTOvYNHKFzI6sITYvwRBdWt6mRNrskUNXq5Jqr47183kSb8w1f5ygVQLS2x2k2yVg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [darwin]
+
+  '@oxc-transform/binding-freebsd-x64@0.144.0':
+    resolution: {integrity: sha512-aKhXnBEvbUJBxTgh5ai9RGGjZOCL8Y9IZM0IfG7WQOdQc2aha4IukyBQ3/V1c5DQFZl8hblGzf95D3Es2uNV2A==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@oxc-transform/binding-linux-arm-gnueabihf@0.144.0':
+    resolution: {integrity: sha512-wWGIK7+bG1gQRR0VEhaQrUOSQqwc6Mo3NuHlBIXt20YLxHSzeghFHU/KuIs2S7xcOZOaWqM4aRKB86fxV1QKeA==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm]
+    os: [linux]
+
+  '@oxc-transform/binding-linux-arm-musleabihf@0.144.0':
+    resolution: {integrity: sha512-R8XAHI6gxenWpzpNe7hll2KXAtfIaDL/6w/oFuuVZ3/bpKwEYH/U1fdSmq3ImbtJbIZXAhGGOTOeaWoKLLhF2w==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm]
+    os: [linux]
+
+  '@oxc-transform/binding-linux-arm64-gnu@0.144.0':
+    resolution: {integrity: sha512-PBGyvBcPeSHujvTNDNj5lVEZGI2CEszyBIKBnQsuhXE6PbkXsXN+ar1tAv9MDFByIppTa6eHCkBCx2wLRGRd5A==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-transform/binding-linux-arm64-musl@0.144.0':
+    resolution: {integrity: sha512-vbXqLri/fGsRzvFm9sUDjEadBq3OlGfmb5c33pyfKVM+AjP685LXb7smUNzjfbmKpGkXB18tHvqpt/QXNadZTg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@oxc-transform/binding-linux-ppc64-gnu@0.144.0':
+    resolution: {integrity: sha512-0SYHjw+KLnjFI1rdZAf0TfgoIqDIDvjsedNZ0U0rxZiHVNJyDltaB8m75rvNToTMfcmV76k61HXOmW6Neylo/A==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [ppc64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-transform/binding-linux-riscv64-gnu@0.144.0':
+    resolution: {integrity: sha512-n7uZFeZimHxuasIpwnwybw9UXQ0AxLHkGeOmHGMtcqey2mYmdVdW/5M+tliPVgPwVGu4HlBqv/riWsqWmrVQEQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-transform/binding-linux-riscv64-musl@0.144.0':
+    resolution: {integrity: sha512-Dc/pGt10QuqCO4tG51hZ+zp/+BNnUVTcDFS7FHCR67X8IaoEE8J7Pr0DkAcn8uPTvvSFzzNkhPwSx/L4XCUb/w==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [musl]
+
+  '@oxc-transform/binding-linux-s390x-gnu@0.144.0':
+    resolution: {integrity: sha512-BeZ9tDcUVwfHlUl76GBwuDxrqmRLqdugPrq+LXuFRJ2mCzn3oFe4vOGCDMLW9ObIRAISR7+NIPH3CUyxM8VgOQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-transform/binding-linux-x64-gnu@0.144.0':
+    resolution: {integrity: sha512-6U5R564AZ/ormt8iXXFETByq9dtADi9j2zEs4IEu0/5nvx27I+M7WTwGYBmWvYr1CfHTkM3a5KgNU0Vn3VoQPQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-transform/binding-linux-x64-musl@0.144.0':
+    resolution: {integrity: sha512-gpEHX25aa33npfw/GcjHT+Hrk3n7kNrKdsDcNB43u5XIyvCgyVR/S/YncSbYI1Woko30YfiE77jKsDx1WrkauQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@oxc-transform/binding-openharmony-arm64@0.144.0':
+    resolution: {integrity: sha512-1kEUpTvm8ADkrUCX5xMop3/8szkTANZ1rLSbuiLGQ6KtbWWQm7hJUDvj78Sig8rZ8TqZS+BwUI4dcw4lK+Yysw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [openharmony]
+
+  '@oxc-transform/binding-win32-arm64-msvc@0.144.0':
+    resolution: {integrity: sha512-/02/Bsw7WPxPQhhEfU80oRtOakHWPzE3MuPVkU4aTACPhismESGl2iIWVsTBddTiViyj30VxyqiEN/022LQnNg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [win32]
+
+  '@oxc-transform/binding-win32-ia32-msvc@0.144.0':
+    resolution: {integrity: sha512-nNxuvrVG9xR06XyZqPqGxt2kNkcYyseki1CFpzHSw+8iZs22EyaGVocjirIsp5t5SBj8Zd+xOLHmT9ldn6ZOTA==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [ia32]
+    os: [win32]
+
+  '@oxc-transform/binding-win32-x64-msvc@0.144.0':
+    resolution: {integrity: sha512-2mqtOa1KR/v8F85Cf8l1jX411AM7dYDO1HUDzucPXvO9LX63AaHxwafv+Uds1NzxSqnZtlpd1/OKUXrb0KvUFQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [win32]
+
   '@oxlint/binding-android-arm-eabi@1.93.0':
     resolution: {integrity: sha512-KKw70pbD5Pvq3G2lJ+WQ71XPMjCmg37rkSe2+mDqCRP3PoTSdDMuEi4UOnE8JBtyNM7bek61EC2s0Jt7S7u+Sg==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -4267,6 +4257,172 @@ packages:
     resolution: {integrity: sha512-SB8xqipSzZHUePCCLNeYxqnxq83X61/qzNhjQGbTfjxGZIeOEP7tBgWYX05Tcd6CgE02WdTJnh5b8kMZJ/+bnQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@typescript/typescript-aix-ppc64@7.1.0-beta':
+    resolution: {integrity: sha512-DXDG+jIWxBHGdoO70tcHON33rCnSzsEZj9P13oyf/r/KEGIo6awsdSNVNjAw0uMwEpqRu75IrgCcW58YcVkZHg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [ppc64]
+    os: [aix]
+
+  '@typescript/typescript-android-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-UZx6PxoQavuvaVTrSf3aw0Oy/J/uJpRylipA0kzc038jMvZXh0UtE8vnQp20FqtdgD5bhXZ0aJrRJyoTSUO58Q==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [android]
+
+  '@typescript/typescript-darwin-arm64@7.0.2':
+    resolution: {integrity: sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@typescript/typescript-darwin-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-q7mxblcyX0E7hXsY4k+Q6KWKK5mGmfVq+BDesdTgRVgjodk27aIxER77Zyj9+TgSTlCje8F7+JM6f6hl2BuNdw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@typescript/typescript-darwin-x64@7.0.2':
+    resolution: {integrity: sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@typescript/typescript-darwin-x64@7.1.0-beta':
+    resolution: {integrity: sha512-D5EYqG5Wm/guw9+0j8+Mn1Jbr/gfS/VtFTuoH8PJtFbcqeDaQGMulc7SW8q51QG6Y3wGOGX3nbsTOw6fIKWWAA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@typescript/typescript-freebsd-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-9A0XX0tcnH9qPdolSKKzSjTb93dlB0UEcAJbHYEsrFX2fkFNSum9+dvkQQJ9vLc+7vxHetDPujq9Qe6wx+Xhow==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [freebsd]
+
+  '@typescript/typescript-freebsd-x64@7.1.0-beta':
+    resolution: {integrity: sha512-EDf/dBHfY0TxX3NmUTek0hbffeyZlh3+ls6WQW3ICB8vYxwYLFnzg7wkgEUvl9eRlpiJ/nmc2S8arPMzINJ7rg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@typescript/typescript-linux-arm64@7.0.2':
+    resolution: {integrity: sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@typescript/typescript-linux-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-hNqQBgQ5b5oGqN76QqbAU6CwYhJZ6iOcWc2kPTUs2OentgpxZktETziH6KIyRFJPaiBncognwn2ZLu3DNhHiWw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@typescript/typescript-linux-arm@7.1.0-beta':
+    resolution: {integrity: sha512-AvN9HmzOQh46G4312ooSgMHhbB7DtnLwg8D9mo324X49B7weMwtJrBG1MxT9IyI8kzDd7YRtW+1hWGun7WG7Qw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm]
+    os: [linux]
+
+  '@typescript/typescript-linux-loong64@7.1.0-beta':
+    resolution: {integrity: sha512-xbUustlBrFflt2pNEyG5ye+d4WGPc/rfr2xK29MXeobPSw297JqwuKRrvbKM5o3fE/eUM/c+urVm6jQ3IaMVTw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [loong64]
+    os: [linux]
+
+  '@typescript/typescript-linux-mips64el@7.1.0-beta':
+    resolution: {integrity: sha512-fS4/G7/0bXZ3NSq3nBMAXyg65I3tO4S7j08VNQ2g1aNC/qq79gE7Qne1BNjVsjMFfHBVBFjQYoTQCjmVU2iFlg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [mips64el]
+    os: [linux]
+
+  '@typescript/typescript-linux-ppc64@7.1.0-beta':
+    resolution: {integrity: sha512-0upCCxYPX8X6gOwkvfv+Ee7/ufyy7k97mTrGE0e5BxLlnUEa+w+rtgnv2dsKcxFdwdeZYVlZKCqgN/xCBV08+A==}
+    engines: {node: '>=16.20.0'}
+    cpu: [ppc64]
+    os: [linux]
+
+  '@typescript/typescript-linux-riscv64@7.1.0-beta':
+    resolution: {integrity: sha512-0jKU9YRgOPRgiy5V/UWv37kB53PaTpIbwGCbbOMUPPAkrjVRNOIAJaz7Wa7s3H7mdDebX1LopUEPEJR+7Xa7zg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [riscv64]
+    os: [linux]
+
+  '@typescript/typescript-linux-s390x@7.1.0-beta':
+    resolution: {integrity: sha512-j+d04s2kxaPQh6DLPb01sknAQfzsrdSZy15jBRHyLEZoaaQ19dVjbFRlkNVvYwUG7ZdP8+y5b/7RmPxdtHUKdQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [s390x]
+    os: [linux]
+
+  '@typescript/typescript-linux-x64@7.0.2':
+    resolution: {integrity: sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [linux]
+
+  '@typescript/typescript-linux-x64@7.1.0-beta':
+    resolution: {integrity: sha512-kcD51ihf+pnI5KT4uQQYG04OpwznaZYBlIQhDhl8fflFd27NktxXsUeguxZyvUMyWfum7IF2bBS6Jv7ox0AgFQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [linux]
+
+  '@typescript/typescript-netbsd-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-8W85YyoGK+rgGoSU9jJQUpELbrKcZcbdJk2jPNQ6UKDKI7ryPlPFTrV2jCE5RQuv4Tt96hMDTc33s4YfRrLFBA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [netbsd]
+
+  '@typescript/typescript-netbsd-x64@7.1.0-beta':
+    resolution: {integrity: sha512-iGsTE0ve2PG0AcyZinwAR0LnGEZhu/y4dceS0hZsYCaKdYETvQtvtlNWlmYKempsBr6C7Il7dMXHVk+VFm9u0g==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [netbsd]
+
+  '@typescript/typescript-openbsd-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-Z2FERdHB9fAKI+KGqdWn04O7uNlnB+VYiEm6INE1aZuzzLNd3KBqQ6IpKUJF2ny4GigGU6nVu75XD9tAUODPng==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [openbsd]
+
+  '@typescript/typescript-openbsd-x64@7.1.0-beta':
+    resolution: {integrity: sha512-NVG3qeyCq/rJEOhaRjR3LsWgjrjo5vJW25omVLeHAVnpKIG4pE4cenwwKGR06DiJ1s0QTOymcJeKXMEpsiNBVg==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [openbsd]
+
+  '@typescript/typescript-sunos-x64@7.1.0-beta':
+    resolution: {integrity: sha512-ovAdoWXEn2B5/fyWG69pLU3FWmQwPWOjQV5TFbcxtpnOv+R3g8ySGHl1NYRq7Lb/GYdFDvaGcZ+SiU7iKuiMsA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [sunos]
+
+  '@typescript/typescript-win32-arm64@7.0.2':
+    resolution: {integrity: sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@typescript/typescript-win32-arm64@7.1.0-beta':
+    resolution: {integrity: sha512-lJbo71IEOfL7ZZIZnArRaOLqjn9BAfoSzyUQn0aSjfSpDZL4ru0afUsdBfo6PQEjD6ssdmi0n/RwaPADX6bsvQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@typescript/typescript-win32-x64@7.0.2':
+    resolution: {integrity: sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [win32]
+
+  '@typescript/typescript-win32-x64@7.1.0-beta':
+    resolution: {integrity: sha512-UKcHvbybY2tDTvFW2b1vwiAvDlIRooo69lh8CXWVhOQejcvpM5+IgbiFW9EIwR5Wi5X/v+BdN7gdWbigBuJ3rw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [win32]
+
+  '@typescript/typescript6@6.0.2':
+    resolution: {integrity: sha512-mbCddXd+jm7hfx7w2YU64/Av4/NqqeG3GoRZgxPcgoTxYjhrcfJRw9ULch71SS4G+Q3bOXFhRvPqjguN0Hyp5w==}
+    hasBin: true
+
   '@ungap/structured-clone@1.4.0':
     resolution: {integrity: sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==}
 
@@ -4332,6 +4488,62 @@ packages:
 
   '@vitest/spy@5.1.0':
     resolution: {integrity: sha512-2DPO5OMHWKrBngC+fCmTQqemNF0gidRhp3lxbBmRhW+M1XJrfgPpqNqWVevXtn2f2ufD5ZaR1B6B641aAlcX5A==}
+
+  '@vizejs/native-darwin-arm64@0.458.0':
+    resolution: {integrity: sha512-CNpdMyN5F8fMwTVvL03CuWR9GM0TD7Y3dDxh5mSgBIQdoS8Kd9bKbQBV8r06XOOqCHYgBrw28lqhhsnsyJSdrQ==}
+    engines: {node: '>=22'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@vizejs/native-darwin-x64@0.458.0':
+    resolution: {integrity: sha512-hQ61Z0wT4Jmnj7S93JS9zALZ/sNzLVYeaj1nF+VR8hGbcaDVvATchPINVWwc22W696Cn3iC9rFkBryhTo8BRhA==}
+    engines: {node: '>=22'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@vizejs/native-linux-arm64-gnu@0.458.0':
+    resolution: {integrity: sha512-e0QQxHOwZe0MWDIlzpL/sgVK1woriq0c0oL/YWlQcrrdmk/mP2dfin1sztI+R0uHAGa2K24Hv3D7uEgpgC2cTg==}
+    engines: {node: '>=22'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@vizejs/native-linux-arm64-musl@0.458.0':
+    resolution: {integrity: sha512-NEc6vzZVui5UtISfuRSL7WEMm/pR7GQ0lIWO+lXS3zgrNoptSoK3rcqSYAfLa/ftVXGCydXg7W8KnXs0nv06yQ==}
+    engines: {node: '>=22'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@vizejs/native-linux-x64-gnu@0.458.0':
+    resolution: {integrity: sha512-e7w6Rg48s5L+3o5kF00CCo+caIyjNMHE45kdlKODLd+3mguj41ZsoL1BxBoi36tmezhsjh0Cr5cr70CPcl5n/Q==}
+    engines: {node: '>=22'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@vizejs/native-linux-x64-musl@0.458.0':
+    resolution: {integrity: sha512-1HBAESI8+vZ0M/owSzHLNwLv8ZZnAfYBxvEvgY4VC5XD5dAspkZmA+JbPt5dORkDIyGuP6k95snNc5wkw5I8sA==}
+    engines: {node: '>=22'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@vizejs/native-win32-arm64-msvc@0.458.0':
+    resolution: {integrity: sha512-rrbi6ST4FLVIrYmhJsy6CUs6IfU12k5FMRMy3TNY+G9r4BJ6iJExy7tESIZIflVetktrPpKfqLWwjl1RNmsvHw==}
+    engines: {node: '>=22'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@vizejs/native-win32-x64-msvc@0.458.0':
+    resolution: {integrity: sha512-OHDXtsmDfEMy+NK0BN6q3ubfYi9UwjXtRwT6omaK2OOWTv5t01VadKd5W4WDlv/yEMIR7KcyYW0DihkbysSzZg==}
+    engines: {node: '>=22'}
+    cpu: [x64]
+    os: [win32]
+
+  '@vizejs/native@0.458.0':
+    resolution: {integrity: sha512-3HeLunEXdf7n+2dE6B2G9PHD6VH7cBdXzHVrNxkhRUuIkFwVl8RmABzDxlbS+fLLReFZi+QxKzi7NbOzwfd7+w==}
+    engines: {node: '>=22'}
 
   '@volar/kit@2.4.30':
     resolution: {integrity: sha512-VocLtumfXnqnPQEWc9Yx7uC1uOh9gyjVNlrn2+6Zx/z9aM6yTLhPK8lSqM9Ilu81XRa48I00lcYJWLi2BLxx8Q==}
@@ -6740,6 +6952,10 @@ packages:
   oxc-resolver@11.24.2:
     resolution: {integrity: sha512-FY91FiDBj7ls5MsFS9jN3tjz2o0/zsdSsymlakySaBwVJZorHhkWyICLZMKxlu1R9vYo+sd3z1jwb4J8x7bNDw==}
 
+  oxc-transform@0.144.0:
+    resolution: {integrity: sha512-a6mYoz3PPIlwbU4xtHAmWJHD0SvXh9ayAHI1D0+LJEKvln+koaD2M9AAAm5bAN5kkT2AWxN37IVhL1EAzXUyfw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+
   oxlint@1.93.0:
     resolution: {integrity: sha512-19JMsQFX+YvEbcUTFQxjTwhvs0Ibg0D6CFneSLgpwnACWcY/6LjhpGpkPodh0T5aIT1pjMTLlYaeBFzaVgugTA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -6934,6 +7150,12 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       prettier: ^3.6.0
+
+  prettier-plugin-svelte@3.4.0:
+    resolution: {integrity: sha512-pn1ra/0mPObzqoIQn/vUTR3ZZI6UuZ0sHqMK5x2jMLGrs53h0sXhkVuDcrlssHwIMk7FYrMjHBPoUSyyEEDlBQ==}
+    peerDependencies:
+      prettier: ^3.0.0
+      svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
 
   prettier@3.9.10:
     resolution: {integrity: sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==}
@@ -7649,6 +7871,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@7.1.0-beta:
+    resolution: {integrity: sha512-cjWjZAJDsmZzsNC5GwHNlW0YPM65jZa5oR0KyQcYX3KSVIfTvtBq//vewISyatKk4OLi5grZjHhIVE9fdrw1UQ==}
+    engines: {node: '>=16.20.0'}
+    hasBin: true
+
   uc.micro@3.0.0:
     resolution: {integrity: sha512-U3PppEkleoTnIfi8BozMx3yju3qc/L6SwqWo2Sw+54PX+PX0q9I+r1Um5HCmqD7n9VDX5/v3vQH/AjA6deDdtw==}
 
@@ -7933,6 +8160,19 @@ packages:
       happy-dom:
         optional: true
       jsdom:
+        optional: true
+
+  vize@0.458.0:
+    resolution: {integrity: sha512-VbWdAvoEvWvIdAVjNvWo+4UacYQgPM20Pp4xuNUsghfnZxBi8LThIwAJffuufsiXv3nTIiscQm4TgFezT4OHQQ==}
+    engines: {node: '>=22'}
+    hasBin: true
+    peerDependencies:
+      '@pkl-community/pkl': 0.30.2
+      vue: '>=2.6.0 || >=3.6.0-0'
+    peerDependenciesMeta:
+      '@pkl-community/pkl':
+        optional: true
+      vue:
         optional: true
 
   volar-service-css@0.0.71:
@@ -8480,13 +8720,13 @@ snapshots:
       is-docker: 4.0.0
       package-manager-detector: 1.9.0
 
-  '@astrojs/ts-plugin@1.10.12(typescript@6.0.3)':
+  '@astrojs/ts-plugin@1.10.12(@typescript/typescript6@6.0.2)':
     dependencies:
       '@astrojs/compiler': 2.13.1
       '@astrojs/yaml2ts': 0.2.4
       '@jridgewell/sourcemap-codec': 1.6.0
       '@volar/language-core': 2.4.31
-      '@volar/typescript': 2.4.31(typescript@6.0.3)
+      '@volar/typescript': 2.4.31(@typescript/typescript6@6.0.2)
       vscode-languageserver-textdocument: 1.0.16
     transitivePeerDependencies:
       - typescript
@@ -9604,10 +9844,10 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.3
 
-  '@nuxt/eslint-plugin@1.17.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)':
+  '@nuxt/eslint-plugin@1.17.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)':
     dependencies:
       '@typescript-eslint/types': 8.72.1
-      '@typescript-eslint/utils': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
@@ -9735,6 +9975,63 @@ snapshots:
     optional: true
 
   '@oxc-resolver/binding-win32-x64-msvc@11.24.2':
+    optional: true
+
+  '@oxc-transform/binding-android-arm-eabi@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-android-arm64@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-darwin-arm64@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-darwin-x64@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-freebsd-x64@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-arm-gnueabihf@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-arm-musleabihf@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-arm64-gnu@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-arm64-musl@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-ppc64-gnu@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-riscv64-gnu@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-riscv64-musl@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-s390x-gnu@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-x64-gnu@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-linux-x64-musl@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-openharmony-arm64@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-win32-arm64-msvc@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-win32-ia32-msvc@0.144.0':
+    optional: true
+
+  '@oxc-transform/binding-win32-x64-msvc@0.144.0':
     optional: true
 
   '@oxlint/binding-android-arm-eabi@1.93.0':
@@ -10090,19 +10387,31 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@typescript-eslint/eslint-plugin@8.72.1(@typescript-eslint/parser@8.72.1)(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)':
+  '@typescript-eslint/eslint-plugin@8.72.1(@typescript-eslint/parser@8.72.1)(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
-      '@typescript-eslint/parser': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       '@typescript-eslint/scope-manager': 8.72.1
-      '@typescript-eslint/type-utils': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/type-utils': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
+      '@typescript-eslint/utils': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       '@typescript-eslint/visitor-keys': 8.72.1
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
       ignore: 7.0.14
       natural-compare: 1.4.0
-      ts-api-utils: 2.5.0(typescript@6.0.3)
-      typescript: 6.0.3
+      ts-api-utils: 2.5.0(@typescript/typescript6@6.0.2)
+      typescript: '@typescript/typescript6@6.0.2'
+    transitivePeerDependencies:
+      - supports-color
+
+  '@typescript-eslint/parser@8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)':
+    dependencies:
+      '@typescript-eslint/scope-manager': 8.72.1
+      '@typescript-eslint/types': 8.72.1
+      '@typescript-eslint/typescript-estree': 8.72.1(@typescript/typescript6@6.0.2)(supports-color@10.2.2)
+      '@typescript-eslint/visitor-keys': 8.72.1
+      debug: 4.4.3(supports-color@10.2.2)
+      eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - supports-color
 
@@ -10115,6 +10424,15 @@ snapshots:
       debug: 4.4.3(supports-color@10.2.2)
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
       typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@typescript-eslint/project-service@8.72.1(@typescript/typescript6@6.0.2)(supports-color@10.2.2)':
+    dependencies:
+      '@typescript-eslint/tsconfig-utils': 8.72.1(@typescript/typescript6@6.0.2)
+      '@typescript-eslint/types': 8.72.1
+      debug: 4.4.3(supports-color@10.2.2)
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - supports-color
 
@@ -10132,23 +10450,42 @@ snapshots:
       '@typescript-eslint/types': 8.72.1
       '@typescript-eslint/visitor-keys': 8.72.1
 
+  '@typescript-eslint/tsconfig-utils@8.72.1(@typescript/typescript6@6.0.2)':
+    dependencies:
+      typescript: '@typescript/typescript6@6.0.2'
+
   '@typescript-eslint/tsconfig-utils@8.72.1(typescript@6.0.3)':
     dependencies:
       typescript: 6.0.3
 
-  '@typescript-eslint/type-utils@8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)':
+  '@typescript-eslint/type-utils@8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)':
     dependencies:
       '@typescript-eslint/types': 8.72.1
-      '@typescript-eslint/typescript-estree': 8.72.1(supports-color@10.2.2)(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/typescript-estree': 8.72.1(@typescript/typescript6@6.0.2)(supports-color@10.2.2)
+      '@typescript-eslint/utils': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       debug: 4.4.3(supports-color@10.2.2)
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
-      ts-api-utils: 2.5.0(typescript@6.0.3)
-      typescript: 6.0.3
+      ts-api-utils: 2.5.0(@typescript/typescript6@6.0.2)
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - supports-color
 
   '@typescript-eslint/types@8.72.1': {}
+
+  '@typescript-eslint/typescript-estree@8.72.1(@typescript/typescript6@6.0.2)(supports-color@10.2.2)':
+    dependencies:
+      '@typescript-eslint/project-service': 8.72.1(@typescript/typescript6@6.0.2)(supports-color@10.2.2)
+      '@typescript-eslint/tsconfig-utils': 8.72.1(@typescript/typescript6@6.0.2)
+      '@typescript-eslint/types': 8.72.1
+      '@typescript-eslint/visitor-keys': 8.72.1
+      debug: 4.4.3(supports-color@10.2.2)
+      minimatch: 10.2.6
+      semver: 7.8.6
+      tinyglobby: 0.2.17
+      ts-api-utils: 2.5.0(@typescript/typescript6@6.0.2)
+      typescript: '@typescript/typescript6@6.0.2'
+    transitivePeerDependencies:
+      - supports-color
 
   '@typescript-eslint/typescript-estree@8.72.1(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
@@ -10165,14 +10502,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)':
+  '@typescript-eslint/utils@8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)':
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.14.0)
       '@typescript-eslint/scope-manager': 8.72.1
       '@typescript-eslint/types': 8.72.1
-      '@typescript-eslint/typescript-estree': 8.72.1(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/typescript-estree': 8.72.1(@typescript/typescript6@6.0.2)(supports-color@10.2.2)
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - supports-color
 
@@ -10180,6 +10517,91 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.72.1
       eslint-visitor-keys: 5.0.1
+
+  '@typescript/typescript-aix-ppc64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-android-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-darwin-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-darwin-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-darwin-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-darwin-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-freebsd-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-freebsd-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-arm@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-loong64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-mips64el@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-ppc64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-riscv64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-s390x@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-linux-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-linux-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-netbsd-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-netbsd-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-openbsd-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-openbsd-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-sunos-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-win32-arm64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-win32-arm64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript-win32-x64@7.0.2':
+    optional: true
+
+  '@typescript/typescript-win32-x64@7.1.0-beta':
+    optional: true
+
+  '@typescript/typescript6@6.0.2':
+    dependencies:
+      '@typescript/old': typescript@6.0.3
 
   '@ungap/structured-clone@1.4.0': {}
 
@@ -10200,14 +10622,14 @@ snapshots:
       tinyrainbow: 3.2.0
       vitest: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
 
-  '@vitest/eslint-plugin@1.6.28(@typescript-eslint/eslint-plugin@8.72.1)(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)(vitest@5.1.0)':
+  '@vitest/eslint-plugin@1.6.28(@typescript-eslint/eslint-plugin@8.72.1)(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)(vitest@5.1.0)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.72.1
-      '@typescript-eslint/utils': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
     optionalDependencies:
-      '@typescript-eslint/eslint-plugin': 8.72.1(@typescript-eslint/parser@8.72.1)(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
-      typescript: 6.0.3
+      '@typescript-eslint/eslint-plugin': 8.72.1(@typescript-eslint/parser@8.72.1)(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
+      typescript: '@typescript/typescript6@6.0.2'
       vitest: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(vite@8.3.8)
     transitivePeerDependencies:
       - supports-color
@@ -10228,6 +10650,41 @@ snapshots:
       vite: 8.3.8(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
 
   '@vitest/spy@5.1.0': {}
+
+  '@vizejs/native-darwin-arm64@0.458.0':
+    optional: true
+
+  '@vizejs/native-darwin-x64@0.458.0':
+    optional: true
+
+  '@vizejs/native-linux-arm64-gnu@0.458.0':
+    optional: true
+
+  '@vizejs/native-linux-arm64-musl@0.458.0':
+    optional: true
+
+  '@vizejs/native-linux-x64-gnu@0.458.0':
+    optional: true
+
+  '@vizejs/native-linux-x64-musl@0.458.0':
+    optional: true
+
+  '@vizejs/native-win32-arm64-msvc@0.458.0':
+    optional: true
+
+  '@vizejs/native-win32-x64-msvc@0.458.0':
+    optional: true
+
+  '@vizejs/native@0.458.0':
+    optionalDependencies:
+      '@vizejs/native-darwin-arm64': 0.458.0
+      '@vizejs/native-darwin-x64': 0.458.0
+      '@vizejs/native-linux-arm64-gnu': 0.458.0
+      '@vizejs/native-linux-arm64-musl': 0.458.0
+      '@vizejs/native-linux-x64-gnu': 0.458.0
+      '@vizejs/native-linux-x64-musl': 0.458.0
+      '@vizejs/native-win32-arm64-msvc': 0.458.0
+      '@vizejs/native-win32-x64-msvc': 0.458.0
 
   '@volar/kit@2.4.30(typescript@6.0.3)':
     dependencies:
@@ -10260,6 +10717,16 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
+  '@volar/language-service@2.4.30(@typescript/typescript6@6.0.2)':
+    dependencies:
+      '@volar/language-core': 2.4.30
+      vscode-languageserver-protocol: 3.18.5
+      vscode-languageserver-textdocument: 1.0.16
+      vscode-uri: 3.2.0
+    optionalDependencies:
+      typescript: '@typescript/typescript6@6.0.2'
+    optional: true
+
   '@volar/language-service@2.4.30(typescript@6.0.3)':
     dependencies:
       '@volar/language-core': 2.4.30
@@ -10268,6 +10735,15 @@ snapshots:
       vscode-uri: 3.2.0
     optionalDependencies:
       typescript: 6.0.3
+
+  '@volar/language-service@2.4.31(@typescript/typescript6@6.0.2)':
+    dependencies:
+      '@volar/language-core': 2.4.31
+      vscode-languageserver-protocol: 3.18.5
+      vscode-languageserver-textdocument: 1.0.16
+      vscode-uri: 3.2.0
+    optionalDependencies:
+      typescript: '@typescript/typescript6@6.0.2'
 
   '@volar/language-service@2.4.31(typescript@6.0.3)':
     dependencies:
@@ -10282,6 +10758,16 @@ snapshots:
 
   '@volar/source-map@2.4.31': {}
 
+  '@volar/typescript@2.4.30(@typescript/typescript6@6.0.2)':
+    dependencies:
+      '@volar/language-core': 2.4.30
+      '@volar/language-service': 2.4.30(@typescript/typescript6@6.0.2)
+      path-browserify: 1.0.1
+      vscode-uri: 3.2.0
+    optionalDependencies:
+      typescript: '@typescript/typescript6@6.0.2'
+    optional: true
+
   '@volar/typescript@2.4.30(typescript@6.0.3)':
     dependencies:
       '@volar/language-core': 2.4.30
@@ -10291,14 +10777,14 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  '@volar/typescript@2.4.31(typescript@6.0.3)':
+  '@volar/typescript@2.4.31(@typescript/typescript6@6.0.2)':
     dependencies:
       '@volar/language-core': 2.4.31
-      '@volar/language-service': 2.4.31(typescript@6.0.3)
+      '@volar/language-service': 2.4.31(@typescript/typescript6@6.0.2)
       path-browserify: 1.0.1
       vscode-uri: 3.2.0
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
 
   '@vscode/emmet-helper@2.11.0':
     dependencies:
@@ -11282,7 +11768,7 @@ snapshots:
     dependencies:
       debug: 3.2.7(supports-color@10.2.2)
     optionalDependencies:
-      '@typescript-eslint/parser': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-import-resolver-node: 0.3.10(supports-color@10.2.2)
     transitivePeerDependencies:
@@ -11301,9 +11787,9 @@ snapshots:
       postcss-selector-parser: 7.1.7
       synckit: 0.11.13
     optionalDependencies:
-      '@typescript-eslint/parser': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@10.14.0)
-      typescript-eslint: 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      typescript-eslint: 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -11343,18 +11829,18 @@ snapshots:
       string.prototype.trimend: 1.0.10
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jsdoc@65.4.5(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-jsdoc@65.4.5(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2):
     dependencies:
       '@es-joy/escodegen': 5.0.1
       '@es-joy/jsdoccomment': 1.1.0
       '@es-joy/resolve.exports': 1.2.0
-      '@typescript-eslint/utils': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       are-docs-informative: 0.1.1
       comment-parser: 1.4.9
       debug: 4.4.3(supports-color@10.2.2)
@@ -11369,7 +11855,7 @@ snapshots:
       spdx-expression-parse: 5.0.0
       to-valid-identifier: 1.0.0
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - supports-color
 
@@ -11407,7 +11893,7 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-n@18.5.0(eslint@10.14.0)(typescript@6.0.3):
+  eslint-plugin-n@18.5.0(@typescript/typescript6@6.0.2)(eslint@10.14.0):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.14.0)
       enhanced-resolve: 5.26.0
@@ -11420,7 +11906,7 @@ snapshots:
       js-yaml: 5.5.0
       semver: 7.8.6
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
 
   eslint-plugin-package-json@1.14.0(@eslint/json@2.1.1)(eslint@10.14.0):
     dependencies:
@@ -11440,10 +11926,10 @@ snapshots:
     optionalDependencies:
       '@eslint/json': 2.1.1
 
-  eslint-plugin-perfectionist@5.13.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-perfectionist@5.13.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2):
     dependencies:
       '@typescript-eslint/types': 8.72.1
-      '@typescript-eslint/utils': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       natural-orderby: 5.0.0
     optionalDependencies:
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
@@ -11531,7 +12017,7 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  eslint-plugin-unicorn@79.0.0(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-unicorn@79.0.0(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.14.0)
       '@eslint/css-tree': 4.1.2
@@ -11557,7 +12043,7 @@ snapshots:
       strip-indent: 4.1.1
       yaml: 2.9.1
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - supports-color
 
@@ -11572,7 +12058,7 @@ snapshots:
       vue-eslint-parser: 10.4.2(eslint@10.14.0)(supports-color@10.2.2)
       xml-name-validator: 5.0.0
     optionalDependencies:
-      '@typescript-eslint/parser': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
 
   eslint-plugin-yml@3.10.0(eslint@10.14.0):
     dependencies:
@@ -13440,6 +13926,28 @@ snapshots:
       '@oxc-resolver/binding-win32-arm64-msvc': 11.24.2
       '@oxc-resolver/binding-win32-x64-msvc': 11.24.2
 
+  oxc-transform@0.144.0:
+    optionalDependencies:
+      '@oxc-transform/binding-android-arm-eabi': 0.144.0
+      '@oxc-transform/binding-android-arm64': 0.144.0
+      '@oxc-transform/binding-darwin-arm64': 0.144.0
+      '@oxc-transform/binding-darwin-x64': 0.144.0
+      '@oxc-transform/binding-freebsd-x64': 0.144.0
+      '@oxc-transform/binding-linux-arm-gnueabihf': 0.144.0
+      '@oxc-transform/binding-linux-arm-musleabihf': 0.144.0
+      '@oxc-transform/binding-linux-arm64-gnu': 0.144.0
+      '@oxc-transform/binding-linux-arm64-musl': 0.144.0
+      '@oxc-transform/binding-linux-ppc64-gnu': 0.144.0
+      '@oxc-transform/binding-linux-riscv64-gnu': 0.144.0
+      '@oxc-transform/binding-linux-riscv64-musl': 0.144.0
+      '@oxc-transform/binding-linux-s390x-gnu': 0.144.0
+      '@oxc-transform/binding-linux-x64-gnu': 0.144.0
+      '@oxc-transform/binding-linux-x64-musl': 0.144.0
+      '@oxc-transform/binding-openharmony-arm64': 0.144.0
+      '@oxc-transform/binding-win32-arm64-msvc': 0.144.0
+      '@oxc-transform/binding-win32-ia32-msvc': 0.144.0
+      '@oxc-transform/binding-win32-x64-msvc': 0.144.0
+
   oxlint@1.93.0:
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.93.0
@@ -13629,6 +14137,11 @@ snapshots:
       '@reteps/dockerfmt': 0.5.4
       prettier: 3.9.10
       sh-syntax: 0.7.0
+
+  prettier-plugin-svelte@3.4.0(prettier@3.9.10)(svelte@5.57.3):
+    dependencies:
+      prettier: 3.9.10
+      svelte: 5.57.3(@typescript-eslint/types@8.72.1)
 
   prettier@3.9.10: {}
 
@@ -13901,7 +14414,7 @@ snapshots:
 
   reusify@1.1.0: {}
 
-  rolldown-plugin-dts@0.28.8(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19)(typescript@6.0.3):
+  rolldown-plugin-dts@0.28.8(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19):
     dependencies:
       dts-resolver: 3.0.0(oxc-resolver@11.24.2)
       get-tsconfig: 5.0.0-beta.6
@@ -13911,13 +14424,13 @@ snapshots:
       yuku-codegen: 0.19.0
       yuku-parser: 0.19.0
     optionalDependencies:
-      '@volar/typescript': 2.4.30(typescript@6.0.3)
+      '@volar/typescript': 2.4.30(@typescript/typescript6@6.0.2)
       '@vue/language-core': 3.3.14
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - oxc-resolver
 
-  rolldown-plugin-dts@0.28.8(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19)(typescript@6.0.3):
+  rolldown-plugin-dts@0.28.8(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19):
     dependencies:
       dts-resolver: 3.0.0(oxc-resolver@11.24.2)
       get-tsconfig: 5.0.0-beta.6
@@ -13927,9 +14440,25 @@ snapshots:
       yuku-codegen: 0.19.0
       yuku-parser: 0.19.0
     optionalDependencies:
-      '@volar/typescript': 2.4.31(typescript@6.0.3)
+      '@volar/typescript': 2.4.31(@typescript/typescript6@6.0.2)
       '@vue/language-core': 3.3.14
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
+    transitivePeerDependencies:
+      - oxc-resolver
+
+  rolldown-plugin-dts@0.28.8(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19)(typescript@7.1.0-beta):
+    dependencies:
+      dts-resolver: 3.0.0(oxc-resolver@11.24.2)
+      get-tsconfig: 5.0.0-beta.6
+      obug: 3.0.0
+      rolldown: 1.2.19
+      yuku-ast: 0.19.0
+      yuku-codegen: 0.19.0
+      yuku-parser: 0.19.0
+    optionalDependencies:
+      '@volar/typescript': 2.4.30(@typescript/typescript6@6.0.2)
+      '@vue/language-core': 3.3.14
+      typescript: 7.1.0-beta
     transitivePeerDependencies:
       - oxc-resolver
 
@@ -14394,12 +14923,12 @@ snapshots:
     optionalDependencies:
       svelte: 5.57.3(@typescript-eslint/types@8.72.1)
 
-  svelte2tsx@0.7.62(svelte@5.57.3)(typescript@6.0.3):
+  svelte2tsx@0.7.62(@typescript/typescript6@6.0.2)(svelte@5.57.3):
     dependencies:
       dedent-js: 1.0.1
       scule: 1.3.0
       svelte: 5.57.3(@typescript-eslint/types@8.72.1)
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
 
   svelte@5.57.3(@typescript-eslint/types@8.72.1):
     dependencies:
@@ -14474,6 +15003,10 @@ snapshots:
 
   trough@2.2.0: {}
 
+  ts-api-utils@2.5.0(@typescript/typescript6@6.0.2):
+    dependencies:
+      typescript: '@typescript/typescript6@6.0.2'
+
   ts-api-utils@2.5.0(typescript@6.0.3):
     dependencies:
       typescript: 6.0.3
@@ -14485,7 +15018,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3):
+  tsdown@0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2):
     dependencies:
       cac: 7.1.0
       defu: 6.1.7
@@ -14495,7 +15028,7 @@ snapshots:
       obug: 3.0.0
       picomatch: 4.0.7
       rolldown: 1.2.19
-      rolldown-plugin-dts: 0.28.8(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19)(typescript@6.0.3)
+      rolldown-plugin-dts: 0.28.8(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19)
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tinyps: 0.5.1
@@ -14503,7 +15036,7 @@ snapshots:
       verkit: 0.5.0
     optionalDependencies:
       '@arethetypeswrong/core': 0.18.5
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - '@typescript/native-preview'
       - '@volar/typescript'
@@ -14511,7 +15044,7 @@ snapshots:
       - oxc-resolver
       - vue-tsc
 
-  tsdown@0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@6.0.3):
+  tsdown@0.23.4(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2):
     dependencies:
       cac: 7.1.0
       defu: 6.1.7
@@ -14521,7 +15054,7 @@ snapshots:
       obug: 3.0.0
       picomatch: 4.0.7
       rolldown: 1.2.19
-      rolldown-plugin-dts: 0.28.8(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19)(typescript@6.0.3)
+      rolldown-plugin-dts: 0.28.8(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19)
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tinyps: 0.5.1
@@ -14529,7 +15062,33 @@ snapshots:
       verkit: 0.5.0
     optionalDependencies:
       '@arethetypeswrong/core': 0.18.5
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
+    transitivePeerDependencies:
+      - '@typescript/native-preview'
+      - '@volar/typescript'
+      - '@vue/language-core'
+      - oxc-resolver
+      - vue-tsc
+
+  tsdown@0.23.4(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@7.1.0-beta):
+    dependencies:
+      cac: 7.1.0
+      defu: 6.1.7
+      empathic: 2.1.0
+      hookable: 6.1.2
+      import-without-cache: 0.4.1
+      obug: 3.0.0
+      picomatch: 4.0.7
+      rolldown: 1.2.19
+      rolldown-plugin-dts: 0.28.8(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.2.19)(typescript@7.1.0-beta)
+      tinyexec: 1.3.1
+      tinyglobby: 0.2.17
+      tinyps: 0.5.1
+      unconfig-core: 7.5.0
+      verkit: 0.5.0
+    optionalDependencies:
+      '@arethetypeswrong/core': 0.18.5
+      typescript: 7.1.0-beta
     transitivePeerDependencies:
       - '@typescript/native-preview'
       - '@volar/typescript'
@@ -14588,20 +15147,44 @@ snapshots:
     dependencies:
       semver: 7.8.6
 
-  typescript-eslint@8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3):
+  typescript-eslint@8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.72.1(@typescript-eslint/parser@8.72.1)(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
-      '@typescript-eslint/parser': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
-      '@typescript-eslint/typescript-estree': 8.72.1(supports-color@10.2.2)(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.72.1(eslint@10.14.0)(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/eslint-plugin': 8.72.1(@typescript-eslint/parser@8.72.1)(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
+      '@typescript-eslint/parser': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
+      '@typescript-eslint/typescript-estree': 8.72.1(@typescript/typescript6@6.0.2)(supports-color@10.2.2)
+      '@typescript-eslint/utils': 8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0)(supports-color@10.2.2)
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
       - supports-color
 
   typescript@5.6.1-rc: {}
 
   typescript@6.0.3: {}
+
+  typescript@7.1.0-beta:
+    optionalDependencies:
+      '@typescript/typescript-aix-ppc64': 7.1.0-beta
+      '@typescript/typescript-android-arm64': 7.1.0-beta
+      '@typescript/typescript-darwin-arm64': 7.1.0-beta
+      '@typescript/typescript-darwin-x64': 7.1.0-beta
+      '@typescript/typescript-freebsd-arm64': 7.1.0-beta
+      '@typescript/typescript-freebsd-x64': 7.1.0-beta
+      '@typescript/typescript-linux-arm': 7.1.0-beta
+      '@typescript/typescript-linux-arm64': 7.1.0-beta
+      '@typescript/typescript-linux-loong64': 7.1.0-beta
+      '@typescript/typescript-linux-mips64el': 7.1.0-beta
+      '@typescript/typescript-linux-ppc64': 7.1.0-beta
+      '@typescript/typescript-linux-riscv64': 7.1.0-beta
+      '@typescript/typescript-linux-s390x': 7.1.0-beta
+      '@typescript/typescript-linux-x64': 7.1.0-beta
+      '@typescript/typescript-netbsd-arm64': 7.1.0-beta
+      '@typescript/typescript-netbsd-x64': 7.1.0-beta
+      '@typescript/typescript-openbsd-arm64': 7.1.0-beta
+      '@typescript/typescript-openbsd-x64': 7.1.0-beta
+      '@typescript/typescript-sunos-x64': 7.1.0-beta
+      '@typescript/typescript-win32-arm64': 7.1.0-beta
+      '@typescript/typescript-win32-x64': 7.1.0-beta
 
   uc.micro@3.0.0: {}
 
@@ -14797,6 +15380,19 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
+  vize@0.458.0(vue@3.5.45):
+    dependencies:
+      '@vizejs/native': 0.458.0
+      oxc-transform: 0.144.0
+    optionalDependencies:
+      '@typescript/typescript-darwin-arm64': 7.0.2
+      '@typescript/typescript-darwin-x64': 7.0.2
+      '@typescript/typescript-linux-arm64': 7.0.2
+      '@typescript/typescript-linux-x64': 7.0.2
+      '@typescript/typescript-win32-arm64': 7.0.2
+      '@typescript/typescript-win32-x64': 7.0.2
+      vue: 3.5.45(@typescript/typescript6@6.0.2)
+
   volar-service-css@0.0.71(@volar/language-service@2.4.31):
     dependencies:
       vscode-css-languageservice: 6.3.10
@@ -14917,7 +15513,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vue@3.5.45(typescript@6.0.3):
+  vue@3.5.45(@typescript/typescript6@6.0.2):
     dependencies:
       '@vue/compiler-dom': 3.5.45
       '@vue/compiler-sfc': 3.5.45
@@ -14925,7 +15521,7 @@ snapshots:
       '@vue/server-renderer': 3.5.45
       '@vue/shared': 3.5.45
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: '@typescript/typescript6@6.0.2'
 
   walk-up-path@4.0.0: {}
 

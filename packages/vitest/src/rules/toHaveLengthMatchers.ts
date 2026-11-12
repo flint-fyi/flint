@@ -1,10 +1,13 @@
-import { isOptionalChain, isStringLiteralLike, SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
+	isStaticString,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	NodeFlags,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -51,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						!expectArgument ||
 						!isAccessExpression(expectArgument) ||
 						getAccessedName(expectArgument) !== "length" ||
-						isOptionalChain(expectArgument)
+						!!(expectArgument.flags & NodeFlags.OptionalChain)
 					) {
 						return;
 					}
@@ -92,7 +95,7 @@ function getAccessedName(node: AccessExpression): string | undefined {
 		return node.name.text;
 	}
 
-	return isStringLiteralLike(node.argumentExpression)
+	return isStaticString(node.argumentExpression)
 		? node.argumentExpression.text
 		: undefined;
 }

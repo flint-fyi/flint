@@ -1,10 +1,9 @@
-import { SyntaxKind, type Node } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -43,14 +42,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const seenMembers = {
 				instance: {
-					getters: new Map<string, Node>(),
-					setters: new Map<string, Node>(),
-					values: new Map<string, Node>(),
+					getters: new Map<string, AST.AnyNode>(),
+					setters: new Map<string, AST.AnyNode>(),
+					values: new Map<string, AST.AnyNode>(),
 				},
 				static: {
-					getters: new Map<string, Node>(),
-					setters: new Map<string, Node>(),
-					values: new Map<string, Node>(),
+					getters: new Map<string, AST.AnyNode>(),
+					setters: new Map<string, AST.AnyNode>(),
+					values: new Map<string, AST.AnyNode>(),
 				},
 			};
 

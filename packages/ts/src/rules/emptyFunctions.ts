@@ -1,10 +1,9 @@
-import { SyntaxKind, type Node } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -45,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkFunctionBody(
-			node: Node,
+			node: AST.AnyNode,
 			body: AST.Block | undefined,
 			sourceFile: AST.SourceFile,
 		) {

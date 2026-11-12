@@ -23,10 +23,13 @@
 		"test": "vitest --project e2e"
 	},
 	"devDependencies": {
+		"@flint.fyi/astro": "workspace:^",
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
+		"@flint.fyi/svelte": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
+		"@flint.fyi/vue": "workspace:^",
 		"execa": "catalog:dev",
 		"flint": "workspace:^",
 		"vitest": "catalog:dev",

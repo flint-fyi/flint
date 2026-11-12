@@ -123,6 +123,17 @@ export interface LanguageFileFactory<
 	FileServices extends object,
 > extends Partial<Disposable> {
 	createFile(data: FileAboutData): LanguageFile<FileServices>;
+
+	/**
+	 * Optionally prepares every file that will be linted, in one batch, before
+	 * any `createFile` call.
+	 * @remarks
+	 * Languages backed by a whole-program model (such as TypeScript) can open all
+	 * files in a single pass here, so that per-file `createFile` work becomes
+	 * cheap lookups against a stable program instead of re-building it once per
+	 * file (which is quadratic in the number of files).
+	 */
+	prepareFiles?(filePathsAbsolute: readonly string[]): void;
 }
 
 /**
@@ -171,4 +182,5 @@ export interface LanguageFileFactoryDefinition<
 	FileServices extends object,
 > extends Partial<Disposable> {
 	createFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
+	prepareFiles?(filePathsAbsolute: readonly string[]): void;
 }

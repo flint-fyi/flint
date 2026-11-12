@@ -1,10 +1,10 @@
-import { SyntaxKind, type Program } from "typescript";
-
 import {
 	isGlobalDeclaration,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 const builtinErrorNames = new Set([
 	"Error",
@@ -31,6 +31,9 @@ export function isErrorSubclass(
 		}
 
 		for (const type of clause.types) {
+			if (type.kind !== SyntaxKind.ExpressionWithTypeArguments) {
+				continue;
+			}
 			const typeName = type.expression;
 			if (
 				typeName.kind === SyntaxKind.Identifier &&

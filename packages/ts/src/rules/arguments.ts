@@ -1,24 +1,33 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
-	if (node.kind === SyntaxKind.ArrowFunction) {
-		return "quit";
+function isInsideNonArrowFunction(node: AST.AnyNode): boolean {
+	for (
+		let current = node.parent;
+		current.kind !== SyntaxKind.SourceFile;
+		current = current.parent
+	) {
+		switch (current.kind) {
+			case SyntaxKind.ArrowFunction:
+				return false;
+
+			case SyntaxKind.Constructor:
+			case SyntaxKind.FunctionDeclaration:
+			case SyntaxKind.FunctionExpression:
+			case SyntaxKind.GetAccessor:
+			case SyntaxKind.MethodDeclaration:
+			case SyntaxKind.SetAccessor:
+				return true;
+		}
 	}
-	return (
-		node.kind === SyntaxKind.FunctionDeclaration ||
-		node.kind === SyntaxKind.FunctionExpression ||
-		node.kind === SyntaxKind.MethodDeclaration ||
-		node.kind === SyntaxKind.GetAccessor ||
-		node.kind === SyntaxKind.SetAccessor ||
-		node.kind === SyntaxKind.Constructor
-	);
+
+	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -66,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// TODO: This might get simpler when we have scope analysis.
 					// https://github.com/JoshuaKGoldberg/flint/issues/400
-					if (!ts.findAncestor(node, isNonArrowFunctionBoundary)) {
+					if (!isInsideNonArrowFunction(node)) {
 						return;
 					}
 
@@ -74,15 +83,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						!symbol ||
-						symbol
-							.getDeclarations()
-							?.some(
-								(declaration) =>
-									declaration.kind === SyntaxKind.Parameter ||
-									declaration.kind === SyntaxKind.VariableDeclaration ||
-									declaration.kind === SyntaxKind.PropertyDeclaration ||
-									declaration.kind === SyntaxKind.BindingElement,
-							)
+						symbol.declarations.some(
+							(declaration) =>
+								declaration.kind === SyntaxKind.Parameter ||
+								declaration.kind === SyntaxKind.VariableDeclaration ||
+								declaration.kind === SyntaxKind.PropertyDeclaration ||
+								declaration.kind === SyntaxKind.BindingElement,
+						)
 					) {
 						return;
 					}

@@ -1,5 +1,3 @@
-import { SyntaxKind, type Program } from "typescript";
-
 import {
 	getTSNodeRange,
 	isGlobalVariable,
@@ -7,6 +5,8 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -40,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function isWindowLikeIdentifier(
-			node: AST.LeftHandSideExpression,
+			node: AST.Node,
 			typeChecker: Checker,
 			program: Program,
 		): boolean {

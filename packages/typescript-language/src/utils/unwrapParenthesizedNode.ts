@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/ast";
 
 import type * as AST from "../types/ast.ts";
 

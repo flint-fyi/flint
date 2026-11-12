@@ -1,12 +1,16 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	typescriptLanguage,
 	type AST,
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	TypeFlags,
+	type Symbol,
+	type Type,
+	type TypeReference,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
@@ -57,17 +61,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkCallArguments(
 			node: AST.CallExpression | AST.NewExpression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (!node.arguments) {
 				return;
 			}
 
 			const signature = typeChecker.getResolvedSignature(node);
-			if (!signature) {
-				return;
-			}
-
 			const parameters = signature.getParameters();
 
 			let parameterIndex = 0;
@@ -77,32 +77,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				if (argument.kind === SyntaxKind.SpreadElement) {
 					const spreadType = typeChecker.getTypeAtLocation(argument.expression);
-					const anyType = discriminateAnyType(
-						spreadType,
-						typeChecker,
-						argument.expression,
-					);
+					const anyType = discriminateAnyType(spreadType, typeChecker);
 
 					if (anyType !== AnyType.Safe) {
 						const restParameter = parameters.at(-1);
 						if (restParameter) {
 							const restType = typeChecker.getTypeOfSymbol(restParameter);
-							if (
-								tsutils.isTypeFlagSet(
-									restType,
-									ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-								)
-							) {
+							if (restType.flags & (TypeFlags.Any | TypeFlags.Unknown)) {
 								continue;
 							}
 							if (typeChecker.isArrayType(restType)) {
-								const elementType = typeChecker.getTypeArguments(restType)[0];
+								const elementType = typeChecker.getTypeArguments(
+									restType as TypeReference,
+								)[0];
 								if (
 									elementType &&
-									tsutils.isTypeFlagSet(
-										elementType,
-										ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-									)
+									elementType.flags & (TypeFlags.Any | TypeFlags.Unknown)
 								) {
 									continue;
 								}
@@ -128,8 +118,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							parameters,
 							parameterIndex,
 							typeChecker,
-							program,
-							argument.expression,
 						);
 						if (tupleResult) {
 							context.report({
@@ -147,17 +135,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								},
 							});
 						}
-						const tupleTypeArgs = typeChecker.getTypeArguments(spreadType);
+						const tupleTypeArgs = typeChecker.getTypeArguments(
+							spreadType as TypeReference,
+						);
 						parameterIndex += tupleTypeArgs.length;
 					}
 					continue;
 				}
 
-				const anyType = discriminateAnyType(
-					argumentType,
-					typeChecker,
-					argument,
-				);
+				const anyType = discriminateAnyType(argumentType, typeChecker);
 
 				if (anyType === AnyType.Safe) {
 					const paramInfo = getParameterAtIndex(
@@ -170,6 +156,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							argumentType,
 							paramInfo.type,
 							argument,
+							typeChecker,
 						);
 						if (unsafeResult) {
 							context.report({
@@ -202,12 +189,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				if (
-					tsutils.isTypeFlagSet(
-						parameterInfo.type,
-						ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-					)
-				) {
+				if (parameterInfo.type.flags & (TypeFlags.Any | TypeFlags.Unknown)) {
 					parameterIndex++;
 					continue;
 				}
@@ -233,10 +215,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				NewExpression: checkCallArguments,
 				TaggedTemplateExpression: (node, { sourceFile, typeChecker }) => {
 					const signature = typeChecker.getResolvedSignature(node);
-					if (!signature) {
-						return;
-					}
-
 					const parameters = signature.getParameters();
 					if (parameters.length <= 1) {
 						return;
@@ -254,11 +232,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const [i, expression] of expressions.entries()) {
 						const expressionType = typeChecker.getTypeAtLocation(expression);
 
-						const anyType = discriminateAnyType(
-							expressionType,
-							typeChecker,
-							expression,
-						);
+						const anyType = discriminateAnyType(expressionType, typeChecker);
 
 						if (anyType === AnyType.Safe) {
 							const parameter = parameters[i + 1];
@@ -268,6 +242,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									expressionType,
 									parameterType,
 									expression,
+									typeChecker,
 								);
 								if (unsafeResult) {
 									context.report({
@@ -299,12 +274,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						const parameterType = typeChecker.getTypeOfSymbol(parameter);
 
-						if (
-							tsutils.isTypeFlagSet(
-								parameterType,
-								ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-							)
-						) {
+						if (parameterType.flags & (TypeFlags.Any | TypeFlags.Unknown)) {
 							continue;
 						}
 
@@ -325,10 +295,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 
 		function getParameterAtIndex(
-			parameters: readonly ts.Symbol[],
+			parameters: readonly Symbol[],
 			index: number,
-			typeChecker: ts.TypeChecker,
-		): undefined | { symbol: ts.Symbol; tupleIndex?: number; type: ts.Type } {
+			typeChecker: Checker,
+		): undefined | { symbol: Symbol; tupleIndex?: number; type: Type } {
 			if (!parameters.length) {
 				return undefined;
 			}
@@ -338,8 +308,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return undefined;
 			}
 
-			const lastParamDeclaration = lastParam.declarations?.[0] as
-				AST.AnyNode | undefined;
+			const lastParamDeclaration = lastParam.declarations[0]?.resolve() as
+				AST.Declaration | undefined;
 
 			if (
 				lastParamDeclaration?.kind === SyntaxKind.Parameter &&
@@ -357,7 +327,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				if (typeChecker.isTupleType(restType)) {
 					const tupleArgs = typeChecker.getTypeArguments(
-						restType as ts.TypeReference,
+						restType as TypeReference,
 					);
 					const tupleIndex = index - (parameters.length - 1);
 					const tupleType = tupleArgs[tupleIndex];
@@ -386,17 +356,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function checkTupleSpread(
-			tupleType: ts.TypeReference,
-			parameters: readonly ts.Symbol[],
+			tupleType: Type,
+			parameters: readonly Symbol[],
 			startIndex: number,
 			typeChecker: Checker,
-			program: ts.Program,
-			node: ts.Node,
-		): undefined | { paramType: ts.Type; type: string } {
-			const tupleTypeArgs = typeChecker.getTypeArguments(tupleType);
+		): undefined | { paramType: Type; type: string } {
+			const tupleTypeArgs = typeChecker.getTypeArguments(
+				tupleType as TypeReference,
+			);
 
 			for (const [i, elementType] of tupleTypeArgs.entries()) {
-				const anyType = discriminateAnyType(elementType, typeChecker, node);
+				const anyType = discriminateAnyType(elementType, typeChecker);
 
 				if (anyType === AnyType.Safe) {
 					continue;
@@ -413,12 +383,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				const parameterType = paramInfo.type;
 
-				if (
-					tsutils.isTypeFlagSet(
-						parameterType,
-						ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-					)
-				) {
+				if (parameterType.flags & (TypeFlags.Any | TypeFlags.Unknown)) {
 					continue;
 				}
 

@@ -1,11 +1,10 @@
-import ts from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { TypeFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -18,13 +17,13 @@ const enumMemberKinds = {
 function getEnumMemberKind(member: AST.EnumMember, typeChecker: Checker) {
 	const type = typeChecker.getTypeAtLocation(member);
 
-	if (type.isNumberLiteral()) {
-		if ((type.flags & ts.TypeFlags.NumberLike) !== 0) {
+	if (type.isNumberLiteralType()) {
+		if ((type.flags & TypeFlags.NumberLike) !== 0) {
 			return enumMemberKinds.Number;
 		}
 	} else if (
-		type.isStringLiteral() &&
-		(type.flags & ts.TypeFlags.StringLike) !== 0
+		type.isStringLiteralType() &&
+		(type.flags & TypeFlags.StringLike) !== 0
 	) {
 		return enumMemberKinds.String;
 	}

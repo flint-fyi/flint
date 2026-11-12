@@ -1,10 +1,10 @@
-import { SyntaxKind } from "typescript";
-
 import {
+	findTokenInRange,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
@@ -14,25 +14,25 @@ function buildSpliceReplacement(
 	elementAccess: AST.ElementAccessExpression,
 	sourceFile: AST.SourceFile,
 ): string {
-	const children = elementAccess.getChildren(sourceFile);
-	const openBracket = children.find(
-		(child) => child.kind === SyntaxKind.OpenBracketToken,
-	);
-	const closeBracket = children.find(
-		(child) => child.kind === SyntaxKind.CloseBracketToken,
-	);
+	const openBracket =
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.OpenBracketToken,
+			elementAccess.expression.getEnd(),
+		)?.begin ?? elementAccess.expression.getEnd();
+	const closeBracket =
+		findTokenInRange(
+			sourceFile,
+			SyntaxKind.CloseBracketToken,
+			elementAccess.argumentExpression.getEnd(),
+		)?.begin ?? elementAccess.argumentExpression.getEnd();
 
 	const before = sourceFile.text.slice(
 		node.getStart(sourceFile) + "delete".length,
-		openBracket?.getStart(sourceFile) ?? elementAccess.expression.getEnd(),
+		openBracket,
 	);
 
-	const keyText = sourceFile.text.slice(
-		openBracket?.getEnd() ??
-			elementAccess.argumentExpression.getStart(sourceFile),
-		closeBracket?.getStart(sourceFile) ??
-			elementAccess.argumentExpression.getEnd(),
-	);
+	const keyText = sourceFile.text.slice(openBracket + 1, closeBracket);
 
 	return `${before}.splice(${keyText}, 1)`;
 }

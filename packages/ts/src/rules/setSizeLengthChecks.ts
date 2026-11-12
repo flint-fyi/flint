@@ -1,5 +1,3 @@
-import { NodeFlags, SyntaxKind, type Program } from "typescript";
-
 import {
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
@@ -7,6 +5,11 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	NodeFlags,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -43,15 +46,16 @@ function isSetExpression(
 		return false;
 	}
 
-	const symbol = typeChecker.getSymbolAtLocation(unwrapped);
-	if (symbol?.valueDeclaration?.kind !== SyntaxKind.VariableDeclaration) {
+	const valueDeclarationHandle =
+		typeChecker.getSymbolAtLocation(unwrapped)?.valueDeclaration;
+	if (valueDeclarationHandle?.kind !== SyntaxKind.VariableDeclaration) {
 		return false;
 	}
 
-	const declaration = symbol.valueDeclaration as AST.VariableDeclaration;
-
+	const declaration = valueDeclarationHandle.resolve() as
+		AST.VariableDeclaration | undefined;
 	if (
-		declaration.parent.kind !== SyntaxKind.VariableDeclarationList ||
+		declaration?.parent.kind !== SyntaxKind.VariableDeclarationList ||
 		!(declaration.parent.flags & NodeFlags.Const) ||
 		!declaration.initializer
 	) {

@@ -17,26 +17,31 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
-		"./package.json": "./package.json"
+		"./native/ast": "./src/native/ast.ts",
+		"./native/fs": "./src/native/fs.ts",
+		"./native/sync": "./src/native/sync.ts",
+		"./package.json": "./package.json",
+		"./test-utils": "./src/test/createNativeSourceFile.testUtils.ts"
 	},
 	"files": [
 		"dist/"
 	],
 	"scripts": {
-		"test": "vitest --project typescript-language"
+		"generate:ast": "node scripts/generate-ast.ts",
+		"test": "pnpm test:ast && vitest --project typescript-language",
+		"test:ast": "pnpm generate:ast && git diff --exit-code -- src/types/ast.ts"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@typescript-eslint/project-service": "catalog:prod",
 		"cached-factory": "catalog:prod",
 		"debug-for-file": "catalog:prod",
 		"pathe": "catalog:prod",
-		"ts-api-utils": "catalog:prod",
-		"typescript": "catalog:prod"
+		"typescript-native": "catalog:prod"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
+		"prettier": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
@@ -47,6 +52,9 @@
 		"access": "public",
 		"exports": {
 			".": "./dist/index.mjs",
+			"./native/ast": "./dist/native/ast.mjs",
+			"./native/fs": "./dist/native/fs.mjs",
+			"./native/sync": "./dist/native/sync.mjs",
 			"./package.json": "./package.json"
 		}
 	}

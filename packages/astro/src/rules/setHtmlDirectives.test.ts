@@ -35,6 +35,18 @@ let string = 'this string contains some <strong>HTML!!!</strong>'
 </div>
 `,
 		},
+		{
+			code: `
+<p>😀 é</p>
+<p set:html={"😀"}></p>
+`,
+			snapshot: `
+<p>😀 é</p>
+<p set:html={"😀"}></p>
+   ~~~~~~~~
+   Avoid using \`set:html\`. Astro does not escape its value.
+`,
+		},
 	],
 	valid: [
 		`
@@ -53,5 +65,9 @@ let string = 'this string contains some <strong>HTML!!!</strong>'
 <p>{string}</p>
 		`,
 		"<p>{`this string contains some <strong>HTML!!!</strong>`}</p>",
+		{
+			code: `export const setHtml = "set:html";`,
+			fileName: "file.ts",
+		},
 	],
 });

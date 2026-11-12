@@ -1,6 +1,3 @@
-import * as tsutils from "ts-api-utils";
-import { TypeFlags, type Program, type Type } from "typescript";
-
 import {
 	declarationIncludesGlobal,
 	getTSNodeRange,
@@ -8,19 +5,29 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	TypeFlags,
+	type Program,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { getUnionConstituents } from "./utils/typeConstituents.ts";
 
 function isBuiltinErrorType(type: Type, program: Program): boolean {
 	const symbol = type.getSymbol();
-	if (symbol?.getName() !== "Error") {
+	if (symbol?.name !== "Error") {
 		return false;
 	}
 
-	return !!symbol
-		.getDeclarations()
-		?.some((declaration) => declarationIncludesGlobal(declaration, program));
+	return symbol.declarations
+		.map((declaration) => declaration.resolve())
+		.some(
+			(declaration) =>
+				!!declaration &&
+				declarationIncludesGlobal(declaration as AST.Declaration, program),
+		);
 }
 
 function isErrorType(type: Type, program: Program): boolean {
@@ -28,12 +35,12 @@ function isErrorType(type: Type, program: Program): boolean {
 		return true;
 	}
 
-	if (type.isUnion()) {
-		return type.types.every((t) => isErrorType(t, program));
+	if (type.isUnionType()) {
+		return type.getTypes().every((type) => isErrorType(type, program));
 	}
 
-	if (type.isIntersection()) {
-		return type.types.some((t) => isErrorType(t, program));
+	if (type.isIntersectionType()) {
+		return type.getTypes().some((type) => isErrorType(type, program));
 	}
 
 	const baseTypes = type.getBaseTypes();
@@ -91,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					);
 
 					if (
-						tsutils.isTypeFlagSet(type, TypeFlags.Any | TypeFlags.Unknown) ||
+						(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||
 						isErrorType(type, program)
 					) {
 						return;
@@ -100,11 +107,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// TODO: Consider using getStaticValue once available
 					// https://github.com/flint-fyi/flint/issues/1298
 					if (
-						type.isUnion()
-							? type.types.every((t) =>
-									tsutils.isTypeFlagSet(t, TypeFlags.Undefined),
-								)
-							: tsutils.isTypeFlagSet(type, TypeFlags.Undefined)
+						getUnionConstituents(type).every(
+							(constituent) => (constituent.flags & TypeFlags.Undefined) !== 0,
+						)
 					) {
 						context.report({
 							message: "throwUndefined",

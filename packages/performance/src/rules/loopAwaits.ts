@@ -1,11 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-
 import {
+	forEachChild,
+	isFunctionScopeBoundary,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -30,8 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkForAwaitExpressions(
-			node: ts.Node,
-			loopNode: ts.Node,
+			node: AST.AnyNode,
 			sourceFile: AST.SourceFile,
 		): void {
 			if (node.kind === SyntaxKind.AwaitExpression) {
@@ -52,21 +51,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.kind === SyntaxKind.ForOfStatement ||
 				node.kind === SyntaxKind.ForStatement ||
 				node.kind === SyntaxKind.WhileStatement ||
-				tsutils.isFunctionScopeBoundary(node)
+				isFunctionScopeBoundary(node)
 			) {
 				return;
 			}
 
-			ts.forEachChild(node, (child) => {
-				checkForAwaitExpressions(child, loopNode, sourceFile);
+			forEachChild(node, (child) => {
+				checkForAwaitExpressions(child, sourceFile);
 			});
 		}
 
 		function checkNode(
-			node: ts.Node & { statement: ts.Node },
+			node: AST.IterationStatement,
 			{ sourceFile }: TypeScriptFileServices,
-		) {
-			checkForAwaitExpressions(node.statement, node, sourceFile);
+		): void {
+			checkForAwaitExpressions(node.statement, sourceFile);
 		}
 
 		return {

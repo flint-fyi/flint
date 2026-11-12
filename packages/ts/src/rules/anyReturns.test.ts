@@ -7,6 +7,18 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const value: any;
+const callback: (() => unknown) & (() => string) = (): string => value;
+`,
+			snapshot: `
+declare const value: any;
+const callback: (() => unknown) & (() => string) = (): string => value;
+                                                                 ~~~~~
+                                                                 Unsafe return of a value of type \`any\`.
+`,
+		},
+		{
+			code: `
 function foo() {
   return 1 as any;
 }
@@ -297,6 +309,23 @@ function bar() {
 		},
 		{
 			code: `
+function foo(this: any) {
+  return this;
+}
+void foo;
+`,
+			files: createRuleTesterTSConfig({ strict: undefined }),
+			snapshot: `
+function foo(this: any) {
+  return this;
+  ~~~~~~~~~~~~
+  Unsafe return of a value of type \`any\`. \`this\` is typed as \`any\`.
+}
+void foo;
+`,
+		},
+		{
+			code: `
 declare function foo(arg: null | (() => any)): void;
 foo(() => 'foo' as any);
       
@@ -559,6 +588,34 @@ void foo;
       
 `,
 		},
+		{
+			code: `
+interface Thenable {
+  then(onfulfilled: (value: any) => unknown): unknown;
+}
+
+declare const value: Thenable;
+async function foo() {
+  return value;
+}
+void foo;
+
+`,
+			snapshot: `
+interface Thenable {
+  then(onfulfilled: (value: any) => unknown): unknown;
+}
+
+declare const value: Thenable;
+async function foo() {
+  return value;
+  ~~~~~~~~~~~~~
+  Unsafe return of a value of type \`Promise<any>\`.
+}
+void foo;
+
+`,
+		},
 	],
 	valid: [
 		`
@@ -701,6 +758,18 @@ void foo;
       function fn<T extends any>(x: T): Promise<unknown> {
         return Promise.resolve(x as any);
       }
+      void fn;
+    `,
+		`
+      declare const promiseAny: Promise<any>;
+      const fn: () => Promise<unknown> = async () => promiseAny;
+      void fn;
+    `,
+		`
+      declare const promiseAny: Promise<any>;
+      const fn: () => Promise<unknown> = async () => {
+        return promiseAny;
+      };
       void fn;
     `,
 		`

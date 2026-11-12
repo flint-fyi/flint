@@ -1,9 +1,9 @@
-import { SyntaxKind } from "typescript";
-
 import {
+	findTokenInRange,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -36,13 +36,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const typeKeyword = node
-						.getChildren(sourceFile)
-						.find((child) => child.kind === SyntaxKind.TypeKeyword);
-
 					context.report({
 						message: "preferInterface",
-						range: getTSNodeRange(typeKeyword ?? node, sourceFile),
+						range:
+							findTokenInRange(
+								sourceFile,
+								SyntaxKind.TypeKeyword,
+								node.getStart(sourceFile),
+								node.type.getStart(sourceFile),
+							) ?? getTSNodeRange(node, sourceFile),
 					});
 				},
 			},

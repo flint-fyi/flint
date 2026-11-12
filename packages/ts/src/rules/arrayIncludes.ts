@@ -1,19 +1,19 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getStaticNumberValue,
 	getTSNodeRange,
+	getTypeProperty,
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
 	const receiverType = getConstrainedTypeAtLocation(node, typeChecker);
-	const includesProperty = receiverType.getProperty("includes");
+	const includesProperty = getTypeProperty(receiverType, "includes");
 
 	return (
 		includesProperty &&

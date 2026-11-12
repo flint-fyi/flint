@@ -1,6 +1,3 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
 import {
 	forEachChild,
 	getTSNodeRange,
@@ -8,6 +5,10 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -22,14 +23,19 @@ function hasNoAssignmentBeforeNode(
 		return false;
 	}
 
-	const declarations = symbol.getDeclarations() as AST.AnyNode[] | undefined;
-	if (!declarations?.length) {
+	const declarations = symbol.declarations;
+	if (!declarations.length) {
 		return false;
 	}
 
 	const nodeEnd = node.getEnd();
 
-	for (const declaration of declarations) {
+	for (const declarationHandle of declarations) {
+		const declaration = declarationHandle.resolve() as
+			AST.Declaration | undefined;
+		if (!declaration) {
+			continue;
+		}
 		if (declaration.getEnd() >= nodeEnd) {
 			continue;
 		}
@@ -46,7 +52,7 @@ function hasNoAssignmentBeforeNode(
 		}
 	}
 
-	const valueDeclaration = symbol.valueDeclaration;
+	const valueDeclaration = symbol.valueDeclaration?.resolve();
 	if (!valueDeclaration) {
 		return true;
 	}
@@ -54,12 +60,12 @@ function hasNoAssignmentBeforeNode(
 	function findModifyingReference(current: AST.AnyNode): boolean {
 		if (current.kind === SyntaxKind.Identifier) {
 			const currentSymbol = typeChecker.getSymbolAtLocation(current);
-			if (currentSymbol?.valueDeclaration === valueDeclaration) {
+			if (currentSymbol?.valueDeclaration?.resolve() === valueDeclaration) {
 				const parent = current.parent;
 
 				if (
 					parent.kind === SyntaxKind.BinaryExpression &&
-					tsutils.isAssignmentKind(parent.operatorToken.kind) &&
+					isAssignmentOperator(parent.operatorToken.kind) &&
 					parent.left === current &&
 					parent.getEnd() < nodeEnd
 				) {

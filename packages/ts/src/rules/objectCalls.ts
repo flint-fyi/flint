@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
@@ -7,6 +5,7 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -49,14 +48,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const reportNode =
-				node.kind === SyntaxKind.NewExpression
-					? node.getChildAt(0, sourceFile)
-					: node.expression;
+			const range = getTSNodeRange(node.expression, sourceFile);
+			if (node.kind === SyntaxKind.NewExpression) {
+				range.begin = node.getStart(sourceFile);
+				range.end = range.begin + "new".length;
+			}
 
 			context.report({
 				message: "preferObjectLiteral",
-				range: getTSNodeRange(reportNode, sourceFile),
+				range,
 			});
 		}
 

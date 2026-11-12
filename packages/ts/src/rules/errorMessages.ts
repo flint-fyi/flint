@@ -1,5 +1,3 @@
-import { SyntaxKind, type NodeArray, type Program } from "typescript";
-
 import {
 	getStaticStringValue,
 	getTSNodeRange,
@@ -9,6 +7,11 @@ import {
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type NodeArray,
+} from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

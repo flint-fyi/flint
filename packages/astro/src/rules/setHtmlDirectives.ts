@@ -1,8 +1,12 @@
 import type { Node } from "@astrojs/compiler/types";
 
-import { astroLanguage } from "@flint.fyi/astro-language";
+import {
+	astroLanguage,
+	getAstroPointOffset,
+	type AstroServices,
+} from "@flint.fyi/astro-language";
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import { nullThrows } from "@flint.fyi/utils";
-import { reportSourceCode } from "@flint.fyi/volar-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -30,18 +34,22 @@ export default ruleCreator.createRule(astroLanguage, {
 		return {
 			visitors: {
 				SourceFile(node, services) {
-					if (services.astro == null) {
+					const astroServices = (services as Partial<AstroServices>).astro;
+					if (!astroServices) {
 						return;
 					}
-
+					const source = { text: astroServices.sourceText };
 					function visit(node: Node) {
 						if ("attributes" in node) {
 							for (const attr of node.attributes) {
 								if (attr.name === "set:html") {
-									const begin = nullThrows(
-										attr.position,
-										"Expected attr.position to be defined",
-									).start.offset;
+									const begin = getAstroPointOffset(
+										source,
+										nullThrows(
+											attr.position,
+											"Expected attr.position to be defined",
+										).start,
+									);
 
 									reportSourceCode(context, {
 										message: "setHtml",
@@ -59,7 +67,7 @@ export default ruleCreator.createRule(astroLanguage, {
 							}
 						}
 					}
-					for (const child of services.astro.ast.children) {
+					for (const child of astroServices.ast.children) {
 						visit(child);
 					}
 				},

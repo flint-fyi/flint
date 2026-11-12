@@ -1,9 +1,10 @@
-import type { Declaration, Program } from "typescript";
+import type { NodeHandle, Program } from "typescript-native/sync";
 
+import type * as AST from "../types/ast.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 
 export function declarationsIncludeGlobal(
-	declarations: Declaration[],
+	declarations: readonly (AST.Declaration | NodeHandle)[],
 	program: Program,
 ): boolean {
 	return declarations.some((declaration) =>

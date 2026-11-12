@@ -1,11 +1,10 @@
-import { SyntaxKind, type NodeArray } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -78,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			});
 		}
 
-		function hasNestedControl(children: NodeArray<AST.JsxChild>): boolean {
+		function hasNestedControl(children: readonly AST.JsxChild[]): boolean {
 			return children.some((child) => {
 				if (child.kind === SyntaxKind.JsxElement) {
 					const { tagName } = child.openingElement;

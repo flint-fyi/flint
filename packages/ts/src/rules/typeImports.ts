@@ -1,13 +1,21 @@
-import { isTypeNode, SymbolFlags, SyntaxKind, type Symbol } from "typescript";
 import { z } from "zod/v4";
 
 import {
+	findTokenInRange,
 	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	isTypeNode,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
+import {
+	SymbolFlags,
+	type Symbol,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -168,21 +176,25 @@ function getTypeKeywordFixRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 }
 
 function getTypeKeywordRange(node: AST.AnyNode, sourceFile: AST.SourceFile) {
-	for (const child of node.getChildren(sourceFile)) {
-		if (child.kind === SyntaxKind.TypeKeyword) {
-			const range = getTSNodeRange(child, sourceFile);
-			if (
-				node.kind === SyntaxKind.ImportSpecifier &&
-				sourceFile.text[range.end] === " "
-			) {
-				range.end += 1;
-			}
-
-			return range;
-		}
+	const typeKeyword = findTokenInRange(
+		sourceFile,
+		SyntaxKind.TypeKeyword,
+		node.getStart(sourceFile),
+		node.getEnd(),
+	);
+	if (!typeKeyword) {
+		return getTSNodeRange(node, sourceFile);
 	}
 
-	return getTSNodeRange(node, sourceFile);
+	const range = { begin: typeKeyword.begin, end: typeKeyword.end };
+	if (
+		node.kind === SyntaxKind.ImportSpecifier &&
+		sourceFile.text[range.end] === " "
+	) {
+		range.end += 1;
+	}
+
+	return range;
 }
 
 function isInImportDeclaration(node: AST.AnyNode) {
@@ -228,8 +240,8 @@ function isOnlyTypeReference(node: AST.Identifier) {
 		}
 
 		if (
-			isTypeNode(parent) &&
-			parent.kind !== SyntaxKind.ExpressionWithTypeArguments
+			parent.kind !== SyntaxKind.ExpressionWithTypeArguments &&
+			isTypeNode(parent)
 		) {
 			return true;
 		}
@@ -259,7 +271,7 @@ function isPropertySignatureComputedReference(node: AST.Identifier) {
 				continue;
 
 			case SyntaxKind.PropertyAccessExpression:
-				if ((parent as AST.PropertyAccessExpression).expression !== child) {
+				if (parent.expression !== child) {
 					return false;
 				}
 				child = parent;
@@ -285,7 +297,11 @@ function isTypeOnlyExportReference(node: AST.Identifier) {
 	}
 
 	const exportDeclaration = parent.parent.parent;
-	return parent.name === node && exportDeclaration.isTypeOnly;
+	return (
+		parent.name === node &&
+		exportDeclaration.kind === SyntaxKind.ExportDeclaration &&
+		exportDeclaration.isTypeOnly
+	);
 }
 
 function isTypeQueryReference(node: AST.Identifier) {
@@ -454,22 +470,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							node.kind === SyntaxKind.Identifier &&
 							!isInImportDeclaration(node)
 						) {
-							const symbol = getReferencedSymbol(typeChecker, node);
-							const importedSpecifier = importedSpecifiers.find(
-								(specifier) =>
-									specifier.local.text === node.text &&
-									(!specifier.symbol || specifier.symbol === symbol),
+							// Resolving a symbol costs a checker query, so only resolve
+							// identifiers that share a name with an import in the first place.
+							const candidates = importedSpecifiers.filter(
+								(specifier) => specifier.local.text === node.text,
 							);
+							if (candidates.length) {
+								const symbol = getReferencedSymbol(typeChecker, node);
+								const importedSpecifier = candidates.find(
+									(specifier) =>
+										!specifier.symbol || specifier.symbol.id === symbol?.id,
+								);
 
-							if (importedSpecifier) {
-								references.get(importedSpecifier)?.push(node);
+								if (importedSpecifier) {
+									references.get(importedSpecifier)?.push(node);
+								}
 							}
 						}
 
 						forEachChild(node, collectReferences);
 					}
 
-					collectReferences(node);
+					if (importedSpecifiers.length) {
+						collectReferences(node);
+					}
 
 					for (const statement of node.statements) {
 						if (
@@ -536,7 +560,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							if (
 								!report.valueSpecifiers.length &&
 								!report.unusedSpecifiers.length &&
-								!report.node.attributes?.elements.length
+								!report.node.attributes?.attributes.length
 							) {
 								context.report({
 									fix,

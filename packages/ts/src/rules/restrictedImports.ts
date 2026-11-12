@@ -1,11 +1,21 @@
-import ts, { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
+	resolveDeclarations,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type Node,
+} from "@flint.fyi/typescript-language/native/ast";
+import {
+	SymbolFlags,
+	type Program,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { getSpecifierNames } from "../type-utils/getSpecifierNames.ts";
 import { matchesSpecifier } from "../type-utils/matchesSpecifier.ts";
@@ -29,27 +39,24 @@ const restrictionSchema = z.object({
 type Restriction = z.infer<typeof restrictionSchema>;
 
 function resolveModuleDeclarations(
-	moduleSpecifier: ts.Expression,
-	typeChecker: ts.TypeChecker,
+	moduleSpecifier: AST.Expression,
+	typeChecker: Checker,
 ) {
 	const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
-	return symbol?.getDeclarations();
+	return symbol && resolveDeclarations(symbol.declarations);
 }
 
-function resolveSymbolDeclarations(
-	nameNode: ts.Node,
-	typeChecker: ts.TypeChecker,
-) {
+function resolveSymbolDeclarations(nameNode: Node, typeChecker: Checker) {
 	let symbol = typeChecker.getSymbolAtLocation(nameNode);
 	if (!symbol) {
 		return;
 	}
 
-	if (symbol.flags & ts.SymbolFlags.Alias) {
+	if (symbol.flags & SymbolFlags.Alias) {
 		symbol = typeChecker.getAliasedSymbol(symbol);
 	}
 
-	return symbol.getDeclarations();
+	return resolveDeclarations(symbol.declarations);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -123,12 +130,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNamedRestrictions(
 			restrictions: Restriction[],
-			declarations: ts.Declaration[],
+			declarations: AST.Declaration[],
 			importedName: string,
 			isTypeOnly: boolean,
 			source: string,
 			range: CharacterReportRange,
-			program: ts.Program,
+			program: Program,
 		) {
 			for (const restriction of restrictions) {
 				if (restriction.allowTypeImports && isTypeOnly) {
@@ -141,6 +148,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						declarations,
 						restriction.specifier,
 						program,
+						context.host,
 					)
 				) {
 					context.report({
@@ -160,11 +168,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkWildcardRestrictions(
 			restrictions: Restriction[],
-			moduleDeclarations: ts.Declaration[],
+			moduleDeclarations: AST.Declaration[],
 			source: string,
 			topLevelTypeOnly: boolean,
 			range: CharacterReportRange,
-			program: ts.Program,
+			program: Program,
 		) {
 			for (const restriction of restrictions) {
 				if (restriction.allowTypeImports && topLevelTypeOnly) {
@@ -182,6 +190,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								name: undefined,
 							},
 							program,
+							context.host,
 						)
 					) {
 						context.report({
@@ -202,6 +211,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						moduleDeclarations,
 						restriction.specifier,
 						program,
+						context.host,
 					)
 				) {
 					context.report({
@@ -302,6 +312,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									moduleDeclarations,
 									restriction.specifier,
 									program,
+									context.host,
 								)
 							) {
 								context.report({

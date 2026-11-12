@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript";
-
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 export function getFunctionName(
 	node:
@@ -8,7 +7,7 @@ export function getFunctionName(
 		| AST.FunctionDeclaration
 		| AST.FunctionExpression
 		| AST.MethodDeclaration
-		| AST.MethodSignature,
+		| AST.MethodSignatureDeclaration,
 ): string | undefined {
 	switch (node.kind) {
 		case SyntaxKind.ArrowFunction: {

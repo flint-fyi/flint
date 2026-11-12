@@ -1,17 +1,15 @@
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 import {
 	getLeadingCommentRanges,
 	getTrailingCommentRanges,
 	SyntaxKind,
-	type NodeArray,
-} from "typescript";
-
-import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 const fallthroughCommentPattern = /falls?\s*through/i;
 
-function endsWithTerminatingStatement(statements: NodeArray<AST.Statement>) {
+function endsWithTerminatingStatement(statements: readonly AST.Statement[]) {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	return !!statements.length && isTerminatingStatement(statements.at(-1)!);
 }

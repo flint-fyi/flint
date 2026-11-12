@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getModifyingReferences,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -36,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				identifiers.push(name);
 			} else {
 				for (const element of name.elements) {
-					if (element.kind === SyntaxKind.BindingElement) {
+					if (element.name) {
 						identifiers.push(...collectBindingElements(element.name));
 					}
 				}

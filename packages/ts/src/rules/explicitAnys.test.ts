@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./explicitAnys.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -503,5 +505,24 @@ function test(...args: never) {}
 `,
 		`const items: string[] = [];`,
 		`type Callback = (value: unknown) => void;`,
+		{
+			code: `
+/** @typedef {any} Anything */
+
+/**
+ * @param {any} input
+ * @returns {any}
+ */
+export function process(input) {
+	return /** @type {any} */ (input);
+}
+`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: true,
+				noEmit: true,
+			}),
+		},
 	],
 });

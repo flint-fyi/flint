@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript";
-
 import type { AST, ScopeVariable } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
 

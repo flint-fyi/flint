@@ -1,12 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags, type Type } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	TypeFlags,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
@@ -86,8 +88,8 @@ function isInValidPosition(
 	return { invalidAncestor: node, valid: false };
 }
 
-function isVoidLike(type: Type) {
-	return tsutils.isTypeFlagSet(type, TypeFlags.VoidLike);
+function isVoidLike(type: Type): boolean {
+	return (type.flags & TypeFlags.VoidLike) !== 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

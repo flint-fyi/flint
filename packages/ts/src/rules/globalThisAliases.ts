@@ -1,5 +1,3 @@
-import { SyntaxKind, type Program } from "typescript";
-
 import {
 	declarationIncludesGlobal,
 	getTSNodeRange,
@@ -7,6 +5,8 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -22,8 +22,16 @@ function isOnlyGlobalDeclaration(
 		return false;
 	}
 
-	const declarations = symbol.getDeclarations();
-	if (!declarations?.length) {
+	const declarations: AST.Declaration[] = [];
+	for (const declarationHandle of symbol.declarations) {
+		const declaration = declarationHandle.resolve();
+		if (!declaration) {
+			return false;
+		}
+		declarations.push(declaration as AST.Declaration);
+	}
+
+	if (!declarations.length) {
 		return false;
 	}
 

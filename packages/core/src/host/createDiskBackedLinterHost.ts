@@ -203,6 +203,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		isCaseSensitiveFS() {
 			return caseSensitiveFs;
 		},
+		isDiskBacked: true,
 		async readDirectory(directoryPathAbsolute) {
 			const dirents = await fs.promises.readdir(directoryPathAbsolute, {
 				withFileTypes: true,

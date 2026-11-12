@@ -1,10 +1,13 @@
-import type { Program } from "typescript";
+import type { SpanMap } from "typescript-native/ast";
+import type { Program, Project } from "typescript-native/sync";
 
 import type * as AST from "./ast.ts";
 import type { Checker } from "./checker.ts";
 
 export interface TypeScriptFileServices {
 	program: Program;
+	project: Project;
 	sourceFile: AST.SourceFile;
+	spanMap: SpanMap | undefined;
 	typeChecker: Checker;
 }

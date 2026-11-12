@@ -1,12 +1,12 @@
-import { resolve } from "pathe";
-import type ts from "typescript";
+import path from "node:path";
 
-import { pathKey } from "@flint.fyi/utils";
+import type { SourceFile } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 export function isFromFile(
-	sourceFile: ts.SourceFile,
+	sourceFile: SourceFile,
 	specifiedPath: string | undefined,
-	program: ts.Program,
+	program: Program,
 ): boolean {
 	if (specifiedPath === undefined) {
 		return (
@@ -15,12 +15,10 @@ export function isFromFile(
 		);
 	}
 
-	const caseSensitive = program.useCaseSensitiveFileNames();
 	return (
-		pathKey(sourceFile.fileName, caseSensitive) ===
-		pathKey(
-			resolve(program.getCurrentDirectory(), specifiedPath),
-			caseSensitive,
+		program.getCanonicalFileName(path.resolve(sourceFile.fileName)) ===
+		program.getCanonicalFileName(
+			path.resolve(program.getCurrentDirectory(), specifiedPath),
 		)
 	);
 }

@@ -1,6 +1,5 @@
-import { isStringLiteralLike, SyntaxKind } from "typescript";
-
-import type { AST } from "@flint.fyi/typescript-language";
+import { isStaticString, type AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 const vitestFunctionKinds = {
 	afterAll: "hook",
@@ -203,7 +202,7 @@ function parseCalleeChain(
 			return invoked ? undefined : parseCalleeChain(node.expression, true);
 
 		case SyntaxKind.ElementAccessExpression: {
-			if (!isStringLiteralLike(node.argumentExpression)) {
+			if (!isStaticString(node.argumentExpression)) {
 				return;
 			}
 

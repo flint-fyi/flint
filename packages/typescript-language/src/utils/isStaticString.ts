@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 

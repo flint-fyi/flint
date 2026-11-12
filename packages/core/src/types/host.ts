@@ -27,6 +27,14 @@ export interface LinterHost extends FileSystemWatcher {
 	 */
 	glob(patterns: string[], options: LinterHostGlobOptions): Promise<string[]>;
 	isCaseSensitiveFS(): boolean;
+
+	/**
+	 * Whether the host is a direct view of the real file system: every file
+	 * and directory it reports exists on disk with the same contents.
+	 * Tooling that can read the disk itself may then skip asking the host to
+	 * confirm existence or list directories.
+	 */
+	readonly isDiskBacked?: boolean;
 	readDirectory(
 		directoryPathAbsolute: string,
 	): Promise<LinterHostDirectoryEntry[]>;

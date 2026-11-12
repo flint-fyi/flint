@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript";
-
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
@@ -7,6 +5,7 @@ import {
 	unwrapParenthesizedNode,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { countCommentsInRange } from "./utils/countCommentsInRange.ts";
@@ -166,6 +165,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					checkObjectLiteralDestructuring(left, sourceFile);
 				},
 				BindingElement: (node, { sourceFile }) => {
+					if (!node.name) {
+						return;
+					}
+
 					if (
 						node.propertyName?.kind !== SyntaxKind.ComputedPropertyName &&
 						node.name.kind === SyntaxKind.Identifier &&

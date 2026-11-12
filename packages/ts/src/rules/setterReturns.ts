@@ -1,11 +1,10 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
 import {
 	forEachChild,
+	isFunctionScopeBoundary,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -52,7 +51,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							return;
 						}
 
-						if (tsutils.isFunctionScopeBoundary(node)) {
+						if (isFunctionScopeBoundary(node)) {
 							return;
 						}
 

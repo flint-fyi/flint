@@ -1,4 +1,4 @@
-import type { Program } from "typescript";
+import type { Program } from "typescript-native/sync";
 
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 
@@ -20,14 +20,12 @@ export function isGlobalVariable(
 		return false;
 	}
 
-	const declarations = symbol.getDeclarations();
-
 	// undefined, NaN, Infinity etc. may have no declarations in some contexts
 	// but are still global identifiers. Check if they're global scope symbols.
-	if (!declarations?.length) {
+	if (!symbol.declarations.length) {
 		// If there are no declarations, it's likely a built-in global like undefined
 		return true;
 	}
 
-	return declarationsIncludeGlobal(declarations, program);
+	return declarationsIncludeGlobal(symbol.declarations, program);
 }

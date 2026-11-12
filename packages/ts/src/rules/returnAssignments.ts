@@ -1,12 +1,13 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	unwrapParenthesizedNode,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -38,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (
 				unwrapped.kind === SyntaxKind.BinaryExpression &&
-				tsutils.isAssignmentKind(unwrapped.operatorToken.kind)
+				isAssignmentOperator(unwrapped.operatorToken.kind)
 			) {
 				context.report({
 					message: "noReturnAssign",

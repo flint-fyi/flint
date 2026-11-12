@@ -1,16 +1,15 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isDateType(node: AST.Expression, typeChecker: Checker) {
-	return typeChecker.getTypeAtLocation(node).getSymbol()?.getName() === "Date";
+	return typeChecker.getTypeAtLocation(node).getSymbol()?.name === "Date";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

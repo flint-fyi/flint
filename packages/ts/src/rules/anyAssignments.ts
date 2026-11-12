@@ -1,35 +1,36 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-
 import {
+	getTypeProperty,
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	TypeFlags,
+	type Type,
+	type TypeReference,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
-function isTypeAny(type: ts.Type): boolean {
-	return (
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any) &&
-		!tsutils.isIntrinsicErrorType(type)
-	);
+function isTypeAny(type: Type): boolean {
+	return !!(type.flags & TypeFlags.Any) && !type.isErrorType();
 }
 
-function isTypeAnyArray(type: ts.Type, checker: Checker): boolean {
-	if (!checker.isArrayType(type)) {
+function isTypeAnyArray(type: Type, typeChecker: Checker): boolean {
+	if (!typeChecker.isArrayType(type)) {
 		return false;
 	}
-	const typeArgs = checker.getTypeArguments(type);
-	const elementType = typeArgs[0];
+
+	const elementType = typeChecker.getTypeArguments(type as TypeReference)[0];
 	return elementType !== undefined && isTypeAny(elementType);
 }
 
-function isTypeAnyOrUnknown(type: ts.Type): boolean {
-	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown);
+function isTypeAnyOrUnknown(type: Type): boolean {
+	return !!(type.flags & (TypeFlags.Any | TypeFlags.Unknown));
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -107,7 +108,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkArrayDestructureWorker(
 			pattern: AST.ArrayBindingPattern,
-			senderType: ts.Type,
+			senderType: Type,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
@@ -127,12 +128,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
-			const tupleElements = typeChecker.getTypeArguments(senderType);
+			const tupleElements = typeChecker.getTypeArguments(
+				senderType as TypeReference,
+			);
 			let didReport = false;
 
 			for (let i = 0; i < pattern.elements.length; i++) {
 				const element = pattern.elements[i];
-				if (!element || element.kind === SyntaxKind.OmittedExpression) {
+				if (!element) {
 					continue;
 				}
 
@@ -146,6 +149,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				const name = element.name;
+				if (!name) {
+					continue;
+				}
 
 				if (isTypeAny(elementType)) {
 					context.report({
@@ -181,7 +187,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkObjectDestructureWorker(
 			pattern: AST.ObjectBindingPattern,
-			senderType: ts.Type,
+			senderType: Type,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
@@ -192,8 +198,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				let key: string | undefined;
 				const propertyName = element.propertyName ?? element.name;
+				if (!propertyName) {
+					continue;
+				}
+
+				let key: string | undefined;
 
 				if (
 					propertyName.kind === SyntaxKind.Identifier ||
@@ -215,7 +225,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const propertySymbol = senderType.getProperty(key);
+				const propertySymbol = getTypeProperty(senderType, key);
 				if (!propertySymbol) {
 					continue;
 				}
@@ -226,6 +236,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				);
 
 				const name = element.name;
+				if (!name) {
+					continue;
+				}
 
 				if (isTypeAny(propertyType)) {
 					context.report({
@@ -261,7 +274,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkArrayDestructure(
 			pattern: AST.ArrayBindingPattern,
-			senderType: ts.Type,
+			senderType: Type,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
@@ -275,7 +288,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkObjectDestructure(
 			pattern: AST.ObjectBindingPattern,
-			senderType: ts.Type,
+			senderType: Type,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
@@ -288,22 +301,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function checkAssignment(
-			initializerType: ts.Type,
-			declaredType: ts.Type | undefined,
+			initializerType: Type,
+			declaredType: Type | undefined,
 			initializer: AST.Expression,
-			reportNode: ts.Node,
+			reportNode: AST.AnyNode,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
-			if (tsutils.isIntrinsicErrorType(initializerType)) {
+			if (initializerType.isErrorType()) {
 				return false;
 			}
 
-			const anyType = discriminateAnyType(
-				initializerType,
-				typeChecker,
-				initializer,
-			);
+			const anyType = discriminateAnyType(initializerType, typeChecker);
 
 			if (declaredType === undefined) {
 				if (anyType !== AnyType.Safe) {
@@ -330,6 +339,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				initializerType,
 				declaredType,
 				initializer,
+				typeChecker,
 			);
 			if (!result) {
 				return false;
@@ -364,7 +374,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							continue;
 						}
 
-						const spreadTypeArgs = typeChecker.getTypeArguments(spreadType);
+						const spreadTypeArgs = typeChecker.getTypeArguments(
+							spreadType as TypeReference,
+						);
 						const spreadElementType = spreadTypeArgs[0];
 						if (!spreadElementType || !isTypeAny(spreadElementType)) {
 							continue;
@@ -375,7 +387,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							continue;
 						}
 
-						const parentTypeArgs = typeChecker.getTypeArguments(parentType);
+						const parentTypeArgs = typeChecker.getTypeArguments(
+							parentType as TypeReference,
+						);
 						const parentElementType = parentTypeArgs[0];
 						if (!parentElementType || isTypeAnyOrUnknown(parentElementType)) {
 							continue;
@@ -445,7 +459,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const contextualType = typeChecker.getContextualType(node.parent);
+					const contextualType = typeChecker.getContextualType(
+						node.parent as AST.Expression,
+					);
 					if (!contextualType) {
 						return;
 					}
@@ -466,7 +482,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const propertySymbol = contextualType.getProperty(key);
+					const propertySymbol = getTypeProperty(contextualType, key);
 					if (!propertySymbol) {
 						return;
 					}
@@ -517,12 +533,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const contextualType = typeChecker.getContextualType(node.parent);
+					const contextualType = typeChecker.getContextualType(
+						node.parent as AST.Expression,
+					);
 					if (!contextualType) {
 						return;
 					}
 
-					const propertySymbol = contextualType.getProperty(node.name.text);
+					const propertySymbol = getTypeProperty(
+						contextualType,
+						(node.name as AST.Identifier).text,
+					);
 					if (!propertySymbol) {
 						return;
 					}

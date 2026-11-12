@@ -1,10 +1,12 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	NodeFlags,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -55,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.modifiers?.some(
 					(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
 				) ||
-				node.declarationList.flags & ts.NodeFlags.BlockScoped
+				node.declarationList.flags & NodeFlags.BlockScoped
 			) {
 				return;
 			}

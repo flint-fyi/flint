@@ -1,6 +1,9 @@
-import type { Declaration, Program } from "typescript";
-
-import { declarationIncludesGlobal } from "@flint.fyi/typescript-language";
+import type { LinterHost } from "@flint.fyi/core";
+import {
+	declarationIncludesGlobal,
+	type AST,
+} from "@flint.fyi/typescript-language";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { getSpecifierNames } from "./getSpecifierNames.ts";
 import { isFromFile } from "./isFromFile.ts";
@@ -10,9 +13,10 @@ import type { TypeOrValueSpecifier } from "./schemas.ts";
 // TODO: Investigate unifying this with / contributing upstream to typescript-eslint
 export function matchesSpecifier(
 	importedName: string | undefined,
-	declarations: Declaration[],
+	declarations: AST.Declaration[],
 	specifier: TypeOrValueSpecifier,
 	program: Program,
+	host: LinterHost,
 ): boolean {
 	const names = getSpecifierNames(specifier);
 	if (
@@ -29,7 +33,7 @@ export function matchesSpecifier(
 			case "lib":
 				return declarationIncludesGlobal(declaration, program);
 			case "package":
-				return isFromPackage(declaration, specifier.package, program);
+				return isFromPackage(declaration, specifier.package, program, host);
 		}
 	});
 }

@@ -1,12 +1,10 @@
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
-
 import {
 	getStaticStringValue,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -20,7 +18,7 @@ interface ImportInfo {
 
 function getImportInfo(
 	node: AST.ImportDeclaration,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): ImportInfo | undefined {
 	if (!node.importClause) {
 		return undefined;

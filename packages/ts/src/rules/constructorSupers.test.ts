@@ -53,6 +53,65 @@ class Example {
 }
 `,
 		},
+		{
+			code: `
+class Parent {}
+class Child extends Parent {
+    public constructor() {
+    }
+}
+`,
+			files: createRuleTesterTSConfig({ noCheck: true }),
+			snapshot: `
+class Parent {}
+class Child extends Parent {
+    public constructor() {
+           ~~~~~~~~~~~
+           Constructors of derived classes must call \`super()\` before using \`this\` or returning.
+    }
+}
+`,
+		},
+		{
+			code: `
+class Parent {}
+class Child extends Parent {
+    private constructor() {
+    }
+}
+`,
+			files: createRuleTesterTSConfig({ noCheck: true }),
+			snapshot: `
+class Parent {}
+class Child extends Parent {
+    private constructor() {
+            ~~~~~~~~~~~
+            Constructors of derived classes must call \`super()\` before using \`this\` or returning.
+    }
+}
+`,
+		},
+		{
+			code: `
+class Parent {}
+class Child extends Parent {
+    "constructor"() {
+        this.constructor;
+    }
+}
+`,
+			files: createRuleTesterTSConfig({ noCheck: true }),
+			snapshot: `
+class Parent {}
+class Child extends Parent {
+    "constructor"() {
+    ~~~~~~~~~~~~~
+    Constructors of derived classes must call \`super()\` before using \`this\` or returning.
+        this.constructor;
+    }
+}
+`,
+		},
 	],
 	valid: [
 		{

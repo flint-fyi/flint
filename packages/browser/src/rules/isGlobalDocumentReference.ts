@@ -1,15 +1,15 @@
-import { SyntaxKind, type Program } from "typescript";
-
 import {
 	isGlobalDeclaration,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 export function isGlobalDocumentReference(
-	node: AST.Expression,
+	node: AST.Node,
 	typeChecker: Checker,
 	program: Program,
 ): boolean {

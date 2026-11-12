@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/ast";
 
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 

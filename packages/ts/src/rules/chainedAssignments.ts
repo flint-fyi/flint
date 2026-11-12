@@ -1,12 +1,13 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	unwrapParenthesizedNode,
 	unwrapParentParenthesizedExpressions,
 } from "@flint.fyi/typescript-language";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -34,14 +35,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					if (!tsutils.isAssignmentKind(node.operatorToken.kind)) {
+					if (!isAssignmentOperator(node.operatorToken.kind)) {
 						return;
 					}
 
 					const rightSide = unwrapParenthesizedNode(node.right);
 					if (
 						rightSide.kind !== SyntaxKind.BinaryExpression ||
-						!tsutils.isAssignmentKind(rightSide.operatorToken.kind)
+						!isAssignmentOperator(rightSide.operatorToken.kind)
 					) {
 						return;
 					}

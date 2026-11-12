@@ -1,10 +1,9 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -102,7 +101,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.parent.parent.kind === SyntaxKind.IfStatement &&
 				node.parent.parent.elseStatement === node.parent
 			) {
-				const grandparent = node.parent.parent;
 				const openBrace = node.parent.getStart(sourceFile);
 				const closeBrace = node.parent.getEnd();
 
@@ -117,14 +115,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				if (hasCommentsInRange(sourceFile, node.getEnd(), closeBrace - 1)) {
-					return;
-				}
-
-				const hasElseKeyword = grandparent
-					.getChildren(sourceFile)
-					.some((child) => child.kind === SyntaxKind.ElseKeyword);
-
-				if (!hasElseKeyword) {
 					return;
 				}
 

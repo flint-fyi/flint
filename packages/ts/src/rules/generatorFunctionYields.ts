@@ -1,11 +1,10 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-
 import {
+	isFunctionScopeBoundary,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -62,17 +61,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function blockContainsYield(block: AST.Block) {
-	function checkForYield(node: ts.Node): boolean | undefined {
+	function checkForYield(node: AST.AnyNode): boolean | undefined {
 		if (node.kind === SyntaxKind.YieldExpression) {
 			return true;
 		}
 
-		if (tsutils.isFunctionScopeBoundary(node)) {
+		if (isFunctionScopeBoundary(node)) {
 			return false;
 		}
 
-		return ts.forEachChild(node, checkForYield);
+		return node.forEachChild(checkForYield);
 	}
 
-	return ts.forEachChild(block, checkForYield);
+	return block.forEachChild(checkForYield);
 }

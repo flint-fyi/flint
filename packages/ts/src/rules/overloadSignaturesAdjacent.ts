@@ -1,11 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -149,10 +148,11 @@ function isSameMethod(method1: Method, method2: Method | undefined) {
 	);
 }
 
-function isStatic(node: ts.Node) {
-	return (
-		ts.canHaveModifiers(node) &&
-		!!node.modifiers?.some((mod) => mod.kind === SyntaxKind.StaticKeyword)
+function isStatic(
+	node: AST.MethodDeclaration | AST.MethodSignatureDeclaration,
+): boolean {
+	return !!(node as AST.MethodDeclaration & AST.ModifiersBase).modifiers?.some(
+		(modifier) => modifier.kind === SyntaxKind.StaticKeyword,
 	);
 }
 

@@ -299,6 +299,7 @@ function createTestSetups({
 	});
 
 	new RuleTester({
+		afterAll: vi.fn(),
 		...testerOptions,
 		...(assertNoLanguageReports === undefined
 			? {}

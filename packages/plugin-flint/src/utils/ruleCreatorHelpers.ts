@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript";
-
 import type { AST, Checker } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 export function isLanguageCreateRule(
 	node: AST.CallExpression,
@@ -25,7 +24,7 @@ function isTypedMethodCall(
 
 	const propertyAccess = node.expression;
 	const type = typeChecker.getTypeAtLocation(propertyAccess.expression);
-	const typeName = type.getSymbol()?.getName();
+	const typeName = type.getSymbol()?.name;
 
 	// TODO: Maybe need to check it more strictly
 	// https://github.com/flint-fyi/flint/issues/152

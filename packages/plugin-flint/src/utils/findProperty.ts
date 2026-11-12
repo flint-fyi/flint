@@ -1,10 +1,11 @@
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
-
 import type { AST } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type NodeArray,
+} from "@flint.fyi/typescript-language/native/ast";
 
 export function findProperty<Node extends AST.Expression>(
-	properties: ts.NodeArray<AST.ObjectLiteralElementLike>,
+	properties: NodeArray<AST.ObjectLiteralElementLike>,
 	name: string,
 	predicate: (node: AST.Expression) => node is Node,
 ): Node | undefined {

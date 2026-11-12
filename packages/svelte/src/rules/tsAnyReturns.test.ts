@@ -45,6 +45,36 @@ ruleTester.describe(rule, {
                        Unsafe return of a value of type \`any\`.
 `,
 		},
+		{
+			code: `
+<script lang="ts">
+	const emoji = "😀 é";
+	let foo = {} as any
+	function bar() {
+		return 1 as any
+	}
+</script>
+
+<p>{emoji} 😀</p>
+<button onclick={() => foo}></button>
+`,
+			snapshot: `
+<script lang="ts">
+	const emoji = "😀 é";
+	let foo = {} as any
+	function bar() {
+		return 1 as any
+		~~~~~~~~~~~~~~~
+		Unsafe return of a value of type \`any\`.
+	}
+</script>
+
+<p>{emoji} 😀</p>
+<button onclick={() => foo}></button>
+                       ~~~
+                       Unsafe return of a value of type \`any\`.
+`,
+		},
 	],
 	valid: [
 		{

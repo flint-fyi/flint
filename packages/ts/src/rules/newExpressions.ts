@@ -1,10 +1,5 @@
-import { SyntaxKind } from "typescript";
-
-import {
-	getTSNodeRange,
-	typescriptLanguage,
-	type AST,
-} from "@flint.fyi/typescript-language";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -62,7 +57,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (isStandaloneExpression(node)) {
 						context.report({
 							message: "noStandaloneNew",
-							range: getTSNodeRange(node.getChildAt(0, sourceFile), sourceFile),
+							range: {
+								begin: node.getStart(sourceFile),
+								end: node.getStart(sourceFile) + "new".length,
+							},
 						});
 					}
 				},

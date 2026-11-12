@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import { debugForFile } from "debug-for-file";
 import { execa } from "execa";
 
@@ -7,17 +5,15 @@ import {
 	summarizeHyperfine,
 	type HyperfineSummary,
 } from "./summarizeHyperfine.ts";
-import { testCasesPath } from "./testCases.ts";
 
 const log = debugForFile(import.meta.url);
 
 export async function runInHyperfine(
 	command: string,
 	label: string,
-	slug: string,
+	cwd: string,
+	prepare?: string,
 ): Promise<HyperfineSummary> {
-	const cwd = path.join(testCasesPath, slug);
-
 	log("Measuring %s in %s...", label, cwd);
 	log("\t%s", command);
 
@@ -34,6 +30,8 @@ export async function runInHyperfine(
 		"--ignore-failure",
 		"--warmup",
 		"1",
+		// Hyperfine runs preparation commands in a shell even with --shell=none.
+		...(prepare ? ["--prepare", prepare] : []),
 	]);
 
 	log("\t✅ %s", stdout);

@@ -61,7 +61,7 @@ const config: KnipConfig = {
 				"@flint.fyi/rule-tester!",
 
 				// Used only inside rule tester fixture source strings.
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
@@ -89,6 +89,9 @@ const config: KnipConfig = {
 		"packages/ts": {
 			entry: ["src/typescript.d.ts"],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+		},
+		"packages/typescript-language": {
+			project: ["src/**/*.ts!"],
 		},
 		"packages/vitest": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],

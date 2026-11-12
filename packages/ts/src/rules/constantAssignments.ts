@@ -1,11 +1,13 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getModifyingReferences,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	NodeFlags,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -38,9 +40,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const identifiers: AST.Identifier[] = [];
 
 			for (const element of name.elements) {
-				if (element.kind === SyntaxKind.BindingElement) {
-					identifiers.push(...collectBindingElements(element.name));
+				if (!element.name) {
+					continue;
 				}
+				identifiers.push(...collectBindingElements(element.name));
 			}
 
 			return identifiers;
@@ -49,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				VariableDeclarationList: (node, { sourceFile }) => {
-					if (!(node.flags & ts.NodeFlags.Const) || !node.declarations.length) {
+					if (!(node.flags & NodeFlags.Const) || !node.declarations.length) {
 						return;
 					}
 

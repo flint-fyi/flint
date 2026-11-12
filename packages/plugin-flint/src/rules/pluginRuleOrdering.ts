@@ -1,10 +1,11 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { SymbolFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { findProperty } from "../utils/findProperty.ts";
 import { ruleCreator } from "./ruleCreator.ts";
@@ -39,8 +40,8 @@ function hasCommentsInArray(
 // TODO: Maybe we will have a function to check if a symbol is from Flint in the future
 function isCreatePluginCall(
 	node: AST.CallExpression,
-	typeChecker: ts.TypeChecker,
-) {
+	typeChecker: Checker,
+): boolean {
 	if (node.expression.kind !== SyntaxKind.Identifier) {
 		return false;
 	}
@@ -51,22 +52,19 @@ function isCreatePluginCall(
 	}
 
 	const resolvedSymbol =
-		symbol.flags & ts.SymbolFlags.Alias
+		symbol.flags & SymbolFlags.Alias
 			? typeChecker.getAliasedSymbol(symbol)
 			: symbol;
 
-	if (resolvedSymbol.getName() !== "createPlugin") {
+	if (resolvedSymbol.name !== "createPlugin") {
 		return false;
 	}
 
-	return resolvedSymbol.getDeclarations()?.some((declaration) => {
-		const fileName = declaration.getSourceFile().fileName.replaceAll("\\", "/");
-
-		return (
-			fileName.includes("/core/") &&
-			/plugins\/createPlugin\.(?:d\.)?[cm]?[jt]s$/.test(fileName)
-		);
-	});
+	return resolvedSymbol.declarations.some(({ path }) =>
+		/\/core\/.*plugins\/createplugin\.(?:d\.)?[cm]?[jt]s$/i.test(
+			path.replaceAll("\\", "/"),
+		),
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

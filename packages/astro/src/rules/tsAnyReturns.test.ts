@@ -11,6 +11,24 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+<script>
+function client() {
+	return 1 as any
+}
+</script>
+`,
+			snapshot: `
+<script>
+function client() {
+	return 1 as any
+	~~~~~~~~~~~~~~~
+	Unsafe return of a value of type \`any\`.
+}
+</script>
+`,
+		},
+		{
+			code: `
 ---
 function foo() {
 	return 1 as any
@@ -51,6 +69,66 @@ function foo() {
 	}
 </div>
 			
+`,
+		},
+		{
+			code: `
+<p>😀 é</p>
+<script>
+const emoji = "😀";
+function client() {
+	return 1 as any
+}
+</script>
+`,
+			snapshot: `
+<p>😀 é</p>
+<script>
+const emoji = "😀";
+function client() {
+	return 1 as any
+	~~~~~~~~~~~~~~~
+	Unsafe return of a value of type \`any\`.
+}
+</script>
+`,
+		},
+		{
+			code: `
+---
+const emoji = "😀 é";
+function foo() {
+	return 1 as any
+}
+---
+<p>{emoji}</p>
+<div>
+	{
+		function bar() {
+			return 2 as any
+		}
+	}
+</div>
+`,
+			snapshot: `
+---
+const emoji = "😀 é";
+function foo() {
+	return 1 as any
+	~~~~~~~~~~~~~~~
+	Unsafe return of a value of type \`any\`.
+}
+---
+<p>{emoji}</p>
+<div>
+	{
+		function bar() {
+			return 2 as any
+			~~~~~~~~~~~~~~~
+			Unsafe return of a value of type \`any\`.
+		}
+	}
+</div>
 `,
 		},
 	],

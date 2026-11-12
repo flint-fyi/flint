@@ -1,11 +1,13 @@
-import { isLiteralExpression, SyntaxKind } from "typescript";
-
 import {
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	isLiteralExpression,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

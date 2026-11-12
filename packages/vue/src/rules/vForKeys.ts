@@ -1,11 +1,16 @@
 import * as vue from "@vue/compiler-dom";
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
 
+import { reportSourceCode } from "@flint.fyi/content-mapper";
 import type { CharacterReportRange } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
-import { reportSourceCode } from "@flint.fyi/volar-language";
-import { vueLanguage } from "@flint.fyi/vue-language";
+import type { AST } from "@flint.fyi/typescript-language";
+import {
+	SpanMap,
+	SpanMapFeature,
+	SyntaxKind,
+	type Node,
+	type ReadonlyTextRange,
+} from "@flint.fyi/typescript-language/native/ast";
+import { vueLanguage, type VueServices } from "@flint.fyi/vue-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -53,48 +58,101 @@ export default ruleCreator.createRule(vueLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				SourceFile(node, services) {
-					if (services.vue == null) {
+				SourceFile(sourceFile, services) {
+					const vueServices = (services as Partial<VueServices>).vue;
+					if (!vueServices || !services.spanMap) {
 						return;
 					}
-					const { map, sfc } = services.vue;
-
-					const toGeneratedLocation = (sourceLocation: number) => {
-						for (const [loc] of map.toGeneratedLocation(sourceLocation)) {
-							return loc;
-						}
-						return;
-					};
-
-					const toGeneratedLocationOrThrow = (sourceLocation: number) => {
-						return nullThrows(
-							toGeneratedLocation(sourceLocation),
-							"Unable to map source location to generated location",
-						);
-					};
-
-					const templateBlock = sfc.children.find(
-						(c): c is vue.ElementNode =>
-							c.type === vue.NodeTypes.ELEMENT && c.tag === "template",
+					const { project, spanMap, typeChecker } = services;
+					const templateBlock = vueServices.sfc.children.find(
+						(child): child is vue.ElementNode =>
+							child.type === vue.NodeTypes.ELEMENT && child.tag === "template",
 					);
-					if (templateBlock == null) {
-						return {};
+					if (!templateBlock) {
+						return;
 					}
 
-					const propValueRange = (propValue: vue.TextNode) => {
-						const strip = propValue.loc.source === propValue.content ? 0 : 1;
-						return {
-							begin: propValue.loc.start.offset + strip,
-							end: propValue.loc.end.offset - strip,
+					const referencesLoopVariable = (
+						authoredKeyRange: CharacterReportRange,
+						loopVariableRanges: CharacterReportRange[],
+						feature: SpanMapFeature,
+					): boolean => {
+						const leadingTrivia =
+							/^(?:\s|\/\*[\s\S]*?\*\/|\/\/[^\n]*(?:\n|$))*/.exec(
+								sourceFile.originalText.slice(
+									authoredKeyRange.begin,
+									authoredKeyRange.end,
+								),
+							)?.[0].length;
+						const projections = spanMap.originalToVirtualSpans(
+							{
+								end: authoredKeyRange.end,
+								pos: authoredKeyRange.begin + (leadingTrivia ?? 0),
+							},
+							feature,
+						);
+						// TODO(perf): use ScopeManager instead
+						// https://github.com/flint-fyi/flint/issues/400
+						const findReference = (
+							node: Node,
+							range: ReadonlyTextRange,
+						): boolean => {
+							const begin = node.getStart(sourceFile);
+							const end = node.getEnd();
+							if (begin >= range.end || end <= range.pos) {
+								return false;
+							}
+							if (
+								begin >= range.pos &&
+								end <= range.end &&
+								node.kind === SyntaxKind.Identifier
+							) {
+								const declaration = typeChecker
+									.getSymbolAtLocation(node)
+									?.valueDeclaration?.resolve(project);
+								if (!declaration) {
+									return false;
+								}
+								const typedDeclaration = declaration as AST.Declaration;
+								// `AST.Declaration` members type `name` as always present, but
+								// anonymous declarations (a default-exported function, say)
+								// carry the property with value `undefined`.
+								const declarationName =
+									(typedDeclaration as { name?: AST.AnyNode }).name ??
+									typedDeclaration;
+								const declarationSourceFile = declarationName.getSourceFile();
+								const declarationMap = declarationSourceFile.spanMap;
+								if (!declarationMap) {
+									return false;
+								}
+								const mapped = declarationMap.virtualToOriginalSpan({
+									end: declarationName.getEnd(),
+									pos: declarationName.getStart(declarationSourceFile),
+								});
+								if (SpanMap.isNone(mapped.fidelity)) {
+									return false;
+								}
+								return loopVariableRanges.some(
+									(range) =>
+										mapped.range.pos >= range.begin &&
+										mapped.range.end <= range.end,
+								);
+							}
+							return !!node.forEachChild(
+								(child) => findReference(child, range) || undefined,
+							);
 						};
+						return projections.some(({ range }) =>
+							findReference(sourceFile, range),
+						);
 					};
 
 					const checkFor = (
 						forDirective: vue.DirectiveNode,
 						forParseResult: vue.ForParseResult,
 						keyProp: null | vue.AttributeNode | vue.DirectiveNode,
-					) => {
-						if (keyProp == null) {
+					): void => {
+						if (!keyProp) {
 							reportSourceCode(context, {
 								message: "missingKey",
 								range: {
@@ -105,116 +163,61 @@ export default ruleCreator.createRule(vueLanguage, {
 							return;
 						}
 						if (keyProp.type === vue.NodeTypes.ATTRIBUTE) {
-							if (keyProp.value == null) {
-								return; // TS error
+							if (!keyProp.value) {
+								return;
 							}
+							const strip =
+								keyProp.value.loc.source === keyProp.value.content ? 0 : 1;
 							reportSourceCode(context, {
 								message: "staticKey",
-								range: propValueRange(keyProp.value),
+								range: {
+									begin: keyProp.value.loc.start.offset + strip,
+									end: keyProp.value.loc.end.offset - strip,
+								},
 							});
 							return;
 						}
 
-						let reportRange: CharacterReportRange;
-						let valueRange: CharacterReportRange;
-
-						if (keyProp.exp == null) {
-							// :key
-							reportRange = {
-								begin: keyProp.loc.start.offset,
-								end: keyProp.loc.end.offset,
-							};
-							const generatedLocations = Array.from(
-								map.toGeneratedLocation(
-									nullThrows(keyProp.arg, "Expected keyProp.arg to be non-null")
-										.loc.start.offset,
-								),
-							).filter(
-								([, m]) =>
-									nullThrows(
-										m.lengths[0],
-										"Expected mapping to have at least one range",
-									) > 0,
-							);
-
-							// |key|: |key|
-							//        ^^^^^
-							// |key|: __VLS_ctx.|key|
-							//                  ^^^^^
-							const valueMapping = nullThrows(
-								generatedLocations[1],
-								"Expected :key two have two mappings",
-							)[1];
-
-							const generatedBegin = nullThrows(
-								valueMapping.generatedOffsets[0],
-								"Expected mapping to have at least one range",
-							);
-							valueRange = {
-								begin: generatedBegin,
-								end:
-									generatedBegin +
-									nullThrows(
-										valueMapping.lengths[0],
-										"Expected mapping to have at least one range",
-									),
-							};
-						} else {
-							reportRange = {
-								begin: keyProp.exp.loc.start.offset,
-								end: keyProp.exp.loc.end.offset,
-							};
-
-							valueRange = {
-								begin: toGeneratedLocationOrThrow(keyProp.exp.loc.start.offset),
-								end: toGeneratedLocationOrThrow(keyProp.exp.loc.end.offset),
-							};
-						}
-
+						const keyExpression = keyProp.exp;
+						const shorthand = !keyExpression;
+						const authoredKeyRange = shorthand
+							? {
+									begin:
+										keyProp.arg?.loc.start.offset ?? keyProp.loc.start.offset,
+									end: keyProp.arg?.loc.end.offset ?? keyProp.loc.end.offset,
+								}
+							: {
+									begin: keyExpression.loc.start.offset,
+									end: keyExpression.loc.end.offset,
+								};
+						const reportRange = shorthand
+							? {
+									begin: keyProp.loc.start.offset,
+									end: keyProp.loc.end.offset,
+								}
+							: authoredKeyRange;
 						const loopVariableRanges = [
 							forParseResult.value,
 							forParseResult.key,
 							forParseResult.index,
 						]
-							.filter((v) => v != null)
-							.map((v) => ({
-								begin: toGeneratedLocationOrThrow(v.loc.start.offset),
-								end: toGeneratedLocationOrThrow(v.loc.end.offset),
+							.filter((value) => value != null)
+							.map((value) => ({
+								begin: value.loc.start.offset,
+								end: value.loc.end.offset,
 							}));
-
-						// TODO(perf): use ScopeManager instead
-						// https://github.com/flint-fyi/flint/issues/400
-						const find = (current: ts.Node) => {
-							const currentBegin = current.getStart(node);
-							const currentEnd = current.getEnd();
-							if (
-								currentBegin > valueRange.end ||
-								currentEnd <= valueRange.begin
-							) {
-								return false;
-							}
-							if (
-								currentBegin >= valueRange.begin &&
-								currentEnd <= valueRange.end &&
-								current.kind === SyntaxKind.Identifier
-							) {
-								const symbol =
-									services.typeChecker.getSymbolAtLocation(current);
-								if (symbol?.valueDeclaration == null) {
-									return false;
-								}
-								const declStart = symbol.valueDeclaration.getStart(node);
-								const declEnd = symbol.valueDeclaration.getEnd();
-
-								return loopVariableRanges.some(
-									({ begin, end }) => declStart >= begin && declEnd <= end,
-								);
-							}
-
-							return current.getChildren(node).some(find);
-						};
-
-						if (!find(node)) {
+						if (
+							!referencesLoopVariable(
+								authoredKeyRange,
+								loopVariableRanges,
+								SpanMapFeature.References,
+							) &&
+							!referencesLoopVariable(
+								authoredKeyRange,
+								loopVariableRanges,
+								SpanMapFeature.Hover,
+							)
+						) {
 							reportSourceCode(context, {
 								message: "invalidKey",
 								range: reportRange,
@@ -222,21 +225,18 @@ export default ruleCreator.createRule(vueLanguage, {
 						}
 					};
 
-					// TODO: add vue: listeners to the language
-					function visitTag(node: vue.TemplateChildNode) {
+					const visitTag = (node: vue.TemplateChildNode): void => {
 						if (node.type !== vue.NodeTypes.ELEMENT) {
 							return;
 						}
-
 						let forDirective: null | vue.DirectiveNode = null;
 						let forParseResult: null | vue.ForParseResult = null;
 						let keyProp: null | vue.AttributeNode | vue.DirectiveNode = null;
-
 						for (const prop of node.props) {
 							if (
 								prop.type === vue.NodeTypes.DIRECTIVE &&
 								prop.name === "for" &&
-								prop.forParseResult != null
+								prop.forParseResult
 							) {
 								forDirective = prop;
 								forParseResult = prop.forParseResult;
@@ -253,15 +253,13 @@ export default ruleCreator.createRule(vueLanguage, {
 								keyProp = prop;
 							}
 						}
-
-						if (forDirective != null && forParseResult != null) {
+						if (forDirective && forParseResult) {
 							checkFor(forDirective, forParseResult, keyProp);
 						}
-
 						for (const child of node.children) {
 							visitTag(child);
 						}
-					}
+					};
 					for (const child of templateBlock.children) {
 						visitTag(child);
 					}

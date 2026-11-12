@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	isStaticString,
 	isStringRawNoSubstitution,
@@ -7,6 +5,7 @@ import {
 	type StaticString,
 	type StringRawNoSubstitution,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { findProperty } from "./findProperty.ts";
 import { tsAstToLiteral } from "./tsAstToLiteral.ts";
@@ -118,7 +117,7 @@ export function parseTestCaseInvalid(
 
 function getTestCaseCode(node: ParsedTestCaseCodeNode) {
 	if (isStringRawNoSubstitution(node)) {
-		return node.template.rawText ?? node.template.text;
+		return node.template.getText().slice(1, -1);
 	}
 
 	return node.text;

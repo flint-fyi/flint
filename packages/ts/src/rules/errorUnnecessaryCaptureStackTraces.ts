@@ -1,15 +1,14 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { isErrorSubclass } from "./utils/isErrorSubclass.ts";
 
-function isCaptureStackTraceCall(node: AST.AnyNode): boolean {
+function isCaptureStackTraceCall(node: AST.Node): boolean {
 	if (node.kind !== SyntaxKind.CallExpression) {
 		return false;
 	}
@@ -33,7 +32,6 @@ function isValidSecondArgument(
 	if (
 		node.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.kind === SyntaxKind.ThisKeyword &&
-		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "constructor"
 	) {
 		return true;

@@ -1,5 +1,3 @@
-import { SyntaxKind, type Program } from "typescript";
-
 import {
 	getStaticNumberValue,
 	getTSNodeRange,
@@ -9,6 +7,8 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -23,7 +23,9 @@ function getMathMethodInfo(
 		unwrapped.kind !== SyntaxKind.CallExpression ||
 		unwrapped.questionDotToken ||
 		unwrapped.arguments.length < 1 ||
-		unwrapped.arguments.some((arg) => arg.kind === SyntaxKind.SpreadElement)
+		unwrapped.arguments.some(
+			(argument) => argument.kind === SyntaxKind.SpreadElement,
+		)
 	) {
 		return;
 	}

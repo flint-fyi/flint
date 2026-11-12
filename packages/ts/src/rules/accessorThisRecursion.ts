@@ -1,12 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
 import {
 	forEachChild,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import {
+	isClassLikeDeclaration,
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -68,7 +70,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const isGetter = accessor.kind === SyntaxKind.GetAccessor;
 
 			function checkNode(node: AST.AnyNode): void {
-				if (tsutils.isFunctionScopeBoundary(node)) {
+				// `this` inside a nested class or function refers to that scope's
+				// own `this`, not the accessor's
+				if (isClassLikeDeclaration(node) || isFunctionLikeDeclaration(node)) {
 					return;
 				}
 
@@ -80,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			function checkPropertyAccessExpression(
-				node: AST.JsxTagNamePropertyAccess | AST.PropertyAccessExpression,
+				node: AST.PropertyAccessExpression,
 			) {
 				if (
 					node.name.text !== propertyName ||

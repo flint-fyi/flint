@@ -27,7 +27,6 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@shikijs/cli": "catalog:prod",
 		"cli-cursor": "catalog:prod",
@@ -35,7 +34,6 @@
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
 		"text-table-fast": "catalog:prod",
-		"typescript": "catalog:prod",
 		"wrap-ansi": "catalog:prod"
 	},
 	"devDependencies": {

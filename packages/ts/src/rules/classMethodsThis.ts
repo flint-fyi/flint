@@ -1,4 +1,3 @@
-import { SyntaxKind, type NodeArray } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -6,6 +5,7 @@ import {
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -97,7 +97,7 @@ function getMemberDisplayName(
 }
 
 function hasModifier(
-	modifiers: NodeArray<AST.ModifierLike> | undefined,
+	modifiers: readonly AST.ModifierLike[] | undefined,
 	kind: SyntaxKind,
 ): boolean {
 	return modifiers?.some((modifier) => modifier.kind === kind) ?? false;
@@ -114,9 +114,9 @@ function isPublicMember(member: ClassMember): boolean {
 	}
 
 	return !modifiers.some(
-		(m) =>
-			m.kind === SyntaxKind.PrivateKeyword ||
-			m.kind === SyntaxKind.ProtectedKeyword,
+		(modifier) =>
+			modifier.kind === SyntaxKind.PrivateKeyword ||
+			modifier.kind === SyntaxKind.ProtectedKeyword,
 	);
 }
 

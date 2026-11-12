@@ -1,11 +1,11 @@
-import { SyntaxKind, type Declaration } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type Checker,
+	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -31,27 +31,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isNamespaceImportDeclaration(declaration: Declaration) {
-			return (
-				declaration.kind === SyntaxKind.NamespaceImport &&
-				declaration.parent.kind === SyntaxKind.ImportClause &&
-				declaration.parent.parent.kind === SyntaxKind.ImportDeclaration
-			);
-		}
-
 		function isIdentifierNamespaceImport(
 			identifier: AST.Identifier,
 			typeChecker: Checker,
-		) {
-			return typeChecker
+		): boolean {
+			return !!typeChecker
 				.getSymbolAtLocation(identifier)
-				?.getDeclarations()
-				?.some(isNamespaceImportDeclaration);
+				?.declarations.some(
+					(handle) => handle.kind === SyntaxKind.NamespaceImport,
+				);
 		}
 
 		return {
 			visitors: {
-				ElementAccessExpression(node, { sourceFile, typeChecker }) {
+				ElementAccessExpression(
+					node,
+					{ sourceFile, typeChecker }: TypeScriptFileServices,
+				) {
 					if (
 						node.expression.kind === SyntaxKind.Identifier &&
 						isIdentifierNamespaceImport(node.expression, typeChecker)

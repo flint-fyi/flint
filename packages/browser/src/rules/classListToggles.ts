@@ -1,10 +1,9 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -67,6 +66,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			) {
 				return;
 			}
+			if (classList.expression.kind !== SyntaxKind.Identifier) {
+				return;
+			}
 
 			const args = expression.arguments;
 			if (args.length !== 1) {
@@ -85,30 +87,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				className: arg.text,
 				method: method.text,
 				methodNode: method,
-			};
-		}
-
-		function getObjectAndClassName(node: AST.Statement) {
-			const call = getClassListMethodCall(node);
-			if (!call) {
-				return;
-			}
-
-			const exprStatement = node as AST.ExpressionStatement;
-			const callExpr = exprStatement.expression as AST.CallExpression;
-			const propertyAccess =
-				callExpr.expression as AST.PropertyAccessExpression;
-			const classList =
-				propertyAccess.expression as AST.PropertyAccessExpression;
-			const object = classList.expression;
-
-			if (object.kind !== SyntaxKind.Identifier) {
-				return;
-			}
-
-			return {
-				className: call.className,
-				object: object.text,
+				object: classList.expression.text,
 			};
 		}
 
@@ -126,7 +105,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						thenStatement.kind === SyntaxKind.Block
 							? thenStatement.statements
 							: [thenStatement];
-					const elseBlock: readonly AST.Statement[] =
+					const elseBlock =
 						elseStatement.kind === SyntaxKind.Block
 							? elseStatement.statements
 							: [elseStatement];
@@ -143,6 +122,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						elseBlock[0],
 						"Else block statement is expected to be present by prior length check",
 					);
+
 					const thenCall = getClassListMethodCall(thenBlockStatement);
 					const elseCall = getClassListMethodCall(elseBlockStatement);
 
@@ -157,32 +137,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const thenInfo = getObjectAndClassName(thenBlockStatement);
-					if (!thenInfo) {
+					if (thenCall.object !== elseCall.object) {
 						return;
 					}
 
-					const elseInfo = getObjectAndClassName(elseBlockStatement);
-					if (thenInfo.object !== elseInfo?.object) {
-						return;
-					}
-
-					const condition = node.expression;
-					const conditionText = condition.getText(sourceFile);
-					const className = thenCall.className;
+					const conditionText = node.expression.getText(sourceFile);
 					const toggleSecondArg =
 						thenCall.method === "add" ? conditionText : `!(${conditionText})`;
-
-					const ifStart = node.getStart(sourceFile);
-					const ifEnd = node.getEnd();
 
 					context.report({
 						fix: {
 							range: {
-								begin: ifStart,
-								end: ifEnd,
+								begin: node.getStart(sourceFile),
+								end: node.getEnd(),
 							},
-							text: `${thenInfo.object}.classList.toggle("${className}", ${toggleSecondArg});`,
+							text: `${thenCall.object}.classList.toggle("${thenCall.className}", ${toggleSecondArg});`,
 						},
 						message: "preferToggle",
 						range: getTSNodeRange(thenCall.methodNode, sourceFile),

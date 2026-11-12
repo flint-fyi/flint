@@ -1,10 +1,9 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { findProperty } from "../utils/findProperty.ts";
 import {
@@ -126,7 +125,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					prop.name.kind === SyntaxKind.Identifier
 				) {
 					dataKeys.add(prop.name.text);
-				} else if (prop.kind === SyntaxKind.ShorthandPropertyAssignment) {
+				} else if (
+					prop.kind === SyntaxKind.ShorthandPropertyAssignment &&
+					prop.name.kind === SyntaxKind.Identifier
+				) {
 					dataKeys.add(prop.name.text);
 				}
 			});

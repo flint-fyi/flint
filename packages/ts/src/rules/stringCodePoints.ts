@@ -1,10 +1,9 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags } from "typescript";
-
 import {
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { TypeFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -42,10 +41,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 						node.expression.name.text === "charCodeAt" &&
-						tsutils.isTypeFlagSet(
-							typeChecker.getTypeAtLocation(node.expression.expression),
-							TypeFlags.StringLike,
-						)
+						(typeChecker.getTypeAtLocation(node.expression.expression).flags &
+							TypeFlags.StringLike) !==
+							0
 					) {
 						context.report({
 							message: "preferCodePointAt",

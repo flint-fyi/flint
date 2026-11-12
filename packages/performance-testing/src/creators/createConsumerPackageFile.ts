@@ -1,20 +1,23 @@
 import path from "node:path";
 
-export function createConsumerPackageFile(
+export function createArtifactSpecifiers(
 	artifacts: Map<string, string>,
 	testCasesPath: string,
-): object {
-	const overrides = Object.fromEntries(
+): Record<string, string> {
+	return Object.fromEntries(
 		[...artifacts].map(([packageName, artifactPath]) => [
 			packageName,
 			`file:${path.relative(testCasesPath, artifactPath).split(path.sep).join("/")}`,
 		]),
 	);
+}
 
+export function createConsumerPackageFile(
+	artifactSpecifiers: Record<string, string>,
+): object {
 	return {
-		dependencies: { flint: overrides.flint },
+		dependencies: artifactSpecifiers,
 		name: "@flint.fyi/performance-testing-cases",
-		pnpm: { overrides },
 		private: true,
 		type: "module",
 	};

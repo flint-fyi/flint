@@ -1,17 +1,18 @@
-import type { Declaration, Program } from "typescript";
+import type { Program } from "typescript-native/sync";
 
-import type { AST, Checker } from "@flint.fyi/typescript-language";
-
+import type * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
 import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
+import { resolveDeclarations } from "./resolveDeclarations.ts";
 
 export function getDeclarationsIfGlobal(
 	node: AST.Expression,
 	typeChecker: Checker,
 	program: Program,
-): Declaration[] | undefined {
-	const declarations = typeChecker.getSymbolAtLocation(node)?.getDeclarations();
+): AST.Declaration[] | undefined {
+	const handles = typeChecker.getSymbolAtLocation(node)?.declarations;
 
-	return !!declarations && declarationsIncludeGlobal(declarations, program)
-		? declarations
+	return handles && declarationsIncludeGlobal(handles, program)
+		? resolveDeclarations(handles)
 		: undefined;
 }

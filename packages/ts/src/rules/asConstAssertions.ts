@@ -1,10 +1,12 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	NodeFlags,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -15,7 +17,7 @@ function getTextValue(node: AST.Expression | AST.TypeNode): string | undefined {
 		case SyntaxKind.FalseKeyword:
 			return "false";
 		case SyntaxKind.LiteralType:
-			return getTextValue(node.literal);
+			return getTextValue(node.literal as AST.Expression);
 		case SyntaxKind.NumericLiteral:
 			return node.text;
 		case SyntaxKind.StringLiteral:
@@ -101,7 +103,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 
 				VariableDeclaration: (node, { sourceFile }) => {
-					if (node.initializer && node.type && isLiteralType(node.type)) {
+					if (
+						node.initializer &&
+						node.type &&
+						!(node.type.flags & NodeFlags.Reparsed) &&
+						isLiteralType(node.type)
+					) {
 						compareTypes(
 							node.initializer,
 							node.type,

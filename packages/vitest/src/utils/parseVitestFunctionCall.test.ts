@@ -1,7 +1,8 @@
-import ts, { SyntaxKind } from "typescript";
 import { describe, expect, it } from "vitest";
 
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { createNativeSourceFile } from "@flint.fyi/typescript-language/test-utils";
 
 import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
 
@@ -21,24 +22,17 @@ const knownVitestFunctions = [
 const unknownVitestFunctionNames = ["foo", "vi", "tests"];
 
 function parseCallExpression(source: string): AST.CallExpression {
-	const sourceFile = ts.createSourceFile(
-		"parseVitestFunctionCall.test.ts",
-		`${source};`,
-		ts.ScriptTarget.ESNext,
-		true,
-		ts.ScriptKind.TS,
-	);
-	const statement = sourceFile.statements[0];
+	const statement = createNativeSourceFile(`${source};`).statements[0];
 	if (statement?.kind !== SyntaxKind.ExpressionStatement) {
 		throw new Error(`Could not parse call expression: ${source}`);
 	}
 
-	const expression = (statement as ts.ExpressionStatement).expression;
+	const { expression } = statement;
 	if (expression.kind !== SyntaxKind.CallExpression) {
 		throw new Error(`Could not parse call expression: ${source}`);
 	}
 
-	return expression as AST.CallExpression;
+	return expression;
 }
 
 describe(parseVitestFunctionCall, () => {

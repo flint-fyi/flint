@@ -11,6 +11,7 @@
 	"include": ["src/**/*.test.ts"],
 	"references": [
 		{ "path": "../rule-tester/tsconfig.src.json" },
+		{ "path": "../typescript-language/tsconfig.test.json" },
 		{ "path": "./tsconfig.src.json" }
 	]
 }

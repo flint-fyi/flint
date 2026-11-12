@@ -1,19 +1,26 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function hasExportModifier(node: AST.Statement) {
-	return !!(
-		ts.canHaveModifiers(node) &&
-		ts
-			.getModifiers(node)
-			?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
+type NamespaceMember =
+	| AST.ClassDeclaration
+	| AST.EnumDeclaration
+	| AST.FunctionDeclaration
+	| AST.InterfaceDeclaration
+	| AST.ModuleDeclaration
+	| AST.TypeAliasDeclaration
+	| AST.VariableStatement;
+
+function hasExportModifier(node: NamespaceMember) {
+	return (
+		node.modifiers?.some(
+			(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
+		) ?? false
 	);
 }
 
@@ -26,17 +33,21 @@ function hasNamedExport(statements: readonly AST.Statement[]) {
 }
 
 function hasNonExportedMember(statements: readonly AST.Statement[]) {
-	return statements.some(
-		(statement) =>
-			!hasExportModifier(statement) &&
-			(statement.kind === SyntaxKind.TypeAliasDeclaration ||
-				statement.kind === SyntaxKind.InterfaceDeclaration ||
-				statement.kind === SyntaxKind.ClassDeclaration ||
-				statement.kind === SyntaxKind.EnumDeclaration ||
-				statement.kind === SyntaxKind.FunctionDeclaration ||
-				statement.kind === SyntaxKind.VariableStatement ||
-				statement.kind === SyntaxKind.ModuleDeclaration),
-	);
+	return statements.some((statement) => {
+		if (
+			statement.kind !== SyntaxKind.TypeAliasDeclaration &&
+			statement.kind !== SyntaxKind.InterfaceDeclaration &&
+			statement.kind !== SyntaxKind.ClassDeclaration &&
+			statement.kind !== SyntaxKind.EnumDeclaration &&
+			statement.kind !== SyntaxKind.FunctionDeclaration &&
+			statement.kind !== SyntaxKind.VariableStatement &&
+			statement.kind !== SyntaxKind.ModuleDeclaration
+		) {
+			return false;
+		}
+
+		return !hasExportModifier(statement);
+	});
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

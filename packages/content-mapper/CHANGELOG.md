@@ -1,0 +1,121 @@
+# @flint.fyi/content-mapper
+
+## 0.4.3
+
+### Patch Changes
+
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+  - @flint.fyi/core@0.29.0
+
+## 0.4.1
+
+### Patch Changes
+
+- [#3470](https://github.com/flint-fyi/flint/pull/3470) [`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39) - Use the host's current directory instead of `process.cwd()` for language report locations and file paths.
+
+- [#3533](https://github.com/flint-fyi/flint/pull/3533) [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f) - Export the package's `package.json`.
+- Updated dependencies [[`ac7c65d`](https://github.com/flint-fyi/flint/commit/ac7c65d0ca4500a7b38fb4fe0dbda600d99d0c39), [`12ad54b`](https://github.com/flint-fyi/flint/commit/12ad54bb504f1c54d215f9b6041fe8a79c263faf), [`c049ab9`](https://github.com/flint-fyi/flint/commit/c049ab9a74c48b2a3c75c2aac26ca33b99a3d6a3), [`663916f`](https://github.com/flint-fyi/flint/commit/663916fb3753c8157848fb0894c22cc2655bcf4f), [`2df6b52`](https://github.com/flint-fyi/flint/commit/2df6b526d4d503e1f2649a092486c7d540d8adda), [`b492077`](https://github.com/flint-fyi/flint/commit/b49207771a419030c8564a90a468f8f82841f9db)]:
+  - @flint.fyi/core@0.28.0
+
+## 0.4.0
+
+### Minor Changes
+
+- [#3366](https://github.com/flint-fyi/flint/pull/3366) [`9372aeb`](https://github.com/flint-fyi/flint/commit/9372aeb77826b628a7d6d6013786bcbb85fd5a4b) - Raised the minimum supported TypeScript version to 6.0.3, removing remaining TypeScript 5 support.
+
+### Patch Changes
+
+- Updated dependencies [[`9372aeb`](https://github.com/flint-fyi/flint/commit/9372aeb77826b628a7d6d6013786bcbb85fd5a4b), [`6a34cee`](https://github.com/flint-fyi/flint/commit/6a34cee256df6c575793bd9ab8b094ed06e0efe4), [`a32109c`](https://github.com/flint-fyi/flint/commit/a32109c1ef55226efd1c05b853a9651c4d4ece6b), [`b071991`](https://github.com/flint-fyi/flint/commit/b0719910c991f7b4b986062ccb182d31722c9fe2), [`fb6ceba`](https://github.com/flint-fyi/flint/commit/fb6ceba45d56c32294e27afff078736ac8e12e07), [`8950424`](https://github.com/flint-fyi/flint/commit/8950424bd54371e56344eff50f752aba1e5752a3), [`07f1ca7`](https://github.com/flint-fyi/flint/commit/07f1ca70461eff08d4bd096ca5d14f2f82dffc68), [`f02543b`](https://github.com/flint-fyi/flint/commit/f02543b8a418ae793b1b0ead1542db899486e7aa)]:
+  - @flint.fyi/ts-patch@0.17.0
+  - @flint.fyi/typescript-language@0.21.0
+  - @flint.fyi/core@0.27.0
+
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`7d6522c`](https://github.com/flint-fyi/flint/commit/7d6522cf53a5c7f9cf7823cf255e1cbdfef511a3), [`5b63f69`](https://github.com/flint-fyi/flint/commit/5b63f6901ff0d6cfabe4dbf61cb3f0333dc94602)]:
+  - @flint.fyi/core@0.26.0
+
+## 0.3.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- [#3142](https://github.com/flint-fyi/flint/pull/3142) [`d9e9c91`](https://github.com/flint-fyi/flint/commit/d9e9c91523d2b2601fd615a7305c9edc7e7cf4f8) - Added `VolarLanguage` type, the return type for `createVolarBasedLanguage`.
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34), [`3f8e15d`](https://github.com/flint-fyi/flint/commit/3f8e15d092d0177bcbf0de75718a075bf5fb4c21)]:
+  - @flint.fyi/typescript-language@0.20.0
+  - @flint.fyi/ts-patch@0.16.0
+  - @flint.fyi/utils@0.16.0
+  - @flint.fyi/core@0.25.0
+
+## 0.2.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/typescript-language@0.19.0
+  - @flint.fyi/ts-patch@0.15.0
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [[`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573)]:
+  - @flint.fyi/ts-patch@0.14.0
+
+## 0.1.3
+
+### Patch Changes
+
+- [#3035](https://github.com/flint-fyi/flint/pull/3035) [`70e5d9c`](https://github.com/flint-fyi/flint/commit/70e5d9cf7e747d001ae17ddcb0dd56a1d671795a) - Fire `SourceFile:exit` visitors when linting Volar-backed files (Vue, Svelte, Astro).
+
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f)]:
+  - @flint.fyi/core@0.23.0
+
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
+## 0.1.0
+
+### Minor Changes
+
+- 0702aa2: Introduce Volar.js meta-language.
+
+### Patch Changes
+
+- Updated dependencies [4fc0eef]
+- Updated dependencies [57fa268]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [d3f5d17]
+  - @flint.fyi/core@0.21.0
+  - @flint.fyi/typescript-language@0.18.0

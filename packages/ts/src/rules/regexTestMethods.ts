@@ -1,10 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { TypeFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
@@ -133,7 +133,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.expression.expression,
 						typeChecker,
 					);
-					if (!(objectType.flags & ts.TypeFlags.StringLike)) {
+					if (!(objectType.flags & TypeFlags.StringLike)) {
 						return;
 					}
 

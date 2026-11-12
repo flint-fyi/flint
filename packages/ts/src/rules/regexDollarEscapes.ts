@@ -1,10 +1,10 @@
-import { SyntaxKind, TypeFlags } from "typescript";
-
 import {
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { TypeFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -70,7 +70,7 @@ function isRegExpArgument(argument: AST.Expression, typeChecker: Checker) {
 
 	const type = typeChecker.getTypeAtLocation(argument);
 	const symbol = type.getSymbol();
-	return symbol?.getName() === "RegExp";
+	return symbol?.name === "RegExp";
 }
 
 function isStringType(node: AST.Expression, typeChecker: Checker) {

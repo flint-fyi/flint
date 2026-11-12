@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript";
-
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
@@ -7,6 +5,7 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { findProperty } from "../utils/findProperty.ts";
 import {
@@ -19,49 +18,54 @@ import {
 } from "../utils/ruleCreatorHelpers.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-const volarLanguagePackageName = "@flint.fyi/volar-language";
+const contentMapperPackageName = "@flint.fyi/content-mapper";
 
-function isVolarReportSourceCodeCall(
+function isContentMapperReportSourceCodeCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
-) {
-	// import { reportSourceCode } from "@flint.fyi/volar-language";
+): boolean {
+	// import { reportSourceCode } from "@flint.fyi/content-mapper";
 	// reportSourceCode(...)
 	if (node.expression.kind === SyntaxKind.Identifier) {
-		return (
-			typeChecker
-				.getSymbolAtLocation(node.expression)
-				?.getDeclarations()
-				?.some((declaration) =>
-					isImportedSpecifierFromModule(
-						declaration,
-						volarLanguagePackageName,
-						"reportSourceCode",
-					),
-				) ?? false
+		return someDeclaration(typeChecker, node.expression, (declaration) =>
+			isImportedSpecifierFromModule(
+				declaration,
+				contentMapperPackageName,
+				"reportSourceCode",
+			),
 		);
 	}
 
-	// import * as VolarLanguage from "@flint.fyi/volar-language";
-	// VolarLanguage.reportSourceCode(...)
+	// import * as ContentMapper from "@flint.fyi/content-mapper";
+	// ContentMapper.reportSourceCode(...)
 	if (
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.expression.kind === SyntaxKind.Identifier &&
 		node.expression.name.text === "reportSourceCode"
 	) {
-		return (
-			typeChecker
-				.getSymbolAtLocation(node.expression.expression)
-				?.getDeclarations()
-				?.some(
-					(declaration) =>
-						declaration.kind === SyntaxKind.NamespaceImport &&
-						isImportedBindingFromModule(declaration, volarLanguagePackageName),
-				) ?? false
+		return someDeclaration(
+			typeChecker,
+			node.expression.expression,
+			(declaration) =>
+				declaration.kind === SyntaxKind.NamespaceImport &&
+				isImportedBindingFromModule(declaration, contentMapperPackageName),
 		);
 	}
 
 	return false;
+}
+
+function someDeclaration(
+	typeChecker: Checker,
+	node: AST.Identifier,
+	predicate: (declaration: AST.Declaration) => boolean,
+): boolean {
+	return !!typeChecker
+		.getSymbolAtLocation(node)
+		?.declarations.some((handle) => {
+			const declaration = handle.resolve() as AST.Declaration | undefined;
+			return !!declaration && predicate(declaration);
+		});
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -160,7 +164,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						collectMessageIds(node, sourceFile);
 					} else if (isRuleContextReport(node, typeChecker)) {
 						detectMessageIdUsage(node, 0);
-					} else if (isVolarReportSourceCodeCall(node, typeChecker)) {
+					} else if (isContentMapperReportSourceCodeCall(node, typeChecker)) {
 						detectMessageIdUsage(node, 1);
 					}
 				},

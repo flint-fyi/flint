@@ -1,10 +1,12 @@
-import { SyntaxKind, type NodeArray } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type NodeArray,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -59,7 +61,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				checkIdentifier(name, sourceFile);
 			} else {
 				for (const element of name.elements) {
-					if (element.kind === SyntaxKind.BindingElement) {
+					if (element.name) {
 						checkBindingName(element.name, sourceFile);
 					}
 				}

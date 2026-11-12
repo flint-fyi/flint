@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import type {
 	LanguageFile,
 	LanguageFileCacheImpacts,
@@ -5,7 +7,9 @@ import type {
 } from "@flint.fyi/core";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
-import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
+import { getTypeScriptContentMapperRegistrations } from "./contentMappers.ts";
+import { findNearestConfigFile } from "./findNearestConfigFile.ts";
+import { isInferredProject } from "./isInferredProject.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
 import { containsGlobalDeclarations } from "./utils/containsGlobalDeclarations.ts";
 
@@ -13,18 +17,49 @@ export function getTypeScriptFileCacheImpacts(
 	file: LanguageFile<TypeScriptFileServices>,
 	host: LinterHost,
 ): LanguageFileCacheImpacts {
+	const mapperConfigFilePath = findMapperConfigFile(file, host);
+
 	return {
 		dependencies: [
 			// TODO: Add support for multi-TSConfig workspaces.
 			// https://github.com/flint-fyi/flint/issues/64 & more.
 			"tsconfig.json",
 
+			...(mapperConfigFilePath ? [mapperConfigFilePath] : []),
+
 			...collectReferencedFilePaths(
 				file.services.program,
+				file.services.typeChecker,
 				file.services.sourceFile,
-				createTypeScriptServerHost(host),
 			),
 		],
 		isGlobalDependency: containsGlobalDeclarations(file.services.sourceFile),
 	};
+}
+
+// A content mapper may read its own config, such as `svelte.config.js`, which
+// changes the file's mapped text without the file itself changing. Mappers look
+// for it from their project's config, so this does too. A config created after
+// the file was cached is not noticed until the file itself changes.
+function findMapperConfigFile(
+	file: LanguageFile<TypeScriptFileServices>,
+	host: LinterHost,
+): string | undefined {
+	const { filePathAbsolute } = file.about;
+	const { project } = file.services;
+	const configFileNames = getTypeScriptContentMapperRegistrations().find(
+		(registration) =>
+			registration.extensions.includes(path.extname(filePathAbsolute)),
+	)?.configFileNames;
+
+	return (
+		configFileNames &&
+		findNearestConfigFile(
+			host,
+			(!isInferredProject(project) && project.configFileName) ||
+				filePathAbsolute,
+			new Map(),
+			configFileNames,
+		)
+	);
 }

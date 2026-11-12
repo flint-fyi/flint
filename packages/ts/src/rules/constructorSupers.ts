@@ -1,11 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
+import type { CharacterReportRange } from "@flint.fyi/core";
 import {
+	findTokenInRange,
 	forEachChild,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import {
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -25,11 +28,27 @@ function containsSuperCall(node: AST.AnyNode): boolean {
 		return true;
 	}
 
-	if (tsutils.isFunctionScopeBoundary(node)) {
+	if (isFunctionLikeDeclaration(node)) {
 		return false;
 	}
 
 	return forEachChild(node, containsSuperCall) ?? false;
+}
+
+function getConstructorNameRange(
+	constructor: AST.ConstructorDeclaration,
+	sourceFile: AST.SourceFile,
+): CharacterReportRange {
+	const begin = constructor.getStart(sourceFile);
+	const end = constructor.parameters.pos;
+
+	return (
+		findTokenInRange(sourceFile, SyntaxKind.ConstructorKeyword, begin, end) ??
+		findTokenInRange(sourceFile, SyntaxKind.StringLiteral, begin, end) ?? {
+			begin,
+			end,
+		}
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -78,20 +97,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const hasSuperCall = containsSuperCall(constructor.body);
 
 			if (isDerivedClass && !hasSuperCall) {
-				const constructorKeyword = constructor
-					.getChildren(sourceFile)
-					.find((child) => child.kind === SyntaxKind.Constructor);
-
 				context.report({
 					message: "missingSuperCall",
-					range: {
-						begin:
-							constructorKeyword?.getStart(sourceFile) ??
-							constructor.getStart(sourceFile),
-						end:
-							constructorKeyword?.getEnd() ??
-							constructor.getStart(sourceFile) + 11,
-					},
+					range: getConstructorNameRange(constructor, sourceFile),
 				});
 			}
 
@@ -118,7 +126,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (tsutils.isFunctionScopeBoundary(node)) {
+			if (isFunctionLikeDeclaration(node)) {
 				return;
 			}
 

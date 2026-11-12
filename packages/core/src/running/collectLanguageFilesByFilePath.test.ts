@@ -78,6 +78,57 @@ describe(collectLanguageFilesByFilePath, () => {
 		expect(orderedCreated).toEqual(["/root/b.ts", "/root/a.ts"]);
 		expect(plainCreated).toEqual(["/root/b.ts", "/root/a.ts"]);
 		expect(filesByPath.has("/root/c.ts")).toBe(false);
+		expect([...filesByPath.keys()]).toEqual(["/root/a.ts", "/root/b.ts"]);
+	});
+
+	it("prepares every file of a language before creating any when the language supports preparation", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		for (const filePath of ["/root/a.ts", "/root/b.ts"]) {
+			host.vfsUpsertFile(filePath, "");
+		}
+		const events: string[] = [];
+		const language = createLanguage({
+			about: { name: "prepared" },
+			createFileFactory: () => ({
+				createFile(data: FileAboutData) {
+					events.push(`create ${data.filePath}`);
+					return { about: data, services: {} };
+				},
+				prepareFiles(filePathsAbsolute) {
+					events.push(`prepare ${filePathsAbsolute.join(" ")}`);
+				},
+			}),
+			orderFilePaths: (filePaths) => filePaths.toReversed(),
+			runFileVisitors: vi.fn(),
+		});
+		const rule = ruleCreator.createRule(language, {
+			about: { description: "", id: "prepared" },
+			messages,
+			setup: () => ({}),
+		});
+
+		collectLanguageFilesByFilePath(
+			new Map([
+				[
+					rule,
+					new Map([
+						["/root/a.ts", {}],
+						["/root/b.ts", {}],
+					]),
+				],
+			]),
+			host,
+			new Set(["/root/a.ts", "/root/b.ts"]),
+			new CachedFactory((language: AnyLanguage) =>
+				language.createFileFactory(host),
+			),
+		);
+
+		expect(events).toEqual([
+			"prepare /root/b.ts /root/a.ts",
+			"create /root/b.ts",
+			"create /root/a.ts",
+		]);
 	});
 });
 

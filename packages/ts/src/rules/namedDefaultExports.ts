@@ -1,20 +1,19 @@
-import { SyntaxKind, type NodeArray } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasDefaultModifier(
-	modifiers: NodeArray<AST.ModifierLike> | undefined,
+	modifiers: readonly AST.ModifierLike[] | undefined,
 ) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.DefaultKeyword);
 }
 
-function hasExportModifier(modifiers: NodeArray<AST.ModifierLike> | undefined) {
+function hasExportModifier(modifiers: readonly AST.ModifierLike[] | undefined) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.ExportKeyword);
 }
 

@@ -1,12 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { TypeFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
@@ -59,8 +58,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const type = getConstrainedTypeAtLocation(node, typeChecker);
 
-			if (tsutils.isTypeFlagSet(type, TypeFlags.Any)) {
-				if (tsutils.isIntrinsicErrorType(type)) {
+			if (type.flags & TypeFlags.Any) {
+				if (type.isErrorType()) {
 					return;
 				}
 				context.report({
@@ -83,8 +82,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				callSignatures.length &&
 				(!allowVoid ||
 					callSignatures.some(
-						(signature) =>
-							!tsutils.isIntrinsicVoidType(signature.getReturnType()),
+						(signature) => !(signature.getReturnType().flags & TypeFlags.Void),
 					))
 			) {
 				return;

@@ -33,7 +33,7 @@ describe("consumer preparation", () => {
 			);
 
 			await expect(getFlintArtifacts(rootPath)).rejects.toThrow(
-				`Missing packed Flint artifact: ${path.join(rootPath, "flint-1.2.3.tgz")}\nRun: pnpm build && pnpm --filter-prod flint... pack`,
+				`Missing packed Flint artifact: ${path.join(rootPath, "flint-1.2.3.tgz")}\nRun: pnpm build && pnpm --filter-prod flint... --filter-prod @flint.fyi/astro... --filter-prod @flint.fyi/svelte... --filter-prod @flint.fyi/vue... pack`,
 			);
 		});
 

@@ -1,5 +1,3 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
@@ -10,8 +8,20 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	type Node,
+} from "@flint.fyi/typescript-language/native/ast";
+import {
+	TypeFlags,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import {
+	getIntersectionConstituents,
+	getUnionConstituents,
+} from "./utils/typeConstituents.ts";
 
 type IgnorePrimitives =
 	boolean | Record<string, boolean | undefined> | undefined;
@@ -259,14 +269,11 @@ function getIfStatementNullishCheckValue(node: AST.IfStatement) {
 	}
 }
 
-function getTypeFlags(type: ts.Type): ts.TypeFlags {
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-assignment -- TypeFlags has no member for an empty bitmask.
-	let flags = 0 as ts.TypeFlags;
-	for (const constituent of tsutils.unionConstituents(type)) {
-		for (const subConstituent of tsutils.intersectionConstituents(
-			constituent,
-		)) {
-			flags |= subConstituent.getFlags();
+function getTypeFlags(type: Type): TypeFlags {
+	let flags = TypeFlags.None;
+	for (const constituent of getUnionConstituents(type)) {
+		for (const subConstituent of getIntersectionConstituents(constituent)) {
+			flags |= subConstituent.flags;
 		}
 	}
 	return flags;
@@ -305,36 +312,17 @@ function isConditionalTest(node: AST.AnyNode): boolean {
 	}
 }
 
-function isFalsyLiteralType(part: ts.Type) {
-	if (part.isNumberLiteral() && part.value === 0) {
-		return true;
-	}
-
-	if (part.isStringLiteral() && part.value === "") {
-		return true;
-	}
-
-	const flags = part.getFlags();
-
-	if (flags & ts.TypeFlags.BooleanLiteral) {
-		const literal = part as unknown as { intrinsicName?: string };
-		if (literal.intrinsicName === "false") {
-			return true;
-		}
-	}
-
-	if (flags & ts.TypeFlags.BigIntLiteral) {
-		const value = (part as ts.BigIntLiteralType).value;
-		if (!value.negative && value.base10Value === "0") {
-			return true;
-		}
-	}
-
-	return false;
+function isFalsyLiteralType(part: Type): boolean {
+	return (
+		(part.isNumberLiteralType() && part.value === 0) ||
+		(part.isStringLiteralType() && part.value === "") ||
+		(part.isBooleanLiteralType() && !part.value) ||
+		(part.isBigIntLiteralType() && part.value === 0n)
+	);
 }
 
 function isMixedLogicalExpression(node: AST.BinaryExpression) {
-	const seen = new Set<ts.Node>();
+	const seen = new Set<Node>();
 	const queue = [node.parent, node.left, node.right];
 
 	for (const current of queue) {
@@ -361,11 +349,8 @@ function isMixedLogicalExpression(node: AST.BinaryExpression) {
 	return false;
 }
 
-function isNullishType(type: ts.Type) {
-	return tsutils.isTypeFlagSet(
-		type,
-		ts.TypeFlags.Null | ts.TypeFlags.Undefined,
-	);
+function isNullishType(type: Type): boolean {
+	return (type.flags & (TypeFlags.Null | TypeFlags.Undefined)) !== 0;
 }
 
 // TODO: Use a util like getStaticValue
@@ -392,12 +377,12 @@ function isNullLikeComparison(node: AST.BinaryExpression) {
 }
 
 function isTypeEligibleForPreferNullish(
-	type: ts.Type,
+	type: Type,
 	ignorePrimitives: IgnorePrimitives,
 ) {
 	if (
 		!typeCanBeNullish(type) ||
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown) ||
+		(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||
 		!ignorePrimitives
 	) {
 		return true;
@@ -406,16 +391,16 @@ function isTypeEligibleForPreferNullish(
 	const ignorableFlags = [
 		(ignorePrimitives === true ||
 			(typeof ignorePrimitives === "object" && ignorePrimitives.bigint)) &&
-			ts.TypeFlags.BigIntLike,
+			TypeFlags.BigIntLike,
 		(ignorePrimitives === true ||
 			(typeof ignorePrimitives === "object" && ignorePrimitives.boolean)) &&
-			ts.TypeFlags.BooleanLike,
+			TypeFlags.BooleanLike,
 		(ignorePrimitives === true ||
 			(typeof ignorePrimitives === "object" && ignorePrimitives.number)) &&
-			ts.TypeFlags.NumberLike,
+			TypeFlags.NumberLike,
 		(ignorePrimitives === true ||
 			(typeof ignorePrimitives === "object" && ignorePrimitives.string)) &&
-			ts.TypeFlags.StringLike,
+			TypeFlags.StringLike,
 	]
 		.filter((flag) => typeof flag === "number")
 		.reduce((previous, flag) => previous | flag, 0);
@@ -430,29 +415,27 @@ function shouldIgnoreNode(
 ) {
 	const type = typeChecker.getTypeAtLocation(node);
 	return (
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown) ||
+		(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||
 		!typeCanBeNullish(type) ||
 		typeHasNonNullishFalsyValues(type) ||
 		!isTypeEligibleForPreferNullish(type, ignorePrimitives)
 	);
 }
 
-function typeCanBeNullish(type: ts.Type) {
-	return tsutils.unionConstituents(type).some(isNullishType);
+function typeCanBeNullish(type: Type): boolean {
+	return getUnionConstituents(type).some(isNullishType);
 }
 
-function typeHasNonNullishFalsyValues(type: ts.Type) {
-	return tsutils
-		.unionConstituents(type)
-		.some(
-			(constituent) =>
-				isFalsyLiteralType(constituent) ||
-				constituent.getFlags() &
-					(ts.TypeFlags.String |
-						ts.TypeFlags.Number |
-						ts.TypeFlags.BigInt |
-						ts.TypeFlags.Boolean),
-		);
+function typeHasNonNullishFalsyValues(type: Type): boolean {
+	return getUnionConstituents(type).some(
+		(constituent) =>
+			isFalsyLiteralType(constituent) ||
+			constituent.flags &
+				(TypeFlags.String |
+					TypeFlags.Number |
+					TypeFlags.BigInt |
+					TypeFlags.Boolean),
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

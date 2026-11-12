@@ -1,5 +1,3 @@
-import { SyntaxKind, type Program } from "typescript";
-
 import {
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
@@ -7,6 +5,8 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
@@ -54,8 +54,12 @@ function isObjectAssignPattern(
 		return false;
 	}
 
+	if (callback.body.kind === SyntaxKind.Block) {
+		return false;
+	}
+
 	const accumulatorName = firstParameter.name.text;
-	const body = skipParentheses(callback.body as AST.Expression);
+	const body = skipParentheses(callback.body);
 
 	if (
 		!isObjectMethodCall(body, "assign", typeChecker, program) ||
@@ -177,8 +181,12 @@ function isSpreadAccumulatorPattern(callback: AST.ArrowFunction) {
 		return false;
 	}
 
+	if (callback.body.kind === SyntaxKind.Block) {
+		return false;
+	}
+
 	const accumulatorName = firstParam.name.text;
-	const body = skipParentheses(callback.body as AST.Expression);
+	const body = skipParentheses(callback.body);
 
 	if (
 		body.kind !== SyntaxKind.ObjectLiteralExpression ||

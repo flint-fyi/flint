@@ -1,25 +1,23 @@
-import ts, { SyntaxKind } from "typescript";
 import { describe, expect, it } from "vitest";
+
+import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { createNativeSourceFile } from "@flint.fyi/typescript-language/test-utils";
 
 import {
 	isImportedBindingFromModule,
 	isImportedSpecifierFromModule,
 } from "./importHelpers.ts";
 
-function parseAndFind<T extends ts.Node>(
+function parseAndFind<T extends AST.Node>(
 	code: string,
-	isMatch: (node: ts.Node) => node is T,
+	isMatch: (node: AST.Node) => node is T,
 ): T {
-	const sourceFile = ts.createSourceFile(
-		"test.ts",
-		code,
-		ts.ScriptTarget.Latest,
-		true,
-	);
+	const sourceFile = createNativeSourceFile(code);
 
 	let found: T | undefined;
 
-	function visit(node: ts.Node) {
+	function visit(node: AST.Node): void {
 		if (found) {
 			return;
 		}
@@ -29,7 +27,7 @@ function parseAndFind<T extends ts.Node>(
 			return;
 		}
 
-		ts.forEachChild(node, visit);
+		node.forEachChild(visit);
 	}
 
 	visit(sourceFile);
@@ -43,9 +41,9 @@ function parseAndFind<T extends ts.Node>(
 
 describe("isImportedBindingFromModule", () => {
 	it("returns true for an ImportSpecifier from the matching module", () => {
-		const specifier = parseAndFind<ts.ImportSpecifier>(
+		const specifier = parseAndFind<AST.ImportSpecifier>(
 			`import { foo } from "my-module";`,
-			(node): node is ts.ImportSpecifier =>
+			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
@@ -53,9 +51,9 @@ describe("isImportedBindingFromModule", () => {
 	});
 
 	it("returns true for a NamespaceImport from the matching module", () => {
-		const nsImport = parseAndFind<ts.NamespaceImport>(
+		const nsImport = parseAndFind<AST.NamespaceImport>(
 			`import * as ns from "my-module";`,
-			(node): node is ts.NamespaceImport =>
+			(node): node is AST.NamespaceImport =>
 				node.kind === SyntaxKind.NamespaceImport,
 		);
 
@@ -63,9 +61,9 @@ describe("isImportedBindingFromModule", () => {
 	});
 
 	it("returns false for an ImportSpecifier from a different module", () => {
-		const specifier = parseAndFind<ts.ImportSpecifier>(
+		const specifier = parseAndFind<AST.ImportSpecifier>(
 			`import { foo } from "other-module";`,
-			(node): node is ts.ImportSpecifier =>
+			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
@@ -73,9 +71,9 @@ describe("isImportedBindingFromModule", () => {
 	});
 
 	it("returns false for a NamespaceImport from a different module", () => {
-		const nsImport = parseAndFind<ts.NamespaceImport>(
+		const nsImport = parseAndFind<AST.NamespaceImport>(
 			`import * as ns from "other-module";`,
-			(node): node is ts.NamespaceImport =>
+			(node): node is AST.NamespaceImport =>
 				node.kind === SyntaxKind.NamespaceImport,
 		);
 
@@ -83,9 +81,9 @@ describe("isImportedBindingFromModule", () => {
 	});
 
 	it("returns false for a non-import node", () => {
-		const identifier = parseAndFind<ts.Identifier>(
+		const identifier = parseAndFind<AST.Identifier>(
 			`const x = 1;`,
-			(node): node is ts.Identifier => node.kind === SyntaxKind.Identifier,
+			(node): node is AST.Identifier => node.kind === SyntaxKind.Identifier,
 		);
 
 		expect(isImportedBindingFromModule(identifier, "my-module")).toBe(false);
@@ -94,80 +92,80 @@ describe("isImportedBindingFromModule", () => {
 
 describe("isImportedSpecifierFromModule", () => {
 	it("returns true for a matching named import", () => {
-		const specifier = parseAndFind<ts.ImportSpecifier>(
-			`import { reportSourceCode } from "@flint.fyi/volar-language";`,
-			(node): node is ts.ImportSpecifier =>
+		const specifier = parseAndFind<AST.ImportSpecifier>(
+			`import { reportSourceCode } from "@flint.fyi/content-mapper";`,
+			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(
 			isImportedSpecifierFromModule(
 				specifier,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(true);
 	});
 
 	it("returns true for a renamed import matching the original name", () => {
-		const specifier = parseAndFind<ts.ImportSpecifier>(
-			`import { reportSourceCode as report } from "@flint.fyi/volar-language";`,
-			(node): node is ts.ImportSpecifier =>
+		const specifier = parseAndFind<AST.ImportSpecifier>(
+			`import { reportSourceCode as report } from "@flint.fyi/content-mapper";`,
+			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(
 			isImportedSpecifierFromModule(
 				specifier,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(true);
 	});
 
 	it("returns false when the imported name does not match", () => {
-		const specifier = parseAndFind<ts.ImportSpecifier>(
-			`import { otherFunction } from "@flint.fyi/volar-language";`,
-			(node): node is ts.ImportSpecifier =>
+		const specifier = parseAndFind<AST.ImportSpecifier>(
+			`import { otherFunction } from "@flint.fyi/content-mapper";`,
+			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(
 			isImportedSpecifierFromModule(
 				specifier,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(false);
 	});
 
 	it("returns false when the module does not match", () => {
-		const specifier = parseAndFind<ts.ImportSpecifier>(
+		const specifier = parseAndFind<AST.ImportSpecifier>(
 			`import { reportSourceCode } from "other-module";`,
-			(node): node is ts.ImportSpecifier =>
+			(node): node is AST.ImportSpecifier =>
 				node.kind === SyntaxKind.ImportSpecifier,
 		);
 
 		expect(
 			isImportedSpecifierFromModule(
 				specifier,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(false);
 	});
 
 	it("returns false for a NamespaceImport", () => {
-		const nsImport = parseAndFind<ts.NamespaceImport>(
-			`import * as ns from "@flint.fyi/volar-language";`,
-			(node): node is ts.NamespaceImport =>
+		const nsImport = parseAndFind<AST.NamespaceImport>(
+			`import * as ns from "@flint.fyi/content-mapper";`,
+			(node): node is AST.NamespaceImport =>
 				node.kind === SyntaxKind.NamespaceImport,
 		);
 
 		expect(
 			isImportedSpecifierFromModule(
 				nsImport,
-				"@flint.fyi/volar-language",
+				"@flint.fyi/content-mapper",
 				"reportSourceCode",
 			),
 		).toBe(false);

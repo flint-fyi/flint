@@ -2,6 +2,12 @@ import { execa } from "execa";
 
 import { normalizePath } from "@flint.fyi/utils";
 
+export interface RunFlintResult {
+	exitCode: number | undefined;
+	stderr: string;
+	stdout: string;
+}
+
 /**
  * Normalizes CLI output for snapshot testing: converts backslashes to forward
  * slashes and replaces the given cwd with `&lt;cwd&gt;` so snapshots are portable.
@@ -28,16 +34,17 @@ export function normalizeOutput(stdout: string, cwd: string): string {
 export async function runFlint(
 	cwd: string,
 	args: string[] = [],
-): Promise<{ exitCode: number | undefined; stdout: string }> {
-	const { exitCode, stdout } = await execa({
+): Promise<RunFlintResult> {
+	const { exitCode, stderr, stdout } = await execa({
 		cwd,
 		env: {
 			FORCE_COLOR: "1",
 			GITHUB_ACTIONS: undefined,
 			NODE_DISABLE_COMPILE_CACHE: "1",
 		},
+		preferLocal: true,
 		reject: false,
 	})`flint ${args}`;
 
-	return { exitCode, stdout };
+	return { exitCode, stderr, stdout };
 }

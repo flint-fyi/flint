@@ -1,10 +1,9 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -44,7 +43,7 @@ function getModernMethodName(methodName: string, node: AST.CallExpression) {
 	return;
 }
 
-function getPropertyNameNode(node: AST.LeftHandSideExpression) {
+function getPropertyNameNode(node: AST.Node) {
 	if (node.kind !== SyntaxKind.PropertyAccessExpression) {
 		return;
 	}

@@ -1,10 +1,9 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	forEachChild,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -126,11 +125,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				Constructor(node: AST.ConstructorDeclaration, { sourceFile }) {
-					if (!node.parent.heritageClauses) {
+					const parent = node.parent;
+					if (
+						(parent.kind !== SyntaxKind.ClassDeclaration &&
+							parent.kind !== SyntaxKind.ClassExpression) ||
+						!parent.heritageClauses
+					) {
 						return;
 					}
 
-					const hasExtends = node.parent.heritageClauses.some(
+					const hasExtends = parent.heritageClauses.some(
 						(clause) => clause.token === SyntaxKind.ExtendsKeyword,
 					);
 

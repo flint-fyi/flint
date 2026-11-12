@@ -1,4 +1,3 @@
-import ts, { SyntaxKind } from "typescript";
 import z from "zod/v4";
 
 import {
@@ -7,6 +6,7 @@ import {
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "../ruleCreator.ts";
@@ -170,7 +170,7 @@ function getExpectAssertionsCount(
 		"argument count is exactly 1, so the first argument is present",
 	);
 
-	if (assertions.kind !== ts.SyntaxKind.NumericLiteral) {
+	if (assertions.kind !== SyntaxKind.NumericLiteral) {
 		return undefined;
 	}
 
@@ -178,10 +178,10 @@ function getExpectAssertionsCount(
 }
 
 function isCatchCall({ expression }: AST.CallExpression): boolean {
-	if (expression.kind === ts.SyntaxKind.PropertyAccessExpression) {
+	if (expression.kind === SyntaxKind.PropertyAccessExpression) {
 		return expression.name.text === "catch";
 	}
-	if (expression.kind === ts.SyntaxKind.ElementAccessExpression) {
+	if (expression.kind === SyntaxKind.ElementAccessExpression) {
 		return (
 			expression.argumentExpression.kind === SyntaxKind.StringLiteral &&
 			expression.argumentExpression.text === "catch"
@@ -194,9 +194,9 @@ function isLogicalBinaryExpression({
 	operatorToken,
 }: AST.BinaryExpression): boolean {
 	return (
-		operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken ||
-		operatorToken.kind === ts.SyntaxKind.BarBarToken ||
-		operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
+		operatorToken.kind === SyntaxKind.AmpersandAmpersandToken ||
+		operatorToken.kind === SyntaxKind.BarBarToken ||
+		operatorToken.kind === SyntaxKind.QuestionQuestionToken
 	);
 }
 

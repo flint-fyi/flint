@@ -1,58 +1,51 @@
 import { parse } from "@astrojs/compiler/sync";
 import type { RootNode } from "@astrojs/compiler/types";
-import { getLanguagePlugin } from "@astrojs/ts-plugin/dist/language.js";
 
-import type { SourceFileWithLineMap } from "@flint.fyi/core";
-import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import {
-	createVolarBasedLanguage,
-	type VolarLanguage,
-} from "@flint.fyi/volar-language";
+	DirectivesCollector,
+	type DirectiveCollection,
+	type Language,
+	type SourceFileWithLineMap,
+} from "@flint.fyi/core";
+import {
+	typescriptLanguage,
+	type TypeScriptFileServices,
+	type TypeScriptNodeVisitors,
+} from "@flint.fyi/typescript-language";
 
-import { addAstroTypes } from "./addAstroTypes.ts";
-import { astroCompilerDiagnosticToLanguageReport } from "./astroCompilerDiagnosticToLanguageReport.ts";
 import { extractDirectives } from "./extractDirectives.ts";
+import { getAstroPointOffset } from "./getAstroPointOffset.ts";
 
-setTSExtraSupportedExtensions([".astro"]);
-
-export interface AstroServices {
+export interface AstroServices extends TypeScriptFileServices {
 	astro: {
 		ast: RootNode;
+		sourceText: string;
 	};
 }
 
-export const astroLanguage: VolarLanguage<AstroServices> =
-	createVolarBasedLanguage((typescript, options) => {
-		addAstroTypes(typescript, options);
+export const astroLanguage = typescriptLanguage as unknown as Language<
+	TypeScriptNodeVisitors,
+	AstroServices
+>;
 
-		return {
-			createFile({ sourceFile, sourceScript }) {
-				const sourceText = sourceScript.snapshot.getText(
-					0,
-					sourceScript.snapshot.getLength(),
-				);
-				const { ast, diagnostics } = parse(sourceText, { position: true });
-				const source: SourceFileWithLineMap = { text: sourceText };
-				return {
-					directives: extractDirectives(ast),
-					extraContext: {
-						astro: {
-							ast,
-						},
-					},
-					firstStatementPosition:
-						ast.children.at(0)?.position?.start.offset ?? sourceText.length,
-					getLanguageReports() {
-						return diagnostics.map((diagnostic) =>
-							astroCompilerDiagnosticToLanguageReport(
-								sourceFile.fileName,
-								source,
-								diagnostic,
-							),
-						);
-					},
-				};
-			},
-			languagePlugins: [getLanguagePlugin()],
-		};
-	});
+export function createAstroFileContext(sourceText: string): {
+	directives: DirectiveCollection["directives"];
+	reports: DirectiveCollection["reports"];
+	services: Pick<AstroServices, "astro">;
+} {
+	const { ast } = parse(sourceText, { position: true });
+	const source: SourceFileWithLineMap = { text: sourceText };
+	const firstPosition = ast.children.at(0)?.position;
+	const collector = new DirectivesCollector(
+		firstPosition
+			? getAstroPointOffset(source, firstPosition.start)
+			: sourceText.length,
+	);
+	for (const directive of extractDirectives(ast, source)) {
+		collector.add(directive.range, directive.selection, directive.type);
+	}
+	return {
+		...collector.collect(),
+		services: { astro: { ast, sourceText } },
+	};
+}

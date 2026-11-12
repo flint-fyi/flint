@@ -1,10 +1,12 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
-
 import {
+	getTypeProperty,
 	typescriptLanguage,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	TypeFlags,
+	type Type,
+} from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
@@ -31,20 +33,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function hasNumberLikeLength(type: ts.Type, typeChecker: Checker): boolean {
-			const lengthProperty = type.getProperty("length");
+		function hasNumberLikeLength(type: Type, typeChecker: Checker): boolean {
+			const lengthProperty = getTypeProperty(type, "length");
 
 			if (lengthProperty == null) {
 				return false;
 			}
 
-			return tsutils.isTypeFlagSet(
-				typeChecker.getTypeOfSymbol(lengthProperty),
-				ts.TypeFlags.NumberLike,
+			return (
+				(typeChecker.getTypeOfSymbol(lengthProperty).flags &
+					TypeFlags.NumberLike) !==
+				0
 			);
 		}
 
-		function isArrayLike(type: ts.Type, typeChecker: Checker): boolean {
+		function isArrayLike(type: Type, typeChecker: Checker): boolean {
 			return isTypeRecursive(
 				type,
 				(t) =>

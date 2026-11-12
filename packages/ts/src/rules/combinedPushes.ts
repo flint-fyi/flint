@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	typescriptLanguage,
 	type AST,
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -28,7 +27,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isArrayPushCall(node: AST.CallExpression, typeChecker: Checker) {
+		function isArrayPushCall(
+			node: AST.CallExpression,
+			typeChecker: Checker,
+		): boolean {
 			return (
 				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 				node.expression.name.text === "push" &&
@@ -41,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function getArrayName(
 			node: AST.CallExpression,
 			sourceFile: AST.SourceFile,
-		) {
+		): false | string {
 			return (
 				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 				node.expression.expression.getText(sourceFile)
@@ -52,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			statement: AST.Statement,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
-		) {
+		): undefined | { arrayName: string; callExpression: AST.CallExpression } {
 			if (
 				statement.kind !== SyntaxKind.ExpressionStatement ||
 				statement.expression.kind !== SyntaxKind.CallExpression ||
@@ -75,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkNode(
 			{ statements }: AST.Block | AST.SourceFile,
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
-		) {
+		): void {
 			for (let i = 0; i < statements.length - 1; i += 1) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const currentStatement = statements[i]!;

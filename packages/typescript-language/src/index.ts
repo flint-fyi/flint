@@ -1,7 +1,9 @@
+export type { TypeScriptContentMapperRegistration } from "./contentMappers.ts";
 export {
 	convertTypeScriptDiagnosticToLanguageReport,
 	type TSDiagnostic,
 } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+export { createContentMapperRegistrar } from "./createContentMapperRegistrar.ts";
 export {
 	createNodeVisitorsForFile,
 	type NodeVisitorsForFile,
@@ -13,7 +15,6 @@ export {
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 export { getTSNodeRange } from "./getTSNodeRange.ts";
 export {
-	setVolarCreateFile,
 	throwUnknownLanguageExtension,
 	typescriptLanguage,
 } from "./language.ts";
@@ -32,10 +33,14 @@ export {
 export type * as AST from "./types/ast.ts";
 export type { Checker } from "./types/checker.ts";
 export type { TypeScriptFileServices } from "./types/services.ts";
+export { collectComments, type Comment } from "./utils/collectComments.ts";
 export { createRuleTesterTSConfig } from "./utils/createRuleTesterTSConfig.ts";
+export { createScanner } from "./utils/createScanner.ts";
 export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts";
+export { findTokenInRange, type TokenRange } from "./utils/findTokenInRange.ts";
 export { forEachChild } from "./utils/forEachChild.ts";
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
+export { getFirstTokenInRange } from "./utils/getFirstTokenInRange.ts";
 export { getModifyingReferences } from "./utils/getModifyingReferences.ts";
 export {
 	getStaticNumberValue,
@@ -43,12 +48,14 @@ export {
 	getStaticValue,
 	type StaticValue,
 } from "./utils/getStaticValue.ts";
+export { getTypeProperty } from "./utils/getTypeProperty.ts";
 export { hasSameTokens } from "./utils/hasSameTokens.ts";
 export {
 	type BuiltInArrayMethodNode,
 	isBuiltinArrayMethod,
 } from "./utils/isBuiltinArrayMethod.ts";
 export { isFunction } from "./utils/isFunction.ts";
+export { isFunctionScopeBoundary } from "./utils/isFunctionScopeBoundary.ts";
 export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";
 export { isGlobalVariable } from "./utils/isGlobalVariable.ts";
@@ -58,5 +65,6 @@ export {
 	isStringRawNoSubstitution,
 	type StringRawNoSubstitution,
 } from "./utils/isStringRawNoSubstitution.ts";
+export { resolveDeclarations } from "./utils/resolveDeclarations.ts";
 export { unwrapParenthesizedNode } from "./utils/unwrapParenthesizedNode.ts";
 export { unwrapParentParenthesizedExpressions } from "./utils/unwrapParentParenthesizedExpressions.ts";

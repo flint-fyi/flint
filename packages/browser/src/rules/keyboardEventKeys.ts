@@ -1,5 +1,3 @@
-import { SyntaxKind, type Program } from "typescript";
-
 import {
 	getDeclarationsIfGlobal,
 	getTSNodeRange,
@@ -7,6 +5,8 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import type { Program } from "@flint.fyi/typescript-language/native/sync";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -32,10 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isKeyboardEvent(
-			expression: AST.LeftHandSideExpression,
-			typeChecker: Checker,
-		) {
+		function isKeyboardEvent(expression: AST.Node, typeChecker: Checker) {
 			return (
 				typeChecker.getTypeAtLocation(expression).getSymbol()?.name ===
 				"KeyboardEvent"
@@ -55,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const declaration = nullThrows(
 				declarations[0],
 				"Declaration is expected to be present by the length check",
-			) as AST.AnyNode;
+			);
 
 			return (
 				declaration.parent.kind === SyntaxKind.InterfaceDeclaration &&
