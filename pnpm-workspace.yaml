@@ -89,7 +89,7 @@ catalogs:
     eslint-plugin-vue: 10.12.0
     eslint-plugin-yml: 3.10.0
     markdownlint: 0.42.1
-    oxlint: 1.92.0
+    oxlint: 1.93.0
     typescript-eslint: 8.72.1
     vue-eslint-parser: 10.4.2
 
