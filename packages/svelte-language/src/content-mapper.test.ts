@@ -4,21 +4,22 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { openSvelteProject, transformSvelte } from "./content-mapper.ts";
+import { openSvelteProject } from "./content-mapper.ts";
 import { createSvelteFileContext } from "./language.ts";
+import { transformSvelte } from "./transformSvelte.ts";
 
 describe("transformSvelte", () => {
 	it.each([
-		["TypeScript", '<script lang="ts">let count: number = 1;</script>', ".tsx"],
-		["JavaScript", "<script>let count = 1;</script>", ".tsx"],
-	])("transforms %s script mode", (_, content, extension) => {
+		["TypeScript", '<script lang="ts">let count: number = 1;</script>'],
+		["JavaScript", "<script>let count = 1;</script>"],
+	])("transforms %s script mode", (_, content) => {
 		const result = transformSvelte({
 			content,
 			fileName: "/project/Component.svelte",
 			projectHandle: "project",
 		});
 
-		expect(result.extension).toBe(extension);
+		expect(result.extension).toBe(".tsx");
 		expect(result.text).toContain("count");
 		expect(result.mappings?.length).toBeGreaterThan(0);
 	});
@@ -45,6 +46,31 @@ describe("transformSvelte", () => {
 				(mapping) => mapping[0] === 0 && mapping[1] === result.text.length,
 			),
 		).toBe(false);
+	});
+
+	it("does not split surrogate pairs when a script contains emoji", () => {
+		const content = '<script lang="ts">const emoji = "😀 é";</script>';
+		const result = transformSvelte({
+			content,
+			fileName: "/project/Component.svelte",
+			projectHandle: "project",
+		});
+
+		const isInsidePair = (text: string, offset: number): boolean =>
+			/^[\ud800-\udbff][\udc00-\udfff]$/.test(
+				text.slice(offset - 1, offset + 1),
+			);
+		for (const mapping of result.mappings ?? []) {
+			expect(isInsidePair(result.text, mapping[0])).toBe(false);
+			expect(isInsidePair(result.text, mapping[0] + mapping[1])).toBe(false);
+			expect(isInsidePair(content, mapping[2])).toBe(false);
+			expect(isInsidePair(content, mapping[2] + mapping[3])).toBe(false);
+		}
+		expect(
+			result.mappings?.some((mapping) =>
+				content.slice(mapping[2], mapping[2] + mapping[3]).includes("😀"),
+			),
+		).toBe(true);
 	});
 
 	it("returns ranged Svelte diagnostics for malformed input", () => {
@@ -127,7 +153,7 @@ describe("openSvelteProject", () => {
 			projectHandle: "project",
 		});
 
-		expect(project.validateOptions?.()).toEqual([
+		expect(project.optionDiagnostics).toEqual([
 			{
 				messageText: 'Unknown Svelte content mapper option "unexpected".',
 				path: ["unexpected"],

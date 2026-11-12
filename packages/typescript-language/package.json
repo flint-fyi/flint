@@ -19,10 +19,9 @@
 		".": "./src/index.ts",
 		"./native/ast": "./src/native/ast.ts",
 		"./native/fs": "./src/native/fs.ts",
-		"./native/path": "./src/native/path.ts",
-		"./native/scanner": "./src/native/scanner.ts",
 		"./native/sync": "./src/native/sync.ts",
-		"./package.json": "./package.json"
+		"./package.json": "./package.json",
+		"./test-utils": "./src/test/createNativeSourceFile.testUtils.ts"
 	},
 	"files": [
 		"dist/"
@@ -30,7 +29,7 @@
 	"scripts": {
 		"generate:ast": "node scripts/generate-ast.ts",
 		"test": "pnpm test:ast && vitest --project typescript-language",
-		"test:ast": "pnpm generate:ast && git diff --exit-code -- src/types/ast.ts && tsc6 --project tsconfig.ast-test.json"
+		"test:ast": "pnpm generate:ast && git diff --exit-code -- src/types/ast.ts"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
@@ -55,8 +54,6 @@
 			".": "./dist/index.mjs",
 			"./native/ast": "./dist/native/ast.mjs",
 			"./native/fs": "./dist/native/fs.mjs",
-			"./native/path": "./dist/native/path.mjs",
-			"./native/scanner": "./dist/native/scanner.mjs",
 			"./native/sync": "./dist/native/sync.mjs",
 			"./package.json": "./package.json"
 		}

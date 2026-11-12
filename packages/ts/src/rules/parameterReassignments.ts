@@ -2,7 +2,6 @@ import {
 	getScopeManager,
 	getTSNodeRange,
 	typescriptLanguage,
-	type AST,
 	type FunctionWithParameters,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
@@ -37,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const scopeManager = getScopeManager(sourceFile);
 			const parameterVariables = new Set(
-				node.parameters.flatMap((parameter: AST.ParameterDeclaration) =>
+				node.parameters.flatMap((parameter) =>
 					scopeManager.getDeclaredVariables(parameter),
 				),
 			);

@@ -88,12 +88,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const firstArgument = nullThrows(
-						node.arguments[0],
-						"First argument is expected to be present by prior length check",
+					const attributeName = getStaticStringValue(
+						nullThrows(
+							node.arguments[0],
+							"First argument is expected to be present by prior length check",
+						),
 					);
-
-					const attributeName = getStaticStringValue(firstArgument);
 					if (!attributeName) {
 						return;
 					}

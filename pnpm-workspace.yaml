@@ -110,7 +110,6 @@ catalogs:
     "@types/css-tree": 3.2.0
     "@types/mdast": ^4.0.4
     "@types/unist": ^3.0.3
-    "@volar/language-core": 2.4.28
     "@vue/compiler-dom": ^3.5.0
     cached-factory: ^0.3.0
     change-case: ^5.4.4

@@ -7,7 +7,6 @@ import {
 import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 import {
 	TypeFlags,
-	type Program,
 	type Symbol,
 	type Type,
 	type TypeReference,
@@ -17,7 +16,6 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
-import { isTypeFlagSet } from "./utils/typePredicates.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -63,7 +61,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkCallArguments(
 			node: AST.CallExpression | AST.NewExpression,
-			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (!node.arguments) {
 				return;
@@ -79,17 +77,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				if (argument.kind === SyntaxKind.SpreadElement) {
 					const spreadType = typeChecker.getTypeAtLocation(argument.expression);
-					const anyType = discriminateAnyType(
-						spreadType,
-						typeChecker,
-						argument.expression,
-					);
+					const anyType = discriminateAnyType(spreadType, typeChecker);
 
 					if (anyType !== AnyType.Safe) {
 						const restParameter = parameters.at(-1);
 						if (restParameter) {
 							const restType = typeChecker.getTypeOfSymbol(restParameter);
-							if (isTypeFlagSet(restType, TypeFlags.Any | TypeFlags.Unknown)) {
+							if (restType.flags & (TypeFlags.Any | TypeFlags.Unknown)) {
 								continue;
 							}
 							if (typeChecker.isArrayType(restType)) {
@@ -98,7 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								)[0];
 								if (
 									elementType &&
-									isTypeFlagSet(elementType, TypeFlags.Any | TypeFlags.Unknown)
+									elementType.flags & (TypeFlags.Any | TypeFlags.Unknown)
 								) {
 									continue;
 								}
@@ -124,8 +118,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							parameters,
 							parameterIndex,
 							typeChecker,
-							program,
-							argument.expression,
 						);
 						if (tupleResult) {
 							context.report({
@@ -151,11 +143,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const anyType = discriminateAnyType(
-					argumentType,
-					typeChecker,
-					argument,
-				);
+				const anyType = discriminateAnyType(argumentType, typeChecker);
 
 				if (anyType === AnyType.Safe) {
 					const paramInfo = getParameterAtIndex(
@@ -201,9 +189,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				if (
-					isTypeFlagSet(parameterInfo.type, TypeFlags.Any | TypeFlags.Unknown)
-				) {
+				if (parameterInfo.type.flags & (TypeFlags.Any | TypeFlags.Unknown)) {
 					parameterIndex++;
 					continue;
 				}
@@ -246,11 +232,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const [i, expression] of expressions.entries()) {
 						const expressionType = typeChecker.getTypeAtLocation(expression);
 
-						const anyType = discriminateAnyType(
-							expressionType,
-							typeChecker,
-							expression,
-						);
+						const anyType = discriminateAnyType(expressionType, typeChecker);
 
 						if (anyType === AnyType.Safe) {
 							const parameter = parameters[i + 1];
@@ -292,9 +274,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						const parameterType = typeChecker.getTypeOfSymbol(parameter);
 
-						if (
-							isTypeFlagSet(parameterType, TypeFlags.Any | TypeFlags.Unknown)
-						) {
+						if (parameterType.flags & (TypeFlags.Any | TypeFlags.Unknown)) {
 							continue;
 						}
 
@@ -381,15 +361,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			parameters: readonly Symbol[],
 			startIndex: number,
 			typeChecker: Checker,
-			program: Program,
-			node: AST.AnyNode,
 		): undefined | { paramType: Type; type: string } {
 			const tupleTypeArgs = typeChecker.getTypeArguments(
 				tupleType as TypeReference,
 			);
 
 			for (const [i, elementType] of tupleTypeArgs.entries()) {
-				const anyType = discriminateAnyType(elementType, typeChecker, node);
+				const anyType = discriminateAnyType(elementType, typeChecker);
 
 				if (anyType === AnyType.Safe) {
 					continue;
@@ -406,7 +384,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				const parameterType = paramInfo.type;
 
-				if (isTypeFlagSet(parameterType, TypeFlags.Any | TypeFlags.Unknown)) {
+				if (parameterType.flags & (TypeFlags.Any | TypeFlags.Unknown)) {
 					continue;
 				}
 

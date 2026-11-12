@@ -9,7 +9,6 @@ import { TypeFlags } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { isIntrinsicErrorType } from "./utils/typePredicates.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -122,7 +121,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: {
-					type: isIntrinsicErrorType(objectType) ? "`error`" : "`any`",
+					type: objectType.isErrorType() ? "`error`" : "`any`",
 				},
 				message: "unsafeMemberAccess",
 				range: getTSNodeRange(reportNode, sourceFile),
@@ -149,7 +148,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (keyType.flags & TypeFlags.Any) {
 				context.report({
 					data: {
-						type: isIntrinsicErrorType(keyType) ? "`error`" : "`any`",
+						type: keyType.isErrorType() ? "`error`" : "`any`",
 					},
 					message: "unsafeComputedMemberAccess",
 					range: getTSNodeRange(keyNode, sourceFile),

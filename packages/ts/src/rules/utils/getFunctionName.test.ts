@@ -2,40 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
-import { serverFS } from "@flint.fyi/typescript-language/native/fs";
-import { API, JsxEmit } from "@flint.fyi/typescript-language/native/sync";
+import { createNativeSourceFile } from "@flint.fyi/typescript-language/test-utils";
 
 import { getFunctionName } from "./getFunctionName.ts";
-
-const files = new Map<string, string>();
-const api = new API({
-	cwd: "/repo",
-	fs: {
-		directoryExists: serverFS.useOS,
-		fileExists: (fileName) => files.has(fileName),
-		getAccessibleEntries: serverFS.useOS,
-		readFile: (fileName) => files.get(fileName),
-		realpath: serverFS.useOS,
-		removeFile: serverFS.useOS,
-		stat: serverFS.useOS,
-		writeFile: serverFS.useOS,
-	},
-});
-let fileIndex = 0;
-
-function createNativeSourceFile(sourceText: string): AST.SourceFile {
-	const fileName = `/repo/test-${String(fileIndex++)}.ts`;
-	files.set(fileName, sourceText);
-	const program = api.createProgram([fileName], {
-		jsx: JsxEmit.Preserve,
-		noLib: true,
-	});
-	const sourceFile = program.getSourceFile(fileName);
-	if (!sourceFile) {
-		throw new Error(`Expected native program to contain ${fileName}.`);
-	}
-	return sourceFile as unknown as AST.SourceFile;
-}
 
 function findFirstNode(sourceText: string, kind: SyntaxKind): AST.Node {
 	const sourceFile = createNativeSourceFile(sourceText);

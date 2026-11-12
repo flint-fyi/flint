@@ -93,7 +93,7 @@ jobs:
       - uses: $/.github/actions/setup
       - run: pnpm run build
       - name: Pack Flint packages
-        run: pnpm --recursive --filter='./packages/**' pack --pack-destination '${{ runner.temp }}/flint-packs'
+        run: pnpm --filter-prod 'flint...' --filter-prod '@flint.fyi/astro...' --filter-prod '@flint.fyi/svelte...' --filter-prod '@flint.fyi/vue...' pack --pack-destination '${{ runner.temp }}/flint-packs'
       - name: Run packed TypeScript native E2E tests
         run: pnpm run test --project e2e tests/typescript-native
         env:

@@ -9,23 +9,19 @@ import {
 	type ContentMapperProject,
 	type OpenProjectParams,
 	type OptionDiagnostic,
-	type TransformParams,
-	type TransformResult,
 } from "@flint.fyi/content-mapper";
 
 import {
-	createSvelteTransform,
-	transformSvelte as transform,
+	transformSvelte,
 	type SvelteTransformOptions,
-} from "./contentMapperPlugin.ts";
+} from "./transformSvelte.ts";
 
 export async function openSvelteProject(
 	params: OpenProjectParams,
 ): Promise<ContentMapperProject> {
-	const projectDirectory = params.configFileName
-		? path.dirname(path.resolve(params.configFileName))
-		: process.cwd();
-	const configFile = findConfig(projectDirectory);
+	const configFile = findConfig(
+		params.configFileName ? path.dirname(params.configFileName) : process.cwd(),
+	);
 	const configSource = configFile
 		? await fs.promises.readFile(configFile, "utf8")
 		: "";
@@ -41,31 +37,26 @@ export async function openSvelteProject(
 		)) as { default?: { compilerOptions?: SvelteTransformOptions } };
 		transformOptions = imported.default?.compilerOptions ?? {};
 	}
-	const optionDiagnostics = validateOptions(params.options);
 	return {
 		configIdentity: crypto
 			.createHash("sha256")
 			.update(
 				JSON.stringify({
-					compilerOptions: params.compilerOptions,
 					configFile,
 					configSource,
 					options: params.options,
 				}),
 			)
 			.digest("hex"),
-		transform: createSvelteTransform(transformOptions),
-		validateOptions: () => optionDiagnostics,
-		watchedFiles: configFile ? [path.resolve(configFile)] : [],
+		optionDiagnostics: validateOptions(params.options),
+		transform: (transformParams) =>
+			transformSvelte(transformParams, transformOptions),
+		watchedFiles: configFile ? [configFile] : [],
 	};
 }
 
-export function transformSvelte(params: TransformParams): TransformResult {
-	return transform(params);
-}
-
 function findConfig(start: string): string | undefined {
-	let directory = path.resolve(start);
+	let directory = start;
 	while (true) {
 		for (const name of [
 			"svelte.config.js",

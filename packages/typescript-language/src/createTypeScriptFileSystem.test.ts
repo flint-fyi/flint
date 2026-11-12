@@ -116,6 +116,16 @@ describe(createTypeScriptFileSystem, () => {
 		expect(createTypeScriptFileSystem(host).realpath).toBe(serverFS.useOS);
 	});
 
+	it("synthesizes stats and ignores writes when the host is not disk-backed", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+
+		expect(createTypeScriptFileSystem(host)).toMatchObject({
+			removeFile: serverFS.noop,
+			stat: serverFS.fakeStat,
+			writeFile: serverFS.noop,
+		});
+	});
+
 	it("serves host-only virtual files without mutating the host", () => {
 		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
 		const virtualFilePath = "/repo/.cache/overlay.json";

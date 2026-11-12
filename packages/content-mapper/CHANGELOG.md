@@ -1,4 +1,4 @@
-# @flint.fyi/volar-language
+# @flint.fyi/content-mapper
 
 ## 0.4.1
 

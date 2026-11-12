@@ -8,7 +8,6 @@ import type {
 	ClassElement,
 	Declaration,
 	Expression,
-	ExpressionParent,
 	ForInStatement,
 	ForOfStatement,
 	FunctionDeclaration,
@@ -48,7 +47,6 @@ expectTypeOf<
 	Extract<Statement, FunctionDeclaration>
 >().toEqualTypeOf<FunctionDeclaration>();
 expectTypeOf<LeftHandSideExpressionParent>().toExtend<Node>();
-expectTypeOf<ExpressionParent>().toExtend<Node>();
 expectTypeOf<MethodSignature>().toEqualTypeOf<MethodSignatureDeclaration>();
 expectTypeOf<ForInStatement>().toExtend<IterationStatement>();
 expectTypeOf<ForOfStatement>().toExtend<IterationStatement>();

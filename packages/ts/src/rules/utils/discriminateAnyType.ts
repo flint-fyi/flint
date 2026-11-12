@@ -1,11 +1,12 @@
 import { getTypeProperty, type Checker } from "@flint.fyi/typescript-language";
-import type { Node } from "@flint.fyi/typescript-language/native/ast";
 import {
 	TypeFlags,
 	type Type,
 	type TypeReference,
 } from "@flint.fyi/typescript-language/native/sync";
 import { nullThrows } from "@flint.fyi/utils";
+
+import { getTypeConstituents } from "./typeConstituents.ts";
 
 export const AnyType = {
 	Any: "any",
@@ -20,26 +21,13 @@ export type AnyType = (typeof AnyType)[keyof typeof AnyType];
  * @returns `AnyType.Any` if the type is `any`, `AnyType.AnyArray` if the type is `any[]` or `readonly any[]`, `AnyType.PromiseAny` if the type is `Promise&lt;any>`,
  * `AnyType.Error` if the type is an intrinsic error type, otherwise it returns `AnyType.Safe`.
  */
-export function discriminateAnyType(
-	type: Type,
-	typeChecker: Checker,
-	tsNode: Node,
-): AnyType {
-	return discriminateAnyTypeWorker(type, typeChecker, tsNode, new Set());
-}
-
-export function getAwaitedTypes(
-	type: Type,
-	typeChecker: Checker,
-	tsNode: Node,
-): readonly Type[] {
-	return getAwaitedTypesWorker(type, typeChecker, tsNode, new Set());
+export function discriminateAnyType(type: Type, typeChecker: Checker): AnyType {
+	return discriminateAnyTypeWorker(type, typeChecker, new Set());
 }
 
 function discriminateAnyTypeWorker(
 	type: Type,
 	typeChecker: Checker,
-	tsNode: Node,
 	visited: Set<number>,
 ): AnyType {
 	if (visited.has(type.id)) {
@@ -58,91 +46,21 @@ function discriminateAnyTypeWorker(
 			return AnyType.AnyArray;
 		}
 	}
-	for (const awaitedType of getAwaitedTypes(type, typeChecker, tsNode)) {
+	for (const part of getTypeConstituents(type)) {
+		if (!getTypeProperty(typeChecker.getApparentType(part), "then")) {
+			continue;
+		}
+
+		const awaitedType = typeChecker.getAwaitedType(part);
 		if (
-			awaitedType.id !== type.id &&
-			discriminateAnyTypeWorker(awaitedType, typeChecker, tsNode, visited) ===
+			awaitedType &&
+			discriminateAnyTypeWorker(awaitedType, typeChecker, visited) ===
 				AnyType.Any &&
 			!awaitedType.isErrorType()
 		) {
 			return AnyType.PromiseAny;
 		}
 	}
+
 	return AnyType.Safe;
-}
-
-function getAwaitedTypesWorker(
-	type: Type,
-	typeChecker: Checker,
-	tsNode: Node,
-	visited: Set<number>,
-): readonly Type[] {
-	if (visited.has(type.id)) {
-		return [type];
-	}
-	visited.add(type.id);
-
-	const awaitedTypes: Type[] = [];
-	let hasThenableConstituent = false;
-	for (const constituent of getTypeConstituents(type)) {
-		const apparentConstituent = typeChecker.getApparentType(constituent);
-		const thenSymbol = getTypeProperty(apparentConstituent, "then");
-		if (!thenSymbol) {
-			awaitedTypes.push(constituent);
-			continue;
-		}
-
-		const thenType = typeChecker.getTypeOfSymbolAtLocation(thenSymbol, tsNode);
-		const fulfilledTypes: Type[] = [];
-		for (const thenConstituent of getTypeConstituents(thenType)) {
-			for (const thenSignature of thenConstituent.getCallSignatures()) {
-				const callbackSymbol = thenSignature.getParameters()[0];
-				if (!callbackSymbol) {
-					continue;
-				}
-
-				const callbackType = typeChecker.getTypeOfSymbolAtLocation(
-					callbackSymbol,
-					tsNode,
-				);
-				for (const callbackConstituent of getTypeConstituents(callbackType)) {
-					for (const callbackSignature of callbackConstituent.getCallSignatures()) {
-						const valueSymbol = callbackSignature.getParameters()[0];
-						if (valueSymbol) {
-							fulfilledTypes.push(
-								typeChecker.getTypeOfSymbolAtLocation(valueSymbol, tsNode),
-							);
-						}
-					}
-				}
-			}
-		}
-
-		if (!fulfilledTypes.length) {
-			awaitedTypes.push(constituent);
-			continue;
-		}
-
-		hasThenableConstituent = true;
-		awaitedTypes.push(
-			...fulfilledTypes.flatMap((fulfilledType) =>
-				getAwaitedTypesWorker(
-					fulfilledType,
-					typeChecker,
-					tsNode,
-					new Set(visited),
-				),
-			),
-		);
-	}
-
-	return hasThenableConstituent ? awaitedTypes : [type];
-}
-
-function getTypeConstituents(type: Type): readonly Type[] {
-	if (type.isUnionType() || type.isIntersectionType()) {
-		return type.getTypes();
-	}
-
-	return [type];
 }

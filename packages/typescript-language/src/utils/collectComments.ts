@@ -10,6 +10,8 @@ export interface Comment {
 	text: string;
 }
 
+const commentsBySourceFile = new WeakMap<AST.SourceFile, readonly Comment[]>();
+
 /**
  * Collects every comment in a source file, in source order.
  *
@@ -17,9 +19,21 @@ export interface Comment {
  * substitutions, regular expression literals, and JSX text all depend on the
  * parser to tell the scanner how to continue, and scanning them as ordinary
  * tokens garbles everything after them. Those tokens are already nodes in the
- * AST, so the text is scanned around them instead.
+ * AST, so the text is scanned around them instead. JSX attribute strings are
+ * skipped too, as a backslash in them is not an escape.
  */
-export function collectComments(sourceFile: AST.SourceFile): Comment[] {
+export function collectComments(
+	sourceFile: AST.SourceFile,
+): readonly Comment[] {
+	let comments = commentsBySourceFile.get(sourceFile);
+	if (!comments) {
+		comments = scanComments(sourceFile);
+		commentsBySourceFile.set(sourceFile, comments);
+	}
+	return comments;
+}
+
+function scanComments(sourceFile: AST.SourceFile): Comment[] {
 	const comments: Comment[] = [];
 	const excludedRanges: { end: number; pos: number }[] = [];
 	function collectExcludedRanges(node: AST.AnyNode): void {
@@ -29,7 +43,9 @@ export function collectComments(sourceFile: AST.SourceFile): Comment[] {
 			node.kind === SyntaxKind.JsxText ||
 			node.kind === SyntaxKind.TemplateHead ||
 			node.kind === SyntaxKind.TemplateMiddle ||
-			node.kind === SyntaxKind.TemplateTail
+			node.kind === SyntaxKind.TemplateTail ||
+			(node.kind === SyntaxKind.StringLiteral &&
+				node.parent.kind === SyntaxKind.JsxAttribute)
 		) {
 			excludedRanges.push({
 				end: node.getEnd(),

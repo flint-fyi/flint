@@ -10,4 +10,5 @@ export const registerAstroTypeScriptContentMapper: (
 	packageName: "@flint.fyi/astro-language",
 });
 
+export { getAstroPointOffset } from "./getAstroPointOffset.ts";
 export { astroLanguage, type AstroServices } from "./language.ts";

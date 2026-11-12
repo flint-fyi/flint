@@ -61,19 +61,14 @@ function isCreatePluginCall(
 		return false;
 	}
 
-	const declarations = [];
-	for (const declarationHandle of resolvedSymbol.declarations) {
-		const declaration = declarationHandle.resolve();
-		if (!declaration) {
-			return false;
-		}
-		declarations.push(declaration);
-	}
-
-	return declarations.some((declaration) => {
-		const fileName = declaration.getSourceFile().fileName.replaceAll("\\", "/");
+	return resolvedSymbol.declarations.some((handle) => {
+		const fileName = handle
+			.resolve()
+			?.getSourceFile()
+			.fileName.replaceAll("\\", "/");
 
 		return (
+			!!fileName &&
 			fileName.includes("/core/") &&
 			/plugins\/createPlugin\.(?:d\.)?[cm]?[jt]s$/.test(fileName)
 		);

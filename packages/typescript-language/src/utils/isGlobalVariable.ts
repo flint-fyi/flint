@@ -20,16 +20,12 @@ export function isGlobalVariable(
 		return false;
 	}
 
-	const declarations = symbol.declarations
-		.map((declaration) => declaration.resolve())
-		.filter((declaration): declaration is AST.Declaration => !!declaration);
-
 	// undefined, NaN, Infinity etc. may have no declarations in some contexts
 	// but are still global identifiers. Check if they're global scope symbols.
-	if (!declarations.length) {
+	if (!symbol.declarations.length) {
 		// If there are no declarations, it's likely a built-in global like undefined
 		return true;
 	}
 
-	return declarationsIncludeGlobal(declarations, program);
+	return declarationsIncludeGlobal(symbol.declarations, program);
 }

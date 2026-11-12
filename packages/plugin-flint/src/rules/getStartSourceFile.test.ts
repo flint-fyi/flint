@@ -5,13 +5,13 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-import ts from "typescript";
-declare const node: ts.Node;
+import type { AST } from "@flint.fyi/typescript-language";
+declare const node: AST.Node;
 node.getStart();
 `,
 			snapshot: `
-import ts from "typescript";
-declare const node: ts.Node;
+import type { AST } from "@flint.fyi/typescript-language";
+declare const node: AST.Node;
 node.getStart();
 ~~~~~~~~~~~~~~~
 \`getStart()\` should be called with a \`sourceFile\` parameter for better performance.
@@ -19,13 +19,13 @@ node.getStart();
 		},
 		{
 			code: `
-import ts from "typescript";
-declare const node: ts.Expression | ts.Statement;
+import type { AST } from "@flint.fyi/typescript-language";
+declare const node: AST.Expression | AST.Statement;
 node.getStart();
 `,
 			snapshot: `
-import ts from "typescript";
-declare const node: ts.Expression | ts.Statement;
+import type { AST } from "@flint.fyi/typescript-language";
+declare const node: AST.Expression | AST.Statement;
 node.getStart();
 ~~~~~~~~~~~~~~~
 \`getStart()\` should be called with a \`sourceFile\` parameter for better performance.
@@ -33,15 +33,29 @@ node.getStart();
 		},
 		{
 			code: `
-import ts from "typescript";
-interface CustomNode extends ts.Node {}
+import type { AST } from "@flint.fyi/typescript-language";
+interface CustomNode extends AST.NodeBase {}
 declare const node: CustomNode;
 node.getStart();
 `,
 			snapshot: `
-import ts from "typescript";
-interface CustomNode extends ts.Node {}
+import type { AST } from "@flint.fyi/typescript-language";
+interface CustomNode extends AST.NodeBase {}
 declare const node: CustomNode;
+node.getStart();
+~~~~~~~~~~~~~~~
+\`getStart()\` should be called with a \`sourceFile\` parameter for better performance.
+`,
+		},
+		{
+			code: `
+import type { Node } from "@flint.fyi/typescript-language/native/ast";
+declare const node: Node;
+node.getStart();
+`,
+			snapshot: `
+import type { Node } from "@flint.fyi/typescript-language/native/ast";
+declare const node: Node;
 node.getStart();
 ~~~~~~~~~~~~~~~
 \`getStart()\` should be called with a \`sourceFile\` parameter for better performance.
@@ -49,8 +63,31 @@ node.getStart();
 		},
 	],
 	valid: [
-		'import ts from "typescript"; declare const node: ts.Node; declare const sourceFile: ts.SourceFile;node.getStart(sourceFile);',
-		'import ts from "typescript"; declare const node: ts.Expression | ts.Statement; declare const sourceFile: ts.SourceFile;node.getStart(sourceFile);',
-		'import ts from "typescript"; interface CustomNode extends ts.Node {} declare const node: CustomNode; declare const sourceFile: ts.SourceFile; node.getStart(sourceFile);',
+		`
+import type { AST } from "@flint.fyi/typescript-language";
+declare const node: AST.Node;
+declare const sourceFile: AST.SourceFile;
+node.getStart(sourceFile);
+`,
+		`
+import type { AST } from "@flint.fyi/typescript-language";
+declare const node: AST.Expression | AST.Statement;
+declare const sourceFile: AST.SourceFile;
+node.getStart(sourceFile);
+`,
+		`
+import type { Node, SourceFile } from "@flint.fyi/typescript-language/native/ast";
+interface CustomNode extends Node {}
+declare const node: CustomNode;
+declare const sourceFile: SourceFile;
+node.getStart(sourceFile);
+`,
+		`
+interface Node {
+	getStart(): number;
+}
+declare const node: Node;
+node.getStart();
+`,
 	],
 });

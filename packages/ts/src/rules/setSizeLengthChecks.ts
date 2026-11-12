@@ -46,17 +46,17 @@ function isSetExpression(
 		return false;
 	}
 
-	const valueDeclaration = typeChecker
-		.getSymbolAtLocation(unwrapped)
-		?.valueDeclaration?.resolve() as AST.Declaration | undefined;
-	if (valueDeclaration?.kind !== SyntaxKind.VariableDeclaration) {
+	const valueDeclarationHandle =
+		typeChecker.getSymbolAtLocation(unwrapped)?.valueDeclaration;
+	if (valueDeclarationHandle?.kind !== SyntaxKind.VariableDeclaration) {
 		return false;
 	}
 
-	const declaration = valueDeclaration;
-
+	const declaration = valueDeclarationHandle.resolve() as
+		| AST.VariableDeclaration
+		| undefined;
 	if (
-		declaration.parent.kind !== SyntaxKind.VariableDeclarationList ||
+		declaration?.parent.kind !== SyntaxKind.VariableDeclarationList ||
 		!(declaration.parent.flags & NodeFlags.Const) ||
 		!declaration.initializer
 	) {

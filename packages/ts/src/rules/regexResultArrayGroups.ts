@@ -9,14 +9,12 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
-	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 import {
 	SymbolFlags,
 	TypeFlags,
-	type Program,
 	type Symbol,
 	type Type,
 } from "@flint.fyi/typescript-language/native/sync";
@@ -51,8 +49,7 @@ function extractCallExpression(expression: AST.Expression) {
 
 function findAssignmentsToSymbol(
 	symbol: Symbol,
-	sourceFile: AST.SourceFile,
-	typeChecker: Checker,
+	{ sourceFile, typeChecker }: TypeScriptFileServices,
 ) {
 	const assignments: AST.BinaryExpression[] = [];
 
@@ -101,35 +98,23 @@ function getNamedCapturingGroups(pattern: string, flags: string) {
 
 function getNamedGroupsFromExpression(
 	node: AST.Expression,
-	typeChecker: Checker,
-	program: Program,
-	sourceFile: AST.SourceFile,
+	services: TypeScriptFileServices,
 ) {
 	const unwrapped = skipParentheses(node);
 
 	if (unwrapped.kind === SyntaxKind.Identifier) {
-		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
+		const symbol = services.typeChecker.getSymbolAtLocation(unwrapped);
 		if (symbol) {
 			const resolvedSymbol =
 				symbol.flags & SymbolFlags.Alias
-					? typeChecker.getAliasedSymbol(symbol)
+					? services.typeChecker.getAliasedSymbol(symbol)
 					: symbol;
-			return getRegexInfoFromSymbol(
-				resolvedSymbol,
-				typeChecker,
-				program,
-				sourceFile,
-			);
+			return getRegexInfoFromSymbol(resolvedSymbol, services);
 		}
 	}
 
 	if (unwrapped.kind === SyntaxKind.CallExpression) {
-		const regexInfo = getRegexFromCall(
-			unwrapped,
-			typeChecker,
-			program,
-			sourceFile,
-		);
+		const regexInfo = getRegexFromCall(unwrapped, services);
 		if (regexInfo) {
 			const namedGroups = getNamedCapturingGroups(
 				regexInfo.pattern,
@@ -146,12 +131,7 @@ function getNamedGroupsFromExpression(
 		unwrapped.kind === SyntaxKind.AsExpression ||
 		unwrapped.kind === SyntaxKind.TypeAssertionExpression
 	) {
-		return getNamedGroupsFromExpression(
-			unwrapped.expression,
-			typeChecker,
-			program,
-			sourceFile,
-		);
+		return getNamedGroupsFromExpression(unwrapped.expression, services);
 	}
 
 	return;
@@ -159,22 +139,18 @@ function getNamedGroupsFromExpression(
 
 function getRegexFromCall(
 	node: AST.CallExpression,
-	typeChecker: Checker,
-	program: Program,
-	sourceFile: AST.SourceFile,
+	services: TypeScriptFileServices,
 ) {
 	return (
-		getRegexFromExecCall(node, typeChecker, program, sourceFile) ??
-		getRegexFromMatchCall(node, typeChecker, program, sourceFile) ??
-		getRegexFromMatchAllCall(node, typeChecker, program, sourceFile)
+		getRegexFromExecCall(node, services) ??
+		getRegexFromMatchCall(node, services) ??
+		getRegexFromMatchAllCall(node, services)
 	);
 }
 
 function getRegexFromExecCall(
 	node: AST.CallExpression,
-	typeChecker: Checker,
-	program: Program,
-	sourceFile: AST.SourceFile,
+	services: TypeScriptFileServices,
 ) {
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 		return;
@@ -185,19 +161,12 @@ function getRegexFromExecCall(
 	}
 
 	const regexObject = node.expression.expression;
-	return getRegexInfoFromExpression(
-		regexObject,
-		typeChecker,
-		program,
-		sourceFile,
-	);
+	return getRegexInfoFromExpression(regexObject, services);
 }
 
 function getRegexFromMatchAllCall(
 	node: AST.CallExpression,
-	typeChecker: Checker,
-	program: Program,
-	sourceFile: AST.SourceFile,
+	services: TypeScriptFileServices,
 ) {
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 		return;
@@ -207,7 +176,9 @@ function getRegexFromMatchAllCall(
 		return;
 	}
 
-	const objectType = typeChecker.getTypeAtLocation(node.expression.expression);
+	const objectType = services.typeChecker.getTypeAtLocation(
+		node.expression.expression,
+	);
 	if (!(objectType.flags & TypeFlags.StringLike)) {
 		return;
 	}
@@ -215,14 +186,12 @@ function getRegexFromMatchAllCall(
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const regexArg = node.arguments[0]!;
 
-	return getRegexInfoFromExpression(regexArg, typeChecker, program, sourceFile);
+	return getRegexInfoFromExpression(regexArg, services);
 }
 
 function getRegexFromMatchCall(
 	node: AST.CallExpression,
-	typeChecker: Checker,
-	program: Program,
-	sourceFile: AST.SourceFile,
+	services: TypeScriptFileServices,
 ) {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
@@ -232,7 +201,9 @@ function getRegexFromMatchCall(
 		return;
 	}
 
-	const objectType = typeChecker.getTypeAtLocation(node.expression.expression);
+	const objectType = services.typeChecker.getTypeAtLocation(
+		node.expression.expression,
+	);
 	if (!(objectType.flags & TypeFlags.StringLike)) {
 		return;
 	}
@@ -240,12 +211,7 @@ function getRegexFromMatchCall(
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const regexArg = node.arguments[0]!;
 
-	const info = getRegexInfoFromExpression(
-		regexArg,
-		typeChecker,
-		program,
-		sourceFile,
-	);
+	const info = getRegexInfoFromExpression(regexArg, services);
 	if (info?.flags.includes("g")) {
 		return;
 	}
@@ -255,25 +221,19 @@ function getRegexFromMatchCall(
 
 function getRegexInfoFromExpression(
 	node: AST.Expression,
-	typeChecker: Checker,
-	program: Program,
-	sourceFile: AST.SourceFile,
+	services: TypeScriptFileServices,
 ) {
 	const unwrapped = skipParentheses(node);
 
 	if (unwrapped.kind === SyntaxKind.RegularExpressionLiteral) {
-		return getRegExpLiteralDetails(unwrapped, { sourceFile });
+		return getRegExpLiteralDetails(unwrapped, services);
 	}
 
 	if (
 		unwrapped.kind === SyntaxKind.CallExpression ||
 		unwrapped.kind === SyntaxKind.NewExpression
 	) {
-		const construction = getRegExpConstruction(unwrapped, {
-			program,
-			sourceFile,
-			typeChecker,
-		} as TypeScriptFileServices);
+		const construction = getRegExpConstruction(unwrapped, services);
 		if (construction) {
 			return {
 				flags: construction.flags,
@@ -283,7 +243,7 @@ function getRegexInfoFromExpression(
 	}
 
 	if (unwrapped.kind === SyntaxKind.Identifier) {
-		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
+		const symbol = services.typeChecker.getSymbolAtLocation(unwrapped);
 		if (symbol?.declarations.length) {
 			for (const declarationHandle of symbol.declarations) {
 				const declaration = declarationHandle.resolve() as
@@ -296,12 +256,7 @@ function getRegexInfoFromExpression(
 					declaration.kind === SyntaxKind.VariableDeclaration &&
 					declaration.initializer
 				) {
-					return getRegexInfoFromExpression(
-						declaration.initializer,
-						typeChecker,
-						program,
-						sourceFile,
-					);
+					return getRegexInfoFromExpression(declaration.initializer, services);
 				}
 			}
 		}
@@ -312,9 +267,7 @@ function getRegexInfoFromExpression(
 
 function getRegexInfoFromSymbol(
 	symbol: Symbol,
-	typeChecker: Checker,
-	program: Program,
-	sourceFile: AST.SourceFile,
+	services: TypeScriptFileServices,
 ) {
 	if (symbol.declarations.length) {
 		for (const declarationHandle of symbol.declarations) {
@@ -330,12 +283,7 @@ function getRegexInfoFromSymbol(
 			) {
 				const callExpression = extractCallExpression(declaration.initializer);
 				if (callExpression) {
-					const regexInfo = getRegexFromCall(
-						callExpression,
-						typeChecker,
-						program,
-						sourceFile,
-					);
+					const regexInfo = getRegexFromCall(callExpression, services);
 					if (regexInfo) {
 						const namedGroups = getNamedCapturingGroups(
 							regexInfo.pattern,
@@ -350,16 +298,11 @@ function getRegexInfoFromSymbol(
 		}
 	}
 
-	const assignments = findAssignmentsToSymbol(symbol, sourceFile, typeChecker);
+	const assignments = findAssignmentsToSymbol(symbol, services);
 	for (const assignment of assignments) {
 		const callExpression = extractCallExpression(assignment.right);
 		if (callExpression) {
-			const regexInfo = getRegexFromCall(
-				callExpression,
-				typeChecker,
-				program,
-				sourceFile,
-			);
+			const regexInfo = getRegexFromCall(callExpression, services);
 			if (regexInfo) {
 				const namedGroups = getNamedCapturingGroups(
 					regexInfo.pattern,
@@ -426,10 +369,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ElementAccessExpression: (
-					node,
-					{ program, sourceFile, typeChecker },
-				) => {
+				ElementAccessExpression: (node, services) => {
+					const { sourceFile, typeChecker } = services;
 					const argument = skipParentheses(node.argumentExpression);
 					if (argument.kind !== SyntaxKind.NumericLiteral) {
 						return;
@@ -451,12 +392,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const namedGroups = getNamedGroupsFromExpression(
-						object,
-						typeChecker,
-						program,
-						sourceFile,
-					);
+					const namedGroups = getNamedGroupsFromExpression(object, services);
 					if (!namedGroups) {
 						return;
 					}

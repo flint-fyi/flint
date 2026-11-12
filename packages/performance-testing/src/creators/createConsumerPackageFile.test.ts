@@ -2,7 +2,10 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { createConsumerPackageFile } from "./createConsumerPackageFile.ts";
+import {
+	createArtifactSpecifiers,
+	createConsumerPackageFile,
+} from "./createConsumerPackageFile.ts";
 
 describe(createConsumerPackageFile, () => {
 	it("installs Flint and its workspace dependencies as artifact tarballs", () => {
@@ -13,7 +16,9 @@ describe(createConsumerPackageFile, () => {
 			["flint", path.join("workspace", "flint-1.2.3.tgz")],
 		]);
 
-		const actual = createConsumerPackageFile(artifacts, casesPath);
+		const actual = createConsumerPackageFile(
+			createArtifactSpecifiers(artifacts, casesPath),
+		);
 
 		expect(actual).toEqual({
 			dependencies: {

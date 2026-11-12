@@ -3,19 +3,16 @@ import type { Program } from "typescript-native/sync";
 import type * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
 import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
+import { resolveDeclarations } from "./resolveDeclarations.ts";
 
 export function getDeclarationsIfGlobal(
 	node: AST.Expression,
 	typeChecker: Checker,
 	program: Program,
 ): AST.Declaration[] | undefined {
-	const declarations = typeChecker
-		.getSymbolAtLocation(node)
-		?.declarations.map((declaration) => declaration.resolve())
-		.filter((declaration): declaration is AST.Declaration => !!declaration);
+	const handles = typeChecker.getSymbolAtLocation(node)?.declarations;
 
-	return declarations?.length &&
-		declarationsIncludeGlobal([...declarations], program)
-		? [...declarations]
+	return handles && declarationsIncludeGlobal(handles, program)
+		? resolveDeclarations(handles)
 		: undefined;
 }

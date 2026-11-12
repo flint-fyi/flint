@@ -17,12 +17,12 @@ const enumMemberKinds = {
 function getEnumMemberKind(member: AST.EnumMember, typeChecker: Checker) {
 	const type = typeChecker.getTypeAtLocation(member);
 
-	if ((type.flags & TypeFlags.NumberLiteral) !== 0) {
+	if (type.isNumberLiteralType()) {
 		if ((type.flags & TypeFlags.NumberLike) !== 0) {
 			return enumMemberKinds.Number;
 		}
 	} else if (
-		(type.flags & TypeFlags.StringLiteral) !== 0 &&
+		type.isStringLiteralType() &&
 		(type.flags & TypeFlags.StringLike) !== 0
 	) {
 		return enumMemberKinds.String;

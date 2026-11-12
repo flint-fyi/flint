@@ -1,7 +1,7 @@
 export {
-	type ContentMapperTransformSource,
-	createContentMapperTransform,
-} from "./content-mapper/createContentMapperTransform.ts";
+	createMappedOutput,
+	type MappedOutputSource,
+} from "./content-mapper/createMappedOutput.ts";
 export {
 	type ContentMapperProject,
 	type ContentMapperTransform,
@@ -11,7 +11,6 @@ export {
 	type MapperDiagnostic,
 	type OpenProjectParams,
 	type OptionDiagnostic,
-	type PositionEncoding,
 	type RunContentMapperOptions,
 	type SpanMapping,
 	TRANSFORM_FAILURE_CODE,

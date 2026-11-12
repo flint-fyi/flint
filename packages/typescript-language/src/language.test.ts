@@ -1,6 +1,4 @@
 import { SyntaxKind } from "typescript-native/ast";
-import { serverFS } from "typescript-native/fs";
-import { API } from "typescript-native/sync";
 import { describe, expect, it } from "vitest";
 
 import { createVFSLinterHost } from "@flint.fyi/core";
@@ -8,9 +6,7 @@ import { createVFSLinterHost } from "@flint.fyi/core";
 import {
 	throwUnknownLanguageExtension,
 	typescriptLanguage,
-	visitTypeScriptNodes,
 } from "./language.ts";
-import type * as AST from "./types/ast.ts";
 
 describe("typescriptLanguage file lifecycle", () => {
 	it("keeps every file on the final snapshot until LIFO finalization", () => {
@@ -30,15 +26,15 @@ describe("typescriptLanguage file lifecycle", () => {
 			filePathAbsolute: "/repo/first.ts",
 			sourceText: "export const first = 1;",
 		});
-		const firstSnapshot = first.services.snapshot;
+		const firstProgram = first.services.program;
 		const second = factory.createFile({
 			filePath: "/repo/second.ts",
 			filePathAbsolute: "/repo/second.ts",
 			sourceText: "export const second = 2;",
 		});
 
-		expect(first.services.snapshot).not.toBe(firstSnapshot);
-		expect(first.services.snapshot).toBe(second.services.snapshot);
+		expect(first.services.program).not.toBe(firstProgram);
+		expect(first.services.program).toBe(second.services.program);
 		expect(first.services.sourceFile.fileName).toBe("/repo/first.ts");
 		expect(second.services.sourceFile.fileName).toBe("/repo/second.ts");
 		expect(first.services.project).toBeDefined();
@@ -48,9 +44,9 @@ describe("typescriptLanguage file lifecycle", () => {
 		second[Symbol.dispose]();
 		expect(first.services.sourceFile.fileName).toBe("/repo/first.ts");
 		first[Symbol.dispose]();
-		expect(first.services.snapshot).toBeDefined();
+		expect(first.services.program).toBeDefined();
 		factory[Symbol.dispose]();
-		expect(() => first.services.snapshot).toThrow("disposed");
+		expect(() => first.services.program).toThrow("disposed");
 	});
 
 	it("updates a repeated target file after a zero-active-file gap", () => {
@@ -121,111 +117,6 @@ describe("typescriptLanguage file lifecycle", () => {
 		).toBeUndefined();
 		fourth[Symbol.dispose]();
 		factory[Symbol.dispose]();
-	});
-});
-
-describe("visitTypeScriptNodes", () => {
-	it("visits native nodes in enter and exit order", () => {
-		const api = new API({
-			cwd: "/repo",
-			fs: {
-				directoryExists: serverFS.useOS,
-				fileExists: (fileName) => fileName === "/repo/index.ts",
-				getAccessibleEntries: serverFS.useOS,
-				readFile: (fileName) =>
-					fileName === "/repo/index.ts" ? "let value;" : undefined,
-				realpath: serverFS.useOS,
-				removeFile: serverFS.useOS,
-				stat: serverFS.useOS,
-				writeFile: serverFS.useOS,
-			},
-		});
-		const program = api.createProgram(["/repo/index.ts"], { noLib: true });
-		const sourceFile = program.getSourceFile("/repo/index.ts") as
-			| AST.SourceFile
-			| undefined;
-
-		try {
-			expect(sourceFile).toBeDefined();
-			if (!sourceFile) {
-				throw new Error("Expected the native program to contain index.ts.");
-			}
-			const events: string[] = [];
-			visitTypeScriptNodes(
-				sourceFile,
-				{
-					Identifier: (node) => {
-						expect(node.text).toBe("value");
-						events.push("Identifier");
-					},
-					"Identifier:exit": () => events.push("Identifier:exit"),
-					SourceFile: () => events.push("SourceFile"),
-					"SourceFile:exit": () => events.push("SourceFile:exit"),
-					VariableDeclaration: () => events.push("VariableDeclaration"),
-					"VariableDeclaration:exit": () =>
-						events.push("VariableDeclaration:exit"),
-					VariableDeclarationList: () => events.push("VariableDeclarationList"),
-					"VariableDeclarationList:exit": () =>
-						events.push("VariableDeclarationList:exit"),
-					VariableStatement: () => events.push("VariableStatement"),
-					"VariableStatement:exit": () => events.push("VariableStatement:exit"),
-				},
-				{},
-			);
-
-			expect(events).toEqual([
-				"SourceFile",
-				"VariableStatement",
-				"VariableDeclarationList",
-				"VariableDeclaration",
-				"Identifier",
-				"Identifier:exit",
-				"VariableDeclaration:exit",
-				"VariableDeclarationList:exit",
-				"VariableStatement:exit",
-				"SourceFile:exit",
-			]);
-		} finally {
-			program.dispose();
-			api.close();
-		}
-	});
-
-	it("traverses children without callbacks for unknown syntax kinds", () => {
-		const events: string[] = [];
-		const sourceFile = {
-			forEachChild(visitor: (node: unknown) => void) {
-				visitor({
-					forEachChild(childVisitor: (node: unknown) => void) {
-						childVisitor({
-							forEachChild(): undefined {
-								return;
-							},
-							kind: SyntaxKind.Identifier,
-						});
-					},
-					kind: Number.MAX_SAFE_INTEGER,
-				});
-			},
-			kind: SyntaxKind.SourceFile,
-		};
-		const visitors = {
-			Identifier: () => events.push("Identifier"),
-			"Identifier:exit": () => events.push("Identifier:exit"),
-			SourceFile: () => events.push("SourceFile"),
-			"SourceFile:exit": () => events.push("SourceFile:exit"),
-			undefined: () => events.push("unknown"),
-			"undefined:exit": () => events.push("unknown:exit"),
-		};
-
-		visitTypeScriptNodes(sourceFile as unknown as AST.SourceFile, visitors, {});
-
-		expect(events).toEqual([
-			"SourceFile",
-			"Identifier",
-			"Identifier:exit",
-			"SourceFile:exit",
-		]);
 	});
 });
 

@@ -19,17 +19,11 @@ export function reportSourceCode<T extends string>(
 			range: sourceCodeRange(change.range),
 		})),
 		range: sourceCodeRange(report.range),
-		suggestions: report.suggestions
-			?.map((suggestion) => {
-				if (isSuggestionForFiles(suggestion)) {
-					return;
-				}
-				return {
-					...suggestion,
-					range: sourceCodeRange(suggestion.range),
-				};
-			})
-			.filter((suggestion) => suggestion !== undefined),
+		suggestions: report.suggestions?.map((suggestion) =>
+			isSuggestionForFiles(suggestion)
+				? suggestion
+				: { ...suggestion, range: sourceCodeRange(suggestion.range) },
+		),
 	});
 }
 

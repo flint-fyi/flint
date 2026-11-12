@@ -3,7 +3,10 @@ import path from "node:path";
 
 import { execa } from "execa";
 
-import { createConsumerPackageFile } from "./creators/createConsumerPackageFile.ts";
+import {
+	createArtifactSpecifiers,
+	createConsumerPackageFile,
+} from "./creators/createConsumerPackageFile.ts";
 import { getFlintArtifacts } from "./getFlintArtifacts.ts";
 
 export async function prepareConsumer(
@@ -11,28 +14,25 @@ export async function prepareConsumer(
 	testCasesPath: string,
 	packageNames: readonly string[] = ["flint"],
 ): Promise<void> {
-	const artifacts = await getFlintArtifacts(rootPath, packageNames);
-	const packageFile = createConsumerPackageFile(artifacts, testCasesPath);
+	const artifactSpecifiers = createArtifactSpecifiers(
+		await getFlintArtifacts(rootPath, packageNames),
+		testCasesPath,
+	);
 
 	await fs.mkdir(testCasesPath, { recursive: true });
 	await fs.writeFile(
 		path.join(testCasesPath, "package.json"),
-		`${JSON.stringify(packageFile, undefined, "\t")}\n`,
+		`${JSON.stringify(createConsumerPackageFile(artifactSpecifiers), undefined, "\t")}\n`,
 	);
 
-	// pnpm no longer reads `overrides` from a package.json's `pnpm` field; it only
-	// reads them from `pnpm-workspace.yaml`. Redirecting the packed tarballs'
-	// transitive `@flint.fyi/*` ranges to the local `.tgz` files therefore has to
-	// go here. `packages: []` makes the cases directory a self-contained workspace
-	// root so this config is used instead of the repository's (hence no
-	// `--ignore-workspace`, which would suppress it).
-	const overrides = [...artifacts]
+	// The tarballs depend on each other through registry ranges, which these
+	// overrides redirect to the local tarballs. pnpm only reads `overrides` from
+	// pnpm-workspace.yaml, and `packages: []` makes the cases directory its own
+	// workspace root so pnpm reads this file instead of the repository's.
+	const overrides = Object.entries(artifactSpecifiers)
 		.map(
-			([packageName, artifactPath]) =>
-				`  "${packageName}": "file:${path
-					.relative(testCasesPath, artifactPath)
-					.split(path.sep)
-					.join("/")}"`,
+			([packageName, specifier]) =>
+				`  ${JSON.stringify(packageName)}: ${JSON.stringify(specifier)}`,
 		)
 		.join("\n");
 	await fs.writeFile(

@@ -1,5 +1,6 @@
 import {
 	forEachChild,
+	isFunctionScopeBoundary,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
@@ -63,27 +64,3 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
-
-function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
-	switch (node.kind) {
-		case SyntaxKind.ArrowFunction:
-		case SyntaxKind.CallSignature:
-		case SyntaxKind.ClassDeclaration:
-		case SyntaxKind.ClassExpression:
-		case SyntaxKind.Constructor:
-		case SyntaxKind.ConstructorType:
-		case SyntaxKind.ConstructSignature:
-		case SyntaxKind.EnumDeclaration:
-		case SyntaxKind.FunctionDeclaration:
-		case SyntaxKind.FunctionExpression:
-		case SyntaxKind.FunctionType:
-		case SyntaxKind.GetAccessor:
-		case SyntaxKind.MethodDeclaration:
-		case SyntaxKind.MethodSignature:
-		case SyntaxKind.ModuleDeclaration:
-		case SyntaxKind.SetAccessor:
-			return true;
-		default:
-			return false;
-	}
-}

@@ -42,24 +42,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isIdentifierNamespaceImport(
 			identifier: AST.Identifier,
 			typeChecker: Checker,
-		): boolean | undefined {
-			const declarations =
-				typeChecker.getSymbolAtLocation(identifier)?.declarations;
-			if (!declarations) {
-				return undefined;
-			}
-
-			const resolvedDeclarations = declarations.map(
-				(declaration) => declaration.resolve() as AST.AnyNode | undefined,
-			);
-			if (resolvedDeclarations.some((declaration) => !declaration)) {
-				return false;
-			}
-
-			return resolvedDeclarations.some(
-				(declaration) =>
-					!!declaration && isNamespaceImportDeclaration(declaration),
-			);
+		): boolean {
+			return !!typeChecker
+				.getSymbolAtLocation(identifier)
+				?.declarations.some((handle) => {
+					const declaration = handle.resolve() as AST.AnyNode | undefined;
+					return !!declaration && isNamespaceImportDeclaration(declaration);
+				});
 		}
 
 		return {

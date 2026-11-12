@@ -3,9 +3,9 @@ import path from "node:path";
 import { serverFS, type FileSystemCallbacks } from "typescript-native/fs";
 
 import type { LinterHost } from "@flint.fyi/core";
-import { getPathInsideDirectory } from "@flint.fyi/utils";
 
 import { createVirtualFiles, type VirtualFiles } from "./createVirtualFiles.ts";
+import { getPathInsideDirectory } from "./utils/isUnderDirectory.ts";
 
 export interface TypeScriptFileSystemOptions {
 	/**
@@ -26,16 +26,8 @@ export function createTypeScriptFileSystem(
 	virtualFiles: VirtualFiles = createVirtualFiles(),
 	{ diskBacked = false }: TypeScriptFileSystemOptions = {},
 ): FileSystemCallbacks {
-	const delegatedToDisk = {
-		realpath: serverFS.useOS,
-		removeFile: serverFS.useOS,
-		stat: serverFS.useOS,
-		writeFile: serverFS.useOS,
-	} as const;
-
 	if (diskBacked) {
 		return {
-			...delegatedToDisk,
 			directoryExists: serverFS.useOS,
 			fileExists: serverFS.useOS,
 			getAccessibleEntries: serverFS.useOS,
@@ -46,6 +38,10 @@ export function createTypeScriptFileSystem(
 				onFileAccess?.(fileName);
 				return virtualFiles.get(fileName) ?? serverFS.useOS;
 			},
+			realpath: serverFS.useOS,
+			removeFile: serverFS.useOS,
+			stat: serverFS.useOS,
+			writeFile: serverFS.useOS,
 		};
 	}
 
@@ -72,8 +68,9 @@ export function createTypeScriptFileSystem(
 		return { directories, files };
 	};
 
+	// Files that only exist in the host would stat as missing on the real disk,
+	// and nothing TypeScript writes should land there either.
 	return {
-		...delegatedToDisk,
 		directoryExists: (directoryName) => {
 			if (host.fileTypeSync(directoryName) === "directory") {
 				return true;
@@ -125,5 +122,9 @@ export function createTypeScriptFileSystem(
 			onFileAccess?.(fileName);
 			return virtualFiles.get(fileName) ?? host.readFileSync(fileName);
 		},
+		realpath: serverFS.useOS,
+		removeFile: serverFS.noop,
+		stat: serverFS.fakeStat,
+		writeFile: serverFS.noop,
 	};
 }

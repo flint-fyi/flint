@@ -3317,46 +3317,5 @@ export type UnaryExpression =
 	| TypeOfExpression
 	| VoidExpression;
 
-export type ExpressionParent =
-	| ArrayLiteralExpression
-	| ArrowFunction
-	| AsExpression
-	| BinaryExpression
-	| BindingElement
-	| CallExpression
-	| CaseClause
-	| ComputedPropertyName
-	| ConditionalExpression
-	| ElementAccessExpression
-	| EnumMember
-	| ExportAssignment
-	| ExportDeclaration
-	| ExpressionStatement
-	| ExternalModuleReference
-	| IfStatement
-	| ImportAttribute
-	| ImportDeclaration
-	| IterationStatement
-	| JsxExpression
-	| JsxSpreadAttribute
-	| NewExpression
-	| NonNullExpression
-	| ParameterDeclaration
-	| ParenthesizedExpression
-	| PartiallyEmittedExpression
-	| PropertyAssignment
-	| PropertyDeclaration
-	| ReturnStatement
-	| SatisfiesExpression
-	| ShorthandPropertyAssignment
-	| SpreadAssignment
-	| SpreadElement
-	| SwitchStatement
-	| TemplateSpan
-	| ThrowStatement
-	| TypeParameterDeclaration
-	| VariableDeclaration
-	| WithStatement
-	| YieldExpression;
 export type MethodSignature = MethodSignatureDeclaration;
 export type LeftHandSideExpressionParent = Expression | Decorator;

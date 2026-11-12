@@ -23,21 +23,16 @@ export function isTypeFromTS(
 
 		const symbol = type.getSymbol();
 
-		if (symbol?.name === typeName) {
-			const declarations = [];
-			for (const declarationHandle of symbol.declarations) {
-				const declaration = declarationHandle.resolve();
-				if (!declaration) {
-					return false;
-				}
-				declarations.push(declaration);
-			}
+		if (symbol?.name === typeName || symbol?.name === `${typeName}Base`) {
+			const isFlintBase = symbol.name !== typeName;
 
-			return declarations.some((declaration) => {
-				const fileName = declaration.getSourceFile().fileName;
+			return symbol.declarations.some((handle) => {
+				const fileName = handle.resolve()?.getSourceFile().fileName;
 				return (
-					fileName.includes("node_modules/typescript") &&
-					fileName.endsWith(".d.ts")
+					!!fileName &&
+					(isFlintBase
+						? isDeclaredByFlintAST(fileName)
+						: isDeclaredByTypeScript(fileName))
 				);
 			});
 		}
@@ -52,4 +47,17 @@ export function isTypeFromTS(
 	}
 
 	return check(type);
+}
+
+function isDeclaredByFlintAST(fileName: string): boolean {
+	return (
+		/[/\\]typescript-language[/\\]src[/\\]types[/\\]ast\.ts$/.test(fileName) ||
+		/[/\\]@flint\.fyi[/\\]typescript-language[/\\]dist[/\\].+\.d\.mts$/.test(
+			fileName,
+		)
+	);
+}
+
+function isDeclaredByTypeScript(fileName: string): boolean {
+	return /[/\\]node_modules[/\\]typescript[/\\].+\.d\.ts$/.test(fileName);
 }

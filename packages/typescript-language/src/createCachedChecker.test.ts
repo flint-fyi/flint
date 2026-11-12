@@ -12,6 +12,7 @@ import {
 import { createTypeScriptProjectSession } from "./createTypeScriptProjectSession.ts";
 import type * as AST from "./types/ast.ts";
 import { forEachChild } from "./utils/forEachChild.ts";
+import { getTypeProperty } from "./utils/getTypeProperty.ts";
 
 const configFilePath = "/repo/tsconfig.json";
 const indexFilePath = "/repo/src/index.ts";
@@ -38,7 +39,7 @@ function collectReferences(sourceFile: AST.SourceFile): AST.AnyNode[] {
 	return collectNodes(sourceFile, [SyntaxKind.Identifier]).filter(
 		(node) =>
 			node.parent.kind !== SyntaxKind.ImportSpecifier &&
-			!("name" in node.parent && node.parent.name === node),
+			(node.parent as { readonly name?: AST.Node }).name !== node,
 	);
 }
 
@@ -147,8 +148,8 @@ export const usesLegacy = legacy;
 describe(createCachedChecker, () => {
 	it("answers identifier lookups with the same symbols as the checker, from one request", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, spy } = fixture;
-		const prefetching = createCachedChecker(checker, indexFile);
+		const { batch, checker, indexFile, spy } = fixture;
+		const prefetching = createCachedChecker(checker, indexFile, batch);
 		const identifiers = collectReferences(indexFile);
 
 		expect(identifiers.length).toBeGreaterThan(3);
@@ -170,8 +171,8 @@ describe(createCachedChecker, () => {
 
 	it("prefetches property accesses and module specifiers too", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, spy } = fixture;
-		const prefetching = createCachedChecker(checker, indexFile);
+		const { batch, checker, indexFile, spy } = fixture;
+		const prefetching = createCachedChecker(checker, indexFile, batch);
 		const [propertyAccess] = collectNodes(indexFile, [
 			SyntaxKind.PropertyAccessExpression,
 		]);
@@ -194,9 +195,9 @@ describe(createCachedChecker, () => {
 
 	it("does not fetch anything until a symbol is requested", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, spy } = fixture;
+		const { batch, checker, indexFile, spy } = fixture;
 
-		const prefetching = createCachedChecker(checker, indexFile);
+		const prefetching = createCachedChecker(checker, indexFile, batch);
 		prefetching.getTypeAtLocation(
 			nullThrows(
 				collectNodes(indexFile, [SyntaxKind.Identifier])[0],
@@ -209,8 +210,8 @@ describe(createCachedChecker, () => {
 
 	it("passes nodes from other files and array lookups through", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, otherFile, spy } = fixture;
-		const prefetching = createCachedChecker(checker, indexFile);
+		const { batch, checker, indexFile, otherFile, spy } = fixture;
+		const prefetching = createCachedChecker(checker, indexFile, batch);
 		const otherIdentifiers = collectNodes(otherFile, [SyntaxKind.Identifier]);
 		const otherIdentifier = nullThrows(
 			otherIdentifiers[0],
@@ -230,8 +231,8 @@ describe(createCachedChecker, () => {
 
 	it("answers repeated type lookups from memory, then fetches a small file's expressions at once", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, typeSpy } = fixture;
-		const cached = createCachedChecker(checker, indexFile);
+		const { batch, checker, indexFile, typeSpy } = fixture;
+		const cached = createCachedChecker(checker, indexFile, batch);
 		const identifiers = collectReferences(indexFile);
 		const [first, second] = identifiers;
 		const firstIdentifier = nullThrows(first, "Expected an identifier.");
@@ -260,22 +261,24 @@ describe(createCachedChecker, () => {
 
 	it("shares memoized answers between wrappers of the same checker", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, otherFile, signatureSpy } = fixture;
+		const { batch, batchSpy, checker, indexFile, otherFile, signatureSpy } =
+			fixture;
 		const [call] = collectNodes(indexFile, [SyntaxKind.CallExpression]);
 		const callExpression = nullThrows(call, "Expected a call expression.");
-		const forIndex = createCachedChecker(checker, indexFile);
-		const forOther = createCachedChecker(checker, otherFile);
+		const forIndex = createCachedChecker(checker, indexFile, batch);
+		const forOther = createCachedChecker(checker, otherFile, batch);
 
 		const signature = forIndex.getResolvedSignature(callExpression);
 
 		expect(forOther.getResolvedSignature(callExpression)).toBe(signature);
-		expect(signatureSpy).toHaveBeenCalledExactlyOnceWith(callExpression);
+		expect(signatureSpy).not.toHaveBeenCalled();
+		expect(batchSpy).toHaveBeenCalledOnce();
 	});
 
-	it("leaves every other checker method intact", () => {
+	it("does not override checker methods when they have no cached form", () => {
 		using fixture = createFixture();
-		const { checker, indexFile } = fixture;
-		const prefetching = createCachedChecker(checker, indexFile);
+		const { batch, checker, indexFile } = fixture;
+		const prefetching = createCachedChecker(checker, indexFile, batch);
 		const [identifier] = collectNodes(indexFile, [SyntaxKind.Identifier]);
 		const symbol = nullThrows(
 			prefetching.getSymbolAtLocation(
@@ -284,15 +287,67 @@ describe(createCachedChecker, () => {
 			"Expected a symbol.",
 		);
 
-		expect(prefetching.getTypeOfSymbol(symbol)).toBe(
-			checker.getTypeOfSymbol(symbol),
-		);
+		const type = prefetching.getTypeOfSymbol(symbol);
+
+		expect(prefetching.typeToString(type)).toBe(checker.typeToString(type));
 		expect(symbol.getJsDocTags(prefetching)).toEqual([]);
+	});
+
+	it("does not attach generators to shared helpers when wrapping a checker", () => {
+		using fixture = createFixture();
+		const { batch, checker, indexFile } = fixture;
+
+		createCachedChecker(checker, indexFile, batch);
+
+		expect(getTypeProperty).not.toHaveProperty("gen");
+	});
+
+	it("looks up symbols one at a time when the prefetch fails", () => {
+		using fixture = createFixture();
+		const { batch, checker, indexFile, spy } = fixture;
+		const identifiers = collectReferences(indexFile);
+		const expected = identifiers.map((node) =>
+			checker.getSymbolAtLocation(node),
+		);
+		spy.mockClear();
+		spy.mockImplementationOnce(() => {
+			throw new Error("Prefetch failed.");
+		});
+		const cached = createCachedChecker(checker, indexFile, batch);
+
+		expect(identifiers.map((node) => cached.getSymbolAtLocation(node))).toEqual(
+			expected,
+		);
+		expect(spy).toHaveBeenCalledTimes(identifiers.length + 1);
+	});
+
+	it("looks up types one at a time when the prefetch fails", () => {
+		using fixture = createFixture();
+		const { batch, checker, indexFile, typeSpy } = fixture;
+		const identifiers = collectReferences(indexFile);
+		const expected = identifiers.map((node) => checker.getTypeAtLocation(node));
+		const getTypeAtLocation = nullThrows(
+			typeSpy.getMockImplementation(),
+			"Expected the checker's implementation.",
+		);
+		typeSpy.mockClear();
+		// The second lookup prefetches the file's types before asking alone.
+		typeSpy
+			.mockImplementationOnce(getTypeAtLocation)
+			.mockImplementationOnce(() => {
+				throw new Error("Prefetch failed.");
+			});
+		const cached = createCachedChecker(checker, indexFile, batch);
+
+		expect(identifiers.map((node) => cached.getTypeAtLocation(node))).toEqual(
+			expected,
+		);
+		expect(typeSpy).toHaveBeenCalledTimes(identifiers.length + 1);
 	});
 	it("looks up a declaration's name alone when it is asked about", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, spy } = fixture;
-		const cached = createCachedChecker(checker, indexFile);
+		const { batch, checker, indexFile, spy } = fixture;
+		const cached = createCachedChecker(checker, indexFile, batch);
 		const declarationName = nullThrows(
 			collectNodes(indexFile, [SyntaxKind.Identifier]).find(
 				(node) => node.parent.kind === SyntaxKind.VariableDeclaration,
@@ -400,8 +455,8 @@ describe(createCachedChecker, () => {
 
 	it("answers apparent types, base constraints, and array checks from type flags when it can", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, spies } = fixture;
-		const cached = createCachedChecker(checker, indexFile);
+		const { batch, checker, indexFile, spies } = fixture;
+		const cached = createCachedChecker(checker, indexFile, batch);
 		const typeOfFirst = (sourceFile: AST.SourceFile, kind: SyntaxKind) =>
 			checker.getTypeAtLocation(
 				nullThrows(
@@ -433,8 +488,8 @@ describe(createCachedChecker, () => {
 
 	it("answers a symbol's type away from where it can be narrowed from one request per symbol", () => {
 		using fixture = createFixture();
-		const { checker, indexFile, spies } = fixture;
-		const cached = createCachedChecker(checker, indexFile);
+		const { batch, checker, indexFile, spies } = fixture;
+		const cached = createCachedChecker(checker, indexFile, batch);
 		const [firstCall, secondCall] = collectNodes(indexFile, [
 			SyntaxKind.CallExpression,
 		]);

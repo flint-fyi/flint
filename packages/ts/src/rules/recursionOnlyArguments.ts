@@ -87,12 +87,8 @@ function isRecursiveCall(
 			current.kind === SyntaxKind.ConstructSignature ||
 			current.kind === SyntaxKind.FunctionType ||
 			current.kind === SyntaxKind.MethodSignature ||
-			(current.kind === SyntaxKind.SourceFile &&
-				current.externalModuleIndicator !== undefined)
+			current.kind === SyntaxKind.SourceFile
 		) {
-			return false;
-		}
-		if (current.kind === SyntaxKind.SourceFile) {
 			return false;
 		}
 	}
@@ -115,7 +111,7 @@ function isReferenceOnlyUsedInRecursion(
 	}
 
 	const argumentIndex = parent.arguments.findIndex(
-		(argument: AST.Expression) => argument === reference,
+		(argument) => argument === reference,
 	);
 
 	return argumentIndex === parameterIndex;

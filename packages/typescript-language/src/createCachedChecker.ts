@@ -9,7 +9,6 @@ import {
 	type JSDocTagInfo,
 	type ObjectType,
 	type Signature,
-	type SignatureKind,
 	type Symbol,
 	type Type,
 	type TypeReference,
@@ -51,15 +50,12 @@ const typePrefetchMaxExpressions = 4000;
 interface CheckerMemos {
 	aliasedBySymbol: WeakMap<Symbol, Symbol>;
 	apparentByPrimitiveFlags: Map<TypeFlags, Type>;
-	apparentByType: WeakMap<Type, Type>;
 	baseConstraintByType: WeakMap<Type, Type | undefined>;
 	immediateAliasedBySymbol: WeakMap<Symbol, Symbol | undefined>;
 	isArrayByTarget: Map<number, boolean>;
 	isArrayByType: WeakMap<Type, boolean>;
 	jsDocTagsBySymbol: WeakMap<Symbol, readonly JSDocTagInfo[]>;
-	returnTypeBySignature: WeakMap<Signature, Type>;
 	signatureByNode: WeakMap<Node, Signature>;
-	signaturesByType: WeakMap<Type, Map<SignatureKind, readonly Signature[]>>;
 	typeArgumentsByType: WeakMap<TypeReference, readonly Type[]>;
 	typeByNode: WeakMap<Node, Type>;
 	typeBySymbol: WeakMap<Symbol, Type>;
@@ -84,21 +80,22 @@ const primitiveApparentTypeFlags = [
 	TypeFlags.String | TypeFlags.StringLiteral,
 ];
 
+export type BatchRequests = <Result>(
+	generators: readonly APIRequestGenerator<Result>[],
+) => Result[];
+
 function getMemos(checker: Checker): CheckerMemos {
 	let memos = memosByChecker.get(checker);
 	if (!memos) {
 		memos = {
 			aliasedBySymbol: new WeakMap(),
 			apparentByPrimitiveFlags: new Map(),
-			apparentByType: new WeakMap(),
 			baseConstraintByType: new WeakMap(),
 			immediateAliasedBySymbol: new WeakMap(),
 			isArrayByTarget: new Map(),
 			isArrayByType: new WeakMap(),
 			jsDocTagsBySymbol: new WeakMap(),
-			returnTypeBySignature: new WeakMap(),
 			signatureByNode: new WeakMap(),
-			signaturesByType: new WeakMap(),
 			typeArgumentsByType: new WeakMap(),
 			typeByNode: new WeakMap(),
 			typeBySymbol: new WeakMap(),
@@ -122,25 +119,6 @@ function memoized<Key extends object, Value>(
 	return value;
 }
 
-function memoizedNested<Key extends object, SubKey, Value>(
-	cache: WeakMap<Key, Map<SubKey, Value>>,
-	key: Key,
-	subKey: SubKey,
-	compute: () => Value,
-): Value {
-	let values = cache.get(key);
-	if (!values) {
-		values = new Map();
-		cache.set(key, values);
-	}
-	if (values.has(subKey)) {
-		return values.get(subKey) as Value;
-	}
-	const value = compute();
-	values.set(subKey, value);
-	return value;
-}
-
 /**
  * Wraps a project's checker so that rules' queries cost as few requests to
  * the native process as possible.
@@ -160,14 +138,10 @@ function memoizedNested<Key extends object, SubKey, Value>(
  * Nothing is fetched until a rule asks, so files no rule queries cost
  * nothing extra, and every answer is exactly what the checker would return.
  */
-export type BatchRequests = <Result>(
-	generators: readonly APIRequestGenerator<Result>[],
-) => Result[];
-
 export function createCachedChecker(
 	checker: Checker,
 	sourceFile: AST.SourceFile,
-	batch?: BatchRequests,
+	batch: BatchRequests,
 ): Checker {
 	const memos = getMemos(checker);
 	let symbolsByNode: Map<Node, Symbol | undefined> | undefined;
@@ -188,10 +162,28 @@ export function createCachedChecker(
 		return nodes;
 	};
 
+	// Prefetches also ask after nodes and symbols no rule has asked about, so a
+	// failure answering any of them falls back to asking about each alone.
+	const tryPrefetch = <Result>(request: () => Result): Result | undefined => {
+		try {
+			return request();
+		} catch (error) {
+			log("Prefetching checker request failed; asking individually: %o", error);
+			return undefined;
+		}
+	};
+
+	const tryBatch = <Result>(
+		generators: readonly APIRequestGenerator<Result>[],
+	): Result[] | undefined =>
+		generators.length ? tryPrefetch(() => batch(generators)) : undefined;
+
 	const prefetchSymbols = (): Map<Node, Symbol | undefined> => {
 		const nodes = collectNodes(isSymbolPrefetched);
-		const symbols = checker.getSymbolAtLocation(nodes);
-		return new Map(nodes.map((node, index) => [node, symbols[index]]));
+		const symbols = tryPrefetch(() => checker.getSymbolAtLocation(nodes));
+		return new Map(
+			symbols && nodes.map((node, index) => [node, symbols[index]]),
+		);
 	};
 
 	// A property access resolves to the same symbol as its name, so only the
@@ -219,22 +211,6 @@ export function createCachedChecker(
 			? symbolsByNode.get(prefetchedNode)
 			: checker.getSymbolAtLocation(node);
 	}
-
-	// Batches also ask after nodes and symbols no rule has asked about, so a
-	// failure answering any of them falls back to asking about each alone.
-	const tryBatch = <Result>(
-		generators: readonly APIRequestGenerator<Result>[],
-	): Result[] | undefined => {
-		if (!batch || !generators.length) {
-			return undefined;
-		}
-		try {
-			return batch(generators);
-		} catch (error) {
-			log("Batched checker request failed; asking individually: %o", error);
-			return undefined;
-		}
-	};
 
 	let jsDocTagsPrefetched = false;
 
@@ -384,9 +360,9 @@ export function createCachedChecker(
 		if (!nodes.length) {
 			return;
 		}
-		const types = checker.getTypeAtLocation(nodes);
+		const types = tryPrefetch(() => checker.getTypeAtLocation(nodes));
 		for (const [index, node] of nodes.entries()) {
-			const type = types[index];
+			const type = types?.[index];
 			if (type) {
 				memos.typeByNode.set(node, type);
 			}
@@ -449,9 +425,7 @@ export function createCachedChecker(
 			(flags) => type.flags & flags,
 		);
 		if (primitiveFlags === undefined) {
-			return memoized(memos.apparentByType, type, () =>
-				checker.getApparentType(type),
-			);
+			return checker.getApparentType(type);
 		}
 		let apparentType = memos.apparentByPrimitiveFlags.get(primitiveFlags);
 		if (!apparentType) {
@@ -516,16 +490,9 @@ export function createCachedChecker(
 		getBaseConstraintOfType,
 		getImmediateAliasedSymbol,
 		getJsDocTagsOfSymbol,
-		getPropertyOfType: getTypeProperty,
+		getPropertyOfType: (type: Type, name: string) =>
+			getTypeProperty(type, name),
 		getResolvedSignature,
-		getReturnTypeOfSignature: (signature: Signature) =>
-			memoized(memos.returnTypeBySignature, signature, () =>
-				checker.getReturnTypeOfSignature(signature),
-			),
-		getSignaturesOfType: (type: Type, kind: SignatureKind) =>
-			memoizedNested(memos.signaturesByType, type, kind, () =>
-				checker.getSignaturesOfType(type, kind),
-			),
 		getSymbolAtLocation,
 		getTypeArguments: (type: TypeReference) =>
 			memoized(memos.typeArgumentsByType, type, () =>
@@ -616,7 +583,7 @@ function isValueIdentifier(node: AST.Identifier): boolean {
 		case SyntaxKind.ShorthandPropertyAssignment:
 			return true;
 		default:
-			return !("name" in parent) || parent.name !== node;
+			return (parent as { readonly name?: AST.Node }).name !== node;
 	}
 }
 

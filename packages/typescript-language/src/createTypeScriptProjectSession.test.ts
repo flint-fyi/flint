@@ -169,10 +169,12 @@ describe(createTypeScriptProjectSession, () => {
 		const host = createHost();
 		using session = createTypeScriptProjectSession(host);
 		session.update({ openProjects: [configFilePath] });
-		const unregister = registerTypeScriptContentMapper({
-			extensions: [".vue"],
-			packageName: "unused-mapper",
-		});
+		using unregister = {
+			[Symbol.dispose]: registerTypeScriptContentMapper({
+				extensions: [".vue"],
+				packageName: "unused-mapper",
+			}),
+		};
 
 		const mappedSnapshot = session.update({ openProjects: [configFilePath] });
 		const mappedProject = session.getProjectForFile("/repo/src/component.vue");
@@ -184,31 +186,6 @@ describe(createTypeScriptProjectSession, () => {
 			"export const value = 1;",
 		);
 		expect(mappedSnapshot.getProjects()).toContain(mappedProject);
-
-		expect(unregister()).toBe(true);
-		const authoredSnapshot = session.update({ openProjects: [configFilePath] });
-		expect(authoredSnapshot.getConfiguredProject(configFilePath)).toBeDefined();
-		expect(session.getProjectForFile(indexFilePath)).toBe(
-			authoredSnapshot.getDefaultProjectForFile(indexFilePath),
-		);
-	});
-
-	it("reopens authored projects when mappers are removed without repeated open projects", () => {
-		const host = createHost();
-		const unregister = registerTypeScriptContentMapper({
-			extensions: [".vue"],
-			packageName: "unused-mapper",
-		});
-		using session = createTypeScriptProjectSession(host);
-		session.update({ openProjects: [configFilePath] });
-
-		expect(unregister()).toBe(true);
-		const snapshot = session.update({});
-
-		expect(snapshot.getConfiguredProject(configFilePath)).toBeDefined();
-		expect(session.getProjectForFile(indexFilePath)).toBe(
-			snapshot.getDefaultProjectForFile(indexFilePath),
-		);
 	});
 
 	it("continues parsing an authored config through repeated edits", () => {
@@ -416,23 +393,7 @@ describe(createTypeScriptProjectSession, () => {
 		expect(() => firstChecker.getTypeAtPosition(indexFilePath, 0)).toThrow();
 	});
 
-	it("propagates created files", () => {
-		const host = createHost();
-		using session = createTypeScriptProjectSession(host);
-		session.update({ openProjects: [configFilePath] });
-		const createdFilePath = "/repo/src/created.ts";
-		host.vfsUpsertFile(createdFilePath, "export const created = true;");
-
-		const snapshot = session.update({ created: [createdFilePath] });
-
-		expect(
-			snapshot
-				.getConfiguredProject(configFilePath)
-				?.program.getSourceFile(createdFilePath)?.text,
-		).toBe("export const created = true;");
-	});
-
-	it("propagates deleted files", () => {
+	it("propagates deleted files when the host no longer has them", () => {
 		const host = createHost();
 		const deletedFilePath = "/repo/src/deleted.ts";
 		host.vfsUpsertFile(deletedFilePath, "export const deleted = true;");
@@ -440,7 +401,7 @@ describe(createTypeScriptProjectSession, () => {
 		session.update({ openProjects: [configFilePath] });
 		host.vfsDeleteFile(deletedFilePath);
 
-		const snapshot = session.update({ deleted: [deletedFilePath] });
+		const snapshot = session.update({});
 
 		expect(
 			snapshot

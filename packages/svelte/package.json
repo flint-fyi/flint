@@ -57,12 +57,7 @@
 				"node",
 				"./dist/content-mapper.mjs"
 			],
-			"dynamicConfig": true,
-			"compilerOptions": [
-				"jsx",
-				"module",
-				"moduleResolution"
-			]
+			"dynamicConfig": true
 		}
 	}
 }

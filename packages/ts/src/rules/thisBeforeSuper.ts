@@ -135,8 +135,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const hasExtends = parent.heritageClauses.some(
-						(clause: AST.HeritageClause) =>
-							clause.token === SyntaxKind.ExtendsKeyword,
+						(clause) => clause.token === SyntaxKind.ExtendsKeyword,
 					);
 
 					if (!hasExtends || !node.body) {

@@ -6,15 +6,17 @@ import type { ElementNode, ParentNode } from "@astrojs/compiler/types";
 import { astro2tsx } from "@astrojs/ts-plugin/dist/astro2tsx.js";
 
 import {
-	createContentMapperTransform,
+	createMappedOutput,
 	runContentMapper,
 	SpanMappingKind,
 	type ContentMapperProject,
-	type ContentMapperTransformSource,
 	type TransformParams,
 	type TransformResult,
 } from "@flint.fyi/content-mapper";
-import { getPositionOfColumnAndLine } from "@flint.fyi/core";
+import type { SourceFileWithLineMap } from "@flint.fyi/core";
+
+import { getAstroPointOffset } from "./getAstroPointOffset.ts";
+import { normalizeAstroMappings } from "./normalizeAstroMappings.ts";
 
 // The type files Astro's language server adds to every program that contains
 // `.astro` files: the `Astro` global and the JSX namespace its elements use.
@@ -26,14 +28,17 @@ export function openAstroProject(): ContentMapperProject {
 	return { transform: transformAstro };
 }
 
-export function transformAstro(params: TransformParams): TransformResult {
+export function transformAstro({
+	content,
+	fileName,
+}: TransformParams): TransformResult {
 	const { diagnostics: transformDiagnostics, virtualFile: serviceScript } =
-		astro2tsx(params.content, params.fileName);
+		astro2tsx(content, fileName);
 	// The imports go after the generated TSX so its mappings keep their offsets.
 	const text =
 		serviceScript.snapshot.getText(0, serviceScript.snapshot.getLength()) +
-		getAmbientTypeImports(params.fileName);
-	const { ast, diagnostics: parseDiagnostics } = parse(params.content, {
+		getAmbientTypeImports(fileName);
+	const { ast, diagnostics: parseDiagnostics } = parse(content, {
 		position: true,
 	});
 	const diagnostics = [
@@ -59,38 +64,27 @@ export function transformAstro(params: TransformParams): TransformResult {
 	);
 	const canonical = hasBlockingError
 		? { extension: ".tsx", mappings: [], text }
-		: createContentMapperTransform({
+		: createMappedOutput({
+				content,
 				extension: ".tsx",
-				mappings: normalizeAstroMappings(
-					serviceScript.mappings,
-					text,
-					params.content,
-				),
+				mappings: normalizeAstroMappings(serviceScript.mappings, text, content),
 				text,
-			})(params);
+			});
+	const source: SourceFileWithLineMap = { text: content };
 	return {
 		...canonical,
-		diagnostics: diagnostics.map((diagnostic) => {
-			const start = getPositionOfColumnAndLine(
-				{ text: params.content },
-				{
-					column: diagnostic.location.column - 1,
-					line: diagnostic.location.line - 1,
-				},
-			);
-			return {
-				code: diagnostic.code,
-				length: diagnostic.location.length,
-				messageText: `${diagnostic.text}${"hint" in diagnostic && diagnostic.hint ? ` (${diagnostic.hint})` : ""}`,
-				start,
-			};
-		}),
-		supplemental: collectScripts(ast).map(({ end, start }) => ({
+		diagnostics: diagnostics.map((diagnostic) => ({
+			code: diagnostic.code,
+			length: diagnostic.location.length,
+			messageText: `${diagnostic.text}${"hint" in diagnostic && diagnostic.hint ? ` (${diagnostic.hint})` : ""}`,
+			start: getAstroPointOffset(source, diagnostic.location),
+		})),
+		supplemental: collectScripts(ast, source).map(({ end, start }) => ({
 			extension: ".ts",
 			mappings: [
 				[0, end - start, start, end - start, SpanMappingKind.Verbatim],
 			],
-			text: params.content.slice(start, end),
+			text: content.slice(start, end),
 		})),
 	};
 }
@@ -101,6 +95,33 @@ export function transformAstro(params: TransformParams): TransformResult {
  * used because it also searches `NODE_PATH`, which package manager shims set
  * to directories unrelated to the linted project.
  */
+function collectScripts(
+	node: ParentNode,
+	source: SourceFileWithLineMap,
+): { end: number; start: number }[] {
+	const scripts: { end: number; start: number }[] = [];
+	for (const child of node.children) {
+		if (
+			child.type === "element" &&
+			child.name === "script" &&
+			isJavaScriptScript(child)
+		) {
+			for (const content of child.children) {
+				if (content.position?.end) {
+					scripts.push({
+						end: getAstroPointOffset(source, content.position.end),
+						start: getAstroPointOffset(source, content.position.start),
+					});
+				}
+			}
+		}
+		if ("children" in child) {
+			scripts.push(...collectScripts(child, source));
+		}
+	}
+	return scripts;
+}
+
 function findAstroPackageDirectory(directory: string): string | undefined {
 	let current = directory;
 	while (true) {
@@ -122,30 +143,6 @@ function findAstroPackageDirectory(directory: string): string | undefined {
  * installed gets no imports rather than a module-not-found error on every
  * component.
  */
-function collectScripts(node: ParentNode): { end: number; start: number }[] {
-	const scripts: { end: number; start: number }[] = [];
-	for (const child of node.children) {
-		if (
-			child.type === "element" &&
-			child.name === "script" &&
-			isJavaScriptScript(child)
-		) {
-			for (const content of child.children) {
-				if (content.position?.end) {
-					scripts.push({
-						end: content.position.end.offset,
-						start: content.position.start.offset,
-					});
-				}
-			}
-		}
-		if ("children" in child) {
-			scripts.push(...collectScripts(child));
-		}
-	}
-	return scripts;
-}
-
 function getAmbientTypeImports(fileName: string): string {
 	const directory = path.dirname(fileName);
 	let ambientTypeFiles = ambientTypeFilesByDirectory.get(directory);
@@ -176,72 +173,6 @@ function isJavaScriptScript(node: ElementNode): boolean {
 	return /^(?:(?:application|text)\/(?:x-)?(?:ecma|java|type)script|module)?$/i.test(
 		type.value.trim(),
 	);
-}
-
-function normalizeAstroMappings(
-	mappings: ContentMapperTransformSource["mappings"],
-	generatedText: string,
-	originalText: string,
-): ContentMapperTransformSource["mappings"] {
-	const flattened: {
-		data: ContentMapperTransformSource["mappings"][number]["data"];
-		exact: boolean;
-		generatedLength: number;
-		generatedOffset: number;
-		length: number;
-		sourceOffset: number;
-	}[] = [];
-	for (const mapping of mappings) {
-		for (const [index, generatedOffset] of mapping.generatedOffsets.entries()) {
-			const length = mapping.lengths[index];
-			const sourceOffset = mapping.sourceOffsets[index];
-			if (length === undefined || sourceOffset === undefined) {
-				throw new Error("Astro mapping arrays must have equal lengths");
-			}
-			const generatedLength = mapping.generatedLengths?.[index] ?? length;
-			flattened.push({
-				data: mapping.data,
-				exact:
-					generatedLength === length &&
-					generatedText.slice(
-						generatedOffset,
-						generatedOffset + generatedLength,
-					) === originalText.slice(sourceOffset, sourceOffset + length),
-				generatedLength,
-				generatedOffset,
-				length,
-				sourceOffset,
-			});
-		}
-	}
-	flattened.sort((left, right) => {
-		return (
-			Number(right.exact) - Number(left.exact) || right.length - left.length
-		);
-	});
-	const normalized: typeof flattened = [];
-	for (const mapping of flattened) {
-		const overlaps = normalized.some((selected) => {
-			return (
-				(mapping.sourceOffset !== selected.sourceOffset ||
-					mapping.length !== selected.length) &&
-				mapping.sourceOffset < selected.sourceOffset + selected.length &&
-				selected.sourceOffset < mapping.sourceOffset + mapping.length
-			);
-		});
-		if (!overlaps) {
-			normalized.push(mapping);
-		}
-	}
-	return normalized.map((mapping) => ({
-		data: mapping.data,
-		...(mapping.generatedLength !== mapping.length && {
-			generatedLengths: [mapping.generatedLength],
-		}),
-		generatedOffsets: [mapping.generatedOffset],
-		lengths: [mapping.length],
-		sourceOffsets: [mapping.sourceOffset],
-	}));
 }
 
 /** Starts the Astro content-mapper JSON-RPC server over stdio. */

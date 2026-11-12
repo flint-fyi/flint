@@ -6,9 +6,13 @@ import { decode } from "@jridgewell/sourcemap-codec";
 import { svelte2tsx } from "svelte2tsx";
 
 import {
-	createContentMapperTransform,
+	createMappedOutput,
+	SPAN_MAPPING_FEATURE_ALL,
+	SpanMappingFeature,
+	SpanMappingKind,
 	TRANSFORM_FAILURE_CODE,
 	type MapperDiagnostic,
+	type SpanMapping,
 	type TransformParams,
 	type TransformResult,
 } from "@flint.fyi/content-mapper";
@@ -25,17 +29,33 @@ const sveltePath = path.dirname(
 const svelte2tsxPath = path.dirname(
 	url.fileURLToPath(import.meta.resolve("svelte2tsx/package.json")),
 );
+const svelteHtmlPath = path.join(sveltePath, "svelte-html.d.ts");
+
+const globalTypeImports = [
+	path.join(svelte2tsxPath, "svelte-shims-v4.d.ts"),
+	path.join(svelte2tsxPath, "svelte-native-jsx.d.ts"),
+	fs.existsSync(svelteHtmlPath)
+		? svelteHtmlPath
+		: path.join(svelte2tsxPath, "svelte-jsx-v4.d.ts"),
+]
+	.map((file) => `import ${JSON.stringify(file)}`)
+	.join("\n");
+
+// svelte2tsx reshapes the component, so formatting and structural operations
+// on its output would not describe the authored file.
+const mappingFeatures =
+	SPAN_MAPPING_FEATURE_ALL &
+	~(
+		SpanMappingFeature.Formatting |
+		SpanMappingFeature.FoldingRanges |
+		SpanMappingFeature.SelectionRanges |
+		SpanMappingFeature.LinkedEditing |
+		SpanMappingFeature.DocumentSymbols
+	);
 
 export interface SvelteTransformOptions {
 	accessors?: boolean;
 	namespace?: string;
-}
-
-export function createSvelteTransform(
-	options: SvelteTransformOptions = {},
-): (params: TransformParams) => TransformResult {
-	return (params: TransformParams): TransformResult =>
-		transformSvelte(params, options);
 }
 
 export function transformSvelte(
@@ -52,19 +72,16 @@ export function transformSvelte(
 			isTsFile,
 			mode: "ts",
 		});
-		const mappings = sourceMapMappings(
+		return createMappedOutput({
 			content,
-			transformed.code,
-			transformed.map.mappings,
-		);
-		const text = `${transformed.code}\n\n${globalTypeFiles()
-			.map((file) => `import ${JSON.stringify(file)}`)
-			.join("\n")}`;
-		return createContentMapperTransform({
 			extension: ".tsx",
-			mappings,
-			text,
-		})({ content, fileName, projectHandle: "svelte" });
+			mappings: sourceMapMappings(
+				content,
+				transformed.code,
+				transformed.map.mappings,
+			),
+			text: `${transformed.code}\n\n${globalTypeImports}`,
+		});
 	} catch (error) {
 		return {
 			diagnostics: [errorToMapperDiagnostic(error, content.length)],
@@ -93,37 +110,14 @@ function errorToMapperDiagnostic(
 	};
 }
 
-function globalTypeFiles(): string[] {
-	const files = ["svelte-shims-v4.d.ts", "svelte-native-jsx.d.ts"];
-	const svelteHtmlPath = path.join(sveltePath, "svelte-html.d.ts");
-	if (fs.existsSync(svelteHtmlPath)) {
-		return [
-			...files.map((file) => path.resolve(svelte2tsxPath, file)),
-			svelteHtmlPath,
-		];
-	}
-	files.push("svelte-jsx-v4.d.ts");
-	return files.map((file) => path.resolve(svelte2tsxPath, file));
-}
-
 function sourceMapMappings(
 	content: string,
 	generated: string,
 	encodedMappings: string,
-) {
+): SpanMapping[] {
 	const source: SourceFileWithLineMap = { text: content };
 	const virtual: SourceFileWithLineMap = { text: generated };
-	const mappings: {
-		data: {
-			completion: true;
-			navigation: true;
-			semantic: true;
-			verification: true;
-		};
-		generatedOffsets: number[];
-		lengths: number[];
-		sourceOffsets: number[];
-	}[] = [];
+	const mappings: SpanMapping[] = [];
 	let previous: undefined | { generated: number; original: number };
 	for (const [generatedLine, segments] of decode(encodedMappings).entries()) {
 		for (const segment of segments) {
@@ -141,18 +135,23 @@ function sourceMapMappings(
 				) {
 					length += 1;
 				}
-				if (length > 0) {
-					mappings.push({
-						data: {
-							completion: true,
-							navigation: true,
-							semantic: true,
-							verification: true,
-						},
-						generatedOffsets: [previous.generated],
-						lengths: [length],
-						sourceOffsets: [previous.original],
-					});
+				const last = mappings.at(-1);
+				if (
+					last &&
+					last[0] + last[1] === previous.generated &&
+					last[2] + last[3] === previous.original
+				) {
+					last[1] += length;
+					last[3] += length;
+				} else if (length > 0) {
+					mappings.push([
+						previous.generated,
+						length,
+						previous.original,
+						length,
+						SpanMappingKind.Verbatim,
+						mappingFeatures,
+					]);
 				}
 			}
 			previous =
@@ -167,5 +166,24 @@ function sourceMapMappings(
 						};
 		}
 	}
-	return mappings;
+	// svelte2tsx's segments can fall between the halves of a surrogate pair,
+	// which no mapping endpoint may split.
+	return mappings.flatMap(([virtualStart, length, originalStart]) => {
+		const run = content.slice(originalStart, originalStart + length);
+		const leading = /^[\udc00-\udfff]/.test(run) ? 1 : 0;
+		const trimmedLength =
+			length - leading - (/[\ud800-\udbff]$/.test(run) ? 1 : 0);
+		return trimmedLength > 0
+			? [
+					[
+						virtualStart + leading,
+						trimmedLength,
+						originalStart + leading,
+						trimmedLength,
+						SpanMappingKind.Verbatim,
+						mappingFeatures,
+					],
+				]
+			: [];
+	});
 }

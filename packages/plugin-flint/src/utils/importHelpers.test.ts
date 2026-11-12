@@ -1,57 +1,23 @@
 import { describe, expect, it } from "vitest";
 
 import type { AST } from "@flint.fyi/typescript-language";
-import {
-	SyntaxKind,
-	type Node,
-} from "@flint.fyi/typescript-language/native/ast";
-import { serverFS } from "@flint.fyi/typescript-language/native/fs";
-import { API, JsxEmit } from "@flint.fyi/typescript-language/native/sync";
+import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import { createNativeSourceFile } from "@flint.fyi/typescript-language/test-utils";
 
 import {
 	isImportedBindingFromModule,
 	isImportedSpecifierFromModule,
 } from "./importHelpers.ts";
 
-const files = new Map<string, string>();
-const api = new API({
-	cwd: "/repo",
-	fs: {
-		directoryExists: serverFS.useOS,
-		fileExists: (fileName) => files.has(fileName),
-		getAccessibleEntries: serverFS.useOS,
-		readFile: (fileName) => files.get(fileName),
-		realpath: serverFS.useOS,
-		removeFile: serverFS.useOS,
-		stat: serverFS.useOS,
-		writeFile: serverFS.useOS,
-	},
-});
-let fileIndex = 0;
-
-function createNativeSourceFile(sourceText: string) {
-	const fileName = `/repo/test-${String(fileIndex++)}.ts`;
-	files.set(fileName, sourceText);
-	const program = api.createProgram([fileName], {
-		jsx: JsxEmit.Preserve,
-		noLib: true,
-	});
-	const sourceFile = program.getSourceFile(fileName);
-	if (!sourceFile) {
-		throw new Error(`Expected native program to contain ${fileName}.`);
-	}
-	return sourceFile;
-}
-
-function parseAndFind<T extends Node>(
+function parseAndFind<T extends AST.Node>(
 	code: string,
-	isMatch: (node: Node) => node is T,
+	isMatch: (node: AST.Node) => node is T,
 ): T {
 	const sourceFile = createNativeSourceFile(code);
 
 	let found: T | undefined;
 
-	function visit(node: Node): void {
+	function visit(node: AST.Node): void {
 		if (found) {
 			return;
 		}

@@ -12,6 +12,7 @@ import {
 } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getUnionConstituents } from "./utils/typeConstituents.ts";
 
 function couldBeNullish(type: Type): boolean {
 	if (type.isTypeParameter()) {
@@ -35,7 +36,7 @@ function getTypesIfNotLoose(
 		return;
 	}
 
-	return type.isUnionType() ? type.getTypes() : [type];
+	return getUnionConstituents(type);
 }
 
 function isConstAssertion(

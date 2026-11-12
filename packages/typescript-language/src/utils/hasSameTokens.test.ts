@@ -110,31 +110,40 @@ describe(hasSameTokens, () => {
 	});
 
 	it.each([
+		["template heads", "`first${value}`", "`second${value}`", ".ts"],
 		[
-			"interpolated template text",
-			"`first${value}`",
-			"`second${value}`",
+			"template middles",
+			"`${value}first${value}`",
+			"`${value}second${value}`",
 			".ts",
 		],
+		["template tails", "`${value}first`", "`${value}second`", ".ts"],
 		["JSX text", "<div>first</div>", "<div>second</div>", ".tsx"],
-	])("ignores differing %s", (_name, firstCode, secondCode, extension) => {
-		const sourceFile = createNativeSourceFile(
-			`const a = ${firstCode}; const b = ${secondCode};`,
-			extension,
-		);
-		const first = nullThrows(
-			sourceFile.statements[0],
-			"Expected the first variable statement.",
-		) as AST.AnyNode;
-		const second = nullThrows(
-			sourceFile.statements[1],
-			"Expected the second variable statement.",
-		) as AST.AnyNode;
+	])(
+		"returns false when %s differ",
+		(_name, firstCode, secondCode, extension) => {
+			const sourceFile = createNativeSourceFile(
+				`const a = ${firstCode}; const b = ${secondCode};`,
+				extension,
+			);
+			const first = nullThrows(
+				sourceFile.statements[0],
+				"Expected the first variable statement.",
+			) as AST.AnyNode;
+			const second = nullThrows(
+				sourceFile.statements[1],
+				"Expected the second variable statement.",
+			) as AST.AnyNode;
 
-		expect(
-			hasSameTokens(getInitializer(first), getInitializer(second), sourceFile),
-		).toBe(true);
-	});
+			expect(
+				hasSameTokens(
+					getInitializer(first),
+					getInitializer(second),
+					sourceFile,
+				),
+			).toBe(false);
+		},
+	);
 
 	function getInitializer(statement: AST.AnyNode): AST.AnyNode {
 		const declaration = nullThrows(

@@ -1,4 +1,4 @@
-import { execa, type Options } from "execa";
+import { execa } from "execa";
 
 import { normalizePath } from "@flint.fyi/utils";
 
@@ -7,8 +7,6 @@ export interface RunFlintResult {
 	stderr: string;
 	stdout: string;
 }
-
-type RunFlintOptions = Exclude<Options, { readonly encoding: string }>;
 
 /**
  * Normalizes CLI output for snapshot testing: converts backslashes to forward
@@ -32,19 +30,12 @@ export function normalizeOutput(stdout: string, cwd: string): string {
 export async function runFlint(
 	cwd: string,
 	args: string[] = [],
-	options: RunFlintOptions = {},
 ): Promise<RunFlintResult> {
 	const { exitCode, stderr, stdout } = await execa({
 		cwd,
 		env: { FORCE_COLOR: "1", GITHUB_ACTIONS: undefined },
 		preferLocal: true,
 		reject: false,
-		...options,
-		buffer: true,
-		encoding: "utf8",
-		lines: false,
-		stderr: "pipe",
-		stdout: "pipe",
 	})`flint ${args}`;
 
 	return { exitCode, stderr, stdout };

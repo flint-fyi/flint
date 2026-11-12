@@ -23,7 +23,7 @@ When a variable is only used once, prefer to inline it unless it includes multip
 
 ### Utilities
 
-Whenever you want to implement a helper/utility method, first check if an equivalent exists in the `typescript` package, or failing that `ts-api-utils`.
+Whenever you want to implement a helper/utility method, first check if an equivalent exists in `@flint.fyi/typescript-language`'s `src/utils/`, or failing that the TypeScript native API it re-exports from `@flint.fyi/typescript-language/native/*`.
 
 ## Documentation
 

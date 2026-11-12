@@ -1,6 +1,7 @@
 import { NodeFlags, SyntaxKind } from "typescript-native/ast";
 
 import type * as AST from "../types/ast.ts";
+import { forEachChild } from "./forEachChild.ts";
 import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
 
 export function hasSameTokens(
@@ -37,9 +38,7 @@ function getNodeIdentities(
 	const identities: string[] = [];
 	function visit(current: AST.AnyNode): void {
 		identities.push(getNodeIdentity(current, sourceFile));
-		current.forEachChild((child) => {
-			visit(child);
-		});
+		forEachChild(current, visit);
 		identities.push(subtreeEnd);
 	}
 	visit(node);
@@ -52,33 +51,29 @@ function getNodeIdentity(
 ): string {
 	switch (node.kind) {
 		case SyntaxKind.BigIntLiteral:
+		case SyntaxKind.Identifier:
+		case SyntaxKind.JsxText:
+		case SyntaxKind.NoSubstitutionTemplateLiteral:
+		case SyntaxKind.NumericLiteral:
+		case SyntaxKind.PrivateIdentifier:
+		case SyntaxKind.StringLiteral:
+		case SyntaxKind.TemplateHead:
+		case SyntaxKind.TemplateMiddle:
+		case SyntaxKind.TemplateTail:
 			return `${String(node.kind)}:${node.text}`;
 		case SyntaxKind.HeritageClause:
-			return `${String(node.kind)}:${String(node.token)}`;
-		case SyntaxKind.Identifier:
-			return `${String(node.kind)}:${node.text}`;
 		case SyntaxKind.ImportAttributes:
 			return `${String(node.kind)}:${String(node.token)}`;
 		case SyntaxKind.MetaProperty:
 			return `${String(node.kind)}:${String(node.keywordToken)}`;
 		case SyntaxKind.ModuleDeclaration:
 			return `${String(node.kind)}:${String(node.keyword)}`;
-		case SyntaxKind.NoSubstitutionTemplateLiteral:
-			return `${String(node.kind)}:${node.text}`;
-		case SyntaxKind.NumericLiteral:
-			return `${String(node.kind)}:${node.text}`;
 		case SyntaxKind.PostfixUnaryExpression:
-			return `${String(node.kind)}:${String(node.operator)}`;
 		case SyntaxKind.PrefixUnaryExpression:
-			return `${String(node.kind)}:${String(node.operator)}`;
-		case SyntaxKind.PrivateIdentifier:
-			return `${String(node.kind)}:${node.text}`;
-		case SyntaxKind.RegularExpressionLiteral:
-			return `${String(node.kind)}:${sourceFile.text.slice(node.getStart(sourceFile), node.end)}`;
-		case SyntaxKind.StringLiteral:
-			return `${String(node.kind)}:${node.text}`;
 		case SyntaxKind.TypeOperator:
 			return `${String(node.kind)}:${String(node.operator)}`;
+		case SyntaxKind.RegularExpressionLiteral:
+			return `${String(node.kind)}:${sourceFile.text.slice(node.getStart(sourceFile), node.end)}`;
 		case SyntaxKind.VariableDeclarationList:
 			return `${String(node.kind)}:${String(node.flags & NodeFlags.BlockScoped)}`;
 

@@ -20,28 +20,6 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 const contentMapperPackageName = "@flint.fyi/content-mapper";
 
-function getResolvedDeclarations(
-	typeChecker: Checker,
-	node: AST.Identifier,
-): AST.Declaration[] | undefined {
-	const declarationHandles =
-		typeChecker.getSymbolAtLocation(node)?.declarations;
-	if (!declarationHandles) {
-		return undefined;
-	}
-
-	const declarations: AST.Declaration[] = [];
-	for (const declarationHandle of declarationHandles) {
-		const declaration = declarationHandle.resolve();
-		if (!declaration) {
-			return undefined;
-		}
-		declarations.push(declaration as AST.Declaration);
-	}
-
-	return declarations;
-}
-
 function isContentMapperReportSourceCodeCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
@@ -49,15 +27,12 @@ function isContentMapperReportSourceCodeCall(
 	// import { reportSourceCode } from "@flint.fyi/content-mapper";
 	// reportSourceCode(...)
 	if (node.expression.kind === SyntaxKind.Identifier) {
-		return (
-			getResolvedDeclarations(typeChecker, node.expression)?.some(
-				(declaration) =>
-					isImportedSpecifierFromModule(
-						declaration,
-						contentMapperPackageName,
-						"reportSourceCode",
-					),
-			) ?? false
+		return someDeclaration(typeChecker, node.expression, (declaration) =>
+			isImportedSpecifierFromModule(
+				declaration,
+				contentMapperPackageName,
+				"reportSourceCode",
+			),
 		);
 	}
 
@@ -68,16 +43,29 @@ function isContentMapperReportSourceCodeCall(
 		node.expression.expression.kind === SyntaxKind.Identifier &&
 		node.expression.name.text === "reportSourceCode"
 	) {
-		return (
-			getResolvedDeclarations(typeChecker, node.expression.expression)?.some(
-				(declaration) =>
-					declaration.kind === SyntaxKind.NamespaceImport &&
-					isImportedBindingFromModule(declaration, contentMapperPackageName),
-			) ?? false
+		return someDeclaration(
+			typeChecker,
+			node.expression.expression,
+			(declaration) =>
+				declaration.kind === SyntaxKind.NamespaceImport &&
+				isImportedBindingFromModule(declaration, contentMapperPackageName),
 		);
 	}
 
 	return false;
+}
+
+function someDeclaration(
+	typeChecker: Checker,
+	node: AST.Identifier,
+	predicate: (declaration: AST.Declaration) => boolean,
+): boolean {
+	return !!typeChecker
+		.getSymbolAtLocation(node)
+		?.declarations.some((handle) => {
+			const declaration = handle.resolve() as AST.Declaration | undefined;
+			return !!declaration && predicate(declaration);
+		});
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

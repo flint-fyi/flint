@@ -1,10 +1,9 @@
 import type { Readable, Writable } from "node:stream";
 
 export interface ContentMapperProject {
-	close?: () => Promise<void> | void;
 	configIdentity?: string;
+	optionDiagnostics?: OptionDiagnostic[];
 	transform: ContentMapperTransform;
-	validateOptions?: () => OptionDiagnostic[];
 	watchedFiles?: string[];
 }
 export type ContentMapperTransform = (
@@ -61,8 +60,6 @@ export interface OptionDiagnostic {
 	messageText: string;
 	path: (number | string)[];
 }
-
-export type PositionEncoding = "utf-8" | "utf-16";
 
 /**
  * Diagnostic code reported when a content mapper's transform throws.

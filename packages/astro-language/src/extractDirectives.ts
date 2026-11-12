@@ -1,9 +1,15 @@
 import type { Node, RootNode } from "@astrojs/compiler/types";
 
+import type { SourceFileWithLineMap } from "@flint.fyi/core";
 import type { ExtractedDirective } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 
-export function extractDirectives(ast: RootNode): ExtractedDirective[] {
+import { getAstroPointOffset } from "./getAstroPointOffset.ts";
+
+export function extractDirectives(
+	ast: RootNode,
+	source: SourceFileWithLineMap,
+): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
 
 	function visit(node: Node) {
@@ -37,24 +43,25 @@ export function extractDirectives(ast: RootNode): ExtractedDirective[] {
 			position.end,
 			"Expected node.position.end to be defined",
 		);
+		const start = getAstroPointOffset(source, position.start);
 		directives.push({
 			range: {
 				begin: {
 					column: position.start.column - 1 + spaceLen,
 					line: position.start.line - 1,
-					raw: position.start.offset + spaceLen,
+					raw: start + spaceLen,
 				},
 				end:
 					end.line === position.start.line
 						? {
 								column: position.start.column - 1 + spaceLen + directiveLen,
 								line: end.line - 1,
-								raw: position.start.offset + spaceLen + directiveLen,
+								raw: start + spaceLen + directiveLen,
 							}
 						: {
 								column: end.column - 1,
 								line: end.line - 1,
-								raw: end.offset,
+								raw: getAstroPointOffset(source, end),
 							},
 			},
 			selection: nullThrows(

@@ -1,4 +1,4 @@
-import { NodeFlags, type Node, type NodeArray } from "typescript-native/ast";
+import { NodeFlags } from "typescript-native/ast";
 
 import type * as AST from "../types/ast.ts";
 import { getAuthoredNode } from "./getAuthoredNode.ts";
@@ -7,39 +7,16 @@ import { getAuthoredNode } from "./getAuthoredNode.ts";
  * `node.forEachChild`, without the nodes TypeScript reparses from JSDoc in
  * JavaScript files.
  */
-export function forEachChild<T>(
+export function forEachChild<Result>(
 	node: AST.AnyNode,
-	cbNode: (node: AST.AnyNode) => T | undefined,
-	cbNodes?: (nodes: readonly AST.AnyNode[]) => T | undefined,
-): T | undefined {
+	visitor: (node: AST.AnyNode) => Result | undefined,
+): Result | undefined {
 	if (!(node.flags & NodeFlags.JavaScriptFile)) {
-		return node.forEachChild(
-			(child: Node) => cbNode(child as AST.AnyNode),
-			cbNodes
-				? (children: NodeArray<Node>) =>
-						cbNodes(children as readonly AST.AnyNode[])
-				: undefined,
-		);
+		return node.forEachChild(visitor);
 	}
 
-	const visitAuthored = (child: Node): T | undefined => {
+	return node.forEachChild((child) => {
 		const authored = getAuthoredNode(child);
-		return authored && cbNode(authored as AST.AnyNode);
-	};
-
-	return node.forEachChild(
-		visitAuthored,
-		cbNodes
-			? (children: NodeArray<Node>) => {
-					const authored: AST.AnyNode[] = [];
-					for (const child of children) {
-						const authoredChild = getAuthoredNode(child);
-						if (authoredChild) {
-							authored.push(authoredChild as AST.AnyNode);
-						}
-					}
-					return cbNodes(authored);
-				}
-			: undefined,
-	);
+		return authored && visitor(authored as AST.AnyNode);
+	});
 }

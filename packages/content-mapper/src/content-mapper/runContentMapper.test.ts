@@ -1,28 +1,15 @@
+import { spawn } from "node:child_process";
 import { PassThrough, Writable } from "node:stream";
+import url from "node:url";
 
 import { describe, expect, test, vi } from "vitest";
 
-import {
-	createContentMapperTransform,
-	type ContentMapperTransformSource,
-} from "./createContentMapperTransform.ts";
-import {
-	SpanMappingFeature,
-	type JsonRpcResponse,
-	type RunContentMapperOptions,
-	type TransformResult,
+import type {
+	JsonRpcResponse,
+	RunContentMapperOptions,
+	TransformResult,
 } from "./protocol.ts";
 import { runContentMapper } from "./runContentMapper.ts";
-
-const NAVIGATION_FEATURES =
-	SpanMappingFeature.Definition |
-	SpanMappingFeature.TypeDefinition |
-	SpanMappingFeature.Implementation |
-	SpanMappingFeature.References |
-	SpanMappingFeature.DocumentHighlights |
-	SpanMappingFeature.Rename |
-	SpanMappingFeature.CallHierarchy |
-	SpanMappingFeature.CodeActions;
 
 interface ContentMapperServer {
 	completion: Promise<void>;
@@ -47,12 +34,10 @@ const responseBuffers = new WeakMap<PassThrough, ResponseBuffer>();
 
 async function initialize(
 	server: ContentMapperServer,
-	positionEncodings: string[] = ["utf-8"],
-): Promise<void> {
-	server.input.write(
-		frame(request(1, "initialize", { positionEncodings, protocolVersion: 1 })),
-	);
-	await nextResponse(server.output);
+	positionEncodings: string[] = ["utf-8", "utf-16"],
+): Promise<JsonRpcResponse> {
+	server.input.write(frame(request(1, "initialize", { positionEncodings })));
+	return await nextResponse(server.output);
 }
 
 async function nextResponse(output: PassThrough): Promise<JsonRpcResponse> {
@@ -105,13 +90,16 @@ async function nextResponse(output: PassThrough): Promise<JsonRpcResponse> {
 	}
 }
 
-async function open(server: ContentMapperServer): Promise<JsonRpcResponse> {
+async function open(
+	server: ContentMapperServer,
+	projectHandle = "project",
+): Promise<JsonRpcResponse> {
 	server.input.write(
 		frame(
 			request(2, "openProject", {
 				compilerOptions: {},
 				configFileName: "/tsconfig.json",
-				projectHandle: "project",
+				projectHandle,
 			}),
 		),
 	);
@@ -129,19 +117,12 @@ function startServer(options: RunContentMapperOptions): ContentMapperServer {
 	return { completion, input, output };
 }
 
-describe("runContentMapper", () => {
-	test("handles split and coalesced UTF-8 framed lifecycle requests", async () => {
-		const close = vi.fn();
-		const { completion, input, output } = startServer({
+describe(runContentMapper, () => {
+	test("handles split and coalesced framed lifecycle requests", async () => {
+		const server = startServer({
 			diagnosticSource: "flint",
 			openProject: ({ options }) => ({
-				close,
-				transform: ({ content }): TransformResult => ({
-					extension: ".ts",
-					mappings: [[0, content.length, 0, content.length, 0]],
-					text: content,
-				}),
-				validateOptions: () =>
+				optionDiagnostics:
 					options === "valid"
 						? []
 						: [
@@ -151,24 +132,27 @@ describe("runContentMapper", () => {
 									path: [],
 								},
 							],
+				transform: ({ content }): TransformResult => ({
+					extension: ".ts",
+					mappings: [[0, content.length, 0, content.length, 0]],
+					text: content,
+				}),
 			}),
 		});
-		const initialize = frame(
+		const initializeFrame = frame(
 			request(1, "initialize", {
 				locale: "en-US",
 				positionEncodings: ["utf-8", "utf-16"],
-				protocolVersion: 1,
 			}),
 		);
-		input.write(initialize.subarray(0, 7));
-		input.write(initialize.subarray(7));
-		expect((await nextResponse(output)).result).toEqual({
+		server.input.write(initializeFrame.subarray(0, 7));
+		server.input.write(initializeFrame.subarray(7));
+		expect((await nextResponse(server.output)).result).toEqual({
 			diagnosticSource: "flint",
-			positionEncoding: "utf-8",
-			protocolVersion: 1,
+			positionEncoding: "utf-16",
 		});
 
-		input.write(
+		server.input.write(
 			Buffer.concat([
 				frame(
 					request(2, "openProject", {
@@ -188,15 +172,17 @@ describe("runContentMapper", () => {
 				),
 			]),
 		);
-		expect((await nextResponse(output)).result).toEqual({
+		expect((await nextResponse(server.output)).result).toEqual({
 			configIdentity: "",
 			optionDiagnostics: [
 				{ code: 1, messageText: "Expected options to be valid", path: [] },
 			],
 		});
-		expect((await nextResponse(output)).result).toEqual({ configIdentity: "" });
+		expect((await nextResponse(server.output)).result).toEqual({
+			configIdentity: "",
+		});
 
-		input.write(
+		server.input.write(
 			frame(
 				request(4, "transform", {
 					content: "const café = '😀';",
@@ -205,21 +191,31 @@ describe("runContentMapper", () => {
 				}),
 			),
 		);
-		expect((await nextResponse(output)).result).toEqual({
+		expect((await nextResponse(server.output)).result).toEqual({
 			extension: ".ts",
-			mappings: [[0, 21, 0, 21, 0]],
+			mappings: [[0, 18, 0, 18, 0]],
 			text: "const café = '😀';",
 		});
-		input.write(frame(request(5, "closeProject", { projectHandle: "a" })));
-		expect((await nextResponse(output)).result).toBeNull();
-		expect(close).toHaveBeenCalledOnce();
-		input.end();
-		await completion;
-		expect(close).toHaveBeenCalledTimes(2);
+		server.input.write(
+			frame(request(5, "closeProject", { projectHandle: "a" })),
+		);
+		expect((await nextResponse(server.output)).result).toBeNull();
+		server.input.write(
+			frame(
+				request(6, "transform", {
+					content: "",
+					fileName: "/项目/a.vue",
+					projectHandle: "a",
+				}),
+			),
+		);
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_602);
+		server.input.end();
+		await server.completion;
 	});
 
 	test("isolates handles and reports malformed or unknown requests", async () => {
-		const { completion, input, output } = startServer({
+		const server = startServer({
 			diagnosticSource: "flint",
 			openProject: ({ projectHandle }) => ({
 				transform: (): TransformResult => ({
@@ -228,29 +224,10 @@ describe("runContentMapper", () => {
 				}),
 			}),
 		});
-		input.write(
-			frame(
-				request(1, "initialize", {
-					positionEncodings: ["utf-8"],
-					protocolVersion: 1,
-				}),
-			),
-		);
-		await nextResponse(output);
-		for (const projectHandle of ["a", "b"]) {
-			input.write(
-				frame(
-					request(2, "openProject", {
-						compilerOptions: {},
-						configFileName: "",
-						projectHandle,
-					}),
-				),
-			);
-			// flint-disable-next-line performance/loopAwaits
-			await nextResponse(output);
-		}
-		input.write(
+		await initialize(server);
+		await open(server, "a");
+		await open(server, "b");
+		server.input.write(
 			frame(
 				request(3, "transform", {
 					content: "",
@@ -259,19 +236,24 @@ describe("runContentMapper", () => {
 				}),
 			),
 		);
-		expect((await nextResponse(output)).result).toMatchObject({ text: "b" });
-		input.write(frame(request(4, "missing", {})));
-		expect((await nextResponse(output)).error?.code).toBe(-32_601);
-		input.write(frame(request(5, "transform", { projectHandle: "missing" })));
-		expect((await nextResponse(output)).error?.code).toBe(-32_602);
-		input.write(Buffer.from("Content-Length: 1\r\n\r\n{"));
-		expect((await nextResponse(output)).error?.code).toBe(-32_700);
-		input.end();
-		await completion;
+		expect((await nextResponse(server.output)).result).toMatchObject({
+			text: "b",
+		});
+		expect((await open(server, "a")).error?.code).toBe(-32_602);
+		server.input.write(frame(request(4, "missing", {})));
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_601);
+		server.input.write(
+			frame(request(5, "transform", { projectHandle: "missing" })),
+		);
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_602);
+		server.input.write(Buffer.from("Content-Length: 1\r\n\r\n{"));
+		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
+		server.input.end();
+		await server.completion;
 	});
 
 	test("turns transform failures into mapper diagnostics", async () => {
-		const { completion, input, output } = startServer({
+		const server = startServer({
 			diagnosticSource: "flint",
 			openProject: () => ({
 				transform: () => {
@@ -279,284 +261,45 @@ describe("runContentMapper", () => {
 				},
 			}),
 		});
-		input.write(
-			frame(
-				request(1, "initialize", {
-					positionEncodings: ["utf-8"],
-					protocolVersion: 1,
-				}),
-			),
-		);
-		await nextResponse(output);
-		input.write(
-			frame(
-				request(2, "openProject", {
-					compilerOptions: {},
-					configFileName: "",
-					projectHandle: "a",
-				}),
-			),
-		);
-		await nextResponse(output);
-		input.write(
+		await initialize(server);
+		await open(server);
+		server.input.write(
 			frame(
 				request(3, "transform", {
-					content: "bad",
+					content: "bad😀",
 					fileName: "/a.vue",
-					projectHandle: "a",
+					projectHandle: "project",
 				}),
 			),
 		);
-		expect((await nextResponse(output)).result).toEqual({
+		expect((await nextResponse(server.output)).result).toEqual({
 			diagnostics: [
-				{ code: 1, length: 3, messageText: "SFC parse failed", start: 0 },
+				{ code: 1, length: 5, messageText: "SFC parse failed", start: 0 },
 			],
 			extension: ".ts",
 			text: "",
 		});
-		input.end();
-		await completion;
-	});
-});
-
-describe("content mapper protocol", () => {
-	test("accepts the pinned nightly initialize request without a protocol version", async () => {
-		const server = startServer({
-			diagnosticSource: "flint",
-			openProject: () => ({
-				transform: () => ({ extension: ".ts", text: "" }),
-			}),
-		});
-		server.input.write(
-			frame(
-				request(1, "initialize", {
-					positionEncodings: ["utf-8", "utf-16"],
-				}),
-			),
-		);
-
-		expect((await nextResponse(server.output)).result).toEqual({
-			diagnosticSource: "flint",
-			positionEncoding: "utf-8",
-			protocolVersion: 1,
-		});
 		server.input.end();
 		await server.completion;
 	});
 
-	test("converts all result offsets to UTF-8, including supplemental outputs", async () => {
-		const { completion, input, output, ...server } = startServer({
-			diagnosticSource: "flint",
-			openProject: () => ({
-				transform: (): TransformResult => ({
-					diagnosticDirectives: {
-						directives: [[1, 3, 0, 3, 1, 7]],
-						unusedExpectDirectiveDiagnostics: [],
-					},
-					diagnostics: [{ length: 3, messageText: "issue", start: 1 }],
-					extension: ".ts",
-					mappings: [[0, 3, 1, 3, 1]],
-					supplemental: [
-						{
-							diagnosticDirectives: {
-								directives: [[1, 3, 0, 3, 0]],
-								unusedExpectDirectiveDiagnostics: [],
-							},
-							extension: ".tsx",
-							mappings: [[0, 3, 1, 3, 2, 0]],
-							text: "é😀B",
-						},
-					],
-					text: "é😀B",
-				}),
-			}),
-		});
-		const running = { completion, input, output, ...server };
-		await initialize(running);
-		await open(running);
-		input.write(
-			frame(
-				request(3, "transform", {
-					content: "Aé😀Z",
-					fileName: "/a.vue",
-					projectHandle: "project",
-				}),
-			),
-		);
-		expect((await nextResponse(output)).result).toEqual({
-			diagnosticDirectives: {
-				directives: [[1, 6, 0, 6, 1, 7]],
-				unusedExpectDirectiveDiagnostics: [],
-			},
-			diagnostics: [{ length: 6, messageText: "issue", start: 1 }],
-			extension: ".ts",
-			mappings: [[0, 6, 1, 6, 1]],
-			supplemental: [
-				{
-					diagnosticDirectives: {
-						directives: [[1, 6, 0, 6, 0]],
-						unusedExpectDirectiveDiagnostics: [],
-					},
-					extension: ".tsx",
-					mappings: [[0, 6, 1, 6, 2, 0]],
-					text: "é😀B",
-				},
-			],
-			text: "é😀B",
-		});
-		input.end();
-		await completion;
-	});
-
-	test("leaves UTF-16 offsets unchanged", async () => {
+	test("returns an error when the client does not offer utf-16 positions", async () => {
 		const server = startServer({
 			diagnosticSource: "flint",
-			openProject: () => ({
-				transform: () => ({
-					diagnostics: [{ length: 2, messageText: "issue", start: 1 }],
-					extension: ".ts",
-					mappings: [[1, 2, 1, 2, 0]],
-					text: "A😀Z",
-				}),
-			}),
+			openProject: vi.fn(),
 		});
-		await initialize(server, ["utf-16"]);
-		await open(server);
-		server.input.write(
-			frame(
-				request(3, "transform", {
-					content: "A😀Z",
-					fileName: "a.vue",
-					projectHandle: "project",
-				}),
-			),
-		);
-		expect((await nextResponse(server.output)).result).toMatchObject({
-			diagnostics: [{ length: 2, messageText: "issue", start: 1 }],
-			mappings: [[1, 2, 1, 2, 0]],
+
+		expect((await initialize(server, ["utf-8"])).error).toMatchObject({
+			code: -32_602,
+		});
+		expect((await initialize(server)).result).toEqual({
+			diagnosticSource: "flint",
+			positionEncoding: "utf-16",
+		});
+		expect((await initialize(server)).error).toMatchObject({
+			code: -32_600,
 		});
 		server.input.end();
-		await server.completion;
-	});
-
-	test.each([
-		[
-			"mapping start",
-			{ extension: ".ts", mappings: [[1, 0, 0, 0, 0]], text: "😀" },
-		],
-		[
-			"mapping end",
-			{ extension: ".ts", mappings: [[0, 1, 0, 0, 0]], text: "😀" },
-		],
-		[
-			"diagnostic start",
-			{
-				diagnostics: [{ length: 0, messageText: "issue", start: 1 }],
-				extension: ".ts",
-				text: "",
-			},
-		],
-		[
-			"diagnostic end",
-			{
-				diagnostics: [{ length: 1, messageText: "issue", start: 0 }],
-				extension: ".ts",
-				text: "",
-			},
-		],
-		[
-			"directive start",
-			{
-				diagnosticDirectives: {
-					directives: [[1, 0, 0, 0, 0]],
-					unusedExpectDirectiveDiagnostics: [],
-				},
-				extension: ".ts",
-				text: "",
-			},
-		],
-		[
-			"directive end",
-			{
-				diagnosticDirectives: {
-					directives: [[0, 1, 0, 0, 0]],
-					unusedExpectDirectiveDiagnostics: [],
-				},
-				extension: ".ts",
-				text: "",
-			},
-		],
-		[
-			"noninteger mapping offset",
-			{ extension: ".ts", mappings: [[0.5, 0, 0, 0, 0]], text: "😀" },
-		],
-		[
-			"negative mapping offset",
-			{ extension: ".ts", mappings: [[-1, 0, 0, 0, 0]], text: "😀" },
-		],
-		[
-			"out-of-bounds mapping end",
-			{ extension: ".ts", mappings: [[0, 3, 0, 0, 0]], text: "😀" },
-		],
-	] satisfies [string, TransformResult][])(
-		"rejects an invalid UTF-16 %s",
-		async (_name, result) => {
-			const server = startServer({
-				diagnosticSource: "flint",
-				openProject: () => ({ transform: (): TransformResult => result }),
-			});
-			await initialize(server);
-			await open(server);
-			server.input.end(
-				frame(
-					request(3, "transform", {
-						content: "😀",
-						fileName: "a.vue",
-						projectHandle: "project",
-					}),
-				),
-			);
-			expect((await nextResponse(server.output)).result).toMatchObject({
-				diagnostics: [{ code: 1, length: 4, start: 0 }],
-				extension: ".ts",
-				text: "",
-			});
-			await server.completion;
-		},
-	);
-
-	test("accepts all UTF-16 boundaries around astral characters", async () => {
-		const server = startServer({
-			diagnosticSource: "flint",
-			openProject: () => ({
-				transform: (): TransformResult => ({
-					diagnosticDirectives: {
-						directives: [[0, 2, 0, 2, 0]],
-						unusedExpectDirectiveDiagnostics: [],
-					},
-					diagnostics: [{ length: 2, messageText: "issue", start: 0 }],
-					extension: ".ts",
-					mappings: [[0, 2, 0, 2, 0]],
-					text: "😀",
-				}),
-			}),
-		});
-		await initialize(server);
-		await open(server);
-		server.input.end(
-			frame(
-				request(3, "transform", {
-					content: "😀",
-					fileName: "a.vue",
-					projectHandle: "project",
-				}),
-			),
-		);
-		expect((await nextResponse(server.output)).result).toMatchObject({
-			diagnosticDirectives: { directives: [[0, 4, 0, 4, 0]] },
-			diagnostics: [{ length: 4, start: 0 }],
-			mappings: [[0, 4, 0, 4, 0]],
-		});
 		await server.completion;
 	});
 
@@ -565,10 +308,10 @@ describe("content mapper protocol", () => {
 			diagnosticSource: "flint",
 			openProject: () => ({
 				configIdentity: "vue@1",
-				transform: () => ({ extension: ".ts", text: "" }),
-				validateOptions: () => [
+				optionDiagnostics: [
 					{ code: 12, messageText: "bad option", path: ["rules", 0] },
 				],
+				transform: () => ({ extension: ".ts", text: "" }),
 				watchedFiles: ["/config/vue.json"],
 			}),
 		});
@@ -584,210 +327,42 @@ describe("content mapper protocol", () => {
 		await server.completion;
 	});
 
-	test.each(["open", "validate", "close"])(
-		"returns an internal error when %s throws",
-		async (failure) => {
-			const close = vi.fn(() => {
-				if (failure === "close") {
-					throw new Error("close failed");
-				}
-			});
-			const server = startServer({
-				diagnosticSource: "flint",
-				openProject: () => {
-					if (failure === "open") {
-						throw new Error("open failed");
-					}
-					return {
-						close,
-						transform: () => ({ extension: ".ts", text: "" }),
-						validateOptions: () => {
-							if (failure === "validate") {
-								throw new Error("validate failed");
-							}
-							return [];
-						},
-					};
-				},
-			});
-			await initialize(server);
-			let response = await open(server);
-			if (failure === "close") {
-				server.input.write(
-					frame(
-						request("close-id", "closeProject", { projectHandle: "project" }),
-					),
-				);
-				response = await nextResponse(server.output);
-			}
-			expect(response).toMatchObject({
-				error: { code: -32_603, message: `${failure} failed` },
-				id: failure === "close" ? "close-id" : 2,
-			});
-			expect(close).toHaveBeenCalledTimes(failure === "open" ? 0 : 1);
-			server.input.end();
-			await server.completion;
-		},
-	);
-
-	test("recovers from malformed headers and JSON bodies", async () => {
+	test("returns an internal error when opening a project throws", async () => {
 		const server = startServer({
 			diagnosticSource: "flint",
-			openProject: () => ({
-				transform: () => ({ extension: ".ts", text: "" }),
-			}),
+			openProject: () => {
+				throw new Error("open failed");
+			},
 		});
-		server.input.write(
-			Buffer.concat([
-				Buffer.from("Bad: header\r\n\r\n"),
-				frame(
-					request(1, "initialize", {
-						positionEncodings: ["utf-8"],
-						protocolVersion: 1,
-					}),
-				),
-			]),
-		);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
-		expect((await nextResponse(server.output)).id).toBe(1);
-		server.input.write(
-			Buffer.concat([
-				Buffer.from("Content-Length: 1\r\n\r\n{"),
-				frame(request("valid", "missing", {})),
-			]),
-		);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
-		expect(await nextResponse(server.output)).toMatchObject({ id: "valid" });
+		await initialize(server);
+
+		expect(await open(server)).toMatchObject({
+			error: { code: -32_603, message: "open failed" },
+			id: 2,
+		});
 		server.input.end();
 		await server.completion;
 	});
 
-	test.each([
-		["incomplete header", Buffer.from("Content-Len")],
-		["incomplete body", Buffer.from("Content-Length: 4\r\n\r\n{")],
-	])("reports %s at EOF", async (_name, bytes) => {
+	test("throws when a frame has no Content-Length header", async () => {
 		const server = startServer({
 			diagnosticSource: "flint",
 			openProject: vi.fn(),
 		});
-		server.input.end(bytes);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
-		await server.completion;
+		server.input.end("Bad: header\r\n\r\n{}");
+
+		await expect(server.completion).rejects.toThrow(/Content-Length/);
 	});
 
-	test.each([0, 16 * 1024 * 1024 + 1])(
-		"rejects Content-Length %i",
-		async (length) => {
-			const server = startServer({
-				diagnosticSource: "flint",
-				openProject: vi.fn(),
-			});
-			server.input.end(`Content-Length: ${length}\r\n\r\n`);
-			expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
-			await server.completion;
-		},
-	);
-
-	test("bounds delimiter-free header growth and accepts a later frame", async () => {
+	test("throws when input ends in the middle of a frame", async () => {
 		const server = startServer({
 			diagnosticSource: "flint",
 			openProject: vi.fn(),
 		});
-		server.input.write("x".repeat(8193));
-		expect((await nextResponse(server.output)).error).toMatchObject({
-			code: -32_700,
-		});
-		server.input.write(
-			frame(
-				request(1, "initialize", {
-					positionEncodings: ["utf-8"],
-					protocolVersion: 1,
-				}),
-			),
-		);
-		expect((await nextResponse(server.output)).id).toBe(1);
-		server.input.end();
-		await server.completion;
-	});
+		server.input.end("Content-Length: 4\r\n\r\n{");
 
-	test("retains a split header marker after delimiter-free overflow", async () => {
-		const server = startServer({
-			diagnosticSource: "flint",
-			openProject: vi.fn(),
-		});
-		const validFrame = frame(
-			request(1, "initialize", {
-				positionEncodings: ["utf-8"],
-				protocolVersion: 1,
-			}),
-		);
-		const markerSplit = 11;
-		server.input.write(
-			Buffer.concat([
-				Buffer.from("x".repeat(8193)),
-				Buffer.from(
-					validFrame.subarray(0, markerSplit).toString().toLowerCase(),
-				),
-			]),
-		);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
-		server.input.end(validFrame.subarray(markerSplit));
-		expect((await nextResponse(server.output)).id).toBe(1);
-		await server.completion;
+		await expect(server.completion).rejects.toThrow(/middle of a frame/);
 	});
-
-	test("recovers a valid coalesced frame after an oversized garbage prefix", async () => {
-		const server = startServer({
-			diagnosticSource: "flint",
-			openProject: vi.fn(),
-		});
-		server.input.end(
-			Buffer.concat([
-				Buffer.from("x".repeat(8193)),
-				frame(
-					request(1, "initialize", {
-						positionEncodings: ["utf-8"],
-						protocolVersion: 1,
-					}),
-				),
-			]),
-		);
-		expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
-		expect((await nextResponse(server.output)).id).toBe(1);
-		await server.completion;
-	});
-
-	test.each(["coalesced", "split"])(
-		"recovers a lowercase %s frame after an oversized garbage prefix",
-		async (delivery) => {
-			const server = startServer({
-				diagnosticSource: "flint",
-				openProject: vi.fn(),
-			});
-			const validFrame = frame(
-				request(1, "initialize", {
-					positionEncodings: ["utf-8"],
-					protocolVersion: 1,
-				}),
-			);
-			const lowercaseFrame = Buffer.concat([
-				Buffer.from("content-length:"),
-				validFrame.subarray("Content-Length:".length),
-			]);
-			const prefix = Buffer.from("x".repeat(8193));
-			if (delivery === "split") {
-				server.input.write(
-					Buffer.concat([prefix, lowercaseFrame.subarray(0, 11)]),
-				);
-				server.input.end(lowercaseFrame.subarray(11));
-			} else {
-				server.input.end(Buffer.concat([prefix, lowercaseFrame]));
-			}
-			expect((await nextResponse(server.output)).error?.code).toBe(-32_700);
-			expect((await nextResponse(server.output)).id).toBe(1);
-			await server.completion;
-		},
-	);
 
 	test("preserves valid request IDs and rejects all invalid ID forms", async () => {
 		const server = startServer({
@@ -796,12 +371,7 @@ describe("content mapper protocol", () => {
 		});
 		server.input.write(
 			Buffer.concat([
-				frame(
-					request("text", "initialize", {
-						positionEncodings: ["utf-8"],
-						protocolVersion: 1,
-					}),
-				),
+				frame(request("text", "initialize", { positionEncodings: ["utf-16"] })),
 				frame({ id: 42, jsonrpc: "2.0", method: "missing", params: {} }),
 			]),
 		);
@@ -848,12 +418,7 @@ describe("content mapper protocol", () => {
 			output,
 		});
 		input.end(
-			frame(
-				request(1, "initialize", {
-					positionEncodings: ["utf-8"],
-					protocolVersion: 1,
-				}),
-			),
+			frame(request(1, "initialize", { positionEncodings: ["utf-16"] })),
 		);
 		await completion;
 		const bytes = Buffer.concat(chunks);
@@ -886,12 +451,7 @@ describe("content mapper protocol", () => {
 		});
 		input.end(
 			Buffer.concat([
-				frame(
-					request(1, "initialize", {
-						positionEncodings: ["utf-8"],
-						protocolVersion: 1,
-					}),
-				),
+				frame(request(1, "initialize", { positionEncodings: ["utf-16"] })),
 				frame(
 					request(2, "openProject", {
 						compilerOptions: {},
@@ -915,356 +475,83 @@ describe("content mapper protocol", () => {
 		await completion;
 	});
 
-	test("propagates output errors and closes open projects", async () => {
+	test("propagates output errors", async () => {
 		const input = new PassThrough();
-		const close = vi.fn();
 		let writes = 0;
 		const output = new Writable({
 			write(_chunk, _encoding, callback): void {
 				writes += 1;
-				callback(writes === 3 ? new Error("output failed") : undefined);
+				callback(writes === 2 ? new Error("output failed") : undefined);
 			},
 		});
 		const completion = runContentMapper({
 			diagnosticSource: "flint",
 			input,
-			openProject: () => ({
-				close,
-				transform: () => ({ extension: ".ts", text: "" }),
-			}),
+			openProject: vi.fn(),
 			output,
 		});
 		input.end(
 			Buffer.concat([
-				frame(
-					request(1, "initialize", {
-						positionEncodings: ["utf-8"],
-						protocolVersion: 1,
-					}),
-				),
-				frame(
-					request(2, "openProject", {
-						compilerOptions: {},
-						configFileName: "",
-						projectHandle: "project",
-					}),
-				),
-				frame(request(3, "missing", {})),
+				frame(request(1, "initialize", { positionEncodings: ["utf-16"] })),
+				frame(request(2, "missing", {})),
 			]),
 		);
 		await expect(completion).rejects.toThrow("output failed");
-		expect(close).toHaveBeenCalledOnce();
-	});
-});
-
-describe("createContentMapperTransform", () => {
-	test("flattens mapped ranges and excludes scaffolding", () => {
-		const source = "éfoo BAR";
-		const generated = "éfoo baz(); BAR";
-		const transform = createContentMapperTransform({
-			extension: ".ts",
-			mappings: [
-				{ generatedOffsets: [0, 12], lengths: [4, 3], sourceOffsets: [0, 5] },
-				{
-					generatedLengths: [3],
-					generatedOffsets: [5],
-					lengths: [0],
-					sourceOffsets: [4],
-				},
-			] as unknown as ContentMapperTransformSource["mappings"],
-			text: generated,
-		});
-		expect(
-			transform({ content: source, fileName: "/a.vue", projectHandle: "a" }),
-		).toEqual({
-			extension: ".ts",
-			mappings: [
-				[0, 4, 0, 4, 0],
-				[5, 3, 4, 0, 1],
-				[12, 3, 5, 3, 0],
-			],
-			text: generated,
-		});
 	});
 
-	test("preserves feature masks and validates mappings", () => {
-		const transform = createContentMapperTransform({
-			extension: ".ts",
-			mappings: [
-				{
-					data: {
-						completion: true,
-						format: true,
-						navigation: true,
-						semantic: true,
-						structure: true,
-						verification: true,
-					},
-					generatedOffsets: [0],
-					lengths: [1],
-					sourceOffsets: [0],
-				},
-				{
-					data: {},
-					generatedOffsets: [1],
-					lengths: [1],
-					sourceOffsets: [1],
-				},
-			],
-			text: "ab",
-		});
-		expect(
-			transform({ content: "ab", fileName: "a", projectHandle: "a" }),
-		).toEqual({
-			extension: ".ts",
-			mappings: [
-				[0, 1, 0, 1, 0],
-				[1, 1, 1, 1, 0, 0],
-			],
-			text: "ab",
-		});
-		expect(() =>
-			createContentMapperTransform({
-				extension: ".ts",
-				mappings: [
-					{
-						data: {},
-						generatedOffsets: [0, 1],
-						lengths: [1],
-						sourceOffsets: [0, 1],
-					},
-				],
-				text: "ab",
-			})({ content: "ab", fileName: "a", projectHandle: "a" }),
-		).toThrow(/parallel arrays/);
-	});
-
-	test.each([
-		[
-			"semantic highlight false",
-			{ semantic: { shouldHighlight: (): boolean => false } },
-			SpanMappingFeature.Hover |
-				SpanMappingFeature.InlayHints |
-				SpanMappingFeature.CodeLens,
-		],
-		[
-			"semantic highlight true",
-			{ semantic: { shouldHighlight: (): boolean => true } },
-			SpanMappingFeature.Hover |
-				SpanMappingFeature.InlayHints |
-				SpanMappingFeature.SemanticTokens |
-				SpanMappingFeature.CodeLens,
-		],
-		[
-			"navigation highlight false",
-			{ navigation: { shouldHighlight: (): boolean => false } },
-			NAVIGATION_FEATURES & ~SpanMappingFeature.DocumentHighlights,
-		],
-		[
-			"navigation highlight true",
-			{ navigation: { shouldHighlight: (): boolean => true } },
-			NAVIGATION_FEATURES,
-		],
-		[
-			"navigation rename false",
-			{ navigation: { shouldRename: (): boolean => false } },
-			NAVIGATION_FEATURES & ~SpanMappingFeature.Rename,
-		],
-		[
-			"navigation rename true",
-			{ navigation: { shouldRename: (): boolean => true } },
-			NAVIGATION_FEATURES,
-		],
-	] as const)("preserves %s callback semantics", (_name, data, expected) => {
-		const transform = createContentMapperTransform({
-			extension: ".ts",
-			mappings: [
-				{ data, generatedOffsets: [0], lengths: [1], sourceOffsets: [0] },
-			],
-			text: "a",
-		});
-		expect(
-			transform({ content: "a", fileName: "a", projectHandle: "a" }),
-		).toMatchObject({
-			mappings: [[0, 1, 0, 1, 0, expected]],
-		});
-	});
-});
-
-describe("createContentMapperTransform mapping validation", () => {
-	function transformMappings(
-		mappings: unknown[],
-		text = "abcdef",
-		content = "abcdef",
-	): () => unknown {
-		return () =>
-			createContentMapperTransform({
-				extension: ".ts",
-				mappings: mappings as ContentMapperTransformSource["mappings"],
-				text,
-			})({
-				content,
-				fileName: "a",
-				projectHandle: "a",
-			});
-	}
-
-	test("accepts exact duplicate original ranges at disjoint virtual ranges", () => {
-		expect(
-			transformMappings([
-				{ generatedOffsets: [0, 3], lengths: [2, 2], sourceOffsets: [0, 0] },
-			]),
-		).not.toThrow();
-	});
-
-	test.each([
-		["partial", [0, 1], [3, 3], undefined],
-		["contained", [0, 1], [4, 2], [2, 2]],
-	] as const)(
-		"rejects %s original overlaps",
-		(_name, sourceOffsets, lengths, generatedLengths) => {
-			expect(
-				transformMappings([
-					{
-						...(generatedLengths && {
-							generatedLengths: [...generatedLengths],
-						}),
-						generatedOffsets: [0, 3],
-						lengths: [...lengths],
-						sourceOffsets: [...sourceOffsets],
-					},
-				]),
-			).toThrow(/partially overlap/);
-		},
-	);
-
-	test("rejects generated overlap and accepts adjacent and zero-length ranges", () => {
-		expect(
-			transformMappings([
-				{ generatedOffsets: [0, 1], lengths: [2, 2], sourceOffsets: [0, 2] },
-			]),
-		).toThrow(/overlap at virtual/);
-		expect(
-			transformMappings([
-				{
-					generatedLengths: [2, 0, 2],
-					generatedOffsets: [0, 2, 2],
-					lengths: [2, 0, 2],
-					sourceOffsets: [0, 2, 2],
-				},
-			]),
-		).not.toThrow();
-	});
-
-	test("orders zero-length mappings before nonempty mappings at the same virtual start", () => {
-		expect(
-			transformMappings([
-				{
-					generatedLengths: [2, 0, 0],
-					generatedOffsets: [0, 0, 0],
-					lengths: [2, 0, 0],
-					sourceOffsets: [0, 2, 0],
-				},
-			])(),
-		).toMatchObject({
-			mappings: [
-				[0, 0, 0, 0, 0],
-				[0, 0, 2, 0, 0],
-				[0, 2, 0, 2, 0],
-			],
-		});
-	});
-
-	test.each([
-		{ generatedOffsets: [0, 1], lengths: [1], sourceOffsets: [0, 1] },
-		{ generatedOffsets: [0, 1], lengths: [1, 1], sourceOffsets: [0] },
-		{
-			generatedLengths: [1],
-			generatedOffsets: [0, 1],
-			lengths: [1, 1],
-			sourceOffsets: [0, 1],
-		},
-	])("rejects every parallel array mismatch form", (mapping) => {
-		expect(transformMappings([mapping])).toThrow(/parallel arrays/);
-	});
-
-	test.each([
-		["negative", -1, 1, 0, 1],
-		["noninteger", 0.5, 1, 0, 1],
-		["virtual out of bounds", 5, 2, 0, 1],
-		["original out of bounds", 0, 1, 5, 2],
-	] as const)(
-		"rejects %s ranges",
-		(_name, generatedStart, generatedLength, sourceStart, sourceLength) => {
-			expect(
-				transformMappings([
-					{
-						generatedLengths: [generatedLength],
-						generatedOffsets: [generatedStart],
-						lengths: [sourceLength],
-						sourceOffsets: [sourceStart],
-					},
-				]),
-			).toThrow(/invalid or out-of-bounds/);
-		},
-	);
-
-	test("uses verbatim only for identical text and atom otherwise", () => {
-		expect(
-			transformMappings(
-				[{ generatedOffsets: [0, 1], lengths: [1, 1], sourceOffsets: [0, 1] }],
-				"ab",
-				"ax",
-			)(),
-		).toMatchObject({
-			mappings: [
-				[0, 1, 0, 1, 0],
-				[1, 1, 1, 1, 1],
-			],
-		});
-	});
-
-	test("omits only the full feature mask and preserves zero and subsets", () => {
-		const result = createContentMapperTransform({
-			extension: ".ts",
-			mappings: [
-				{
-					data: {
-						completion: true,
-						format: true,
-						navigation: true,
-						semantic: true,
-						structure: true,
-						verification: true,
-					},
-					generatedOffsets: [0],
-					lengths: [1],
-					sourceOffsets: [0],
-				},
-				{ data: {}, generatedOffsets: [1], lengths: [1], sourceOffsets: [1] },
-				{
-					data: { semantic: true },
-					generatedOffsets: [2],
-					lengths: [1],
-					sourceOffsets: [2],
-				},
-			],
-			text: "abc",
-		})({ content: "abc", fileName: "a", projectHandle: "a" });
-		expect(result.mappings).toEqual([
-			[0, 1, 0, 1, 0],
-			[1, 1, 1, 1, 0, 0],
+	test("does not write console output to stdout when serving over stdout", async () => {
+		const child = spawn(
+			process.execPath,
 			[
-				2,
-				1,
-				2,
-				1,
-				0,
-				SpanMappingFeature.Hover |
-					SpanMappingFeature.InlayHints |
-					SpanMappingFeature.SemanticTokens |
-					SpanMappingFeature.CodeLens,
+				"--input-type=module",
+				"--eval",
+				`
+					import { runContentMapper } from ${JSON.stringify(url.pathToFileURL(`${import.meta.dirname}/runContentMapper.ts`).href)};
+					await runContentMapper({
+						diagnosticSource: "flint",
+						openProject: () => {
+							console.log("logged from a config");
+							process.stdout.write("written from a config");
+							return { transform: () => ({ extension: ".ts", text: "" }) };
+						},
+					});
+				`,
 			],
-		]);
+			{ stdio: "pipe" },
+		);
+		const stdout: Buffer[] = [];
+		const stderr: Buffer[] = [];
+		child.stdout.on("data", (chunk: Buffer) => stdout.push(chunk));
+		child.stderr.on("data", (chunk: Buffer) => stderr.push(chunk));
+		const exitCode = new Promise<null | number>((resolve) => {
+			child.on("close", resolve);
+		});
+		child.stdin.end(
+			Buffer.concat([
+				frame(request(1, "initialize", { positionEncodings: ["utf-16"] })),
+				frame(
+					request(2, "openProject", {
+						compilerOptions: {},
+						configFileName: "/tsconfig.json",
+						projectHandle: "project",
+					}),
+				),
+			]),
+		);
+
+		expect(await exitCode).toBe(0);
+		expect(Buffer.concat(stdout).toString()).toBe(
+			Buffer.concat([
+				frame({
+					id: 1,
+					jsonrpc: "2.0",
+					result: { diagnosticSource: "flint", positionEncoding: "utf-16" },
+				}),
+				frame({ id: 2, jsonrpc: "2.0", result: { configIdentity: "" } }),
+			]).toString(),
+		);
+		expect(Buffer.concat(stderr).toString()).toContain(
+			"logged from a config\nwritten from a config",
+		);
 	});
 });

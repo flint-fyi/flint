@@ -3,7 +3,10 @@ import {
 	isGlobalVariable,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -34,8 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
-						node.operatorToken.kind >= SyntaxKind.FirstAssignment &&
-						node.operatorToken.kind <= SyntaxKind.LastAssignment &&
+						isAssignmentOperator(node.operatorToken.kind) &&
 						isGlobalVariable(node.left, typeChecker, program)
 					) {
 						context.report({

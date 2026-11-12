@@ -127,19 +127,8 @@ export class RuleTester {
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
 		);
-		const afterAllSetup = afterAll ?? getSetupFromScope(scope, "afterAll");
-		if (!afterAllSetup) {
-			// Language file factories may hold onto resources such as native
-			// sessions, so an afterAll hook is required to dispose them.
-			throw new Error("No afterAll function found");
-		}
-
-		let disposed = false;
+		const afterAllSetup = defaultTo(afterAll, scope, "afterAll");
 		afterAllSetup(() => {
-			if (disposed) {
-				return;
-			}
-			disposed = true;
 			const resources = new DisposableStack();
 			for (const [, fileFactory] of this.#fileFactories.entries()) {
 				resources.use(fileFactory);
@@ -344,57 +333,20 @@ function assertNoLanguageReports(languageReports: LanguageReports) {
 	}
 }
 
-function defaultTo(
-	provided: TesterSetupDescribe | undefined,
+function defaultTo<
+	TesterSetup extends TesterSetupAfterAll | TesterSetupDescribe | TesterSetupIt,
+>(
+	provided: TesterSetup | undefined,
 	scope: Record<string, unknown>,
-	scopeKey: "describe",
-): TesterSetupDescribe;
-function defaultTo(
-	provided: TesterSetupIt | undefined,
-	scope: Record<string, unknown>,
-	scopeKey: "it",
-): TesterSetupIt;
-function defaultTo(
-	provided: TesterSetupDescribe | TesterSetupIt | undefined,
-	scope: Record<string, unknown>,
-	scopeKey: "describe" | "it",
-): TesterSetupDescribe | TesterSetupIt {
+	scopeKey: string,
+): TesterSetup {
 	if (provided) {
 		return provided;
 	}
 
-	const setupFromScope = getSetupFromScope(scope, scopeKey);
-	if (setupFromScope) {
-		return setupFromScope;
+	if (scopeKey in scope && typeof scope[scopeKey] === "function") {
+		return scope[scopeKey] as TesterSetup;
 	}
 
 	throw new Error(`No ${scopeKey} function found`);
-}
-
-function getSetupFromScope(
-	scope: Record<string, unknown>,
-	scopeKey: "afterAll",
-): TesterSetupAfterAll | undefined;
-function getSetupFromScope(
-	scope: Record<string, unknown>,
-	scopeKey: "describe",
-): TesterSetupDescribe | undefined;
-function getSetupFromScope(
-	scope: Record<string, unknown>,
-	scopeKey: "it",
-): TesterSetupIt | undefined;
-function getSetupFromScope(
-	scope: Record<string, unknown>,
-	scopeKey: "describe" | "it",
-): TesterSetupDescribe | TesterSetupIt | undefined;
-function getSetupFromScope(
-	scope: Record<string, unknown>,
-	scopeKey: "afterAll" | "describe" | "it",
-): TesterSetupAfterAll | TesterSetupDescribe | TesterSetupIt | undefined {
-	return scopeKey in scope && typeof scope[scopeKey] === "function"
-		? (scope[scopeKey] as
-				| TesterSetupAfterAll
-				| TesterSetupDescribe
-				| TesterSetupIt)
-		: undefined;
 }

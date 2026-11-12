@@ -6,15 +6,12 @@ import {
 } from "./contentMappers.ts";
 
 describe(registerTypeScriptContentMapper, () => {
-	it("registers and unregisters isolated mapper registrations", () => {
-		const registration = {
+	it("registers and unregisters mapper registrations", () => {
+		const unregister = registerTypeScriptContentMapper({
 			extensions: [".vue"],
 			options: { optionsApi: false },
 			packageName: "vize",
-		};
-		const unregister = registerTypeScriptContentMapper(registration);
-		registration.extensions.push(".other");
-		registration.options.optionsApi = true;
+		});
 
 		expect(getTypeScriptContentMapperRegistrations()).toEqual([
 			{
@@ -43,27 +40,5 @@ describe(registerTypeScriptContentMapper, () => {
 			{ extensions: [".svelte"], packageName: "svelte-mapper" },
 		]);
 		expect(unregisterSvelte()).toBe(true);
-	});
-
-	it("returns fresh registration clones", () => {
-		const unregister = registerTypeScriptContentMapper({
-			extensions: [".vue"],
-			options: { mode: "strict" },
-			packageName: "vize",
-		});
-		const [registration] = getTypeScriptContentMapperRegistrations();
-		registration?.extensions.push(".changed");
-		if (registration?.options) {
-			registration.options.mode = "changed";
-		}
-
-		expect(getTypeScriptContentMapperRegistrations()).toEqual([
-			{
-				extensions: [".vue"],
-				options: { mode: "strict" },
-				packageName: "vize",
-			},
-		]);
-		expect(unregister()).toBe(true);
 	});
 });

@@ -1,3 +1,4 @@
+import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	findTokenInRange,
 	forEachChild,
@@ -32,6 +33,22 @@ function containsSuperCall(node: AST.AnyNode): boolean {
 	}
 
 	return forEachChild(node, containsSuperCall) ?? false;
+}
+
+function getConstructorNameRange(
+	constructor: AST.ConstructorDeclaration,
+	sourceFile: AST.SourceFile,
+): CharacterReportRange {
+	const begin = constructor.getStart(sourceFile);
+	const end = constructor.parameters.pos;
+
+	return (
+		findTokenInRange(sourceFile, SyntaxKind.ConstructorKeyword, begin, end) ??
+		findTokenInRange(sourceFile, SyntaxKind.StringLiteral, begin, end) ?? {
+			begin,
+			end,
+		}
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -80,19 +97,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const hasSuperCall = containsSuperCall(constructor.body);
 
 			if (isDerivedClass && !hasSuperCall) {
-				const constructorKeyword = findTokenInRange(
-					sourceFile,
-					SyntaxKind.ConstructorKeyword,
-					constructor.getStart(sourceFile),
-					constructor.getEnd(),
-				);
-				if (!constructorKeyword) {
-					return;
-				}
-
 				context.report({
 					message: "missingSuperCall",
-					range: constructorKeyword,
+					range: getConstructorNameRange(constructor, sourceFile),
 				});
 			}
 

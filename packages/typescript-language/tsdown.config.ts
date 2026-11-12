@@ -8,8 +8,6 @@ const config: UserConfig = defineConfig({
 		"src/index.ts",
 		"src/native/ast.ts",
 		"src/native/fs.ts",
-		"src/native/path.ts",
-		"src/native/scanner.ts",
 		"src/native/sync.ts",
 	],
 });

@@ -1,11 +1,9 @@
-import path from "node:path";
-
 import { resolve } from "pathe";
 
 import type { LinterHost } from "@flint.fyi/core";
 import { pathKey } from "@flint.fyi/utils";
 
-const configFileNames = ["tsconfig.json", "jsconfig.json"];
+import { findNearestConfigFile } from "./findNearestConfigFile.ts";
 
 /**
  * Orders files so that files sharing a nearest TypeScript config are linted
@@ -28,77 +26,31 @@ export function orderTypeScriptFilePaths(
 	const caseSensitiveFileSystem = host.isCaseSensitiveFS();
 	const currentDirectory = host.getCurrentDirectory();
 
-	const configByDirectory = new Map<string, string | undefined>();
-	const findConfigFile = (filePath: string): string | undefined => {
-		let directory = path.dirname(filePath);
-		const walked: string[] = [];
-		while (true) {
-			const cached = configByDirectory.get(directory);
-			if (cached !== undefined || configByDirectory.has(directory)) {
-				for (const walkedDirectory of walked) {
-					configByDirectory.set(walkedDirectory, cached);
-				}
-				return cached;
-			}
-			walked.push(directory);
+	const configFilePathByDirectory = new Map<string, string | undefined>();
 
-			let configFilePath: string | undefined;
-			for (const configName of configFileNames) {
-				const candidate = path.join(directory, configName);
-				if (host.fileTypeSync(candidate) === "file") {
-					configFilePath = candidate;
-					break;
-				}
-			}
-			if (configFilePath) {
-				for (const walkedDirectory of walked) {
-					configByDirectory.set(walkedDirectory, configFilePath);
-				}
-				return configFilePath;
-			}
-
-			const parent = path.dirname(directory);
-			if (parent === directory) {
-				for (const walkedDirectory of walked) {
-					configByDirectory.set(walkedDirectory, undefined);
-				}
-				return undefined;
-			}
-			directory = parent;
-		}
-	};
-
-	const absolutePaths = new Map(
-		filePaths.map((filePath) => [
-			filePath,
-			resolve(currentDirectory, filePath),
-		]),
-	);
-	const configKeyByFilePath = new Map(
-		filePaths.map((filePath) => {
-			const configFilePath = findConfigFile(
-				absolutePaths.get(filePath) ?? filePath,
+	return filePaths
+		.map((filePath) => {
+			const absolutePath = resolve(currentDirectory, filePath);
+			const configFilePath = findNearestConfigFile(
+				host,
+				absolutePath,
+				configFilePathByDirectory,
 			);
-			return [
+			return {
+				// Files with no config sort last.
+				configKey:
+					configFilePath === undefined
+						? "\uffff"
+						: pathKey(configFilePath, caseSensitiveFileSystem),
+				fileKey: pathKey(absolutePath, caseSensitiveFileSystem),
 				filePath,
-				configFilePath == null
-					? "￿"
-					: pathKey(configFilePath, caseSensitiveFileSystem),
-			];
-		}),
-	);
-
-	return filePaths.toSorted((left, right) => {
-		const leftConfig = configKeyByFilePath.get(left) ?? "￿";
-		const rightConfig = configKeyByFilePath.get(right) ?? "￿";
-		if (leftConfig !== rightConfig) {
-			return leftConfig < rightConfig ? -1 : 1;
-		}
-		return pathKey(
-			absolutePaths.get(left) ?? left,
-			caseSensitiveFileSystem,
-		).localeCompare(
-			pathKey(absolutePaths.get(right) ?? right, caseSensitiveFileSystem),
-		);
-	});
+			};
+		})
+		.toSorted((left, right) => {
+			if (left.configKey !== right.configKey) {
+				return left.configKey < right.configKey ? -1 : 1;
+			}
+			return left.fileKey.localeCompare(right.fileKey);
+		})
+		.map(({ filePath }) => filePath);
 }

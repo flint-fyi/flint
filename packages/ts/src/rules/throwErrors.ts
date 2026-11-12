@@ -13,6 +13,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { getUnionConstituents } from "./utils/typeConstituents.ts";
 
 function isBuiltinErrorType(type: Type, program: Program): boolean {
 	const symbol = type.getSymbol();
@@ -106,11 +107,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// TODO: Consider using getStaticValue once available
 					// https://github.com/flint-fyi/flint/issues/1298
 					if (
-						type.isUnionType()
-							? type
-									.getTypes()
-									.every((type) => (type.flags & TypeFlags.Undefined) !== 0)
-							: (type.flags & TypeFlags.Undefined) !== 0
+						getUnionConstituents(type).every(
+							(constituent) => (constituent.flags & TypeFlags.Undefined) !== 0,
+						)
 					) {
 						context.report({
 							message: "throwUndefined",

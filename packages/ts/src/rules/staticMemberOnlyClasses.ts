@@ -22,8 +22,7 @@ function hasDecorators(node: AST.ClassDeclaration | AST.ClassExpression) {
 function hasExtendsClause(node: AST.ClassDeclaration | AST.ClassExpression) {
 	return (
 		node.heritageClauses?.some(
-			(clause: AST.HeritageClause) =>
-				clause.token === SyntaxKind.ExtendsKeyword,
+			(clause) => clause.token === SyntaxKind.ExtendsKeyword,
 		) ?? false
 	);
 }
@@ -31,8 +30,7 @@ function hasExtendsClause(node: AST.ClassDeclaration | AST.ClassExpression) {
 function hasPrivateConstructor(node: AST.ConstructorDeclaration) {
 	return (
 		node.modifiers?.some(
-			(modifier: AST.ModifierLike) =>
-				modifier.kind === SyntaxKind.PrivateKeyword,
+			(modifier) => modifier.kind === SyntaxKind.PrivateKeyword,
 		) ?? false
 	);
 }
@@ -47,8 +45,7 @@ function hasStaticModifier(modifiers: NodeArray<AST.ModifierLike> | undefined) {
 function isAbstractClass(node: AST.ClassDeclaration | AST.ClassExpression) {
 	return (
 		node.modifiers?.some(
-			(modifier: AST.ModifierLike) =>
-				modifier.kind === SyntaxKind.AbstractKeyword,
+			(modifier) => modifier.kind === SyntaxKind.AbstractKeyword,
 		) ?? false
 	);
 }

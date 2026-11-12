@@ -1,6 +1,5 @@
 export {
 	createContentMapperRegistrar,
-	registerTypeScriptContentMapper,
 	type TypeScriptContentMapperRegistration,
 } from "./contentMappers.ts";
 export {
@@ -13,15 +12,6 @@ export {
 	type NodeVisitorSubscriptions,
 } from "./createNodeVisitorsForFile.ts";
 export {
-	createTypeScriptOverlayConfig,
-	type TypeScriptOverlayConfig,
-} from "./createTypeScriptOverlayConfig.ts";
-export {
-	createTypeScriptProjectSession,
-	type TypeScriptProjectChanges,
-	type TypeScriptProjectSession,
-} from "./createTypeScriptProjectSession.ts";
-export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
@@ -29,7 +19,6 @@ export { getTSNodeRange } from "./getTSNodeRange.ts";
 export {
 	throwUnknownLanguageExtension,
 	typescriptLanguage,
-	visitTypeScriptNodes,
 } from "./language.ts";
 export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 export { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
@@ -68,6 +57,7 @@ export {
 	isBuiltinArrayMethod,
 } from "./utils/isBuiltinArrayMethod.ts";
 export { isFunction } from "./utils/isFunction.ts";
+export { isFunctionScopeBoundary } from "./utils/isFunctionScopeBoundary.ts";
 export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";
 export { isGlobalVariable } from "./utils/isGlobalVariable.ts";

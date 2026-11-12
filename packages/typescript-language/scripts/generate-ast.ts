@@ -11,6 +11,11 @@ interface AliasData {
 	typeParameters: boolean;
 }
 
+interface GenericMember {
+	kind: string;
+	type: string;
+}
+
 interface InterfaceData {
 	bases: string[];
 	declaration: string;
@@ -37,51 +42,6 @@ const categoryCompatibilityMembers = new Map([
 	["IterationStatement", ["ForInStatement", "ForOfStatement"]],
 ]);
 const compatibilityAliases = new Map([
-	[
-		"ExpressionParent",
-		[
-			"ArrayLiteralExpression",
-			"ArrowFunction",
-			"AsExpression",
-			"BinaryExpression",
-			"BindingElement",
-			"CallExpression",
-			"CaseClause",
-			"ComputedPropertyName",
-			"ConditionalExpression",
-			"ElementAccessExpression",
-			"EnumMember",
-			"ExportAssignment",
-			"ExportDeclaration",
-			"ExpressionStatement",
-			"ExternalModuleReference",
-			"IfStatement",
-			"ImportAttribute",
-			"ImportDeclaration",
-			"IterationStatement",
-			"JsxExpression",
-			"JsxSpreadAttribute",
-			"NewExpression",
-			"NonNullExpression",
-			"ParameterDeclaration",
-			"ParenthesizedExpression",
-			"PartiallyEmittedExpression",
-			"PropertyAssignment",
-			"PropertyDeclaration",
-			"ReturnStatement",
-			"SatisfiesExpression",
-			"ShorthandPropertyAssignment",
-			"SpreadAssignment",
-			"SpreadElement",
-			"SwitchStatement",
-			"TemplateSpan",
-			"ThrowStatement",
-			"TypeParameterDeclaration",
-			"VariableDeclaration",
-			"WithStatement",
-			"YieldExpression",
-		],
-	],
 	["MethodSignature", ["MethodSignatureDeclaration"]],
 ]);
 const canonicalSyntaxKindNames = new Map<number, string>();
@@ -256,12 +216,27 @@ function tokenAt(tokens: TokenData[], index: number): TokenData {
 	return token;
 }
 
-for (const fileName of fs.readdirSync(astDirectory).toSorted()) {
-	if (fileName !== "ast.d.ts" && fileName !== "ast.generated.d.ts") {
-		continue;
+const externalTypeNames = new Set<string>();
+const unexportedBrandNames = new Set<string>();
+for (const fileName of ["ast.d.ts", "ast.generated.d.ts"]) {
+	const text = fs.readFileSync(path.join(astDirectory, fileName), "utf8");
+	parseDeclarations(text);
+	for (const match of text.matchAll(/^declare const (\w+): unique symbol;/gm)) {
+		if (match[1]) {
+			unexportedBrandNames.add(match[1]);
+		}
 	}
-
-	parseDeclarations(fs.readFileSync(path.join(astDirectory, fileName), "utf8"));
+	for (const match of text.matchAll(
+		/import(?: type)? \{([^}]+)\} from "(?:#enums\/[^"]+|(?:\.\.\/)+enums\/[^"]+|\.\/spanMap\.ts)";/g,
+	)) {
+		const importedNames = match[1];
+		if (!importedNames) {
+			continue;
+		}
+		for (const importedName of importedNames.split(",")) {
+			externalTypeNames.add(importedName.trim());
+		}
+	}
 }
 
 function inheritsFrom(
@@ -309,7 +284,7 @@ function syntaxKindsFor(typeName: string, seen = new Set<string>()): string[] {
 		.flatMap((type) => syntaxKindsFor(type.trim(), new Set(seen)));
 }
 
-const genericMembers = new Map<string, string[]>();
+const genericMembers = new Map<string, GenericMember[]>();
 const coveredSyntaxKinds = new Set(
 	[...interfaces.values()].flatMap((data) =>
 		data.kindType && !data.typeParameterConstraint
@@ -329,7 +304,7 @@ for (const [name, data] of interfaces) {
 			name,
 			syntaxKindsFor(data.typeParameterConstraint)
 				.filter((kind) => name !== "Token" || !coveredSyntaxKinds.has(kind))
-				.map((kind) => `${name}Node<NativeAST.${kind}>`),
+				.map((kind) => ({ kind, type: `${name}Node<NativeAST.${kind}>` })),
 		);
 	}
 }
@@ -337,11 +312,7 @@ for (const [name, data] of interfaces) {
 const specializedGenericKinds = new Set(
 	[...genericMembers]
 		.filter(([name]) => name !== "Token")
-		.flatMap(([, members]) =>
-			members.flatMap(
-				(member) => /NativeAST\.(SyntaxKind\.\w+)/.exec(member)?.[1] ?? [],
-			),
-		),
+		.flatMap(([, members]) => members.map(({ kind }) => kind)),
 );
 const tokenMembers = genericMembers.get("Token");
 if (!tokenMembers) {
@@ -349,10 +320,7 @@ if (!tokenMembers) {
 }
 genericMembers.set(
 	"Token",
-	tokenMembers.filter((member) => {
-		const kind = /NativeAST\.(SyntaxKind\.\w+)/.exec(member)?.[1];
-		return !kind || !specializedGenericKinds.has(kind);
-	}),
+	tokenMembers.filter(({ kind }) => !specializedGenericKinds.has(kind)),
 );
 
 const preferredGenericByKind = new Map<string, string>();
@@ -360,11 +328,8 @@ for (const [name, members] of genericMembers) {
 	if (name === "Token") {
 		continue;
 	}
-	for (const member of members) {
-		const kind = /NativeAST\.(SyntaxKind\.\w+)/.exec(member)?.[1];
-		if (kind) {
-			preferredGenericByKind.set(kind, member);
-		}
+	for (const { kind, type } of members) {
+		preferredGenericByKind.set(kind, type);
 	}
 }
 
@@ -375,11 +340,7 @@ for (const [name, declaration] of aliases) {
 	const reference = /^(\w+)<\s*(SyntaxKind\.\w+)\s*>$/.exec(declaration.type);
 	const target = reference?.[1];
 	const typeArgument = reference?.[2];
-	if (
-		target &&
-		genericMembers.has(target) &&
-		typeArgument?.startsWith("SyntaxKind.")
-	) {
+	if (target && typeArgument && genericMembers.has(target)) {
 		if (target === "Token" && coveredSyntaxKinds.has(typeArgument)) {
 			continue;
 		}
@@ -422,7 +383,7 @@ function membersFor(base: string): string[] {
 		});
 	for (const [name, genericVariants] of genericMembers) {
 		if (inheritsFrom(name, base)) {
-			members.push(...genericVariants);
+			members.push(...genericVariants.map(({ type }) => type));
 		}
 	}
 	return members.toSorted();
@@ -436,28 +397,6 @@ const lines = [
 	'import type * as NativeAST from "typescript-native/ast";',
 	"",
 ];
-
-const externalTypeNames = new Set<string>();
-const unexportedBrandNames = new Set<string>();
-for (const fileName of ["ast.d.ts", "ast.generated.d.ts"]) {
-	const text = fs.readFileSync(path.join(astDirectory, fileName), "utf8");
-	for (const match of text.matchAll(/^declare const (\w+): unique symbol;/gm)) {
-		if (match[1]) {
-			unexportedBrandNames.add(match[1]);
-		}
-	}
-	for (const match of text.matchAll(
-		/import(?: type)? \{([^}]+)\} from "(?:#enums\/[^"]+|(?:\.\.\/)+enums\/[^"]+|\.\/spanMap\.ts)";/g,
-	)) {
-		const importedNames = match[1];
-		if (!importedNames) {
-			continue;
-		}
-		for (const importedName of importedNames.split(",")) {
-			externalTypeNames.add(importedName.trim());
-		}
-	}
-}
 
 function localDeclaration(name: string, declaration: string): string {
 	const alias = aliases.get(name);
@@ -557,10 +496,10 @@ lines.push(
 
 const generatedKindAliases = new Map<string, string>();
 for (const members of genericMembers.values()) {
-	for (const member of members) {
-		const kindName = /SyntaxKind\.(\w+)/.exec(member)?.[1];
-		if (kindName && !exportedNames.has(kindName)) {
-			generatedKindAliases.set(kindName, member);
+	for (const { kind, type } of members) {
+		const kindName = kind.slice("SyntaxKind.".length);
+		if (!exportedNames.has(kindName)) {
+			generatedKindAliases.set(kindName, type);
 		}
 	}
 }
@@ -573,7 +512,9 @@ for (const [kindName, member] of [...generatedKindAliases].toSorted(
 lines.push("export type AnyNode = Node;", "", "");
 for (const categoryName of [...categoryNames].toSorted()) {
 	const base = categoryName === "Node" ? "NodeBase" : `${categoryName}Base`;
-	const members = genericMembers.get(categoryName) ?? membersFor(base);
+	const members =
+		genericMembers.get(categoryName)?.map(({ type }) => type) ??
+		membersFor(base);
 	if (categoryName === "Node") {
 		members.push("SourceFile");
 	}

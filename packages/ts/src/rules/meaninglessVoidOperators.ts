@@ -6,6 +6,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { getUnionConstituents } from "./utils/typeConstituents.ts";
 
 function isVoidOrUndefinedType(type: Type): boolean {
 	return (type.flags & (TypeFlags.Void | TypeFlags.Undefined)) !== 0;
@@ -41,11 +42,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						typeChecker,
 					);
 
-					const unionParts = argumentType.isUnionType()
-						? argumentType.getTypes()
-						: [argumentType];
-
-					if (!unionParts.every(isVoidOrUndefinedType)) {
+					if (
+						!getUnionConstituents(argumentType).every(isVoidOrUndefinedType)
+					) {
 						return;
 					}
 

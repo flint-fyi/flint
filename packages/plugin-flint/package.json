@@ -35,7 +35,6 @@
 		"@flint.fyi/content-mapper": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
-		"typescript": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {

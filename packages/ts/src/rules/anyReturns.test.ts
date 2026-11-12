@@ -749,6 +749,18 @@ void foo;
       void fn;
     `,
 		`
+      declare const promiseAny: Promise<any>;
+      const fn: () => Promise<unknown> = async () => promiseAny;
+      void fn;
+    `,
+		`
+      declare const promiseAny: Promise<any>;
+      const fn: () => Promise<unknown> = async () => {
+        return promiseAny;
+      };
+      void fn;
+    `,
+		`
       function test(): Map<string, string> {
         return new Map();
       }

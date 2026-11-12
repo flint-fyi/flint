@@ -86,9 +86,7 @@ const config: KnipConfig = {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/typescript-language": {
-			// The test helper is only reachable from test files, which --strict
-			// excludes from the project.
-			project: ["src/**/*.ts!", "!src/test/*.testUtils.ts!"],
+			project: ["src/**/*.ts!"],
 		},
 		"packages/vitest": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],

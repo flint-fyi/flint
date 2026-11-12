@@ -4,6 +4,7 @@ import type { Program } from "typescript-native/sync";
 import type * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
+import { resolveDeclarations } from "./resolveDeclarations.ts";
 
 /**
  * TODO: Use a scope analyzer (#400).
@@ -14,19 +15,14 @@ export function isGlobalDeclarationOfName(
 	typeChecker: Checker,
 	program: Program,
 ): boolean {
-	const declarationHandles =
-		typeChecker.getSymbolAtLocation(node)?.declarations;
-	if (!declarationHandles?.length) {
+	const handles = typeChecker.getSymbolAtLocation(node)?.declarations;
+	if (!handles?.length) {
 		return false;
 	}
 
-	const declarations: AST.Declaration[] = [];
-	for (const declarationHandle of declarationHandles) {
-		const declaration = declarationHandle.resolve();
-		if (!declaration) {
-			return false;
-		}
-		declarations.push(declaration as AST.Declaration);
+	const declarations = resolveDeclarations(handles);
+	if (!declarations) {
+		return false;
 	}
 
 	return declarations.every((declaration) => {

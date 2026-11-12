@@ -19,6 +19,12 @@ import { normalizeOutput, runFlint, type RunFlintResult } from "../utils.ts";
 const sourceDirectory = import.meta.dirname;
 let fixtureDirectory: string;
 
+// Formatting would need Prettier plugins for Astro and Svelte, and these tests
+// are only about linting.
+function runFixtureFlint(): Promise<RunFlintResult> {
+	return runFlint(fixtureDirectory, ["--skip-formatting"]);
+}
+
 // These tests install Flint from tarballs, so they only run in the CI job that
 // packs the workspace first. Every other `--project e2e` run skips them rather
 // than failing on the missing directory.
@@ -78,8 +84,6 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 					"@flint.fyi/vue": packedPackages["@flint.fyi/vue"],
 					astro: "7.3.5",
 					flint: packedPackages.flint,
-					"prettier-plugin-astro": "0.14.1",
-					"prettier-plugin-svelte": "^3.4.0",
 					svelte: "5.56.10",
 					typescript: "npm:@typescript/typescript6@6.0.2",
 					"typescript-native": "npm:typescript@7.1.0-beta",
@@ -98,7 +102,7 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 	});
 
 	it("reports rule and language reports in authored coordinates when linting configured, inferred, referenced, Astro, Svelte, and Vue sources", async () => {
-		const { exitCode, stderr, stdout } = await runFlint(fixtureDirectory);
+		const { exitCode, stderr, stdout } = await runFixtureFlint();
 
 		expect(exitCode).toBe(1);
 		expect(normalizeOutput(`${stdout}\n${stderr}`, fixtureDirectory))
@@ -147,12 +151,12 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 	it("observes a changed file between runs", async () => {
 		const fileName = path.join(fixtureDirectory, "fixtures/changed.ts");
 		const original = await readFile(fileName, "utf8");
-		const initial = await runFlint(fixtureDirectory);
+		const initial = await runFixtureFlint();
 		expect(`${initial.stdout}\n${initial.stderr}`).not.toContain("changed.ts");
 		try {
 			await writeFile(fileName, `${original}\ndebugger;\n`);
 
-			const result = await runFlint(fixtureDirectory);
+			const result = await runFixtureFlint();
 			expect(result.exitCode).toBe(1);
 			expect(`${result.stdout}\n${result.stderr}`).toContain("changed.ts");
 			expect(`${result.stdout}\n${result.stderr}`).toContain(
@@ -166,20 +170,21 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 	it("reloads a changed Svelte config between runs", async () => {
 		const configFileName = path.join(fixtureDirectory, "svelte.config.js");
 		const original = await readFile(configFileName, "utf8");
-		const initial = await runFlint(fixtureDirectory);
-		expect(`${initial.stdout}\n${initial.stderr}`).toContain(
-			"component.svelte",
+		const failedTransform =
+			"The content mapper '@flint.fyi/svelte' failed to transform this file.";
+		const initial = await runFixtureFlint();
+		expect(`${initial.stdout}\n${initial.stderr}`).not.toContain(
+			failedTransform,
 		);
 		try {
 			await writeFile(
 				configFileName,
-				"export default { compilerOptions: { runes: true } };\n",
+				'throw new Error("Invalid Svelte config.");\n',
 			);
 
-			const { exitCode, stderr, stdout } = await runFlint(fixtureDirectory);
+			const { exitCode, stderr, stdout } = await runFixtureFlint();
 			expect(exitCode).toBe(1);
-			expect(`${stdout}\n${stderr}`).toContain("component.svelte");
-			expect(`${stdout}\n${stderr}`).toContain("ts/debuggerStatements");
+			expect(`${stdout}\n${stderr}`).toContain(failedTransform);
 		} finally {
 			await writeFile(configFileName, original);
 		}
@@ -200,13 +205,15 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 				configFileName,
 				'{ "compilerOptions": { "target": 42 } }',
 			);
-			result = await runFlint(fixtureDirectory);
+			result = await runFixtureFlint();
 		} finally {
 			await writeFile(configFileName, originalConfig);
 			await writeFile(flintConfigFileName, originalFlintConfig);
 		}
 
-		expect(result.exitCode).not.toBe(0);
-		expect(`${result.stdout}\n${result.stderr}`).toMatch(/target|tsconfig/i);
+		expect(result.exitCode).toBe(1);
+		expect(`${result.stdout}\n${result.stderr}`).toContain(
+			"Compiler option 'target' requires a value of type enum.",
+		);
 	}, 60_000);
 });

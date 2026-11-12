@@ -18,11 +18,6 @@ export function convertTypeScriptDiagnosticToLanguageReport(
 	};
 }
 
-/**
- * Content mappers name themselves as the source of the diagnostics they
- * report (`astro`, `svelte`), which TypeScript passes through in place of its
- * own `TS` code prefix.
- */
 function color(text: string, formatStyle: string): string {
 	return formatStyle + text + resetEscapeSequence;
 }
@@ -88,6 +83,11 @@ function formatReport(
 	return output;
 }
 
+/**
+ * Content mappers name themselves as the source of the diagnostics they
+ * report (`astro`, `svelte`), which TypeScript passes through in place of its
+ * own `TS` code prefix.
+ */
 function getDiagnosticCode(diagnostic: Diagnostic): string {
 	return `${diagnostic.source ? diagnostic.source.toUpperCase() : "TS"}${diagnostic.code}`;
 }

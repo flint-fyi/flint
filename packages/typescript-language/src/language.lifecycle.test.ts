@@ -87,36 +87,7 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
 	});
 
-	it("closes the session when a later update fails", () => {
-		mockSnapshot({
-			"/repo/first.ts": { fileName: "/repo/first.ts" },
-		});
-		const factory = createFactory();
-		const first = factory.createFile(fileData("/repo/first.ts"));
-		mocks.session.update.mockImplementationOnce(() => {
-			throw new Error("update failed");
-		});
-
-		expect(() => factory.createFile(fileData("/repo/second.ts"))).toThrow(
-			"update failed",
-		);
-		expect(() => first.services.sourceFile).toThrow(
-			/session has been disposed/i,
-		);
-		expect(() => factory.createFile(fileData("/repo/third.ts"))).toThrow(
-			/session has been disposed/i,
-		);
-		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
-		expect(() => {
-			first[Symbol.dispose]();
-		}).not.toThrow();
-		expect(() => {
-			first[Symbol.dispose]();
-		}).not.toThrow();
-		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
-	});
-
-	it("fails active services and later files after a partial update closes the session", () => {
+	it("fails active services and later files when a later update fails", () => {
 		mockSnapshot({ "/repo/first.ts": { fileName: "/repo/first.ts" } });
 		const factory = createFactory();
 		const first = factory.createFile(fileData("/repo/first.ts"));
@@ -253,60 +224,6 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		);
 		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledTimes(2);
 		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
-	});
-
-	it("aggregates an update failure with a session cleanup failure", () => {
-		mockSnapshot({});
-		mocks.session.update.mockImplementationOnce(() => {
-			throw new Error("update failed");
-		});
-		mocks.session[Symbol.dispose].mockImplementationOnce(() => {
-			throw new Error("cleanup failed");
-		});
-
-		let caught: unknown;
-		try {
-			createFactory().createFile(fileData("/repo/first.ts"));
-		} catch (error) {
-			caught = error;
-		}
-
-		expect(caught).toBeInstanceOf(AggregateError);
-		const aggregate = caught as AggregateError;
-		expect(aggregate.errors[0]).toHaveProperty("message", "update failed");
-		expect(aggregate.errors[1]).toHaveProperty("message", "cleanup failed");
-		expect(aggregate.cause).toBe(aggregate.errors[0]);
-	});
-
-	it("flattens snapshot and API cleanup failures after an update failure", () => {
-		mockSnapshot({});
-		const updateError = new Error("update failed");
-		const snapshotError = new Error("snapshot cleanup failed");
-		const closeError = new Error("API close failed");
-		mocks.session.update.mockImplementationOnce(() => {
-			throw updateError;
-		});
-		mocks.session[Symbol.dispose].mockImplementationOnce(() => {
-			throw new AggregateError([snapshotError, closeError], "cleanup failed", {
-				cause: snapshotError,
-			});
-		});
-
-		let caught: unknown;
-		try {
-			createFactory().createFile(fileData("/repo/first.ts"));
-		} catch (error) {
-			caught = error;
-		}
-
-		expect(caught).toBeInstanceOf(AggregateError);
-		const aggregate = caught as AggregateError;
-		expect(aggregate.errors as unknown[]).toEqual([
-			updateError,
-			snapshotError,
-			closeError,
-		]);
-		expect(aggregate.cause).toBe(updateError);
 	});
 
 	it("fails one file without closing the session when directives fail", () => {

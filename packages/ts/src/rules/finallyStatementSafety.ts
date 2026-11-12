@@ -78,11 +78,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								break;
 							}
 							case SyntaxKind.SwitchStatement: {
-								statement.caseBlock.clauses.forEach(
-									(clause: AST.CaseOrDefaultClause) => {
-										clause.statements.forEach(checkStatement);
-									},
-								);
+								statement.caseBlock.clauses.forEach((clause) => {
+									clause.statements.forEach(checkStatement);
+								});
 
 								break;
 							}

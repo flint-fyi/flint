@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/ast";
+import { isExternalModule, SyntaxKind } from "typescript-native/ast";
 
 import type * as AST from "../types/ast.ts";
 
@@ -9,15 +9,15 @@ import type * as AST from "../types/ast.ts";
 export function containsGlobalDeclarations(
 	sourceFileNode: AST.SourceFile,
 ): boolean {
-	const isModule = !!sourceFileNode.externalModuleIndicator;
+	const isModule = isExternalModule(sourceFileNode);
 
 	return sourceFileNode.statements.some((statement) => {
 		// Checks for 'declare global {}'
-		if (statement.kind === SyntaxKind.ModuleDeclaration) {
-			const declaration = statement;
-			if (declaration.name.text === "global") {
-				return true;
-			}
+		if (
+			statement.kind === SyntaxKind.ModuleDeclaration &&
+			statement.name.text === "global"
+		) {
+			return true;
 		}
 
 		// In a module file, bare `declare` statements are local to the module
@@ -26,13 +26,8 @@ export function containsGlobalDeclarations(
 		}
 
 		// In a script file, top-level `declare` statements affect the global scope
-		return (
-			"modifiers" in statement &&
-			(
-				statement as AST.Declaration & { modifiers?: readonly AST.AnyNode[] }
-			).modifiers?.some(
-				(modifier) => modifier.kind === SyntaxKind.DeclareKeyword,
-			) === true
+		return !!(statement as Partial<AST.ModifiersBase>).modifiers?.some(
+			(modifier) => modifier.kind === SyntaxKind.DeclareKeyword,
 		);
 	});
 }

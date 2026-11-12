@@ -2,6 +2,7 @@ import {
 	forEachChild,
 	getTSNodeRange,
 	getTypeProperty,
+	isFunctionScopeBoundary,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -10,10 +11,10 @@ import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 import type {
 	Checker,
 	Symbol,
-	Type,
 } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getUnionConstituents } from "./utils/typeConstituents.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -120,10 +121,6 @@ function checkForAwait(node: AST.AnyNode): boolean | undefined {
 	return forEachChild(node, checkForAwait);
 }
 
-function getUnionConstituents(type: Type): readonly Type[] {
-	return type.isUnionType() ? type.getTypes() : [type];
-}
-
 function isCallback(
 	typeChecker: Checker,
 	parameter: Symbol,
@@ -132,14 +129,14 @@ function isCallback(
 	let type = typeChecker.getApparentType(
 		typeChecker.getTypeOfSymbolAtLocation(parameter, node),
 	);
-	const declaration = parameter.valueDeclaration?.resolve();
 	if (
-		declaration?.kind === SyntaxKind.Parameter &&
-		(declaration as AST.ParameterDeclaration).dotDotDotToken
+		parameter.valueDeclaration?.kind === SyntaxKind.Parameter &&
+		(
+			parameter.valueDeclaration.resolve() as
+				| AST.ParameterDeclaration
+				| undefined
+		)?.dotDotDotToken
 	) {
-		if (typeof type.getNumberIndexType !== "function") {
-			return false;
-		}
 		const elementType = type.getNumberIndexType();
 		if (!elementType) {
 			return false;
@@ -154,30 +151,6 @@ function isCallback(
 
 function isEmptyBody(body: AST.Block | AST.Expression): boolean {
 	return body.kind === SyntaxKind.Block && !body.statements.length;
-}
-
-function isFunctionScopeBoundary(node: AST.AnyNode): boolean {
-	switch (node.kind) {
-		case SyntaxKind.ArrowFunction:
-		case SyntaxKind.CallSignature:
-		case SyntaxKind.ClassDeclaration:
-		case SyntaxKind.ClassExpression:
-		case SyntaxKind.Constructor:
-		case SyntaxKind.ConstructorType:
-		case SyntaxKind.ConstructSignature:
-		case SyntaxKind.EnumDeclaration:
-		case SyntaxKind.FunctionDeclaration:
-		case SyntaxKind.FunctionExpression:
-		case SyntaxKind.FunctionType:
-		case SyntaxKind.GetAccessor:
-		case SyntaxKind.MethodDeclaration:
-		case SyntaxKind.MethodSignature:
-		case SyntaxKind.ModuleDeclaration:
-		case SyntaxKind.SetAccessor:
-			return true;
-	}
-
-	return false;
 }
 
 function isThenableType(typeChecker: Checker, node: AST.AnyNode): boolean {

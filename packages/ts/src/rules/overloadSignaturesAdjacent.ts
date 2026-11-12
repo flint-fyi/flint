@@ -152,7 +152,7 @@ function isStatic(
 	node: AST.MethodDeclaration | AST.MethodSignatureDeclaration,
 ): boolean {
 	return !!(node as AST.MethodDeclaration & AST.ModifiersBase).modifiers?.some(
-		(modifier: AST.ModifierLike) => modifier.kind === SyntaxKind.StaticKeyword,
+		(modifier) => modifier.kind === SyntaxKind.StaticKeyword,
 	);
 }
 

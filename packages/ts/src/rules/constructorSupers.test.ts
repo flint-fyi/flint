@@ -91,6 +91,27 @@ class Child extends Parent {
 }
 `,
 		},
+		{
+			code: `
+class Parent {}
+class Child extends Parent {
+    "constructor"() {
+        this.constructor;
+    }
+}
+`,
+			files: createRuleTesterTSConfig({ noCheck: true }),
+			snapshot: `
+class Parent {}
+class Child extends Parent {
+    "constructor"() {
+    ~~~~~~~~~~~~~
+    Constructors of derived classes must call \`super()\` before using \`this\` or returning.
+        this.constructor;
+    }
+}
+`,
+		},
 	],
 	valid: [
 		{
@@ -200,10 +221,6 @@ class Child extends Parent {
 		{
 			code: `const obj = { prop: class {} }; class A extends obj?.prop { constructor() { super(); } }`,
 			files: createRuleTesterTSConfig({ noUnusedLocals: false }),
-		},
-		{
-			code: `class Parent {} class Child extends Parent { "constructor"() {} }`,
-			files: createRuleTesterTSConfig({ noCheck: true }),
 		},
 	],
 });

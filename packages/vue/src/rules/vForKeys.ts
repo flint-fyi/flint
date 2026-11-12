@@ -56,13 +56,6 @@ export default ruleCreator.createRule(vueLanguage, {
 		},
 	},
 	setup(context) {
-		const reportAuthored = (
-			message: "invalidKey" | "missingKey" | "staticKey",
-			range: CharacterReportRange,
-		): void => {
-			reportSourceCode(context, { message, range });
-		};
-
 		return {
 			visitors: {
 				SourceFile(sourceFile, services) {
@@ -98,6 +91,8 @@ export default ruleCreator.createRule(vueLanguage, {
 							},
 							feature,
 						);
+						// TODO(perf): use ScopeManager instead
+						// https://github.com/flint-fyi/flint/issues/400
 						const findReference = (
 							node: Node,
 							range: ReadonlyTextRange,
@@ -143,13 +138,9 @@ export default ruleCreator.createRule(vueLanguage, {
 										mapped.range.end <= range.end,
 								);
 							}
-							let found = false;
-							node.forEachChild((child) => {
-								if (!found && findReference(child, range)) {
-									found = true;
-								}
-							});
-							return found;
+							return !!node.forEachChild(
+								(child) => findReference(child, range) || undefined,
+							);
 						};
 						return projections.some(({ range }) =>
 							findReference(sourceFile, range),
@@ -162,9 +153,12 @@ export default ruleCreator.createRule(vueLanguage, {
 						keyProp: null | vue.AttributeNode | vue.DirectiveNode,
 					): void => {
 						if (!keyProp) {
-							reportAuthored("missingKey", {
-								begin: forDirective.loc.start.offset,
-								end: forDirective.loc.start.offset + "v-for".length,
+							reportSourceCode(context, {
+								message: "missingKey",
+								range: {
+									begin: forDirective.loc.start.offset,
+									end: forDirective.loc.start.offset + "v-for".length,
+								},
 							});
 							return;
 						}
@@ -174,9 +168,12 @@ export default ruleCreator.createRule(vueLanguage, {
 							}
 							const strip =
 								keyProp.value.loc.source === keyProp.value.content ? 0 : 1;
-							reportAuthored("staticKey", {
-								begin: keyProp.value.loc.start.offset + strip,
-								end: keyProp.value.loc.end.offset - strip,
+							reportSourceCode(context, {
+								message: "staticKey",
+								range: {
+									begin: keyProp.value.loc.start.offset + strip,
+									end: keyProp.value.loc.end.offset - strip,
+								},
 							});
 							return;
 						}
@@ -221,7 +218,10 @@ export default ruleCreator.createRule(vueLanguage, {
 								SpanMapFeature.Hover,
 							)
 						) {
-							reportAuthored("invalidKey", reportRange);
+							reportSourceCode(context, {
+								message: "invalidKey",
+								range: reportRange,
+							});
 						}
 					};
 

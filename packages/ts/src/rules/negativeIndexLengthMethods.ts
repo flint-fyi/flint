@@ -147,7 +147,7 @@ function isSupportedType(
 		}
 
 		if (
-			(constituent.flags & TypeFlags.StringLiteral) !== 0 ||
+			constituent.isStringLiteralType() ||
 			(constituent.flags & TypeFlags.String) !== 0
 		) {
 			return supportedTypes.has("String");

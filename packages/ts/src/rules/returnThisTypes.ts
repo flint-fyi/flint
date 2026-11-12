@@ -6,7 +6,6 @@ import {
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
-import type { Type } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { forEachReturnStatement } from "./utils/forEachReturnStatement.ts";
@@ -118,7 +117,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				if (
 					type.isUnionType() &&
-					type.getTypes().some((part: Type) => part.id === classType.id)
+					type.getTypes().some((part) => part.id === classType.id)
 				) {
 					hasReturnClassType = true;
 					return true;

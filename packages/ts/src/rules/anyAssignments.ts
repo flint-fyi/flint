@@ -5,21 +5,33 @@ import {
 	type Checker,
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
-import type {
-	Type,
-	TypeReference,
+import {
+	TypeFlags,
+	type Type,
+	type TypeReference,
 } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
-import {
-	isIntrinsicErrorType,
-	isTypeAny,
-	isTypeAnyArray,
-	isTypeAnyOrUnknown,
-} from "./utils/typePredicates.ts";
+
+function isTypeAny(type: Type): boolean {
+	return !!(type.flags & TypeFlags.Any) && !type.isErrorType();
+}
+
+function isTypeAnyArray(type: Type, typeChecker: Checker): boolean {
+	if (!typeChecker.isArrayType(type)) {
+		return false;
+	}
+
+	const elementType = typeChecker.getTypeArguments(type as TypeReference)[0];
+	return elementType !== undefined && isTypeAny(elementType);
+}
+
+function isTypeAnyOrUnknown(type: Type): boolean {
+	return !!(type.flags & (TypeFlags.Any | TypeFlags.Unknown));
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -296,15 +308,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
-			if (isIntrinsicErrorType(initializerType)) {
+			if (initializerType.isErrorType()) {
 				return false;
 			}
 
-			const anyType = discriminateAnyType(
-				initializerType,
-				typeChecker,
-				initializer,
-			);
+			const anyType = discriminateAnyType(initializerType, typeChecker);
 
 			if (declaredType === undefined) {
 				if (anyType !== AnyType.Safe) {

@@ -13,6 +13,7 @@ import {
 } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getUnionConstituents } from "./utils/typeConstituents.ts";
 
 const literalToPrimitiveTypeFlags: Record<number, TypeFlags> = {
 	[TypeFlags.BigIntLiteral]: TypeFlags.BigInt,
@@ -49,7 +50,7 @@ function describeLiteralType(type: Type): string {
 		return JSON.stringify(type.value);
 	}
 
-	if (type.isLiteralType() && type.flags & TypeFlags.BigIntLiteral) {
+	if (type.isBigIntLiteralType()) {
 		return `${type.value}n`;
 	}
 
@@ -57,8 +58,11 @@ function describeLiteralType(type: Type): string {
 		return String(type.value);
 	}
 
-	if (type.isErrorType() && type.getAliasSymbol()) {
-		return type.getAliasSymbol()?.name ?? "error";
+	if (type.isErrorType()) {
+		const aliasSymbol = type.getAliasSymbol();
+		if (aliasSymbol) {
+			return aliasSymbol.name;
+		}
 	}
 
 	if (type.flags & TypeFlags.Any) {
@@ -77,15 +81,23 @@ function describeLiteralType(type: Type): string {
 		return "template literal type";
 	}
 
-	if (type.isIntrinsicType() && type.intrinsicName === "true") {
-		return "true";
-	}
-
-	if (type.isIntrinsicType() && type.intrinsicName === "false") {
-		return "false";
-	}
-
 	return "literal type";
+}
+
+function getTypeFlags(type: Type): TypeFlags {
+	return isBooleanUnion(type) ? TypeFlags.Boolean : type.flags;
+}
+
+function isBooleanUnion(type: Type): boolean {
+	if (!type.isUnionType()) {
+		return false;
+	}
+
+	const types = type.getTypes();
+	return (
+		types.length === 2 &&
+		types.every((typePart) => typePart.flags & TypeFlags.BooleanLiteral)
+	);
 }
 
 // TODO: This will be more clean when there is a scope manager
@@ -107,14 +119,6 @@ function isDescendantOf(node: AST.AnyNode, potentialAncestor: Node) {
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
-function getTypeFlags(type: Type): TypeFlags {
-	const types = type.isUnionType() ? type.getTypes() : undefined;
-	return types?.length === 2 &&
-		types.every((typePart) => typePart.flags & TypeFlags.BooleanLiteral)
-		? TypeFlags.Boolean
-		: type.flags;
-}
-
 function isNodeInsideReturnType(node: AST.AnyNode) {
 	let current = node.parent;
 
@@ -139,15 +143,8 @@ function isNodeInsideReturnType(node: AST.AnyNode) {
 	return false;
 }
 
-function unionTypePartsUnlessBoolean(type: Type) {
-	const types = type.isUnionType() ? type.getTypes() : undefined;
-	if (
-		types?.length === 2 &&
-		types.every((typePart) => typePart.flags & TypeFlags.BooleanLiteral)
-	) {
-		return [type];
-	}
-	return types ?? [type];
+function unionTypePartsUnlessBoolean(type: Type): readonly Type[] {
+	return isBooleanUnion(type) ? [type] : getUnionConstituents(type);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

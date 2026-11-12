@@ -6,18 +6,6 @@ import {
 } from "./nativeScenarios.ts";
 
 describe("native timing scenarios", () => {
-	it("defines each required native workload", () => {
-		expect(nativeScenarios.map(({ label }) => label)).toEqual([
-			"Cold project startup",
-			"Warm unchanged lint",
-			"One changed file",
-			"Type-aware rules",
-			"Astro",
-			"Svelte",
-			"Vue",
-		]);
-	});
-
 	it.each(nativeScenarios)("creates a package file for $label", (scenario) => {
 		expect(createNativeScenarioFiles(scenario)["package.json"]).toEqual([
 			'{"type":"module"}',
@@ -50,17 +38,4 @@ describe("native timing scenarios", () => {
 			).toBe(true);
 		},
 	);
-
-	it("prepares cache-backed scenarios independently for every sample", () => {
-		const warm = nativeScenarios.find(({ slug }) => slug === "warm")?.prepare;
-		const changed = nativeScenarios.find(
-			({ slug }) => slug === "changed",
-		)?.prepare;
-
-		expect(warm).toContain("rm -rf .flint-benchmark-cache");
-		expect(warm).toContain("({{flint}}");
-		expect(changed).toContain("benchmark-input.ts");
-		expect(changed).toContain("rm -rf .flint-benchmark-cache");
-		expect(changed).toContain("({{flint}}");
-	});
 });

@@ -5,11 +5,13 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
-import * as ts from "@flint.fyi/typescript-language/native/ast";
-import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	getJSDocTags,
+	SyntaxKind,
+	type Node,
+} from "@flint.fyi/typescript-language/native/ast";
 import {
 	SymbolFlags,
-	TypeFlags,
 	type JSDocTagInfo,
 	type Signature,
 	type Symbol,
@@ -17,6 +19,31 @@ import {
 } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+type InheritableDeclaration =
+	| AST.GetAccessorDeclaration
+	| AST.MethodDeclaration
+	| AST.MethodSignatureDeclaration
+	| AST.PropertyDeclaration
+	| AST.PropertySignatureDeclaration
+	| AST.SetAccessorDeclaration;
+
+const inheritableDeclarationKinds: ReadonlySet<SyntaxKind> = new Set<
+	InheritableDeclaration["kind"]
+>([
+	SyntaxKind.GetAccessor,
+	SyntaxKind.MethodDeclaration,
+	SyntaxKind.MethodSignature,
+	SyntaxKind.PropertyDeclaration,
+	SyntaxKind.PropertySignature,
+	SyntaxKind.SetAccessor,
+]);
+
+function isInheritableDeclaration(
+	declaration: AST.Declaration,
+): declaration is InheritableDeclaration {
+	return inheritableDeclarationKinds.has(declaration.kind);
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -97,7 +124,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
-			const declaration = symbol.declarations[0]?.resolve() as
+			const declarationHandle = symbol.declarations[0];
+			if (
+				!declarationHandle ||
+				!inheritableDeclarationKinds.has(declarationHandle.kind)
+			) {
+				return false;
+			}
+
+			const declaration = declarationHandle.resolve() as
 				| AST.Declaration
 				| undefined;
 			return (
@@ -106,13 +141,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function hasDeprecationTag(declaration: AST.Declaration): boolean {
-			return ts
-				.getJSDocTags(declaration)
-				.some(
-					(tag) =>
-						tag.tagName.text === "deprecated" ||
-						tag.tagName.text === "Deprecated",
-				);
+			return getJSDocTags(declaration).some(
+				(tag) =>
+					tag.tagName.text === "deprecated" ||
+					tag.tagName.text === "Deprecated",
+			);
 		}
 
 		// JSDoc tags are inherited from base declarations, such as when a class
@@ -121,44 +154,36 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			declaration: AST.Declaration,
 			typeChecker: Checker,
 		): boolean {
-			switch (declaration.kind) {
-				case SyntaxKind.GetAccessor:
-				case SyntaxKind.MethodDeclaration:
-				case SyntaxKind.MethodSignature:
-				case SyntaxKind.PropertyDeclaration:
-				case SyntaxKind.PropertySignature:
-				case SyntaxKind.SetAccessor: {
-					// A declaration with its own JSDoc tags overrides inherited ones
-					if (ts.getJSDocTags(declaration).length) {
-						return false;
-					}
-
-					const { name, parent } = declaration;
-					if (
-						name.kind !== SyntaxKind.Identifier ||
-						(parent.kind !== SyntaxKind.ClassDeclaration &&
-							parent.kind !== SyntaxKind.ClassExpression &&
-							parent.kind !== SyntaxKind.InterfaceDeclaration)
-					) {
-						return false;
-					}
-
-					return !!parent.heritageClauses?.some((heritageClause) =>
-						heritageClause.types.some((heritageType) => {
-							const baseProperty = getTypeProperty(
-								typeChecker.getTypeAtLocation(heritageType),
-								name.text,
-							);
-							return (
-								baseProperty?.declarations.length === 1 &&
-								isDeprecatedFromDeclarations(baseProperty)
-							);
-						}),
-					);
-				}
-				default:
-					return false;
+			// A declaration with its own JSDoc tags overrides inherited ones
+			if (
+				!isInheritableDeclaration(declaration) ||
+				getJSDocTags(declaration).length
+			) {
+				return false;
 			}
+
+			const { name, parent } = declaration;
+			if (
+				name.kind !== SyntaxKind.Identifier ||
+				(parent.kind !== SyntaxKind.ClassDeclaration &&
+					parent.kind !== SyntaxKind.ClassExpression &&
+					parent.kind !== SyntaxKind.InterfaceDeclaration)
+			) {
+				return false;
+			}
+
+			return !!parent.heritageClauses?.some((heritageClause) =>
+				heritageClause.types.some((heritageType) => {
+					const baseProperty = getTypeProperty(
+						typeChecker.getTypeAtLocation(heritageType),
+						name.text,
+					);
+					return (
+						baseProperty?.declarations.length === 1 &&
+						isDeprecatedFromDeclarations(baseProperty)
+					);
+				}),
+			);
 		}
 
 		function isDeprecatedFromDeclarations(symbol: Symbol | undefined) {
@@ -248,9 +273,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isDeclarationSite(node: AST.AnyNode) {
 			switch (node.parent.kind) {
-				case SyntaxKind.ArrowFunction:
 				case SyntaxKind.ClassDeclaration:
-				case SyntaxKind.Constructor:
 				case SyntaxKind.EnumDeclaration:
 				case SyntaxKind.EnumMember:
 				case SyntaxKind.FunctionDeclaration:
@@ -267,7 +290,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				case SyntaxKind.TypeAliasDeclaration:
 				case SyntaxKind.TypeParameter:
 				case SyntaxKind.VariableDeclaration:
-					return "name" in node.parent && node.parent.name === node;
+					return node.parent.name === node;
 
 				case SyntaxKind.ExportSpecifier:
 					return node.parent.propertyName === node;
@@ -334,8 +357,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					? typeChecker.getAliasedSymbol(symbol)
 					: symbol;
 
-			const symbolDeclarationKind =
-				aliasedSymbol?.declarations[0]?.resolve()?.kind;
+			const symbolDeclarationKind = aliasedSymbol?.declarations[0]?.kind;
 
 			if (
 				symbolDeclarationKind !== SyntaxKind.MethodDeclaration &&
@@ -416,25 +438,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const argumentExpression = node.argumentExpression;
 			const argumentType = typeChecker.getTypeAtLocation(argumentExpression);
 
-			if (
-				!(
-					argumentType.flags &
-					(TypeFlags.StringLiteral | TypeFlags.NumberLiteral)
-				)
-			) {
-				return;
-			}
-
-			const objectType = typeChecker.getTypeAtLocation(node.expression);
 			let propertyName: string;
-			if (argumentType.flags & TypeFlags.StringLiteral) {
-				propertyName = (argumentType as Type & { value: string }).value;
-			} else if (argumentType.flags & TypeFlags.NumberLiteral) {
-				propertyName = String((argumentType as Type & { value: number }).value);
+			if (argumentType.isStringLiteralType()) {
+				propertyName = argumentType.value;
+			} else if (argumentType.isNumberLiteralType()) {
+				propertyName = String(argumentType.value);
 			} else {
 				return;
 			}
 
+			const objectType = typeChecker.getTypeAtLocation(node.expression);
 			const property = getTypeProperty(objectType, propertyName);
 			if (
 				property &&
@@ -510,6 +523,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 		}
 
+		function checkHeritageClause(
+			node: AST.HeritageClause,
+			sourceFile: AST.SourceFile,
+			typeChecker: Checker,
+		) {
+			for (const type of node.types) {
+				const name =
+					type.kind === SyntaxKind.ExpressionWithTypeArguments
+						? type.expression
+						: type.typeName;
+				if (
+					name.kind === SyntaxKind.Identifier &&
+					isDeprecated(typeChecker.getSymbolAtLocation(name), typeChecker)
+				) {
+					context.report({
+						message: "deprecated",
+						range: getTSNodeRange(name, sourceFile),
+					});
+				}
+			}
+		}
+
 		function checkSuperCall(
 			node: AST.SuperExpression,
 			sourceFile: AST.SourceFile,
@@ -542,18 +577,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					checkComputedPropertyAccess(node, sourceFile, typeChecker);
 				},
 
+				HeritageClause: (node, { sourceFile, typeChecker }) => {
+					checkHeritageClause(node, sourceFile, typeChecker);
+				},
+
 				Identifier: (node, { sourceFile, typeChecker }) => {
 					if (isInsideHeritageClause(node)) {
-						if (
-							(node.parent.kind === SyntaxKind.ExpressionWithTypeArguments &&
-								node.parent.expression === node &&
-								node.parent.parent.kind === SyntaxKind.HeritageClause) ||
-							(node.parent.kind === SyntaxKind.TypeReference &&
-								node.parent.typeName === node &&
-								node.parent.parent.kind === SyntaxKind.HeritageClause)
-						) {
-							checkNode(node, sourceFile, typeChecker);
-						}
 						return;
 					}
 
@@ -606,7 +635,7 @@ function isInsideHeritageClause(node: AST.AnyNode) {
 		return true;
 	}
 
-	let current: ts.Node | undefined = node.parent;
+	let current: Node | undefined = node.parent;
 
 	while (current) {
 		if (current.kind === SyntaxKind.HeritageClause) {
@@ -620,7 +649,7 @@ function isInsideHeritageClause(node: AST.AnyNode) {
 			break;
 		}
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as ts.Node | undefined;
+		current = current.parent as Node | undefined;
 	}
 
 	return false;
@@ -632,7 +661,7 @@ function isInsideImport(node: AST.AnyNode) {
 		return true;
 	}
 
-	let current: ts.Node | undefined = node.parent;
+	let current: Node | undefined = node.parent;
 
 	while (current) {
 		if (current.kind === SyntaxKind.ImportDeclaration) {
@@ -652,7 +681,7 @@ function isInsideImport(node: AST.AnyNode) {
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as ts.Node | undefined;
+		current = current.parent as Node | undefined;
 	}
 
 	return false;

@@ -97,6 +97,23 @@ describe(transformAstro, () => {
 		]);
 	});
 
+	it("returns supplemental scripts at their authored offsets when earlier text is non-ASCII", () => {
+		const content = "<p>😀é</p>\n<script>const a: number = 1;</script>";
+		const result = transformAstro({
+			content,
+			fileName: "/project/Component.astro",
+			projectHandle: "project",
+		});
+
+		expect(result.supplemental).toEqual([
+			{
+				extension: ".ts",
+				mappings: [[0, 20, content.indexOf("const a"), 20, 0]],
+				text: "const a: number = 1;",
+			},
+		]);
+	});
+
 	it("returns authored compiler diagnostics", () => {
 		const result = transformAstro({
 			content: '<div set:html="foo">child</div>',

@@ -18,6 +18,10 @@ import {
 } from "@flint.fyi/typescript-language/native/sync";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import {
+	getIntersectionConstituents,
+	getUnionConstituents,
+} from "./utils/typeConstituents.ts";
 
 type IgnorePrimitives =
 	| boolean
@@ -277,10 +281,6 @@ function getIfStatementNullishCheckValue(node: AST.IfStatement) {
 	}
 }
 
-function getIntersectionConstituents(type: Type): readonly Type[] {
-	return type.isIntersectionType() ? type.getTypes() : [type];
-}
-
 function getTypeFlags(type: Type): TypeFlags {
 	let flags = 0;
 	for (const constituent of getUnionConstituents(type)) {
@@ -289,10 +289,6 @@ function getTypeFlags(type: Type): TypeFlags {
 		}
 	}
 	return flags;
-}
-
-function getUnionConstituents(type: Type): readonly Type[] {
-	return type.isUnionType() ? type.getTypes() : [type];
 }
 
 function isConditionalTest(node: AST.AnyNode): boolean {
@@ -328,38 +324,13 @@ function isConditionalTest(node: AST.AnyNode): boolean {
 	}
 }
 
-function isFalsyLiteralType(part: Type, typeChecker: Checker): boolean {
-	if (
-		(part.flags & TypeFlags.NumberLiteral) !== 0 &&
-		(part as Type & { value: number }).value === 0
-	) {
-		return true;
-	}
-
-	if (
-		(part.flags & TypeFlags.StringLiteral) !== 0 &&
-		(part as Type & { value: string }).value === ""
-	) {
-		return true;
-	}
-
-	const flags = part.flags;
-
-	if (
-		(flags & TypeFlags.BooleanLiteral) !== 0 &&
-		typeChecker.typeToString(part) === "false"
-	) {
-		return true;
-	}
-
-	if (
-		(flags & TypeFlags.BigIntLiteral) !== 0 &&
-		typeChecker.typeToString(part) === "0n"
-	) {
-		return true;
-	}
-
-	return false;
+function isFalsyLiteralType(part: Type): boolean {
+	return (
+		(part.isNumberLiteralType() && part.value === 0) ||
+		(part.isStringLiteralType() && part.value === "") ||
+		(part.isBooleanLiteralType() && !part.value) ||
+		(part.isBigIntLiteralType() && part.value === 0n)
+	);
 }
 
 function isMixedLogicalExpression(node: AST.BinaryExpression) {
@@ -458,7 +429,7 @@ function shouldIgnoreNode(
 	return (
 		(type.flags & (TypeFlags.Any | TypeFlags.Unknown)) !== 0 ||
 		!typeCanBeNullish(type) ||
-		typeHasNonNullishFalsyValues(type, typeChecker) ||
+		typeHasNonNullishFalsyValues(type) ||
 		!isTypeEligibleForPreferNullish(type, ignorePrimitives)
 	);
 }
@@ -467,13 +438,10 @@ function typeCanBeNullish(type: Type): boolean {
 	return getUnionConstituents(type).some(isNullishType);
 }
 
-function typeHasNonNullishFalsyValues(
-	type: Type,
-	typeChecker: Checker,
-): boolean {
+function typeHasNonNullishFalsyValues(type: Type): boolean {
 	return getUnionConstituents(type).some(
 		(constituent) =>
-			isFalsyLiteralType(constituent, typeChecker) ||
+			isFalsyLiteralType(constituent) ||
 			constituent.flags &
 				(TypeFlags.String |
 					TypeFlags.Number |

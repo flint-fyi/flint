@@ -1,7 +1,7 @@
 import path from "node:path";
 
 import { debugForFile } from "debug-for-file";
-import { SpanMap, type Node as NativeNode } from "typescript-native/ast";
+import { SpanMap } from "typescript-native/ast";
 import { toRootedFilePath } from "typescript-native/path";
 import type {
 	Checker,
@@ -19,7 +19,6 @@ import {
 	type Language,
 	type LanguageFileDefinition,
 	type LanguageReports,
-	type RuleVisitors,
 } from "@flint.fyi/core";
 import { assert, nullThrows } from "@flint.fyi/utils";
 
@@ -37,14 +36,10 @@ import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
 import { isInferredProject } from "./isInferredProject.ts";
 import { isNativeProcessFailure } from "./isNativeProcessFailure.ts";
-import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
-import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
+import type { TypeScriptNodeVisitors } from "./nodes.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
-import { getAuthoredNode } from "./utils/getAuthoredNode.ts";
-
-export type { TypeScriptFileServices } from "./types/services.ts";
 
 const log = debugForFile(import.meta.filename);
 
@@ -55,37 +50,6 @@ type ContentMappedLanguageFileDefinition =
 
 interface GlobalLanguageState {
 	packageVersion: string;
-}
-
-export function visitTypeScriptNodes<Services extends object>(
-	sourceFile: AST.SourceFile,
-	visitors: RuleVisitors<TypeScriptNodeVisitors, Services>,
-	services: Services,
-): void {
-	const visitChild = (child: NativeNode): void => {
-		const authored = getAuthoredNode(child);
-		if (authored) {
-			visit(authored);
-		}
-	};
-
-	const visit = (node: NativeNode): void => {
-		const syntaxKindName = NodeSyntaxKinds[node.kind];
-		if (typeof syntaxKindName !== "string") {
-			node.forEachChild(visitChild);
-			return;
-		}
-
-		const key = syntaxKindName as keyof TypeScriptNodesByName;
-
-		// @ts-expect-error -- A dynamically selected visitor accepts this kind's node.
-		visitors[key]?.(node, services);
-		node.forEachChild(visitChild);
-		// @ts-expect-error -- A dynamically selected visitor accepts this kind's node.
-		visitors[`${key}:exit`]?.(node, services);
-	};
-
-	visit(sourceFile);
 }
 
 function adjustMappedRange(
@@ -224,66 +188,40 @@ export const typescriptLanguage: Language<
 		name: "TypeScript",
 	},
 	createFileFactory: (host) => {
-		const unwrapError = (error: unknown): unknown[] =>
-			error instanceof AggregateError ? error.errors : [error];
 		let sessionState:
 			| undefined
 			| {
 					activeFiles: number;
-					disposed: boolean;
-					openFiles: string[];
+					openFiles: Set<string>;
 					prepared: boolean;
 					runsExternalCode: boolean;
 					session: TypeScriptProjectSession;
 			  };
 		let disposed = false;
 		let failed = false;
-		const disposeSession = (
+		const abandonSession = (
 			currentSessionState: NonNullable<typeof sessionState>,
 		): void => {
-			if (currentSessionState.disposed) {
-				return;
-			}
-			currentSessionState.disposed = true;
-			currentSessionState.session[Symbol.dispose]();
-		};
-		const disposeSessionForFailure = (
-			currentSessionState: NonNullable<typeof sessionState>,
-		): undefined | { disposalError: unknown } => {
 			try {
-				disposeSession(currentSessionState);
-			} catch (disposalError) {
-				return { disposalError };
+				currentSessionState.session[Symbol.dispose]();
+			} catch (error) {
+				log("Failed to dispose an abandoned session:", error);
+			}
+			if (sessionState === currentSessionState) {
+				sessionState = undefined;
 			}
 		};
 		// TypeScript's native process exiting takes every project it held with
 		// it, but nothing about the next process: unlike a session that failed
 		// while its process kept running, it can be replaced.
-		const abandonSession = (
-			currentSessionState: NonNullable<typeof sessionState>,
-		): void => {
-			disposeSessionForFailure(currentSessionState);
-			if (sessionState === currentSessionState) {
-				sessionState = undefined;
-			}
-		};
 		const failSession = (
 			currentSessionState: NonNullable<typeof sessionState>,
 			error: unknown,
 		): never => {
-			if (isNativeProcessFailure(error)) {
-				abandonSession(currentSessionState);
-				throw error;
+			if (!isNativeProcessFailure(error)) {
+				failed = true;
 			}
-			failed = true;
-			const disposalFailure = disposeSessionForFailure(currentSessionState);
-			if (disposalFailure) {
-				throw new AggregateError(
-					[error, ...unwrapError(disposalFailure.disposalError)],
-					"TypeScript file creation and project session cleanup both failed.",
-					{ cause: error },
-				);
-			}
+			abandonSession(currentSessionState);
 			throw error;
 		};
 
@@ -299,13 +237,12 @@ export const typescriptLanguage: Language<
 				!sessionState.activeFiles &&
 				runExternalCode
 			) {
-				disposeSession(sessionState);
+				sessionState.session[Symbol.dispose]();
 				sessionState = undefined;
 			}
 			sessionState ??= {
 				activeFiles: 0,
-				disposed: false,
-				openFiles: [],
+				openFiles: new Set(),
 				prepared: false,
 				runsExternalCode: runExternalCode,
 				session: createTypeScriptProjectSession(host, { runExternalCode }),
@@ -360,15 +297,12 @@ export const typescriptLanguage: Language<
 			// When prepareFiles has already batch-opened every file, the snapshot is
 			// stable and this file is directly queryable, so the per-file update is
 			// skipped — doing one update per file is quadratic in the file count.
-			const alreadyPrepared =
-				currentSessionState.prepared &&
-				currentSessionState.openFiles.includes(data.filePathAbsolute);
-			const openingFile =
-				!alreadyPrepared &&
-				!currentSessionState.openFiles.includes(data.filePathAbsolute);
-			if (!alreadyPrepared) {
+			const openingFile = !currentSessionState.openFiles.has(
+				data.filePathAbsolute,
+			);
+			if (openingFile || !currentSessionState.prepared) {
 				const restartingOpenFiles =
-					currentSessionState.openFiles.length &&
+					currentSessionState.openFiles.size &&
 					currentSessionState.activeFiles === 0;
 				if (restartingOpenFiles) {
 					try {
@@ -380,7 +314,7 @@ export const typescriptLanguage: Language<
 					}
 				}
 				if (openingFile) {
-					currentSessionState.openFiles.push(data.filePathAbsolute);
+					currentSessionState.openFiles.add(data.filePathAbsolute);
 				}
 				// The session detects changes to every other file it is tracking by
 				// comparing modification times, so only the file being opened needs to
@@ -409,14 +343,8 @@ export const typescriptLanguage: Language<
 			let cachedProject: Project | undefined;
 			let cachedSourceFile: AST.SourceFile | undefined;
 			let cachedTypeChecker: Checker | undefined;
-			const getSnapshot = (): Snapshot => {
-				if (currentSessionState.disposed) {
-					throw new Error("TypeScript project session has been disposed.");
-				}
-				return currentSessionState.session.getSnapshot();
-			};
 			const getProject = (): Project => {
-				const snapshot = getSnapshot();
+				const snapshot = currentSessionState.session.getSnapshot();
 				if (snapshot !== cachedSnapshot) {
 					cachedSnapshot = snapshot;
 					cachedProject = undefined;
@@ -444,9 +372,6 @@ export const typescriptLanguage: Language<
 				get project() {
 					return getProject();
 				},
-				get snapshot() {
-					return getSnapshot();
-				},
 				get sourceFile() {
 					return getSourceFile();
 				},
@@ -454,8 +379,9 @@ export const typescriptLanguage: Language<
 					return getSourceFile().spanMap;
 				},
 				get typeChecker() {
+					const project = getProject();
 					cachedTypeChecker ??= createCachedChecker(
-						getProject().checker,
+						project.checker,
 						getSourceFile(),
 						currentSessionState.session.batch,
 					);
@@ -513,57 +439,63 @@ export const typescriptLanguage: Language<
 					throw error;
 				}
 				if (openingFile) {
-					const index = currentSessionState.openFiles.indexOf(
-						data.filePathAbsolute,
-					);
-					if (index !== -1) {
-						currentSessionState.openFiles.splice(index, 1);
-					}
+					currentSessionState.openFiles.delete(data.filePathAbsolute);
 				}
 				throw error;
 			}
 		}
 
-		function prepareFiles(filePathsAbsolute: readonly string[]) {
+		function prepareFiles(filePathsAbsolute: readonly string[]): void {
 			if (disposed || failed || !filePathsAbsolute.length) {
 				return;
 			}
+			// As in createFile, the process may have exited because of an earlier
+			// file, so the batch gets one attempt in a new process.
+			if (!prepareFilesInSession(filePathsAbsolute)) {
+				log("Native process exited while preparing files; retrying.");
+				prepareFilesInSession(filePathsAbsolute);
+			}
+		}
+
+		/**
+		 * @returns Whether the native process survived the attempt.
+		 */
+		function prepareFilesInSession(
+			filePathsAbsolute: readonly string[],
+		): boolean {
 			const currentSessionState = getSessionState();
-			const alreadyOpen = new Set(currentSessionState.openFiles);
 			const newFilePaths = filePathsAbsolute.filter(
-				(filePath) => !alreadyOpen.has(filePath),
+				(filePath) => !currentSessionState.openFiles.has(filePath),
 			);
 			if (!newFilePaths.length) {
 				currentSessionState.prepared = true;
-				return;
+				return true;
 			}
 			for (const filePath of newFilePaths) {
-				currentSessionState.openFiles.push(filePath);
+				currentSessionState.openFiles.add(filePath);
 			}
 			// Open every file in a single update so the whole lint pass builds the
 			// program once, rather than rebuilding it per file (which is quadratic).
 			try {
 				currentSessionState.session.update({
-					changed: [...newFilePaths],
+					changed: newFilePaths,
 					openFiles: [...currentSessionState.openFiles],
 				});
 				currentSessionState.prepared = true;
 			} catch (error) {
 				if (isNativeProcessFailure(error)) {
 					abandonSession(currentSessionState);
-					return;
+					return false;
 				}
 				// Batch preparation failed (for example, a malformed tsconfig). Roll
 				// back so createFile falls back to opening files one at a time, which
 				// preserves per-file error isolation.
 				for (const filePath of newFilePaths) {
-					const index = currentSessionState.openFiles.indexOf(filePath);
-					if (index !== -1) {
-						currentSessionState.openFiles.splice(index, 1);
-					}
+					currentSessionState.openFiles.delete(filePath);
 				}
 				currentSessionState.prepared = false;
 			}
+			return true;
 		}
 
 		return {
@@ -574,9 +506,7 @@ export const typescriptLanguage: Language<
 					return;
 				}
 				disposed = true;
-				if (sessionState) {
-					disposeSession(sessionState);
-				}
+				sessionState?.session[Symbol.dispose]();
 			},
 		};
 	},
@@ -684,9 +614,6 @@ export const typescriptLanguage: Language<
 const typeScriptCoreSupportedExtensions: ReadonlySet<string> = new Set([
 	".cjs",
 	".cts",
-	".d.cts",
-	".d.mts",
-	".d.ts",
 	".js",
 	".json",
 	".jsx",

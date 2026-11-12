@@ -4,74 +4,51 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
+import {
+	isFunctionLikeDeclaration,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/native/ast";
 import {
 	TypeFlags,
-	type Signature,
-	type Type,
 	type TypeReference,
 } from "@flint.fyi/typescript-language/native/sync";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import {
-	AnyType,
-	discriminateAnyType,
-	getAwaitedTypes,
-} from "./utils/discriminateAnyType.ts";
+import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
-import { isIntrinsicErrorType, isTypeFlagSet } from "./utils/typePredicates.ts";
+import { getUnionConstituents } from "./utils/typeConstituents.ts";
 
 function findFunctionAncestor(
 	node: AST.AnyNode,
 ): AST.FunctionLikeDeclaration | undefined {
-	let current = node.parent;
-
-	while (current.kind !== SyntaxKind.SourceFile) {
-		switch (current.kind) {
-			case SyntaxKind.ArrowFunction:
-			case SyntaxKind.Constructor:
-			case SyntaxKind.FunctionDeclaration:
-			case SyntaxKind.FunctionExpression:
-			case SyntaxKind.GetAccessor:
-			case SyntaxKind.MethodDeclaration:
-			case SyntaxKind.SetAccessor:
-				return current;
+	for (
+		let current = node.parent;
+		current.kind !== SyntaxKind.SourceFile;
+		current = current.parent
+	) {
+		if (isFunctionLikeDeclaration(current)) {
+			return current;
 		}
-
-		current = current.parent;
 	}
 
 	return undefined;
 }
 
-function getCallSignatures(type: Type): readonly Signature[] {
-	if (type.isUnionType() || type.isIntersectionType()) {
-		return type
-			.getTypes()
-			.flatMap((constituent) => getCallSignatures(constituent));
-	}
-
-	return type.getCallSignatures();
-}
-
 function getThisExpression(
 	node: AST.Expression,
 ): AST.ThisExpression | undefined {
-	while (true) {
-		if (node.kind === SyntaxKind.ParenthesizedExpression) {
-			node = node.expression;
-		} else if (
-			node.kind === SyntaxKind.CallExpression ||
-			node.kind === SyntaxKind.PropertyAccessExpression ||
-			node.kind === SyntaxKind.ElementAccessExpression
-		) {
-			node = node.expression;
-		} else {
-			return node.kind === SyntaxKind.ThisKeyword ? node : undefined;
-		}
+	while (
+		node.kind === SyntaxKind.CallExpression ||
+		node.kind === SyntaxKind.ElementAccessExpression ||
+		node.kind === SyntaxKind.ParenthesizedExpression ||
+		node.kind === SyntaxKind.PropertyAccessExpression
+	) {
+		node = node.expression;
 	}
+
+	return node.kind === SyntaxKind.ThisKeyword ? node : undefined;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -133,9 +110,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				returnNode,
 				typeChecker,
 			);
-			const anyType = isIntrinsicErrorType(returnNodeType)
+			const anyType = returnNodeType.isErrorType()
 				? AnyType.Error
-				: discriminateAnyType(type, typeChecker, returnNode);
+				: discriminateAnyType(type, typeChecker);
+			const isAsync = functionNode.modifiers?.some(
+				(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
+			);
 
 			// function expressions will not have their return type modified based on receiver typing
 			// so we have to use the contextual typing in these cases, i.e.
@@ -147,7 +127,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					? typeChecker.getContextualType(functionNode)
 					: typeChecker.getTypeAtLocation(functionNode);
 			functionType ??= typeChecker.getTypeAtLocation(functionNode);
-			const callSignatures = getCallSignatures(functionType);
+			const callSignatures = getUnionConstituents(functionType).flatMap(
+				(constituent) => constituent.getCallSignatures(),
+			);
 			// If there is an explicit type annotation *and* that type matches the actual
 			// function return type, we shouldn't complain (it's intentional, even if unsafe)
 			if (functionNode.type) {
@@ -156,40 +138,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						returnNodeType.id === signatureReturnType.id ||
-						isTypeFlagSet(
-							signatureReturnType,
-							TypeFlags.Any | TypeFlags.Unknown,
-						)
+						signatureReturnType.flags & (TypeFlags.Any | TypeFlags.Unknown)
 					) {
 						return;
 					}
-					if (
-						functionNode.modifiers?.some(
-							(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
-						) === true
-					) {
-						const awaitedSignatureReturnTypes = getAwaitedTypes(
-							signatureReturnType,
-							typeChecker,
-							returnNode,
-						);
-						const awaitedReturnNodeTypes = getAwaitedTypes(
-							returnNodeType,
-							typeChecker,
-							returnNode,
-						);
+					if (isAsync) {
+						const awaitedSignatureReturnType =
+							typeChecker.getAwaitedType(signatureReturnType);
 						if (
-							awaitedSignatureReturnTypes.some((awaitedType) =>
-								isTypeFlagSet(awaitedType, TypeFlags.Unknown),
-							) ||
-							(awaitedReturnNodeTypes.length &&
-								awaitedReturnNodeTypes.length ===
-									awaitedSignatureReturnTypes.length &&
-								awaitedReturnNodeTypes.every((awaitedType) =>
-									awaitedSignatureReturnTypes.some(
-										(signatureType) => signatureType.id === awaitedType.id,
-									),
-								))
+							typeChecker.getAwaitedType(returnNodeType)?.id ===
+								awaitedSignatureReturnType?.id ||
+							(awaitedSignatureReturnType &&
+								awaitedSignatureReturnType.flags &
+									(TypeFlags.Any | TypeFlags.Unknown))
 						) {
 							return;
 						}
@@ -204,33 +165,32 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const functionReturnType = signature.getReturnType();
 					if (
 						(anyType === AnyType.Any || anyType === AnyType.Error) &&
-						isTypeFlagSet(functionReturnType, TypeFlags.Unknown)
+						functionReturnType.flags & TypeFlags.Unknown
 					) {
 						return;
 					}
 					if (
 						anyType === AnyType.AnyArray &&
 						typeChecker.isArrayType(functionReturnType) &&
-						isTypeFlagSet(
-							nullThrows(
-								typeChecker.getTypeArguments(
-									functionReturnType as TypeReference,
-								)[0],
-								"Array type should have at least one type argument",
-							),
-							TypeFlags.Unknown,
-						)
+						nullThrows(
+							typeChecker.getTypeArguments(
+								functionReturnType as TypeReference,
+							)[0],
+							"Array type should have at least one type argument",
+						).flags & TypeFlags.Unknown
 					) {
+						return;
+					}
+					if (anyType !== AnyType.PromiseAny) {
+						continue;
+					}
+					const awaitedType = typeChecker.getAwaitedType(functionReturnType);
+					if (awaitedType && awaitedType.flags & TypeFlags.Unknown) {
 						return;
 					}
 				}
 
-				if (
-					anyType === AnyType.PromiseAny &&
-					!functionNode.modifiers?.some(
-						(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
-					)
-				) {
+				if (anyType === AnyType.PromiseAny && !isAsync) {
 					return;
 				}
 
@@ -245,10 +205,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const thisExpression = getThisExpression(returnNode);
 					if (
 						thisExpression &&
-						isTypeFlagSet(
-							getConstrainedTypeAtLocation(thisExpression, typeChecker),
-							TypeFlags.Any,
-						)
+						getConstrainedTypeAtLocation(thisExpression, typeChecker).flags &
+							TypeFlags.Any
 					) {
 						message = "unsafeReturnThis";
 					}

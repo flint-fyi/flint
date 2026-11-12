@@ -1,29 +1,21 @@
-import { stdin, stdout } from "node:process";
+import { stderr, stdin, stdout } from "node:process";
 
 import {
 	TRANSFORM_FAILURE_CODE,
 	type ContentMapperProject,
 	type JsonRpcResponse,
-	type MappedDiagnosticDirective,
-	type MappedOutput,
 	type OpenProjectParams,
-	type OptionDiagnostic,
-	type PositionEncoding,
 	type RunContentMapperOptions,
-	type SpanMapping,
 	type TransformParams,
 	type TransformResult,
 } from "./protocol.ts";
 
 interface JsonRpcRequest {
-	id?: null | number | string;
+	id: number | string;
 	jsonrpc: "2.0";
 	method: string;
 	params?: unknown;
 }
-
-const MAXIMUM_HEADER_BYTES = 8 * 1024;
-const CONTENT_LENGTH_MARKER = "content-length:";
 
 export async function runContentMapper({
 	diagnosticSource,
@@ -32,9 +24,14 @@ export async function runContentMapper({
 	output = stdout,
 }: RunContentMapperOptions): Promise<void> {
 	const projects = new Map<string, ContentMapperProject>();
-	let positionEncoding: PositionEncoding = "utf-16";
 	let initialized = false;
 	let pending: Buffer = Buffer.alloc(0);
+	const writeFrame = output.write.bind(output);
+	if (output === stdout) {
+		// Frames own stdout, so anything else the process prints, such as a
+		// framework config's console.log, must not corrupt the protocol stream.
+		stdout.write = stderr.write.bind(stderr);
+	}
 	const write = async (response: JsonRpcResponse): Promise<void> => {
 		const body = Buffer.from(JSON.stringify(response));
 		const frame = Buffer.concat([
@@ -46,7 +43,7 @@ export async function runContentMapper({
 				reject(error);
 			};
 			output.once("error", onError);
-			output.write(frame, (error) => {
+			writeFrame(frame, (error) => {
 				if (error) {
 					reject(error);
 					return;
@@ -56,9 +53,12 @@ export async function runContentMapper({
 			});
 		});
 	};
-	const dispatch = async (request: JsonRpcRequest): Promise<void> => {
-		const id = request.id ?? null;
-		if (request.method === "initialize") {
+	const dispatch = async ({
+		id,
+		method,
+		params,
+	}: JsonRpcRequest): Promise<void> => {
+		if (method === "initialize") {
 			if (initialized) {
 				await write(
 					responseError(id, -32_600, "Content mapper is already initialized"),
@@ -66,38 +66,24 @@ export async function runContentMapper({
 				return;
 			}
 			if (
-				!isRecord(request.params) ||
-				(request.params.protocolVersion !== undefined &&
-					request.params.protocolVersion !== 1)
+				!isRecord(params) ||
+				!Array.isArray(params.positionEncodings) ||
+				!params.positionEncodings.includes("utf-16")
 			) {
-				await write(
-					responseError(id, -32_602, "initialize requires protocolVersion 1"),
-				);
-				return;
-			}
-			const encodings = request.params.positionEncodings;
-			const selectedEncoding = Array.isArray(encodings)
-				? encodings.find(
-						(encoding): encoding is PositionEncoding =>
-							encoding === "utf-8" || encoding === "utf-16",
-					)
-				: undefined;
-			if (!selectedEncoding) {
 				await write(
 					responseError(
 						id,
 						-32_602,
-						"initialize requires utf-8 or utf-16 position support",
+						"initialize requires utf-16 position support",
 					),
 				);
 				return;
 			}
-			positionEncoding = selectedEncoding;
 			initialized = true;
 			await write({
 				id,
 				jsonrpc: "2.0",
-				result: { diagnosticSource, positionEncoding, protocolVersion: 1 },
+				result: { diagnosticSource, positionEncoding: "utf-16" },
 			});
 			return;
 		}
@@ -108,28 +94,25 @@ export async function runContentMapper({
 			return;
 		}
 		if (
-			request.method !== "openProject" &&
-			request.method !== "closeProject" &&
-			request.method !== "transform"
+			method !== "openProject" &&
+			method !== "closeProject" &&
+			method !== "transform"
 		) {
+			await write(responseError(id, -32_601, `Unknown method: ${method}`));
+			return;
+		}
+		if (!isRecord(params)) {
 			await write(
-				responseError(id, -32_601, `Unknown method: ${request.method}`),
+				responseError(id, -32_602, `${method} requires object params`),
 			);
 			return;
 		}
-		if (!isRecord(request.params)) {
-			await write(
-				responseError(id, -32_602, `${request.method} requires object params`),
-			);
-			return;
-		}
-		if (request.method === "openProject") {
-			const projectHandle = getString(request.params, "projectHandle");
-			const configFileName = getString(request.params, "configFileName");
+		const projectHandle = getString(params, "projectHandle") ?? "";
+		if (method === "openProject") {
 			if (
 				!projectHandle ||
-				configFileName === undefined ||
-				!isRecord(request.params.compilerOptions) ||
+				getString(params, "configFileName") === undefined ||
+				!isRecord(params.compilerOptions) ||
 				projects.has(projectHandle)
 			) {
 				await write(
@@ -143,20 +126,8 @@ export async function runContentMapper({
 			}
 			let project: ContentMapperProject;
 			try {
-				project = await openProject(
-					request.params as unknown as OpenProjectParams,
-				);
+				project = await openProject(params as unknown as OpenProjectParams);
 			} catch (error) {
-				await write(internalError(id, error));
-				return;
-			}
-			let optionDiagnostics: OptionDiagnostic[] | undefined;
-			try {
-				optionDiagnostics = project.validateOptions?.();
-			} catch (error) {
-				await Promise.allSettled([
-					Promise.resolve().then(() => project.close?.()),
-				]);
 				await write(internalError(id, error));
 				return;
 			}
@@ -166,7 +137,9 @@ export async function runContentMapper({
 				jsonrpc: "2.0",
 				result: {
 					configIdentity: project.configIdentity ?? "",
-					...(optionDiagnostics?.length ? { optionDiagnostics } : {}),
+					...(project.optionDiagnostics?.length
+						? { optionDiagnostics: project.optionDiagnostics }
+						: {}),
 					...(project.watchedFiles?.length
 						? { watchedFiles: project.watchedFiles }
 						: {}),
@@ -174,252 +147,108 @@ export async function runContentMapper({
 			});
 			return;
 		}
-		const projectHandle = getString(request.params, "projectHandle");
-		const project = projectHandle ? projects.get(projectHandle) : undefined;
+		const project = projects.get(projectHandle);
 		if (!project) {
 			await write(
 				responseError(
 					id,
 					-32_602,
-					`Unknown project handle: ${projectHandle ?? "<missing>"}`,
+					`Unknown project handle: ${projectHandle || "<missing>"}`,
 				),
 			);
 			return;
 		}
-		if (request.method === "closeProject") {
-			projects.delete(projectHandle ?? "");
-			try {
-				await project.close?.();
-			} catch (error) {
-				await write(internalError(id, error));
-				return;
-			}
+		if (method === "closeProject") {
+			projects.delete(projectHandle);
 			await write({ id, jsonrpc: "2.0", result: null });
 			return;
 		}
-		const content = getString(request.params, "content");
-		const fileName = getString(request.params, "fileName");
-		if (content === undefined || fileName === undefined) {
+		const content = getString(params, "content");
+		if (content === undefined || getString(params, "fileName") === undefined) {
 			await write(
 				responseError(id, -32_602, "transform requires content and fileName"),
 			);
 			return;
 		}
-		let response: JsonRpcResponse;
+		let result: TransformResult;
 		try {
-			const result = await project.transform(
-				request.params as unknown as TransformParams,
-			);
-			response = {
-				id,
-				jsonrpc: "2.0",
-				result:
-					positionEncoding === "utf-8" ? encodeResult(result, content) : result,
-			};
+			result = await project.transform(params as unknown as TransformParams);
 		} catch (error) {
-			response = {
-				id,
-				jsonrpc: "2.0",
-				result: {
-					diagnostics: [
-						{
-							code: TRANSFORM_FAILURE_CODE,
-							length:
-								positionEncoding === "utf-8"
-									? Buffer.byteLength(content)
-									: content.length,
-							messageText:
-								error instanceof Error ? error.message : String(error),
-							start: 0,
-						},
-					],
-					extension: ".ts",
-					text: "",
-				},
+			result = {
+				diagnostics: [
+					{
+						code: TRANSFORM_FAILURE_CODE,
+						length: content.length,
+						messageText: error instanceof Error ? error.message : String(error),
+						start: 0,
+					},
+				],
+				extension: ".ts",
+				text: "",
 			};
 		}
-		await write(response);
-		return;
+		await write({ id, jsonrpc: "2.0", result });
 	};
-	try {
-		// The protocol is a sequential request stream over stdio: each frame must
-		// be handled before the next, so the awaits below are inherently serial.
-		// flint-disable-lines-begin performance/loopAwaits
-		for await (const chunk of input) {
-			pending = Buffer.concat([
-				pending,
-				Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk),
-			]);
-			while (true) {
-				const headerEnd = pending.indexOf("\r\n\r\n");
-				if (headerEnd === -1) {
-					if (pending.byteLength > MAXIMUM_HEADER_BYTES) {
-						await write(
-							responseError(
-								null,
-								-32_700,
-								"Content mapper header is too large",
-							),
-						);
-						pending = trailingHeaderMarkerPrefix(pending);
-					}
-					break;
-				}
-				if (headerEnd > MAXIMUM_HEADER_BYTES) {
-					await write(
-						responseError(null, -32_700, "Content mapper header is too large"),
-					);
-					const nextHeader = pending
-						.toString("latin1")
-						.toLowerCase()
-						.indexOf(CONTENT_LENGTH_MARKER);
-					pending =
-						nextHeader > 0
-							? pending.subarray(nextHeader)
-							: pending.subarray(headerEnd + 4);
-					continue;
-				}
-				const header = pending.subarray(0, headerEnd).toString();
-				const match = /^content-length: (\d+)$/im.exec(header);
-				const bodyLength = match ? Number(match[1]) : 0;
-				if (!match || bodyLength <= 0 || bodyLength > 16 * 1024 * 1024) {
-					await write(
-						responseError(null, -32_700, "Missing Content-Length header"),
-					);
-					pending = pending.subarray(headerEnd + 4);
-					continue;
-				}
-				if (pending.byteLength < headerEnd + 4 + bodyLength) {
-					break;
-				}
-				const body = pending.subarray(
-					headerEnd + 4,
-					headerEnd + 4 + bodyLength,
-				);
-				pending = pending.subarray(headerEnd + 4 + bodyLength);
-				let request: unknown;
-				try {
-					request = JSON.parse(body.toString()) as unknown;
-				} catch (error) {
-					await write(
-						responseError(
-							null,
-							-32_700,
-							error instanceof Error ? error.message : "Invalid JSON",
-						),
-					);
-					continue;
-				}
-				if (
-					!isRecord(request) ||
-					request.jsonrpc !== "2.0" ||
-					typeof request.method !== "string" ||
-					!(
-						typeof request.id === "string" ||
-						(typeof request.id === "number" && Number.isFinite(request.id))
-					)
-				) {
-					await write(responseError(null, -32_600, "Invalid JSON-RPC request"));
-					continue;
-				}
-				await dispatch(request as unknown as JsonRpcRequest);
+	// The protocol is a sequential request stream over stdio: each frame must
+	// be handled before the next, so the awaits below are inherently serial.
+	// flint-disable-lines-begin performance/loopAwaits
+	for await (const chunk of input) {
+		pending = Buffer.concat([
+			pending,
+			Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk),
+		]);
+		while (true) {
+			const headerEnd = pending.indexOf("\r\n\r\n");
+			if (headerEnd === -1) {
+				break;
 			}
-		}
-		// flint-disable-lines-end performance/loopAwaits
-		if (pending.length) {
-			await write(
-				responseError(null, -32_700, "Incomplete content mapper frame"),
-			);
-		}
-	} finally {
-		await Promise.allSettled(
-			[...projects.values()].map(async (project) => await project.close?.()),
-		);
-		projects.clear();
-	}
-}
-
-function encodeOutput(
-	result: MappedOutput,
-	originalText: string,
-): MappedOutput {
-	const mappings = result.mappings?.map((mapping): SpanMapping => {
-		const [virtualStart, virtualLength] = utf8Range(
-			result.text,
-			mapping[0],
-			mapping[1],
-		);
-		const [originalStart, originalLength] = utf8Range(
-			originalText,
-			mapping[2],
-			mapping[3],
-		);
-		return mapping[5] === undefined
-			? [virtualStart, virtualLength, originalStart, originalLength, mapping[4]]
-			: [
-					virtualStart,
-					virtualLength,
-					originalStart,
-					originalLength,
-					mapping[4],
-					mapping[5],
-				];
-	});
-	const diagnosticDirectives = result.diagnosticDirectives && {
-		...result.diagnosticDirectives,
-		directives: result.diagnosticDirectives.directives.map(
-			(directive): MappedDiagnosticDirective => {
-				const [originalStart, originalLength] = utf8Range(
-					originalText,
-					directive[0],
-					directive[1],
+			const contentLength = /^content-length: (\d+)$/im.exec(
+				pending.subarray(0, headerEnd).toString(),
+			)?.[1];
+			if (contentLength === undefined) {
+				throw new Error(
+					"Content mapper received a frame without a Content-Length header",
 				);
-				const virtualStart = utf8Offset(result.text, directive[2]);
-				const virtualEnd = utf8Offset(result.text, directive[3]);
-				return directive[5] === undefined
-					? [
-							originalStart,
-							originalLength,
-							virtualStart,
-							virtualEnd,
-							directive[4],
-						]
-					: [
-							originalStart,
-							originalLength,
-							virtualStart,
-							virtualEnd,
-							directive[4],
-							directive[5],
-						];
-			},
-		),
-	};
-	return {
-		...result,
-		...(diagnosticDirectives && { diagnosticDirectives }),
-		...(mappings && { mappings }),
-	};
-}
-
-function encodeResult(
-	result: TransformResult,
-	originalText: string,
-): TransformResult {
-	const diagnostics = result.diagnostics?.map((diagnostic) => ({
-		...diagnostic,
-		length: utf8Range(originalText, diagnostic.start, diagnostic.length)[1],
-		start: utf8Offset(originalText, diagnostic.start),
-	}));
-	return {
-		...encodeOutput(result, originalText),
-		...(diagnostics && { diagnostics }),
-		...(result.supplemental && {
-			supplemental: result.supplemental.map((supplemental) =>
-				encodeOutput(supplemental, originalText),
-			),
-		}),
-	};
+			}
+			const bodyStart = headerEnd + 4;
+			const bodyEnd = bodyStart + Number(contentLength);
+			if (pending.byteLength < bodyEnd) {
+				break;
+			}
+			const body = pending.subarray(bodyStart, bodyEnd).toString();
+			pending = pending.subarray(bodyEnd);
+			let request: unknown;
+			try {
+				request = JSON.parse(body) as unknown;
+			} catch (error) {
+				await write(
+					responseError(
+						null,
+						-32_700,
+						error instanceof Error ? error.message : "Invalid JSON",
+					),
+				);
+				continue;
+			}
+			if (
+				!isRecord(request) ||
+				request.jsonrpc !== "2.0" ||
+				typeof request.method !== "string" ||
+				!(
+					typeof request.id === "string" ||
+					(typeof request.id === "number" && Number.isFinite(request.id))
+				)
+			) {
+				await write(responseError(null, -32_600, "Invalid JSON-RPC request"));
+				continue;
+			}
+			await dispatch(request as unknown as JsonRpcRequest);
+		}
+	}
+	// flint-disable-lines-end performance/loopAwaits
+	if (pending.length) {
+		throw new Error("Content mapper input ended in the middle of a frame");
+	}
 }
 
 function getString(
@@ -440,14 +269,6 @@ function internalError(
 	);
 }
 
-function isHighSurrogate(code: number): boolean {
-	return code >= 0xd8_00 && code <= 0xdb_ff;
-}
-
-function isLowSurrogate(code: number): boolean {
-	return code >= 0xdc_00 && code <= 0xdf_ff;
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -458,50 +279,4 @@ function responseError(
 	message: string,
 ): JsonRpcResponse {
 	return { error: { code, message }, id, jsonrpc: "2.0" };
-}
-
-function trailingHeaderMarkerPrefix(bytes: Buffer): Buffer {
-	const maximumLength = Math.min(
-		bytes.byteLength,
-		CONTENT_LENGTH_MARKER.length - 1,
-	);
-	for (let length = maximumLength; length > 0; length -= 1) {
-		if (
-			bytes.subarray(-length).toString().toLowerCase() ===
-			CONTENT_LENGTH_MARKER.slice(0, length)
-		) {
-			return bytes.subarray(-length);
-		}
-	}
-	return Buffer.alloc(0);
-}
-
-function utf8Offset(text: string, offset: number): number {
-	if (
-		!Number.isInteger(offset) ||
-		offset < 0 ||
-		offset > text.length ||
-		(offset > 0 &&
-			offset < text.length &&
-			// eslint-disable-next-line unicorn/prefer-code-point -- surrogate checks need UTF-16 code units
-			isHighSurrogate(text.charCodeAt(offset - 1)) &&
-			// eslint-disable-next-line unicorn/prefer-code-point -- surrogate checks need UTF-16 code units
-			isLowSurrogate(text.charCodeAt(offset)))
-	) {
-		throw new Error(`Invalid UTF-16 offset ${offset}`);
-	}
-	return Buffer.byteLength(text.slice(0, offset));
-}
-
-function utf8Range(
-	text: string,
-	start: number,
-	length: number,
-): [number, number] {
-	if (!Number.isInteger(length) || length < 0) {
-		throw new Error(`Invalid UTF-16 range length ${length}`);
-	}
-	const end = start + length;
-	const utf8Start = utf8Offset(text, start);
-	return [utf8Start, utf8Offset(text, end) - utf8Start];
 }

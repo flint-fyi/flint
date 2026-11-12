@@ -14,17 +14,9 @@ const moduleIndicatorKinds = new Set([
 	SyntaxKind.ImportEqualsDeclaration,
 ]);
 
-function hasExportModifier(node: AST.Statement) {
-	if (!("modifiers" in node)) {
-		return false;
-	}
-
-	return (
-		Array.isArray(node.modifiers) &&
-		node.modifiers.some(
-			(modifier: AST.ModifierLike) =>
-				modifier.kind === SyntaxKind.ExportKeyword,
-		)
+function hasExportModifier(node: AST.Statement): boolean {
+	return !!(node as Partial<AST.ModifiersBase>).modifiers?.some(
+		(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
 	);
 }
 

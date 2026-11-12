@@ -51,7 +51,7 @@ export function getTypeScriptDiagnostics(
 		const previousDiagnostic = diagnostics[index - 1];
 		return (
 			previousDiagnostic === undefined ||
-			!diagnosticsEqual(diagnostic, previousDiagnostic)
+			compareDiagnostics(diagnostic, previousDiagnostic) !== 0
 		);
 	});
 }
@@ -172,21 +172,6 @@ function compareValues<T>(
 		return 1;
 	}
 	return left < right ? -1 : 1;
-}
-
-function diagnosticsEqual(left: Diagnostic, right: Diagnostic): boolean {
-	return (
-		left.fileName === right.fileName &&
-		left.pos === right.pos &&
-		left.end === right.end &&
-		left.code === right.code &&
-		left.text === right.text &&
-		compareMessageChains(left.messageChain, right.messageChain) === 0 &&
-		compareRelatedInformation(
-			left.relatedInformation,
-			right.relatedInformation,
-		) === 0
-	);
 }
 
 function getProgramDiagnostics(program: Program): ProgramDiagnostics {

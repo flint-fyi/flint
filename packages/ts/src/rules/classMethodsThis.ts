@@ -1,6 +1,10 @@
 import { z } from "zod/v4";
 
-import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+import {
+	forEachChild,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -21,8 +25,7 @@ function classImplementsSomething(
 ): boolean {
 	return (
 		classNode.heritageClauses?.some(
-			(clause: AST.HeritageClause) =>
-				clause.token === SyntaxKind.ImplementsKeyword,
+			(clause) => clause.token === SyntaxKind.ImplementsKeyword,
 		) ?? false
 	);
 }
@@ -53,7 +56,7 @@ function containsThis(node: AST.AnyNode): boolean {
 			return true;
 
 		default:
-			return node.forEachChild(containsThis) ?? false;
+			return forEachChild(node, containsThis) ?? false;
 	}
 }
 
@@ -111,7 +114,7 @@ function isPublicMember(member: ClassMember): boolean {
 	}
 
 	return !modifiers.some(
-		(modifier: AST.ModifierLike) =>
+		(modifier) =>
 			modifier.kind === SyntaxKind.PrivateKeyword ||
 			modifier.kind === SyntaxKind.ProtectedKeyword,
 	);

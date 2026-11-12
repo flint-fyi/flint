@@ -1,4 +1,5 @@
 import {
+	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -23,7 +24,7 @@ function containsThis(node: AST.AnyNode): boolean {
 	}
 
 	let found = false;
-	node.forEachChild((child: AST.Node) => {
+	forEachChild(node, (child) => {
 		if (containsThis(child)) {
 			found = true;
 		}

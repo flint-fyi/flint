@@ -7,7 +7,7 @@ import {
 } from "typescript-native/sync";
 
 import type { LinterHost } from "@flint.fyi/core";
-import { isUnderDirectory } from "@flint.fyi/utils";
+import { nullThrows } from "@flint.fyi/utils";
 
 import {
 	getTypeScriptContentMapperRegistrations,
@@ -17,13 +17,13 @@ import type { BatchRequests } from "./createCachedChecker.ts";
 import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 import { createTypeScriptOverlayConfig } from "./createTypeScriptOverlayConfig.ts";
 import { createVirtualFiles } from "./createVirtualFiles.ts";
+import { findNearestConfigFile } from "./findNearestConfigFile.ts";
 import { createDefaultProjectResolver } from "./resolveDefaultProjectForFile.ts";
+import { isUnderDirectory } from "./utils/isUnderDirectory.ts";
 
 export interface TypeScriptProjectChanges {
 	changed?: string[];
 	closeFiles?: string[];
-	created?: string[];
-	deleted?: string[];
 	openFiles?: string[];
 	openProjects?: string[];
 }
@@ -69,8 +69,6 @@ export function createTypeScriptProjectSession(
 	// Virtual files (config overlays and parse temporaries) are managed here
 	// explicitly, so they are never disk-detected.
 	const observedTouchTimeByFilePath = new Map<string, number | undefined>();
-	const authoredConfigPaths = new Set<string>();
-	const authoredConfigPathsToOpen = new Set<string>();
 	let mappedExtensions = new Set<string>();
 	const openedMappedFilePaths = new Set<string>();
 	const openedOverlayPaths = new Set<string>();
@@ -108,15 +106,7 @@ export function createTypeScriptProjectSession(
 	try {
 		snapshot = api.createSnapshot({});
 	} catch (error) {
-		try {
-			api.close();
-		} catch (closeError) {
-			throw aggregateCleanupFailures(
-				error,
-				closeError,
-				"TypeScript project session initialization failed to clean up.",
-			);
-		}
+		api.close();
 		throw error;
 	}
 	let disposed = false;
@@ -125,70 +115,14 @@ export function createTypeScriptProjectSession(
 			throw new Error("TypeScript project session has been disposed.");
 		}
 	};
-	const closeApi = (): undefined | { error: unknown } => {
-		try {
-			api.close();
-		} catch (error) {
-			return { error };
-		}
-	};
-	const dispose = (): void => {
-		if (disposed) {
-			return;
-		}
-
-		disposed = true;
-		let snapshotDisposalFailed = false;
-		let snapshotDisposalError: unknown;
-		try {
-			snapshot.dispose();
-		} catch (error) {
-			snapshotDisposalFailed = true;
-			snapshotDisposalError = error;
-		}
-		const closeFailure = closeApi();
-		if (snapshotDisposalFailed && closeFailure) {
-			throw new AggregateError(
-				[snapshotDisposalError, closeFailure.error],
-				"TypeScript project session failed to dispose.",
-				{ cause: snapshotDisposalError },
-			);
-		}
-		if (snapshotDisposalFailed) {
-			throw snapshotDisposalError;
-		}
-		if (closeFailure) {
-			throw closeFailure.error;
-		}
-	};
-	const disposeForFailure = (): undefined | { error: unknown } => {
-		try {
-			dispose();
-		} catch (error) {
-			return { error };
-		}
-	};
 	const replaceSnapshot = (changes: SnapshotChanges): Snapshot => {
 		const previousSnapshot = snapshot;
 		// Without ensurePrograms, a project whose files changed keeps answering
 		// from its previous program.
 		snapshot = previousSnapshot.update({ ...changes, ensurePrograms: true });
 		// An update that changes nothing answers with the snapshot it was given.
-		if (snapshot === previousSnapshot) {
-			return snapshot;
-		}
-		try {
+		if (snapshot !== previousSnapshot) {
 			previousSnapshot.dispose();
-		} catch (error) {
-			const disposalFailure = disposeForFailure();
-			if (disposalFailure) {
-				throw aggregateCleanupFailures(
-					error,
-					disposalFailure.error,
-					"TypeScript project session failed to dispose replaced snapshots.",
-				);
-			}
-			throw error;
 		}
 		return snapshot;
 	};
@@ -197,22 +131,7 @@ export function createTypeScriptProjectSession(
 		registrations: TypeScriptContentMapperRegistration[],
 		mappedFilePaths: string[],
 	): string => {
-		const authoredSourceText = host.readFileSync(authoredConfigFilePath);
-		if (authoredSourceText === undefined) {
-			throw new Error(
-				`Could not read TypeScript config: ${authoredConfigFilePath}`,
-			);
-		}
-		const parseFilePath = `${authoredConfigFilePath}.flint-parse.json`;
-		virtualFiles.set(parseFilePath, authoredSourceText);
-		let config: unknown;
-		let error: unknown;
-		try {
-			({ config, error } = api.readConfigFile(parseFilePath));
-		} finally {
-			virtualFiles.delete(parseFilePath);
-			observedTouchTimeByFilePath.delete(parseFilePath);
-		}
+		const { config, error } = api.readConfigFile(authoredConfigFilePath);
 		if (error) {
 			throw new Error(
 				`Could not parse TypeScript config: ${authoredConfigFilePath}`,
@@ -223,7 +142,10 @@ export function createTypeScriptProjectSession(
 			config,
 			registrations,
 			[
-				...api.parseConfigFile(authoredConfigFilePath).fileNames,
+				...nullThrows(
+					parseConfigSafely(authoredConfigFilePath),
+					`Could not parse TypeScript config: ${authoredConfigFilePath}`,
+				).fileNames,
 				...mappedFilePaths,
 			],
 		);
@@ -234,30 +156,8 @@ export function createTypeScriptProjectSession(
 		);
 		return overlay.filePath;
 	};
-	const findNearestConfigFile = (filePath: string): string | undefined => {
-		const visitedDirectories: string[] = [];
-		let directory = path.dirname(filePath);
-		let nearest: string | undefined;
-		while (true) {
-			if (nearestConfigCache.has(directory)) {
-				nearest = nearestConfigCache.get(directory);
-				break;
-			}
-			visitedDirectories.push(directory);
-			nearest = ["tsconfig.json", "jsconfig.json"]
-				.map((configName) => path.join(directory, configName))
-				.find((configFilePath) => host.fileTypeSync(configFilePath) === "file");
-			const parent = path.dirname(directory);
-			if (nearest || parent === directory) {
-				break;
-			}
-			directory = parent;
-		}
-		for (const visitedDirectory of visitedDirectories) {
-			nearestConfigCache.set(visitedDirectory, nearest);
-		}
-		return nearest;
-	};
+	const findNearestConfig = (filePath: string): string | undefined =>
+		findNearestConfigFile(host, filePath, nearestConfigCache);
 	const parseConfigSafely = (
 		configFilePath: string,
 	): ParsedCommandLine | undefined => {
@@ -361,7 +261,7 @@ export function createTypeScriptProjectSession(
 		return best?.configFilePath ?? fallback ?? configFilePath;
 	};
 	const findConfigFile = (filePath: string): string | undefined => {
-		const nearest = findNearestConfigFile(filePath);
+		const nearest = findNearestConfig(filePath);
 		if (!nearest) {
 			return undefined;
 		}
@@ -404,8 +304,14 @@ export function createTypeScriptProjectSession(
 			assertActive();
 			return snapshot;
 		},
-		[Symbol.dispose]: dispose,
-		update({ changed, closeFiles, created, deleted, openFiles, openProjects }) {
+		[Symbol.dispose]() {
+			if (disposed) {
+				return;
+			}
+			disposed = true;
+			api.close();
+		},
+		update({ changed, closeFiles, openFiles, openProjects }) {
 			assertActive();
 			// Configs may have changed on disk since the last update, so drop the
 			// per-cycle caches used for project resolution.
@@ -434,10 +340,7 @@ export function createTypeScriptProjectSession(
 			// and must be reported as created so that projects whose file sets come
 			// from include globs re-scan their directories and pick it up.
 			const changedFilePaths = new Set(detectedChanged);
-			const createdFilePaths = new Set([
-				...(created ?? []),
-				...detectedCreated,
-			]);
+			const createdFilePaths = new Set(detectedCreated);
 			for (const filePath of changed ?? []) {
 				if (observedTouchTimeByFilePath.has(filePath)) {
 					changedFilePaths.add(filePath);
@@ -542,13 +445,6 @@ export function createTypeScriptProjectSession(
 					rollbackOverlaySourceTexts();
 					throw error;
 				}
-			} else if (openedOverlayPaths.size || authoredConfigPathsToOpen.size) {
-				closeProjects.push(...openedOverlayPaths);
-				projectsToOpen = [
-					...(openProjects ?? []),
-					...authoredConfigPaths,
-					...authoredConfigPathsToOpen,
-				];
 			}
 			if (closeProjects.length) {
 				try {
@@ -567,12 +463,6 @@ export function createTypeScriptProjectSession(
 				for (const closedOverlayPath of closeProjects) {
 					openedOverlayPaths.delete(closedOverlayPath);
 				}
-				if (!registrations.length) {
-					authoredConfigPathsToOpen.clear();
-					for (const authoredConfigPath of authoredConfigPaths) {
-						authoredConfigPathsToOpen.add(authoredConfigPath);
-					}
-				}
 			}
 			// TypeScript's native process exits when it opens a file whose nearest
 			// config it has not loaded and that config sends it looking elsewhere
@@ -582,7 +472,7 @@ export function createTypeScriptProjectSession(
 			// to load, as it reloads those once their last open file is closed.
 			const configPathsToLoad = new Set<string>();
 			for (const filePath of nativeOpenFiles ?? []) {
-				const configPath = findNearestConfigFile(filePath);
+				const configPath = findNearestConfig(filePath);
 				if (
 					configPath &&
 					!loadedExcludingConfigPaths.has(configPath) &&
@@ -605,9 +495,7 @@ export function createTypeScriptProjectSession(
 					...(createdFilePaths.size && {
 						created: [...createdFilePaths],
 					}),
-					...((deleted ?? detectedDeleted.length) && {
-						deleted: [...new Set([...(deleted ?? []), ...detectedDeleted])],
-					}),
+					...(detectedDeleted.length && { deleted: detectedDeleted }),
 				},
 				...(nativeCloseFiles?.length && { closeFiles: nativeCloseFiles }),
 				...(nativeOpenFiles?.length && { openFiles: nativeOpenFiles }),
@@ -615,16 +503,6 @@ export function createTypeScriptProjectSession(
 					openProjects: [...new Set(projectsToOpen)],
 				}),
 			});
-			for (const authoredConfigPath of openProjects ?? []) {
-				authoredConfigPaths.add(authoredConfigPath);
-				authoredConfigPathsToOpen.delete(authoredConfigPath);
-			}
-			if (!registrations.length) {
-				authoredConfigPathsToOpen.clear();
-			}
-			for (const authoredConfigPath of mappedConfigFilePaths) {
-				authoredConfigPaths.add(authoredConfigPath);
-			}
 			for (const overlayPath of overlaysToMarkOpened) {
 				openedOverlayPaths.add(overlayPath);
 			}
@@ -635,18 +513,4 @@ export function createTypeScriptProjectSession(
 			return replacement;
 		},
 	};
-}
-
-function aggregateCleanupFailures(
-	initialError: unknown,
-	cleanupError: unknown,
-	message: string,
-): AggregateError {
-	const cleanupErrors: unknown[] =
-		cleanupError instanceof AggregateError
-			? (cleanupError.errors as unknown[])
-			: [cleanupError];
-	return new AggregateError([initialError, ...cleanupErrors], message, {
-		cause: initialError,
-	});
 }
