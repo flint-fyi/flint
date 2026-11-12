@@ -26,15 +26,9 @@ export function isTypeFromTS(
 		if (symbol?.name === typeName || symbol?.name === `${typeName}Base`) {
 			const isFlintBase = symbol.name !== typeName;
 
-			return symbol.declarations.some((handle) => {
-				const fileName = handle.resolve()?.getSourceFile().fileName;
-				return (
-					!!fileName &&
-					(isFlintBase
-						? isDeclaredByFlintAST(fileName)
-						: isDeclaredByTypeScript(fileName))
-				);
-			});
+			return symbol.declarations.some(({ path }) =>
+				isFlintBase ? isDeclaredByFlintAST(path) : isDeclaredByTypeScript(path),
+			);
 		}
 
 		// CustomNode extends ts[typeName]
@@ -51,13 +45,13 @@ export function isTypeFromTS(
 
 function isDeclaredByFlintAST(fileName: string): boolean {
 	return (
-		/[/\\]typescript-language[/\\]src[/\\]types[/\\]ast\.ts$/.test(fileName) ||
-		/[/\\]@flint\.fyi[/\\]typescript-language[/\\]dist[/\\].+\.d\.mts$/.test(
+		/[/\\]typescript-language[/\\]src[/\\]types[/\\]ast\.ts$/i.test(fileName) ||
+		/[/\\]@flint\.fyi[/\\]typescript-language[/\\]dist[/\\].+\.d\.mts$/i.test(
 			fileName,
 		)
 	);
 }
 
 function isDeclaredByTypeScript(fileName: string): boolean {
-	return /[/\\]node_modules[/\\]typescript[/\\].+\.d\.ts$/.test(fileName);
+	return /[/\\]node_modules[/\\]typescript[/\\].+\.d\.ts$/i.test(fileName);
 }

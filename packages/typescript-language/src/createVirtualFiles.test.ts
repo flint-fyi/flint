@@ -15,14 +15,10 @@ describe(createVirtualFiles, () => {
 	// while TypeScript asks the file system for the same file using `/`.
 	it("matches a backslash-spelled path against its slash-spelled entry", () => {
 		const virtualFiles = createVirtualFiles();
-		virtualFiles.set(String.raw`C:\repo\tsconfig.json.flint-parse.json`, "{}");
+		virtualFiles.set(String.raw`C:\repo\tsconfig.flint-overlay.json`, "{}");
 
-		expect(virtualFiles.has("C:/repo/tsconfig.json.flint-parse.json")).toBe(
-			true,
-		);
-		expect(virtualFiles.get("C:/repo/tsconfig.json.flint-parse.json")).toBe(
-			"{}",
-		);
+		expect(virtualFiles.has("C:/repo/tsconfig.flint-overlay.json")).toBe(true);
+		expect(virtualFiles.get("C:/repo/tsconfig.flint-overlay.json")).toBe("{}");
 	});
 
 	it("deletes an entry spelled with the other separator", () => {

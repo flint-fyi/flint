@@ -7,6 +7,18 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const value: any;
+const callback: (() => unknown) & (() => string) = (): string => value;
+`,
+			snapshot: `
+declare const value: any;
+const callback: (() => unknown) & (() => string) = (): string => value;
+                                                                 ~~~~~
+                                                                 Unsafe return of a value of type \`any\`.
+`,
+		},
+		{
+			code: `
 function foo() {
   return 1 as any;
 }

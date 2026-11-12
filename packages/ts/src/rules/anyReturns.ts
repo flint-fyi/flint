@@ -10,6 +10,8 @@ import {
 } from "@flint.fyi/typescript-language/native/ast";
 import {
 	TypeFlags,
+	type Signature,
+	type Type,
 	type TypeReference,
 } from "@flint.fyi/typescript-language/native/sync";
 import { nullThrows } from "@flint.fyi/utils";
@@ -18,7 +20,6 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
-import { getUnionConstituents } from "./utils/typeConstituents.ts";
 
 function findFunctionAncestor(
 	node: AST.AnyNode,
@@ -34,6 +35,29 @@ function findFunctionAncestor(
 	}
 
 	return undefined;
+}
+
+// An intersection of several callable types has no one set of signatures to
+// check against, so it is treated as having none.
+function getCallSignaturesOfType(type: Type): readonly Signature[] {
+	if (type.isUnionType()) {
+		return type.getTypes().flatMap(getCallSignaturesOfType);
+	}
+	if (!type.isIntersectionType()) {
+		return type.getCallSignatures();
+	}
+	let signatures: readonly Signature[] | undefined;
+	for (const constituent of type.getTypes()) {
+		const constituentSignatures = getCallSignaturesOfType(constituent);
+		if (!constituentSignatures.length) {
+			continue;
+		}
+		if (signatures) {
+			return [];
+		}
+		signatures = constituentSignatures;
+	}
+	return signatures ?? [];
 }
 
 function getThisExpression(
@@ -127,9 +151,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					? typeChecker.getContextualType(functionNode)
 					: typeChecker.getTypeAtLocation(functionNode);
 			functionType ??= typeChecker.getTypeAtLocation(functionNode);
-			const callSignatures = getUnionConstituents(functionType).flatMap(
-				(constituent) => constituent.getCallSignatures(),
-			);
+			const callSignatures = getCallSignaturesOfType(functionType);
 			// If there is an explicit type annotation *and* that type matches the actual
 			// function return type, we shouldn't complain (it's intentional, even if unsafe)
 			if (functionNode.type) {

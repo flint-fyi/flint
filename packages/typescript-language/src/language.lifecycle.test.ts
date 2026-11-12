@@ -208,16 +208,27 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledTimes(3);
 	});
 
-	it("opens files in a new session when the native process exits during preparation", () => {
-		mockSnapshot({ "/repo/first.ts": { fileName: "/repo/first.ts" } });
+	it("retries the batch in a new session when the native process exits during preparation", () => {
+		mockSnapshot({
+			"/repo/first.ts": { fileName: "/repo/first.ts" },
+			"/repo/second.ts": { fileName: "/repo/second.ts" },
+		});
 		mocks.session.update.mockImplementationOnce(() => {
 			throw new Error("Unexpected EOF while reading from child process");
 		});
 		const factory = createFactory();
 
-		factory.prepareFiles?.(["/repo/first.ts"]);
+		factory.prepareFiles?.(["/repo/first.ts", "/repo/second.ts"]);
+		const updatesAfterPreparation = mocks.session.update.mock.calls.length;
 		const first = factory.createFile(fileData("/repo/first.ts"));
 
+		expect(mocks.session.update.mock.calls.at(-1)).toEqual([
+			{
+				changed: ["/repo/first.ts", "/repo/second.ts"],
+				openFiles: ["/repo/first.ts", "/repo/second.ts"],
+			},
+		]);
+		expect(mocks.session.update).toHaveBeenCalledTimes(updatesAfterPreparation);
 		expect(first.services.sourceFile).toHaveProperty(
 			"fileName",
 			"/repo/first.ts",

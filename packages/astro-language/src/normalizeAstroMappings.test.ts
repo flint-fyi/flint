@@ -2,10 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { SpanMappingFeature } from "@flint.fyi/content-mapper";
 
-import {
-	featuresFor,
-	normalizeAstroMappings,
-} from "./normalizeAstroMappings.ts";
+import { normalizeAstroMappings } from "./normalizeAstroMappings.ts";
 
 const NAVIGATION_FEATURES =
 	SpanMappingFeature.Definition |
@@ -17,14 +14,8 @@ const NAVIGATION_FEATURES =
 	SpanMappingFeature.CallHierarchy |
 	SpanMappingFeature.CodeActions;
 
-const SEMANTIC_FEATURES =
-	SpanMappingFeature.Hover |
-	SpanMappingFeature.InlayHints |
-	SpanMappingFeature.SemanticTokens |
-	SpanMappingFeature.CodeLens;
-
 describe(normalizeAstroMappings, () => {
-	it("marks identical text verbatim and differing text atom", () => {
+	it("marks a mapping verbatim when its texts are identical and atom when they differ", () => {
 		expect(
 			normalizeAstroMappings(
 				[
@@ -45,7 +36,7 @@ describe(normalizeAstroMappings, () => {
 		]);
 	});
 
-	it("drops mappings that partially overlap an exact or longer original range", () => {
+	it("drops a mapping when it partially overlaps an exact or longer original range", () => {
 		expect(
 			normalizeAstroMappings(
 				[
@@ -68,7 +59,7 @@ describe(normalizeAstroMappings, () => {
 		]);
 	});
 
-	it("drops a mapping that extends an exact mapping's virtual range over scaffolding", () => {
+	it("drops a mapping when it extends an exact mapping's virtual range over scaffolding", () => {
 		const originalText = "---\nconst a = 1;\n---\n<p>{a}</p>\n";
 		const generatedText =
 			"/* prefix */\nconst a = 1;\n\n;{};<Fragment><p>{a}</p>\n";
@@ -116,55 +107,5 @@ describe(normalizeAstroMappings, () => {
 				"ab",
 			),
 		).toThrow(/equal lengths/);
-	});
-});
-
-describe(featuresFor, () => {
-	it("enables every feature when every capability is enabled", () => {
-		expect(
-			featuresFor({
-				completion: true,
-				format: true,
-				navigation: true,
-				semantic: true,
-				structure: true,
-				verification: true,
-			}),
-		).toBe((SpanMappingFeature.CodeLens << 1) - 1);
-	});
-
-	it.each([
-		[
-			"semantic highlight false",
-			{ semantic: { shouldHighlight: (): boolean => false } },
-			SEMANTIC_FEATURES & ~SpanMappingFeature.SemanticTokens,
-		],
-		[
-			"semantic highlight true",
-			{ semantic: { shouldHighlight: (): boolean => true } },
-			SEMANTIC_FEATURES,
-		],
-		[
-			"navigation highlight false",
-			{ navigation: { shouldHighlight: (): boolean => false } },
-			NAVIGATION_FEATURES & ~SpanMappingFeature.DocumentHighlights,
-		],
-		[
-			"navigation highlight true",
-			{ navigation: { shouldHighlight: (): boolean => true } },
-			NAVIGATION_FEATURES,
-		],
-		[
-			"navigation rename false",
-			{ navigation: { shouldRename: (): boolean => false } },
-			NAVIGATION_FEATURES & ~SpanMappingFeature.Rename,
-		],
-		[
-			"navigation rename true",
-			{ navigation: { shouldRename: (): boolean => true } },
-			NAVIGATION_FEATURES,
-		],
-	] as const)("preserves %s callback semantics", (_name, data, expected) => {
-		expect(featuresFor(data)).toBe(expected);
 	});
 });

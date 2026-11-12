@@ -69,6 +69,12 @@ type TestCaseUniqueProperties = Pick<
 	"code" | "fileName" | "files" | "options"
 >;
 
+interface TesterSetupsByKey {
+	afterAll: TesterSetupAfterAll;
+	describe: TesterSetupDescribe;
+	it: TesterSetupIt;
+}
+
 export class RuleTester {
 	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
 	#linterHost: VFSLinterHost;
@@ -333,19 +339,17 @@ function assertNoLanguageReports(languageReports: LanguageReports) {
 	}
 }
 
-function defaultTo<
-	TesterSetup extends TesterSetupAfterAll | TesterSetupDescribe | TesterSetupIt,
->(
-	provided: TesterSetup | undefined,
+function defaultTo<ScopeKey extends keyof TesterSetupsByKey>(
+	provided: TesterSetupsByKey[ScopeKey] | undefined,
 	scope: Record<string, unknown>,
-	scopeKey: string,
-): TesterSetup {
+	scopeKey: ScopeKey,
+): TesterSetupsByKey[ScopeKey] {
 	if (provided) {
 		return provided;
 	}
 
 	if (scopeKey in scope && typeof scope[scopeKey] === "function") {
-		return scope[scopeKey] as TesterSetup;
+		return scope[scopeKey] as TesterSetupsByKey[ScopeKey];
 	}
 
 	throw new Error(`No ${scopeKey} function found`);

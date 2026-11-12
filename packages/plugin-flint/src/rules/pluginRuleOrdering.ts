@@ -61,18 +61,11 @@ function isCreatePluginCall(
 		return false;
 	}
 
-	return resolvedSymbol.declarations.some((handle) => {
-		const fileName = handle
-			.resolve()
-			?.getSourceFile()
-			.fileName.replaceAll("\\", "/");
-
-		return (
-			!!fileName &&
-			fileName.includes("/core/") &&
-			/plugins\/createPlugin\.(?:d\.)?[cm]?[jt]s$/.test(fileName)
-		);
-	});
+	return resolvedSymbol.declarations.some(({ path }) =>
+		/\/core\/.*plugins\/createPlugin\.(?:d\.)?[cm]?[jt]s$/i.test(
+			path.replaceAll("\\", "/"),
+		),
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

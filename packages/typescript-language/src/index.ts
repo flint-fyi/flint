@@ -1,11 +1,9 @@
-export {
-	createContentMapperRegistrar,
-	type TypeScriptContentMapperRegistration,
-} from "./contentMappers.ts";
+export type { TypeScriptContentMapperRegistration } from "./contentMappers.ts";
 export {
 	convertTypeScriptDiagnosticToLanguageReport,
 	type TSDiagnostic,
 } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+export { createContentMapperRegistrar } from "./createContentMapperRegistrar.ts";
 export {
 	createNodeVisitorsForFile,
 	type NodeVisitorsForFile,
@@ -67,5 +65,6 @@ export {
 	isStringRawNoSubstitution,
 	type StringRawNoSubstitution,
 } from "./utils/isStringRawNoSubstitution.ts";
+export { resolveDeclarations } from "./utils/resolveDeclarations.ts";
 export { unwrapParenthesizedNode } from "./utils/unwrapParenthesizedNode.ts";
 export { unwrapParentParenthesizedExpressions } from "./utils/unwrapParentParenthesizedExpressions.ts";

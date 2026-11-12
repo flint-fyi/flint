@@ -31,24 +31,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isNamespaceImportDeclaration(declaration: AST.AnyNode): boolean {
-			return (
-				declaration.kind === SyntaxKind.NamespaceImport &&
-				declaration.parent.kind === SyntaxKind.ImportClause &&
-				declaration.parent.parent.kind === SyntaxKind.ImportDeclaration
-			);
-		}
-
 		function isIdentifierNamespaceImport(
 			identifier: AST.Identifier,
 			typeChecker: Checker,
 		): boolean {
 			return !!typeChecker
 				.getSymbolAtLocation(identifier)
-				?.declarations.some((handle) => {
-					const declaration = handle.resolve() as AST.AnyNode | undefined;
-					return !!declaration && isNamespaceImportDeclaration(declaration);
-				});
+				?.declarations.some(
+					(handle) => handle.kind === SyntaxKind.NamespaceImport,
+				);
 		}
 
 		return {

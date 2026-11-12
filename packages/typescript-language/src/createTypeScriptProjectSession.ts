@@ -1,3 +1,4 @@
+import { debugForFile } from "debug-for-file";
 import path from "pathe";
 import {
 	API,
@@ -20,6 +21,8 @@ import { createVirtualFiles } from "./createVirtualFiles.ts";
 import { findNearestConfigFile } from "./findNearestConfigFile.ts";
 import { createDefaultProjectResolver } from "./resolveDefaultProjectForFile.ts";
 import { isUnderDirectory } from "./utils/isUnderDirectory.ts";
+
+const log = debugForFile(import.meta.filename);
 
 export interface TypeScriptProjectChanges {
 	changed?: string[];
@@ -66,8 +69,8 @@ export function createTypeScriptProjectSession(
 	// file system has touched. Change detection compares these timestamps rather
 	// than re-reading full file contents, which keeps a lint pass linear in the
 	// number of files instead of O(files opened * files in program) disk reads.
-	// Virtual files (config overlays and parse temporaries) are managed here
-	// explicitly, so they are never disk-detected.
+	// Virtual config overlays are managed here explicitly, so they are never
+	// disk-detected.
 	const observedTouchTimeByFilePath = new Map<string, number | undefined>();
 	let mappedExtensions = new Set<string>();
 	const openedMappedFilePaths = new Set<string>();
@@ -106,7 +109,14 @@ export function createTypeScriptProjectSession(
 	try {
 		snapshot = api.createSnapshot({});
 	} catch (error) {
-		api.close();
+		try {
+			api.close();
+		} catch (closeError) {
+			log(
+				"Failed to close the API after snapshot creation failed:",
+				closeError,
+			);
+		}
 		throw error;
 	}
 	let disposed = false;
@@ -121,8 +131,15 @@ export function createTypeScriptProjectSession(
 		// from its previous program.
 		snapshot = previousSnapshot.update({ ...changes, ensurePrograms: true });
 		// An update that changes nothing answers with the snapshot it was given.
-		if (snapshot !== previousSnapshot) {
+		if (snapshot === previousSnapshot) {
+			return snapshot;
+		}
+		// The replacement is already in place, and disposal removes the previous
+		// snapshot from the API's bookkeeping even when it fails.
+		try {
 			previousSnapshot.dispose();
+		} catch (error) {
+			log("Failed to dispose a replaced snapshot:", error);
 		}
 		return snapshot;
 	};

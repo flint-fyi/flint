@@ -89,12 +89,6 @@ export function transformAstro({
 	};
 }
 
-/**
- * Walks up from a component's directory to the `astro` package installed for
- * it, the same way `@astrojs/ts-plugin` does. Node's own resolution is not
- * used because it also searches `NODE_PATH`, which package manager shims set
- * to directories unrelated to the linted project.
- */
 function collectScripts(
 	node: ParentNode,
 	source: SourceFileWithLineMap,
@@ -122,6 +116,12 @@ function collectScripts(
 	return scripts;
 }
 
+/**
+ * Walks up from a component's directory to the `astro` package installed for
+ * it, the same way `@astrojs/ts-plugin` does. Node's own resolution is not
+ * used because it also searches `NODE_PATH`, which package manager shims set
+ * to directories unrelated to the linted project.
+ */
 function findAstroPackageDirectory(directory: string): string | undefined {
 	let current = directory;
 	while (true) {

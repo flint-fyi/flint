@@ -103,20 +103,19 @@ describe(`${createTypeScriptProjectSession.name} error handling`, () => {
 		expect(mocks.apis[0]?.close).toHaveBeenCalledOnce();
 	});
 
-	it("throws the disposal error when the previous snapshot fails to dispose", () => {
-		const error = new Error("previous snapshot disposal failed");
+	it("keeps the replacement snapshot when the previous snapshot fails to dispose", () => {
 		mocks.snapshotDisposes.push(
 			vi.fn(() => {
-				throw error;
+				throw new Error("previous snapshot disposal failed");
 			}),
 		);
 		using session = createTypeScriptProjectSession(
 			createVFSLinterHost({ caseSensitive: true, cwd: "/repo" }),
 		);
 
-		expect(() => session.update({ openFiles: ["/repo/index.ts"] })).toThrow(
-			error,
-		);
+		const replacement = session.update({ openFiles: ["/repo/index.ts"] });
+
+		expect(session.getSnapshot()).toBe(replacement);
 	});
 
 	it("restores changed overlays when the close snapshot fails so a retry reopens the project", () => {

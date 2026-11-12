@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
+	resolveDeclarations,
 	typescriptLanguage,
 	type AST,
 	type Checker,
@@ -37,31 +38,12 @@ const restrictionSchema = z.object({
 
 type Restriction = z.infer<typeof restrictionSchema>;
 
-function resolveDeclarations(
-	declarationHandles: readonly { resolve(): Node | undefined }[] | undefined,
-): AST.Declaration[] | undefined {
-	if (!declarationHandles) {
-		return undefined;
-	}
-
-	const declarations: AST.Declaration[] = [];
-	for (const declarationHandle of declarationHandles) {
-		const declaration = declarationHandle.resolve();
-		if (!declaration) {
-			return undefined;
-		}
-		declarations.push(declaration as AST.Declaration);
-	}
-	return declarations;
-}
-
 function resolveModuleDeclarations(
 	moduleSpecifier: AST.Expression,
 	typeChecker: Checker,
 ) {
-	return resolveDeclarations(
-		typeChecker.getSymbolAtLocation(moduleSpecifier)?.declarations,
-	);
+	const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
+	return symbol && resolveDeclarations(symbol.declarations);
 }
 
 function resolveSymbolDeclarations(nameNode: Node, typeChecker: Checker) {
