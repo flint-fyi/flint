@@ -876,7 +876,7 @@ describe("createDiskBackedLinterHost", () => {
 
 		it("opens one native watcher for file watchers of the same path", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
-			const filePath = path.join(integrationRoot, "shared.txt");
+			const filePath = normalizePath(path.join(integrationRoot, "shared.txt"));
 			fs.writeFileSync(filePath, "first");
 			const watch = vi.spyOn(fs, "watch");
 			const first = vi.fn();
@@ -898,7 +898,7 @@ describe("createDiskBackedLinterHost", () => {
 
 		it("keeps reporting to a callback registered twice after one is disposed", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
-			const filePath = path.join(integrationRoot, "shared.txt");
+			const filePath = normalizePath(path.join(integrationRoot, "shared.txt"));
 			fs.writeFileSync(filePath, "first");
 			const onEvent = vi.fn();
 			using _ = host.watchFileSync(filePath, onEvent, { ignoredPaths: [] });
@@ -918,7 +918,7 @@ describe("createDiskBackedLinterHost", () => {
 
 		it("does not warn about too many listeners when many watchers share a missing path", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
-			const filePath = path.join(integrationRoot, "missing.txt");
+			const filePath = normalizePath(path.join(integrationRoot, "missing.txt"));
 			const warnings: Error[] = [];
 			const onWarning = (warning: Error): void => {
 				warnings.push(warning);
@@ -964,12 +964,16 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: false,
 			});
 
-			expect(watch).toHaveBeenCalledTimes(2);
+			// On Linux, Node implements recursive fs.watch by calling fs.watch per entry.
+			const hostWatchCalls = watch.mock.calls.filter(
+				([, options]) => typeof options === "object" && "recursive" in options,
+			);
+			expect(hostWatchCalls).toHaveLength(2);
 		});
 
 		it("does not report to a watcher disposed by an earlier watcher's callback", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
-			const filePath = path.join(integrationRoot, "shared.txt");
+			const filePath = normalizePath(path.join(integrationRoot, "shared.txt"));
 			fs.writeFileSync(filePath, "first");
 			const subscriptions: Disposable[] = [];
 			const first = vi.fn(() => {
@@ -996,7 +1000,7 @@ describe("createDiskBackedLinterHost", () => {
 
 		it("closes a shared native watcher after its last watcher is disposed", () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
-			const filePath = path.join(integrationRoot, "shared.txt");
+			const filePath = normalizePath(path.join(integrationRoot, "shared.txt"));
 			fs.writeFileSync(filePath, "first");
 			const watch = vi.spyOn(fs, "watch");
 			const first = host.watchFileSync(filePath, vi.fn(), {
