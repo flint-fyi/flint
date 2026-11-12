@@ -12,6 +12,7 @@ import type {
 	LinterHostFileWatcherEvent,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
+import { isIgnoredRelativePath } from "./watcher.ts";
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFs = isFileSystemCaseSensitive();
@@ -276,10 +277,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				if (changedKey.startsWith(dirKeySlash)) {
 					relative = relative.slice(directoryPathAbsolute.length);
 				}
-				return options.ignoredPaths.some(
-					(ignored) =>
-						relative.endsWith(ignored) || relative.includes(ignored + "/"),
-				);
+				return isIgnoredRelativePath(relative, options.ignoredPaths);
 			}
 
 			return createWatcher(

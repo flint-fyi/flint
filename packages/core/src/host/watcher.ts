@@ -10,3 +10,14 @@ export const commonlyIgnoredPaths: string[] = [
 export const commonlyIgnoredGlobs: string[] = commonlyIgnoredPaths.map(
 	(dir) => `**${dir}`,
 );
+
+export function isIgnoredRelativePath(
+	relativePath: string,
+	ignoredPaths: string[],
+): boolean {
+	return ignoredPaths.some(
+		(ignoredPath) =>
+			relativePath.endsWith(ignoredPath) ||
+			relativePath.includes(`${ignoredPath}/`),
+	);
+}

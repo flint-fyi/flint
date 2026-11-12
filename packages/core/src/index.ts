@@ -17,6 +17,10 @@ export { directiveReports } from "./directives/reports/directiveReports.ts";
 export { globs } from "./globs/index.ts";
 export { createEphemeralLinterHost } from "./host/createEphemeralLinterHost.ts";
 export {
+	createRelayFileSystemWatcher,
+	type RelayFileSystemWatcher,
+} from "./host/createRelayFileSystemWatcher.ts";
+export {
 	createVFSLinterHost,
 	type CreateVFSLinterHostOpts,
 } from "./host/createVFSLinterHost.ts";
