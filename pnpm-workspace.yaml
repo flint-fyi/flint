@@ -147,13 +147,13 @@ catalogs:
   site:
     "@astrojs/check": 0.9.12
     "@astrojs/markdown-remark": 7.3.6
-    "@astrojs/react": 7.1.4
+    "@astrojs/react": 7.1.5
     "@astrojs/starlight": 0.42.10
     "@expressive-code/core": 0.44.3
     "@konami-emoji-blast/astro": 0.3.0
     "@types/react": 19.3.0
     "@types/react-dom": 19.3.0
-    astro: 7.4.7
+    astro: 7.4.8
     astro-og-canvas: 0.13.3
     canvaskit-wasm: 0.42.0
     clsx: 2.1.1
