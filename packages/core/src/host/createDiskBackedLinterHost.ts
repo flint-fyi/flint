@@ -13,6 +13,11 @@ import type {
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
 
+interface SharedWatcher<Args extends unknown[]> {
+	subscribers: Set<{ callback: (...args: Args) => void }>;
+	watcher: Disposable;
+}
+
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFs = isFileSystemCaseSensitive();
 	cwd = normalizePath(cwd);
@@ -21,6 +26,15 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		foundRepositoryRoot == null
 			? undefined
 			: normalizePath(foundRepositoryRoot);
+
+	const sharedDirectoryWatchers = new Map<
+		string,
+		SharedWatcher<[filePathAbsolute: string]>
+	>();
+	const sharedFileWatchers = new Map<
+		string,
+		SharedWatcher<[event: LinterHostFileWatcherEvent]>
+	>();
 
 	function createWatcher(
 		normalizedWatchPath: string,
@@ -282,40 +296,59 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				);
 			}
 
-			return createWatcher(
-				directoryPathAbsolute,
-				options.recursive,
-				options.pollingInterval ?? 2000,
-				(normalizedChangedFilePath) => {
-					normalizedChangedFilePath ??= directoryPathAbsolute;
-					if (isIgnoredPath(normalizedChangedFilePath)) {
-						return;
-					}
-					callback(normalizedChangedFilePath);
-				},
-				options.ignoredPaths.length
-					? (relativePath) =>
-							isIgnoredPath(
-								normalizePath(resolve(directoryPathAbsolute, relativePath)),
-							)
-					: undefined,
+			const pollingInterval = options.pollingInterval ?? 2000;
+
+			return watchShared(
+				sharedDirectoryWatchers,
+				JSON.stringify([
+					dirKey,
+					options.recursive,
+					pollingInterval,
+					options.ignoredPaths,
+				]),
+				callback,
+				(notify) =>
+					createWatcher(
+						directoryPathAbsolute,
+						options.recursive,
+						pollingInterval,
+						(normalizedChangedFilePath) => {
+							normalizedChangedFilePath ??= directoryPathAbsolute;
+							if (!isIgnoredPath(normalizedChangedFilePath)) {
+								notify(normalizedChangedFilePath);
+							}
+						},
+						options.ignoredPaths.length
+							? (relativePath) =>
+									isIgnoredPath(
+										normalizePath(resolve(directoryPathAbsolute, relativePath)),
+									)
+							: undefined,
+					),
 			);
 		},
 		watchFileSync(filePathAbsolute, callback, options) {
 			const watchKey = pathKey(filePathAbsolute, caseSensitiveFs);
+			const pollingInterval = options.pollingInterval ?? 2000;
 
-			return createWatcher(
-				filePathAbsolute,
-				false,
-				options.pollingInterval ?? 2000,
-				(normalizedChangedFilePath, event) => {
-					if (
-						normalizedChangedFilePath != null &&
-						pathKey(normalizedChangedFilePath, caseSensitiveFs) === watchKey
-					) {
-						callback(event);
-					}
-				},
+			return watchShared(
+				sharedFileWatchers,
+				JSON.stringify([watchKey, pollingInterval]),
+				callback,
+				(notify) =>
+					createWatcher(
+						filePathAbsolute,
+						false,
+						pollingInterval,
+						(normalizedChangedFilePath, event) => {
+							if (
+								normalizedChangedFilePath != null &&
+								pathKey(normalizedChangedFilePath, caseSensitiveFs) === watchKey
+							) {
+								notify(event);
+							}
+						},
+					),
 			);
 		},
 		async writeFile(filePathAbsolute, content) {
@@ -330,6 +363,44 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		writeFileSync(filePathAbsolute, content) {
 			fs.mkdirSync(dirname(filePathAbsolute), { recursive: true });
 			fs.writeFileSync(filePathAbsolute, content, "utf8");
+		},
+	};
+}
+
+function watchShared<Args extends unknown[]>(
+	sharedWatchers: Map<string, SharedWatcher<Args>>,
+	key: string,
+	callback: (...args: Args) => void,
+	openWatcher: (notify: (...args: Args) => void) => Disposable,
+): Disposable {
+	let sharedWatcher = sharedWatchers.get(key);
+	if (!sharedWatcher) {
+		const subscribers = new Set<{ callback: (...args: Args) => void }>();
+		sharedWatcher = {
+			subscribers,
+			watcher: openWatcher((...args) => {
+				for (const subscriber of Array.from(subscribers)) {
+					if (subscribers.has(subscriber)) {
+						subscriber.callback(...args);
+					}
+				}
+			}),
+		};
+		sharedWatchers.set(key, sharedWatcher);
+	}
+
+	const subscriber = { callback };
+	const { subscribers, watcher } = sharedWatcher;
+	subscribers.add(subscriber);
+
+	return {
+		[Symbol.dispose]() {
+			if (!subscribers.delete(subscriber) || subscribers.size) {
+				return;
+			}
+
+			sharedWatchers.delete(key);
+			watcher[Symbol.dispose]();
 		},
 	};
 }
