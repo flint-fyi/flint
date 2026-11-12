@@ -65,7 +65,7 @@ const config: ConfigObject[] = defineConfig(
 			tseslint.configs.stylisticTypeChecked,
 			unicorn.configs.unopinionated,
 		],
-		files: ["**/*.{js,ts}"],
+		files: [tseslint.globs.jsts],
 		languageOptions: {
 			parserOptions: {
 				projectService: true,

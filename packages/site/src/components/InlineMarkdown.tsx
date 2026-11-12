@@ -1,4 +1,5 @@
 import markdownIt from "markdown-it";
+import type { ReactElement } from "react";
 
 const renderer = markdownIt();
 
@@ -7,7 +8,10 @@ export interface InlineMarkdownProps {
 	markdown: string;
 }
 
-export function InlineMarkdown({ className, markdown }: InlineMarkdownProps) {
+export function InlineMarkdown({
+	className,
+	markdown,
+}: InlineMarkdownProps): ReactElement {
 	return (
 		<span
 			className={className}
