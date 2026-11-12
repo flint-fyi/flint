@@ -54,8 +54,8 @@ interface GlobalLanguageState {
 
 function adjustMappedRange(
 	range: CharacterReportRange,
+	kind: "change" | "report",
 	spanMap: SpanMap | undefined,
-	requireExact = false,
 ): CharacterReportRange | null {
 	// Rules that already report in authored coordinates (through
 	// `@flint.fyi/content-mapper`'s `reportSourceCode`) encode `begin` as
@@ -72,7 +72,9 @@ function adjustMappedRange(
 	});
 	if (
 		SpanMap.isNone(mapped.fidelity) ||
-		(requireExact && !SpanMap.isExact(mapped.fidelity))
+		// A change applies its replacement text unchanged, so it must land on
+		// exactly the authored text it replaces.
+		(kind === "change" && !SpanMap.isExact(mapped.fidelity))
 	) {
 		return null;
 	}
@@ -148,8 +150,9 @@ function isInAuthoredCoordinates(
 	) {
 		return false;
 	}
-	const start = getColumnAndLineOfPosition(sourceText, pos);
-	const finish = getColumnAndLineOfPosition(sourceText, end);
+	const source = { text: sourceText };
+	const start = getColumnAndLineOfPosition(source, pos);
+	const finish = getColumnAndLineOfPosition(source, end);
 	if (
 		start.line !== startPosition.line ||
 		start.column !== startPosition.character ||
@@ -418,10 +421,10 @@ export const typescriptLanguage: Language<
 						: parseDirectivesFromTypeScriptFile(sourceFile)),
 					about: data,
 					...(mapperRegistration && {
-						adjustFixRange: (range: CharacterReportRange) =>
-							adjustMappedRange(range, sourceFile.spanMap, true),
-						adjustReportRange: (range: CharacterReportRange) =>
-							adjustMappedRange(range, sourceFile.spanMap),
+						adjustReportRange: (
+							range: CharacterReportRange,
+							kind: "change" | "report",
+						) => adjustMappedRange(range, kind, sourceFile.spanMap),
 					}),
 					language: typescriptLanguage,
 					services,
@@ -451,10 +454,11 @@ export const typescriptLanguage: Language<
 			}
 			// As in createFile, the process may have exited because of an earlier
 			// file, so the batch gets one attempt in a new process.
-			if (!prepareFilesInSession(filePathsAbsolute)) {
-				log("Native process exited while preparing files; retrying.");
-				prepareFilesInSession(filePathsAbsolute);
+			if (prepareFilesInSession(filePathsAbsolute)) {
+				return;
 			}
+			log("Native process exited while preparing files; retrying.");
+			prepareFilesInSession(filePathsAbsolute);
 		}
 
 		/**
@@ -467,19 +471,19 @@ export const typescriptLanguage: Language<
 			const newFilePaths = filePathsAbsolute.filter(
 				(filePath) => !currentSessionState.openFiles.has(filePath),
 			);
-			if (!newFilePaths.length) {
-				currentSessionState.prepared = true;
-				return true;
-			}
 			for (const filePath of newFilePaths) {
 				currentSessionState.openFiles.add(filePath);
 			}
 			// Open every file in a single update so the whole lint pass builds the
 			// program once, rather than rebuilding it per file (which is quadratic).
+			// Files opened by an earlier pass are flagged too, as they are linted
+			// again because they may have changed since.
 			try {
 				currentSessionState.session.update({
-					changed: newFilePaths,
-					openFiles: [...currentSessionState.openFiles],
+					changed: [...filePathsAbsolute],
+					...(newFilePaths.length && {
+						openFiles: [...currentSessionState.openFiles],
+					}),
 				});
 				currentSessionState.prepared = true;
 			} catch (error) {
@@ -570,15 +574,10 @@ export const typescriptLanguage: Language<
 			file.services.program,
 			file.services.sourceFile,
 		)) {
-			const adjustFixRange = file.adjustFixRange;
 			const adjustReportRange = file.adjustReportRange;
-			if (adjustFixRange) {
-				file.adjustFixRange = (range) =>
-					adjustMappedRange(range, sourceFile.spanMap, true);
-			}
 			if (adjustReportRange) {
-				file.adjustReportRange = (range) =>
-					adjustMappedRange(range, sourceFile.spanMap);
+				file.adjustReportRange = (range, kind) =>
+					adjustMappedRange(range, kind, sourceFile.spanMap);
 			}
 			try {
 				// Walk each mapped source file once for all of its rules. For
@@ -598,11 +597,8 @@ export const typescriptLanguage: Language<
 							}));
 				createNodeVisitorsForFile(sourceFileVisitors)?.visit(sourceFile);
 			} finally {
-				// Only mapped files had their adjusters swapped above, so only those
-				// need them restored.
-				if (adjustFixRange) {
-					file.adjustFixRange = adjustFixRange;
-				}
+				// Only mapped files had their adjuster swapped above, so only those
+				// need it restored.
 				if (adjustReportRange) {
 					file.adjustReportRange = adjustReportRange;
 				}

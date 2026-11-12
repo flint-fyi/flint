@@ -54,16 +54,20 @@ export type InferredOutputObject<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 > = OptionsSchema extends AnyOptionalSchema
 	? {
-			[Key in keyof OptionsSchema as undefined extends StandardSchemaV1.InferOutput<
-				OptionsSchema[Key]
-			>
-				? Key
-				: never]?: StandardSchemaV1.InferOutput<OptionsSchema[Key]>;
+			[
+				Key in keyof OptionsSchema as undefined extends StandardSchemaV1.InferOutput<
+					OptionsSchema[Key]
+				>
+					? Key
+					: never
+			]?: StandardSchemaV1.InferOutput<OptionsSchema[Key]>;
 		} & {
-			[Key in keyof OptionsSchema as undefined extends StandardSchemaV1.InferOutput<
-				OptionsSchema[Key]
-			>
-				? never
-				: Key]: StandardSchemaV1.InferOutput<OptionsSchema[Key]>;
+			[
+				Key in keyof OptionsSchema as undefined extends StandardSchemaV1.InferOutput<
+					OptionsSchema[Key]
+				>
+					? never
+					: Key
+			]: StandardSchemaV1.InferOutput<OptionsSchema[Key]>;
 		}
 	: undefined;

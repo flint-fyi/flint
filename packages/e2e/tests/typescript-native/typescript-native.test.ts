@@ -107,42 +107,42 @@ describe.skipIf(!packDirectory)("packed TypeScript native integration", () => {
 		expect(exitCode).toBe(1);
 		expect(normalizeOutput(`${stdout}\n${stderr}`, fixtureDirectory))
 			.toMatchInlineSnapshot(`
-				"<dim>Linting with <cyan><bold>flint.config.ts</bold><dim>...</fg>
+				"<grey>Linting with <cyan><bold>flint.config.ts</bold><grey>...</fg>
 
 				<underline><cwd>/fixtures/component.astro</underline>
-				<dim>  4:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
-				<dim>  8:5</fg>  Void expressions should not be used as values.              <yellow>ts/misleadingVoidExpressions</fg>
+				<grey>  4:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+				<grey>  8:5</fg>  Void expressions should not be used as values.              <yellow>ts/misleadingVoidExpressions</fg>
 
 				<underline><cwd>/fixtures/component.svelte</underline>
-				<dim>  4:3</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+				<grey>  4:3</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 				<underline><cwd>/fixtures/component.vue</underline>
-				<dim>  4:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+				<grey>  4:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 				<underline><cwd>/fixtures/configured.ts</underline>
-				<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+				<grey>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 				<underline><cwd>/fixtures/inferred.js</underline>
-				<dim>  3:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+				<grey>  3:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 				<underline><cwd>/fixtures/reference/referenced.ts</underline>
-				<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+				<grey>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 				<red>✖ Found <bold>7 reports</bold> across <bold>6 files</bold>.
 				</fg>
-				<dim>Finished in <time> on 7 files with 140 rules.
+				<grey>Finished in <time> on 7 files with 140 rules.
 				</fg>
 				<yellow>⚠️  Additionally found 3 language reportss:</fg>
 
-				[96mfixtures/component.astro</>:[93m2</>:[93m7</> - <dim>TS2322</>: Type 'string' is not assignable to type 'number'.
-				[7m2</> const typed: number = "text";
-				[7m </> [91m      ~~~~~</>
-				[96mfixtures/component.svelte</>:[93m2</>:[93m8</> - <dim>TS2322</>: Type 'string' is not assignable to type 'number'.
-				[7m2</>  const typed: number = "text";
-				[7m </> [91m       ~~~~~</>
-				[96mfixtures/component.vue</>:[93m2</>:[93m7</> - <dim>TS2322</>: Type 'string' is not assignable to type 'number'.
-				[7m2</> const typed: number = "text";
-				[7m </> [91m      ~~~~~</>
+				<cyanBright>fixtures/component.astro</>:<yellowBright>2</>:<yellowBright>7</> - <grey>TS2322</>: Type 'string' is not assignable to type 'number'.
+				<inverse>2</> const typed: number = "text";
+				<inverse> </> <redBright>      ~~~~~</>
+				<cyanBright>fixtures/component.svelte</>:<yellowBright>2</>:<yellowBright>8</> - <grey>TS2322</>: Type 'string' is not assignable to type 'number'.
+				<inverse>2</>  const typed: number = "text";
+				<inverse> </> <redBright>       ~~~~~</>
+				<cyanBright>fixtures/component.vue</>:<yellowBright>2</>:<yellowBright>7</> - <grey>TS2322</>: Type 'string' is not assignable to type 'number'.
+				<inverse>2</> const typed: number = "text";
+				<inverse> </> <redBright>      ~~~~~</>
 
 				"
 			`);

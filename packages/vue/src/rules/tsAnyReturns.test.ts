@@ -109,6 +109,20 @@ ruleTester.describe(rule, {
 <script lang="ts" setup>
 	import MyComponent from './MyComponent.vue'
 
+	const foo = 'safe' as string
+</script>
+
+<template>
+	<MyComponent :foo="() => foo"/>
+</template>
+`,
+			files: myComponentFixture,
+		},
+		{
+			code: `
+<script lang="ts" setup>
+	import MyComponent from './MyComponent.vue'
+
 	function foo() {
 		return MyComponent
 	}
@@ -118,3 +132,78 @@ ruleTester.describe(rule, {
 		},
 	],
 });
+
+ruleTester.describe(
+	{
+		...rule,
+		setup(context) {
+			return rule.setup({
+				...context,
+				report(report) {
+					context.report({
+						...report,
+						fix: { range: report.range, text: "'safe'" },
+						suggestions: [
+							{ id: "replace", range: report.range, text: "'safe'" },
+						],
+					});
+				},
+			});
+		},
+	},
+	{
+		invalid: [
+			{
+				code: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => foo" /></template>
+`,
+				files: myComponentFixture,
+				name: "applies edits to a template expression when it maps exactly to authored text",
+				output: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => 'safe'" /></template>
+`,
+				snapshot: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => foo" /></template>
+                                   ~~~
+                                   Unsafe return of a value of type \`any\`.
+`,
+				suggestions: [
+					{
+						id: "replace",
+						updated: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 1 as any;
+</script>
+<template><MyComponent :foo="() => 'safe'" /></template>
+`,
+					},
+				],
+			},
+		],
+		valid: [
+			{
+				code: `
+<script setup lang="ts">
+import MyComponent from './MyComponent.vue';
+const foo = 'safe' as string;
+</script>
+<template><MyComponent :foo="() => foo" /></template>
+`,
+				files: myComponentFixture,
+			},
+		],
+	},
+);

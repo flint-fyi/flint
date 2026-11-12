@@ -2,7 +2,7 @@ name: PR Quality
 
 on: # zizmor: ignore[dangerous-triggers] This workflow does not check out or execute pull request code.
   pull_request_target:
-    types: [opened, reopened]
+    types: [opened, ready_for_review, reopened]
 
 jobs:
   pr-quality-review:
@@ -30,6 +30,9 @@ jobs:
           blocked-terms: SASSAFRAS
 
           # Exemptions
+          exempt-author-association: ""
+          exempt-draft-prs: true
+          exempt-label: ""
           exempt-bots: |
             renovate[bot]
             github-actions[bot]

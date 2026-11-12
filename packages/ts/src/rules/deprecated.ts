@@ -94,8 +94,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: Checker,
 		): boolean {
 			const declaration = signature.declaration?.resolve() as
-				| AST.Declaration
-				| undefined;
+				AST.Declaration | undefined;
 			return (
 				!!declaration &&
 				(hasDeprecationTag(declaration) ||
@@ -133,8 +132,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const declaration = declarationHandle.resolve() as
-				| AST.Declaration
-				| undefined;
+				AST.Declaration | undefined;
 			return (
 				!!declaration && hasInheritedDeprecationTag(declaration, typeChecker)
 			);
@@ -308,6 +306,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					);
 				}
 			}
+
+			return;
 		}
 
 		function getCallLikeExpression(node: AST.AnyNode) {
@@ -505,21 +505,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (objectType) {
-				const property = getTypeProperty(objectType, propertyName.text);
-				if (
-					property &&
-					(getJsDocDeprecation(property, typeChecker) ||
-						isDeprecatedFromDeclarations(property))
-				) {
-					const reportNode = node.propertyName ?? node.name;
-					if (reportNode?.kind === SyntaxKind.Identifier) {
-						context.report({
-							message: "deprecated",
-							range: getTSNodeRange(reportNode, sourceFile),
-						});
-					}
-				}
+			if (!objectType) {
+				return;
+			}
+
+			const property = getTypeProperty(objectType, propertyName.text);
+			if (
+				!property ||
+				(!getJsDocDeprecation(property, typeChecker) &&
+					!isDeprecatedFromDeclarations(property))
+			) {
+				return;
+			}
+
+			const reportNode = node.propertyName ?? node.name;
+			if (reportNode?.kind === SyntaxKind.Identifier) {
+				context.report({
+					message: "deprecated",
+					range: getTSNodeRange(reportNode, sourceFile),
+				});
 			}
 		}
 

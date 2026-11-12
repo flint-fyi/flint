@@ -30,15 +30,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression(node, { sourceFile, typeChecker }) {
-					if (
-						!(
-							node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-							node.expression.name.text === "substring"
-						) ||
-						(getConstrainedTypeAtLocation(node, typeChecker).flags &
-							TypeFlags.StringLike) ===
-							0
-					) {
+					if (!(
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.name.text === "substring" &&
+						getConstrainedTypeAtLocation(node, typeChecker).flags &
+							TypeFlags.StringLike
+					)) {
 						return;
 					}
 

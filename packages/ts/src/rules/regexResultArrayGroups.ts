@@ -247,8 +247,7 @@ function getRegexInfoFromExpression(
 		if (symbol?.declarations.length) {
 			for (const declarationHandle of symbol.declarations) {
 				const declaration = declarationHandle.resolve() as
-					| AST.Declaration
-					| undefined;
+					AST.Declaration | undefined;
 				if (!declaration) {
 					continue;
 				}
@@ -272,8 +271,7 @@ function getRegexInfoFromSymbol(
 	if (symbol.declarations.length) {
 		for (const declarationHandle of symbol.declarations) {
 			const declaration = declarationHandle.resolve() as
-				| AST.Declaration
-				| undefined;
+				AST.Declaration | undefined;
 			if (!declaration) {
 				continue;
 			}

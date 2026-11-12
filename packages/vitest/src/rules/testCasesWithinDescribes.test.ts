@@ -43,6 +43,28 @@ describe("test suite", () => {
 		},
 		{
 			code: `
+aroundEach(async (runTest) => { await runTest() })
+`,
+			snapshot: `
+aroundEach(async (runTest) => { await runTest() })
+~~~~~~~~~~
+Prefer wrapping \`aroundEach()\` hooks in a \`describe()\` block.
+`,
+		},
+		{
+			code: `
+suite("test suite", () => {});
+test("my test", () => {})
+`,
+			snapshot: `
+suite("test suite", () => {});
+test("my test", () => {})
+~~~~
+Prefer wrapping \`test()\` tests in a \`describe()\` block.
+`,
+		},
+		{
+			code: `
 describe("test suite", () => {});
 afterAll(() => {})
 `,
@@ -61,6 +83,26 @@ it.skip("test", () => {});
 it.skip("test", () => {});
 ~~~~~~~
 Prefer wrapping \`it()\` tests in a \`describe()\` block.
+`,
+		},
+		{
+			code: `
+test["skip"]("x", () => {});
+`,
+			snapshot: `
+test["skip"]("x", () => {});
+~~~~~~~~~~~~
+Prefer wrapping \`test()\` tests in a \`describe()\` block.
+`,
+		},
+		{
+			code: `
+test.skip["only"]("x", () => {});
+`,
+			snapshot: `
+test.skip["only"]("x", () => {});
+~~~~~~~~~~~~~~~~~
+Prefer wrapping \`test()\` tests in a \`describe()\` block.
 `,
 		},
 		{
@@ -122,6 +164,8 @@ describe("test suite", () => {
 		`describe("test suite", () => { beforeAll(() => {}) });`,
 		`describe("test suite", () => { afterEach(() => {}) });`,
 		`describe("test suite", () => { afterAll(() => {}) });`,
+		`suite("test suite", () => { test("my test") });`,
+		`suite("test suite", () => { aroundAll(async (runSuite) => { await runSuite() }) });`,
 		`
 describe("test suite", () => {
 	it("my test", () => {})

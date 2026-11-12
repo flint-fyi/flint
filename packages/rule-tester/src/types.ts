@@ -44,13 +44,16 @@ export interface TestSuggestionForFile {
 }
 
 export interface TestSuggestionForFiles {
+	/**
+	 * Expected edits keyed by paths relative to the test host's cwd, or absolute paths.
+	 * Rules must report the corresponding absolute target paths.
+	 */
 	files: Record<string, TestSuggestionFileCase[]>;
 	id: string;
 }
 
 export type ValidTestCase<Options extends object | undefined> =
-	| string
-	| ValidTestCaseObject<Options>;
+	string | ValidTestCaseObject<Options>;
 
 export type ValidTestCaseObject<Options extends object | undefined> =
 	TestCase<Options>;

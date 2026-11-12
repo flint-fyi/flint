@@ -40,7 +40,7 @@ export function orderTypeScriptFilePaths(
 				// Files with no config sort last.
 				configKey:
 					configFilePath === undefined
-						? "\uffff"
+						? "\uFFFF"
 						: pathKey(configFilePath, caseSensitiveFileSystem),
 				fileKey: pathKey(absolutePath, caseSensitiveFileSystem),
 				filePath,

@@ -309,8 +309,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const lastParamDeclaration = lastParam.declarations[0]?.resolve() as
-				| AST.Declaration
-				| undefined;
+				AST.Declaration | undefined;
 
 			if (
 				lastParamDeclaration?.kind === SyntaxKind.Parameter &&

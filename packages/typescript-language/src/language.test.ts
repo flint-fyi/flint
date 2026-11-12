@@ -45,8 +45,34 @@ describe("typescriptLanguage file lifecycle", () => {
 		expect(first.services.sourceFile.fileName).toBe("/repo/first.ts");
 		first[Symbol.dispose]();
 		expect(first.services.program).toBeDefined();
-		factory[Symbol.dispose]();
+		factory[Symbol.dispose]?.();
 		expect(() => first.services.program).toThrow("disposed");
+	});
+
+	it("reads updated source text when a prepared file changes before it is recreated", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile("/repo/index.ts", "export const value = 1;");
+		const factory = typescriptLanguage.createFileFactory(host);
+		factory.prepareFiles?.(["/repo/index.ts"]);
+		const first = factory.createFile({
+			filePath: "/repo/index.ts",
+			filePathAbsolute: "/repo/index.ts",
+			sourceText: "export const value = 1;",
+		});
+		expect(first.services.sourceFile.text).toBe("export const value = 1;");
+		first[Symbol.dispose]();
+
+		host.vfsUpsertFile("/repo/index.ts", "export const value = 2;");
+		factory.prepareFiles?.(["/repo/index.ts"]);
+		const second = factory.createFile({
+			filePath: "/repo/index.ts",
+			filePathAbsolute: "/repo/index.ts",
+			sourceText: "export const value = 2;",
+		});
+
+		expect(second.services.sourceFile.text).toBe("export const value = 2;");
+		second[Symbol.dispose]();
+		factory[Symbol.dispose]?.();
 	});
 
 	it("updates a repeated target file after a zero-active-file gap", () => {
@@ -77,7 +103,7 @@ describe("typescriptLanguage file lifecycle", () => {
 			SyntaxKind.VariableStatement,
 		);
 		second[Symbol.dispose]();
-		factory[Symbol.dispose]();
+		factory[Symbol.dispose]?.();
 	});
 
 	it("updates created, changed, and deleted auxiliary project files", () => {
@@ -116,7 +142,7 @@ describe("typescriptLanguage file lifecycle", () => {
 			fourth.services.program.getSourceFile("/repo/auxiliary.ts"),
 		).toBeUndefined();
 		fourth[Symbol.dispose]();
-		factory[Symbol.dispose]();
+		factory[Symbol.dispose]?.();
 	});
 });
 

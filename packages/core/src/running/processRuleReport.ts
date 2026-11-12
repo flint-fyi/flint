@@ -3,7 +3,12 @@ import { nullThrows } from "@flint.fyi/utils";
 import type { AnyLanguageFile } from "../types/languages.ts";
 import type { FileReport, RuleReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
-import { getColumnAndLineOfPosition } from "../utils/getColumnAndLineOfPosition.ts";
+import {
+	getColumnAndLineOfPosition,
+	type SourceFileWithLineMap,
+} from "../utils/getColumnAndLineOfPosition.ts";
+
+const sourcesByFile = new WeakMap<AnyLanguageFile, SourceFileWithLineMap>();
 
 /**
  * Joins rule report data with data from the file being linted and parent rule.
@@ -21,15 +26,14 @@ export function processRuleReport(
 	let suggestions = ruleReport.suggestions;
 	const { adjustReportRange } = currentFile;
 	if (adjustReportRange != null) {
-		const adjustFixRange = currentFile.adjustFixRange ?? adjustReportRange;
-		const adjustedRange = adjustReportRange(ruleReport.range);
+		const adjustedRange = adjustReportRange(ruleReport.range, "report");
 		if (adjustedRange == null) {
 			return null;
 		}
 		range = adjustedRange;
 		fix &&= fix
 			.map((fix) => {
-				const range = adjustFixRange(fix.range);
+				const range = adjustReportRange(fix.range, "change");
 				return (
 					range && {
 						...fix,
@@ -45,7 +49,7 @@ export function processRuleReport(
 					// TODO: support cross-file suggestions
 					return null;
 				}
-				const range = adjustFixRange(s.range);
+				const range = adjustReportRange(s.range, "change");
 				return (
 					range && {
 						...s,
@@ -54,6 +58,12 @@ export function processRuleReport(
 				);
 			})
 			.filter((s) => s != null);
+	}
+
+	let source = sourcesByFile.get(currentFile);
+	if (source?.text !== currentFile.about.sourceText) {
+		source = { text: currentFile.about.sourceText };
+		sourcesByFile.set(currentFile, source);
 	}
 
 	return {
@@ -70,11 +80,8 @@ export function processRuleReport(
 			`Rule "${rule.about.id}" reported message "${ruleReport.message}" which is not defined in its messages.`,
 		),
 		range: {
-			begin: getColumnAndLineOfPosition(
-				currentFile.about.sourceText,
-				range.begin,
-			),
-			end: getColumnAndLineOfPosition(currentFile.about.sourceText, range.end),
+			begin: getColumnAndLineOfPosition(source, range.begin),
+			end: getColumnAndLineOfPosition(source, range.end),
 		},
 		suggestions,
 	};

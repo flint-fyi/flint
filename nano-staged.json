@@ -1,0 +1,3 @@
+{
+	"*": "prettier --experimental-cli --ignore-unknown --write"
+}

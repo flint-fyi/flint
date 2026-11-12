@@ -1,5 +1,40 @@
 # @flint.fyi/vitest
 
+## 0.4.6
+
+### Patch Changes
+
+- [#3752](https://github.com/flint-fyi/flint/pull/3752) [`376ae65`](https://github.com/flint-fyi/flint/commit/376ae6523bbb1810c8b5caeeeaeb2b0edc20fce0) - Report `expect.soft()`, `expect.poll()`, `expect.element()`, and `expect` utility calls such as `expect.hasAssertions()` inside conditionals in `conditionalExpects`, and report the full assertion chain instead of only the `expect(...)` call.
+
+- [#3698](https://github.com/flint-fyi/flint/pull/3698) [`28f2fdd`](https://github.com/flint-fyi/flint/commit/28f2fddec382076967a95c6cee35c61a3f0cd867) - Recognize Vitest functions in padding rules with the same parsing as other Vitest rules, so `suite`, `aroundAll`, `aroundEach`, and tagged-template tables such as ``test.each`...` `` are now padded.
+  Apply `describePaddingLines` to `suite` as well as `describe`.
+
+## 0.4.5
+
+### Patch Changes
+
+- [#3635](https://github.com/flint-fyi/flint/pull/3635) [`4f31391`](https://github.com/flint-fyi/flint/commit/4f3139156cd3f8be5c4ab77ff856ddf32d4f4f7c) - Recognize Vitest functions called with string literal element access modifiers, such as `test["skip"]()`, in Vitest rules.
+
+- [#3652](https://github.com/flint-fyi/flint/pull/3652) [`82f7132`](https://github.com/flint-fyi/flint/commit/82f7132151fa11255ea0c8b85dfc52ab84cd70ad) - Stop recognizing uninvoked Vitest factories, such as `test.runIf(true)`, and unknown invoked members, such as `test.nonsense([1])()`, as Vitest functions in Vitest rules.
+  Only recognize members that exist on each kind of Vitest function, so calls such as `test.shuffle()`, `describe.fails()`, and `beforeEach.skip()` are no longer treated as Vitest functions.
+  Count test cases created through `test.extend()` and `test.scoped()`, such as `test.extend({})("name", () => {})`, as test cases in `hooksBeforeTestCases`.
+
+- [#3643](https://github.com/flint-fyi/flint/pull/3643) [`ce2797f`](https://github.com/flint-fyi/flint/commit/ce2797f554644aaa191c1a9078ba9d440f54cab5) - Recognize Vitest functions called with non-null assertions, such as `test!()` and `test.each([1])!()`, in Vitest rules.
+
+- [#3650](https://github.com/flint-fyi/flint/pull/3650) [`0079050`](https://github.com/flint-fyi/flint/commit/007905056b05b28c3f12226a10b755e1ae4b76d2) - Added a `toHaveLengthMatchers` rule.
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
+## 0.4.4
+
+### Patch Changes
+
+- [#3608](https://github.com/flint-fyi/flint/pull/3608) [`b6b9974`](https://github.com/flint-fyi/flint/commit/b6b99741bd640754fc225d7a36bef7240554a87e) - Recognize `aroundAll`, `aroundEach`, and `suite` functions and the `shuffle` modifier in Vitest rules.
+  Remove the `fit`, `xit`, and `xtest` names not in Vitest.
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+  - @flint.fyi/core@0.29.0
+
 ## 0.4.3
 
 ### Patch Changes

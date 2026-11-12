@@ -53,8 +53,7 @@ function isSetExpression(
 	}
 
 	const declaration = valueDeclarationHandle.resolve() as
-		| AST.VariableDeclaration
-		| undefined;
+		AST.VariableDeclaration | undefined;
 	if (
 		declaration?.parent.kind !== SyntaxKind.VariableDeclarationList ||
 		!(declaration.parent.flags & NodeFlags.Const) ||

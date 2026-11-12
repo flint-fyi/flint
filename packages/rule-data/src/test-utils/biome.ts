@@ -6,9 +6,9 @@ import type { LinterRuleReference } from "../schemas.ts";
 type Defs = typeof schema.$defs;
 
 type DefsWithProperties = {
-	[K in keyof Defs as Defs[K] extends { properties: object }
-		? K
-		: never]: Defs[K];
+	[
+		K in keyof Defs as Defs[K] extends { properties: object } ? K : never
+	]: Defs[K];
 };
 
 export function findBiomeRulesInFlint(): LinterRuleReference[] {

@@ -344,67 +344,71 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					visitRegExpAST(regexpAst, {
 						onAssertionEnter(assertion) {
-							if (
-								!(
-									assertion.kind === "lookahead" ||
-									assertion.kind === "lookbehind"
-								)
-							) {
+							if (!(
+								assertion.kind === "lookahead" ||
+								assertion.kind === "lookbehind"
+							)) {
 								return;
 							}
 
 							const result = processAlternatives(assertion);
-							if (result) {
-								const newPattern =
-									pattern.slice(0, assertion.start) +
-									result.fixedPattern +
-									pattern.slice(assertion.end);
-								context.report({
-									data: { replacement: result.replacement },
-									fix: {
-										range: nodeRange,
-										text: `/${newPattern}/${flags}`,
-									},
-									message: "preferCharacterClass",
-									range: nodeRange,
-								});
+							if (!result) {
+								return;
 							}
+
+							const newPattern =
+								pattern.slice(0, assertion.start) +
+								result.fixedPattern +
+								pattern.slice(assertion.end);
+							context.report({
+								data: { replacement: result.replacement },
+								fix: {
+									range: nodeRange,
+									text: `/${newPattern}/${flags}`,
+								},
+								message: "preferCharacterClass",
+								range: nodeRange,
+							});
 						},
 						onCapturingGroupEnter(group) {
 							const result = processAlternatives(group);
-							if (result) {
-								const newPattern =
-									pattern.slice(0, group.start) +
-									result.fixedPattern +
-									pattern.slice(group.end);
-								context.report({
-									data: { replacement: result.replacement },
-									fix: {
-										range: nodeRange,
-										text: `/${newPattern}/${flags}`,
-									},
-									message: "preferCharacterClass",
-									range: nodeRange,
-								});
+							if (!result) {
+								return;
 							}
+
+							const newPattern =
+								pattern.slice(0, group.start) +
+								result.fixedPattern +
+								pattern.slice(group.end);
+							context.report({
+								data: { replacement: result.replacement },
+								fix: {
+									range: nodeRange,
+									text: `/${newPattern}/${flags}`,
+								},
+								message: "preferCharacterClass",
+								range: nodeRange,
+							});
 						},
 						onGroupEnter(group) {
 							const result = processAlternatives(group);
-							if (result) {
-								const newPattern =
-									pattern.slice(0, group.start) +
-									result.fixedPattern +
-									pattern.slice(group.end);
-								context.report({
-									data: { replacement: result.replacement },
-									fix: {
-										range: nodeRange,
-										text: `/${newPattern}/${flags}`,
-									},
-									message: "preferCharacterClass",
-									range: nodeRange,
-								});
+							if (!result) {
+								return;
 							}
+
+							const newPattern =
+								pattern.slice(0, group.start) +
+								result.fixedPattern +
+								pattern.slice(group.end);
+							context.report({
+								data: { replacement: result.replacement },
+								fix: {
+									range: nodeRange,
+									text: `/${newPattern}/${flags}`,
+								},
+								message: "preferCharacterClass",
+								range: nodeRange,
+							});
 						},
 						onPatternEnter(patternNode) {
 							const result = processAlternatives(patternNode);

@@ -1,16 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
 
+import type { CharacterReportRange } from "../types/ranges.ts";
 import { processRuleReport } from "./processRuleReport.ts";
 
 describe(processRuleReport, () => {
-	it("uses edit-safe range mapping for fixes", () => {
-		const adjustReportRange = vi.fn(() => ({ begin: 1, end: 2 }));
-		const adjustFixRange = vi.fn(() => null);
+	it("drops a fix when its range cannot be mapped as a change", () => {
+		const adjustReportRange = vi.fn(
+			(_range: CharacterReportRange, kind: "change" | "report") =>
+				kind === "report" ? { begin: 1, end: 2 } : null,
+		);
 
 		const report = processRuleReport(
 			{
 				about: { sourceText: "abc" },
-				adjustFixRange,
 				adjustReportRange,
 			} as never,
 			{
@@ -31,7 +33,9 @@ describe(processRuleReport, () => {
 			end: expect.objectContaining({ column: 2, line: 0 }),
 		});
 		expect(report?.fix).toEqual([]);
-		expect(adjustReportRange).toHaveBeenCalledOnce();
-		expect(adjustFixRange).toHaveBeenCalledOnce();
+		expect(adjustReportRange.mock.calls.map(([, kind]) => kind)).toEqual([
+			"report",
+			"change",
+		]);
 	});
 });

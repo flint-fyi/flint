@@ -1,5 +1,34 @@
 # @flint.fyi/rule-data
 
+## 0.5.6
+
+### Patch Changes
+
+- [#3712](https://github.com/flint-fyi/flint/pull/3712) [`3169c3f`](https://github.com/flint-fyi/flint/commit/3169c3fd282f495fbab2b2f46bef70954d90a2cf) - Added missing YAML rule mappings for boolean keys and trailing spaces.
+
+## 0.5.5
+
+### Patch Changes
+
+- [#3711](https://github.com/flint-fyi/flint/pull/3711) [`d22195c`](https://github.com/flint-fyi/flint/commit/d22195c9dc1db8bedf2391c0740a253bab8c8a6f) - Record the missing Node.js rules in the rule catalog.
+
+- [#3650](https://github.com/flint-fyi/flint/pull/3650) [`0079050`](https://github.com/flint-fyi/flint/commit/007905056b05b28c3f12226a10b755e1ae4b76d2) - Added a `toHaveLengthMatchers` rule.
+
+- [#3709](https://github.com/flint-fyi/flint/pull/3709) [`cd8c2bf`](https://github.com/flint-fyi/flint/commit/cd8c2bfc42e0501f1e1c0ab6652de8fd2e367afd) - Record Vue's native event shadowing rule in the rule catalog.
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
+## 0.5.4
+
+### Patch Changes
+
+- [#3559](https://github.com/flint-fyi/flint/pull/3559) [`0631b5b`](https://github.com/flint-fyi/flint/commit/0631b5b676b1b93720f5aeb6ad8f09cd40a17cb8) - Added an initial Changesets plugin with `summaryCasing`, `summaryPunctuation`, and `summaryReadability` rules.
+
+- [#3579](https://github.com/flint-fyi/flint/pull/3579) [`40bdb4b`](https://github.com/flint-fyi/flint/commit/40bdb4bf3a0b3eb945080d1c779ad791afb97fb3) - Added missing `package-json` data.
+- Updated dependencies [[`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5), [`0631b5b`](https://github.com/flint-fyi/flint/commit/0631b5b676b1b93720f5aeb6ad8f09cd40a17cb8), [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001), [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9)]:
+  - @flint.fyi/core@0.29.0
+  - @flint.fyi/changesets@0.1.0
+
 ## 0.5.3
 
 ### Patch Changes

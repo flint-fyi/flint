@@ -108,20 +108,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (classType.id === type.id) {
 					hasReturnClassType = true;
 					return true;
-				}
-
-				if (type.isTypeParameter() && type.isThisType) {
+				} else if (type.isTypeParameter() && type.isThisType) {
 					hasReturnThis = true;
 					return;
-				}
-
-				if (
+				} else if (
 					type.isUnionType() &&
 					type.getTypes().some((part) => part.id === classType.id)
 				) {
 					hasReturnClassType = true;
 					return true;
 				}
+
+				return;
 			});
 
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

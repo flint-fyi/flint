@@ -71,6 +71,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (child.kind === SyntaxKind.JsxExpression && child.expression) {
 					return true;
 				}
+
+				return;
 			});
 		}
 

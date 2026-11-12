@@ -41,12 +41,10 @@ const ALLOWED_RANGES: AllowedRange[] = [
 
 function checkInAllowedRange(
 	value: number,
-	rangeMin?: number,
-	rangeMax?: number,
+	rangeMin = value,
+	rangeMax = value,
 ): boolean {
-	const min = rangeMin ?? value;
-	const max = rangeMax ?? value;
-	return ALLOWED_RANGES.some((r) => r.min <= min && max <= r.max);
+	return ALLOWED_RANGES.some((r) => r.min <= rangeMin && rangeMax <= r.max);
 }
 
 function findIssues(pattern: string, flags: string): Issue[] {

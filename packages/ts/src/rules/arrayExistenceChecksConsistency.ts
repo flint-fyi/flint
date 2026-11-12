@@ -93,6 +93,8 @@ function detectIssue(operator: SyntaxKind, value: number) {
 		case SyntaxKind.LessThanToken:
 			return value === 0 && (["preferEqualsMinusOne", "==="] as const);
 	}
+
+	return;
 }
 
 function getNumericLiteralValue(node: AST.AnyNode): number | undefined {

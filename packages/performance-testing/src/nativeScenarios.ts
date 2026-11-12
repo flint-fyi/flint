@@ -6,15 +6,24 @@ import type { FileToWrite, Structure } from "./writing/writeStructure.ts";
 export interface NativeScenario {
 	label: string;
 	language: "astro" | "svelte" | "typescript" | "vue";
-	prepare?: string;
+
+	/**
+	 * Creates a shell script run before each sample, given the cached Flint
+	 * command being measured. Scenarios without one are measured uncached.
+	 */
+	prepare?: (flint: string) => string;
+
 	rules: 1 | "many";
 	slug: string;
-	useCache?: boolean;
 }
 
-const cacheCommand =
-	"{{flint}} --cache-location .flint-benchmark-cache --skip-formatting --skip-language-reports";
+export const nativeCacheLocation = ".flint-benchmark-cache";
+
 const packageFile: FileToWrite = ['{"type":"module"}', "json"];
+
+function createWarmCacheScript(flint: string): string {
+	return `rm -rf ${nativeCacheLocation} && (${flint} || true)`;
+}
 
 export const nativeScenarios: NativeScenario[] = [
 	{
@@ -26,18 +35,17 @@ export const nativeScenarios: NativeScenario[] = [
 	{
 		label: "Warm unchanged lint",
 		language: "typescript",
-		prepare: `rm -rf .flint-benchmark-cache && (${cacheCommand} || true)`,
+		prepare: createWarmCacheScript,
 		rules: 1,
 		slug: "warm",
-		useCache: true,
 	},
 	{
 		label: "One changed file",
 		language: "typescript",
-		prepare: `cp benchmark-input.ts src/index.ts && rm -rf .flint-benchmark-cache && (${cacheCommand} || true) && printf '\nexport const benchmarkChange = true;\n' >> src/index.ts`,
+		prepare: (flint) =>
+			`cp benchmark-input.ts src/index.ts && ${createWarmCacheScript(flint)} && printf '\nexport const benchmarkChange = true;\n' >> src/index.ts`,
 		rules: 1,
 		slug: "changed",
-		useCache: true,
 	},
 	{
 		label: "Type-aware rules",

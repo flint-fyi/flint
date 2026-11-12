@@ -5,6 +5,11 @@ import { createSvelteFileContext } from "./language.ts";
 export const registerSvelteTypeScriptContentMapper: (
 	packageName: string,
 ) => void = createContentMapperRegistrar({
+	configFileNames: [
+		"svelte.config.js",
+		"svelte.config.mjs",
+		"svelte.config.cjs",
+	],
 	createFile: ({ about, sourceText }) =>
 		createSvelteFileContext(about.filePath, sourceText),
 	extensions: [".svelte"],

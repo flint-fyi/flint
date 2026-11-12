@@ -2,10 +2,8 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import {
-	createDiskBackedLinterHost,
-	createVFSLinterHost,
-} from "@flint.fyi/core";
+import { createVFSLinterHost } from "@flint.fyi/core";
+import { createDiskBackedLinterHost } from "@flint.fyi/core/node";
 import {
 	SpanMap,
 	SpanMapFeature,
@@ -86,7 +84,7 @@ describe("Vize content mapper", () => {
 			).toBeGreaterThan(0);
 		} finally {
 			file[Symbol.dispose]();
-			factory[Symbol.dispose]();
+			factory[Symbol.dispose]?.();
 		}
 	});
 
@@ -119,7 +117,7 @@ describe("Vize content mapper", () => {
 			).toBeGreaterThan(0);
 		} finally {
 			file[Symbol.dispose]();
-			factory[Symbol.dispose]();
+			factory[Symbol.dispose]?.();
 		}
 	});
 
@@ -142,7 +140,7 @@ describe("Vize content mapper", () => {
 			).toBe(true);
 		} finally {
 			file[Symbol.dispose]();
-			factory[Symbol.dispose]();
+			factory[Symbol.dispose]?.();
 		}
 	});
 
@@ -158,7 +156,7 @@ describe("Vize content mapper", () => {
 			);
 		} finally {
 			file[Symbol.dispose]();
-			factory[Symbol.dispose]();
+			factory[Symbol.dispose]?.();
 		}
 	});
 

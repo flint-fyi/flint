@@ -1,5 +1,39 @@
 # @flint/core
 
+## 0.30.1
+
+### Patch Changes
+
+- [#3742](https://github.com/flint-fyi/flint/pull/3742) [`348a945`](https://github.com/flint-fyi/flint/commit/348a945368205fce1b7ad4cfcfafba73edd94ff1) - Evaluate `.gitignore` rules once per path during file discovery instead of once per matched file and `use` group.
+
+- [#3743](https://github.com/flint-fyi/flint/pull/3743) [`4104141`](https://github.com/flint-fyi/flint/commit/410414102219774ae672c2b07f4015c8dd16af39) - Skip ignored subtrees such as `node_modules` and `.git` when setting up recursive directory watchers.
+
+- [#3745](https://github.com/flint-fyi/flint/pull/3745) [`a2187b2`](https://github.com/flint-fyi/flint/commit/a2187b2afc98cbe65e899b53f633493543551fca) - Compute each file's line starts once when converting rule report positions instead of once per report.
+
+## 0.30.0
+
+### Minor Changes
+
+- [#2766](https://github.com/flint-fyi/flint/pull/2766) [`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929) - Adds a new `LintSession` class to track the relevant files after each change and only lint the ones that have updated inputs.
+  Uses the session in `--watch` mode and rebuilds it when config or fileset changes require a fresh project view.
+  Keeps files with global declarations marked in the cache, so editing one still relints everything after a fully cached run.
+
+## 0.29.0
+
+### Minor Changes
+
+- [#3526](https://github.com/flint-fyi/flint/pull/3526) [`f5032e7`](https://github.com/flint-fyi/flint/commit/f5032e72ee57e42bd30561a5ba08bc674b89b001) - Move `createDiskBackedLinterHost` and `isFileSystemCaseSensitive` to a new `@flint.fyi/core/node` entry point, so the main entry no longer imports Node.js built-ins.
+  Invalid-config errors no longer print a `Received:` line.
+
+### Patch Changes
+
+- [#3475](https://github.com/flint-fyi/flint/pull/3475) [`59363bf`](https://github.com/flint-fyi/flint/commit/59363bf3d0d4d14e42ab67905144ff5613e0b2a5) - Preserve global cache invalidation across cache-hit runs so changing a global declaration re-lints unrelated files.
+  Rename the language cache-impact flag from `invalidatesCache` to `isGlobalDependency`.
+
+- [#3582](https://github.com/flint-fyi/flint/pull/3582) [`a13eac8`](https://github.com/flint-fyi/flint/commit/a13eac87040f4034baf58f58cba7724e870c81d9) - Resolve language cache dependencies against the host's current directory instead of the process's current directory.
+- Updated dependencies [[`3ff15cf`](https://github.com/flint-fyi/flint/commit/3ff15cf29201a838766dd14164b19909d9921589), [`6c67694`](https://github.com/flint-fyi/flint/commit/6c6769446362489d64d4351b7428bed783f79dab)]:
+  - @flint.fyi/utils@0.17.0
+
 ## 0.28.0
 
 ### Minor Changes

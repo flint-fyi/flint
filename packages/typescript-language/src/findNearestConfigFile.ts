@@ -3,13 +3,15 @@ import path from "node:path";
 import type { LinterHost } from "@flint.fyi/core";
 
 /**
- * Walks up from a file's directory to the nearest `tsconfig.json` or
- * `jsconfig.json`, remembering the answer for every directory walked.
+ * Walks up from a file's directory to the nearest config file, by default a
+ * `tsconfig.json` or `jsconfig.json`, remembering the answer for every
+ * directory walked.
  */
 export function findNearestConfigFile(
 	host: LinterHost,
 	filePath: string,
 	configFilePathByDirectory: Map<string, string | undefined>,
+	configFileNames: readonly string[] = ["tsconfig.json", "jsconfig.json"],
 ): string | undefined {
 	const visitedDirectories: string[] = [];
 	let directory = path.dirname(filePath);
@@ -20,7 +22,7 @@ export function findNearestConfigFile(
 			break;
 		}
 		visitedDirectories.push(directory);
-		nearest = ["tsconfig.json", "jsconfig.json"]
+		nearest = configFileNames
 			.map((configName) => path.join(directory, configName))
 			.find((configFilePath) => host.fileTypeSync(configFilePath) === "file");
 		const parent = path.dirname(directory);

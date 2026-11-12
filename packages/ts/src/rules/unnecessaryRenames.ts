@@ -23,6 +23,8 @@ function getModuleNameText(node: AST.AnyNode | undefined) {
 	) {
 		return node.text;
 	}
+
+	return;
 }
 
 function getPropertyAssignmentTargetInfo(node: AST.PropertyAssignment) {

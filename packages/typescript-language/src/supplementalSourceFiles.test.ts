@@ -6,7 +6,7 @@ import {
 import type { Diagnostic } from "typescript-native/sync";
 import { describe, expect, it, vi } from "vitest";
 
-import { createDiskBackedLinterHost } from "@flint.fyi/core";
+import { createDiskBackedLinterHost } from "@flint.fyi/core/node";
 
 import { typescriptLanguage } from "./language.ts";
 

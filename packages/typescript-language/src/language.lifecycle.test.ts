@@ -69,7 +69,7 @@ describe("typescriptLanguage failed file lifecycle", () => {
 			"/repo/second.ts",
 		);
 		second[Symbol.dispose]();
-		factory[Symbol.dispose]();
+		factory[Symbol.dispose]?.();
 
 		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledOnce();
 		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
@@ -352,11 +352,15 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		it("decodes an authored range without consulting the span map when begin is encoded as negative", () => {
 			const file = createMappedFile();
 
-			expect(file.adjustReportRange?.({ begin: -1 - 5, end: 8 })).toEqual({
+			expect(
+				file.adjustReportRange?.({ begin: -1 - 5, end: 8 }, "report"),
+			).toEqual({
 				begin: 5,
 				end: 8,
 			});
-			expect(file.adjustFixRange?.({ begin: -1 - 5, end: 8 })).toEqual({
+			expect(
+				file.adjustReportRange?.({ begin: -1 - 5, end: 8 }, "change"),
+			).toEqual({
 				begin: 5,
 				end: 8,
 			});
@@ -365,16 +369,20 @@ describe("typescriptLanguage failed file lifecycle", () => {
 		it("keeps an authored range at offset 0 when begin is encoded as negative", () => {
 			const file = createMappedFile();
 
-			expect(file.adjustReportRange?.({ begin: -1, end: 3 })).toEqual({
-				begin: 0,
-				end: 3,
-			});
+			expect(file.adjustReportRange?.({ begin: -1, end: 3 }, "report")).toEqual(
+				{
+					begin: 0,
+					end: 3,
+				},
+			);
 		});
 
 		it("drops a virtual range when the mapped file has no span map", () => {
 			const file = createMappedFile();
 
-			expect(file.adjustReportRange?.({ begin: 0, end: 3 })).toBeNull();
+			expect(
+				file.adjustReportRange?.({ begin: 0, end: 3 }, "report"),
+			).toBeNull();
 		});
 	});
 });

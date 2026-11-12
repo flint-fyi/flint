@@ -5,8 +5,7 @@ export interface VolarMappingData {
 	completion?: boolean | object;
 	format?: boolean;
 	navigation?:
-		| boolean
-		| { shouldHighlight?: () => boolean; shouldRename?: () => boolean };
+		boolean | { shouldHighlight?: () => boolean; shouldRename?: () => boolean };
 	semantic?: boolean | { shouldHighlight?: () => boolean };
 	structure?: boolean;
 	verification?: boolean | object;

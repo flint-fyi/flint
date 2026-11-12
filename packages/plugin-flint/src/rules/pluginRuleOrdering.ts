@@ -29,7 +29,6 @@ function hasCommentsInArray(
 	array: AST.ArrayLiteralExpression,
 	sourceFile: AST.SourceFile,
 ) {
-	// eslint-disable-next-line unicorn/prefer-set-has -- substring check on a string, not array membership
 	const arrayText = sourceFile.text.slice(
 		array.getStart(sourceFile),
 		array.getEnd(),
@@ -62,7 +61,7 @@ function isCreatePluginCall(
 	}
 
 	return resolvedSymbol.declarations.some(({ path }) =>
-		/\/core\/.*plugins\/createPlugin\.(?:d\.)?[cm]?[jt]s$/i.test(
+		/\/core\/.*plugins\/createplugin\.(?:d\.)?[cm]?[jt]s$/i.test(
 			path.replaceAll("\\", "/"),
 		),
 	);

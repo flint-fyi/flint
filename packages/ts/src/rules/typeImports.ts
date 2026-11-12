@@ -26,9 +26,7 @@ interface ImportedSpecifier {
 }
 
 type ImportSpecifierNode =
-	| AST.Identifier
-	| AST.ImportSpecifier
-	| AST.NamespaceImport;
+	AST.Identifier | AST.ImportSpecifier | AST.NamespaceImport;
 
 interface ReportValueImport {
 	node: AST.ImportDeclaration;

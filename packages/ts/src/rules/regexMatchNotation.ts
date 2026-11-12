@@ -180,14 +180,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const [, pattern, flags] = match;
+			const [, pattern, flags = ""] = match;
 
 			if (!pattern) {
 				return;
 			}
 
 			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags ?? "");
+			checkPattern(pattern, nodeStart + 1, flags);
 		}
 
 		function checkRegExpConstructor(

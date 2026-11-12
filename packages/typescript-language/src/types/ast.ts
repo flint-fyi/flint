@@ -5,18 +5,14 @@ import type * as NativeAST from "typescript-native/ast";
 
 export type AbstractKeyword = Token<NativeAST.SyntaxKind.AbstractKeyword>;
 export type AccessExpression =
-	| PropertyAccessExpression
-	| ElementAccessExpression;
+	PropertyAccessExpression | ElementAccessExpression;
 export type AccessorDeclaration =
-	| GetAccessorDeclaration
-	| SetAccessorDeclaration;
+	GetAccessorDeclaration | SetAccessorDeclaration;
 export type AccessorKeyword = Token<NativeAST.SyntaxKind.AccessorKeyword>;
 export type AdditiveOperator =
-	| NativeAST.SyntaxKind.PlusToken
-	| NativeAST.SyntaxKind.MinusToken;
+	NativeAST.SyntaxKind.PlusToken | NativeAST.SyntaxKind.MinusToken;
 export type AdditiveOperatorOrHigher =
-	| MultiplicativeOperatorOrHigher
-	| AdditiveOperator;
+	MultiplicativeOperatorOrHigher | AdditiveOperator;
 export type AnyImportSyntax = ImportDeclaration | ImportEqualsDeclaration;
 export type ArgumentList = NodeArray<Expression>;
 export type ArrayBindingElement = BindingElement | OmittedExpression;
@@ -53,8 +49,7 @@ export type AssertKeyword = Token<NativeAST.SyntaxKind.AssertKeyword>;
 export type AssertionExpression = TypeAssertion | AsExpression;
 export type AssertsKeyword = Token<NativeAST.SyntaxKind.AssertsKeyword>;
 export type AssignmentOperator =
-	| NativeAST.SyntaxKind.EqualsToken
-	| CompoundAssignmentOperator;
+	NativeAST.SyntaxKind.EqualsToken | CompoundAssignmentOperator;
 export type AssignmentOperatorOrHigher =
 	| NativeAST.SyntaxKind.QuestionQuestionToken
 	| LogicalOperatorOrHigher
@@ -79,8 +74,7 @@ export interface BinaryExpression
 	readonly right: Expression;
 }
 export type BinaryOperator =
-	| AssignmentOperatorOrHigher
-	| NativeAST.SyntaxKind.CommaToken;
+	AssignmentOperatorOrHigher | NativeAST.SyntaxKind.CommaToken;
 export type BinaryOperatorToken = Token<BinaryOperator>;
 export interface BindingElement extends NodeBase, DeclarationBase {
 	readonly kind: NativeAST.SyntaxKind.BindingElement;
@@ -97,8 +91,7 @@ export type BitwiseOperator =
 	| NativeAST.SyntaxKind.BarToken
 	| NativeAST.SyntaxKind.CaretToken;
 export type BitwiseOperatorOrHigher =
-	| EqualityOperatorOrHigher
-	| BitwiseOperator;
+	EqualityOperatorOrHigher | BitwiseOperator;
 export interface Block extends StatementBase {
 	readonly kind: NativeAST.SyntaxKind.Block;
 	readonly statements: NodeArray<Statement>;
@@ -270,8 +263,7 @@ export interface DeleteExpression extends UnaryExpressionBase {
 	readonly expression: Expression;
 }
 export type DestructuringAssignment =
-	| ObjectDestructuringAssignment
-	| ArrayDestructuringAssignment;
+	ObjectDestructuringAssignment | ArrayDestructuringAssignment;
 export interface DoStatement extends IterationStatementBase {
 	readonly kind: NativeAST.SyntaxKind.DoStatement;
 	readonly expression: Expression;
@@ -291,11 +283,9 @@ export interface EmptyStatement extends StatementBase {
 export type EndOfFile = Token<NativeAST.SyntaxKind.EndOfFile>;
 export type EntityName = Identifier | QualifiedName;
 export type EntityNameExpression =
-	| Identifier
-	| PropertyAccessEntityNameExpression;
+	Identifier | PropertyAccessEntityNameExpression;
 export type EntityNameOrEntityNameExpression =
-	| EntityName
-	| EntityNameExpression;
+	EntityName | EntityNameExpression;
 export interface EnumDeclaration
 	extends StatementBase, DeclarationBase, ModifiersBase {
 	readonly kind: NativeAST.SyntaxKind.EnumDeclaration;
@@ -313,8 +303,7 @@ export type EqualityOperator =
 	| NativeAST.SyntaxKind.ExclamationEqualsEqualsToken
 	| NativeAST.SyntaxKind.ExclamationEqualsToken;
 export type EqualityOperatorOrHigher =
-	| RelationalOperatorOrHigher
-	| EqualityOperator;
+	RelationalOperatorOrHigher | EqualityOperator;
 export type EqualsGreaterThanToken =
 	Token<NativeAST.SyntaxKind.EqualsGreaterThanToken>;
 export type EqualsToken = Token<NativeAST.SyntaxKind.EqualsToken>;
@@ -377,9 +366,7 @@ export interface ForInStatement extends StatementBase {
 	readonly statement: Statement;
 }
 export type ForInitializer =
-	| Expression
-	| MissingDeclaration
-	| VariableDeclarationList;
+	Expression | MissingDeclaration | VariableDeclarationList;
 export interface ForOfStatement extends StatementBase {
 	readonly kind: NativeAST.SyntaxKind.ForOfStatement;
 	readonly awaitModifier?: AwaitKeyword;
@@ -490,8 +477,7 @@ export interface HeritageClause extends NodeBase {
 	readonly types: NodeArray<HeritageClauseElement>;
 }
 export type HeritageClauseElement =
-	| ExpressionWithTypeArguments
-	| TypeReferenceNode;
+	ExpressionWithTypeArguments | TypeReferenceNode;
 export type HeritageClauseElementList = NodeArray<HeritageClauseElement>;
 export type HeritageClauseList = NodeArray<HeritageClause>;
 export interface Identifier extends PrimaryExpressionBase {
@@ -514,8 +500,7 @@ export type ImportAttributeName = Identifier | StringLiteral;
 export interface ImportAttributes extends NodeBase {
 	readonly kind: NativeAST.SyntaxKind.ImportAttributes;
 	readonly token:
-		| NativeAST.SyntaxKind.WithKeyword
-		| NativeAST.SyntaxKind.AssertKeyword;
+		NativeAST.SyntaxKind.WithKeyword | NativeAST.SyntaxKind.AssertKeyword;
 	readonly attributes: NodeArray<ImportAttribute>;
 	readonly multiLine: boolean;
 }
@@ -614,10 +599,7 @@ export interface JSDocCallbackTag extends JSDocTagBase {
 	readonly name?: JSDocFullName;
 }
 export type JSDocComment =
-	| JSDocText
-	| JSDocLink
-	| JSDocLinkCode
-	| JSDocLinkPlain;
+	JSDocText | JSDocLink | JSDocLinkCode | JSDocLinkPlain;
 export interface JSDocCommentBase extends NodeBase {
 	readonly text: string;
 }
@@ -817,11 +799,7 @@ export interface JsxAttributes extends PrimaryExpressionBase, DeclarationBase {
 	readonly properties: NodeArray<JsxAttributeLike>;
 }
 export type JsxChild =
-	| JsxText
-	| JsxExpression
-	| JsxElement
-	| JsxSelfClosingElement
-	| JsxFragment;
+	JsxText | JsxExpression | JsxElement | JsxSelfClosingElement | JsxFragment;
 export type JsxChildList = NodeArray<JsxChild>;
 export interface JsxClosingElement extends NodeBase {
 	readonly kind: NativeAST.SyntaxKind.JsxClosingElement;
@@ -873,10 +851,7 @@ export interface JsxSpreadAttribute extends NodeBase, ObjectLiteralElementBase {
 	readonly expression: Expression;
 }
 export type JsxTagNameExpression =
-	| Identifier
-	| ThisExpression
-	| JsxTagNamePropertyAccess
-	| JsxNamespacedName;
+	Identifier | ThisExpression | JsxTagNamePropertyAccess | JsxNamespacedName;
 export interface JsxTagNamePropertyAccess extends PropertyAccessExpression {
 	readonly expression: Identifier | ThisExpression | JsxTagNamePropertyAccess;
 }
@@ -1094,8 +1069,7 @@ export type MemberName = Identifier | PrivateIdentifier;
 export interface MetaProperty extends PrimaryExpressionBase {
 	readonly kind: NativeAST.SyntaxKind.MetaProperty;
 	readonly keywordToken:
-		| NativeAST.SyntaxKind.ImportKeyword
-		| NativeAST.SyntaxKind.NewKeyword;
+		NativeAST.SyntaxKind.ImportKeyword | NativeAST.SyntaxKind.NewKeyword;
 	readonly name: Identifier;
 }
 export interface MethodDeclaration
@@ -1171,8 +1145,7 @@ export interface ModuleDeclaration
 	extends StatementBase, DeclarationBase, ModifiersBase, BodyBase {
 	readonly kind: NativeAST.SyntaxKind.ModuleDeclaration;
 	readonly keyword:
-		| NativeAST.SyntaxKind.ModuleKeyword
-		| NativeAST.SyntaxKind.NamespaceKeyword;
+		NativeAST.SyntaxKind.ModuleKeyword | NativeAST.SyntaxKind.NamespaceKeyword;
 	readonly name: ModuleName;
 	readonly attributes?: TypeLiteralNode;
 	readonly body?: ModuleBody;
@@ -1180,16 +1153,13 @@ export interface ModuleDeclaration
 export type ModuleExportName = Identifier | StringLiteral;
 export type ModuleName = Identifier | StringLiteral;
 export type ModuleReference =
-	| Identifier
-	| QualifiedName
-	| ExternalModuleReference;
+	Identifier | QualifiedName | ExternalModuleReference;
 export type MultiplicativeOperator =
 	| NativeAST.SyntaxKind.AsteriskToken
 	| NativeAST.SyntaxKind.SlashToken
 	| NativeAST.SyntaxKind.PercentToken;
 export type MultiplicativeOperatorOrHigher =
-	| ExponentiationOperator
-	| MultiplicativeOperator;
+	ExponentiationOperator | MultiplicativeOperator;
 export type NamedExportBindings = NamespaceExport | NamedExports;
 export interface NamedExports extends NodeBase {
 	readonly kind: NativeAST.SyntaxKind.NamedExports;
@@ -1286,12 +1256,9 @@ export interface ObjectLiteralExpression
 	readonly multiLine: boolean;
 }
 export type ObjectLiteralLikeNode =
-	| ObjectLiteralExpression
-	| ObjectBindingPattern;
+	ObjectLiteralExpression | ObjectBindingPattern;
 export type ObjectTypeDeclaration =
-	| ClassLikeDeclaration
-	| InterfaceDeclaration
-	| TypeLiteralNode;
+	ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode;
 export interface OmittedExpression extends ExpressionBase {
 	readonly kind: NativeAST.SyntaxKind.OmittedExpression;
 }
@@ -1329,12 +1296,10 @@ export interface PostfixUnaryExpression extends UpdateExpressionBase {
 	readonly kind: NativeAST.SyntaxKind.PostfixUnaryExpression;
 	readonly operand: Expression;
 	readonly operator:
-		| NativeAST.SyntaxKind.PlusPlusToken
-		| NativeAST.SyntaxKind.MinusMinusToken;
+		NativeAST.SyntaxKind.PlusPlusToken | NativeAST.SyntaxKind.MinusMinusToken;
 }
 export type PostfixUnaryOperator =
-	| NativeAST.SyntaxKind.PlusPlusToken
-	| NativeAST.SyntaxKind.MinusMinusToken;
+	NativeAST.SyntaxKind.PlusPlusToken | NativeAST.SyntaxKind.MinusMinusToken;
 export interface PrefixUnaryExpression extends UpdateExpressionBase {
 	readonly kind: NativeAST.SyntaxKind.PrefixUnaryExpression;
 	readonly operator:
@@ -1493,8 +1458,7 @@ export type RelationalOperator =
 	| NativeAST.SyntaxKind.InstanceOfKeyword
 	| NativeAST.SyntaxKind.InKeyword;
 export type RelationalOperatorOrHigher =
-	| ShiftOperatorOrHigher
-	| RelationalOperator;
+	ShiftOperatorOrHigher | RelationalOperator;
 export interface RestTypeNode extends TypeNodeBase {
 	readonly kind: NativeAST.SyntaxKind.RestType;
 	readonly type: TypeNode;
@@ -1606,8 +1570,7 @@ export interface StringLiteral extends LiteralExpressionBase {
 	readonly kind: NativeAST.SyntaxKind.StringLiteral;
 }
 export type StringLiteralLikeNode =
-	| StringLiteral
-	| NoSubstitutionTemplateLiteral;
+	StringLiteral | NoSubstitutionTemplateLiteral;
 export type SuperExpression =
 	KeywordExpressionNode<NativeAST.SyntaxKind.SuperKeyword>;
 export interface SwitchStatement extends StatementBase {
@@ -1646,19 +1609,15 @@ export interface TemplateHead extends NodeBase, TemplateLiteralLikeNodeBase {
 	readonly kind: NativeAST.SyntaxKind.TemplateHead;
 }
 export type TemplateLiteral =
-	| TemplateExpression
-	| NoSubstitutionTemplateLiteral;
+	TemplateExpression | NoSubstitutionTemplateLiteral;
 export type TemplateLiteralLikeNode =
-	| TemplateHead
-	| TemplateMiddle
-	| TemplateTail;
+	TemplateHead | TemplateMiddle | TemplateTail;
 export interface TemplateLiteralLikeNodeBase extends LiteralLikeNodeBase {
 	readonly rawText: string;
 	readonly templateFlags: NativeAST.TokenFlags;
 }
 export type TemplateLiteralToken =
-	| NoSubstitutionTemplateLiteral
-	| PseudoLiteralToken;
+	NoSubstitutionTemplateLiteral | PseudoLiteralToken;
 export interface TemplateLiteralTypeNode extends TypeNodeBase {
 	readonly kind: NativeAST.SyntaxKind.TemplateLiteralType;
 	readonly head: TemplateHead;
@@ -1975,11 +1934,9 @@ export interface VariableDeclarationList extends NodeBase {
 }
 export type VariableDeclarationNodeList = NodeArray<VariableDeclaration>;
 export type VariableOrParameterDeclaration =
-	| VariableDeclaration
-	| ParameterDeclaration;
+	VariableDeclaration | ParameterDeclaration;
 export type VariableOrPropertyDeclaration =
-	| VariableDeclaration
-	| PropertyDeclaration;
+	VariableDeclaration | PropertyDeclaration;
 export interface VariableStatement extends StatementBase, ModifiersBase {
 	readonly kind: NativeAST.SyntaxKind.VariableStatement;
 	readonly declarationList: VariableDeclarationList;
@@ -2714,11 +2671,7 @@ export type Expression =
 	| YieldExpression;
 
 export type IterationStatement =
-	| DoStatement
-	| ForInStatement
-	| ForOfStatement
-	| ForStatement
-	| WhileStatement;
+	DoStatement | ForInStatement | ForOfStatement | ForStatement | WhileStatement;
 
 export type JSDocTag =
 	| JSDocAugmentsTag

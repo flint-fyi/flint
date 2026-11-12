@@ -57,6 +57,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						message: "emptyInterface",
 						range: getTSNodeRange(node, sourceFile),
 					});
+
+					return;
 				},
 				TypeLiteral: (node, { sourceFile }) => {
 					if (

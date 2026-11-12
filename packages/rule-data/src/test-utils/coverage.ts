@@ -2,6 +2,7 @@ import type { Rule } from "eslint";
 import { builtinRules } from "eslint/use-at-your-own-risk";
 
 import { findBiomeRulesInFlint, getBiomeLintRules } from "./biome.ts";
+import { findDenoRulesInFlint, getDenoLintRules } from "./deno.ts";
 import {
 	findESLintRulesInCore,
 	findESLintRulesInPlugin,
@@ -37,26 +38,20 @@ export interface RuleCoverageSource {
 	linter: string;
 }
 
-const excludedESLintRulesByPluginName = new Map([
-	// These rules are exported in the React plugin but not mentioned on react.dev.
-	// We're treating them as an internal implementation detail for now.
-	[
-		"react-hooks",
-		new Set([
-			"capitalized-calls",
-			"exhaustive-effect-dependencies",
-			"fbt",
-			"hooks",
-			"invariant",
-			"memo-dependencies",
-			"memoized-effect-dependencies",
-			"no-deriving-state-in-effects",
-			"rule-suppression",
-			"syntax",
-			"todo",
-			"void-use-memo",
-		]),
-	],
+// These React Compiler diagnostics are internal and not documented on react.dev.
+const excludedReactCompilerRuleNames = new Set([
+	"capitalized-calls",
+	"exhaustive-effect-dependencies",
+	"fbt",
+	"hooks",
+	"invariant",
+	"memo-dependencies",
+	"memoized-effect-dependencies",
+	"no-deriving-state-in-effects",
+	"rule-suppression",
+	"syntax",
+	"todo",
+	"void-use-memo",
 ]);
 
 export async function collectRuleCoverageReports(): Promise<
@@ -125,6 +120,16 @@ function collectBiomeCoverage(): RuleCoverage {
 	);
 }
 
+async function collectDenoCoverage(): Promise<RuleCoverage> {
+	return compareRuleCoverage(
+		(await getDenoLintRules()).map((name) => ({
+			name,
+			url: `https://docs.deno.com/lint/rules/${name}`,
+		})),
+		findDenoRulesInFlint().map((rule) => rule.name),
+	);
+}
+
 function collectESLintCoreCoverage(): RuleCoverage {
 	return compareRuleCoverage(
 		// builtinRules is marked as deprecated since it's in "use-at-your-own-risk", not actually deprecated
@@ -143,11 +148,17 @@ function collectESLintPluginCoverage(
 	pluginName: string,
 	rules: object,
 ): RuleCoverage {
-	const excludedRuleNames = excludedESLintRulesByPluginName.get(pluginName);
+	const excludedRuleNames =
+		pluginName === "react-hooks" ? excludedReactCompilerRuleNames : undefined;
 
 	return compareRuleCoverage(
 		Object.entries(rules as Record<string, Rule.RuleModule>)
-			.filter(([name]) => !excludedRuleNames?.has(name))
+			.filter(
+				([name, rule]) =>
+					!excludedRuleNames?.has(name) &&
+					// Deprecated Unicorn exports are no-op compatibility stubs.
+					!(pluginName === "unicorn" && rule.meta?.deprecated),
+			)
 			.map(([name, rule]) => ({
 				name: `${pluginName}/${name}`,
 				url: rule.meta?.docs?.url,
@@ -167,7 +178,13 @@ async function collectMarkdownlintCoverage(): Promise<RuleCoverage> {
 
 async function collectOxlintCoverage(): Promise<RuleCoverage> {
 	return compareRuleCoverage(
-		(await getOxlintLintRules()).map((name) => ({ name, url: undefined })),
+		(await getOxlintLintRules())
+			.filter(
+				(name) =>
+					!name.startsWith("react/") ||
+					!excludedReactCompilerRuleNames.has(name.slice("react/".length)),
+			)
+			.map((name) => ({ name, url: undefined })),
 		findOxlintRulesInFlint().map((rule) => getOxlintRuleConfigName(rule.name)),
 	);
 }
@@ -179,6 +196,7 @@ export const ruleCoverageSources: RuleCoverageSource[] = [
 		linter: pluginName,
 	})),
 	{ collect: collectBiomeCoverage, linter: "Biome" },
+	{ collect: collectDenoCoverage, linter: "deno-lint" },
 	{ collect: collectMarkdownlintCoverage, linter: "Markdownlint" },
 	{ collect: collectOxlintCoverage, linter: "Oxlint" },
 ].toSorted((a, b) => a.linter.localeCompare(b.linter));

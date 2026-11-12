@@ -162,17 +162,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				CallExpression(node, { sourceFile, typeChecker }) {
 					if (isRuleCreatorCreateRule(node, typeChecker)) {
 						collectMessageIds(node, sourceFile);
-						return;
-					}
-
-					if (isRuleContextReport(node, typeChecker)) {
+					} else if (isRuleContextReport(node, typeChecker)) {
 						detectMessageIdUsage(node, 0);
-						return;
-					}
-
-					if (isContentMapperReportSourceCodeCall(node, typeChecker)) {
+					} else if (isContentMapperReportSourceCodeCall(node, typeChecker)) {
 						detectMessageIdUsage(node, 1);
-						return;
 					}
 				},
 				"SourceFile:exit"() {

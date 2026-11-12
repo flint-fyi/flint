@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
 	collectRuleCoverageReports,
@@ -7,14 +7,75 @@ import {
 	hasRuleCoverageGaps,
 	ruleCoverageSources,
 } from "./coverage.ts";
+import * as eslint from "./eslint.ts";
+import * as oxlint from "./oxlint.ts";
 
 describe(collectRuleCoverageReports, () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
 	it("collects one report per source, preserving source order", async () => {
+		vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+			Response.json({
+				oneOf: [
+					{ pattern: "^[a-z0-9-]+/[a-z0-9-]+$", type: "string" },
+					{ enum: ["no-dupe-keys"] },
+				],
+			}),
+		);
 		const reports = await collectRuleCoverageReports();
 
 		expect(reports.map(({ linter }) => linter)).toEqual(
 			ruleCoverageSources.map(({ linter }) => linter),
 		);
+	});
+
+	it("excludes deprecated Unicorn no-ops while retaining active replacements and reporting stale mappings", async () => {
+		vi.spyOn(eslint, "findESLintRulesInPlugin").mockReturnValue([
+			{
+				name: "unicorn/better-regex",
+				url: "https://example.com/better-regex",
+			},
+		]);
+
+		const source = ruleCoverageSources.find(
+			({ linter }) => linter === "unicorn",
+		);
+		const report = await source?.collect();
+
+		expect(report?.missing.map(({ name }) => name)).not.toContain(
+			"unicorn/better-regex",
+		);
+		expect(report?.missing.map(({ name }) => name)).not.toContain(
+			"unicorn/no-unused-array-method-return",
+		);
+		expect(report?.missing.map(({ name }) => name)).toContain(
+			"unicorn/no-unused-builtin-method-return",
+		);
+		expect(report?.stale).toEqual(["unicorn/better-regex"]);
+	});
+
+	it("excludes internal Oxlint React Compiler diagnostics but retains public and non-React rules", async () => {
+		vi.spyOn(oxlint, "getOxlintLintRules").mockResolvedValue([
+			"react/capitalized-calls",
+			"react/error-boundaries",
+			"react/hooks",
+			"typescript/hooks",
+		]);
+		vi.spyOn(oxlint, "findOxlintRulesInFlint").mockReturnValue([]);
+
+		const source = ruleCoverageSources.find(
+			({ linter }) => linter === "Oxlint",
+		);
+
+		expect(await source?.collect()).toEqual({
+			missing: [
+				{ name: "react/error-boundaries", url: undefined },
+				{ name: "typescript/hooks", url: undefined },
+			],
+			stale: [],
+		});
 	});
 });
 

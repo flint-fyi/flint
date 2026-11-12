@@ -3,21 +3,8 @@ import { SyntaxKind } from "@flint.fyi/typescript-language/native/ast";
 
 import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
 
-const testCaseFunctionNamesSet = new Set([
-	"bench",
-	"fit",
-	"it",
-	"test",
-	"xit",
-	"xtest",
-]);
-
-export const isVitestTestFunction = (node: AST.CallExpression): boolean => {
-	const vitestFunction = parseVitestFunctionCall(node);
-	return (
-		vitestFunction != null && testCaseFunctionNamesSet.has(vitestFunction.name)
-	);
-};
+export const isVitestTestFunction = (node: AST.CallExpression): boolean =>
+	parseVitestFunctionCall(node)?.kind === "test";
 
 export const getTestCallExpressionsFromDeclaredVariables = (
 	declaredVariables: readonly ScopeVariable[],

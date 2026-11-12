@@ -1,5 +1,3 @@
-import { inspect } from "node:util";
-
 import type { AnyLevelDeep } from "../types/arrays.ts";
 import type {
 	ConfigDefinition,
@@ -18,7 +16,6 @@ export function validateConfigDefinition(
 			? undefined
 			: `Invalid configuration in ${configFilePath}
   at use[${useIndex}]
-  Received: ${inspect(rulesValue)}
 
 This usually means a rule or preset resolved to \`undefined\` at runtime.
 Common causes:

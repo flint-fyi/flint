@@ -51,6 +51,8 @@ export function getStaticValue(node: AST.Expression): StaticValue | undefined {
 		case SyntaxKind.TrueKeyword:
 			return { value: true };
 	}
+
+	return undefined;
 }
 
 function getPrefixUnaryStaticValue(
@@ -87,4 +89,6 @@ function getPrefixUnaryStaticValue(
 				return { value: ~operand.value };
 			}
 	}
+
+	return undefined;
 }

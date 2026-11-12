@@ -133,8 +133,7 @@ function isCallback(
 		parameter.valueDeclaration?.kind === SyntaxKind.Parameter &&
 		(
 			parameter.valueDeclaration.resolve() as
-				| AST.ParameterDeclaration
-				| undefined
+				AST.ParameterDeclaration | undefined
 		)?.dotDotDotToken
 	) {
 		const elementType = type.getNumberIndexType();

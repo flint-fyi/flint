@@ -20,6 +20,12 @@ export interface TypeScriptContentMapperRegistration {
 		reports?: FileReport[];
 		services?: object;
 	};
+
+	/**
+	 * Names of config files the mapper reads, looked up from each mapped file's
+	 * directory upward, whose changes invalidate that file's cached results.
+	 */
+	configFileNames?: string[];
 	extensions: string[];
 	options?: Record<string, unknown>;
 	packageName: string;

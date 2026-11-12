@@ -3,16 +3,19 @@ import { resolve } from "pathe";
 
 import { nullThrows } from "@flint.fyi/utils";
 
-import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
-import type { AnyLanguage, AnyLanguageFile } from "../types/languages.ts";
+import type {
+	AnyLanguage,
+	AnyLanguageFile,
+	AnyLanguageFileFactory,
+} from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 
 export function collectLanguageFilesByFilePath(
-	cached: Map<string, FileCacheStorage> | undefined,
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
-	resources: DisposableStack,
+	filePaths: ReadonlySet<string>,
+	languageFileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>,
 ): Map<
 	string,
 	{
@@ -25,15 +28,41 @@ export function collectLanguageFilesByFilePath(
 	);
 	const languageFilesByFilePath = new CachedFactory<
 		string,
-		Map<AnyLanguage, AnyLanguageFile | undefined>
+		Map<AnyLanguage, AnyLanguageFile>
 	>(() => new Map());
 
-	const languageFactories = new CachedFactory((language: AnyLanguage) => {
-		const fileFactory = resources.use(language.createFileFactory(host));
+	for (const [rule, optionsByFile] of rulesOptionsByFile) {
+		for (const [filePath] of optionsByFile) {
+			if (!filePaths.has(filePath)) {
+				continue;
+			}
 
-		const filesByPath = new CachedFactory((filePath: string) =>
-			resources.use(
-				fileFactory.createFile({
+			filePathsByLanguage.get(rule.language).add(filePath);
+			// Reserves the file's place, so results keep discovery order even
+			// when a language creates its files in a different order.
+			languageFilesByFilePath.get(filePath);
+		}
+	}
+
+	for (const [language, filePaths] of filePathsByLanguage.entries()) {
+		const languageFileFactory = languageFileFactories.get(language);
+		const orderedFilePaths = language.orderFilePaths
+			? language.orderFilePaths([...filePaths], host)
+			: [...filePaths];
+
+		// Give whole-program languages (e.g. TypeScript) the chance to open every
+		// file at once, so the per-file `createFile` calls below become cheap
+		// lookups against a stable program instead of rebuilding it per file.
+		languageFileFactory.prepareFiles?.(
+			orderedFilePaths.map((filePath) =>
+				resolve(host.getCurrentDirectory(), filePath),
+			),
+		);
+
+		for (const filePath of orderedFilePaths) {
+			languageFilesByFilePath.get(filePath).set(
+				language,
+				languageFileFactory.createFile({
 					filePath,
 					filePathAbsolute: resolve(host.getCurrentDirectory(), filePath),
 					sourceText: nullThrows(
@@ -42,43 +71,7 @@ export function collectLanguageFilesByFilePath(
 						`Expected ${filePath} to exist`,
 					),
 				}),
-			),
-		);
-
-		return { fileFactory, filesByPath };
-	});
-
-	for (const [rule, optionsByFile] of rulesOptionsByFile) {
-		for (const [filePath] of optionsByFile) {
-			// If the file has cached results, don't bother making files for it
-			if (cached?.has(filePath)) {
-				continue;
-			}
-
-			filePathsByLanguage.get(rule.language).add(filePath);
-			languageFilesByFilePath.get(filePath).set(rule.language, undefined);
-		}
-	}
-
-	for (const [language, filePaths] of filePathsByLanguage.entries()) {
-		const { fileFactory, filesByPath } = languageFactories.get(language);
-		const orderedFilePaths = language.orderFilePaths
-			? language.orderFilePaths([...filePaths], host)
-			: [...filePaths];
-
-		// Give whole-program languages (e.g. TypeScript) the chance to open every
-		// file at once, so the per-file `createFile` calls below become cheap
-		// lookups against a stable program instead of rebuilding it per file.
-		fileFactory.prepareFiles?.(
-			orderedFilePaths.map((filePath) =>
-				resolve(host.getCurrentDirectory(), filePath),
-			),
-		);
-
-		for (const filePath of orderedFilePaths) {
-			languageFilesByFilePath
-				.get(filePath)
-				.set(language, filesByPath.get(filePath));
+			);
 		}
 	}
 
@@ -88,10 +81,7 @@ export function collectLanguageFilesByFilePath(
 			([filePath, filesByLanguage]) => [
 				filePath,
 				Array.from(filesByLanguage, ([language, file]) => ({
-					file: nullThrows(
-						file,
-						"Language file is expected to be present by the map",
-					),
+					file,
 					language,
 				})),
 			],

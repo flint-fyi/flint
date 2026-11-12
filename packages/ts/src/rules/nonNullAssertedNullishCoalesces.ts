@@ -32,8 +32,7 @@ function hasNoAssignmentBeforeNode(
 
 	for (const declarationHandle of declarations) {
 		const declaration = declarationHandle.resolve() as
-			| AST.Declaration
-			| undefined;
+			AST.Declaration | undefined;
 		if (!declaration) {
 			continue;
 		}

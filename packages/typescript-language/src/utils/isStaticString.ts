@@ -3,8 +3,7 @@ import { SyntaxKind } from "typescript-native/ast";
 import type { AST } from "@flint.fyi/typescript-language";
 
 export type StaticString =
-	| AST.NoSubstitutionTemplateLiteral
-	| AST.StringLiteral;
+	AST.NoSubstitutionTemplateLiteral | AST.StringLiteral;
 
 export function isStaticString(node: AST.Expression): node is StaticString {
 	return (

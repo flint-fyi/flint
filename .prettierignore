@@ -1,7 +1,7 @@
-/.husky
 packages/*/.astro
 packages/*/dist
 packages/*/lib
 packages/performance-testing/cases
 packages/performance-testing/cases-baseline
 /pnpm-lock.yaml
+**/*.mdx

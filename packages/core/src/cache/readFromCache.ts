@@ -6,6 +6,7 @@ import { nullThrows, pathKey } from "@flint.fyi/utils";
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
+import { collectTransitiveDependents } from "./collectTransitiveDependents.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
 const log = debugForFile(import.meta.url);
@@ -73,19 +74,20 @@ export async function readFromCache(
 	const dependencyTouchTimes = new Map<string, number | undefined>();
 	const filePathsToLint = new Set<string>();
 
-	for (const {
-		filePath,
-		touchTime: cachedTouchTime,
-	} of cache.globalInvalidations) {
+	for (const [filePath, fileCached] of cached) {
+		if (!fileCached.isGlobalDependency) {
+			continue;
+		}
+
 		// flint-disable-next-line performance/loopAwaits
 		const currentTouchTime = await host.getFileTouchTime(filePath);
-		if (currentTouchTime == null || currentTouchTime > cachedTouchTime) {
+		if (currentTouchTime == null || currentTouchTime > fileCached.timestamp) {
 			log(
 				"Linting all %d file(s) because cache-invalidating file %s has changed (current: %d, cached: %d)",
 				allFilePaths.size,
 				filePath,
 				currentTouchTime,
-				cachedTouchTime,
+				fileCached.timestamp,
 			);
 			return undefined;
 		}
@@ -132,19 +134,17 @@ export async function readFromCache(
 		}
 	}
 
-	const transitivelyCheckedForChanges = new Set<string>();
-	const transitivelyImpactedByChanges = Array.from(filePathsToLint);
+	const transitiveDependents = collectTransitiveDependents(
+		Array.from(filePathsToLint, (filePath) =>
+			pathKey(filePath, caseSensitiveFS),
+		),
+		(dependencyKey) => fileDependents.get(dependencyKey),
+		(filePath) => pathKey(filePath, caseSensitiveFS),
+	);
 
-	for (const filePath of transitivelyImpactedByChanges) {
-		const dependents = fileDependents.get(pathKey(filePath, caseSensitiveFS));
-		for (const dependent of dependents) {
-			if (!transitivelyCheckedForChanges.has(dependent)) {
-				log("Transitively invalidating cache for: %s", dependent);
-				markAsUncached(dependent);
-				transitivelyCheckedForChanges.add(dependent);
-				transitivelyImpactedByChanges.push(dependent);
-			}
-		}
+	for (const dependent of transitiveDependents) {
+		log("Transitively invalidating cache for: %s", dependent);
+		markAsUncached(dependent);
 	}
 
 	// Remove cached files that no longer exist

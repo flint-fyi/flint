@@ -124,13 +124,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			// `{ code }`
-			if (codeProperty.kind === SyntaxKind.ShorthandPropertyAssignment) {
-				const range = getTSNodeRange(codeProperty.name, sourceFile);
-				context.report({
-					message: "nonStaticTestCaseCode",
-					range,
-				});
+			if (codeProperty.kind !== SyntaxKind.ShorthandPropertyAssignment) {
+				return;
 			}
+
+			const range = getTSNodeRange(codeProperty.name, sourceFile);
+			context.report({
+				message: "nonStaticTestCaseCode",
+				range,
+			});
 		}
 
 		return {

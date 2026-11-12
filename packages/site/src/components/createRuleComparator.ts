@@ -22,10 +22,6 @@ export function createRuleComparator(sortBy?: RuleSortBy): RuleComparator {
 			return a.flint.preset.localeCompare(b.flint.preset);
 		}
 
-		if (a.flint.strictness !== b.flint.strictness) {
-			return a.flint.strictness ? 1 : -1;
-		}
-
 		return a.flint.name.localeCompare(b.flint.name);
 	};
 }

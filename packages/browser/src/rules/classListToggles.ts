@@ -130,35 +130,32 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (
+					if (!(
 						(thenCall.method === "add" && elseCall.method === "remove") ||
 						(thenCall.method === "remove" && elseCall.method === "add")
-					) {
-						if (thenCall.object !== elseCall.object) {
-							return;
-						}
-
-						const condition = node.expression;
-						const conditionText = condition.getText(sourceFile);
-						const className = thenCall.className;
-						const toggleSecondArg =
-							thenCall.method === "add" ? conditionText : `!(${conditionText})`;
-
-						const ifStart = node.getStart(sourceFile);
-						const ifEnd = node.getEnd();
-
-						context.report({
-							fix: {
-								range: {
-									begin: ifStart,
-									end: ifEnd,
-								},
-								text: `${thenCall.object}.classList.toggle("${className}", ${toggleSecondArg});`,
-							},
-							message: "preferToggle",
-							range: getTSNodeRange(thenCall.methodNode, sourceFile),
-						});
+					)) {
+						return;
 					}
+
+					if (thenCall.object !== elseCall.object) {
+						return;
+					}
+
+					const conditionText = node.expression.getText(sourceFile);
+					const toggleSecondArg =
+						thenCall.method === "add" ? conditionText : `!(${conditionText})`;
+
+					context.report({
+						fix: {
+							range: {
+								begin: node.getStart(sourceFile),
+								end: node.getEnd(),
+							},
+							text: `${thenCall.object}.classList.toggle("${thenCall.className}", ${toggleSecondArg});`,
+						},
+						message: "preferToggle",
+						range: getTSNodeRange(thenCall.methodNode, sourceFile),
+					});
 				},
 			},
 		};

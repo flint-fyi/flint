@@ -39,6 +39,8 @@ function getModernMethodName(methodName: string, node: AST.CallExpression) {
 		case "replaceChild":
 			return "replaceWith";
 	}
+
+	return;
 }
 
 function getPropertyNameNode(node: AST.Node) {

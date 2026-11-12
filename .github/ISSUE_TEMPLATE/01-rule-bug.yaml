@@ -4,6 +4,7 @@ description: Report a bug specific to a lint rule provided by Flint
 title: "🐛 Bug: [plugin/ruleName] <short description of the bug>"
 
 labels:
+  - "status: in discussion"
   - "type: bug"
 
 body:

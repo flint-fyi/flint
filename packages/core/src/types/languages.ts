@@ -60,6 +60,7 @@ export interface Language<
 	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
+		host: LinterHost,
 	): LanguageFileCacheImpacts;
 	getLanguageReports?(
 		file: LanguageFile<FileServices>,
@@ -97,6 +98,7 @@ export interface LanguageDefinition<
 	): LanguageFileFactoryDefinition<FileServices>;
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
+		host: LinterHost,
 	): LanguageFileCacheImpacts;
 	getLanguageReports?(
 		file: LanguageFile<FileServices>,
@@ -111,7 +113,7 @@ export interface LanguageDefinition<
 
 export interface LanguageFileCacheImpacts {
 	dependencies: string[];
-	invalidatesCache: boolean;
+	isGlobalDependency: boolean;
 }
 
 /**
@@ -119,7 +121,7 @@ export interface LanguageFileCacheImpacts {
  */
 export interface LanguageFileFactory<
 	FileServices extends object,
-> extends Disposable {
+> extends Partial<Disposable> {
 	createFile(data: FileAboutData): LanguageFile<FileServices>;
 
 	/**
@@ -145,9 +147,18 @@ export type LanguageFile<FileServices extends object> = Disposable &
  */
 export interface LanguageFileBase<FileServices extends object> {
 	about: FileAboutData;
-	adjustFixRange?: (range: CharacterReportRange) => CharacterReportRange | null;
+
+	/**
+	 * Maps a range from the language's analysis text to the original source text.
+	 * @param range The range produced by a rule.
+	 * @param kind `report` maps a diagnostic highlight and may use a language-specific fallback.
+	 * `change` maps an autofix or suggestion replacement and must preserve the edit's meaning;
+	 * the replacement text is applied unchanged to the mapped range.
+	 * @returns The source range, or `null` to discard the diagnostic or individual edit.
+	 */
 	adjustReportRange?: (
 		range: CharacterReportRange,
+		kind: "change" | "report",
 	) => CharacterReportRange | null;
 	directives?: CommentDirective[];
 	reports?: FileReport[];
@@ -167,8 +178,9 @@ export type LanguageFileDefinition<FileServices extends object> =
  * are {@link LanguageFileDefinition}s (which do not have to be disposable), rather
  * than {@link LanguageFile}s (which are always disposable).
  */
-export type LanguageFileFactoryDefinition<FileServices extends object> =
-	Partial<Disposable> & {
-		createFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
-		prepareFiles?(filePathsAbsolute: readonly string[]): void;
-	};
+export interface LanguageFileFactoryDefinition<
+	FileServices extends object,
+> extends Partial<Disposable> {
+	createFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
+	prepareFiles?(filePathsAbsolute: readonly string[]): void;
+}
