@@ -1,3 +1,4 @@
+import { WeakCachedFactory } from "cached-factory";
 import ts, { SyntaxKind } from "typescript";
 
 import {
@@ -25,6 +26,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		const jsDocDeprecationByTypeChecker = new WeakCachedFactory(
+			(typeChecker: ts.TypeChecker) =>
+				new WeakCachedFactory((symbol: ts.Signature | ts.Symbol) =>
+					getJsDocDeprecationUncached(symbol, typeChecker),
+				),
+		);
+		const aliasChainDeprecationByTypeChecker = new WeakCachedFactory(
+			(typeChecker: ts.TypeChecker) =>
+				new WeakCachedFactory((symbol: ts.Symbol) =>
+					searchForDeprecationInAliasesChainUncached(
+						symbol,
+						typeChecker,
+						false,
+					),
+				),
+		);
+		const aliasChainTargetDeprecationByTypeChecker = new WeakCachedFactory(
+			(typeChecker: ts.TypeChecker) =>
+				new WeakCachedFactory((symbol: ts.Symbol) =>
+					searchForDeprecationInAliasesChainUncached(symbol, typeChecker, true),
+				),
+		);
+
 		function getJsDocDeprecation(
 			symbol: ts.Signature | ts.Symbol | undefined,
 			typeChecker: ts.TypeChecker,
@@ -33,6 +57,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
+			return jsDocDeprecationByTypeChecker.get(typeChecker).get(symbol);
+		}
+
+		function getJsDocDeprecationUncached(
+			symbol: ts.Signature | ts.Symbol,
+			typeChecker: ts.TypeChecker,
+		) {
 			let jsDocTags: ts.JSDocTagInfo[] | undefined;
 			try {
 				jsDocTags = symbol.getJsDocTags(typeChecker);
@@ -63,6 +94,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
+			return (
+				checkAliasedSymbol
+					? aliasChainTargetDeprecationByTypeChecker
+					: aliasChainDeprecationByTypeChecker
+			)
+				.get(typeChecker)
+				.get(symbol);
+		}
+
+		function searchForDeprecationInAliasesChainUncached(
+			symbol: ts.Symbol,
+			typeChecker: ts.TypeChecker,
+			checkAliasedSymbol: boolean,
+		) {
 			if (!(symbol.flags & ts.SymbolFlags.Alias)) {
 				return !!(
 					checkAliasedSymbol &&
