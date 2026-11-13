@@ -153,7 +153,12 @@ function collectESLintPluginCoverage(
 
 	return compareRuleCoverage(
 		Object.entries(rules as Record<string, Rule.RuleModule>)
-			.filter(([name]) => !excludedRuleNames?.has(name))
+			.filter(
+				([name, rule]) =>
+					!excludedRuleNames?.has(name) &&
+					// Deprecated Unicorn exports are no-op compatibility stubs.
+					!(pluginName === "unicorn" && rule.meta?.deprecated),
+			)
 			.map(([name, rule]) => ({
 				name: `${pluginName}/${name}`,
 				url: rule.meta?.docs?.url,

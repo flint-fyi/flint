@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer reading JSON files as buffers when using JSON.parse for better performance.",
-		id: "fileReadJSONBuffers",
+		id: "jsonFileReads",
 		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {

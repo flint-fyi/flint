@@ -1,4 +1,4 @@
-import rule from "./nodeDatasetAttributes.ts";
+import rule from "./nodeDatasetAccesses.ts";
 import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
