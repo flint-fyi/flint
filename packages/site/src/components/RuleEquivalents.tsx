@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 import { linterNames, type LinterName } from "@flint.fyi/rule-data";
 
 import { getRuleDataByFlintId } from "./getRuleDataByFlintId";
@@ -8,7 +10,10 @@ export interface RuleEquivalentsProps {
 	ruleId: string;
 }
 
-export function RuleEquivalents({ pluginId, ruleId }: RuleEquivalentsProps) {
+export function RuleEquivalents({
+	pluginId,
+	ruleId,
+}: RuleEquivalentsProps): ReactElement {
 	const ruleDetails = getRuleDataByFlintId(pluginId, ruleId);
 
 	return (
@@ -18,7 +23,7 @@ export function RuleEquivalents({ pluginId, ruleId }: RuleEquivalentsProps) {
 					ruleDetails[linter] && (
 						<li key={linter}>
 							{linterName}:{" "}
-							<RuleEquivalentLinks ruleDetails={ruleDetails} linter={linter} />
+							<RuleEquivalentLinks linter={linter} ruleDetails={ruleDetails} />
 						</li>
 					),
 			)}

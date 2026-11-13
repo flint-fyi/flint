@@ -65,7 +65,7 @@ const config: ConfigObject[] = defineConfig(
 			tseslint.configs.stylisticTypeChecked,
 			unicorn.configs.unopinionated,
 		],
-		files: ["**/*.{js,ts}"],
+		files: [tseslint.globs.jsts],
 		languageOptions: {
 			parserOptions: {
 				projectService: true,
@@ -106,6 +106,7 @@ const config: ConfigObject[] = defineConfig(
 				"error",
 				{ allowNumber: true },
 			],
+			curly: ["error", "all"],
 			eqeqeq: ["error", "always", { null: "ignore" }],
 			"jsdoc/check-tag-names": [
 				"error",

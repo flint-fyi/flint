@@ -2,27 +2,28 @@
 
 import { fileURLToPath } from "node:url";
 
+import { defineEcConfig } from "@astrojs/starlight/expressive-code";
 import ecTwoSlash from "expressive-code-twoslash";
+import ts from "typescript";
 
-/** @type {import('@astrojs/starlight/expressive-code').StarlightExpressiveCodeOptions} */
-export default {
+export default defineEcConfig({
 	plugins: [
 		ecTwoSlash({
 			twoslashOptions: {
-				vfsRoot: fileURLToPath(new URL("../..", import.meta.url)),
 				compilerOptions: {
-					target: 99, // ESNext
-					module: 199, // NodeNext
-					moduleResolution: 99, // NodeNext
-					jsx: 4, // react-jsx
+					jsx: ts.JsxEmit.ReactJSX,
 					jsxImportSource: "react",
+					module: ts.ModuleKind.NodeNext,
+					moduleResolution: ts.ModuleResolutionKind.NodeNext,
 					noImplicitAny: false,
+					target: ts.ScriptTarget.ESNext,
 					// Override expressive-code-twoslash defaults which use friendly names
 					// ("DOM", "ES2022") that don't work in the programmatic API — it needs
 					// the file path format. esnext.full includes ES + DOM + DOM.Iterable.
 					lib: ["lib.esnext.full.d.ts"],
 				},
+				vfsRoot: fileURLToPath(new URL("../..", import.meta.url)),
 			},
 		}),
 	],
-};
+});

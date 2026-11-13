@@ -13,7 +13,7 @@ const config: Config = {
 		"",
 		"^[.]",
 	],
-	importOrderTypeScriptVersion: "5.0.0",
+	importOrderTypeScriptVersion: "6.0.0",
 	overrides: [
 		{ files: ".nvmrc", options: { parser: "yaml" } },
 		{
@@ -23,8 +23,8 @@ const config: Config = {
 		{ files: "cspell.json", options: { parser: "json-stringify" } },
 	],
 	plugins: [
+		"@prettier/plugin-oxc",
 		"prettier-plugin-astro",
-		"prettier-plugin-curly",
 		"prettier-plugin-packagejson",
 		"prettier-plugin-sentences-per-line",
 		"prettier-plugin-sh",

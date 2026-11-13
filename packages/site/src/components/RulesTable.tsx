@@ -1,5 +1,6 @@
 import { getPluginDataSafe } from "~/data/pluginData";
 import clsx from "clsx";
+import type { ReactElement } from "react";
 
 import {
 	getRuleForPluginSafe,
@@ -12,46 +13,6 @@ import { createRuleComparator } from "./createRuleComparator";
 import { InlineMarkdown } from "./InlineMarkdown";
 import styles from "./RulesTable.module.css";
 
-function renderFlintPlugin(flint: FlintRuleReference) {
-	const pluginData = getPluginDataSafe(flint.plugin);
-
-	if (!pluginData && flint.status !== "skipped") {
-		throw new Error(
-			`Unknown plugin ${flint.plugin} for non-skipped Flint rule ${flint.plugin}/${flint.name}.`,
-		);
-	}
-
-	return pluginData ? (
-		<td className={styles.linkCell}>
-			<a href={`/rules/${flint.plugin}`}>
-				{pluginData.plugin.name.split(" ")[0]}
-			</a>
-		</td>
-	) : (
-		<td className={styles.unknownPlugin}>
-			{flint.plugin && `(${flint.plugin})`}
-		</td>
-	);
-}
-
-function renderFlintPreset(flint: FlintRuleReference) {
-	if (flint.status === "skipped" || !flint.preset) {
-		return <td className={styles.noneCell}>(none)</td>;
-	}
-
-	const href = `/rules/${flint.plugin}#${flint.preset.toLowerCase()}`;
-
-	return (
-		<td className={styles.linkCell}>
-			<a href={href}>{flint.preset}</a>
-		</td>
-	);
-}
-
-function renderFlintNotes(notes: string | undefined) {
-	return <td className={styles.notesCell}>{notes}</td>;
-}
-
 export interface RulesTableProps {
 	implementing: boolean;
 	plugin?: string;
@@ -59,42 +20,12 @@ export interface RulesTableProps {
 	sortBy?: "name" | "preset";
 }
 
-function renderFlintName(flint: FlintRuleReference) {
-	return flint.status === "implemented" ? (
-		<a href={`/rules/${flint.plugin}/${flint.name.toLowerCase()}`}>
-			{flint.name}
-		</a>
-	) : (
-		flint.name
-	);
-}
-
-function renderFlintRuleDescription(flint: FlintRuleReference) {
-	const description = getRuleForPluginSafe(flint.plugin, flint.name)?.about
-		.description;
-
-	return description ? <InlineMarkdown markdown={description} /> : null;
-}
-
-function renderImplemented(ruleData: RuleDetails[]) {
-	const count = ruleData.filter(
-		(ruleDetails) => ruleDetails.flint.status === "implemented",
-	).length;
-
-	return count === ruleData.length ? null : (
-		<>
-			Implemented: {count} of {ruleData.length} (
-			{Math.trunc((count / ruleData.length) * 1000) / 10}%)
-		</>
-	);
-}
-
 export function RulesTable({
 	implementing,
-	sortBy,
 	plugin,
 	small,
-}: RulesTableProps) {
+	sortBy,
+}: RulesTableProps): ReactElement {
 	const comparator = createRuleComparator(sortBy);
 
 	const values = ruleData
@@ -109,7 +40,7 @@ export function RulesTable({
 
 			return true;
 		})
-		.sort(comparator);
+		.toSorted(comparator);
 
 	return (
 		<div>
@@ -153,5 +84,73 @@ export function RulesTable({
 				</tbody>
 			</table>
 		</div>
+	);
+}
+
+function renderFlintName(flint: FlintRuleReference) {
+	return flint.status === "implemented" ? (
+		<a href={`/rules/${flint.plugin}/${flint.name.toLowerCase()}`}>
+			{flint.name}
+		</a>
+	) : (
+		flint.name
+	);
+}
+
+function renderFlintNotes(notes: string | undefined) {
+	return <td className={styles.notesCell}>{notes}</td>;
+}
+
+function renderFlintPlugin(flint: FlintRuleReference) {
+	const pluginData = getPluginDataSafe(flint.plugin);
+
+	if (!pluginData && flint.status !== "skipped") {
+		throw new Error(
+			`Unknown plugin ${flint.plugin} for non-skipped Flint rule ${flint.plugin}/${flint.name}.`,
+		);
+	}
+
+	return pluginData ? (
+		<td className={styles.linkCell}>
+			<a href={`/rules/${flint.plugin}`}>
+				{pluginData.plugin.name.split(" ", 1)[0]}
+			</a>
+		</td>
+	) : (
+		<td className={styles.unknownPlugin}>({flint.plugin})</td>
+	);
+}
+
+function renderFlintPreset(flint: FlintRuleReference) {
+	if (flint.status === "skipped" || !flint.preset) {
+		return <td className={styles.noneCell}>(none)</td>;
+	}
+
+	const href = `/rules/${flint.plugin}#${flint.preset.toLowerCase()}`;
+
+	return (
+		<td className={styles.linkCell}>
+			<a href={href}>{flint.preset}</a>
+		</td>
+	);
+}
+
+function renderFlintRuleDescription(flint: FlintRuleReference) {
+	const description = getRuleForPluginSafe(flint.plugin, flint.name)?.about
+		.description;
+
+	return description ? <InlineMarkdown markdown={description} /> : null;
+}
+
+function renderImplemented(ruleData: RuleDetails[]) {
+	const count = ruleData.filter(
+		(ruleDetails) => ruleDetails.flint.status === "implemented",
+	).length;
+
+	return count === ruleData.length ? null : (
+		<>
+			Implemented: {count} of {ruleData.length} (
+			{Math.trunc((count / ruleData.length) * 1000) / 10}%)
+		</>
 	);
 }
