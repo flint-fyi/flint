@@ -18,5 +18,4 @@ export const base: UserConfig = {
 	suppressWarnings: [
 		"TypeScript Go is experimental. Some options will be unavailable.",
 	],
-	tsconfig: "tsconfig.src.json",
 };
