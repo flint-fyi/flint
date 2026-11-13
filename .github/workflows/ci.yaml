@@ -60,7 +60,7 @@ jobs:
       - wait-all: ~
 
   test_e2e:
-    name: Test E2E (Node.js ${{ matrix.node-version }}, ${{ matrix.os }})
+    name: Test E2E (Node.js ${{ case(matrix.node-version == '26.1.0', matrix.node-version, '26') }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -69,7 +69,7 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
-        node-version: [26.1.0, 26]
+        node-version: [26.1.0, 26.13.0]
     steps:
       - uses: $/.github/actions/setup
         with:
@@ -83,11 +83,11 @@ jobs:
         run: pnpm run test --project e2e
 
   test_node:
-    name: Test (Node.js ${{ matrix.node-version }}, ubuntu-latest)
+    name: Test (Node.js ${{ case(matrix.node-version == '26.1.0', matrix.node-version, '26') }}, ubuntu-latest)
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [26.1.0, 26]
+        node-version: [26.1.0, 26.13.0]
     steps:
       - uses: $/.github/actions/setup
         with:
