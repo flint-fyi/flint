@@ -314,8 +314,8 @@ catalogs:
       specifier: 4.0.3
       version: 4.0.3
     '@typescript/native':
-      specifier: npm:typescript@7.1.0-dev.20261109.1
-      version: 7.1.0-dev.20261109.1
+      specifier: npm:typescript@7.1.0-dev.20261110.1
+      version: 7.1.0-dev.20261110.1
     '@vitest/coverage-v8':
       specifier: 5.1.0
       version: 5.1.0
@@ -699,7 +699,7 @@ importers:
         version: 26.6.6
       '@typescript/native':
         specifier: catalog:dev
-        version: typescript@7.1.0-dev.20261109.1
+        version: typescript@7.1.0-dev.20261110.1
       '@vitest/coverage-v8':
         specifier: catalog:dev
         version: 5.1.0(vitest@5.1.0)
@@ -897,10 +897,10 @@ importers:
     dependencies:
       '@typescript/native':
         specifier: catalog:dev
-        version: typescript@7.1.0-dev.20261109.1
+        version: typescript@7.1.0-dev.20261110.1
       tsdown:
         specifier: catalog:dev
-        version: 0.23.7(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261109.1)
+        version: 0.23.7(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261110.1)
 
   packages/changesets:
     dependencies:
@@ -4335,44 +4335,44 @@ packages:
     resolution: {integrity: sha512-NAGrjn0Pitjqzq/GkgMC4kBYm233PQ8GffyQ9+kTA3AlNQYEzOf25EIM02BAHZv5FRJSpHpJk+OGUxVkOB93GQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@typescript/typescript-darwin-arm64@7.1.0-dev.20261109.1':
-    resolution: {integrity: sha512-k5X3MB7j6U7c1Xs+rSscULDKX+KQzEzJny+mTN92vWgWE8ampF8RRS6uT2BbzlugySYif6FAQbpT7XoLUSKuLg==}
+  '@typescript/typescript-darwin-arm64@7.1.0-dev.20261110.1':
+    resolution: {integrity: sha512-94rWDpZY2PUiDy4ee53vNiJLr9vYeLDpu7byYrzGWyl+fIrUhID09V+k3sDvxr3HKUT1Rc7gsxxzJ+UyTZYwuA==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [darwin]
 
-  '@typescript/typescript-darwin-x64@7.1.0-dev.20261109.1':
-    resolution: {integrity: sha512-8NvwXDDZHunOkNNw96hoQ0ev2LIVSsZdGTUI9W5S5HD6Iwvm4aSqs9V4w1zCtNqCwtZaEiOjURip6PVMLRsF6A==}
+  '@typescript/typescript-darwin-x64@7.1.0-dev.20261110.1':
+    resolution: {integrity: sha512-j0YonOFQnyr5Q2EMwQT3wVvD7di7/0GFTPReITIQLsHfvqOdicPFewvmsrPquhzLYGmuRS5sjcolMhrEja6Qjg==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [darwin]
 
-  '@typescript/typescript-linux-arm64@7.1.0-dev.20261109.1':
-    resolution: {integrity: sha512-UVHu4IKa2xc8ggnJdzFwrJCAMj8bcNKG2Ygp69fAuqLWQaORu2PbGsyuBMn0OgNMr00P8FKRL2eRSceTb4HAKw==}
+  '@typescript/typescript-linux-arm64@7.1.0-dev.20261110.1':
+    resolution: {integrity: sha512-r9rVILAbNWQf7V1B2vCZaVAAkvxpe+f1myGX6Vs3ccN/aDqtxBKU7J+PAu6/+dsPqD4tjZaSEunwSat8z95/ag==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [linux]
 
-  '@typescript/typescript-linux-arm@7.1.0-dev.20261109.1':
-    resolution: {integrity: sha512-NLakeoS9l5pSHrfTIAipq3hrUGRCxfBaGC7kMvgwuwvgGT8jmlLmfCdR+koxlnVIQxlJZXQOIWXKJ/EP4PeaFw==}
+  '@typescript/typescript-linux-arm@7.1.0-dev.20261110.1':
+    resolution: {integrity: sha512-hzQ002jUD4YjYb1XTA+5PAvnn+zncb+EXBRq1yyCE3UngpdNUPD1j3cz34njNs3OtptrSDeiQucKnNrg/oyV7w==}
     engines: {node: '>=16.20.0'}
     cpu: [arm]
     os: [linux]
 
-  '@typescript/typescript-linux-x64@7.1.0-dev.20261109.1':
-    resolution: {integrity: sha512-ds2dWbkP603iCvpW3vLuurYJFCKRZBc/swX4w6GYV1irzZrgCZOSfnhifQIQNDZmWAJTmOyXdSP3zoIpHsSK0g==}
+  '@typescript/typescript-linux-x64@7.1.0-dev.20261110.1':
+    resolution: {integrity: sha512-wnsByMYYIa/v3lf45JBfOJ75WmPND+Y0oK+y8L1HQq0JmJ6w9ZLGH+fE6XpUufruH0oDd9skTcGnZsA7Z7w5jw==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [linux]
 
-  '@typescript/typescript-win32-arm64@7.1.0-dev.20261109.1':
-    resolution: {integrity: sha512-QlGuYPxAySkNsOWyriI0HficVfAvY53vaCKsvGOBmXnzqB6Cf+vfABRikRJdOHKQ3Fo92U0lg2TtUcB5INiG4g==}
+  '@typescript/typescript-win32-arm64@7.1.0-dev.20261110.1':
+    resolution: {integrity: sha512-3FySbUaPtCiD4h9rpr0D3NIBnW59v6xA2yO943ZG1E7ktbMMpbcl6z3hCcE9Pwxf3sKZrvriu6YG3Kf8AZxtEw==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [win32]
 
-  '@typescript/typescript-win32-x64@7.1.0-dev.20261109.1':
-    resolution: {integrity: sha512-DwVTepbRmBpsPPzEqGn3GBVwtL81M0fIL6RiUSjYRduHWSBNOyErjccMHvXrpeSotlQ3Ik5yYq2R9hVt6HmhGw==}
+  '@typescript/typescript-win32-x64@7.1.0-dev.20261110.1':
+    resolution: {integrity: sha512-varSWVER8grWzyYmmbGeyNyD6RaUbnNJ3xfmxGGkcsWxIoudhQLiP3+mfNalrQHpaCyNiSiQQDcwQ3OseEOSxg==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [win32]
@@ -7730,8 +7730,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@7.1.0-dev.20261109.1:
-    resolution: {integrity: sha512-gWvPmRpUJ1SzahmGN6138gT0aLLK4bMUCC8MoTKJtVdRIJc65f/UuvpZpHGctvD0y/Nu3w3b5gLY9e/7+GSeJw==}
+  typescript@7.1.0-dev.20261110.1:
+    resolution: {integrity: sha512-P0Lonxj1/CHUYjpnuXsnWG9+nqcyYD0TkZbyOS3zqyS59SM4T7Pq2QgL2ZoA7OWJEs08ZlgqAEFjTVlZta31gQ==}
     engines: {node: '>=16.20.0'}
     hasBin: true
 
@@ -10281,25 +10281,25 @@ snapshots:
       '@typescript-eslint/types': 8.72.2
       eslint-visitor-keys: 5.0.1
 
-  '@typescript/typescript-darwin-arm64@7.1.0-dev.20261109.1':
+  '@typescript/typescript-darwin-arm64@7.1.0-dev.20261110.1':
     optional: true
 
-  '@typescript/typescript-darwin-x64@7.1.0-dev.20261109.1':
+  '@typescript/typescript-darwin-x64@7.1.0-dev.20261110.1':
     optional: true
 
-  '@typescript/typescript-linux-arm64@7.1.0-dev.20261109.1':
+  '@typescript/typescript-linux-arm64@7.1.0-dev.20261110.1':
     optional: true
 
-  '@typescript/typescript-linux-arm@7.1.0-dev.20261109.1':
+  '@typescript/typescript-linux-arm@7.1.0-dev.20261110.1':
     optional: true
 
-  '@typescript/typescript-linux-x64@7.1.0-dev.20261109.1':
+  '@typescript/typescript-linux-x64@7.1.0-dev.20261110.1':
     optional: true
 
-  '@typescript/typescript-win32-arm64@7.1.0-dev.20261109.1':
+  '@typescript/typescript-win32-arm64@7.1.0-dev.20261110.1':
     optional: true
 
-  '@typescript/typescript-win32-x64@7.1.0-dev.20261109.1':
+  '@typescript/typescript-win32-x64@7.1.0-dev.20261110.1':
     optional: true
 
   '@typescript/typescript6@6.0.2':
@@ -14036,7 +14036,7 @@ snapshots:
       - '@yuku-toolchain/wasm'
       - oxc-resolver
 
-  rolldown-plugin-dts@0.30.2(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.3.2)(typescript@7.1.0-dev.20261109.1):
+  rolldown-plugin-dts@0.30.2(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.3.2)(typescript@7.1.0-dev.20261110.1):
     dependencies:
       dts-resolver: 3.0.0(oxc-resolver@11.24.2)
       get-tsconfig: 5.0.0-beta.6
@@ -14046,7 +14046,7 @@ snapshots:
     optionalDependencies:
       '@volar/typescript': 2.4.30(@typescript/typescript6@6.0.2)
       '@vue/language-core': 3.3.14
-      typescript: 7.1.0-dev.20261109.1
+      typescript: 7.1.0-dev.20261110.1
     transitivePeerDependencies:
       - '@yuku-toolchain/wasm'
       - oxc-resolver
@@ -14662,7 +14662,7 @@ snapshots:
       - tsrs
       - vue-tsc
 
-  tsdown@0.23.7(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261109.1):
+  tsdown@0.23.7(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(typescript@7.1.0-dev.20261110.1):
     dependencies:
       cac: 7.1.0
       defu: 6.1.7
@@ -14672,7 +14672,7 @@ snapshots:
       obug: 3.0.0
       picomatch: 4.0.7
       rolldown: 1.3.2
-      rolldown-plugin-dts: 0.30.2(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.3.2)(typescript@7.1.0-dev.20261109.1)
+      rolldown-plugin-dts: 0.30.2(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)(rolldown@1.3.2)(typescript@7.1.0-dev.20261110.1)
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tinyps: 0.5.1
@@ -14680,7 +14680,7 @@ snapshots:
       verkit: 0.5.0
     optionalDependencies:
       '@arethetypeswrong/core': 0.18.5
-      typescript: 7.1.0-dev.20261109.1
+      typescript: 7.1.0-dev.20261110.1
     transitivePeerDependencies:
       - '@volar/typescript'
       - '@vue/language-core'
@@ -14755,15 +14755,15 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  typescript@7.1.0-dev.20261109.1:
+  typescript@7.1.0-dev.20261110.1:
     optionalDependencies:
-      '@typescript/typescript-darwin-arm64': 7.1.0-dev.20261109.1
-      '@typescript/typescript-darwin-x64': 7.1.0-dev.20261109.1
-      '@typescript/typescript-linux-arm': 7.1.0-dev.20261109.1
-      '@typescript/typescript-linux-arm64': 7.1.0-dev.20261109.1
-      '@typescript/typescript-linux-x64': 7.1.0-dev.20261109.1
-      '@typescript/typescript-win32-arm64': 7.1.0-dev.20261109.1
-      '@typescript/typescript-win32-x64': 7.1.0-dev.20261109.1
+      '@typescript/typescript-darwin-arm64': 7.1.0-dev.20261110.1
+      '@typescript/typescript-darwin-x64': 7.1.0-dev.20261110.1
+      '@typescript/typescript-linux-arm': 7.1.0-dev.20261110.1
+      '@typescript/typescript-linux-arm64': 7.1.0-dev.20261110.1
+      '@typescript/typescript-linux-x64': 7.1.0-dev.20261110.1
+      '@typescript/typescript-win32-arm64': 7.1.0-dev.20261110.1
+      '@typescript/typescript-win32-x64': 7.1.0-dev.20261110.1
 
   uc.micro@3.0.0: {}
 
