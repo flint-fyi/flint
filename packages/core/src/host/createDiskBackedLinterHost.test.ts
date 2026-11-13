@@ -916,32 +916,21 @@ describe("createDiskBackedLinterHost", () => {
 			});
 		});
 
-		it("does not warn about too many listeners when many watchers share a missing path", async () => {
+		it("does not warn about too many listeners when many watchers share a missing path", () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const filePath = normalizePath(path.join(integrationRoot, "missing.txt"));
-			const warnings: Error[] = [];
-			const onWarning = (warning: Error): void => {
-				warnings.push(warning);
-			};
-			process.on("warning", onWarning);
+			const emitWarning = vi.spyOn(process, "emitWarning");
 
-			try {
-				const subscriptions = Array.from({ length: 11 }, () =>
-					host.watchFileSync(filePath, vi.fn(), { ignoredPaths: [] }),
-				);
-				await sleep(50);
-				for (const subscription of subscriptions) {
-					subscription[Symbol.dispose]();
-				}
-			} finally {
-				process.off("warning", onWarning);
+			const subscriptions = Array.from({ length: 11 }, () =>
+				host.watchFileSync(filePath, vi.fn(), { ignoredPaths: [] }),
+			);
+			for (const subscription of subscriptions) {
+				subscription[Symbol.dispose]();
 			}
 
-			expect(
-				warnings.filter(
-					(warning) => warning.name === "MaxListenersExceededWarning",
-				),
-			).toEqual([]);
+			expect(emitWarning).not.toHaveBeenCalledWith(
+				expect.objectContaining({ name: "MaxListenersExceededWarning" }),
+			);
 		});
 
 		it("opens one native watcher per distinct set of directory options", () => {
