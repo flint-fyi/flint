@@ -14,69 +14,6 @@ ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
       {
-        code: "",
-        snapshot: \`
-~
-Rule report message.
-\`,
-      }
-    ],
-});
-`,
-			output: `
-import { RuleTester } from "@flint.fyi/rule-tester";
-import rule from "../ruleCreationMethods";
-
-const ruleTester = new RuleTester();
-
-ruleTester.describe(rule, {
-    valid: ['a', 'a'],
-    invalid: [
-      {
-        code: \`
-
-\`,
-        snapshot: \`
-~
-Rule report message.
-\`,
-      }
-    ],
-});
-`,
-			snapshot: `
-import { RuleTester } from "@flint.fyi/rule-tester";
-import rule from "../ruleCreationMethods";
-
-const ruleTester = new RuleTester();
-
-ruleTester.describe(rule, {
-    valid: ['a', 'a'],
-    invalid: [
-      {
-        code: "",
-              ~~
-              This code block should be formatted across multiple lines for more readable reports.
-        snapshot: \`
-~
-Rule report message.
-\`,
-      }
-    ],
-});
-`,
-		},
-		{
-			code: `
-import { RuleTester } from "@flint.fyi/rule-tester";
-import rule from "../ruleCreationMethods";
-
-const ruleTester = new RuleTester();
-
-ruleTester.describe(rule, {
-    valid: ['a', 'a'],
-    invalid: [
-      {
         code: \`console.log(
 );\`,
         snapshot: \`console.log(
@@ -320,6 +257,44 @@ console.log();
 ~~~~~~~~~~~~~
 Rule report message.
 \`,
+        }
+    ],
+});
+`,
+		`
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [
+        {
+            code: "",
+            snapshot: \`
+~
+Rule report message.
+\`,
+        }
+    ],
+});
+`,
+		`
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [
+        {
+            code: \`\`,
+            fileName: "config.yml",
+            snapshot: \`
+
+Use .yaml extension instead of .yml for YAML files.\`,
         }
     ],
 });
