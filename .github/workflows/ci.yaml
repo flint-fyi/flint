@@ -13,52 +13,51 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
-    name: Build
+  checks:
+    name: Checks
     runs-on: ubuntu-latest
     steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run build # Ensure packages pass attw, etc.
-      - run: pnpm --filter=site check # Validate packages/site without a full Astro build.
-
-  dedupe_check:
-    name: Dedupe Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm dedupe --check --prefer-offline
-
-  flint:
-    name: Flint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
-      - run: pnpm run flint
-
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
-      - run: pnpm run lint
-
-  lint_knip:
-    name: Lint Knip
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run build # Knip requires all exports to be generated.
-      - run: pnpm run lint:knip
-      - run: pnpm run lint:knip:prod
-
-  typecheck:
-    name: Typecheck
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm exec tsc -b
+      - id: setup
+        uses: $/.github/actions/setup
+      - name: Dedupe Check
+        run: pnpm dedupe --check --prefer-offline
+      - name: Generate Astro Types
+        id: astro
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: pnpm run --filter=site prebuild
+      - name: Build
+        id: build
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: pnpm run build # Ensure packages pass attw and generate exports for Knip.
+      - name: Ensure rule data remains sorted
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        background: true
+        run: pnpm run --filter=rule-data sort-data --check
+      - name: Flint
+        if: ${{ !cancelled() && steps.astro.outcome == 'success' }}
+        background: true
+        run: pnpm run flint
+      - name: Lint
+        if: ${{ !cancelled() && steps.astro.outcome == 'success' }}
+        background: true
+        run: pnpm run lint
+      - name: Lint Knip
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        background: true
+        run: pnpm run lint:knip
+      - name: Lint Knip Production
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        background: true
+        run: pnpm run lint:knip:prod
+      - name: Site Check
+        if: ${{ !cancelled() && steps.astro.outcome == 'success' && steps.build.outcome == 'success' }}
+        background: true
+        run: pnpm --filter=site check
+      - name: Typecheck
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        background: true
+        run: pnpm exec tsc -b
+      - wait-all: ~
 
   test_e2e:
     name: Test E2E (Node.js ${{ matrix.node-version }}, ${{ matrix.os }})
@@ -126,10 +125,3 @@ jobs:
         with:
           fail_ci_if_error: true
           use_oidc: true
-
-  check_rule_data_sort:
-    name: Ensure rule data remains sorted
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run --filter=rule-data sort-data --check
