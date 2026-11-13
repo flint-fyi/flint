@@ -23,7 +23,7 @@ catalogs:
     "@types/mdast": 4.0.4
     "@types/node": 26.6.6
     "@types/picomatch": 4.0.3
-    "@typescript/native": npm:typescript@7.1.0-beta
+    "@typescript/native": npm:typescript@7.1.0-dev.20261109.1
     "@vitest/coverage-v8": 5.1.0
     "@vitest/eslint-plugin": 1.6.28
     console-fail-test: 0.10.0
