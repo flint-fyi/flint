@@ -377,8 +377,8 @@ catalogs:
       specifier: 1.1.2
       version: 1.1.2
     prettier-plugin-curly:
-      specifier: 0.4.1
-      version: 0.4.1
+      specifier: 0.4.2
+      version: 0.4.2
     prettier-plugin-packagejson:
       specifier: 3.1.0
       version: 3.1.0
@@ -756,7 +756,7 @@ importers:
         version: 1.1.2(prettier@3.9.10)
       prettier-plugin-curly:
         specifier: catalog:dev
-        version: 0.4.1(prettier@3.9.10)
+        version: 0.4.2(prettier@3.9.10)
       prettier-plugin-packagejson:
         specifier: catalog:dev
         version: 3.1.0(prettier@3.9.10)
@@ -6909,11 +6909,15 @@ packages:
     peerDependencies:
       prettier: ^3.5.3
 
-  prettier-plugin-curly@0.4.1:
-    resolution: {integrity: sha512-Xc7zatoD0/08zYFv+hwnlqT5ekM81DCbBr73CWAsr1Fmx7qLQT/M0wfPx6w/+zfnmXH009xYvjzLUPcwzq7Fbw==}
+  prettier-plugin-curly@0.4.2:
+    resolution: {integrity: sha512-haKq5uzJWhEW7hdwD1BzokoYAq7nf61lPrlrnqpWEStrL0d0FiOHi8paxzH1P2p0w+1eRkJErseBIIuvWBqJ1Q==}
     engines: {node: '>=18'}
     peerDependencies:
+      '@prettier/plugin-oxc': ^0.2.2
       prettier: ^3
+    peerDependenciesMeta:
+      '@prettier/plugin-oxc':
+        optional: true
 
   prettier-plugin-packagejson@3.1.0:
     resolution: {integrity: sha512-KxH8E68UGYVW4IDxZk7lLXKxVd8uY6g8ctfu+fNwA+bAKgCN66ZoRIcPtOHXDa1kDj/nLBZIgH8srP/1Yaz9iA==}
@@ -13609,7 +13613,7 @@ snapshots:
       prettier: 3.9.10
       sass-formatter: 0.8.0
 
-  prettier-plugin-curly@0.4.1(prettier@3.9.10):
+  prettier-plugin-curly@0.4.2(prettier@3.9.10):
     dependencies:
       prettier: 3.9.10
 
