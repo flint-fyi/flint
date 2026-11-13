@@ -149,7 +149,7 @@ describe(runCliWatch, () => {
 		]);
 	});
 
-	it("rebuilds the lint session after a structural file changes", async () => {
+	it("rebuilds and relints after a reported structural input outside the watched directory changes", async () => {
 		const project = createTestProject();
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
 		let quit: (() => void) | undefined;
@@ -169,7 +169,7 @@ describe(runCliWatch, () => {
 
 						if (renderCount === 1) {
 							project.host.vfsUpsertFile(
-								path.join(project.root, "package.json"),
+								"/shared/compiler-settings.json",
 								"{}",
 							);
 						} else {
@@ -183,6 +183,12 @@ describe(runCliWatch, () => {
 
 		expect(loadConfigDefinition).toHaveBeenCalledTimes(2);
 		expect(renderCount).toBe(2);
+		expect(project.visitedFilePaths).toEqual([
+			project.aPath,
+			project.bPath,
+			project.aPath,
+			project.bPath,
+		]);
 	});
 
 	it("applies fixes and re-lints changed files", async () => {
@@ -261,6 +267,7 @@ function createTestProject({
 	host.vfsUpsertFile(bPath, "b1");
 	host.vfsUpsertFile("flint.config.ts", "");
 	host.vfsUpsertFile("package.json", "{}");
+	host.vfsUpsertFile("/shared/compiler-settings.json", "{}");
 	const visitedFilePaths: string[] = [];
 	const visitedSourceTexts: string[] = [];
 	const createFileFactory = vi.fn(() => ({
@@ -274,6 +281,13 @@ function createTestProject({
 	const language = createLanguage<TestNodes>({
 		about: { name: "Test" },
 		createFileFactory,
+		getFileCacheImpacts() {
+			return {
+				dependencies: [],
+				isGlobalDependency: false,
+				structuralDependencies: ["/shared/compiler-settings.json"],
+			};
+		},
 		runFileVisitors(file, fileVisitors) {
 			for (const { services, visitors } of fileVisitors) {
 				visitors.file?.(file.about, services);
