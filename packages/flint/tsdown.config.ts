@@ -9,7 +9,6 @@ const config: UserConfig = defineConfig({
 		...(base.exports && typeof base.exports === "object" ? base.exports : {}),
 		exclude: ["bin/index"],
 	},
-	tsconfig: "tsconfig.json",
 });
 
 export default config;
