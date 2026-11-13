@@ -4,7 +4,7 @@ import type { LanguageReport } from "./languages.ts";
 import type { FileReport } from "./reports.ts";
 
 export interface FileResults {
-	dependencies: Set<string>;
+	dependencies: ReadonlySet<string>;
 	languageReports: LanguageReport[];
 	reports: FileReport[];
 }
