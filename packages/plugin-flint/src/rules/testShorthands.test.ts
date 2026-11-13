@@ -128,8 +128,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
     valid: [
-        { code: \`a\`, fileName: "b.ts" },
-        { code: \`a\`, fileName: "c.ts" },
+        { files: { "b.ts": \`a\` } },
+        { files: { "c.ts": \`a\` } },
     ],
     invalid: []
 });
@@ -156,8 +156,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
     valid: [
-        { code: \`a\`, fileName: "b.ts", name: "first" },
-        { code: \`a\`, fileName: "c.ts", name: "second" },
+        { files: { "b.ts": \`a\` }, name: "first" },
+        { files: { "c.ts": \`a\` }, name: "second" },
     ],
     invalid: []
 });

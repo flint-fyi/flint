@@ -624,17 +624,16 @@ export type { Type };
 `,
 		},
 		{
-			code: `
-import Type from "./types";
-export = {} as Type;
-`,
-			fileName: "file.cts",
 			files: {
 				"component.ts": `
 export class Component {}
 `,
 				"constants.ts": `
 export const value = "value" as const;
+`,
+				"file.cts": `
+import Type from "./types";
+export = {} as Type;
 `,
 				"types.ts": `
 class Type {
@@ -674,16 +673,20 @@ export function createValue() {
 export default Value;
 `,
 			},
-			output: `
+			output: {
+				"file.cts": `
 import type Type from "./types";
 export = {} as Type;
 `,
-			snapshot: `
+			},
+			snapshot: {
+				"file.cts": `
 import Type from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 All imports in this declaration are only used as types. Use 'import type'.
 export = {} as Type;
 `,
+			},
 		},
 		{
 			code: `
@@ -1995,17 +1998,16 @@ export default Value;
 			},
 		},
 		{
-			code: `
-import Value from "./values";
-export = Value;
-`,
-			fileName: "file.cts",
 			files: {
 				"component.ts": `
 export class Component {}
 `,
 				"constants.ts": `
 export const value = "value" as const;
+`,
+				"file.cts": `
+import Value from "./values";
+export = Value;
 `,
 				"types.ts": `
 class Type {

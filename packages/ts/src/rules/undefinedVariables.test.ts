@@ -1,113 +1,71 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester } from "./ruleTester.ts";
 import rule from "./undefinedVariables.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 undefinedVar;
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 undefinedVar;
 ~~~~~~~~~~~~
 Variable 'undefinedVar' is used but was never defined.
 `,
+			},
 		},
 	],
 	valid: [
 		{
-			code: `const value = 5; value;`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-		},
-		{
-			code: `function test(parameter) { return parameter; } test(1);`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-		},
-		{
-			code: `let count = 0; count++;`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-		},
-		{
-			code: `const obj = { prop: 1 }; obj.prop;`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-		},
-		{
-			code: `const obj = { prop: undefined }; const { prop } = obj; prop;`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-		},
-		{
-			code: `function fn() { return 1; } fn();`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-		},
-		{
-			code: `class MyClass {} const instance = new MyClass(); instance;`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-		},
-		{
-			code: `import { value } from "module"; value;`,
-			fileName: "file.js",
 			files: {
-				...createRuleTesterTSConfig({
-					allowJs: true,
-					checkJs: false,
-					noEmit: true,
-				}),
+				"file.js": `const value = 5; value;`,
+			},
+		},
+		{
+			files: {
+				"file.js": `function test(parameter) { return parameter; } test(1);`,
+			},
+		},
+		{
+			files: {
+				"file.js": `let count = 0; count++;`,
+			},
+		},
+		{
+			files: {
+				"file.js": `const obj = { prop: 1 }; obj.prop;`,
+			},
+		},
+		{
+			files: {
+				"file.js": `const obj = { prop: undefined }; const { prop } = obj; prop;`,
+			},
+		},
+		{
+			files: {
+				"file.js": `function fn() { return 1; } fn();`,
+			},
+		},
+		{
+			files: {
+				"file.js": `class MyClass {} const instance = new MyClass(); instance;`,
+			},
+		},
+		{
+			files: {
+				"file.js": `import { value } from "module"; value;`,
 				"node_modules/module/index.d.ts": `
 export const value: unknown;
 `,
 			},
 		},
 		{
-			code: `const array = [1, 2, 3]; array.forEach(item => item);`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `const array = [1, 2, 3]; array.forEach(item => item);`,
+			},
 		},
 	],
 });

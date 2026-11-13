@@ -4,6 +4,7 @@ import { resolveReportedSuggestions } from "./resolveReportedSuggestions.ts";
 import type { TestSuggestion } from "./types.ts";
 
 const mockReport = {
+	fileName: "file.ts",
 	message: { primary: "", secondary: [], suggestions: [] },
 	range: {
 		begin: { column: 0, line: 1, raw: 0 },
@@ -12,8 +13,9 @@ const mockReport = {
 };
 
 const mockTestCaseNormalized = {
+	auxiliaryFiles: {},
 	code: "xyz",
-	fileName: "file.ts",
+	lintedFiles: { "file.ts": "xyz" },
 	snapshot: "",
 };
 
@@ -64,6 +66,35 @@ describe("resolveReportedSuggestions", () => {
 			{
 				id: suggestion.id,
 				updated: suggestion.text,
+			},
+		]);
+	});
+
+	it("resolves own-file suggestions against each originating file", () => {
+		const result = resolveReportedSuggestions(
+			["first.ts", "second.ts"].map((fileName) => ({
+				...mockReport,
+				fileName,
+				suggestions: [
+					{ id: "replace", range: { begin: 1, end: 3 }, text: "!" },
+				],
+			})),
+			{
+				auxiliaryFiles: {},
+				files: { "first.ts": "abcd", "second.ts": "wxyz" },
+				lintedFiles: { "first.ts": "abcd", "second.ts": "wxyz" },
+				snapshot: {},
+			},
+			"/project",
+		);
+		expect(result).toEqual([
+			{
+				files: { "first.ts": [{ original: "abcd", updated: "a!d" }] },
+				id: "replace",
+			},
+			{
+				files: { "second.ts": [{ original: "wxyz", updated: "w!z" }] },
+				id: "replace",
 			},
 		]);
 	});

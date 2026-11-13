@@ -92,20 +92,24 @@ Declared namespaces without explicit exports implicitly export all members.
 		`declare namespace Values { type Value = 1; type Other = 2; export { Other }; }`,
 		`declare namespace Empty {}`,
 		{
-			code: `declare namespace Values { export type Value = 1; }`,
-			fileName: "file.d.ts",
+			files: {
+				"file.d.ts": `declare namespace Values { export type Value = 1; }`,
+			},
 		},
 		{
-			code: `declare namespace Values { export {}; type Value = 1; }`,
-			fileName: "file.d.ts",
+			files: {
+				"file.d.ts": `declare namespace Values { export {}; type Value = 1; }`,
+			},
 		},
 		{
-			code: `declare namespace Values { export {}; type Value = 1; export type Other = 2; }`,
-			fileName: "file.d.ts",
+			files: {
+				"file.d.ts": `declare namespace Values { export {}; type Value = 1; export type Other = 2; }`,
+			},
 		},
 		{
-			code: `declare namespace Empty {}`,
-			fileName: "file.d.ts",
+			files: {
+				"file.d.ts": `declare namespace Empty {}`,
+			},
 		},
 	],
 });

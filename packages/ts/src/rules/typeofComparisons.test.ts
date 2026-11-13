@@ -1,32 +1,32 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 import rule from "./typeofComparisons.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 if (typeof value === "") {
     process();
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-				noUnusedLocals: false,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 if (typeof value === "") {
                      ~~
                      This string literal is not one that the typeof operator will ever produce.
     process();
 }
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`
 declare const value: unknown;

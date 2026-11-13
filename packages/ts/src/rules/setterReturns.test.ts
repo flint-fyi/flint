@@ -1,25 +1,20 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester } from "./ruleTester.ts";
 import rule from "./setterReturns.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 const object = {
     set value(value) {
         return value;
     }
 };
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const object = {
     set value(value) {
         return value;
@@ -28,22 +23,20 @@ const object = {
     }
 };
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Example {
     set name(value) {
         return value;
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 class Example {
     set name(value) {
         return value;
@@ -52,9 +45,11 @@ class Example {
     }
 }
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Example {
     #value = 0;
 
@@ -66,13 +61,9 @@ class Example {
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 class Example {
     #value = 0;
 
@@ -86,22 +77,20 @@ class Example {
     }
 }
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const object = {
     set value(value) {
         return 42;
     }
 };
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const object = {
     set value(value) {
         return 42;
@@ -110,22 +99,20 @@ const object = {
     }
 };
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Example {
     set "computed-name"(value) {
         return value;
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 class Example {
     set "computed-name"(value) {
         return value;
@@ -134,9 +121,11 @@ class Example {
     }
 }
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const key = "dynamic";
 const object = {
     set [key](value) {
@@ -144,13 +133,9 @@ const object = {
     }
 };
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const key = "dynamic";
 const object = {
     set [key](value) {
@@ -160,29 +145,23 @@ const object = {
     }
 };
 `,
+			},
 		},
 	],
 	valid: [
 		{
-			code: `const object = { _value: 0, set value(value) { this._value = value; } };`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `const object = { _value: 0, set value(value) { this._value = value; } };`,
+			},
 		},
 		{
-			code: `class Example { #value = 0; set value(value) { this.#value = value; } }`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `class Example { #value = 0; set value(value) { this.#value = value; } }`,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const object = {
     _value: 0,
 
@@ -192,15 +171,11 @@ const object = {
     }
 };
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Example {
     #value = 0;
 
@@ -212,15 +187,11 @@ class Example {
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const object = {
     _value: 0,
 
@@ -229,15 +200,11 @@ const object = {
     }
 };
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Example {
     #value = 0;
 
@@ -246,15 +213,11 @@ class Example {
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const object = {
     _value: 0,
 
@@ -264,15 +227,11 @@ const object = {
     }
 };
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Example {
     #value = 0;
 
@@ -282,15 +241,11 @@ class Example {
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 class Example {
     #value = 0;
 
@@ -300,21 +255,12 @@ class Example {
     }
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			},
 		},
 		{
-			code: `class Example { set value(value) {} }`,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
+			files: {
+				"file.js": `class Example { set value(value) {} }`,
+			},
 		},
 	],
 });

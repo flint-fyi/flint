@@ -40,20 +40,65 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			testCase: ParsedTestCaseInvalid,
 			sourceFile: AST.SourceFile,
 		) {
-			const fix = [
-				...createNewlineFixes(testCase.code, testCase.nodes.code, sourceFile),
-				...createNewlineFixes(
-					testCase.snapshot,
-					testCase.nodes.snapshot,
+			if (testCase.code !== undefined && testCase.nodes.code) {
+				checkCode(
+					testCase.code,
+					testCase.nodes.code,
+					testCase,
+					undefined,
 					sourceFile,
-				),
+				);
+				return;
+			}
+
+			if (
+				typeof testCase.snapshot === "string" &&
+				Object.keys(testCase.files ?? {}).length !== 1
+			) {
+				return;
+			}
+
+			for (const [fileName, code] of Object.entries(testCase.files ?? {})) {
+				const codeNode = testCase.nodes.fileCodes?.[fileName];
+				if (codeNode) {
+					checkCode(code, codeNode, testCase, fileName, sourceFile);
+				}
+			}
+		}
+
+		function checkCode(
+			code: string,
+			codeNode: ParsedTestCaseCodeNode,
+			testCase: ParsedTestCaseInvalid,
+			fileName: string | undefined,
+			sourceFile: AST.SourceFile,
+		): void {
+			const snapshotFileNames = Object.keys(testCase.nodes.snapshotFiles ?? {});
+			const snapshotFileName =
+				fileName ??
+				(snapshotFileNames.length === 1 ? snapshotFileNames[0] : undefined);
+			const snapshot =
+				typeof testCase.snapshot === "string"
+					? testCase.snapshot
+					: snapshotFileName && testCase.snapshot[snapshotFileName];
+			const snapshotNode =
+				testCase.nodes.snapshot.kind === SyntaxKind.ObjectLiteralExpression
+					? snapshotFileName && testCase.nodes.snapshotFiles?.[snapshotFileName]
+					: testCase.nodes.snapshot;
+			if (snapshot === undefined || !snapshotNode) {
+				return;
+			}
+
+			const fix = [
+				...createNewlineFixes(code, codeNode, sourceFile),
+				...createNewlineFixes(snapshot, snapshotNode, sourceFile),
 			];
 
 			if (fix.length) {
 				context.report({
 					fix,
 					message: "singleLineTest",
-					range: getTSNodeRange(testCase.nodes.code, sourceFile),
+					range: getTSNodeRange(codeNode, sourceFile),
 				});
 			}
 		}

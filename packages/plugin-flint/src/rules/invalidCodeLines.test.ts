@@ -11,6 +11,130 @@ import rule from "../ruleCreationMethods";
 const ruleTester = new RuleTester();
 
 ruleTester.describe(rule, {
+    valid: [],
+    invalid: [{
+        code: "a",
+        snapshot: { "file.ts": "a" },
+    }],
+});
+`,
+			output: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [{
+        code: \`
+a
+\`,
+        snapshot: { "file.ts": \`
+a
+\` },
+    }],
+});
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [{
+        code: "a",
+              ~~~
+              This code block should be formatted across multiple lines for more readable reports.
+        snapshot: { "file.ts": "a" },
+    }],
+});
+`,
+		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [{
+        files: {
+            "a.ts": "a",
+            "b.ts": "b",
+        },
+        snapshot: {
+            "a.ts": "a",
+            "b.ts": "b",
+        },
+    }],
+});
+`,
+			output: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [{
+        files: {
+            "a.ts": \`
+a
+\`,
+            "b.ts": \`
+b
+\`,
+        },
+        snapshot: {
+            "a.ts": \`
+a
+\`,
+            "b.ts": \`
+b
+\`,
+        },
+    }],
+});
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [{
+        files: {
+            "a.ts": "a",
+                    ~~~
+                    This code block should be formatted across multiple lines for more readable reports.
+            "b.ts": "b",
+                    ~~~
+                    This code block should be formatted across multiple lines for more readable reports.
+        },
+        snapshot: {
+            "a.ts": "a",
+            "b.ts": "b",
+        },
+    }],
+});
+`,
+		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
       {

@@ -266,7 +266,11 @@ Empty export does nothing and can be removed.
 		},
 	],
 	valid: [
-		{ code: `declare module 'module' {}`, fileName: "file.d.ts" },
+		{
+			files: {
+				"file.d.ts": `declare module 'module' {}`,
+			},
+		},
 		{
 			code: `import {} from 'module';`,
 			files: {
@@ -311,29 +315,16 @@ export const value: unknown;
 		`const value = {}; export default value;`,
 		`export {};`,
 		{
-			code: `export type A = 1; export {};`,
-			fileName: "test.d.ts",
-		},
-		{
-			code: `export declare const value = 2; export {};`,
-			fileName: "test.d.ts",
-		},
-		{
-			code: `import type { A } from 'module'; export {};`,
-			fileName: "test.d.ts",
 			files: {
-				"node_modules/module/index.d.ts": `
-export interface A {}
-export const value: unknown;
-`,
-				"node_modules/module/package.json": `{
-	"types": "index.d.ts"
-}`,
+				"test.d.ts": `export type A = 1; export {};`,
 			},
 		},
 		{
-			code: `import { A } from 'module'; export {};`,
-			fileName: "test.d.ts",
+			files: {
+				"test.d.ts": `export declare const value = 2; export {};`,
+			},
+		},
+		{
 			files: {
 				"node_modules/module/index.d.ts": `
 export interface A {}
@@ -342,6 +333,19 @@ export const value: unknown;
 				"node_modules/module/package.json": `{
 	"types": "index.d.ts"
 }`,
+				"test.d.ts": `import type { A } from 'module'; export {};`,
+			},
+		},
+		{
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+				"test.d.ts": `import { A } from 'module'; export {};`,
 			},
 		},
 	],

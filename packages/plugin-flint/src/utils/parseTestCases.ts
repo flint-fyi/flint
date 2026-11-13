@@ -22,10 +22,7 @@ export function parseTestCase(
 	if (isTestCaseCode(node)) {
 		return {
 			code: getTestCaseCode(node),
-			nodes: {
-				case: node,
-				code: node,
-			},
+			nodes: { case: node, code: node },
 		};
 	}
 
@@ -34,38 +31,58 @@ export function parseTestCase(
 	}
 
 	const code = findProperty(node.properties, "code", isTestCaseCode);
-	if (!code) {
+	if (
+		!code &&
+		node.properties.some(
+			(property) =>
+				property.kind === SyntaxKind.SpreadAssignment ||
+				((property.name.kind === SyntaxKind.Identifier ||
+					property.name.kind === SyntaxKind.StringLiteral) &&
+					property.name.text === "code"),
+		)
+	) {
 		return;
 	}
-
-	const fileName = findProperty(node.properties, "fileName", isStaticString);
 	const files = findProperty(
 		node.properties,
 		"files",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
+	const parsedFiles = files && parseCodeMap(files);
+	if (!code && !parsedFiles) {
+		return;
+	}
+
 	const name = findProperty(node.properties, "name", isStaticString);
 	const options = findProperty(
 		node.properties,
 		"options",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
-
-	return {
-		code: getTestCaseCode(code),
-		fileName: fileName?.text,
-		files: files && (tsAstToLiteral(files) as Record<string, string>),
+	const shared = {
 		name: name?.text,
 		nodes: {
 			case: node,
 			code,
-			fileName,
+			fileCodes: parsedFiles?.nodes,
 			files,
 			name,
 			options,
 		},
 		options: options && tsAstToLiteral(options),
 	};
+
+	if (code) {
+		return {
+			...shared,
+			code: getTestCaseCode(code),
+			files:
+				parsedFiles?.values ??
+				(files && (tsAstToLiteral(files) as Record<string, string>)),
+		};
+	}
+
+	return parsedFiles && { ...shared, files: parsedFiles.values };
 }
 
 export function parseTestCaseInvalid(
@@ -75,48 +92,42 @@ export function parseTestCaseInvalid(
 		return;
 	}
 
-	const code = findProperty(node.properties, "code", isTestCaseCode);
-	if (!code) {
+	const testCase = parseTestCase(node);
+	const snapshot = findProperty(
+		node.properties,
+		"snapshot",
+		(node) =>
+			isTestCaseCode(node) || node.kind === SyntaxKind.ObjectLiteralExpression,
+	);
+	if (!testCase || !snapshot) {
 		return;
 	}
 
-	const fileName = findProperty(node.properties, "fileName", isStaticString);
-	const files = findProperty(
-		node.properties,
-		"files",
-		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
-	);
-	const name = findProperty(node.properties, "name", isStaticString);
-	const options = findProperty(
-		node.properties,
-		"options",
-		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
-	);
-	const snapshot = findProperty(node.properties, "snapshot", isTestCaseCode);
-	if (!snapshot) {
+	if (isTestCaseCode(snapshot)) {
+		return {
+			...testCase,
+			nodes: { ...testCase.nodes, snapshot },
+			snapshot: getTestCaseCode(snapshot),
+		};
+	}
+
+	const snapshotFiles = parseCodeMap(snapshot);
+	if (!snapshotFiles) {
 		return;
 	}
 
 	return {
-		code: getTestCaseCode(code),
-		fileName: fileName?.text,
-		files: files && (tsAstToLiteral(files) as Record<string, string>),
-		name: name?.text,
+		...testCase,
 		nodes: {
-			case: node,
-			code,
-			fileName,
-			files,
-			name,
-			options,
+			...testCase.nodes,
 			snapshot,
+			snapshotFiles: snapshotFiles.nodes,
 		},
-		options: options && tsAstToLiteral(options),
-		snapshot: getTestCaseCode(snapshot),
+		snapshot: snapshotFiles.values,
 	};
 }
 
-function getTestCaseCode(node: ParsedTestCaseCodeNode) {
+function getTestCaseCode(node: ParsedTestCaseCodeNode): string {
 	if (isStringRawNoSubstitution(node)) {
 		return node.template.rawText ?? node.template.text;
 	}
@@ -128,4 +139,31 @@ function isTestCaseCode(
 	node: AST.Expression,
 ): node is StaticString | StringRawNoSubstitution {
 	return isStaticString(node) || isStringRawNoSubstitution(node);
+}
+
+function parseCodeMap(node: AST.ObjectLiteralExpression):
+	| undefined
+	| {
+			nodes: Record<string, ParsedTestCaseCodeNode>;
+			values: Record<string, string>;
+	  } {
+	const entries: [string, ParsedTestCaseCodeNode][] = [];
+	for (const property of node.properties) {
+		if (
+			property.kind !== SyntaxKind.PropertyAssignment ||
+			(property.name.kind !== SyntaxKind.Identifier &&
+				property.name.kind !== SyntaxKind.StringLiteral) ||
+			!isTestCaseCode(property.initializer)
+		) {
+			return;
+		}
+		entries.push([property.name.text, property.initializer]);
+	}
+
+	return {
+		nodes: Object.fromEntries(entries),
+		values: Object.fromEntries(
+			entries.map(([name, code]) => [name, getTestCaseCode(code)]),
+		),
+	};
 }

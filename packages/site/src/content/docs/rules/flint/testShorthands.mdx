@@ -38,8 +38,8 @@ ruleTester.describe(rule, {
 ```ts
 ruleTester.describe(rule, {
 	valid: [
-		{ code: "a", fileName: "b.ts" },
-		{ code: "a", fileName: "c.ts" },
+		{ files: { "b.ts": "a" } },
+		{ files: { "c.ts": "a" } },
 	],
 	invalid: [],
 });

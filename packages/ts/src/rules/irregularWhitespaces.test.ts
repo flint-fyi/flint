@@ -1,7 +1,5 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
 import rule from "./irregularWhitespaces.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { jsxRuleTester, ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -254,14 +252,13 @@ const value = \`\u{180E}\`;
 	valid: [`const value = 1;`],
 });
 
-ruleTester.describe(rule, {
+jsxRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.tsx": `
 const element = <div>\u{A0}</div>;
 `,
-			fileName: "file.tsx",
-			files: {
 				"global.d.ts": `
 declare namespace JSX {
     interface IntrinsicElements {
@@ -269,20 +266,20 @@ declare namespace JSX {
     }
 }
 `,
-				...createRuleTesterTSConfig({ jsx: "preserve" }),
 			},
-			snapshot: `
+			snapshot: {
+				"file.tsx": `
 const element = <div>\u{A0}</div>;
                      ~
                      Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
+			},
 		},
 	],
 	valid: [
 		{
-			code: `const element = <div>\u{A0}</div>;`,
-			fileName: "file.tsx",
 			files: {
+				"file.tsx": `const element = <div>\u{A0}</div>;`,
 				"global.d.ts": `
 declare namespace JSX {
     interface IntrinsicElements {
@@ -290,7 +287,6 @@ declare namespace JSX {
     }
 }
 `,
-				...createRuleTesterTSConfig({ jsx: "preserve" }),
 			},
 			options: { skipJSXText: true },
 		},

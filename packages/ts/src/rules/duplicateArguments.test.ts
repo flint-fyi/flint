@@ -1,103 +1,90 @@
-import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
-
 import rule from "./duplicateArguments.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { javascriptRuleTester, ruleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+javascriptRuleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
+			files: {
+				"file.js": `
 function test(value, value) {
     return value;
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 function test(value, value) {
                      ~~~~~
                      This parameter overrides the previous parameter of the same name.
     return value;
 }
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 function test(first, second, first) {
     return first + second;
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 function test(first, second, first) {
                              ~~~~~
                              This parameter overrides the previous parameter of the same name.
     return first + second;
 }
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 const func = function (value, value) {
     return value;
 };
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 const func = function (value, value) {
                               ~~~~~
                               This parameter overrides the previous parameter of the same name.
     return value;
 };
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 function test(first, second, third, second) {
     return first + second + third;
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 function test(first, second, third, second) {
                                     ~~~~~~
                                     This parameter overrides the previous parameter of the same name.
     return first + second + third;
 }
 `,
+			},
 		},
 		{
-			code: `
+			files: {
+				"file.js": `
 function test(value, value, value) {
     return value;
 }
 `,
-			fileName: "file.js",
-			files: createRuleTesterTSConfig({
-				allowJs: true,
-				checkJs: false,
-				noEmit: true,
-			}),
-			snapshot: `
+			},
+			snapshot: {
+				"file.js": `
 function test(value, value, value) {
                      ~~~~~
                      This parameter overrides the previous parameter of the same name.
@@ -106,8 +93,14 @@ function test(value, value, value) {
     return value;
 }
 `,
+			},
 		},
 	],
+	valid: [],
+});
+
+ruleTester.describe(rule, {
+	invalid: [],
 	valid: [
 		`function test(value: number) { return value; } void test;`,
 		`function test(first: number, second: number) { return first + second; } void test;`,
