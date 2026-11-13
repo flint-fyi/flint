@@ -20,6 +20,7 @@ const config: Config = {
 			files: ".all-contributorsrc",
 			options: { parser: "json-stringify", useTabs: false },
 		},
+		{ files: ".github/labels.json", options: { parser: "json-stringify" } },
 		{ files: "cspell.json", options: { parser: "json-stringify" } },
 	],
 	plugins: [
