@@ -497,6 +497,9 @@ catalogs:
     detect-newline:
       specifier: ^4.0.1
       version: 4.0.1
+    formatly:
+      specifier: ^0.11.4
+      version: 0.11.4
     github-slugger:
       specifier: ^2.0.0
       version: 2.0.0
@@ -953,9 +956,9 @@ importers:
       debug-for-file:
         specifier: catalog:prod
         version: 0.5.0(supports-color@10.2.2)
-      ignore:
+      formatly:
         specifier: catalog:prod
-        version: 7.0.14
+        version: 0.11.4
       text-table-fast:
         specifier: catalog:prod
         version: 0.2.0
@@ -1132,9 +1135,6 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
-      prettier:
-        specifier: catalog:dev
-        version: 3.9.10
       tsdown:
         specifier: catalog:dev
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
