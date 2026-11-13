@@ -5,11 +5,13 @@ import { debugForFile } from "debug-for-file";
 
 import {
 	applyChangesToFiles,
+	createRelayFileSystemWatcher,
 	LintSession,
 	lintSessionWithCache,
 	maximumFixIterations,
 	nodeModulesCache,
 	vcsDirectories,
+	withFileSystemWatcher,
 	writeToCache,
 	type LinterHost,
 	type LintResults,
@@ -37,6 +39,13 @@ export async function runCliWatch(
 	const lintOptions = {
 		skipLanguageReports: values["skip-language-reports"] ?? false,
 	};
+
+	const ignoredPaths = [nodeModulesCache, ...vcsDirectories];
+	const sessionWatcher = createRelayFileSystemWatcher(host, {
+		directoryPath: cwd,
+		ignoredPaths,
+	});
+	const sessionHost = withFileSystemWatcher(host, sessionWatcher);
 
 	return new Promise<void>((resolve) => {
 		let configDefinition: ProcessedConfigDefinition | undefined;
@@ -97,7 +106,7 @@ export async function runCliWatch(
 				return;
 			}
 
-			lintSession = await LintSession.create(configDefinition, host);
+			lintSession = await LintSession.create(configDefinition, sessionHost);
 		}
 
 		function createLintResults(
@@ -293,14 +302,12 @@ export async function runCliWatch(
 		const watcher = host.watchDirectorySync(
 			cwd,
 			(filePath) => {
+				sessionWatcher.notifyChange(filePath);
 				const normalizedPath = pathKey(filePath, isCaseSensitiveFS);
 				pendingChanges.set(normalizedPath, filePath);
 				processPendingChanges();
 			},
-			{
-				ignoredPaths: [nodeModulesCache, ...vcsDirectories],
-				recursive: true,
-			},
+			{ ignoredPaths, recursive: true },
 		);
 
 		log("Running initial watch lint.");
