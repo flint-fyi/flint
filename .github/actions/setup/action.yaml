@@ -12,6 +12,10 @@ inputs:
     description: The Node.js version to use
     required: false
     default: 26.13.0
+  save-cache:
+    description: Save the pnpm store after the job
+    required: false
+    default: false
   skip-checkout:
     description: Skip the checkout step if the repo is already checked out
     default: false
@@ -29,4 +33,5 @@ runs:
       with:
         cache: ${{ inputs.cache }}
         runtime: node@${{ inputs.node-version }}
+        save-cache: ${{ inputs.save-cache }}
   using: composite
