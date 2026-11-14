@@ -35815,6 +35815,18 @@
 	},
 	{
 		"flint": {
+			"name": "contentLocation",
+			"plugin": "vue"
+		},
+		"eslint": [
+			{
+				"name": "vue/no-content-outside-block",
+				"url": "https://eslint.vuejs.org/rules/no-content-outside-block.html"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "customEventNameCasing",
 			"plugin": "vue",
 			"preset": "stylistic"
@@ -35956,6 +35968,18 @@
 			{
 				"name": "vue/define-macros-order",
 				"url": "https://eslint.vuejs.org/rules/define-macros-order.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "defineModelDefaults",
+			"plugin": "vue"
+		},
+		"eslint": [
+			{
+				"name": "vue/no-define-model-default",
+				"url": "https://eslint.vuejs.org/rules/no-define-model-default.html"
 			}
 		]
 	},
@@ -37714,6 +37738,18 @@
 			{
 				"name": "vue/no-required-prop-with-default",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-required-prop-with-default.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "propsShadow",
+			"plugin": "vue"
+		},
+		"eslint": [
+			{
+				"name": "vue/no-props-shadow",
+				"url": "https://eslint.vuejs.org/rules/no-props-shadow.html"
 			}
 		]
 	},
