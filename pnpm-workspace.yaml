@@ -40,7 +40,7 @@ catalogs:
     eslint-plugin-yml: 3.10.0
     execa: 10.2.1
     jiti: 2.7.0
-    knip: 6.44.2
+    knip: 6.45.1
     nano-staged: 1.0.2
     pkg-pr-new: 0.0.93
     prettier: 3.10.0
