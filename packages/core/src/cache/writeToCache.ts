@@ -45,7 +45,7 @@ export async function writeToCache(
 						...(fileResults.reports.length && {
 							reports: fileResults.reports,
 						}),
-						timestamp,
+						timestamp: fileResults.timestamp ?? timestamp,
 					},
 				]),
 			),
