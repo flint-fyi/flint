@@ -1,5 +1,11 @@
 # @flint.fyi/node
 
+## 0.6.0
+
+### Minor Changes
+
+- [#3907](https://github.com/flint-fyi/flint/pull/3907) [`03b7a1a`](https://github.com/flint-fyi/flint/commit/03b7a1ac6038cdf31598998dbfef9a3cd8319500) - Rename `node/fileReadJSONBuffers` to `node/jsonFileReads`.
+
 ## 0.5.5
 
 ### Patch Changes
