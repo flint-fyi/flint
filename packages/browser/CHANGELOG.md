@@ -1,5 +1,11 @@
 # @flint.fyi/browser
 
+## 0.6.0
+
+### Minor Changes
+
+- [#3906](https://github.com/flint-fyi/flint/pull/3906) [`9778414`](https://github.com/flint-fyi/flint/commit/97784141ce4d5d7d10bd6e74412b966f0ad23099) - Rename `browser/nodeDatasetAttributes` to `browser/nodeDatasetAccesses`.
+
 ## 0.5.5
 
 ### Patch Changes
