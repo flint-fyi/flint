@@ -240,6 +240,12 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "useAstroClientOnlyDirectiveValue",
+				"url": "https://biomejs.dev/linter/rules/use-astro-client-only-directive-value/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "astro/missing-client-only-directive-value",
@@ -923,6 +929,12 @@
 			"plugin": "browser",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useBetterDomTraversing",
+				"url": "https://biomejs.dev/linter/rules/use-better-dom-traversing/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/better-dom-traversing",
@@ -1028,6 +1040,12 @@
 			"plugin": "browser",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noLateEventControl",
+				"url": "https://biomejs.dev/linter/rules/no-late-event-control/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-late-event-control",
@@ -1265,6 +1283,12 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "noInvalidRemoveEventListener",
+				"url": "https://biomejs.dev/linter/rules/no-invalid-remove-event-listener/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-invalid-remove-event-listener",
@@ -1633,6 +1657,16 @@
 			"plugin": "css",
 			"preset": "logicalStrict"
 		},
+		"biome": [
+			{
+				"name": "useLayeredStyles",
+				"url": "https://biomejs.dev/linter/rules/use-layered-styles/css/"
+			},
+			{
+				"name": "useNamedLayer",
+				"url": "https://biomejs.dev/linter/rules/use-named-layer/css/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "css/use-layers",
@@ -1819,6 +1853,12 @@
 			"plugin": "css",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noUndeclaredCustomProperties",
+				"url": "https://biomejs.dev/linter/rules/no-undeclared-custom-properties/css/"
+			}
+		],
 		"stylelint": [
 			{
 				"name": "no-unknown-custom-properties",
@@ -2177,6 +2217,18 @@
 	},
 	{
 		"flint": {
+			"name": "functionalPseudoClassPseudoElements",
+			"plugin": "css"
+		},
+		"biome": [
+			{
+				"name": "noPseudoElementInFunctionalPseudoClass",
+				"url": "https://biomejs.dev/linter/rules/no-pseudo-element-in-functional-pseudo-class/css/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "functionNameCasing",
 			"plugin": "css",
 			"preset": "stylistic"
@@ -2521,6 +2573,18 @@
 	},
 	{
 		"flint": {
+			"name": "layerSelfNesting",
+			"plugin": "css"
+		},
+		"biome": [
+			{
+				"name": "noSelfNestedLayer",
+				"url": "https://biomejs.dev/linter/rules/no-self-nested-layer/css/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "lightnessNotations",
 			"plugin": "css",
 			"preset": "stylistic"
@@ -2576,6 +2640,12 @@
 			"plugin": "css",
 			"preset": "logicalStrict"
 		},
+		"biome": [
+			{
+				"name": "useLogicalProperties",
+				"url": "https://biomejs.dev/linter/rules/use-logical-properties/css/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "css/prefer-logical-properties",
@@ -2821,6 +2891,12 @@
 			"plugin": "css",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noExcessiveNestedBlocks",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-nested-blocks/css/"
+			}
+		],
 		"stylelint": [
 			{
 				"name": "max-nesting-depth",
@@ -2934,6 +3010,18 @@
 			{
 				"name": "noDuplicateProperties",
 				"url": "https://biomejs.dev/linter/rules/no-duplicate-properties/css/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "propertyInitialValueValidity",
+			"plugin": "css"
+		},
+		"biome": [
+			{
+				"name": "noInvalidPropertyInitValue",
+				"url": "https://biomejs.dev/linter/rules/no-invalid-property-init-value/css/"
 			}
 		]
 	},
@@ -3097,6 +3185,18 @@
 			{
 				"name": "rule-selector-property-disallowed-list",
 				"url": "https://stylelint.io/user-guide/rules/rule-selector-property-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "scssCustomPropertyInterpolations",
+			"plugin": "css"
+		},
+		"biome": [
+			{
+				"name": "noMissingScssInterpolation",
+				"url": "https://biomejs.dev/linter/rules/no-missing-scss-interpolation/css/"
 			}
 		]
 	},
@@ -3601,6 +3701,18 @@
 			{
 				"name": "unit-no-unknown",
 				"url": "https://stylelint.io/user-guide/rules/unit-no-unknown"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unusedClasses",
+			"plugin": "css"
+		},
+		"biome": [
+			{
+				"name": "noUnusedClasses",
+				"url": "https://biomejs.dev/linter/rules/no-unused-classes/css/"
 			}
 		]
 	},
@@ -6754,6 +6866,12 @@
 			"plugin": "jsx",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useControlLabel",
+				"url": "https://biomejs.dev/linter/rules/use-control-label/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/control-has-associated-label",
@@ -7453,6 +7571,18 @@
 	},
 	{
 		"flint": {
+			"name": "listItemParents",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noMisplacedListElements",
+				"url": "https://biomejs.dev/linter/rules/no-misplaced-list-elements/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "literals",
 			"plugin": "jsx",
 			"status": "skipped"
@@ -7702,6 +7832,30 @@
 			{
 				"name": "jsx-a11y/no-noninteractive-tabindex",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-noninteractive-tabindex.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "obsoleteAttributes",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noObsoleteAttributes",
+				"url": "https://biomejs.dev/linter/rules/no-obsolete-attributes/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "obsoleteTags",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noObsoleteTags",
+				"url": "https://biomejs.dev/linter/rules/no-obsolete-tags/javascript/"
 			}
 		]
 	},
@@ -7989,6 +8143,18 @@
 	},
 	{
 		"flint": {
+			"name": "scalableViewports",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noNonScalableViewport",
+				"url": "https://biomejs.dev/linter/rules/no-non-scalable-viewport/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "scopeProps",
 			"plugin": "jsx",
 			"preset": "logical",
@@ -8190,6 +8356,90 @@
 	},
 	{
 		"flint": {
+			"name": "tailwindArbitraryValues",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noTailwindArbitraryValue",
+				"url": "https://biomejs.dev/linter/rules/no-tailwind-arbitrary-value/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tailwindLegacyUtilities",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noTailwindLegacyUtilities",
+				"url": "https://biomejs.dev/linter/rules/no-tailwind-legacy-utilities/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tailwindRawColors",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noTailwindRawColors",
+				"url": "https://biomejs.dev/linter/rules/no-tailwind-raw-colors/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tailwindRestyledComponents",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noTailwindRestyledComponents",
+				"url": "https://biomejs.dev/linter/rules/no-tailwind-restyled-components/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tailwindShorthandClasses",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "useTailwindShorthandClasses",
+				"url": "https://biomejs.dev/linter/rules/use-tailwind-shorthand-classes/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tailwindStaticClassStrings",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "useTailwindStaticClassStrings",
+				"url": "https://biomejs.dev/linter/rules/use-tailwind-static-class-strings/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tailwindVariableShorthands",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "useTailwindVariablesShorthand",
+				"url": "https://biomejs.dev/linter/rules/use-tailwind-variables-shorthand/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "targetBlanks",
 			"plugin": "jsx",
 			"status": "skipped"
@@ -8223,6 +8473,18 @@
 			{
 				"name": "@eslint-react/dom-no-unsafe-target-blank",
 				"url": "https://eslint-react.xyz/docs/rules/dom-no-unsafe-target-blank"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "undeclaredClasses",
+			"plugin": "jsx"
+		},
+		"biome": [
+			{
+				"name": "noUndeclaredClasses",
+				"url": "https://biomejs.dev/linter/rules/no-undeclared-classes/javascript/"
 			}
 		]
 	},
@@ -8819,6 +9081,12 @@
 			"preset": "logicalStrict",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "useSingleTopLevelHeading",
+				"url": "https://biomejs.dev/linter/rules/use-single-top-level-heading/markdown/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "markdown/no-multiple-h1",
@@ -9398,6 +9666,12 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useNextScriptForGoogleAnalytics",
+				"url": "https://biomejs.dev/linter/rules/use-next-script-for-google-analytics/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/next-script-for-ga",
@@ -10275,6 +10549,12 @@
 			"preset": "stylisticStrict",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "useConsistentJsonFileRead",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-json-file-read/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/consistent-json-file-read",
@@ -10648,6 +10928,12 @@
 			"plugin": "node",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noSyncMethods",
+				"url": "https://biomejs.dev/linter/rules/no-sync-methods/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "n/no-sync",
@@ -11083,6 +11369,12 @@
 			"plugin": "package-json",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "usePackageJsonCpu",
+				"url": "https://biomejs.dev/linter/rules/use-package-json-cpu/json/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "package-json/require-cpu",
@@ -11310,6 +11602,12 @@
 			"plugin": "package-json",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "usePackageJsonEngines",
+				"url": "https://biomejs.dev/linter/rules/use-package-json-engines/json/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "package-json/require-engines",
@@ -12434,6 +12732,12 @@
 			"plugin": "performance",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noMapSpread",
+				"url": "https://biomejs.dev/linter/rules/no-map-spread/javascript/"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/no-map-spread",
@@ -12541,6 +12845,18 @@
 	},
 	{
 		"flint": {
+			"name": "nthMethods",
+			"plugin": "playwright"
+		},
+		"biome": [
+			{
+				"name": "noPlaywrightNthMethods",
+				"url": "https://biomejs.dev/linter/rules/no-playwright-nth-methods/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "pagePauses",
 			"plugin": "playwright",
 			"status": "skipped"
@@ -12549,6 +12865,18 @@
 			{
 				"name": "noPlaywrightPagePause",
 				"url": "https://biomejs.dev/linter/rules/no-playwright-page-pause/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unsafeReferences",
+			"plugin": "playwright"
+		},
+		"biome": [
+			{
+				"name": "noPlaywrightUnsafeReferences",
+				"url": "https://biomejs.dev/linter/rules/no-playwright-unsafe-references/javascript/"
 			}
 		]
 	},
@@ -12884,6 +13212,18 @@
 			{
 				"name": "react/no-clone-element",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-clone-element.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "compilerDiagnostics",
+			"plugin": "react"
+		},
+		"biome": [
+			{
+				"name": "useReactCompiler",
+				"url": "https://biomejs.dev/linter/rules/use-react-compiler/javascript/"
 			}
 		]
 	},
@@ -13576,6 +13916,10 @@
 			"preset": "stylistic"
 		},
 		"biome": [
+			{
+				"name": "useReactFunctionComponentDefinition",
+				"url": "https://biomejs.dev/linter/rules/use-react-function-component-definition/javascript/"
+			},
 			{
 				"name": "useReactFunctionComponents",
 				"url": "https://biomejs.dev/linter/rules/use-react-function-components/javascript/"
@@ -14792,6 +15136,18 @@
 	},
 	{
 		"flint": {
+			"name": "platformColors",
+			"plugin": "react-native"
+		},
+		"biome": [
+			{
+				"name": "useReactNativeValidPlatformColors",
+				"url": "https://biomejs.dev/linter/rules/use-react-native-valid-platform-colors/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "platformComponents",
 			"plugin": "react-native",
 			"status": "skipped"
@@ -15132,6 +15488,18 @@
 	},
 	{
 		"flint": {
+			"name": "appStateImports",
+			"plugin": "svelte"
+		},
+		"biome": [
+			{
+				"name": "useSvelteKitRuneImports",
+				"url": "https://biomejs.dev/linter/rules/use-svelte-kit-rune-imports/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "asyncStores",
 			"plugin": "svelte",
 			"status": "skipped"
@@ -15143,6 +15511,18 @@
 			}
 		],
 		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"flint": {
+			"name": "atConstTags",
+			"plugin": "svelte"
+		},
+		"biome": [
+			{
+				"name": "noSvelteLegacyConst",
+				"url": "https://biomejs.dev/linter/rules/no-svelte-legacy-const/html/"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -15230,6 +15610,12 @@
 			"plugin": "svelte",
 			"preset": "logicalStrict"
 		},
+		"biome": [
+			{
+				"name": "useConsistentBlockLang",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-block-lang/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "svelte/block-lang",
@@ -15252,6 +15638,18 @@
 	},
 	{
 		"flint": {
+			"name": "checkableInputValueBindings",
+			"plugin": "svelte"
+		},
+		"biome": [
+			{
+				"name": "noSvelteBindValueOnCheckableInputs",
+				"url": "https://biomejs.dev/linter/rules/no-svelte-bind-value-on-checkable-inputs/html/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "classDirectives",
 			"plugin": "svelte",
 			"preset": "stylisticStrict"
@@ -15260,6 +15658,18 @@
 			{
 				"name": "svelte/prefer-class-directive",
 				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "classDirectiveUsages",
+			"plugin": "svelte"
+		},
+		"biome": [
+			{
+				"name": "noSvelteClassDirective",
+				"url": "https://biomejs.dev/linter/rules/no-svelte-class-directive/html/"
 			}
 		]
 	},
@@ -15440,6 +15850,18 @@
 	},
 	{
 		"flint": {
+			"name": "exportLetProps",
+			"plugin": "svelte"
+		},
+		"biome": [
+			{
+				"name": "noSvelteExportLet",
+				"url": "https://biomejs.dev/linter/rules/no-svelte-export-let/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "extraReactiveCurlies",
 			"plugin": "svelte",
 			"status": "skipped"
@@ -15555,6 +15977,12 @@
 			"plugin": "svelte",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noSvelteIgnoredUnsubscribe",
+				"url": "https://biomejs.dev/linter/rules/no-svelte-ignored-unsubscribe/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "svelte/no-ignored-unsubscribe",
@@ -15961,6 +16389,12 @@
 			"plugin": "svelte",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "useSvelteStoreInitialValue",
+				"url": "https://biomejs.dev/linter/rules/use-svelte-store-initial-value/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "svelte/require-stores-init",
@@ -16035,6 +16469,12 @@
 			"plugin": "svelte",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useSvelteReactiveClasses",
+				"url": "https://biomejs.dev/linter/rules/use-svelte-reactive-classes/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "svelte/prefer-svelte-reactivity",
@@ -16122,6 +16562,18 @@
 			}
 		],
 		"notes": "Deprecated. No longer needed when using svelte-eslint-parser>=v0.19.0."
+	},
+	{
+		"flint": {
+			"name": "unnecessaryDerivedBy",
+			"plugin": "svelte"
+		},
+		"biome": [
+			{
+				"name": "noSvelteUselessDerivedBy",
+				"url": "https://biomejs.dev/linter/rules/no-svelte-useless-derived-by/javascript/"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -16337,6 +16789,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "useAccessorPairs",
+				"url": "https://biomejs.dev/linter/rules/use-accessor-pairs/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "accessor-pairs",
@@ -16571,6 +17029,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noArrayMethodsOnArguments",
+				"url": "https://biomejs.dev/linter/rules/no-array-methods-on-arguments/javascript/"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/bad-array-method-on-arguments",
@@ -16752,6 +17216,12 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "noUninvokedArrayCallback",
+				"url": "https://biomejs.dev/linter/rules/no-uninvoked-array-callback/javascript/"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/uninvoked-array-callback",
@@ -17007,6 +17477,12 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "useIncludes",
+				"url": "https://biomejs.dev/linter/rules/use-includes/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/prefer-includes",
@@ -17026,6 +17502,12 @@
 			"plugin": "ts",
 			"preset": "stylisticStrict"
 		},
+		"biome": [
+			{
+				"name": "useIncludes",
+				"url": "https://biomejs.dev/linter/rules/use-includes/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/prefer-includes",
@@ -17129,6 +17611,10 @@
 			"status": "implemented"
 		},
 		"biome": [
+			{
+				"name": "noArrayForEach",
+				"url": "https://biomejs.dev/linter/rules/no-array-for-each/javascript/"
+			},
 			{
 				"name": "noForEach",
 				"url": "https://biomejs.dev/linter/rules/no-for-each/javascript/"
@@ -17487,6 +17973,12 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "noUselessLengthCheck",
+				"url": "https://biomejs.dev/linter/rules/no-useless-length-check/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-useless-length-check",
@@ -17805,6 +18297,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noAwaitInPromiseMethods",
+				"url": "https://biomejs.dev/linter/rules/no-await-in-promise-methods/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-await-in-promise-methods",
@@ -17858,6 +18356,10 @@
 			"preset": "logical"
 		},
 		"biome": [
+			{
+				"name": "noUselessAwait",
+				"url": "https://biomejs.dev/linter/rules/no-useless-await/javascript/"
+			},
 			{
 				"name": "useAwaitThenable",
 				"url": "https://biomejs.dev/linter/rules/use-await-thenable/javascript/"
@@ -18075,6 +18577,12 @@
 			"plugin": "ts",
 			"preset": "stylisticStrict"
 		},
+		"biome": [
+			{
+				"name": "noSharedBranchCode",
+				"url": "https://biomejs.dev/linter/rules/no-shared-branch-code/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/prefer-hoisting-branch-code",
@@ -18149,6 +18657,18 @@
 			{
 				"name": "unicorn/prefer-prototype-methods",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-prototype-methods.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "bunBuiltinImports",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "noBunModules",
+				"url": "https://biomejs.dev/linter/rules/no-bun-modules/javascript/"
 			}
 		]
 	},
@@ -18667,6 +19187,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noChainedComparison",
+				"url": "https://biomejs.dev/linter/rules/no-chained-comparison/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-chained-comparison",
@@ -19879,6 +20405,12 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "noDynamicDelete",
+				"url": "https://biomejs.dev/linter/rules/no-dynamic-delete/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/no-dynamic-delete",
@@ -21330,6 +21862,12 @@
 			"plugin": "ts",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "useConsistentFunctionStyle",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-function-style/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "func-style",
@@ -21393,6 +21931,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "useNamedFunction",
+				"url": "https://biomejs.dev/linter/rules/use-named-function/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "func-names",
@@ -22809,6 +23353,18 @@
 			{
 				"name": "unicorn/prefer-iterator-to-array-at-end",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-iterator-to-array-at-end.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "iteratorZips",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "useIteratorZip",
+				"url": "https://biomejs.dev/linter/rules/use-iterator-zip/javascript/"
 			}
 		]
 	},
@@ -24314,6 +24870,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noExcessiveNestedBlocks",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-nested-blocks/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "max-depth",
@@ -24663,6 +25225,12 @@
 			"plugin": "ts",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noMismatchedMapKey",
+				"url": "https://biomejs.dev/linter/rules/no-mismatched-map-key/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-mismatched-map-key",
@@ -25161,6 +25729,12 @@
 			"plugin": "ts",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "noNegatedArrayPredicate",
+				"url": "https://biomejs.dev/linter/rules/no-negated-array-predicate/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-negated-array-predicate",
@@ -25323,6 +25897,10 @@
 			"status": "implemented"
 		},
 		"biome": [
+			{
+				"name": "noMissingThrow",
+				"url": "https://biomejs.dev/linter/rules/no-missing-throw/javascript/"
+			},
 			{
 				"name": "noUnusedInstantiation",
 				"url": "https://biomejs.dev/linter/rules/no-unused-instantiation/javascript/"
@@ -25704,6 +26282,12 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "noNumberArgumentOutOfRange",
+				"url": "https://biomejs.dev/linter/rules/no-number-argument-out-of-range/javascript/"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/number-arg-out-of-range",
@@ -25795,6 +26379,12 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "noErasingOperation",
+				"url": "https://biomejs.dev/linter/rules/no-erasing-operation/javascript/"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/erasing-op",
@@ -26006,6 +26596,12 @@
 			"plugin": "ts",
 			"preset": "stylisticStrict"
 		},
+		"biome": [
+			{
+				"name": "useObjectFromEntries",
+				"url": "https://biomejs.dev/linter/rules/use-object-from-entries/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/prefer-object-from-entries",
@@ -26090,6 +26686,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noObjectLiteralComparison",
+				"url": "https://biomejs.dev/linter/rules/no-object-literal-comparison/javascript/"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/bad-object-literal-comparison",
@@ -26851,6 +27453,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noReturnInFinally",
+				"url": "https://biomejs.dev/linter/rules/no-return-in-finally/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "promise/no-return-in-finally",
@@ -26890,6 +27498,12 @@
 			"plugin": "ts",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noSinglePromiseInPromiseMethods",
+				"url": "https://biomejs.dev/linter/rules/no-single-promise-in-promise-methods/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-single-promise-in-promise-methods",
@@ -28802,6 +29416,18 @@
 	},
 	{
 		"flint": {
+			"name": "restrictedDependencies",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "noRestrictedDependencies",
+				"url": "https://biomejs.dev/linter/rules/no-restricted-dependencies/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "restrictedDirectives",
 			"plugin": "ts",
 			"status": "skipped"
@@ -29198,6 +29824,12 @@
 			"plugin": "ts",
 			"preset": "stylisticStrict"
 		},
+		"biome": [
+			{
+				"name": "useSetSize",
+				"url": "https://biomejs.dev/linter/rules/use-set-size/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/prefer-set-size",
@@ -29639,6 +30271,12 @@
 			"plugin": "ts",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useStrictBooleanExpressions",
+				"url": "https://biomejs.dev/linter/rules/use-strict-boolean-expressions/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/strict-boolean-expressions",
@@ -29957,6 +30595,12 @@
 			"plugin": "ts",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "noSubtractionComparison",
+				"url": "https://biomejs.dev/linter/rules/no-subtraction-comparison/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-subtraction-comparison",
@@ -30042,6 +30686,18 @@
 	},
 	{
 		"flint": {
+			"name": "switchNesting",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "noNestedSwitch",
+				"url": "https://biomejs.dev/linter/rules/no-nested-switch/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "symbolDescriptions",
 			"plugin": "ts",
 			"preset": "stylistic",
@@ -30079,6 +30735,54 @@
 			}
 		],
 		"notes": "Generally handled by parsers."
+	},
+	{
+		"flint": {
+			"name": "tanstackQueryClientStability",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "useTanstackQueryStableQueryClient",
+				"url": "https://biomejs.dev/linter/rules/use-tanstack-query-stable-query-client/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tanstackQueryInfiniteQueryPropertiesOrder",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "useTanstackQueryInfiniteQueryPropertyOrder",
+				"url": "https://biomejs.dev/linter/rules/use-tanstack-query-infinite-query-property-order/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tanstackQueryRestDestructuring",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "noTanstackQueryRestDestructuring",
+				"url": "https://biomejs.dev/linter/rules/no-tanstack-query-rest-destructuring/javascript/"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "tanstackQueryVoidQueryFunctions",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "noTanstackQueryVoidQueryFn",
+				"url": "https://biomejs.dev/linter/rules/no-tanstack-query-void-query-fn/javascript/"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -30128,6 +30832,18 @@
 			{
 				"name": "unicorn/consistent-template-literal-escape",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/consistent-template-literal-escape.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "templateLiteralNesting",
+			"plugin": "ts"
+		},
+		"biome": [
+			{
+				"name": "noNestedTemplateLiterals",
+				"url": "https://biomejs.dev/linter/rules/no-nested-template-literals/javascript/"
 			}
 		]
 	},
@@ -30661,6 +31377,12 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "noUnsafeTypeAssertion",
+				"url": "https://biomejs.dev/linter/rules/no-unsafe-type-assertion/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/consistent-type-assertions",
@@ -31033,6 +31755,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noDanglingUnderscore",
+				"url": "https://biomejs.dev/linter/rules/no-dangling-underscore/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-underscore-dangle",
@@ -31284,6 +32012,10 @@
 			"status": "implemented"
 		},
 		"biome": [
+			{
+				"name": "noConstantComparisons",
+				"url": "https://biomejs.dev/linter/rules/no-constant-comparisons/javascript/"
+			},
 			{
 				"name": "noDoubleComparison",
 				"url": "https://biomejs.dev/linter/rules/no-double-comparison/javascript/"
@@ -31781,6 +32513,12 @@
 			"plugin": "ts",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "noUnnecessaryStringTrim",
+				"url": "https://biomejs.dev/linter/rules/no-unnecessary-string-trim/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/no-unnecessary-string-trim",
@@ -31906,6 +32644,12 @@
 			"plugin": "ts",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noUselessTypeAssertion",
+				"url": "https://biomejs.dev/linter/rules/no-useless-type-assertion/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/no-unnecessary-type-assertion",
@@ -35021,6 +35765,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "useVueValidAttributeName",
+				"url": "https://biomejs.dev/linter/rules/use-vue-valid-attribute-name/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/valid-attribute-name",
@@ -35062,6 +35812,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueThisInBeforeRouteEnter",
+				"url": "https://biomejs.dev/linter/rules/no-vue-this-in-before-route-enter/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-this-in-before-route-enter",
@@ -35132,6 +35888,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useConsistentBlockLang",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-block-lang/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/block-lang",
@@ -35158,6 +35920,12 @@
 			"plugin": "vue",
 			"preset": "sorting"
 		},
+		"biome": [
+			{
+				"name": "useVueBlockOrder",
+				"url": "https://biomejs.dev/linter/rules/use-vue-block-order/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/block-order",
@@ -35232,6 +36000,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueBooleanPropTypeFirst",
+				"url": "https://biomejs.dev/linter/rules/use-vue-boolean-prop-type-first/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/prefer-prop-type-boolean-first",
@@ -35285,6 +36059,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueChildContent",
+				"url": "https://biomejs.dev/linter/rules/no-vue-child-content/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-child-content",
@@ -35298,6 +36078,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "noVueMultipleObjectsInClass",
+				"url": "https://biomejs.dev/linter/rules/no-vue-multiple-objects-in-class/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-multiple-objects-in-class",
@@ -35531,6 +36317,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueMatchingComponentFileName",
+				"url": "https://biomejs.dev/linter/rules/use-vue-matching-component-file-name/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/match-component-file-name",
@@ -35755,6 +36547,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueComputedPropertyReturn",
+				"url": "https://biomejs.dev/linter/rules/use-vue-computed-property-return/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/return-in-computed-property",
@@ -35774,6 +36572,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueSideEffectsInComputed",
+				"url": "https://biomejs.dev/linter/rules/no-vue-side-effects-in-computed/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-side-effects-in-computed-properties",
@@ -35870,6 +36674,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueDefaultExport",
+				"url": "https://biomejs.dev/linter/rules/use-vue-default-export/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-default-export",
@@ -35889,6 +36699,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueValidDefaultProp",
+				"url": "https://biomejs.dev/linter/rules/use-vue-valid-default-prop/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-valid-default-prop",
@@ -35902,6 +36718,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueConsistentDefineEmitsDeclaration",
+				"url": "https://biomejs.dev/linter/rules/use-vue-consistent-define-emits-declaration/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/define-emits-declaration",
@@ -35984,6 +36806,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueValidDefineOptions",
+				"url": "https://biomejs.dev/linter/rules/use-vue-valid-define-options/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/valid-define-options",
@@ -36053,6 +36881,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueValidDefineProps",
+				"url": "https://biomejs.dev/linter/rules/use-vue-valid-define-props/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/valid-define-props",
@@ -36072,6 +36906,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedVBindSync",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-v-bind-sync/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-v-bind-sync",
@@ -36111,6 +36951,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedDestroyedLifecycle",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-destroyed-lifecycle/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-destroyed-lifecycle",
@@ -36170,6 +37016,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedEventsApi",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-events-api/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-events-api",
@@ -36203,6 +37055,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedFunctionalTemplate",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-functional-template/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-functional-template",
@@ -36216,6 +37074,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedHtmlElementIs",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-html-element-is/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-html-element-is",
@@ -36230,6 +37094,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedInlineTemplate",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-inline-template/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-inline-template",
@@ -36244,6 +37114,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedModelDefinition",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-model-definition/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-model-definition",
@@ -36330,6 +37206,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedSlotAttribute",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-slot-attribute/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-slot-attribute",
@@ -36344,6 +37226,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedSlotScope",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-slot-scope/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-slot-scope-attribute",
@@ -36358,6 +37246,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedPropsDefaultThis",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-props-default-this/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-props-default-this",
@@ -36391,6 +37285,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedVOnNativeModifier",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-v-on-native-modifier/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-v-on-native-modifier",
@@ -36425,6 +37325,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noVueDeprecatedConfigKeyCodes",
+				"url": "https://biomejs.dev/linter/rules/no-vue-deprecated-config-key-codes/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-vue-config-keycodes",
@@ -36574,6 +37480,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueEmitsValidatorReturn",
+				"url": "https://biomejs.dev/linter/rules/use-vue-emits-validator-return/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/return-in-emits-validator",
@@ -36593,6 +37505,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueEmitValidator",
+				"url": "https://biomejs.dev/linter/rules/use-vue-emit-validator/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-emit-validator",
@@ -36645,6 +37563,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueUndeclaredEmits",
+				"url": "https://biomejs.dev/linter/rules/no-vue-undeclared-emits/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-explicit-emits",
@@ -36658,6 +37582,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueUndeclaredSlots",
+				"url": "https://biomejs.dev/linter/rules/no-vue-undeclared-slots/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-explicit-slots",
@@ -36722,6 +37652,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueConsistentVForDelimiter",
+				"url": "https://biomejs.dev/linter/rules/use-vue-consistent-v-for-delimiter/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/v-for-delimiter-style",
@@ -37064,6 +38000,12 @@
 			"plugin": "vue",
 			"preset": "logicalStrict"
 		},
+		"biome": [
+			{
+				"name": "noVueLoneTemplate",
+				"url": "https://biomejs.dev/linter/rules/no-vue-lone-template/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-lone-template",
@@ -37077,6 +38019,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueMacroVariableName",
+				"url": "https://biomejs.dev/linter/rules/use-vue-macro-variable-name/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-macro-variable-name",
@@ -37090,6 +38038,12 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "useVueOneComponentPerFile",
+				"url": "https://biomejs.dev/linter/rules/use-vue-one-component-per-file/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/one-component-per-file",
@@ -37114,6 +38068,18 @@
 			{
 				"name": "vue/valid-v-memo",
 				"url": "https://eslint.vuejs.org/rules/valid-v-memo.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mixins",
+			"plugin": "vue"
+		},
+		"biome": [
+			{
+				"name": "noVueMixin",
+				"url": "https://biomejs.dev/linter/rules/no-vue-mixin/javascript/"
 			}
 		]
 	},
@@ -37256,6 +38222,12 @@
 			"plugin": "vue",
 			"preset": "logicalStrict"
 		},
+		"biome": [
+			{
+				"name": "noVueShadowNativeEvents",
+				"url": "https://biomejs.dev/linter/rules/no-vue-shadow-native-events/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-shadow-native-events",
@@ -37320,6 +38292,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueValidNextTick",
+				"url": "https://biomejs.dev/linter/rules/use-vue-valid-next-tick/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/valid-next-tick",
@@ -37516,6 +38494,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueDefaultProp",
+				"url": "https://biomejs.dev/linter/rules/use-vue-default-prop/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-default-prop",
@@ -37635,6 +38619,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "noVueExcessiveProps",
+				"url": "https://biomejs.dev/linter/rules/no-vue-excessive-props/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/max-props",
@@ -37654,6 +38644,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueConsistentPropNameCasing",
+				"url": "https://biomejs.dev/linter/rules/use-vue-consistent-prop-name-casing/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/prop-name-casing",
@@ -37723,6 +38719,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVuePropTypeConstructor",
+				"url": "https://biomejs.dev/linter/rules/use-vue-prop-type-constructor/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-prop-type-constructor",
@@ -37767,6 +38769,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueRefObjectReactivityLoss",
+				"url": "https://biomejs.dev/linter/rules/no-vue-ref-object-reactivity-loss/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-ref-object-reactivity-loss",
@@ -37799,6 +38807,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueRenderReturn",
+				"url": "https://biomejs.dev/linter/rules/use-vue-render-return/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-render-return",
@@ -37844,6 +38858,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueRestrictedCallAfterAwait",
+				"url": "https://biomejs.dev/linter/rules/no-vue-restricted-call-after-await/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-restricted-call-after-await",
@@ -37935,6 +38955,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueRestrictedVOn",
+				"url": "https://biomejs.dev/linter/rules/no-vue-restricted-v-on/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-restricted-v-on",
@@ -38039,6 +39065,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueSeparateStaticClass",
+				"url": "https://biomejs.dev/linter/rules/use-vue-separate-static-class/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/prefer-separate-static-class",
@@ -38090,6 +39122,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueSingleEventPayload",
+				"url": "https://biomejs.dev/linter/rules/use-vue-single-event-payload/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/prefer-single-event-payload",
@@ -38161,6 +39199,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueSlotNameCasing",
+				"url": "https://biomejs.dev/linter/rules/use-vue-slot-name-casing/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/slot-name-casing",
@@ -38174,6 +39218,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueSlotsAsFunctions",
+				"url": "https://biomejs.dev/linter/rules/use-vue-slots-as-functions/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-slots-as-functions",
@@ -38193,6 +39243,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueConsistentVSlotStyle",
+				"url": "https://biomejs.dev/linter/rules/use-vue-consistent-v-slot-style/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/v-slot-style",
@@ -38364,6 +39420,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueTemplateKey",
+				"url": "https://biomejs.dev/linter/rules/no-vue-template-key/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-template-key",
@@ -38390,6 +39452,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueTemplateRef",
+				"url": "https://biomejs.dev/linter/rules/use-vue-template-ref/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/prefer-use-template-ref",
@@ -38435,6 +39503,12 @@
 			"plugin": "vue",
 			"preset": "logicalStrict"
 		},
+		"biome": [
+			{
+				"name": "noVueTemplateShadow",
+				"url": "https://biomejs.dev/linter/rules/no-vue-template-shadow/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-template-shadow",
@@ -38474,6 +39548,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueVForTemplateKeyOnChild",
+				"url": "https://biomejs.dev/linter/rules/no-vue-v-for-template-key-on-child/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-v-for-template-key-on-child",
@@ -38487,6 +39567,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueTextareaMustache",
+				"url": "https://biomejs.dev/linter/rules/no-vue-textarea-mustache/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-textarea-mustache",
@@ -38538,6 +39624,12 @@
 			"plugin": "vue",
 			"preset": "logicalStrict"
 		},
+		"biome": [
+			{
+				"name": "noVueThisInTemplate",
+				"url": "https://biomejs.dev/linter/rules/no-vue-this-in-template/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/this-in-template",
@@ -38584,6 +39676,12 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "useVueConsistentBooleanPropStyle",
+				"url": "https://biomejs.dev/linter/rules/use-vue-consistent-boolean-prop-style/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/prefer-true-attribute-shorthand",
@@ -38597,6 +39695,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "useVueTypedObjectProps",
+				"url": "https://biomejs.dev/linter/rules/use-vue-typed-object-props/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/require-typed-object-prop",
@@ -38681,6 +39785,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueUndeclaredProperties",
+				"url": "https://biomejs.dev/linter/rules/no-vue-undeclared-properties/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-undef-properties",
@@ -38694,6 +39804,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueUselessVBind",
+				"url": "https://biomejs.dev/linter/rules/no-vue-useless-v-bind/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-useless-v-bind",
@@ -38746,6 +39862,12 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noVueUselessTemplateAttributes",
+				"url": "https://biomejs.dev/linter/rules/no-vue-useless-template-attributes/html/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-useless-template-attributes",
@@ -39235,6 +40357,18 @@
 			{
 				"name": "yml/key-name-casing",
 				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/key-name-casing.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mappingKeyDuplicates",
+			"plugin": "yaml"
+		},
+		"biome": [
+			{
+				"name": "noDuplicateMapKeys",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-map-keys/yaml/"
 			}
 		]
 	},
