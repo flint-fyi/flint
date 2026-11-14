@@ -42,6 +42,7 @@ export { formatReport } from "./reporting/formatReport.ts";
 export { RuleCreator, type RuleCreatorOptions } from "./rules/RuleCreator.ts";
 export {
 	LintSession,
+	type LintSessionChangedLintOptions,
 	type LintSessionLintOptions,
 } from "./running/LintSession.ts";
 export {
