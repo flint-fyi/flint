@@ -34,6 +34,91 @@ const aPath = "/root/a.ts";
 const bPath = "/root/b.ts";
 
 describe("typescriptLanguage", () => {
+	it("reports selected and inherited configs and consulted package metadata, not filename guesses", () => {
+		const vfs = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		vfs.vfsUpsertFile(
+			"/root/tsconfig.json",
+			JSON.stringify({ extends: "./settings/compiler.json", files: ["a.ts"] }),
+		);
+		vfs.vfsUpsertFile(
+			"/root/settings/compiler.json",
+			JSON.stringify({
+				compilerOptions: { module: "nodenext", noLib: true },
+				extends: "/shared/base.json",
+			}),
+		);
+		vfs.vfsUpsertFile(
+			"/shared/base.json",
+			JSON.stringify({ compilerOptions: { strict: true } }),
+		);
+		vfs.vfsUpsertFile("/root/tsconfig.unrelated.json", "{}");
+		vfs.vfsUpsertFile("/root/package.json", '{"type":"module"}');
+		vfs.vfsUpsertFile(aPath, "export const a = 1;");
+		const factory = typescriptLanguage.createFileFactory(vfs);
+		using disposables = new DisposableStack();
+		disposables.defer(() => factory[Symbol.dispose]?.());
+		using file = factory.createFile(
+			createAboutData(aPath, "export const a = 1;"),
+		);
+		const impacts = typescriptLanguage.getFileCacheImpacts?.(file, vfs);
+		expect(impacts?.structuralDependencies).toEqual(
+			expect.arrayContaining([
+				"/root/package.json",
+				"/root/settings/compiler.json",
+				"/root/tsconfig.json",
+				"/shared/base.json",
+			]),
+		);
+		expect(impacts?.structuralDependencies).not.toContain(
+			"/root/tsconfig.unrelated.json",
+		);
+		expect(impacts?.structuralDependencies).not.toContain(aPath);
+		expect(impacts?.dependencies).not.toContain("tsconfig.json");
+	});
+
+	it("keeps project config dependencies scoped to each open file", () => {
+		const vfs = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		for (const project of ["first", "second"]) {
+			vfs.vfsUpsertFile(
+				`/root/${project}/tsconfig.json`,
+				'{"compilerOptions":{"noLib":true},"files":["source.ts"]}',
+			);
+			vfs.vfsUpsertFile(
+				`/root/${project}/source.ts`,
+				'import "./missing.js"; export {};',
+			);
+		}
+		const factory = typescriptLanguage.createFileFactory(vfs);
+		using disposables = new DisposableStack();
+		disposables.defer(() => factory[Symbol.dispose]?.());
+		const files = ["first", "second"].map((project) =>
+			disposables.use(
+				factory.createFile(
+					createAboutData(
+						`/root/${project}/source.ts`,
+						'import "./missing.js"; export {};',
+					),
+				),
+			),
+		);
+		for (const file of files) {
+			const dependencies = typescriptLanguage.getFileCacheImpacts?.(
+				file,
+				vfs,
+			).structuralDependencies;
+			const projectDirectory = file.about.filePathAbsolute.replace(
+				"/source.ts",
+				"",
+			);
+			expect(dependencies).toContain(`${projectDirectory}/tsconfig.json`);
+			const otherDirectory = projectDirectory.endsWith("first")
+				? "/root/second"
+				: "/root/first";
+			expect(dependencies).not.toContain(`${otherDirectory}/tsconfig.json`);
+			expect(dependencies).not.toContain(`${otherDirectory}/missing.ts`);
+		}
+	});
+
 	it("closes remaining open client files when the factory is disposed", () => {
 		const { factory, service } = createTestFactory();
 		const closeClientFile = vi.spyOn(service, "closeClientFile");

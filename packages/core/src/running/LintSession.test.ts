@@ -71,6 +71,7 @@ describe(LintSession, () => {
 		const bPath = path.posix.join(root, "b.txt");
 		const dependency = path.posix.join(root, "dependency.txt");
 		const otherDependency = path.posix.join(root, "other.txt");
+		const structural = path.posix.join(root, "project.json");
 		dependenciesByFilePath.set(aPath, [dependency, otherDependency]);
 		dependenciesByFilePath.set(bPath, [otherDependency, dependency]);
 		using session = await LintSession.create(configDefinition, host);
@@ -85,6 +86,7 @@ describe(LintSession, () => {
 					aPath,
 					{
 						dependencies: [dependency, otherDependency],
+						structuralDependencies: [structural],
 						timestamp: 1,
 					},
 				],
@@ -92,6 +94,7 @@ describe(LintSession, () => {
 					bPath,
 					{
 						dependencies: [otherDependency, dependency],
+						structuralDependencies: [structural],
 						timestamp: 2,
 					},
 				],
@@ -100,6 +103,9 @@ describe(LintSession, () => {
 		const shared = session.storedResults.get(bPath)?.dependencies;
 		const originalDependencies = new Set(shared);
 		expect(session.storedResults.get(aPath)?.dependencies).toBe(shared);
+		expect(session.storedResults.get(aPath)?.structuralDependencies).toBe(
+			session.storedResults.get(bPath)?.structuralDependencies,
+		);
 		dependenciesByFilePath.set(aPath, [otherDependency]);
 		await session.lintFiles([aPath]);
 		expect(shared).toEqual(originalDependencies);
@@ -113,6 +119,7 @@ describe(LintSession, () => {
 			session.storedResults.get(bPath)?.dependencies,
 		);
 		expect(await session.lintChangedFiles([dependency])).toEqual(new Map());
+		expect(session.hasStructuralDependency(structural)).toBe(false);
 		expect(shared).toEqual(originalDependencies);
 	});
 
