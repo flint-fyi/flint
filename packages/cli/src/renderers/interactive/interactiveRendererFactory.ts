@@ -58,39 +58,36 @@ export const interactiveRendererFactory: RendererFactory = {
 
 			await rerender();
 
-			return new Promise<void>((resolve) => {
-				let currentTask: Promise<void> | undefined;
+			let currentTask: Promise<void> | undefined;
 
-				onDisposeListeners.add(offKeyPress);
-				onQuitListeners.add(offKeyPress);
-				process.stdin.on("keypress", onKeyPress);
+			onDisposeListeners.add(offKeyPress);
+			onQuitListeners.add(offKeyPress);
+			process.stdin.on("keypress", onKeyPress);
 
-				function offKeyPress() {
-					process.stdin.off("keypress", onKeyPress);
-				}
+			function offKeyPress() {
+				process.stdin.off("keypress", onKeyPress);
+			}
 
-				function onKeyPress(chunk: string, key: { name: string }) {
-					if (chunk === "\u{3}" || key.name === "q") {
-						dispose();
-						quit();
-						resolve();
-						return;
-					}
-
-					if (events[key.name]?.()) {
-						queueRerender();
-					}
-
+			function onKeyPress(chunk: string, key: { name: string }) {
+				if (chunk === "\u{3}" || key.name === "q") {
+					dispose();
+					quit();
 					return;
 				}
 
-				function queueRerender() {
-					currentTask = (async () => {
-						await currentTask;
-						await rerender();
-					})();
+				if (events[key.name]?.()) {
+					queueRerender();
 				}
-			});
+
+				return;
+			}
+
+			function queueRerender() {
+				currentTask = (async () => {
+					await currentTask;
+					await rerender();
+				})();
+			}
 
 			async function rerender() {
 				console.clear();
