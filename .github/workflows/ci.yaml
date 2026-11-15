@@ -20,7 +20,7 @@ jobs:
       - uses: $/.github/actions/setup
       - run: pnpm run build
 
-  build:
+  build_site:
     name: Build Site
     runs-on: ubuntu-latest
     steps:
