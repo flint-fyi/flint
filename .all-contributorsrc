@@ -350,6 +350,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "hayatexe",
+      "name": "hayat",
+      "avatar_url": "https://avatars.githubusercontent.com/u/145812188?v=4",
+      "profile": "https://github.com/hayatexe",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
