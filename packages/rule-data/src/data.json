@@ -12846,7 +12846,8 @@
 	{
 		"flint": {
 			"name": "nthMethods",
-			"plugin": "playwright"
+			"plugin": "playwright",
+			"status": "skipped"
 		},
 		"biome": [
 			{
@@ -12871,7 +12872,8 @@
 	{
 		"flint": {
 			"name": "unsafeReferences",
-			"plugin": "playwright"
+			"plugin": "playwright",
+			"status": "skipped"
 		},
 		"biome": [
 			{
@@ -15137,7 +15139,8 @@
 	{
 		"flint": {
 			"name": "platformColors",
-			"plugin": "react-native"
+			"plugin": "react-native",
+			"status": "skipped"
 		},
 		"biome": [
 			{
