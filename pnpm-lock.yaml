@@ -637,8 +637,8 @@ catalogs:
       specifier: 0.27.0
       version: 0.27.0
     starlight-package-managers:
-      specifier: 0.13.0
-      version: 0.13.0
+      specifier: 0.13.1
+      version: 0.13.1
     starlight-sidebar-topics:
       specifier: 0.9.0
       version: 0.9.0
@@ -1765,7 +1765,7 @@ importers:
         version: 19.3.1
       starlight-package-managers:
         specifier: catalog:site
-        version: 0.13.0(@astrojs/starlight@0.42.10)
+        version: 0.13.1(@astrojs/starlight@0.42.10)
       typescript:
         specifier: catalog:dev
         version: '@typescript/typescript6@6.0.2'
@@ -7470,8 +7470,8 @@ packages:
       '@astrojs/starlight': '>=0.42.0'
       astro: '>=7.2.10'
 
-  starlight-package-managers@0.13.0:
-    resolution: {integrity: sha512-Jcvx7oLA2hWlNMsYI42Ny5vZ0lZov18M/0+aiXmY59Wo+GmhTjJPRpGEbIN0yJsGLoJPFTegcMArjNVU0SvROQ==}
+  starlight-package-managers@0.13.1:
+    resolution: {integrity: sha512-lD3hp+RBetHDWtOLa/rgG2cyLY4qV0GAWMl59hn++HkagcnFIkWT0oHsws2pMwBZHCO+iJ86jWRtSD4kfU6N3g==}
     peerDependencies:
       '@astrojs/starlight': '>=0.32.0'
 
@@ -14420,7 +14420,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  starlight-package-managers@0.13.0(@astrojs/starlight@0.42.10):
+  starlight-package-managers@0.13.1(@astrojs/starlight@0.42.10):
     dependencies:
       '@astrojs/starlight': 0.42.10(@astrojs/markdown-remark@7.3.8)(@typescript/typescript6@6.0.2)(astro@7.4.11)(supports-color@10.2.2)
 
