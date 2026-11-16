@@ -23,7 +23,7 @@ function renderFlintPlugin(flint: FlintRuleReference) {
 
 	return pluginData ? (
 		<td className={styles.linkCell}>
-			<a href={`/rules/${flint.plugin}`}>
+			<a href={`/rules/${flint.plugin}/`}>
 				{pluginData.plugin.name.split(" ")[0]}
 			</a>
 		</td>
@@ -39,7 +39,7 @@ function renderFlintPreset(flint: FlintRuleReference) {
 		return <td className={styles.noneCell}>(none)</td>;
 	}
 
-	const href = `/rules/${flint.plugin}#${flint.preset.toLowerCase()}`;
+	const href = `/rules/${flint.plugin}/#${flint.preset.toLowerCase()}`;
 
 	return (
 		<td className={styles.linkCell}>
@@ -61,7 +61,7 @@ export interface RulesTableProps {
 
 function renderFlintName(flint: FlintRuleReference) {
 	return flint.status === "implemented" ? (
-		<a href={`/rules/${flint.plugin}/${flint.name.toLowerCase()}`}>
+		<a href={`/rules/${flint.plugin}/${flint.name.toLowerCase()}/`}>
 			{flint.name}
 		</a>
 	) : (

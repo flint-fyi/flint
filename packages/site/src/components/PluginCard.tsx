@@ -16,7 +16,7 @@ export function PluginCard({
 			<ColoredLogo colors={colors} />
 			<div className={styles.texts}>
 				<span className={styles.name}>
-					<a href={`/rules/${id}`}>{name}</a>{" "}
+					<a href={`/rules/${id}/`}>{name}</a>{" "}
 				</span>
 				<InlineMarkdown className={styles.description} markdown={description} />
 			</div>

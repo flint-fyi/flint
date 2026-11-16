@@ -16,7 +16,7 @@ We plan on publishing these posts 1-2 times a year as the Flint project hits its
 
 :::tip
 New to Flint?
-See [About Flint](/about) to learn more about the fast, friendly linter for JavaScript, TypeScript, and more.
+See [About Flint](/about/) to learn more about the fast, friendly linter for JavaScript, TypeScript, and more.
 :::
 
 ## What We've Done
@@ -45,8 +45,8 @@ Flint natively provides full support for cross-file linting:
 Flint already provides several core rules that make use of these features in ways most or all other linters do not.
 Its experimental spell-checking rule, for example, provides suggestions to add unknown words to the user's dictionary file.
 
-> - [What Flint Does Differently § Cross File Caching](/blog/what-flint-does-differently#cross-file-caching)
-> - [What Flint Does Differently § Rich Cross File Fixes](/blog/what-flint-does-differently#rich-cross-file-fixes)
+> - [What Flint Does Differently § Cross File Caching](/blog/what-flint-does-differently/#cross-file-caching)
+> - [What Flint Does Differently § Rich Cross File Fixes](/blog/what-flint-does-differently/#rich-cross-file-fixes)
 
 #### Tooling Coordination
 
@@ -58,8 +58,8 @@ Flint runs Prettier on all linted files after linting, piping through its own `-
 Flint also provides languages with API hooks to define their own language reports (sometimes called "diagnostics") that can be reported.
 The TypeScript language uses those hooks to reuse type information services from linting and report type errors.
 
-> - [What Flint Does Differently § Formatting Coordination](/blog/what-flint-does-differently#formatting-coordination)
-> - [What Flint Does Differently § Language Reports Coordination](/blog/what-flint-does-differently#language-reports-coordination)
+> - [What Flint Does Differently § Formatting Coordination](/blog/what-flint-does-differently/#formatting-coordination)
+> - [What Flint Does Differently § Language Reports Coordination](/blog/what-flint-does-differently/#language-reports-coordination)
 
 #### I/O Host
 
@@ -71,7 +71,7 @@ Establishing host architecture early will allow Flint to support environments li
 They're able to run setup and teardown logic, as well as operate on multiple not-yet-saved files in text editors at a time.
 It also allows for a number of (yet-to-be-implemented) performance optimizations, such as the ability to batch file system reads and writes.
 
-> [What Flint Does Differently § Embeddable By Design](/blog/what-flint-does-differently#embeddable-by-design)
+> [What Flint Does Differently § Embeddable By Design](/blog/what-flint-does-differently/#embeddable-by-design)
 
 ### CLI
 
@@ -94,8 +94,8 @@ It supports:
 In fact, we've been running Flint in CI alongside ESLint and other checks for the majority of the Flint project.
 Our next step will be to start using it in personal projects of members of the Flint team.
 
-> - [What Flint Does Differently § Comprehensive Rule Reports](/blog/what-flint-does-differently#comprehensive-rule-reports)
-> - [What Flint Does Differently § Interactive and Watch CLI Modes](/blog/what-flint-does-differently#interactive-and-watch-cli-modes)
+> - [What Flint Does Differently § Comprehensive Rule Reports](/blog/what-flint-does-differently/#comprehensive-rule-reports)
+> - [What Flint Does Differently § Interactive and Watch CLI Modes](/blog/what-flint-does-differently/#interactive-and-watch-cli-modes)
 
 ### Lint Rule Progress
 
@@ -111,7 +111,7 @@ As of Spring 2026, the Flint monorepo has implemented:
 Flint's implemented rules intentionally span the gamut of linting checks.
 They include behavior from the core ESLint and typescript-eslint projects, plugins such as [eslint-plugin-regexp](https://ota-meshi.github.io/eslint-plugin-regexp), and languages such as JSON and Markdown.
 
-> [What Flint Does Differently § Common Core Rules](/blog/what-flint-does-differently#common-core-rules)
+> [What Flint Does Differently § Common Core Rules](/blog/what-flint-does-differently/#common-core-rules)
 
 ### Volar, Astro, Svelte, and Vue Integrations
 
@@ -125,9 +125,9 @@ We've used it for a first-class `@flint.fyi/vue` language plugin that provides V
 Through its Volar integration, Flint has true support for typed lint rules in Astro, Svelte, and Vue syntax.
 Rather than default to `any` for cross-file values imported into those syntax extensions, Flint is able to use Volar tooling to determine their actual TypeScript types.
 
-> - [What Flint Does Differently § Built-In TypeScript Extensibility](/blog/what-flint-does-differently#built-in-typescript-extensibility)
-> - [What Flint Does Differently § Focused Language Plugins](/blog/what-flint-does-differently#focused-language-plugins)
-> - [Fully Type-Aware Linting for Astro, Svelte, and Vue](/blog/fully-type-aware-linting-for-astro-svelte-and-vue)
+> - [What Flint Does Differently § Built-In TypeScript Extensibility](/blog/what-flint-does-differently/#built-in-typescript-extensibility)
+> - [What Flint Does Differently § Focused Language Plugins](/blog/what-flint-does-differently/#focused-language-plugins)
+> - [Fully Type-Aware Linting for Astro, Svelte, and Vue](/blog/fully-type-aware-linting-for-astro-svelte-and-vue/)
 
 ## Coming Next
 
@@ -155,7 +155,7 @@ Flint will provide a configuration initializer CLI that reads a user's `package.
 The initial 2026 version of this initializer will rely on metadata provided in Flint's first-party plugins to determine which match the project being initialized.
 
 > - [flint#2479 🚀 Feature: Implement the config initializer](https://github.com/flint-fyi/flint/issues/2479)
-> - [What Flint Does Differently § Config Initializer](/blog/what-flint-does-differently#config-initializer)
+> - [What Flint Does Differently § Config Initializer](/blog/what-flint-does-differently/#config-initializer)
 
 ### Documentation Expansion
 
@@ -177,8 +177,8 @@ We plan on fleshing out most or all the rest of that documentation as the projec
 > - [flint#67 🚀 Feature: Create a templated docs page for each core plugin](https://github.com/flint-fyi/flint/issues/67)
 > - [flint#1053 🚀 Feature: Documentation Generator](https://github.com/flint-fyi/flint/issues/1053)
 > - [flint#1150 📝 Documentation: Add architecture docs for Flint itself](https://github.com/flint-fyi/flint/issues/1150)
-> - [What Flint Does Differently § Comprehensive Rule Documentation](/blog/what-flint-does-differently#comprehensive-rule-documentation)
-> - [What Flint Does Differently § Shared Glossary](/blog/what-flint-does-differently#shared-glossary)
+> - [What Flint Does Differently § Comprehensive Rule Documentation](/blog/what-flint-does-differently/#comprehensive-rule-documentation)
+> - [What Flint Does Differently § Shared Glossary](/blog/what-flint-does-differently/#shared-glossary)
 
 ### Editor Integrations (LSP)
 
@@ -220,7 +220,7 @@ Starting with ~400 implemented rules in Spring 2026, that projection is:
 We expect the number of rules added each month to go down as easier rules are tackled first.
 For example, most of the rules we expect to add from [eslint-plugin-package-json](https://github.com/michaelfaith/eslint-plugin-package-json) in April are straightforward or even auto-generated from schemas.
 
-> [What Flint Does Differently § Common Core Rules](/blog/what-flint-does-differently#common-core-rules)
+> [What Flint Does Differently § Common Core Rules](/blog/what-flint-does-differently/#common-core-rules)
 
 :::tip
 Expect a blog post later this year on how the Flint project is using a combination of AI -in particular [Amp](https://ampcode.com)- and manual review to create dozens of high quality lint rule (re-)implementations a month.
@@ -252,7 +252,7 @@ Our 2026 goal is to have a near-complete understanding of how we _could_ build t
 We may have a prototype of it working by the end of the year.
 
 > - [flint#1320 🚀 Feature: Performance](https://github.com/flint-fyi/flint/issues/1320)
-> - [What Flint Does Differently § Hybrid Core](/blog/what-flint-does-differently#hybrid-core)
+> - [What Flint Does Differently § Hybrid Core](/blog/what-flint-does-differently/#hybrid-core)
 
 ## Estimated for 2027
 
@@ -285,7 +285,7 @@ Part of that tooling will be ways to register plugins in a shared community regi
 We haven't yet completed the core work on first-party plugins, so we don't believe this will land soon.
 It is a core part of Flint's story that we know we will have out by the end of 2027 at the latest.
 
-> [What Flint Does Differently § Plugin Registry](/blog/what-flint-does-differently#plugin-registry)
+> [What Flint Does Differently § Plugin Registry](/blog/what-flint-does-differently/#plugin-registry)
 
 ### Configuration Migrator
 
@@ -297,7 +297,7 @@ Flint is not yet ready for real world users to try it out.
 We believe helping users migrate from to Flint will not be a priority until Flint is alpha-ready.
 Therefore, although we see a configuration migrator as being an important part of Flint's story, it likely won't be prioritized in 2026.
 
-> [What Flint Does Differently § Configuration Migration](/blog/what-flint-does-differently#configuration-migration)
+> [What Flint Does Differently § Configuration Migration](/blog/what-flint-does-differently/#configuration-migration)
 
 ### Configuration Projects / Workspaces
 
@@ -309,7 +309,7 @@ Most modern userland projects are on ESLint flat config which does not support p
 
 So, while we do plan on working on this, it's not slated for 2026.
 
-> [What Flint Does Differently § Typed Configuration Files](/blog/what-flint-does-differently#typed-configuration-files)
+> [What Flint Does Differently § Typed Configuration Files](/blog/what-flint-does-differently/#typed-configuration-files)
 
 ### Configuration Inspector
 

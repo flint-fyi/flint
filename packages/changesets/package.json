@@ -2,7 +2,7 @@
 	"name": "@flint.fyi/changesets",
 	"version": "0.1.1",
 	"description": "[Experimental] A Flint plugin for Changesets.",
-	"homepage": "https://flint.fyi/rules/changesets",
+	"homepage": "https://flint.fyi/rules/changesets/",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",
