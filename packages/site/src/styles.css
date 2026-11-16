@@ -11,7 +11,7 @@
 	--flint-pine: #185b37;
 	--flint-pine-deep: #003821;
 
-	--flint-font-display: Fraunces, ui-serif, Georgia, serif;
+	--flint-font-display: Platypi, ui-serif, Georgia, serif;
 }
 
 /* Dark mode colors. */
@@ -125,7 +125,7 @@ h3,
 .site-title,
 .flint-display {
 	font-family: var(--flint-font-display);
-	font-weight: 900;
+	font-weight: 800;
 	letter-spacing: -0.015em;
 }
 
