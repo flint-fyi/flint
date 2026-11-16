@@ -3,28 +3,28 @@ import { Icon } from "@astrojs/starlight/components";
 
 const features = [
 	{
-		body: "Sensible rules right out of the bag. No config wrangling — just unzip, light the fire, and start linting.",
+		body: "Flint ships with a sensible set of rules turned on, so you can start linting without writing a pile of config first.",
 		accent: "ember",
 		icon: "heart",
 		title: "Toasty by default",
 	},
 	{
-		body: "Intelligent caching and CI coordination keep duplicate jobs from wandering off-trail. Your runs finish faster.",
+		body: "Change one file and Flint re-checks that file and its dependents. Everything else comes straight from the cache.",
 		accent: "moss",
 		icon: "rocket",
-		title: "Always points home",
+		title: "No wasted trips",
 	},
 	{
-		body: "Lint rules powered by the full TypeScript type checker. They catch the kind of bugs that hide under tent flaps.",
+		body: "Flint’s rules can use the full TypeScript type checker, so they catch bugs that syntax-only linters miss.",
 		accent: "lake",
 		icon: "star",
-		title: "Type-checked shelter",
+		title: "Sheltered by types",
 	},
 	{
-		body: "Configs you can actually read by lantern-light. Powerful when you need it, quiet when you don't.",
+		body: "Flint configs are plain, readable TypeScript that scales with your project.",
 		accent: "berry",
 		icon: "document",
-		title: "Bright, readable config",
+		title: "Config you can read",
 	},
 ] as const;
 ---
