@@ -47,6 +47,7 @@
 		"@flint.fyi/vitest": "workspace:^",
 		"@ianvs/prettier-plugin-sort-imports": "catalog:dev",
 		"@types/node": "catalog:dev",
+		"@typescript/native": "catalog:dev",
 		"@vitest/coverage-v8": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",
 		"console-fail-test": "catalog:dev",
@@ -83,7 +84,7 @@
 	"devEngines": {
 		"packageManager": {
 			"name": "pnpm",
-			"version": "12.18.0"
+			"version": "12.20.0"
 		}
 	}
 }

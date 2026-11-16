@@ -1,14 +1,17 @@
 // @ts-check
 
+import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import ecTwoSlash from "expressive-code-twoslash";
+import ts from "typescript";
 
 /** @type {import('@astrojs/starlight/expressive-code').StarlightExpressiveCodeOptions} */
 export default {
 	plugins: [
 		ecTwoSlash({
 			twoslashOptions: {
+				tsLibDirectory: dirname(ts.getDefaultLibFilePath({})),
 				vfsRoot: fileURLToPath(new URL("../..", import.meta.url)),
 				compilerOptions: {
 					target: 99, // ESNext
