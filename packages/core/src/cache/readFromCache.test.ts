@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import type { CacheStorage } from "../types/cache.ts";
 import type { VFSLinterHost } from "../types/host.ts";
+import { cacheStorageSchema } from "./cacheSchema.ts";
 import { readFromCache } from "./readFromCache.ts";
 
 const cacheFilePath = "/root/cache.json";
@@ -29,9 +30,10 @@ function createHostWithCache(
 			"package.json": cacheWriteTime,
 		},
 		files: cachedFiles,
+		version: 3,
 	};
 
-	host.vfsUpsertFile(cacheFilePath, JSON.stringify(storage));
+	host.vfsUpsertFile(cacheFilePath, cacheStorageSchema.encode(storage));
 
 	return host;
 }

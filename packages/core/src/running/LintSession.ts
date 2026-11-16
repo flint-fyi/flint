@@ -15,6 +15,7 @@ import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
 import { computeUseDefinitions } from "./computeUseDefinitions.ts";
+import { DependencyPool } from "./DependencyPool.ts";
 import {
 	finalizeFileResults,
 	type FinalizedFileResults,
@@ -37,6 +38,7 @@ export class LintSession implements Disposable {
 	}
 
 	readonly #caseSensitiveFS: boolean;
+	readonly #dependencies: DependencyPool;
 
 	/**
 	 * Reverse index: dependency key -> file paths that depend on it.
@@ -60,6 +62,9 @@ export class LintSession implements Disposable {
 		this.allFilePaths = allFilePaths;
 		this.#caseSensitiveFS = host.isCaseSensitiveFS();
 		this.#host = host;
+		this.#dependencies = new DependencyPool((filePath) =>
+			this.#toPathKey(filePath),
+		);
 		this.#rulesOptionsByFile = rulesOptionsByFile;
 		this.#languageFileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(host),
@@ -218,6 +223,9 @@ export class LintSession implements Disposable {
 
 	#storeResults(filePath: string, fileResults: FinalizedFileResults): void {
 		const previous = this.storedResults.get(filePath);
+		fileResults.dependencies = this.#dependencies.retain(
+			fileResults.dependencies,
+		);
 		if (previous) {
 			for (const dependencyKey of previous.dependencies) {
 				const dependents = this.#dependentsByDependencyKey.get(dependencyKey);
@@ -225,6 +233,7 @@ export class LintSession implements Disposable {
 					this.#dependentsByDependencyKey.delete(dependencyKey);
 				}
 			}
+			this.#dependencies.release(previous.dependencies);
 		}
 
 		this.storedResults.set(filePath, fileResults);
