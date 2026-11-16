@@ -40388,6 +40388,20 @@
 	},
 	{
 		"flint": {
+			"name": "lineLengths",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "yml/max-len",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/max-len.html"
+			}
+		],
+		"notes": "Formatting rule."
+	},
+	{
+		"flint": {
 			"name": "mappingKeyCasing",
 			"plugin": "yaml",
 			"status": "skipped"
