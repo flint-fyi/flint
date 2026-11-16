@@ -2,14 +2,9 @@
 
 /* Campfire palette shared by both themes. */
 :root {
-	--flint-bark: #4b2915;
 	--flint-cream: #fbf4e6;
-	--flint-ember: #f6722b;
-	--flint-ember-deep: #b33a0a;
 	--flint-moss: #65955a;
-	--flint-night: #0c1a32;
 	--flint-pine: #185b37;
-	--flint-pine-deep: #003821;
 
 	--flint-font-display: Fraunces, ui-serif, Georgia, serif;
 }
@@ -39,15 +34,6 @@
 	--sl-color-banner-bg: var(--flint-badge-surface);
 	--sl-color-banner-text: var(--flint-badge-text);
 	--flint-pine-mark: #79ad6c;
-
-	--flint-tag-ember-bg: #3c1d0e;
-	--flint-tag-ember-fg: #ffb48e;
-	--flint-tag-moss-bg: #172d12;
-	--flint-tag-moss-fg: #a4dd98;
-	--flint-tag-lake-bg: #0b293f;
-	--flint-tag-lake-fg: #8bd2ff;
-	--flint-tag-berry-bg: #3b1a28;
-	--flint-tag-berry-fg: #ffacce;
 
 	--flint-band-text: var(--flint-cream);
 	--flint-band-muted: #b9c4d6;
@@ -83,15 +69,6 @@
 	--sl-color-banner-bg: var(--flint-badge-surface);
 	--sl-color-banner-text: var(--flint-badge-text);
 	--flint-pine-mark: #185b37;
-
-	--flint-tag-ember-bg: #ffcab2;
-	--flint-tag-ember-fg: #732600;
-	--flint-tag-moss-bg: #c0e3b8;
-	--flint-tag-moss-fg: #155003;
-	--flint-tag-lake-bg: #b1ddff;
-	--flint-tag-lake-fg: #00457d;
-	--flint-tag-berry-bg: #fec5da;
-	--flint-tag-berry-fg: #701f46;
 
 	--flint-band-text: #3b1d13;
 	--flint-band-muted: #664432;
