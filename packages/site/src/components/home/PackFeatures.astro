@@ -6,28 +6,24 @@ const features = [
 		body: "Sensible rules right out of the bag. No config wrangling — just unzip, light the fire, and start linting.",
 		accent: "ember",
 		icon: "heart",
-		label: "cozy defaults",
 		title: "Toasty by default",
 	},
 	{
 		body: "Intelligent caching and CI coordination keep duplicate jobs from wandering off-trail. Your runs finish faster.",
 		accent: "moss",
 		icon: "rocket",
-		label: "fast & cached",
 		title: "Always points home",
 	},
 	{
 		body: "Lint rules powered by the full TypeScript type checker. They catch the kind of bugs that hide under tent flaps.",
 		accent: "lake",
 		icon: "star",
-		label: "typed power",
 		title: "Type-checked shelter",
 	},
 	{
 		body: "Configs you can actually read by lantern-light. Powerful when you need it, quiet when you don't.",
 		accent: "berry",
 		icon: "document",
-		label: "clear config",
 		title: "Bright, readable config",
 	},
 ] as const;
@@ -49,7 +45,6 @@ const features = [
 					<Icon name={feature.icon} size="2rem" />
 				</div>
 				<div class="body">
-					<span class="label">{feature.label}</span>
 					<h3 class="flint-display">{feature.title}</h3>
 					<p>{feature.body}</p>
 				</div>
@@ -136,18 +131,11 @@ const features = [
 		flex-direction: column;
 	}
 
-	.label {
-		color: var(--feature-fg);
-		font-size: var(--sl-text-xs);
-		font-weight: 800;
-		text-transform: uppercase;
-	}
-
 	h3 {
 		color: var(--sl-color-white);
 		font-size: var(--sl-text-2xl);
 		line-height: 1.2;
-		margin: 0.6rem 0 0;
+		margin: 0;
 	}
 
 	.feature p {
