@@ -57,6 +57,7 @@ export async function runCliWatch(
 
 		const knownUnrelatedFilePaths = new Set<string>();
 		const pendingChanges = new Map<string, string>();
+		const dependencyWatchers = new Map<string, Disposable>();
 
 		function finish() {
 			if (quitting) {
@@ -67,6 +68,9 @@ export async function runCliWatch(
 			processPendingChanges.clear();
 			pendingChanges.clear();
 			watcher[Symbol.dispose]();
+			for (const watcher of dependencyWatchers.values()) {
+				watcher[Symbol.dispose]();
+			}
 
 			currentTask = currentTask.finally(() => {
 				currentRenderer?.dispose?.();
@@ -205,6 +209,36 @@ export async function runCliWatch(
 						).allFileResults,
 			);
 			const lintResults = createLintResults(lintSession, changed);
+			const dependencies = new Set<string>();
+			for (const result of lintResults.allFileResults.values()) {
+				for (const dependency of [
+					...result.dependencies,
+					...(result.structuralDependencies ?? []),
+				]) {
+					dependencies.add(dependency);
+				}
+			}
+			for (const [dependency, watcher] of dependencyWatchers) {
+				if (!dependencies.has(dependency)) {
+					watcher[Symbol.dispose]();
+					dependencyWatchers.delete(dependency);
+				}
+			}
+			for (const dependency of dependencies) {
+				if (!dependencyWatchers.has(dependency)) {
+					dependencyWatchers.set(
+						dependency,
+						host.watchFileSync(
+							dependency,
+							() => {
+								pendingChanges.set(dependency, dependency);
+								processPendingChanges();
+							},
+							{ ignoredPaths: [] },
+						),
+					);
+				}
+			}
 
 			await writeToCache(host, configFileName, lintResults, cacheLocation);
 
@@ -223,12 +257,15 @@ export async function runCliWatch(
 
 		async function processChanges(changedFilePaths: string[]) {
 			if (
-				changedFilePaths.some((filePath) =>
-					isStructuralFile(filePath, configFileName, cwd),
+				changedFilePaths.some(
+					(filePath) =>
+						pathKey(filePath, isCaseSensitiveFS) ===
+							pathKey(path.resolve(cwd, configFileName), isCaseSensitiveFS) ||
+						lintSession?.hasStructuralDependency(filePath),
 				)
 			) {
 				log("Rebuilding watch session after a structural file change.");
-				await run({ rebuild: true });
+				await run({ ignoreCache: true, rebuild: true });
 				return;
 			}
 
@@ -315,18 +352,4 @@ export async function runCliWatch(
 			run({ ignoreCache: values["cache-ignore"] ?? false, rebuild: true }),
 		);
 	});
-}
-
-function isStructuralFile(
-	filePath: string,
-	configFileName: string,
-	cwd: string,
-) {
-	const baseName = path.basename(filePath);
-
-	return (
-		filePath === path.resolve(cwd, configFileName) ||
-		baseName === "package.json" ||
-		/^tsconfig(?:\..+)?\.json$/u.test(baseName)
-	);
 }

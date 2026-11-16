@@ -44,8 +44,10 @@ export async function readFromCache(
 		Array.from(allFilePaths, (filePath) => pathKey(filePath, caseSensitiveFS)),
 	);
 
-	// The config file and package.json are hardcoded to always be dependencies of all files
-	for (const filePath of [configFilePath, "package.json"]) {
+	for (const filePath of new Set([
+		configFilePath,
+		...Object.keys(cache.configs),
+	])) {
 		if (!Object.hasOwn(cache.configs, filePath)) {
 			log(
 				"Linting all %d file path(s) due to no cache of %s",
@@ -61,7 +63,11 @@ export async function readFromCache(
 		);
 		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
-		if (timestampTouched == null || timestampTouched > timestampCached) {
+		if (
+			filePath === configFilePath
+				? timestampTouched == null || timestampTouched > timestampCached
+				: (timestampTouched ?? 0) !== timestampCached
+		) {
 			log(
 				"Linting all %d file path(s) due to %s touch timestamp %d after cache timestamp %d",
 				allFilePaths.size,

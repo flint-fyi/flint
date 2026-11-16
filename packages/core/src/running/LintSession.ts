@@ -99,11 +99,27 @@ export class LintSession implements Disposable {
 		return this.#filePathByKey.has(this.#toPathKey(filePath));
 	}
 
+	hasStructuralDependency(filePath: string): boolean {
+		const key = this.#toPathKey(filePath);
+		return this.storedResults
+			.values()
+			.some((result) => result.structuralDependencies?.has(key));
+	}
+
 	async lintChangedFiles(
 		filePaths: Iterable<string>,
 		options?: LintSessionLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
 		const changedPaths = Array.from(filePaths);
+		if (
+			changedPaths.some((filePath) => this.hasStructuralDependency(filePath))
+		) {
+			for (const [, factory] of this.#languageFileFactories.entries()) {
+				factory[Symbol.dispose]?.();
+			}
+			this.#languageFileFactories.clear();
+			return this.lintFiles(this.allFilePaths, options);
+		}
 		const changedKeys = new Set(
 			changedPaths.map((filePath) => this.#toPathKey(filePath)),
 		);
@@ -195,6 +211,9 @@ export class LintSession implements Disposable {
 		for (const [filePath, cachedStorage] of cached) {
 			this.#storeResults(filePath, {
 				dependencies: new Set(cachedStorage.dependencies),
+				...(cachedStorage.structuralDependencies && {
+					structuralDependencies: new Set(cachedStorage.structuralDependencies),
+				}),
 				isGlobalDependency: cachedStorage.isGlobalDependency ?? false,
 				languageReports: cachedStorage.languageReports ?? [],
 				reports: cachedStorage.reports ?? [],
@@ -226,6 +245,13 @@ export class LintSession implements Disposable {
 		fileResults.dependencies = this.#dependencies.retain(
 			fileResults.dependencies,
 		);
+		if (fileResults.structuralDependencies) {
+			Object.assign(fileResults, {
+				structuralDependencies: this.#dependencies.retain(
+					fileResults.structuralDependencies,
+				),
+			});
+		}
 		if (previous) {
 			for (const dependencyKey of previous.dependencies) {
 				const dependents = this.#dependentsByDependencyKey.get(dependencyKey);
@@ -234,6 +260,7 @@ export class LintSession implements Disposable {
 				}
 			}
 			this.#dependencies.release(previous.dependencies);
+			this.#dependencies.release(previous.structuralDependencies);
 		}
 
 		this.storedResults.set(filePath, fileResults);

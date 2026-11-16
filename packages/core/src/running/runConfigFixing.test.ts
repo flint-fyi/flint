@@ -133,7 +133,6 @@ describe(runConfigFixing, () => {
 				cacheStorageSchema.encode({
 					configs: {
 						[config.filePath]: Date.now(),
-						"package.json": Date.now(),
 					},
 					files: { [cachedFilePath]: { timestamp: Date.now() } },
 					version: 3,
