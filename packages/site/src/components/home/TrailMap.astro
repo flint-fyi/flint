@@ -48,10 +48,16 @@ const rules = ruleIds.map((ruleId) => {
 		{rules.map((rule) => (
 			<li class="rule">
 				<div class="rule-heading">
-					<a href={`/rules/ts/${rule.id}/`}>ts/{rule.id}</a>
-					<span class="preset" data-preset={rule.preset}>
+					<a class="rule-name" href={`/rules/ts/${rule.id}/`}>
+						ts/{rule.id}
+					</a>
+					<a
+						class="flint-preset"
+						data-preset={rule.preset}
+						href={`/rules/ts/#${rule.preset.toLowerCase()}`}
+					>
 						{rule.preset}
-					</span>
+					</a>
 				</div>
 				<p set:html={rule.description} />
 			</li>
@@ -113,7 +119,7 @@ const rules = ruleIds.map((ruleId) => {
 		white-space: nowrap;
 	}
 
-	.rule a {
+	.rule-name {
 		color: var(--sl-color-white);
 		font-family: var(--sl-font-mono);
 		font-size: var(--sl-text-xs);
@@ -132,30 +138,6 @@ const rules = ruleIds.map((ruleId) => {
 		background-color: var(--sl-color-bg-inline-code);
 		margin-block: -0.125rem;
 		padding: 0.125rem 0.375rem;
-	}
-
-	.preset {
-		background: var(--preset-bg);
-		border: 1px solid var(--preset-border);
-		border-radius: 0.25rem;
-		color: var(--preset-text);
-		display: inline-block;
-		font-family: var(--sl-font-mono);
-		font-size: var(--sl-text-xs);
-		line-height: 1;
-		padding: 0.125rem 0.375rem;
-	}
-
-	.preset[data-preset="logical"] {
-		--preset-bg: var(--flint-secondary-surface);
-		--preset-border: var(--flint-secondary);
-		--preset-text: var(--flint-secondary-text);
-	}
-
-	.preset[data-preset="stylistic"] {
-		--preset-bg: var(--sl-color-accent-low);
-		--preset-border: var(--sl-color-accent);
-		--preset-text: var(--sl-color-accent-high);
 	}
 
 	@media (width >= 50rem) {

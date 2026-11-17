@@ -113,13 +113,13 @@ export function RulesTable({
 
 	return (
 		<div>
-			<blockquote>
+			<p>
 				{implementing ? (
 					renderImplemented(values)
 				) : (
 					<>Total count: {values.length}</>
 				)}
-			</blockquote>
+			</p>
 			<table
 				className={clsx(
 					styles.rulesTable,
