@@ -76,6 +76,9 @@ const config: KnipConfig = {
 				"@flint.fyi/typescript-language",
 				"zod",
 
+				// Knip --strict incorrectly reports it as unused; under investigation.
+				"canvaskit-wasm!",
+
 				// https://github.com/JoshuaKGoldberg/emoji-blast/issues/969
 				"konami-emoji-blast!",
 			],
