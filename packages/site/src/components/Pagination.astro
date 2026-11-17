@@ -1,6 +1,7 @@
 ---
 import Default from "@astrojs/starlight/components/Pagination.astro";
 import type { StarlightRouteData } from "@astrojs/starlight/route-data";
+import { Image } from "astro:assets";
 
 export type Props = StarlightRouteData;
 
@@ -20,15 +21,19 @@ const isHomepage = Astro.url.pathname === "/";
 
 {isHomepage && (
 	<a class="netlify" href="https://www.netlify.com">
-		<img
+		<Image
 			alt="Deploys by Netlify"
 			class="dark"
+			height={50}
 			src="https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg"
+			width={114}
 		/>
-		<img
+		<Image
 			alt="Deploys by Netlify"
 			class="light"
+			height={50}
 			src="https://www.netlify.com/assets/badges/netlify-badge-color-bg.svg"
+			width={114}
 		/>
 	</a>
 )}
