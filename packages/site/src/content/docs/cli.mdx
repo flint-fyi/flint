@@ -77,20 +77,28 @@ Flint's interactive CLI view can be controlled by using the arrow keys printed i
 
 [90m╭[39m[38;2;255;119;119m./[39m[1m[38;2;255;73;73mexample.ts[39m[22m
 [90m│ [39m
-[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mforInArrays[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;238;170;119m For-in loops over arrays have surprising behavior that often leads to bugs.[39m
+[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[38;2;238;170;119m[38;2;255;153;153m[1m]8;;https://flint.fyi/rules/ts/forinarrays/ts/forInArrays]8;;[22m[38;2;238;170;119m[38;2;204;170;170m][38;2;238;170;119m For-in loops over arrays have surprising behavior[39m
+[90m│ [39m [38;2;238;170;119mthat often leads to bugs.[39m
 [90m│ [39m
-[90m│ [39m[38;2;187;187;187m 6:1 [39m[90m│ [39m[37mfor[39m[97m ([39m[37mconst[39m[97m [39m[97mi[39m[97m [39m[37min[39m[97m [[39m[97m"[39m[37ma[39m[97m"[39m[97m,[39m[97m [39m[97m"[39m[37mb[39m[97m"[39m[97m,[39m[97m [39m[97m"[39m[37mc[39m[97m"[39m[97m]) [39m[97m{[39m
-[90m│ [39m[90m     │ [39m[38;2;235;140;140m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[39m
+[90m│ [39m[38;2;187;187;187m 1:1 [39m[90m│ [39m[38;2;129;161;193mfor[39m[38;2;216;222;233m ([39m[38;2;129;161;193mconst[39m[38;2;216;222;233m [39m[38;2;216;222;233mi[39m[38;2;216;222;233m [39m[38;2;129;161;193min[39m[38;2;216;222;233m [[39m[38;2;236;239;244m"[39m[38;2;163;190;140ma[39m[38;2;236;239;244m"[39m[38;2;236;239;244m,[39m[38;2;216;222;233m [39m[38;2;236;239;244m"[39m[38;2;163;190;140mb[39m[38;2;236;239;244m"[39m[38;2;236;239;244m,[39m[38;2;216;222;233m [39m[38;2;236;239;244m"[39m[38;2;163;190;140mc[39m[38;2;236;239;244m"[39m[38;2;216;222;233m]) [39m[38;2;236;239;244m{[39m
+[90m│ [39m[90m     │ [39m[38;2;255;204;204m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[39m
 [90m│ [39m
-[90m│ [39m [38;2;204;187;170m[3mA for-in loop (`for (const i in o)`) iterates over all enumerable properties of an object, including those that are not array indices.[23m[39m
-[90m│ [39m [38;2;204;187;170m[3mThis can lead to unexpected behavior when used with arrays, as it may include properties that are not part of the array's numeric indices.[23m[39m
-[90m│ [39m [38;2;204;187;170m[3mIt also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.[23m[39m
+[90m│ [39m [38;2;204;187;170m[3mA for-in loop (`for (const i in o)`) iterates over all enumerable[23m[39m
+[90m│ [39m [38;2;204;187;170m[3mproperties of an object, including those that are not array indices.[23m[39m
+[90m│ [39m [38;2;204;187;170m[3mThis can lead to unexpected behavior when used with arrays, as it[23m[39m
+[90m│ [39m [38;2;204;187;170m[3mmay include properties that are not part of the array's numeric[23m[39m
+[90m│ [39m [38;2;204;187;170m[3mindices.[23m[39m
+[90m│ [39m [38;2;204;187;170m[3mIt also returns the index key (`i`) as a string, which is not the[23m[39m
+[90m│ [39m [38;2;204;187;170m[3mexpected numeric type for array indices.[23m[39m
 [90m│ [39m
-[90m│ [39m [38;2;187;238;255mSuggestion: [38;2;187;204;221m[38;2;187;204;221mUse a construct more suited for arrays, such as a for-of loop ([39m[38;2;187;238;255m[38;2;187;204;221m`[38;2;187;238;255mfor (const i of o)[39m[38;2;187;238;255m[38;2;187;204;221m`[38;2;187;204;221m).[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
-[90m│ [39m [38;2;170;204;170m[3m→ flint.fyi/rules/forInArrays
-[90m╰[39m
+[90m│ [39m [38;2;187;238;255mSuggestion: [38;2;187;204;221m[38;2;187;204;221mUse a construct more suited for arrays, such as a for-of[39m[39m
+[90m│ [39m [38;2;187;238;255m[38;2;187;204;221mloop ([38;2;187;204;221m`[38;2;187;238;255mfor (const i of o)[38;2;187;204;221m`[38;2;187;204;221m).[38;2;187;238;255m[39m[39m
+[90m│ [39m
+[90m│ [39m [38;2;170;204;170m[3m→ ]8;;https://flint.fyi/rules/ts/forinarrays/flint.fyi/rules/ts/forinarrays/]8;;[23m[39m
+[90m│ [39m
+[90m╰────────────────────────────────────────────────────────────────────[39m
 
-[31m✖ Found [1m3 reports[22m across [1m2 files[22m.[39m
+[31m✖ Found [1m1 report[22m across [1m1 file[22m.[39m
 ```
 
 </div>
@@ -98,25 +106,33 @@ Flint's interactive CLI view can be controlled by using the arrow keys printed i
 <div class="only-light">
 
 ```ansi
-[38;2;0;92;184m📌 Displaying Flint reports in [39m[38;2;0;122;204m--interactive[39m[38;2;0;92;184m mode (file [39m[38;2;0;122;204m1[39m[38;2;0;92;184m of [39m[38;2;0;122;204m1[39m[38;2;0;92;184m).[39m
+[38;2;0;92;184m📌 Displaying Flint reports in [39m[38;2;0;122;204m--interactive[39m[38;2;0;92;184m mode (file [39m[38;2;0;122;204m1[39m[38;2;0;92;184m of [39m[38;2;0;92;184m1[39m[38;2;0;92;184m).[39m
    [38;2;120;120;120m[<] previous file[39m  [38;2;120;120;120m[>] next file[39m  [38;2;120;120;120m[q] quit[39m
 
 [38;2;120;120;120m╭[39m[38;2;200;40;40m./[39m[1m[38;2;170;0;0mexample.ts[39m[22m
 [38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m[38;2;190;120;60m[38;2;198;79;79m[[39m[38;2;190;120;60m[38;2;170;0;0m[1mforInArrays[22m[39m[38;2;190;120;60m[38;2;198;79;79m][39m[38;2;190;120;60m For-in loops over arrays have surprising behavior that often leads to bugs.[39m
+[38;2;120;120;120m│ [39m[38;2;190;120;60m[38;2;198;79;79m[[38;2;190;120;60m[38;2;170;0;0m[1m]8;;https://flint.fyi/rules/ts/forinarrays/ts/forInArrays]8;;[22m[38;2;190;120;60m[38;2;198;79;79m][38;2;190;120;60m For-in loops over arrays have surprising behavior[39m
+[38;2;120;120;120m│ [39m [38;2;190;120;60mthat often leads to bugs.[39m
 [38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m[38;2;120;120;120m 6:1 [39m[38;2;120;120;120m│ [39m[38;2;0;0;0mfor[39m[38;2;60;60;60m ([39m[38;2;0;0;0mconst[39m[38;2;60;60;60m [39m[38;2;0;0;0mi[39m[38;2;60;60;60m [39m[38;2;0;0;0min[39m[38;2;60;60;60m [[39m[38;2;60;60;60m"[39m[38;2;0;0;0ma[39m[38;2;60;60;60m"[39m[38;2;60;60;60m,[39m[38;2;60;60;60m [39m[38;2;60;60;60m"[39m[38;2;0;0;0mb[39m[38;2;60;60;60m"[39m[38;2;60;60;60m,[39m[38;2;60;60;60m [39m[38;2;60;60;60m"[39m[38;2;0;0;0mc[39m[38;2;60;60;60m"[39m[38;2;60;60;60m]) [39m[38;2;60;60;60m{[39m
+[38;2;120;120;120m│ [39m[38;2;120;120;120m 1:1 [39m[38;2;120;120;120m│ [39m[38;2;0;92;184mfor[39m[38;2;40;40;40m ([39m[38;2;0;92;184mconst[39m[38;2;40;40;40m [39m[38;2;40;40;40mi[39m[38;2;40;40;40m [39m[38;2;0;92;184min[39m[38;2;40;40;40m [[39m[38;2;90;90;90m"[39m[38;2;0;128;90ma[39m[38;2;90;90;90m"[39m[38;2;90;90;90m,[39m[38;2;40;40;40m [39m[38;2;90;90;90m"[39m[38;2;0;128;90mb[39m[38;2;90;90;90m"[39m[38;2;90;90;90m,[39m[38;2;40;40;40m [39m[38;2;90;90;90m"[39m[38;2;0;128;90mc[39m[38;2;90;90;90m"[39m[38;2;40;40;40m]) [39m[38;2;90;90;90m{[39m
 [38;2;120;120;120m│ [39m[38;2;120;120;120m     │ [39m[38;2;235;140;140m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[39m
 [38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mA for-in loop (`for (const i in o)`) iterates over all enumerable properties of an object, including those that are not array indices.[23m[39m
-[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mThis can lead to unexpected behavior when used with arrays, as it may include properties that are not part of the array's numeric indices.[23m[39m
-[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mIt also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.[23m[39m
+[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mA for-in loop (`for (const i in o)`) iterates over all enumerable[23m[39m
+[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mproperties of an object, including those that are not array indices.[23m[39m
+[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mThis can lead to unexpected behavior when used with arrays, as it[23m[39m
+[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mmay include properties that are not part of the array's numeric[23m[39m
+[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mindices.[23m[39m
+[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mIt also returns the index key (`i`) as a string, which is not the[23m[39m
+[38;2;120;120;120m│ [39m [38;2;150;105;60m[3mexpected numeric type for array indices.[23m[39m
 [38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m [38;2;0;92;184mSuggestion: [39m[38;2;60;60;60mUse a construct more suited for arrays, such as a for-of loop ([39m[38;2;0;122;204m`for (const i of o)`[39m[38;2;60;60;60m).[39m
-[38;2;120;120;120m│ [39m [38;2;0;128;90m[3m→ flint.fyi/rules/forInArrays[23m[39m
-[38;2;120;120;120m╰[39m
+[38;2;120;120;120m│ [39m [38;2;0;92;184mSuggestion: [38;2;60;60;60m[38;2;60;60;60mUse a construct more suited for arrays, such as a for-of[39m[39m
+[38;2;120;120;120m│ [39m [38;2;0;92;184m[38;2;60;60;60mloop ([38;2;60;60;60m`[38;2;0;92;184mfor (const i of o)[38;2;60;60;60m`[38;2;60;60;60m).[38;2;0;92;184m[39m[39m
+[38;2;120;120;120m│ [39m
+[38;2;120;120;120m│ [39m [38;2;0;128;90m[3m→ ]8;;https://flint.fyi/rules/ts/forinarrays/flint.fyi/rules/ts/forinarrays/]8;;[23m[39m
+[38;2;120;120;120m│ [39m
+[38;2;120;120;120m╰────────────────────────────────────────────────────────────────────[39m
 
-[3m[38;2;170;0;0m✖ Found [1m3 reports[22m across [1m2 files[22m.[39m[23m
+[38;2;170;0;0m✖ Found [1m1 report[22m across [1m1 file[22m.[39m
 ```
 
 </div>
@@ -142,12 +158,13 @@ The `brief` presenter shows a terse output with just file locations, primary rep
 <div class="only-dark">
 
 ```ansi
-[90mLinting with [36m[1mflint.config.ts[22m[39m[90m...[39m
+[90mLinting with [36m[1mflint.config.ts[22m[90m...[39m
 
-[4m/Users/josh/repos/flint/packages/cli/src/presenters/getPresenterFactory.ts[24m
-[90m  6:1[39m  For-in loops over arrays have surprising behavior that often leads to bugs.  [33mforInArrays[39m
+[4mexample.ts[24m
+[90m  1:1[39m  For-in loops over arrays have surprising behavior that often leads to bugs.  [33mts/forInArrays[39m
 
-[3m[31m✖ Found [1m1 report[22m across [1m1 file[22m.[39m[23m
+[31m✖ Found [1m1 report[22m across [1m1 file[22m.[39m
+[90mFinished in 2.00s on 1 file with 137 rules.[39m
 ```
 
 </div>
@@ -155,12 +172,13 @@ The `brief` presenter shows a terse output with just file locations, primary rep
 <div class="only-light">
 
 ```ansi
-[38;2;120;120;120mLinting with [39m[38;2;0;122;204m[1mflint.config.ts[22m[39m[38;2;120;120;120m...[39m
+[38;2;120;120;120mLinting with [38;2;0;122;204m[1mflint.config.ts[22m[38;2;120;120;120m...[39m
 
-[38;2;0;0;0m[4m/Users/josh/repos/flint/packages/cli/src/presenters/getPresenterFactory.ts[24m[39m
-[38;2;120;120;120m  6:1[39m  [38;2;60;60;60mFor-in loops over arrays have surprising behavior that often leads to bugs.[39m  [38;2;170;0;0mforInArrays[39m
+[4mexample.ts[24m
+[38;2;120;120;120m  1:1[39m  For-in loops over arrays have surprising behavior that often leads to bugs.  [38;2;170;0;0mts/forInArrays[39m
 
-[3m[38;2;170;0;0m✖ Found [1m1 report[22m across [1m1 file[22m.[39m[23m
+[38;2;170;0;0m✖ Found [1m1 report[22m across [1m1 file[22m.[39m
+[38;2;120;120;120mFinished in 2.00s on 1 file with 137 rules.[39m
 ```
 
 </div>
@@ -170,24 +188,26 @@ The `detailed` presenter shows a rich formatted output containing full report me
 <div class="only-dark">
 
 ```ansi
-[90mLinting with [36m[1mflint.config.ts[22m[39m[90m...[39m
-
+[90mLinting with [36m[1mflint.config.ts[22m[90m...[39m
 [90m╭[39m[38;2;255;119;119m./[39m[1m[38;2;255;73;73mexample.ts[39m[22m
 [90m│ [39m
-[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mforInArrays[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;238;170;119m For-in loops over arrays have surprising behavior that often leads to bugs.[39m
+[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[38;2;238;170;119m[38;2;255;153;153m[1m]8;;https://flint.fyi/rules/ts/forinarrays/ts/forInArrays]8;;[22m[38;2;238;170;119m[38;2;204;170;170m][38;2;238;170;119m For-in loops over arrays have surprising behavior that often leads to bugs.[39m
 [90m│ [39m
-[90m│ [39m[38;2;187;187;187m 6:1 [39m[90m│ [39m[37mfor[39m[97m ([39m[37mconst[39m[97m [39m[97mi[39m[97m [39m[37min[39m[97m [[39m[97m"[39m[37ma[39m[97m"[39m[97m,[39m[97m [39m[97m"[39m[37mb[39m[97m"[39m[97m,[39m[97m [39m[97m"[39m[37mc[39m[97m"[39m[97m]) [39m[97m{[39m
+[90m│ [39m[38;2;187;187;187m 1:1 [39m[90m│ [39m[38;2;129;161;193mfor[39m[38;2;216;222;233m ([39m[38;2;129;161;193mconst[39m[38;2;216;222;233m [39m[38;2;216;222;233mi[39m[38;2;216;222;233m [39m[38;2;129;161;193min[39m[38;2;216;222;233m [[39m[38;2;236;239;244m"[39m[38;2;163;190;140ma[39m[38;2;236;239;244m"[39m[38;2;236;239;244m,[39m[38;2;216;222;233m [39m[38;2;236;239;244m"[39m[38;2;163;190;140mb[39m[38;2;236;239;244m"[39m[38;2;236;239;244m,[39m[38;2;216;222;233m [39m[38;2;236;239;244m"[39m[38;2;163;190;140mc[39m[38;2;236;239;244m"[39m[38;2;216;222;233m]) [39m[38;2;236;239;244m{[39m
 [90m│ [39m[90m     │ [39m[38;2;255;204;204m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[39m
 [90m│ [39m
 [90m│ [39m [38;2;204;187;170m[3mA for-in loop (`for (const i in o)`) iterates over all enumerable properties of an object, including those that are not array indices.[23m[39m
 [90m│ [39m [38;2;204;187;170m[3mThis can lead to unexpected behavior when used with arrays, as it may include properties that are not part of the array's numeric indices.[23m[39m
 [90m│ [39m [38;2;204;187;170m[3mIt also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.[23m[39m
 [90m│ [39m
-[90m│ [39m [38;2;187;238;255mSuggestion: [38;2;187;204;221m[38;2;187;204;221mUse a construct more suited for arrays, such as a for-of loop ([39m[38;2;187;238;255m[38;2;187;204;221m`[38;2;187;238;255mfor (const i of o)[39m[38;2;187;238;255m[38;2;187;204;221m`[38;2;187;204;221m).[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
-[90m│ [39m [38;2;170;204;170m[3m→ flint.fyi/rules/forInArrays
+[90m│ [39m [38;2;187;238;255mSuggestion: [38;2;187;204;221m[38;2;187;204;221mUse a construct more suited for arrays, such as a for-of loop ([38;2;187;204;221m`[38;2;187;238;255mfor (const i of o)[38;2;187;204;221m`[38;2;187;204;221m).[38;2;187;238;255m[39m[39m
+[90m│ [39m
+[90m│ [39m [38;2;170;204;170m[3m→ ]8;;https://flint.fyi/rules/ts/forinarrays/flint.fyi/rules/ts/forinarrays/]8;;[23m[39m
+[90m│ [39m
 [90m╰[39m
 
-[3m[31m✖ Found [1m1 report[22m across [1m1 file[22m.[39m[23m
+[31m✖ Found [1m1 report[22m across [1m1 file[22m.[39m
+[90mFinished in 2.00s on 1 file with 137 rules.[39m
 ```
 
 </div>
@@ -195,24 +215,26 @@ The `detailed` presenter shows a rich formatted output containing full report me
 <div class="only-light">
 
 ```ansi
-[38;2;120;120;120mLinting with [39m[38;2;0;122;204m[1mflint.config.ts[22m[39m[38;2;120;120;120m...[39m
-
+[38;2;120;120;120mLinting with [38;2;0;122;204m[1mflint.config.ts[22m[38;2;120;120;120m...[39m
 [38;2;120;120;120m╭[39m[38;2;200;40;40m./[39m[1m[38;2;170;0;0mexample.ts[39m[22m
 [38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m[38;2;190;120;60m[38;2;198;79;79m[[39m[38;2;190;120;60m[38;2;170;0;0m[1mforInArrays[22m[39m[38;2;190;120;60m[38;2;198;79;79m][39m[38;2;190;120;60m For-in loops over arrays have surprising behavior that often leads to bugs.[39m
+[38;2;120;120;120m│ [39m[38;2;190;120;60m[38;2;198;79;79m[[38;2;190;120;60m[38;2;170;0;0m[1m]8;;https://flint.fyi/rules/ts/forinarrays/ts/forInArrays]8;;[22m[38;2;190;120;60m[38;2;198;79;79m][38;2;190;120;60m For-in loops over arrays have surprising behavior that often leads to bugs.[39m
 [38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m[38;2;120;120;120m 6:1 [39m[38;2;120;120;120m│ [39m[38;2;0;0;0mfor[39m[38;2;60;60;60m ([39m[38;2;0;0;0mconst[39m[38;2;60;60;60m [39m[38;2;0;0;0mi[39m[38;2;60;60;60m [39m[38;2;0;0;0min[39m[38;2;60;60;60m [[39m[38;2;60;60;60m"[39m[38;2;0;0;0ma[39m[38;2;60;60;60m"[39m[38;2;60;60;60m,[39m[38;2;60;60;60m [39m[38;2;60;60;60m"[39m[38;2;0;0;0mb[39m[38;2;60;60;60m"[39m[38;2;60;60;60m,[39m[38;2;60;60;60m [39m[38;2;60;60;60m"[39m[38;2;0;0;0mc[39m[38;2;60;60;60m"[39m[38;2;60;60;60m]) [39m[38;2;60;60;60m{[39m
+[38;2;120;120;120m│ [39m[38;2;120;120;120m 1:1 [39m[38;2;120;120;120m│ [39m[38;2;0;92;184mfor[39m[38;2;40;40;40m ([39m[38;2;0;92;184mconst[39m[38;2;40;40;40m [39m[38;2;40;40;40mi[39m[38;2;40;40;40m [39m[38;2;0;92;184min[39m[38;2;40;40;40m [[39m[38;2;90;90;90m"[39m[38;2;0;128;90ma[39m[38;2;90;90;90m"[39m[38;2;90;90;90m,[39m[38;2;40;40;40m [39m[38;2;90;90;90m"[39m[38;2;0;128;90mb[39m[38;2;90;90;90m"[39m[38;2;90;90;90m,[39m[38;2;40;40;40m [39m[38;2;90;90;90m"[39m[38;2;0;128;90mc[39m[38;2;90;90;90m"[39m[38;2;40;40;40m]) [39m[38;2;90;90;90m{[39m
 [38;2;120;120;120m│ [39m[38;2;120;120;120m     │ [39m[38;2;235;140;140m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[39m
 [38;2;120;120;120m│ [39m
 [38;2;120;120;120m│ [39m [38;2;150;105;60m[3mA for-in loop (`for (const i in o)`) iterates over all enumerable properties of an object, including those that are not array indices.[23m[39m
 [38;2;120;120;120m│ [39m [38;2;150;105;60m[3mThis can lead to unexpected behavior when used with arrays, as it may include properties that are not part of the array's numeric indices.[23m[39m
 [38;2;120;120;120m│ [39m [38;2;150;105;60m[3mIt also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.[23m[39m
 [38;2;120;120;120m│ [39m
-[38;2;120;120;120m│ [39m [38;2;0;92;184mSuggestion: [39m[38;2;60;60;60mUse a construct more suited for arrays, such as a for-of loop ([39m[38;2;0;122;204m`for (const i of o)`[39m[38;2;60;60;60m).[39m
-[38;2;120;120;120m│ [39m [38;2;0;128;90m[3m→ flint.fyi/rules/forInArrays[23m[39m
+[38;2;120;120;120m│ [39m [38;2;0;92;184mSuggestion: [38;2;60;60;60m[38;2;60;60;60mUse a construct more suited for arrays, such as a for-of loop ([38;2;60;60;60m`[38;2;0;92;184mfor (const i of o)[38;2;60;60;60m`[38;2;60;60;60m).[38;2;0;92;184m[39m[39m
+[38;2;120;120;120m│ [39m
+[38;2;120;120;120m│ [39m [38;2;0;128;90m[3m→ ]8;;https://flint.fyi/rules/ts/forinarrays/flint.fyi/rules/ts/forinarrays/]8;;[23m[39m
+[38;2;120;120;120m│ [39m
 [38;2;120;120;120m╰[39m
 
-[3m[38;2;170;0;0m✖ Found [1m1 report[22m across [1m1 file[22m.[39m[23m
+[38;2;170;0;0m✖ Found [1m1 report[22m across [1m1 file[22m.[39m
+[38;2;120;120;120mFinished in 2.00s on 1 file with 137 rules.[39m
 ```
 
 </div>
