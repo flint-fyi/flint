@@ -2,33 +2,33 @@
 
 /* Campfire palette shared by both themes. */
 :root {
-	--flint-cream: #fbf4e6;
-	--flint-night: #0b1628;
+	--flint-cream: oklch(96.9% 0.027 84.6);
+	--flint-night: oklch(20% 0.054 259.8);
 
 	--flint-font-display: Platypi, ui-serif, Georgia, serif;
 }
 
 /* Dark mode colors: cream on night blue, pine accent, ember secondary. */
 :root {
-	--sl-color-accent-low: #0f3a24;
-	--sl-color-accent: #63c08a;
-	--sl-color-accent-high: #b4e6c6;
+	--sl-color-accent-low: oklch(31.2% 0.074 157.2);
+	--sl-color-accent: oklch(73.6% 0.176 156.3);
+	--sl-color-accent-high: oklch(88.1% 0.102 156.7);
 	--sl-color-white: var(--flint-cream);
-	--sl-color-gray-1: #eee7d9;
-	--sl-color-gray-2: #cec2af;
-	--sl-color-gray-3: #b0a08b;
-	--sl-color-gray-4: #515e75;
-	--sl-color-gray-5: #2c3e57;
-	--sl-color-gray-6: #182941;
+	--sl-color-gray-1: oklch(93% 0.027 84.6);
+	--sl-color-gray-2: oklch(81.9% 0.04 79.4);
+	--sl-color-gray-3: oklch(71.4% 0.047 74.7);
+	--sl-color-gray-4: oklch(48% 0.055 261.8);
+	--sl-color-gray-5: oklch(36% 0.067 256.7);
+	--sl-color-gray-6: oklch(27.9% 0.068 257.1);
 	--sl-color-black: var(--flint-night);
 	--flint-button-hover-surface: var(--sl-color-gray-6);
 
-	--flint-accent-fill: #237a4b;
+	--flint-accent-fill: oklch(51.6% 0.127 155.2);
 	--flint-accent-fill-text: var(--flint-cream);
 
-	--flint-secondary: #f58a3a;
-	--flint-secondary-surface: #3c1d0e;
-	--flint-secondary-text: #ffb48e;
+	--flint-secondary: oklch(73.7% 0.167 53.6);
+	--flint-secondary-surface: oklch(27.1% 0.074 45.4);
+	--flint-secondary-text: oklch(83.2% 0.102 47.8);
 
 	--sl-color-banner-bg: var(--flint-secondary-surface);
 	--sl-color-banner-text: var(--flint-secondary-text);
@@ -36,17 +36,17 @@
 
 /* Light mode colors: night blue on cream, pine accent, ember secondary. */
 :root[data-theme="light"] {
-	--sl-color-accent-low: #cfe8d6;
-	--sl-color-accent: #185b37;
-	--sl-color-accent-high: #003821;
+	--sl-color-accent-low: oklch(90.8% 0.048 154.3);
+	--sl-color-accent: oklch(42% 0.102 155.4);
+	--sl-color-accent-high: oklch(30% 0.069 159.2);
 	--sl-color-white: var(--flint-night);
-	--sl-color-gray-1: #1d2d48;
-	--sl-color-gray-2: #34445f;
-	--sl-color-gray-3: #4a5873;
-	--sl-color-gray-4: #a9a597;
-	--sl-color-gray-5: #e3d9c6;
-	--sl-color-gray-6: #f1e9d8;
-	--sl-color-gray-7: #f7f1e4;
+	--sl-color-gray-1: oklch(29.7% 0.073 260.4);
+	--sl-color-gray-2: oklch(38.5% 0.069 260.6);
+	--sl-color-gray-3: oklch(46% 0.064 263.3);
+	--sl-color-gray-4: oklch(72.1% 0.027 93.7);
+	--sl-color-gray-5: oklch(88.8% 0.037 83.5);
+	--sl-color-gray-6: oklch(93.6% 0.033 85.8);
+	--sl-color-gray-7: oklch(95.9% 0.025 86.1);
 	--sl-color-black: var(--flint-cream);
 	--flint-button-hover-surface: color-mix(
 		in srgb,
@@ -54,12 +54,12 @@
 		transparent
 	);
 
-	--flint-accent-fill: #185b37;
+	--flint-accent-fill: oklch(42% 0.102 155.4);
 	--flint-accent-fill-text: var(--flint-cream);
 
-	--flint-secondary: #b33a0a;
-	--flint-secondary-surface: #fbd3b4;
-	--flint-secondary-text: #7a2400;
+	--flint-secondary: oklch(52% 0.17 38);
+	--flint-secondary-surface: oklch(89.3% 0.069 59.7);
+	--flint-secondary-text: oklch(39.2% 0.126 38.8);
 
 	--sl-color-banner-bg: var(--flint-secondary-surface);
 	--sl-color-banner-text: var(--flint-secondary-text);
