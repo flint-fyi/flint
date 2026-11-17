@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"description": "A Flint plugin with rules specific to our repo.",
-	"homepage": "https://flint.fyi/rules/flint",
+	"homepage": "https://flint.fyi/rules/flint/",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -12,7 +12,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",

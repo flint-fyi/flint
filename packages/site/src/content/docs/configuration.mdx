@@ -7,7 +7,7 @@ Linting with Flint must be configured by at least one `flint.config.*` configura
 That file may be any extension recognized by your version of Node.js.
 
 Flint configs must default-export the result of calling the [`defineConfig`](#defineconfig) function imported from the `flint` package.
-`flint` also exports a [`globs`](#globs) object for common file globs, as well as objects for each of the [core plugins](/rules#core-plugins).
+`flint` also exports a [`globs`](#globs) object for common file globs, as well as objects for each of the [core plugins](/rules/#core-plugins).
 
 ## `defineConfig`
 
@@ -179,7 +179,7 @@ Currently it contains only one selector, [`all`](#all).
 
 Includes all files previously selected by the configuration.
 
-For example, this config enables the [spelling plugin](/rules/spelling) on all files that are being linted, which includes multiple languages:
+For example, this config enables the [spelling plugin](/rules/spelling/) on all files that are being linted, which includes multiple languages:
 
 ```ts title="flint.config.ts"
 import { spelling } from "@flint.fyi/spelling";
@@ -205,7 +205,7 @@ export default defineConfig({
 
 ## Inline Directives
 
-You can also disable specific rules inline in your code using [comment directives](/directives).
+You can also disable specific rules inline in your code using [comment directives](/directives/).
 This is useful when you need to suppress a rule for a specific line, block, or file.
 
 ### Projects
