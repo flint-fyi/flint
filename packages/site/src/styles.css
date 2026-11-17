@@ -285,3 +285,40 @@ mobile-starlight-toc {
 :root[data-theme="dark"] .only-light {
 	display: none;
 }
+
+/* Asides use the code block frame and the Flint palette. */
+.starlight-aside {
+	border: 1px solid
+		color-mix(in oklch, var(--sl-color-asides-border) 55%, transparent);
+	border-radius: 1px;
+}
+.starlight-aside--note {
+	--sl-color-asides-border: oklch(60% 0.09 255);
+	--sl-color-asides-text-accent: oklch(85% 0.07 255);
+	background-color: oklch(27.9% 0.068 257);
+}
+.starlight-aside--tip {
+	--sl-color-asides-border: var(--sl-color-accent);
+	--sl-color-asides-text-accent: var(--sl-color-accent-high);
+	background-color: var(--sl-color-accent-low);
+}
+.starlight-aside--caution {
+	--sl-color-asides-border: var(--flint-secondary);
+	--sl-color-asides-text-accent: var(--flint-secondary-text);
+	background-color: var(--flint-secondary-surface);
+}
+.starlight-aside--danger {
+	--sl-color-asides-border: oklch(62% 0.19 28);
+	--sl-color-asides-text-accent: oklch(84% 0.09 28);
+	background-color: oklch(27% 0.08 28);
+}
+:root[data-theme="light"] .starlight-aside--note {
+	--sl-color-asides-border: oklch(46% 0.064 263);
+	--sl-color-asides-text-accent: oklch(30% 0.073 260);
+	background-color: oklch(92% 0.03 255);
+}
+:root[data-theme="light"] .starlight-aside--danger {
+	--sl-color-asides-border: oklch(48% 0.18 28);
+	--sl-color-asides-text-accent: oklch(38% 0.14 28);
+	background-color: oklch(90% 0.05 25);
+}
