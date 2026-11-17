@@ -1,5 +1,5 @@
 ---
-import { Code } from "@astrojs/starlight/components";
+import { Code, LinkButton } from "@astrojs/starlight/components";
 
 const darkCliOutput = [
 	"$ flint",
@@ -57,15 +57,17 @@ const lightCliOutput = [
 			</div>
 		</div>
 
-		<a class="button" href="/about/">
-			Get started →
-		</a>
+		<div class="action">
+			<LinkButton href="/about/" icon="right-arrow">
+				Get started
+			</LinkButton>
+		</div>
 	</div>
 </section>
 
 <style>
 	.try-it-out {
-		border-block-end: 1px solid var(--flint-paper-border);
+		border-block-end: 1px solid var(--sl-color-gray-5);
 		margin-block: 1rem 4rem;
 		padding-block: clamp(3rem, 6vw, 4.5rem);
 	}
@@ -81,7 +83,7 @@ const lightCliOutput = [
 	}
 
 	h2 {
-		color: var(--flint-band-text);
+		color: var(--sl-color-white);
 		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
 		grid-area: heading;
 		line-height: 1.15;
@@ -89,7 +91,7 @@ const lightCliOutput = [
 	}
 
 	.aside {
-		color: var(--flint-band-muted);
+		color: var(--sl-color-gray-2);
 		font-size: var(--sl-text-lg);
 		grid-area: aside;
 		line-height: 1.6;
@@ -103,30 +105,9 @@ const lightCliOutput = [
 		min-inline-size: 0;
 	}
 
-	.button {
-		background: var(--flint-ember-fill);
-		border: 1px solid var(--flint-ember-fill);
-		border-radius: 0.5rem;
-		color: var(--flint-ember-fill-text);
-		display: inline-block;
-		font-weight: 800;
+	.action {
 		grid-area: button;
-		justify-self: start;
 		margin-block-start: 2rem;
-		padding: 0.8rem 1.6rem;
-		text-decoration: none;
-		transition:
-			background-color 150ms,
-			filter 120ms ease-out;
-	}
-
-	.button:hover {
-		filter: var(--flint-button-hover-filter);
-	}
-
-	.button:active {
-		filter: var(--flint-button-pressed-filter);
-		transition-duration: 0ms;
 	}
 
 	@media (width >= 50rem) {

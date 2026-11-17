@@ -3,75 +3,66 @@
 /* Campfire palette shared by both themes. */
 :root {
 	--flint-cream: #fbf4e6;
-	--flint-moss: #65955a;
-	--flint-pine: #185b37;
+	--flint-night: #0b1628;
 
 	--flint-font-display: Platypi, ui-serif, Georgia, serif;
 }
 
-/* Dark mode colors. */
+/* Dark mode colors: cream on night blue, pine accent, ember secondary. */
 :root {
-	--sl-color-accent-low: #562001;
-	--sl-color-accent: #f58a3a;
-	--sl-color-accent-high: #ffc48a;
-	--sl-color-white: #fbf4e6;
+	--sl-color-accent-low: #0f3a24;
+	--sl-color-accent: #63c08a;
+	--sl-color-accent-high: #b4e6c6;
+	--sl-color-white: var(--flint-cream);
 	--sl-color-gray-1: #eee7d9;
 	--sl-color-gray-2: #cec2af;
 	--sl-color-gray-3: #b0a08b;
 	--sl-color-gray-4: #515e75;
 	--sl-color-gray-5: #2c3e57;
 	--sl-color-gray-6: #182941;
-	--sl-color-black: #0b1628;
-	--flint-button-hover-surface: var(--flint-paper);
+	--sl-color-black: var(--flint-night);
+	--flint-button-hover-surface: var(--sl-color-gray-6);
 
-	--flint-ember-fill: #f58a3a;
-	--flint-ember-fill-text: #0b1628;
+	--flint-accent-fill: #237a4b;
+	--flint-accent-fill-text: var(--flint-cream);
 
-	--flint-paper: #16263d;
-	--flint-paper-border: #3b4d68;
-	--flint-badge-surface: #2a1a10;
-	--flint-badge-text: #ffc48a;
-	--sl-color-banner-bg: var(--flint-badge-surface);
-	--sl-color-banner-text: var(--flint-badge-text);
-	--flint-pine-mark: #79ad6c;
+	--flint-secondary: #f58a3a;
+	--flint-secondary-surface: #3c1d0e;
+	--flint-secondary-text: #ffb48e;
 
-	--flint-band-text: var(--flint-cream);
-	--flint-band-muted: #b9c4d6;
+	--sl-color-banner-bg: var(--flint-secondary-surface);
+	--sl-color-banner-text: var(--flint-secondary-text);
 }
 
-/* Light mode colors. */
+/* Light mode colors: night blue on cream, pine accent, ember secondary. */
 :root[data-theme="light"] {
-	--sl-color-accent-low: #fdd7ac;
-	--sl-color-accent: #962900;
-	--sl-color-accent-high: #6f1200;
-	--sl-color-white: #3b1d13;
-	--sl-color-gray-1: #54301e;
-	--sl-color-gray-2: #664432;
-	--sl-color-gray-3: #6d4835;
-	--sl-color-gray-4: #bb9f84;
-	--sl-color-gray-5: #e3d2b8;
-	--sl-color-gray-6: #f1e7d2;
-	--sl-color-gray-7: #f7efe0;
-	--sl-color-black: #fbf4e6;
+	--sl-color-accent-low: #cfe8d6;
+	--sl-color-accent: #185b37;
+	--sl-color-accent-high: #003821;
+	--sl-color-white: var(--flint-night);
+	--sl-color-gray-1: #1d2d48;
+	--sl-color-gray-2: #34445f;
+	--sl-color-gray-3: #4a5873;
+	--sl-color-gray-4: #a9a597;
+	--sl-color-gray-5: #e3d9c6;
+	--sl-color-gray-6: #f1e9d8;
+	--sl-color-gray-7: #f7f1e4;
+	--sl-color-black: var(--flint-cream);
 	--flint-button-hover-surface: color-mix(
 		in srgb,
 		var(--sl-color-accent-low) 35%,
 		transparent
 	);
 
-	--flint-ember-fill: #962900;
-	--flint-ember-fill-text: var(--flint-cream);
+	--flint-accent-fill: #185b37;
+	--flint-accent-fill-text: var(--flint-cream);
 
-	--flint-paper: #fffaf1;
-	--flint-paper-border: #c7a98a;
-	--flint-badge-surface: #f7d19c;
-	--flint-badge-text: #6f1200;
-	--sl-color-banner-bg: var(--flint-badge-surface);
-	--sl-color-banner-text: var(--flint-badge-text);
-	--flint-pine-mark: #185b37;
+	--flint-secondary: #b33a0a;
+	--flint-secondary-surface: #fbd3b4;
+	--flint-secondary-text: #7a2400;
 
-	--flint-band-text: #3b1d13;
-	--flint-band-muted: #664432;
+	--sl-color-banner-bg: var(--flint-secondary-surface);
+	--sl-color-banner-text: var(--flint-secondary-text);
 }
 
 html[data-theme="light"] .only-dark {
@@ -101,15 +92,34 @@ h3,
 	letter-spacing: -0.015em;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	text-wrap: balance;
+}
+
+p,
+li,
+blockquote {
+	text-wrap: pretty;
+}
+
 table code {
 	background: none;
 	padding: 0;
 }
 
 a.sl-link-button.primary {
-	background: var(--flint-ember-fill);
-	border-color: var(--flint-ember-fill);
-	color: var(--flint-ember-fill-text);
+	background: var(--flint-accent-fill);
+	border-color: var(--flint-accent-fill);
+	color: var(--flint-accent-fill-text);
+}
+
+.not-content .sl-link-button {
+	margin: 0;
 }
 
 a.sl-link-button {
@@ -140,6 +150,25 @@ a.sl-link-button:active {
 
 /* Starlight chrome customizations. */
 
+/* Site chrome uses ember; page content keeps the pine accent. */
+:is(header.header, #starlight__sidebar, .right-sidebar, mobile-starlight-toc) {
+	--sl-color-accent-low: var(--flint-secondary-surface);
+	--sl-color-accent: var(--flint-secondary);
+	--sl-color-accent-high: var(--flint-secondary-text);
+	--sl-color-text-accent: var(--flint-secondary);
+	--sl-color-text-invert: var(--flint-secondary-surface);
+}
+
+:root[data-theme="light"]
+	:is(
+		header.header,
+		#starlight__sidebar,
+		.right-sidebar,
+		mobile-starlight-toc
+	) {
+	--sl-color-text-invert: var(--flint-cream);
+}
+
 header.header {
 	background: var(--sl-color-black);
 	border-block-end: 1px solid var(--sl-color-gray-5);
@@ -150,6 +179,14 @@ header.header {
 		grid-template-columns:
 			calc(var(--sl-sidebar-width) - var(--sl-nav-pad-x))
 			1fr auto;
+	}
+}
+
+/* On the homepage, line the header up with the splash content column. */
+@media (min-width: 72rem) {
+	:root[data-has-hero] header.header > .header {
+		margin-inline: auto;
+		max-width: 67.5rem;
 	}
 }
 
