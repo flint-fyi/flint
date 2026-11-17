@@ -177,9 +177,88 @@ a.sl-link-button:active {
 
 /* Starlight chrome customizations. */
 
+/* One flat background with no borders between the header, sidebars, and content, like the homepage. */
+:root {
+	--sl-color-bg-nav: var(--sl-color-bg);
+	--sl-color-bg-sidebar: var(--sl-color-bg);
+}
+
 header.header {
-	background: var(--sl-color-black);
-	border-block-end: 1px solid var(--sl-color-gray-5);
+	border-block-end: 0;
+}
+
+.sidebar-pane {
+	border-inline-end: 0;
+}
+
+.right-sidebar {
+	border-inline-start: 0;
+}
+
+mobile-starlight-toc summary {
+	border-block-end: 0;
+}
+
+.content-panel {
+	padding-block: 0.5rem;
+}
+
+.content-panel + .content-panel {
+	border-block-start: 0;
+}
+
+/* Mark the current page with accent text instead of a filled bar. */
+#starlight__sidebar [aria-current="page"] {
+	background-color: transparent;
+	color: var(--sl-color-text-accent);
+}
+
+/* Keep the table of contents heading small and line its links up with it. */
+.right-sidebar h2 {
+	font-family: var(--sl-font);
+	font-size: var(--sl-text-sm);
+}
+
+.right-sidebar-panel a {
+	--pad-inline: 0px;
+}
+
+mobile-starlight-toc {
+	details {
+		height: var(--sl-mobile-toc-height);
+	}
+
+	[open]::details-content {
+		min-width: min(17rem, 100%);
+		width: max-content;
+	}
+
+	[open] .toggle {
+		background-color: var(--sl-color-gray-6);
+		border-color: var(--sl-color-gray-5);
+	}
+
+	.dropdown {
+		background-color: var(--sl-color-gray-6);
+		border-color: var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		margin-block-end: -0.5rem;
+		margin-inline: 1rem;
+	}
+
+	.isMobile a {
+		--pad-inline: 0.75rem;
+		border-block-start: 0;
+		padding-block: 0.4375rem;
+	}
+
+	.isMobile > :first-child a {
+		padding-block-start: 0.625rem;
+	}
+
+	.isMobile > :last-child a {
+		padding-block-end: 0.625rem;
+	}
 }
 
 /* Center every page in one frame so the logo lines up with the sidebar and the homepage content. */
