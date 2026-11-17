@@ -495,8 +495,8 @@ catalogs:
       specifier: ^3.2.1
       version: 3.2.1
     debounce:
-      specifier: ^3.0.0
-      version: 3.0.0
+      specifier: ^4.0.0
+      version: 4.0.0
     debug-for-file:
       specifier: ^0.5.0
       version: 0.5.0
@@ -958,7 +958,7 @@ importers:
         version: 5.0.0
       debounce:
         specifier: catalog:prod
-        version: 3.0.0
+        version: 4.0.0
       debug-for-file:
         specifier: catalog:prod
         version: 0.5.0(supports-color@10.2.2)
@@ -5053,9 +5053,9 @@ packages:
   dataloader@2.2.3:
     resolution: {integrity: sha512-y2krtASINtPFS1rSDjacrFgn1dcUuoREVabwlOGOe4SdxenREqwjwjElAdwvbGM7kgZz9a3KVicWR7vcz8rnzA==}
 
-  debounce@3.0.0:
-    resolution: {integrity: sha512-64byRbF0/AirwbuHqB3/ZpMG9/nckDa6ZA0yd6UnaQNwbbemCOwvz2sL5sjXLHhZHADyiwLm0M5qMhltUUx+TA==}
-    engines: {node: '>=20'}
+  debounce@4.0.0:
+    resolution: {integrity: sha512-o6nMNFRtqLR6mRlyt0b21cgYPSKAEMZFpROIRS9ZRH6hhSJWvGErqeSCJnWyiwVQYMSw7f/DZLilF5YRDwFz7w==}
+    engines: {node: '>=22.2'}
 
   debug-for-file@0.5.0:
     resolution: {integrity: sha512-CbWwRGgZuG3VqXo7Z6SrfxCwgtQJ06dwqu/mZAD17OhY/TfgYpgzmYTNuqWJOgLKA0Z6iDyKT/KYYcy1nH7PSg==}
@@ -11136,7 +11136,7 @@ snapshots:
 
   dataloader@2.2.3: {}
 
-  debounce@3.0.0: {}
+  debounce@4.0.0: {}
 
   debug-for-file@0.5.0(supports-color@10.2.2):
     dependencies:

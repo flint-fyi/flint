@@ -117,7 +117,7 @@ catalogs:
     cli-cursor: ^5.0.0
     cspell-lib: ^10.0.0
     css-tree: ^3.2.1
-    debounce: ^3.0.0
+    debounce: ^4.0.0
     debug-for-file: ^0.5.0
     detect-indent: ^7.0.2
     detect-newline: ^4.0.1
