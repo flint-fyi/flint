@@ -11,6 +11,13 @@ import starlightLinksValidator from "starlight-links-validator";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
 export default defineConfig({
+	image: {
+		domains: [
+			"ampcode.com",
+			"avatars.githubusercontent.com",
+			"www.netlify.com",
+		],
+	},
 	integrations: [
 		konamiEmojiBlast(),
 		starlight({
