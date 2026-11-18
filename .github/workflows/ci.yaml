@@ -89,9 +89,13 @@ jobs:
           path: node_modules/.vite
       - name: Run E2E Tests
         if: ${{ matrix.e2e-only }}
+        env:
+          NODE_COMPILE_CACHE: ${{ runner.temp }}/node-compile-cache
         run: pnpm run test --project e2e
       - name: Run Tests
         if: ${{ !matrix.e2e-only && !matrix.coverage }}
+        env:
+          NODE_COMPILE_CACHE: ${{ runner.temp }}/node-compile-cache
         run: pnpm run test
       - name: Run Tests With Coverage
         if: ${{ matrix.coverage }}
