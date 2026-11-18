@@ -1,4 +1,5 @@
 import type { PluginDetails } from "~/data/pluginData";
+import type { ReactElement } from "react";
 
 import { ColoredLogo } from "./ColoredLogo";
 import { InlineMarkdown } from "./InlineMarkdown";
@@ -10,7 +11,7 @@ export interface PluginCardProps {
 
 export function PluginCard({
 	data: { colors, description, id, name },
-}: PluginCardProps) {
+}: PluginCardProps): ReactElement {
 	return (
 		<li className={styles.pluginCard}>
 			<ColoredLogo colors={colors} />
