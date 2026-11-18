@@ -29,6 +29,7 @@ export {
 	type ScopeReference,
 	type ScopeVariable,
 } from "./scope/scopeManager.ts";
+// eslint-disable-next-line no-restricted-syntax -- Renamed module for more intuitive API
 export type * as AST from "./types/ast.ts";
 export type { Checker } from "./types/checker.ts";
 export type { TypeScriptFileServices } from "./types/services.ts";
