@@ -12,7 +12,8 @@ const config: ViteUserConfigExport = defineConfig({
 	test: {
 		coverage: {
 			exclude: [...defaultExclude, "e2e/tests/**"],
-			include: ["packages/**/src/**/*.{ts,tsx}"],
+			// Relative to each project's root when --project is passed, else the repo root.
+			include: ["**/src/**/*.{ts,tsx}"],
 			reporter: ["html", "lcov", "text"],
 		},
 		fsModuleCache: env.CI !== "true",
