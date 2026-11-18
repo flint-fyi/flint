@@ -7,8 +7,11 @@ import { defineEcConfig } from "@astrojs/starlight/expressive-code";
 import ecTwoSlash from "expressive-code-twoslash";
 import ts from "typescript";
 
+import { pluginAnsiLinks } from "@flint.fyi/expressive-code-ansi-links";
+
 export default defineEcConfig({
 	plugins: [
+		pluginAnsiLinks(),
 		ecTwoSlash({
 			twoslashOptions: {
 				compilerOptions: {
