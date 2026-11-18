@@ -55,9 +55,11 @@ jobs:
         run: pnpm exec tsc -b
       - wait-all: ~
 
-  test_e2e:
-    name: Test E2E (Node.js ${{ case(matrix.node-version == '26.1.0', matrix.node-version, '26') }}, ${{ matrix.os }})
+  test:
+    name: Test (Node.js ${{ case(matrix.node-version == '26.1.0', matrix.node-version, '26') }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    permissions:
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -66,6 +68,16 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version: [26.1.0, 26.13.1]
+        include:
+          - os: macos-latest
+            node-version: 26.1.0
+            e2e-only: true
+          - os: ubuntu-latest
+            node-version: 26.13.1
+            coverage: true
+          - os: windows-latest
+            node-version: 26.1.0
+            e2e-only: true
     steps:
       - uses: $/.github/actions/setup
         with:
@@ -75,49 +87,18 @@ jobs:
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
-      - name: Run e2e Tests
+      - name: Run E2E Tests
+        if: ${{ matrix.e2e-only }}
         run: pnpm run test --project e2e
-
-  test_node:
-    name: Test (Node.js ${{ case(matrix.node-version == '26.1.0', matrix.node-version, '26') }}, ubuntu-latest)
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [26.1.0, 26.13.1]
-    steps:
-      - uses: $/.github/actions/setup
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Cache Vite Cache
-        uses: actions/cache@v6.1.0
-        with:
-          key: vite-cache-ubuntu-latest-${{ hashFiles('pnpm-lock.yaml') }}
-          path: node_modules/.vite
-      - name: Run Unit Tests
-        run: pnpm run test --project='!e2e'
-
-  test_os:
-    name: Test
-    runs-on: ${{ matrix.os }}
-    permissions:
-      id-token: write
-    strategy:
-      matrix:
-        os:
-          - macos-latest
-          - windows-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - name: Cache Vite Cache
-        uses: actions/cache@v6.1.0
-        with:
-          key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          path: node_modules/.vite
-      - name: Run Unit Tests
-        run: pnpm run test --project='!e2e' --coverage
+      - name: Run Tests
+        if: ${{ !matrix.e2e-only && !matrix.coverage }}
+        run: pnpm run test
+      - name: Run Tests With Coverage
+        if: ${{ matrix.coverage }}
+        run: pnpm run test --coverage
       - name: Report Code Coverage
         uses: codecov/codecov-action@v7.1.1
-        if: ${{ !cancelled() && (matrix.os == 'macos-latest') }}
+        if: ${{ !cancelled() && matrix.coverage }}
         with:
           fail_ci_if_error: true
           use_oidc: true
