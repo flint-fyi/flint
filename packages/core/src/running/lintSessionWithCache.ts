@@ -28,13 +28,18 @@ export async function lintSessionWithCache(
 				cacheLocation,
 			);
 
-	await session.lintFiles(
-		cached ? session.allFilePaths.difference(cached) : session.allFilePaths,
-		{ skipLanguageReports },
-	);
-
 	if (cached) {
 		session.restoreCachedResults(cached);
+
+		const lintedResults = await session.lintChangedFiles(
+			session.allFilePaths.difference(cached),
+			{ skipLanguageReports },
+		);
+		for (const filePath of lintedResults.keys()) {
+			cached.delete(filePath);
+		}
+	} else {
+		await session.lintFiles(session.allFilePaths, { skipLanguageReports });
 	}
 
 	return {
