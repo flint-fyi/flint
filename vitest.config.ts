@@ -20,6 +20,12 @@ const config: ViteUserConfigExport = defineConfig({
 				test: {
 					clearMocks: true,
 					include: ["**/src/**/*.test.ts", "**/tests/**/*.test.ts"],
+					// Module mocks with vi.mock can leak between files that share a worker.
+					isolate: [
+						"cli",
+						"performance-testing",
+						"typescript-language",
+					].includes(name),
 					name,
 					root: path.join(import.meta.dirname, "packages", name),
 					setupFiles: [
