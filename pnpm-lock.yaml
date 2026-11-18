@@ -1120,6 +1120,16 @@ importers:
         specifier: catalog:dev
         version: 0.4.0(vitest@5.1.1)
 
+  packages/expressive-code-ansi-links:
+    dependencies:
+      '@expressive-code/core':
+        specifier: catalog:site
+        version: 0.44.4
+    devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
+
   packages/flint:
     dependencies:
       '@flint.fyi/cli':
@@ -1791,6 +1801,9 @@ importers:
       '@expressive-code/core':
         specifier: catalog:site
         version: 0.44.4
+      '@flint.fyi/expressive-code-ansi-links':
+        specifier: workspace:^
+        version: link:../expressive-code-ansi-links
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
