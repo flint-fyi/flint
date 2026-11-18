@@ -1,6 +1,6 @@
 import { readdirSync } from "node:fs";
 import path from "node:path";
-import { platform } from "node:process";
+import { env, platform } from "node:process";
 
 import {
 	defaultExclude,
@@ -15,6 +15,7 @@ const config: ViteUserConfigExport = defineConfig({
 			include: ["packages/**/src/**/*.{ts,tsx}"],
 			reporter: ["html", "lcov", "text"],
 		},
+		fsModuleCache: env.CI !== "true",
 		projects: readdirSync(path.join(import.meta.dirname, "packages")).map(
 			(name) => ({
 				test: {
