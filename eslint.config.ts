@@ -147,7 +147,15 @@ const config: ConfigObject[] = defineConfig(
 				},
 			],
 			// Use no-restricted-syntax to target e.g. `type Foo = typeof import('foo.js')` as well.
-			"no-restricted-syntax": ["error", ...banJsImportExtension()],
+			"no-restricted-syntax": [
+				"error",
+				...banJsImportExtension(),
+				{
+					message:
+						"Do not use 'export * from' statements. Please export individual symbols.",
+					selector: "ExportAllDeclaration",
+				},
+			],
 
 			// Covered by Prettier plugin
 			"perfectionist/sort-imports": "off",
