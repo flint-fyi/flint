@@ -34,6 +34,7 @@
 		"debounce": "catalog:prod",
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
+		"string-width": "catalog:prod",
 		"text-table-fast": "catalog:prod",
 		"typescript": "catalog:prod",
 		"wrap-ansi": "catalog:prod"

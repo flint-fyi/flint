@@ -536,6 +536,9 @@ catalogs:
     sort-package-json:
       specifier: ^4.0.0
       version: 4.1.0
+    string-width:
+      specifier: ^8.3.0
+      version: 8.3.0
     svelte:
       specifier: ^5.0.0
       version: 5.57.3
@@ -965,6 +968,9 @@ importers:
       ignore:
         specifier: catalog:prod
         version: 7.0.14
+      string-width:
+        specifier: catalog:prod
+        version: 8.3.0
       text-table-fast:
         specifier: catalog:prod
         version: 0.2.0
