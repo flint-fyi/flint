@@ -968,6 +968,9 @@ importers:
       ignore:
         specifier: catalog:prod
         version: 7.0.14
+      pathe:
+        specifier: catalog:prod
+        version: 2.0.3
       string-width:
         specifier: catalog:prod
         version: 9.0.0
