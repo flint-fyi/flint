@@ -112,9 +112,11 @@ export const vueLanguage: VolarLanguage<VueServices> = createVolarBasedLanguage(
 							.offset ?? sourceText.length,
 					getLanguageReports(currentDirectory) {
 						return vueParsingErrorsToLanguageReports(
-							sourceFile.fileName.startsWith("./")
-								? sourceFile.fileName.slice(2)
-								: sourceFile.fileName.slice(currentDirectory.length + 1),
+							sourceFile.fileName.slice(
+								sourceFile.fileName.startsWith("./")
+									? 2
+									: currentDirectory.length + 1,
+							),
 							virtualCode.vueSfc?.errors ?? [],
 						);
 					},
