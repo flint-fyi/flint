@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { addFlintAssertionContext } from "@flint.fyi/utils";
 
-import packageData from "../package.json" with { type: "json" };
 import { createRendererFactory } from "./renderers/createRendererFactory.ts";
 import { runCli } from "./runCli.ts";
 import { runCliOnce } from "./runCliOnce.ts";
@@ -40,6 +39,8 @@ vi.mock("./runCliWatch.ts", () => ({
 	runCliWatch: vi.fn(),
 }));
 
+const packageVersion = "1.2.3";
+
 describe(runCli, () => {
 	const mockError = vi.fn();
 	const mockLog = vi.fn();
@@ -50,7 +51,7 @@ describe(runCli, () => {
 	});
 
 	it("should print help when --help is provided", async () => {
-		const exitCode = await runCli(["--help"]);
+		const exitCode = await runCli(["--help"], packageVersion);
 		const output = mockLog.mock.calls[0]?.[0] as string;
 
 		expect(exitCode).toBe(0);
@@ -82,15 +83,15 @@ describe(runCli, () => {
 	});
 
 	it("should print the package version when --version is provided", async () => {
-		const exitCode = await runCli(["--version"]);
+		const exitCode = await runCli(["--version"], packageVersion);
 
 		expect(exitCode).toBe(0);
-		expect(mockLog).toHaveBeenCalledWith(packageData.version);
+		expect(mockLog).toHaveBeenCalledWith(packageVersion);
 		expect(createRendererFactory).not.toHaveBeenCalled();
 	});
 
 	it("should print a suggestion when an unknown flag is provided", async () => {
-		const exitCode = await runCli(["--fx"]);
+		const exitCode = await runCli(["--fx"], packageVersion);
 
 		expect(exitCode).toBe(2);
 		expect(mockError.mock.calls).toMatchInlineSnapshot(`
@@ -105,13 +106,13 @@ describe(runCli, () => {
 	});
 
 	it("should print an error when an invalid presenter is provided", async () => {
-		const exitCode = await runCli(["--presenter", "unknown"]);
+		const exitCode = await runCli(["--presenter", "unknown"], packageVersion);
 
 		expect(exitCode).toBe(2);
 		expect(mockError.mock.calls).toMatchInlineSnapshot(`
 			[
 			  [
-			    "--presenter: Invalid option: expected one of "brief"|"detailed"|"github"
+			    "--presenter: Expected "brief", "detailed", or "github", received "unknown".
 			Run 'flint --help' for usage.",
 			  ],
 			]
@@ -120,7 +121,7 @@ describe(runCli, () => {
 	});
 
 	it("should print an error when a positional argument is provided", async () => {
-		const exitCode = await runCli(["src"]);
+		const exitCode = await runCli(["src"], packageVersion);
 
 		expect(exitCode).toBe(2);
 		expect(mockError.mock.calls).toMatchInlineSnapshot(`
@@ -134,18 +135,21 @@ describe(runCli, () => {
 	});
 
 	it("should pass parsed values to a single run when --watch is not provided", async () => {
-		const exitCode = await runCli([
-			"--cache-location",
-			"node_modules/.cache/flint",
-			"--fix",
-			"--fix-suggestions",
-			"first",
-			"--fix-suggestions",
-			"second",
-			"--presenter",
-			"detailed",
-			"--skip-formatting",
-		]);
+		const exitCode = await runCli(
+			[
+				"--cache-location",
+				"node_modules/.cache/flint",
+				"--fix",
+				"--fix-suggestions",
+				"first",
+				"--fix-suggestions",
+				"second",
+				"--presenter",
+				"detailed",
+				"--skip-formatting",
+			],
+			packageVersion,
+		);
 		const values = {
 			"cache-location": "node_modules/.cache/flint",
 			fix: true,
@@ -172,7 +176,7 @@ describe(runCli, () => {
 	it("should pass parsed values and raw args to watch mode when --watch is provided", async () => {
 		const args = ["--watch", "--interactive", "--cache-ignore"];
 
-		const exitCode = await runCli(args);
+		const exitCode = await runCli(args, packageVersion);
 
 		expect(exitCode).toBe(0);
 		expect(runCliWatch).toHaveBeenCalledWith(
@@ -190,7 +194,7 @@ describe(runCli, () => {
 		const error = new Error("Oh no!");
 		vi.mocked(runCliOnce).mockRejectedValueOnce(error);
 
-		await expect(runCli(args)).rejects.toBe(error);
+		await expect(runCli(args, packageVersion)).rejects.toBe(error);
 		expect(addFlintAssertionContext).toHaveBeenCalledWith(error, args);
 	});
 });

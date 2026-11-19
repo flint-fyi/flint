@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.23.4",
+	"version": "0.23.5",
 	"description": "[Experimental] Command-line interface for Flint.",
-	"homepage": "https://flint.fyi/cli",
+	"homepage": "https://flint.fyi/cli/",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",
@@ -34,7 +34,7 @@
 		"debounce": "catalog:prod",
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
-		"parse-standard-args": "link:../../../parse-standard-args",
+		"parse-standard-args": "^0.3.0",
 		"text-table-fast": "catalog:prod",
 		"typescript": "catalog:prod",
 		"wrap-ansi": "catalog:prod",

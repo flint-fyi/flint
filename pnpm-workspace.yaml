@@ -182,6 +182,9 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
+minimumReleaseAgeExclude:
+  - parse-standard-args@0.3.0
+
 nodeVersion: 26.3.0
 
 overrides:
