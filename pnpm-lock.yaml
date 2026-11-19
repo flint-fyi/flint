@@ -518,6 +518,9 @@ catalogs:
     package-json-validator:
       specifier: ^2.0.0
       version: 2.0.0
+    parse-standard-args:
+      specifier: ^0.3.0
+      version: 0.3.0
     pathe:
       specifier: ^2.0.3
       version: 2.0.3
@@ -966,7 +969,7 @@ importers:
         specifier: catalog:prod
         version: 7.0.14
       parse-standard-args:
-        specifier: ^0.3.0
+        specifier: catalog:prod
         version: 0.3.0(@clack/prompts@1.8.1)
       text-table-fast:
         specifier: catalog:prod

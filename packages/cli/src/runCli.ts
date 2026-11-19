@@ -15,7 +15,10 @@ export async function runCli(
 			"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
 		name: "flint",
 		options,
-		version: packageVersion,
+		version: {
+			description: "Prints the current package version of Flint.",
+			version: packageVersion,
+		},
 	});
 
 	switch (parsed.type) {

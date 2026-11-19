@@ -45,7 +45,7 @@ export const options: z.ZodObject<{
 		.enum(["brief", "detailed", "github"])
 		.optional()
 		.describe(
-			"Which 'presenter' to output results using: brief (default) or detailed.",
+			"Which 'presenter' to output results using: brief (default), detailed, or github.",
 		),
 	"skip-formatting": z
 		.boolean()

@@ -34,7 +34,7 @@
 		"debounce": "catalog:prod",
 		"debug-for-file": "catalog:prod",
 		"ignore": "catalog:prod",
-		"parse-standard-args": "^0.3.0",
+		"parse-standard-args": "catalog:prod",
 		"text-table-fast": "catalog:prod",
 		"typescript": "catalog:prod",
 		"wrap-ansi": "catalog:prod",

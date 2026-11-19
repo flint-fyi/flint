@@ -70,12 +70,12 @@ describe(runCli, () => {
 			      --fix                                Enables auto-fixing 'fixes' from rule reports.
 			      --fix-suggestions <suggestion>       Enables auto-fixing any number of specific 'suggestions' from rule reports. (repeatable)
 			      --interactive                        Whether to run Flint with an interactive 'one file at a time' viewer.
-			      --presenter <brief|detailed|github>  Which 'presenter' to output results using: brief (default) or detailed.
+			      --presenter <brief|detailed|github>  Which 'presenter' to output results using: brief (default), detailed, or github.
 			      --skip-formatting                    Whether to skip formatting after linting.
 			      --skip-language-reports              Whether to skip generating language reports after linting.
 			      --watch                              Whether to keep the linting process running, re-linting files as they change.
 			  -h, --help                               Show this help message
-			  -v, --version                            Show the version number
+			  -v, --version                            Prints the current package version of Flint.
 
 			See flint.fyi for more information."
 		`);
@@ -132,6 +132,7 @@ describe(runCli, () => {
 			  ],
 			]
 		`);
+		expect(createRendererFactory).not.toHaveBeenCalled();
 	});
 
 	it("should pass parsed values to a single run when --watch is not provided", async () => {
