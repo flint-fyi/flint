@@ -153,7 +153,7 @@ const config: ConfigObject[] = defineConfig(
 				{
 					message:
 						"Do not use 'export * from' statements. Please export individual symbols.",
-					selector: "ExportAllDeclaration",
+					selector: "ExportAllDeclaration[exported=null]",
 				},
 			],
 
