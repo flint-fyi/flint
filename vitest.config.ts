@@ -21,8 +21,9 @@ const config: ViteUserConfigExport = defineConfig({
 				test: {
 					clearMocks: true,
 					include: ["**/src/**/*.test.ts", "**/tests/**/*.test.ts"],
-					// Module mocks with vi.mock can leak between files that share a worker.
+					// Module mocks with vi.mock, and astro's shared TypeScript project service, leak between files that share a worker.
 					isolate: [
+						"astro",
 						"cli",
 						"performance-testing",
 						"typescript-language",
