@@ -132,7 +132,7 @@ catalogs:
     scslre: ^0.3.0
     sort-object-keys: ^2.1.0
     sort-package-json: ^4.0.0
-    string-width: ^8.3.0
+    string-width: ^9.0.0
     svelte: ^5.0.0
     svelte2tsx: ^0.7.55
     text-table-fast: ^0.2.0
