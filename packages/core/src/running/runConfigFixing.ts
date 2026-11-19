@@ -9,7 +9,7 @@ import { runConfig } from "./runConfig.ts";
 
 const log = debugForFile(import.meta.url);
 
-const maximumIterations = 10;
+export const maximumFixIterations = 10;
 
 export interface RunConfigFixingOptions {
 	cacheLocation?: string | undefined;
@@ -36,7 +36,7 @@ export async function runConfigFixing(
 		log(
 			"Starting fix iteration %d of maximum %d",
 			iteration,
-			maximumIterations,
+			maximumFixIterations,
 		);
 
 		// TODO: Investigate reusing file contents from previous iterations.
@@ -78,8 +78,8 @@ export async function runConfigFixing(
 
 		changed = changed.union(new Set(fixedFilePaths));
 
-		if (iteration >= maximumIterations) {
-			log("Reached maximum iterations of %d, verifying.", maximumIterations);
+		if (iteration >= maximumFixIterations) {
+			log("Reached maximum iterations of %d, verifying.", maximumFixIterations);
 			// flint-disable-next-line performance/loopAwaits
 			const finalLintResults = await runConfig(configDefinition, host, {
 				cacheLocation,

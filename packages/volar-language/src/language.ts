@@ -101,6 +101,9 @@ type VolarBasedLanguageCreateFile<FileServices extends object> = (
 	extraContext?: FileServices;
 	firstStatementPosition: number;
 	getLanguageReports?: (currentDirectory: string) => LanguageReports;
+	getReportRange?: (
+		range: CharacterReportRange,
+	) => CharacterReportRange | undefined;
 	reports?: FileReport[];
 };
 
@@ -274,6 +277,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 		extraContext,
 		firstStatementPosition,
 		getLanguageReports,
+		getReportRange,
 		reports,
 	} = createFile({
 		data,
@@ -393,14 +397,21 @@ setVolarCreateFile((data, program, sourceFile) => {
 			...data,
 			sourceText,
 		},
-		adjustReportRange(range) {
+		adjustReportRange(range, kind) {
 			if (range.begin < 0) {
 				return {
 					begin: -range.begin,
 					end: range.end,
 				};
 			}
-			return translateRange(map, range.begin, range.end);
+			const translated = translateRange(map, range.begin, range.end);
+			if (translated || kind !== "report") {
+				return translated;
+			}
+			const reportRange = getReportRange?.(range);
+			return reportRange
+				? translateRange(map, reportRange.begin, reportRange.end)
+				: null;
 		},
 		directives: collected.directives,
 		language: typescriptLanguage,

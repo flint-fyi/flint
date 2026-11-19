@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/astro-language",
-	"version": "0.3.2",
+	"version": "0.3.3",
 	"description": "[Experimental] Astro language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": true,
 	"type": "module",

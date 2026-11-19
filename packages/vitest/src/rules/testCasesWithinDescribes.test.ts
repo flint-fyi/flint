@@ -87,6 +87,26 @@ Prefer wrapping \`it()\` tests in a \`describe()\` block.
 		},
 		{
 			code: `
+test["skip"]("x", () => {});
+`,
+			snapshot: `
+test["skip"]("x", () => {});
+~~~~~~~~~~~~
+Prefer wrapping \`test()\` tests in a \`describe()\` block.
+`,
+		},
+		{
+			code: `
+test.skip["only"]("x", () => {});
+`,
+			snapshot: `
+test.skip["only"]("x", () => {});
+~~~~~~~~~~~~~~~~~
+Prefer wrapping \`test()\` tests in a \`describe()\` block.
+`,
+		},
+		{
+			code: `
 it.each([1, 2, 3])("%n", () => {});
 `,
 			snapshot: `

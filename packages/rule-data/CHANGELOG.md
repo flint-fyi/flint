@@ -1,5 +1,36 @@
 # @flint.fyi/rule-data
 
+## 0.5.7
+
+### Patch Changes
+
+- [#3900](https://github.com/flint-fyi/flint/pull/3900) [`798bfd0`](https://github.com/flint-fyi/flint/commit/798bfd010744ff9a1bd9b255e9839e28efe051bd) - Link Biome rule mappings to language-specific documentation pages.
+  Use the Biome rule names `noUnusedInstantiation` and `useTailwindSortedClasses` without duplicate mapping entries.
+
+- [#3904](https://github.com/flint-fyi/flint/pull/3904) [`c40882a`](https://github.com/flint-fyi/flint/commit/c40882ab4f66d38390d7057e3a133c241478f4ca) - Align rule catalog mappings with active ESLint, Oxlint, and Stylelint rules and documentation.
+  Exclude deprecated Unicorn no-op rules from coverage reports.
+- Updated dependencies [[`9778414`](https://github.com/flint-fyi/flint/commit/97784141ce4d5d7d10bd6e74412b966f0ad23099), [`03b7a1a`](https://github.com/flint-fyi/flint/commit/03b7a1ac6038cdf31598998dbfef9a3cd8319500)]:
+  - @flint.fyi/browser@0.6.0
+  - @flint.fyi/node@0.6.0
+
+## 0.5.6
+
+### Patch Changes
+
+- [#3712](https://github.com/flint-fyi/flint/pull/3712) [`3169c3f`](https://github.com/flint-fyi/flint/commit/3169c3fd282f495fbab2b2f46bef70954d90a2cf) - Added missing YAML rule mappings for boolean keys and trailing spaces.
+
+## 0.5.5
+
+### Patch Changes
+
+- [#3711](https://github.com/flint-fyi/flint/pull/3711) [`d22195c`](https://github.com/flint-fyi/flint/commit/d22195c9dc1db8bedf2391c0740a253bab8c8a6f) - Record the missing Node.js rules in the rule catalog.
+
+- [#3650](https://github.com/flint-fyi/flint/pull/3650) [`0079050`](https://github.com/flint-fyi/flint/commit/007905056b05b28c3f12226a10b755e1ae4b76d2) - Added a `toHaveLengthMatchers` rule.
+
+- [#3709](https://github.com/flint-fyi/flint/pull/3709) [`cd8c2bf`](https://github.com/flint-fyi/flint/commit/cd8c2bfc42e0501f1e1c0ab6652de8fd2e367afd) - Record Vue's native event shadowing rule in the rule catalog.
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
 ## 0.5.4
 
 ### Patch Changes

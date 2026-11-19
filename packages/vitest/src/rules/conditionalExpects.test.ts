@@ -25,7 +25,7 @@ test("test", () => {
 test("test", () => {
     if (something) {
         expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
     }
 });
@@ -40,7 +40,7 @@ test("test", () => {
 			snapshot: `
 test("test", () => {
     something ? expect(something).toBe(true) : null;
-                ~~~~~~~~~~~~~~~~~
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 Avoid calling \`expect\` inside conditional statements
 });
 `,
@@ -59,7 +59,7 @@ test("test", () => {
     switch (something) {
         case true:
             expect(something).toBe(true);
-            ~~~~~~~~~~~~~~~~~
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Avoid calling \`expect\` inside conditional statements
     }
 });
@@ -74,7 +74,7 @@ test("test", () => {
 			snapshot: `
 test("test", () => {
     something && expect(something).toBe(true);
-                 ~~~~~~~~~~~~~~~~~
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                  Avoid calling \`expect\` inside conditional statements
 });
 `,
@@ -88,7 +88,7 @@ test("test", () => {
 			snapshot: `
 test("test", () => {
     something || expect(something).toBe(true);
-                 ~~~~~~~~~~~~~~~~~
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                  Avoid calling \`expect\` inside conditional statements
 });
 `,
@@ -102,7 +102,7 @@ test("test", () => {
 			snapshot: `
 test("test", () => {
     something ?? expect(something).toBe(true);
-                 ~~~~~~~~~~~~~~~~~
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                  Avoid calling \`expect\` inside conditional statements
 });
 `,
@@ -123,7 +123,7 @@ test("test", () => {
         somethingThatThrows();
     } catch (error) {
         expect(error).toBeDefined();
-        ~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
     }
 });
@@ -141,7 +141,7 @@ it("test", () => {
 it("test", () => {
     if (something) {
         expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
     }
 });
@@ -156,7 +156,7 @@ promise.catch(() => {
 			snapshot: `
 promise.catch(() => {
     expect(true).toBe(false);
-    ~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~
     Avoid calling \`expect\` inside a \`.catch()\` handler
 });
 `,
@@ -175,7 +175,7 @@ test("test", () => {
     expect.assertions(1);
     if (something) {
         expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
     }
 });
@@ -195,7 +195,7 @@ test("test", assertSomething);
 function assertSomething() {
     if (something) {
         expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
     }
 }
@@ -217,7 +217,7 @@ test("test", () => {
     if (something) {
         function helper() {}
         expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
     }
 });
@@ -236,7 +236,7 @@ test("test", () => {
 test("test", () => {
     if (something) {
         expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
     }
 });
@@ -257,7 +257,7 @@ test("test", () => {
     expect.hasAssertions();
     if (something) {
         expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
     }
 });
@@ -278,8 +278,62 @@ test("test", () => {
     expect.assertions(count);
     if (something) {
         expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
+test("test", () => {
+    if (something) {
+        expect.hasAssertions();
+    }
+});
+`,
+			snapshot: `
+test("test", () => {
+    if (something) {
+        expect.hasAssertions();
+        ~~~~~~~~~~~~~~~~~~~~~~
+        Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
+test("test", () => {
+    if (something) {
+        expect.soft(something).toBe(true);
+    }
+});
+`,
+			snapshot: `
+test("test", () => {
+    if (something) {
+        expect.soft(something).toBe(true);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
+test("test", async () => {
+    if (something) {
+        await expect.poll(() => something).toBe(true);
+    }
+});
+`,
+			snapshot: `
+test("test", async () => {
+    if (something) {
+        await expect.poll(() => something).toBe(true);
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+              Avoid calling \`expect\` inside conditional statements
     }
 });
 `,
@@ -293,7 +347,7 @@ promise["catch"](() => {
 			snapshot: `
 promise["catch"](() => {
     expect(true).toBe(false);
-    ~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~
     Avoid calling \`expect\` inside a \`.catch()\` handler
 });
 `,
@@ -305,6 +359,7 @@ promise["catch"](() => {
 		`test("test", () => { if (something) { doSomething(); } });`,
 		`if (something) { expect(something).toBe(true); }`,
 		`describe("suite", () => { if (something) { expect(something).toBe(true); } });`,
+		`test("test", () => { if (something) { expectTypeOf(something).toEqualTypeOf<true>(); } });`,
 		{
 			code: `
 test("test", () => {

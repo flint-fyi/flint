@@ -7,13 +7,10 @@ export interface CommentDirective {
 }
 
 export type CommentDirectiveType =
-	| "disable-file"
-	| CommentDirectiveTypeWithinFile;
+	"disable-file" | CommentDirectiveTypeWithinFile;
 
 export type CommentDirectiveTypeWithinFile =
-	| "disable-lines-begin"
-	| "disable-lines-end"
-	| "disable-next-line";
+	"disable-lines-begin" | "disable-lines-end" | "disable-next-line";
 
 export interface CommentDirectiveWithinFile extends CommentDirective {
 	type: CommentDirectiveTypeWithinFile;

@@ -8,14 +8,24 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: $/.github/actions/setup
-      - run: pnpm run build # Ensure packages pass attw, etc.
-      - run: pnpm --filter=site check # Validate packages/site without a full Astro build.
+      - run: pnpm run build
+
+  build_site:
+    name: Build Site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: $/.github/actions/setup
+      - run: pnpm --filter=site build
 
   dedupe_check:
     name: Dedupe Check

@@ -1,6 +1,6 @@
 ---
 description: "Prefer using element.dataset over getAttribute/setAttribute for data-* attributes."
-title: "nodeDatasetAttributes"
+title: "nodeDatasetAccesses"
 topic: "rules"
 ---
 
@@ -9,7 +9,7 @@ import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="browser" rule="nodeDatasetAttributes" />
+<RuleSummary plugin="browser" rule="nodeDatasetAccesses" />
 
 The `dataset` property provides a more convenient and cleaner API for working with `data-*` attributes on DOM elements.
 It automatically converts between kebab-case attribute names and camelCase property names, making the code more readable and less error-prone.
@@ -55,4 +55,4 @@ For modern web applications, the `dataset` property is widely supported and pref
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="browser" ruleId="nodeDatasetAttributes" />
+<RuleEquivalents pluginId="browser" ruleId="nodeDatasetAccesses" />

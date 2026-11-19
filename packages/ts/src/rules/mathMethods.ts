@@ -35,6 +35,8 @@ function checkLogDivideConstant(
 			replacement: `Math.${replacementMethod}(…)`,
 		};
 	}
+
+	return;
 }
 
 function checkLogTimesConstant(
@@ -70,6 +72,8 @@ function checkLogTimesConstant(
 			replacement: `Math.${replacementMethod}(…)`,
 		};
 	}
+
+	return;
 }
 
 function flattenPlusExpression(node: AST.Expression): AST.Expression[] {

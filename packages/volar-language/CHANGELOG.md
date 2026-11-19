@@ -1,5 +1,18 @@
 # @flint.fyi/volar-language
 
+## 0.4.4
+
+### Patch Changes
+
+- [#3673](https://github.com/flint-fyi/flint/pull/3673) [`70245a4`](https://github.com/flint-fyi/flint/commit/70245a4dd349ded7cd5ac38af02cdcd5802f4f3b) - Preserve Vue diagnostics on generated `__VLS_unwrap` calls without relaxing source mapping for fixes or suggestions.
+
+## 0.4.3
+
+### Patch Changes
+
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
 ## 0.4.2
 
 ### Patch Changes

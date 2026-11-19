@@ -279,6 +279,8 @@ function createReport(
 	primary: string,
 	data?: NormalizedReport["data"],
 ): NormalizedReport {
+	const source = { text: sourceText };
+
 	return {
 		...(data === undefined ? {} : { data }),
 		message: {
@@ -287,8 +289,8 @@ function createReport(
 			suggestions: [],
 		},
 		range: {
-			begin: getColumnAndLineOfPosition(sourceText, begin),
-			end: getColumnAndLineOfPosition(sourceText, end),
+			begin: getColumnAndLineOfPosition(source, begin),
+			end: getColumnAndLineOfPosition(source, end),
 		},
 	};
 }

@@ -7,7 +7,7 @@ import {
 
 describe("getColumnAndLineOfPosition", () => {
 	test("negative position", () => {
-		const res = getColumnAndLineOfPosition("01", -1);
+		const res = getColumnAndLineOfPosition({ text: "01" }, -1);
 
 		expect(res).toEqual({
 			column: 0,
@@ -17,7 +17,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("empty source", () => {
-		const res = getColumnAndLineOfPosition("", 0);
+		const res = getColumnAndLineOfPosition({ text: "" }, 0);
 
 		expect(res).toEqual({
 			column: 0,
@@ -27,7 +27,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("empty source, pos bigger than source", () => {
-		const res = getColumnAndLineOfPosition("", 1);
+		const res = getColumnAndLineOfPosition({ text: "" }, 1);
 
 		expect(res).toEqual({
 			column: 0,
@@ -37,7 +37,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("two empty lines, first char of second line", () => {
-		const res = getColumnAndLineOfPosition("\n", 1);
+		const res = getColumnAndLineOfPosition({ text: "\n" }, 1);
 
 		expect(res).toEqual({
 			column: 0,
@@ -47,7 +47,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("single line", () => {
-		const res = getColumnAndLineOfPosition("0123", 1);
+		const res = getColumnAndLineOfPosition({ text: "0123" }, 1);
 
 		expect(res).toEqual({
 			column: 1,
@@ -57,7 +57,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("single line, pos is EOF", () => {
-		const res = getColumnAndLineOfPosition("0123", 4);
+		const res = getColumnAndLineOfPosition({ text: "0123" }, 4);
 
 		expect(res).toEqual({
 			column: 4,
@@ -67,7 +67,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("position is start of first line", () => {
-		const res = getColumnAndLineOfPosition("0\n23", 0);
+		const res = getColumnAndLineOfPosition({ text: "0\n23" }, 0);
 
 		expect(res).toEqual({
 			column: 0,
@@ -77,7 +77,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test(String.raw`position is on \n`, () => {
-		const res = getColumnAndLineOfPosition("0\n23", 1);
+		const res = getColumnAndLineOfPosition({ text: "0\n23" }, 1);
 
 		expect(res).toEqual({
 			column: 1,
@@ -87,7 +87,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("position is start of line", () => {
-		const res = getColumnAndLineOfPosition("0\n23", 2);
+		const res = getColumnAndLineOfPosition({ text: "0\n23" }, 2);
 
 		expect(res).toEqual({
 			column: 0,
@@ -97,7 +97,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("position is end of line", () => {
-		const res = getColumnAndLineOfPosition("0\n23", 3);
+		const res = getColumnAndLineOfPosition({ text: "0\n23" }, 3);
 
 		expect(res).toEqual({
 			column: 1,
@@ -107,7 +107,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("position is bigger than the source", () => {
-		const res = getColumnAndLineOfPosition("0\n23", 4);
+		const res = getColumnAndLineOfPosition({ text: "0\n23" }, 4);
 
 		expect(res).toEqual({
 			column: 2,
@@ -117,7 +117,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("position is much bigger than the source", () => {
-		const res = getColumnAndLineOfPosition("0\n23", 999);
+		const res = getColumnAndLineOfPosition({ text: "0\n23" }, 999);
 
 		expect(res).toEqual({
 			column: 2,
@@ -127,7 +127,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("position is much bigger than the source - 2", () => {
-		const res = getColumnAndLineOfPosition("0\n23\n56", 999);
+		const res = getColumnAndLineOfPosition({ text: "0\n23\n56" }, 999);
 
 		expect(res).toEqual({
 			column: 2,
@@ -137,7 +137,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test(String.raw`position is much bigger than the source - \r`, () => {
-		const res = getColumnAndLineOfPosition("0\r23\r56", 999);
+		const res = getColumnAndLineOfPosition({ text: "0\r23\r56" }, 999);
 
 		expect(res).toEqual({
 			column: 2,
@@ -147,7 +147,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test(String.raw`\r\n line endings`, () => {
-		const res = getColumnAndLineOfPosition("0\r\n34\r\n78", 3);
+		const res = getColumnAndLineOfPosition({ text: "0\r\n34\r\n78" }, 3);
 
 		expect(res).toEqual({
 			column: 0,
@@ -157,7 +157,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test(String.raw`\r\n line endings - 2`, () => {
-		const res = getColumnAndLineOfPosition("0\r\n34\r\n78", 8);
+		const res = getColumnAndLineOfPosition({ text: "0\r\n34\r\n78" }, 8);
 
 		expect(res).toEqual({
 			column: 1,
@@ -167,7 +167,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("mixed line endings", () => {
-		const res = getColumnAndLineOfPosition("0\r2\n4\r6\n7", 2);
+		const res = getColumnAndLineOfPosition({ text: "0\r2\n4\r6\n7" }, 2);
 
 		expect(res).toEqual({
 			column: 0,
@@ -177,7 +177,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("mixed line endings - 2", () => {
-		const res = getColumnAndLineOfPosition("0\r2\n4\r6\n7", 4);
+		const res = getColumnAndLineOfPosition({ text: "0\r2\n4\r6\n7" }, 4);
 
 		expect(res).toEqual({
 			column: 0,
@@ -187,7 +187,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("mixed line endings - 3", () => {
-		const res = getColumnAndLineOfPosition("0\r2\n4\r6\n7", 6);
+		const res = getColumnAndLineOfPosition({ text: "0\r2\n4\r6\n7" }, 6);
 
 		expect(res).toEqual({
 			column: 0,
@@ -197,7 +197,7 @@ describe("getColumnAndLineOfPosition", () => {
 	});
 
 	test("mixed line endings - 4", () => {
-		const res = getColumnAndLineOfPosition("0\r2\n4\r6\n8", 8);
+		const res = getColumnAndLineOfPosition({ text: "0\r2\n4\r6\n8" }, 8);
 
 		expect(res).toEqual({
 			column: 0,

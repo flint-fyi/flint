@@ -89,6 +89,41 @@ This statement should be separated from a neighboring \`describe\` block by a bl
   });
 `,
 		},
+		{
+			code: `
+const value = 'value';
+suite('someText', () => {
+  suite('some condition', () => {
+  });
+  describe('some other condition', () => {
+  });
+});
+`,
+			output: `
+const value = 'value';
+
+suite('someText', () => {
+  suite('some condition', () => {
+  });
+
+  describe('some other condition', () => {
+  });
+});
+`,
+			snapshot: `
+const value = 'value';
+suite('someText', () => {
+~~~~~
+This statement should be separated from a neighboring \`describe\` block by a blank line.
+  suite('some condition', () => {
+  });
+  describe('some other condition', () => {
+  ~~~~~~~~
+  This statement should be separated from a neighboring \`describe\` block by a blank line.
+  });
+});
+`,
+		},
 	],
 	valid: [
 		`
@@ -118,6 +153,17 @@ describe
   .skip('skip me too', () => {
     // stuff
   });
+`,
+		`
+const value = 'value';
+
+suite('someText', () => {
+  suite('some condition', () => {
+  });
+
+  describe('some other condition', () => {
+  });
+});
 `,
 	],
 });

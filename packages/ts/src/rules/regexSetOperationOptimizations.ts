@@ -191,8 +191,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					function reportWithFix(
 						targetNode:
-							| RegExpAST.CharacterClass
-							| RegExpAST.ExpressionCharacterClass,
+							RegExpAST.CharacterClass | RegExpAST.ExpressionCharacterClass,
 						messageId:
 							| "toIntersection"
 							| "toNegationOfConjunction"
@@ -337,8 +336,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					function toIntersection(
 						expression:
-							| RegExpAST.ClassIntersection
-							| RegExpAST.ClassSubtraction,
+							RegExpAST.ClassIntersection | RegExpAST.ClassSubtraction,
 						expressionRight:
 							| null
 							| RegExpAST.ClassIntersection

@@ -21,38 +21,38 @@ This rule checks that anchor elements don't contain common ambiguous phrases tha
 <TabItem label="❌ Incorrect">
 
 ```tsx
-<a href="/about">click here</a>
+<a href="/about/">click here</a>
 ```
 
 ```tsx
-<a href="/docs">here</a>
+<a href="/docs/">here</a>
 ```
 
 ```tsx
-<a href="/contact">link</a>
+<a href="/contact/">link</a>
 ```
 
 ```tsx
-<a href="/pricing">read more</a>
+<a href="/pricing/">read more</a>
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```tsx
-<a href="/about">About Us</a>
+<a href="/about/">About Us</a>
 ```
 
 ```tsx
-<a href="/docs">View Documentation</a>
+<a href="/docs/">View Documentation</a>
 ```
 
 ```tsx
-<a href="/contact">Contact Information</a>
+<a href="/contact/">Contact Information</a>
 ```
 
 ```tsx
-<a href="/pricing">See Pricing Details</a>
+<a href="/pricing/">See Pricing Details</a>
 ```
 
 </TabItem>

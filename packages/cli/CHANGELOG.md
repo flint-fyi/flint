@@ -1,5 +1,15 @@
 # @flint/cli
 
+## 0.23.5
+
+### Patch Changes
+
+- [#2766](https://github.com/flint-fyi/flint/pull/2766) [`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929) - Adds a new `LintSession` class to track the relevant files after each change and only lint the ones that have updated inputs.
+  Uses the session in `--watch` mode and rebuilds it when config or fileset changes require a fresh project view.
+  Keeps files with global declarations marked in the cache, so editing one still relints everything after a fully cached run.
+- Updated dependencies [[`3374e11`](https://github.com/flint-fyi/flint/commit/3374e115105d2ca9f9cbad33cd3af9b93b1d0929)]:
+  - @flint.fyi/core@0.30.0
+
 ## 0.23.4
 
 ### Patch Changes

@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.24.1",
+	"version": "0.24.2",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
-	"homepage": "https://flint.fyi/rules/ts",
+	"homepage": "https://flint.fyi/rules/ts/",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",

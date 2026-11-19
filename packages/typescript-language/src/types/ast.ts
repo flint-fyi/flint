@@ -8,18 +8,15 @@ export interface AbstractKeyword extends ts.Node {
 	readonly parent: ModifierParent;
 }
 export type AccessorDeclaration =
-	| GetAccessorDeclaration
-	| SetAccessorDeclaration;
+	GetAccessorDeclaration | SetAccessorDeclaration;
 export interface AccessorKeyword extends ts.Node {
 	readonly kind: ts.SyntaxKind.AccessorKeyword;
 	readonly parent: ModifierParent;
 }
 export type AdditiveOperator =
-	| ts.SyntaxKind.MinusToken
-	| ts.SyntaxKind.PlusToken;
+	ts.SyntaxKind.MinusToken | ts.SyntaxKind.PlusToken;
 export type AdditiveOperatorOrHigher =
-	| AdditiveOperator
-	| MultiplicativeOperatorOrHigher;
+	AdditiveOperator | MultiplicativeOperatorOrHigher;
 export interface AnyKeyword extends ts.Node {
 	_typeNodeBrand: any;
 	readonly kind: ts.SyntaxKind.AnyKeyword;
@@ -80,8 +77,7 @@ export interface AssertsKeyword extends ts.Node {
 	readonly parent: TypePredicateNode;
 }
 export type AssignmentOperator =
-	| CompoundAssignmentOperator
-	| ts.SyntaxKind.EqualsToken;
+	CompoundAssignmentOperator | ts.SyntaxKind.EqualsToken;
 export type AssignmentOperatorOrHigher =
 	| AssignmentOperator
 	| LogicalOperatorOrHigher
@@ -158,8 +154,7 @@ export interface BinaryExpression extends ts.Node {
 	readonly right: Expression;
 }
 export type BinaryOperator =
-	| AssignmentOperatorOrHigher
-	| ts.SyntaxKind.CommaToken;
+	AssignmentOperatorOrHigher | ts.SyntaxKind.CommaToken;
 export interface BinaryOperatorToken extends ts.Node {
 	readonly kind: BinaryOperator;
 	readonly parent: BinaryExpression;
@@ -181,8 +176,7 @@ export type BitwiseOperator =
 	| ts.SyntaxKind.BarToken
 	| ts.SyntaxKind.CaretToken;
 export type BitwiseOperatorOrHigher =
-	| BitwiseOperator
-	| EqualityOperatorOrHigher;
+	BitwiseOperator | EqualityOperatorOrHigher;
 export interface Block extends ts.Node {
 	_jsdocContainerBrand: any;
 	_localsContainerBrand: any;
@@ -562,8 +556,7 @@ export type EqualityOperator =
 	| ts.SyntaxKind.ExclamationEqualsEqualsToken
 	| ts.SyntaxKind.ExclamationEqualsToken;
 export type EqualityOperatorOrHigher =
-	| EqualityOperator
-	| RelationalOperatorOrHigher;
+	EqualityOperator | RelationalOperatorOrHigher;
 export interface EqualsGreaterThanToken extends ts.Node {
 	readonly kind: ts.SyntaxKind.EqualsGreaterThanToken;
 	readonly parent: ArrowFunction;
@@ -839,8 +832,7 @@ export interface FunctionExpression extends ts.Node {
 	readonly typeParameters?: ts.NodeArray<TypeParameterDeclaration> | undefined;
 }
 export type FunctionOrConstructorTypeNodeBase =
-	| ConstructorTypeNode
-	| FunctionTypeNode;
+	ConstructorTypeNode | FunctionTypeNode;
 export interface FunctionTypeNode extends ts.Node {
 	_declarationBrand: any;
 	_jsdocContainerBrand: any;
@@ -884,8 +876,7 @@ export interface HeritageClause extends ts.Node {
 	readonly kind: ts.SyntaxKind.HeritageClause;
 	readonly parent: ClassDeclaration | ClassExpression | InterfaceDeclaration;
 	readonly token:
-		| ts.SyntaxKind.ExtendsKeyword
-		| ts.SyntaxKind.ImplementsKeyword;
+		ts.SyntaxKind.ExtendsKeyword | ts.SyntaxKind.ImplementsKeyword;
 	readonly types: ts.NodeArray<ExpressionWithTypeArguments>;
 }
 export interface Identifier extends ts.Node {
@@ -1061,8 +1052,7 @@ export interface ImportExpression extends ts.Node {
 	readonly parent: LeftHandSideExpressionParent;
 }
 export type ImportPhaseModifierSyntaxKind =
-	| ts.SyntaxKind.DeferKeyword
-	| ts.SyntaxKind.TypeKeyword;
+	ts.SyntaxKind.DeferKeyword | ts.SyntaxKind.TypeKeyword;
 export interface ImportSpecifier extends ts.Node {
 	_declarationBrand: any;
 	readonly isTypeOnly: boolean;
@@ -1142,11 +1132,7 @@ export interface IntrinsicKeyword extends ts.Node {
 	readonly parent: TypeNodeParent;
 }
 export type IterationStatement =
-	| DoStatement
-	| ForInStatement
-	| ForOfStatement
-	| ForStatement
-	| WhileStatement;
+	DoStatement | ForInStatement | ForOfStatement | ForStatement | WhileStatement;
 export interface JSDocAllType extends ts.Node {
 	_jsDocTypeBrand: any;
 	_typeNodeBrand: any;
@@ -1154,10 +1140,7 @@ export interface JSDocAllType extends ts.Node {
 	readonly parent: TypeNodeParent;
 }
 export type JSDocComment =
-	| JSDocLink
-	| JSDocLinkCode
-	| JSDocLinkPlain
-	| JSDocText;
+	JSDocLink | JSDocLinkCode | JSDocLinkPlain | JSDocText;
 export interface JSDocFunctionType extends ts.Node {
 	_declarationBrand: any;
 	_jsdocContainerBrand: any;
@@ -1309,10 +1292,7 @@ export interface JSDocTypeExpression extends ts.Node {
 	_typeNodeBrand: any;
 	readonly kind: ts.SyntaxKind.JSDocTypeExpression;
 	readonly parent:
-		| JSDocPropertyLikeTag
-		| JSDocReturnTag
-		| JSDocTemplateTag
-		| TypeNodeParent;
+		JSDocPropertyLikeTag | JSDocReturnTag | JSDocTemplateTag | TypeNodeParent;
 	readonly type: TypeNode;
 }
 export interface JSDocTypeLiteral extends ts.Node {
@@ -1357,9 +1337,7 @@ export interface JsxAttributes extends ts.Node {
 	_updateExpressionBrand: any;
 	readonly kind: ts.SyntaxKind.JsxAttributes;
 	readonly parent:
-		| JsxOpeningElement
-		| JsxSelfClosingElement
-		| LeftHandSideExpressionParent;
+		JsxOpeningElement | JsxSelfClosingElement | LeftHandSideExpressionParent;
 	readonly properties: ts.NodeArray<JsxAttributeLike>;
 }
 export type JsxAttributeValue =
@@ -1369,11 +1347,7 @@ export type JsxAttributeValue =
 	| JsxSelfClosingElement
 	| StringLiteral;
 export type JsxChild =
-	| JsxElement
-	| JsxExpression
-	| JsxFragment
-	| JsxSelfClosingElement
-	| JsxText;
+	JsxElement | JsxExpression | JsxFragment | JsxSelfClosingElement | JsxText;
 export interface JsxClosingElement extends ts.Node {
 	readonly kind: ts.SyntaxKind.JsxClosingElement;
 	readonly parent: JsxElement;
@@ -1667,10 +1641,7 @@ export interface JsxSpreadAttribute extends ts.Node {
 	readonly parent: JsxAttributes;
 }
 export type JsxTagNameExpression =
-	| Identifier
-	| JsxNamespacedName
-	| JsxTagNamePropertyAccess
-	| ThisExpression;
+	Identifier | JsxNamespacedName | JsxTagNamePropertyAccess | ThisExpression;
 export interface JsxTagNamePropertyAccess extends ts.Node {
 	_declarationBrand: any;
 	_expressionBrand: any;
@@ -1722,15 +1693,11 @@ export interface LiteralTypeNode extends ts.Node {
 	_typeNodeBrand: any;
 	readonly kind: ts.SyntaxKind.LiteralType;
 	readonly literal:
-		| BooleanLiteral
-		| LiteralExpression
-		| NullLiteral
-		| PrefixUnaryExpression;
+		BooleanLiteral | LiteralExpression | NullLiteral | PrefixUnaryExpression;
 	readonly parent: TypeNodeParent;
 }
 export type LogicalOperator =
-	| ts.SyntaxKind.AmpersandAmpersandToken
-	| ts.SyntaxKind.BarBarToken;
+	ts.SyntaxKind.AmpersandAmpersandToken | ts.SyntaxKind.BarBarToken;
 export type LogicalOperatorOrHigher = BitwiseOperatorOrHigher | LogicalOperator;
 export interface MappedTypeNode extends ts.Node {
 	readonly kind: ts.SyntaxKind.MappedType;
@@ -1782,9 +1749,7 @@ export interface MethodDeclaration extends ts.Node {
 	readonly name: PropertyName;
 	readonly parameters: ts.NodeArray<ParameterDeclaration>;
 	readonly parent:
-		| ClassDeclaration
-		| ClassExpression
-		| ObjectLiteralExpressionBase;
+		ClassDeclaration | ClassExpression | ObjectLiteralExpressionBase;
 	readonly questionToken?: QuestionToken | undefined;
 	readonly type?: TypeNode | undefined;
 	readonly typeParameters?: ts.NodeArray<TypeParameterDeclaration> | undefined;
@@ -1923,8 +1888,7 @@ export type MultiplicativeOperator =
 	| ts.SyntaxKind.PercentToken
 	| ts.SyntaxKind.SlashToken;
 export type MultiplicativeOperatorOrHigher =
-	| ExponentiationOperator
-	| MultiplicativeOperator;
+	ExponentiationOperator | MultiplicativeOperator;
 export type NamedExportBindings = NamedExports | NamespaceExport;
 export interface NamedExports extends ts.Node {
 	readonly elements: ts.NodeArray<ExportSpecifier>;
@@ -2216,8 +2180,7 @@ export interface PostfixUnaryExpression extends ts.Node {
 		| VoidExpression;
 }
 export type PostfixUnaryOperator =
-	| ts.SyntaxKind.MinusMinusToken
-	| ts.SyntaxKind.PlusPlusToken;
+	ts.SyntaxKind.MinusMinusToken | ts.SyntaxKind.PlusPlusToken;
 export interface PrefixUnaryExpression extends ts.Node {
 	_expressionBrand: any;
 	_unaryExpressionBrand: any;
@@ -2419,8 +2382,7 @@ export type RelationalOperator =
 	| ts.SyntaxKind.LessThanEqualsToken
 	| ts.SyntaxKind.LessThanToken;
 export type RelationalOperatorOrHigher =
-	| RelationalOperator
-	| ShiftOperatorOrHigher;
+	RelationalOperator | ShiftOperatorOrHigher;
 export interface RestTypeNode extends ts.Node {
 	_typeNodeBrand: any;
 	readonly kind: ts.SyntaxKind.RestType;
@@ -2736,8 +2698,7 @@ export interface TemplateHead extends ts.Node {
 	text: string;
 }
 export type TemplateLiteral =
-	| NoSubstitutionTemplateLiteral
-	| TemplateExpression;
+	NoSubstitutionTemplateLiteral | TemplateExpression;
 export interface TemplateLiteralTypeNode extends ts.Node {
 	_typeNodeBrand: any;
 	readonly head: TemplateHead;
@@ -3009,9 +2970,7 @@ export interface UnknownKeyword extends ts.Node {
 	readonly parent: TypeNodeParent;
 }
 export type UpdateExpression =
-	| LeftHandSideExpression
-	| PostfixUnaryExpression
-	| PrefixUnaryExpression;
+	LeftHandSideExpression | PostfixUnaryExpression | PrefixUnaryExpression;
 export interface VariableDeclaration extends ts.Node {
 	_declarationBrand: any;
 	_jsdocContainerBrand: any;
@@ -3026,10 +2985,7 @@ export interface VariableDeclarationList extends ts.Node {
 	readonly declarations: ts.NodeArray<VariableDeclaration>;
 	readonly kind: ts.SyntaxKind.VariableDeclarationList;
 	readonly parent:
-		| ForInStatement
-		| ForOfStatement
-		| ForStatement
-		| VariableStatement;
+		ForInStatement | ForOfStatement | ForStatement | VariableStatement;
 }
 export interface VariableStatement extends ts.Node {
 	_flowContainerBrand: any;

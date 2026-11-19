@@ -4,6 +4,7 @@ description: Request that a new non-rule-specific feature be added or an existin
 title: "🚀 Feature: <short description of the feature>"
 
 labels:
+  - "status: in discussion"
   - "type: feature"
 
 body:

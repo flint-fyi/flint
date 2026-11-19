@@ -5,6 +5,7 @@ title: "📝 Documentation: <short description of the request>"
 
 labels:
   - "area: documentation"
+  - "status: in discussion"
 
 body:
   - attributes:

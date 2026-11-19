@@ -149,6 +149,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					);
 				}
 			}
+
+			return;
 		}
 
 		function getCallLikeExpression(node: AST.AnyNode) {

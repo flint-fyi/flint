@@ -1,22 +1,22 @@
-import { createCli } from "parse-standard-args";
+import { parseStandardArgv } from "parse-standard-args";
 
 import { addFlintAssertionContext } from "@flint.fyi/utils";
 
-import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";
 
-const cli = createCli({
-	description:
-		"Welcome to Flint!\nFlint is still very early stage and experimental.",
-	footer:
-		"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
-	name: "flint",
-	options,
-	version: packageData.version,
-});
-
-export async function runCli(args: string[]): Promise<number> {
-	const parsed = await cli.parse(args);
+export async function runCli(
+	args: string[],
+	packageVersion: string,
+): Promise<number> {
+	const parsed = parseStandardArgv(args, {
+		description:
+			"Welcome to Flint!\nFlint is still very early stage and experimental.",
+		footer:
+			"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
+		name: "flint",
+		options,
+		version: packageVersion,
+	});
 
 	switch (parsed.type) {
 		case "error":
@@ -49,7 +49,7 @@ export async function runCli(args: string[]): Promise<number> {
 				"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
 			);
 			console.error(
-				`In the meantime, why not join \u{1B}]8;;https://flint.fyi/discord\u{7}flint.fyi/discord\u{1B}]8;;\u{7} and chat with us? ❤️`,
+				`In the meantime, why not join \u{1B}]8;;https://flint.fyi/discord/\u{7}flint.fyi/discord\u{1B}]8;;\u{7} and chat with us? ❤️`,
 			);
 			return 2;
 		}
@@ -72,12 +72,18 @@ export async function runCli(args: string[]): Promise<number> {
 		const { runCliOnce } = await import("./runCliOnce.ts");
 		const renderer = getRenderer();
 		try {
-			const { exitCode } = await runCliOnce(
+			const { exitCode, lintResults } = await runCliOnce(
 				createEphemeralLinterHost(host),
 				configFileName,
 				renderer,
 				values,
 			);
+
+			if (lintResults && renderer.onQuit) {
+				const quit: PromiseWithResolvers<void> = Promise.withResolvers();
+				renderer.onQuit(quit.resolve);
+				await quit.promise;
+			}
 
 			return exitCode;
 		} finally {

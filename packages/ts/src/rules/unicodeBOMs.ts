@@ -45,6 +45,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							},
 						],
 					});
+
+					return;
 				},
 			},
 		};

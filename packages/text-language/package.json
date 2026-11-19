@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/text-language",
-	"version": "0.17.4",
+	"version": "0.17.5",
 	"description": "[Experimental] Plain text language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",

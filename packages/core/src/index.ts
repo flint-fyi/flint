@@ -1,5 +1,6 @@
 export { getCacheFilePath } from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
+export { applyChangesToFiles } from "./changing/applyChangesToFiles.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";
 export {
@@ -15,6 +16,10 @@ export {
 export { directiveReports } from "./directives/reports/directiveReports.ts";
 export { globs } from "./globs/index.ts";
 export { createEphemeralLinterHost } from "./host/createEphemeralLinterHost.ts";
+export {
+	createRelayFileSystemWatcher,
+	type RelayFileSystemWatcher,
+} from "./host/createRelayFileSystemWatcher.ts";
 export {
 	createVFSLinterHost,
 	type CreateVFSLinterHostOpts,
@@ -39,10 +44,21 @@ export {
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";
 export { RuleCreator, type RuleCreatorOptions } from "./rules/RuleCreator.ts";
+export {
+	LintSession,
+	type LintSessionLintOptions,
+} from "./running/LintSession.ts";
+export {
+	lintSessionWithCache,
+	type LintSessionWithCacheOptions,
+} from "./running/lintSessionWithCache.ts";
 export { parseOptions } from "./running/parseOptions.ts";
 export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";
-export { runConfigFixing } from "./running/runConfigFixing.ts";
+export {
+	maximumFixIterations,
+	runConfigFixing,
+} from "./running/runConfigFixing.ts";
 export type { BaseAbout } from "./types/about.ts";
 export type {
 	CacheStorage,
@@ -65,6 +81,7 @@ export type {
 	ConfigRuleDefinition,
 	ConfigRuleDefinitionObject,
 	ConfigUseDefinition,
+	ProcessedConfigDefinition,
 } from "./types/configs.ts";
 export type {
 	MessageForContext,

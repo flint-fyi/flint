@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/json",
-	"version": "0.18.4",
+	"version": "0.18.5",
 	"description": "[Experimental] JSON plugin for Flint.",
-	"homepage": "https://flint.fyi/rules/json",
+	"homepage": "https://flint.fyi/rules/json/",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",

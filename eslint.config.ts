@@ -65,7 +65,7 @@ const config: ConfigObject[] = defineConfig(
 			tseslint.configs.stylisticTypeChecked,
 			unicorn.configs.unopinionated,
 		],
-		files: ["**/*.{js,ts}"],
+		files: [tseslint.globs.jsts],
 		languageOptions: {
 			parserOptions: {
 				projectService: true,
@@ -106,6 +106,7 @@ const config: ConfigObject[] = defineConfig(
 				"error",
 				{ allowNumber: true },
 			],
+			curly: ["error", "all"],
 			eqeqeq: ["error", "always", { null: "ignore" }],
 			"jsdoc/check-tag-names": [
 				"error",
@@ -179,9 +180,14 @@ const config: ConfigObject[] = defineConfig(
 		},
 	},
 	{
-		files: ["packages/*-language/src/language.ts"],
+		files: [
+			"packages/*-language/src/language.ts",
+			"packages/*/src/rules/*.ts",
+			"packages/site/astro.config.ts",
+		],
 		rules: {
 			// Language entry points register extensions and enforce single-instance invariants.
+			// Rule modules and Astro configuration construct exports using factory calls.
 			"unicorn/no-top-level-side-effects": "off",
 		},
 	},

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/rule-data",
-	"version": "0.5.4",
+	"version": "0.5.7",
 	"description": "Data for all of Flint's rules and mappings between Flint and other web linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",

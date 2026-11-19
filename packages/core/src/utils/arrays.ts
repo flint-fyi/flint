@@ -43,9 +43,7 @@ export function binarySearch<T>(
 	array: readonly T[],
 	compare: (elem: T) => number,
 	fallbackBehavior:
-		| "fallback-next"
-		| "fallback-prev"
-		| "no-fallback" = "no-fallback",
+		"fallback-next" | "fallback-prev" | "no-fallback" = "no-fallback",
 ): undefined | { element: T | undefined; index: number } {
 	let low = 0;
 	let high = array.length - 1;

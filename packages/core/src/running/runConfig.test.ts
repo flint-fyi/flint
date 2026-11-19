@@ -16,6 +16,42 @@ describe(runConfig, () => {
 		vi.restoreAllMocks();
 	});
 
+	it("counts only rules with matched files", async () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+		const language = createLanguage<{ text: string }>({
+			about: { name: "test" },
+			createFileFactory: () => ({
+				createFile: (about) => ({ about, services: {} }),
+			}),
+			runFileVisitors(file, fileVisitors): void {
+				for (const { services, visitors } of fileVisitors) {
+					visitors.text?.(file.about.sourceText, services);
+				}
+			},
+		});
+		const createRule = (id: string) =>
+			ruleCreator.createRule(language, {
+				about: { description: "Test rule.", id },
+				messages: {},
+				setup() {
+					return;
+				},
+			});
+		const config = {
+			filePath: "/root/flint.config.ts",
+			use: [
+				{ files: ["*.ts"], rules: [createRule("matched")] },
+				{ files: ["*.missing"], rules: [createRule("unmatched")] },
+			],
+		};
+		host.vfsUpsertFile(config.filePath, "");
+		host.vfsUpsertFile("/root/a.ts", "");
+
+		const results = await runConfig(config, host, { ignoreCache: true });
+
+		expect(results.ruleCount).toBe(1);
+	});
+
 	it.each(["changed", "deleted"])(
 		"re-lints unrelated files when a global declaration is %s after a cache hit",
 		async (change) => {

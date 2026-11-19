@@ -31,13 +31,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				CallExpression: (node, { sourceFile }) => {
 					const functionCall = parseVitestFunctionCall(node);
 
-					switch (functionCall?.name) {
-						case "afterAll":
-						case "afterEach":
-						case "aroundAll":
-						case "aroundEach":
-						case "beforeAll":
-						case "beforeEach":
+					switch (functionCall?.kind) {
+						case "describe":
+							insideDescribeStack += 1;
+							break;
+
+						case "hook":
 							if (!insideDescribeStack) {
 								context.report({
 									data: { name: functionCall.name, type: "hook" },
@@ -47,12 +46,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 							break;
 
-						case "describe":
-						case "suite":
-							insideDescribeStack += 1;
-							break;
-
-						case "it":
 						case "test":
 							if (!insideDescribeStack) {
 								context.report({
@@ -64,11 +57,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 				"CallExpression:exit": (node) => {
-					switch (parseVitestFunctionCall(node)?.name) {
-						case "describe":
-						case "suite":
-							insideDescribeStack -= 1;
-							break;
+					if (parseVitestFunctionCall(node)?.kind === "describe") {
+						insideDescribeStack -= 1;
 					}
 				},
 				"SourceFile:exit": () => {

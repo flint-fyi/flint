@@ -50,14 +50,14 @@ export function createVFSLinterHost(
 ): VFSLinterHost {
 	let cwd: string;
 	let baseHost: LinterHost | undefined;
-	let caseSensitiveFS: boolean;
+	let caseSensitiveFs: boolean;
 	if (opts.baseHost == null) {
-		caseSensitiveFS = opts.caseSensitive;
+		caseSensitiveFs = opts.caseSensitive;
 		cwd = normalizePath(opts.cwd);
 	} else {
 		baseHost = opts.baseHost;
 		cwd = opts.cwd ?? baseHost.getCurrentDirectory();
-		caseSensitiveFS = baseHost.isCaseSensitiveFS();
+		caseSensitiveFs = baseHost.isCaseSensitiveFS();
 	}
 
 	interface VfsFile {
@@ -78,7 +78,7 @@ export function createVFSLinterHost(
 		normalizedFilePathAbsolute: string,
 		fileEvent: LinterHostFileWatcherEvent,
 	) {
-		const fileKey = pathKey(normalizedFilePathAbsolute, caseSensitiveFS);
+		const fileKey = pathKey(normalizedFilePathAbsolute, caseSensitiveFs);
 		for (const watcher of fileWatchers.get(fileKey) ?? []) {
 			watcher(fileEvent);
 		}
@@ -87,7 +87,7 @@ export function createVFSLinterHost(
 		let currentDir = normalizeDirname(currentFile);
 		do {
 			for (const watcher of directoryWatchers.get(
-				pathKey(currentDir, caseSensitiveFS),
+				pathKey(currentDir, caseSensitiveFs),
 			) ?? []) {
 				watcher(currentFile);
 			}
@@ -98,7 +98,7 @@ export function createVFSLinterHost(
 		let dir = normalizeDirname(normalizedFilePathAbsolute);
 		while (true) {
 			for (const watcher of recursiveDirectoryWatchers.get(
-				pathKey(dir, caseSensitiveFS),
+				pathKey(dir, caseSensitiveFs),
 			) ?? []) {
 				watcher(normalizedFilePathAbsolute);
 			}
@@ -111,8 +111,8 @@ export function createVFSLinterHost(
 	}
 	const host: VFSLinterHost = {
 		fileTypeSync(pathAbsolute) {
-			const key = pathKey(pathAbsolute, caseSensitiveFS);
-			const keySlash = dirnameKey(pathAbsolute, caseSensitiveFS);
+			const key = pathKey(pathAbsolute, caseSensitiveFs);
+			const keySlash = dirnameKey(pathAbsolute, caseSensitiveFs);
 			for (const fileKey of fileMap.keys()) {
 				if (key === fileKey) {
 					return "file";
@@ -128,13 +128,13 @@ export function createVFSLinterHost(
 		},
 		async getFileTouchTime(filePath) {
 			return (
-				fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime ??
+				fileMap.get(pathKey(filePath, caseSensitiveFs))?.touchTime ??
 				(await baseHost?.getFileTouchTime(filePath))
 			);
 		},
 		getFileTouchTimeSync(filePath) {
 			return (
-				fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime ??
+				fileMap.get(pathKey(filePath, caseSensitiveFs))?.touchTime ??
 				baseHost?.getFileTouchTimeSync(filePath)
 			);
 		},
@@ -152,21 +152,21 @@ export function createVFSLinterHost(
 				const relative = relativeWithinCwd(
 					file.path,
 					cwdNormalized,
-					caseSensitiveFS,
+					caseSensitiveFs,
 				);
 				if (relative == null) {
 					continue;
 				}
 				if (isIncluded(relative) && !isExcluded?.(relative)) {
 					found.push(relative);
-					seen.add(pathKey(relative, caseSensitiveFS));
+					seen.add(pathKey(relative, caseSensitiveFs));
 				}
 			}
 
 			// Merge files only the base host knows about, letting VFS entries
 			// shadow them (mirrors readDirectorySync's overlay semantics).
 			for (const relative of (await baseHost?.glob(patterns, options)) ?? []) {
-				if (!seen.has(pathKey(relative, caseSensitiveFS))) {
+				if (!seen.has(pathKey(relative, caseSensitiveFs))) {
 					found.push(relative);
 				}
 			}
@@ -174,7 +174,7 @@ export function createVFSLinterHost(
 			return found;
 		},
 		isCaseSensitiveFS() {
-			return caseSensitiveFS;
+			return caseSensitiveFs;
 		},
 		// flint-disable-next-line ts/asyncFunctionAwaits
 		// eslint-disable-next-line @typescript-eslint/require-await
@@ -184,7 +184,7 @@ export function createVFSLinterHost(
 		readDirectorySync(directoryPathAbsolute) {
 			const dirNorm = normalizePath(directoryPathAbsolute);
 			const dirNormSlash = dirNorm.endsWith("/") ? dirNorm : dirNorm + "/";
-			const dirKeySlash = dirnameKey(dirNorm, caseSensitiveFS);
+			const dirKeySlash = dirnameKey(dirNorm, caseSensitiveFs);
 			const result = new Map<PathKey, LinterHostDirectoryEntry>();
 
 			for (const [fileKey, file] of fileMap) {
@@ -200,7 +200,7 @@ export function createVFSLinterHost(
 								name: relPath.slice(0, slashIndex),
 								type: "directory",
 							};
-				const entryKey = pathKey(dirent.name, caseSensitiveFS);
+				const entryKey = pathKey(dirent.name, caseSensitiveFs);
 				if (!result.has(entryKey)) {
 					result.set(entryKey, dirent);
 				}
@@ -211,7 +211,7 @@ export function createVFSLinterHost(
 				...(baseHost?.fileTypeSync(directoryPathAbsolute) === "directory"
 					? baseHost
 							.readDirectorySync(directoryPathAbsolute)
-							.filter(({ name }) => !result.has(pathKey(name, caseSensitiveFS)))
+							.filter(({ name }) => !result.has(pathKey(name, caseSensitiveFs)))
 					: []),
 			];
 		},
@@ -221,7 +221,7 @@ export function createVFSLinterHost(
 			return host.readFileSync(filePathAbsolute);
 		},
 		readFileSync(filePathAbsolute) {
-			const key = pathKey(filePathAbsolute, caseSensitiveFS);
+			const key = pathKey(filePathAbsolute, caseSensitiveFs);
 			const file = fileMap.get(key);
 			if (file != null) {
 				return file.content;
@@ -232,7 +232,7 @@ export function createVFSLinterHost(
 			return;
 		},
 		vfsDeleteFile(filePathAbsolute) {
-			const key = pathKey(filePathAbsolute, caseSensitiveFS);
+			const key = pathKey(filePathAbsolute, caseSensitiveFs);
 			const file = fileMap.get(key);
 			if (file == null) {
 				return;
@@ -247,7 +247,7 @@ export function createVFSLinterHost(
 			return new Map(Array.from(fileMap.values(), (f) => [f.path, f.content]));
 		},
 		vfsUpsertFile(filePathAbsolute, content) {
-			const key = pathKey(filePathAbsolute, caseSensitiveFS);
+			const key = pathKey(filePathAbsolute, caseSensitiveFs);
 			const existing = fileMap.get(key);
 			const storedPath = existing?.path ?? normalizePath(filePathAbsolute);
 			const fileEvent =
@@ -258,7 +258,7 @@ export function createVFSLinterHost(
 			watchEvent(storedPath, fileEvent);
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
-			const key = pathKey(directoryPathAbsolute, caseSensitiveFS);
+			const key = pathKey(directoryPathAbsolute, caseSensitiveFs);
 			const collection = options.recursive
 				? recursiveDirectoryWatchers
 				: directoryWatchers;
@@ -284,7 +284,7 @@ export function createVFSLinterHost(
 			};
 		},
 		watchFileSync(filePathAbsolute, callback, options) {
-			const key = pathKey(filePathAbsolute, caseSensitiveFS);
+			const key = pathKey(filePathAbsolute, caseSensitiveFs);
 			let watchers = fileWatchers.get(key);
 
 			if (watchers == null) {
@@ -336,10 +336,10 @@ function createExcludeMatcher(patterns: string[] | undefined) {
 function relativeWithinCwd(
 	filePathAbsolute: string,
 	cwdNormalized: string,
-	caseSensitiveFS: boolean,
+	caseSensitiveFs: boolean,
 ): string | undefined {
-	const fileKey = pathKey(filePathAbsolute, caseSensitiveFS);
-	const cwdKey = pathKey(cwdNormalized, caseSensitiveFS);
+	const fileKey = pathKey(filePathAbsolute, caseSensitiveFs);
+	const cwdKey = pathKey(cwdNormalized, caseSensitiveFs);
 	if (fileKey === cwdKey) {
 		return "";
 	}

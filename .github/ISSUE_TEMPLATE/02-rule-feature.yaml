@@ -4,6 +4,7 @@ description: Request a feature be added to a lint rule provided by Flint
 title: "🚀 Feature: [plugin/ruleName] <short description of the feature>"
 
 labels:
+  - "status: in discussion"
   - "type: feature"
 
 body:

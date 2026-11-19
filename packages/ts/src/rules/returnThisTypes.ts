@@ -123,6 +123,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					hasReturnClassType = true;
 					return true;
 				}
+
+				return;
 			});
 
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

@@ -10,14 +10,14 @@ describe("typescript", () => {
 
 		expect(exitCode).toBe(1);
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
-			"<dim>Linting with <cyan><bold>flint.config.ts</bold><dim>...</fg>
+			"<grey>Linting with <cyan><bold>flint.config.ts</bold><grey>...</fg>
 
 			<underline><cwd>/fixtures/src/with-issues.ts</underline>
-			<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
+			<grey>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 			<red>✖ Found <bold>1 report</bold> across <bold>1 file</bold>.
 			</fg>
-			<dim>Finished in <time> on 2 files with 137 rules.
+			<grey>Finished in <time> on 2 files with 137 rules.
 			</fg>"
 		`);
 	});

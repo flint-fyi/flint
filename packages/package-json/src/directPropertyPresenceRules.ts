@@ -57,5 +57,7 @@ export const directPropertyPresenceRules = Object.fromEntries(
 		return [id, rule] as const;
 	}),
 ) as {
-	[PropertyName in PresenceProperty as PresenceRuleName<PropertyName>]: PresenceRule<PropertyName>;
+	[
+		PropertyName in PresenceProperty as PresenceRuleName<PropertyName>
+	]: PresenceRule<PropertyName>;
 };
