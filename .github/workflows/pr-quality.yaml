@@ -13,21 +13,61 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-      - uses: peakoss/anti-slop@v0.3.0
+      - # The "ai slop" label comes from the app token so that it triggers OctoGuide, which comments and closes the PR.
+        if: ${{ !github.event.pull_request.draft }}
+        id: create_token
+        uses: actions/create-github-app-token@v3.4.0
         with:
-          # PR Description Checks (Default: 2) - disabled since our contributing guidelines actually encourages use of emojis...
-          max-emoji-count: 0
+          client-id: ${{ vars.FLINT_TOKENS_BOT_CLIENT_ID }}
+          permission-pull-requests: write
+          private-key: ${{ secrets.FLINT_TOKENS_BOT_PRIVATE_KEY }}
+
+      - # Only automated agents follow the template's hidden honeypot instruction, so its word in the description marks the PR as AI slop.
+        # The template's own HTML comment contains the word, so comments are stripped before matching.
+        if: steps.create_token.outcome == 'success'
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ steps.create_token.outputs.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if gh pr view "$PR_NUMBER" --json body --jq .body | perl -0pe 's/<!--.*?-->//gs' | grep -qi sassafras; then
+            gh api "repos/$GH_REPO/issues/$PR_NUMBER/labels" -f "labels[]=ai slop"
+          fi
+
+      - # A PR that skips the template might still come from a person, so it's only suspected and closes after 7 days.
+        # Account history is left to the AgentScan workflow.
+        uses: peakoss/anti-slop@v0.3.0
+        with:
+          max-failures: 1
 
           # PR Template Checks
           require-pr-template: true
+          optional-pr-template-sections: PR Checklist
+
+          # Disabled Checks
+          blocked-source-branches: ""
+          blocked-paths: ""
+          detect-spam-usernames: false
+          max-added-comments: 0
+          max-changed-files: 0
+          max-changed-lines: 0
+          max-code-references: 0
+          max-commit-message-length: 0
+          max-daily-forks: 0
+          max-description-length: 0
+          max-emoji-count: 0
+          min-account-age: 0
+          min-global-merge-ratio: 0
+          min-profile-completeness: 0
+          require-commit-author-match: false
+          require-final-newline: false
+          require-maintainer-can-modify: false
+          require-public-profile: false
 
           # PR Failure Actions
           failure-add-pr-labels: suspected ai slop
           failure-pr-message: "Our PR Quality workflow has detected this PR as not conforming to our [AI Contribution guidelines](https://flint.fyi/project/contributing-with-ai). Please review our guidelines, and if you believe the PR *did* conform to the guidelines and was incorrectly detected, feel free to tag a member of our team for re-consideration. This pr will automatically close in 7 days, otherwise."
           close-pr: false
-
-          # Honeypot Trap
-          blocked-terms: SASSAFRAS
 
           # Exemptions
           exempt-author-association: ""

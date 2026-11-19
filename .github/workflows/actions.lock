@@ -3,6 +3,9 @@
 # Docs: https://gh.io/actions-lockfile
 version: 'v0.0.3'
 workflows:
+    '.github/workflows/agentscan.yaml':
+        - 'actions/create-github-app-token@v3.4.0'
+        - 'matteogabriele/agentscan-action@v2.8.0'
     '.github/workflows/ci.yaml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
@@ -29,6 +32,7 @@ workflows:
     '.github/workflows/pr-quality-closures.yaml':
         - 'actions/stale@v11.0.0'
     '.github/workflows/pr-quality.yaml':
+        - 'actions/create-github-app-token@v3.4.0'
         - 'peakoss/anti-slop@v0.3.0'
     '.github/workflows/pr-review-requested.yaml': []
     '.github/workflows/release.yaml':
@@ -112,6 +116,11 @@ dependencies:
         commit: 'sha1-05af9622283286a660465ac50f552b7f4151377e'
         owner_id: 24919330
         repo_id: 1370403157
+    'matteogabriele/agentscan-action@v2.8.0':
+        ref: 'v2.8.0'
+        commit: 'sha1-7ad606f1e21df2119da8be99b763f282a670a1c5'
+        owner_id: 5337152
+        repo_id: 1183120486
     'octoguide/bot@0.33.1':
         ref: '0.33.1'
         commit: 'sha1-8d29abce6793b35c6bfab51d4db6bfa62634b871'
