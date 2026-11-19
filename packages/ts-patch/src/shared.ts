@@ -71,6 +71,18 @@ function _changeExtension(path, newExtension)`,
 
 	source = replaceOrThrow(
 		source,
+		"function getScriptKind(fileName, host) {",
+		(s) => `${s}
+for (const provider of globalThis._flintScriptKindProviders) {
+	const scriptKind = provider(fileName, host);
+	if (scriptKind !== undefined) {
+		return scriptKind;
+	}
+}`,
+	);
+
+	source = replaceOrThrow(
+		source,
 		/function createProgram\(/,
 		() => `function createProgram(...args) {
 	return _flintProxyCreateProgram(
