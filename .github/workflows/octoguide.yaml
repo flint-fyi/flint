@@ -27,6 +27,7 @@ on: # zizmor: ignore[dangerous-triggers] This workflow does not check out or exe
   pull_request_target:
     types:
       - edited
+      - labeled
       - opened
 
 permissions:
