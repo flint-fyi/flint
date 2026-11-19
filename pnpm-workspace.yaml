@@ -192,7 +192,7 @@ overrides:
 
 peerDependencyRules:
   allowedVersions:
-    "@ianvs/prettier-plugin-sort-imports>@prettier/plugin-oxc": 0.2.3
+    "@ianvs/prettier-plugin-sort-imports>@prettier/plugin-oxc": 0.2.4
     "@konami-emoji-blast/astro>astro": "7"
     eslint-plugin-import>eslint: "10"
     eslint-plugin-jsx-a11y>eslint: "10"
