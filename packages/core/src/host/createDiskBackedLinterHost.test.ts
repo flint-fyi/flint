@@ -11,6 +11,7 @@ import {
 	expect,
 	it,
 	vi,
+	type Mock,
 } from "vitest";
 
 import { normalizePath } from "@flint.fyi/utils";
@@ -507,6 +508,19 @@ describe("createDiskBackedLinterHost", () => {
 	});
 
 	describe("watchDirectorySync", () => {
+		// macOS starts directory watchers asynchronously and drops writes made before they are ready.
+		async function waitForWatcherReady(
+			directoryPath: string,
+			onEvent: Mock,
+		): Promise<void> {
+			const readyPath = path.join(directoryPath, "watcher-ready.txt");
+			await vi.waitFor(() => {
+				fs.writeFileSync(readyPath, "");
+				expect(onEvent).toHaveBeenCalledWith(normalizePath(readyPath));
+			});
+			onEvent.mockClear();
+		}
+
 		it.skipIf(process.platform !== "linux" || process.getuid?.() === 0)(
 			"watches directories containing unreadable ignored subtrees",
 			async () => {
@@ -545,7 +559,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: false,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			const nestedFile = path.join(nestedPath, "nested.txt");
 			const directFile = path.join(directoryPath, "direct.txt");
@@ -571,7 +585,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			const nestedFile = path.join(nestedPath, "nested.txt");
 			fs.writeFileSync(nestedFile, "nested");
@@ -593,7 +607,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(baseDir, onEvent);
 
 			fs.mkdirSync(path.join(baseDir, ".git"), { recursive: true });
 			fs.writeFileSync(path.join(baseDir, ".git", "config"), "content");
@@ -619,7 +633,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(baseDir, onEvent);
 
 			fs.mkdirSync(path.join(baseDir, "node_modules", "pkg"), {
 				recursive: true,
@@ -657,6 +671,8 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
+			await waitForWatcherReady(integrationRoot, onEvent);
+
 			for (const filePath of [...ignoredFiles, ...visibleFiles]) {
 				fs.writeFileSync(filePath, "content");
 			}
@@ -682,7 +698,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(baseDir, onEvent);
 
 			const filePath = path.join(baseDir, ".gitignore");
 			fs.writeFileSync(filePath, "content");
@@ -726,7 +742,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: false,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			fs.rmSync(directoryPath, { force: true, recursive: true });
 
@@ -754,7 +770,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: false,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			fs.rmSync(firstFile);
 			await vi.waitFor(() => {
@@ -782,7 +798,7 @@ describe("createDiskBackedLinterHost", () => {
 					recursive,
 				});
 
-				await sleep(50);
+				await waitForWatcherReady(directoryPath, onEvent);
 
 				const firstFile = path.join(directoryPath, "first.txt");
 				fs.writeFileSync(firstFile, "first");
@@ -806,7 +822,7 @@ describe("createDiskBackedLinterHost", () => {
 				await vi.waitFor(() => {
 					expect(onEvent).toHaveBeenCalledWith(normalizedDirectory);
 				});
-				onEvent.mockClear();
+				await waitForWatcherReady(directoryPath, onEvent);
 
 				const secondFile = path.join(directoryPath, "second.txt");
 				fs.writeFileSync(secondFile, "second");
@@ -835,7 +851,7 @@ describe("createDiskBackedLinterHost", () => {
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(directoryPath);
 			});
-			onEvent.mockClear();
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			fs.mkdirSync(subdirectoryPath, { recursive: true });
 			await vi.waitFor(() => {
@@ -859,7 +875,7 @@ describe("createDiskBackedLinterHost", () => {
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(directoryPath);
 			});
-			onEvent.mockClear();
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			fs.rmSync(directoryPath, { recursive: true });
 			await vi.waitFor(() => {
