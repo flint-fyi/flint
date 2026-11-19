@@ -15,8 +15,6 @@ export async function getPresenterFactory(
 		case "github":
 			return (await import("./githubPresenterFactory.ts"))
 				.githubPresenterFactory;
-		default:
-			throw new Error(`Unknown --presenter: ${presenterName}`);
 	}
 }
 

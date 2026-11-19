@@ -518,6 +518,9 @@ catalogs:
     package-json-validator:
       specifier: ^2.0.0
       version: 2.0.0
+    parse-standard-args:
+      specifier: ^0.3.0
+      version: 0.3.0
     pathe:
       specifier: ^2.0.3
       version: 2.0.3
@@ -965,6 +968,9 @@ importers:
       ignore:
         specifier: catalog:prod
         version: 7.0.14
+      parse-standard-args:
+        specifier: catalog:prod
+        version: 0.3.0(@clack/prompts@1.8.1)
       text-table-fast:
         specifier: catalog:prod
         version: 0.2.0
@@ -974,6 +980,9 @@ importers:
       wrap-ansi:
         specifier: catalog:prod
         version: 10.0.2
+      zod:
+        specifier: catalog:prod
+        version: 4.6.7
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -7043,6 +7052,15 @@ packages:
   parse-ms@4.0.0:
     resolution: {integrity: sha512-TXfryirbmq34y8QBwgqCVLi+8oA3oWx2eAnSn62ITyEhEYaWRlVZ2DvMM9eZbMs/RfxPu/PK/aBLyGj4IrqMHw==}
     engines: {node: '>=18'}
+
+  parse-standard-args@0.3.0:
+    resolution: {integrity: sha512-SH663jox6V7vxSZgroZJw9DgvSbcNHWOnjHjgvsPyj0/+OIbFraNJyDQbA+ATaAUIi0OGAmV27bIGUgcAEM41g==}
+    engines: {node: '>=18.7.0'}
+    peerDependencies:
+      '@clack/prompts': '>=0.11'
+    peerDependenciesMeta:
+      '@clack/prompts':
+        optional: true
 
   parse-statements@1.0.11:
     resolution: {integrity: sha512-HlsyYdMBnbPQ9Jr/VgJ1YF4scnldvJpJxCVx6KgqPL4dxppsWrJHCIIxQXMJrqGnsRkNPATbeMJ8Yxu7JMsYcA==}
@@ -13916,6 +13934,12 @@ snapshots:
       vfile: 6.0.3
 
   parse-ms@4.0.0: {}
+
+  parse-standard-args@0.3.0(@clack/prompts@1.8.1):
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+    optionalDependencies:
+      '@clack/prompts': 1.8.1
 
   parse-statements@1.0.11: {}
 

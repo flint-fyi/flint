@@ -1,6 +1,5 @@
 import { afterAll, describe, expect, it, vi } from "vitest";
 
-import type { OptionsValues } from "../options.ts";
 import { getPresenterFactory } from "./getPresenterFactory.ts";
 
 const briefPresenterFactory = { name: "brief" };
@@ -65,15 +64,4 @@ describe(getPresenterFactory, () => {
 			).resolves.toBe(expectedFactory);
 		},
 	);
-
-	it("should throw for unsupported presenter names", async () => {
-		const values = {
-			interactive: false,
-			presenter: "unknown",
-		} as Pick<OptionsValues, "interactive" | "presenter">;
-
-		await expect(getPresenterFactory(values)).rejects.toThrow(
-			"Unknown --presenter: unknown",
-		);
-	});
 });
