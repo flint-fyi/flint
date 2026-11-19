@@ -8,6 +8,10 @@ describe("data.json", () => {
 		const duplicates: string[] = [];
 
 		for (const ruleDetails of ruleData) {
+			if (ruleDetails.flint == null) {
+				continue;
+			}
+
 			const id = getFlintRuleId(
 				ruleDetails.flint.plugin,
 				ruleDetails.flint.name,
