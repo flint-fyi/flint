@@ -184,8 +184,8 @@ catalogs:
       specifier: 2.1.1
       version: 2.1.1
     '@eslint/markdown':
-      specifier: 8.0.3
-      version: 8.0.3
+      specifier: 9.0.0
+      version: 9.0.0
     '@next/eslint-plugin-next':
       specifier: 16.4.6
       version: 16.4.6
@@ -302,8 +302,8 @@ catalogs:
       specifier: 2.1.1
       version: 2.1.1
     '@eslint/markdown':
-      specifier: 8.0.3
-      version: 8.0.3
+      specifier: 9.0.0
+      version: 9.0.0
     '@humanwhocodes/momoa':
       specifier: 3.3.13
       version: 3.3.13
@@ -681,7 +681,7 @@ importers:
         version: 2.1.1
       '@eslint/markdown':
         specifier: catalog:dev
-        version: 8.0.3(supports-color@10.2.2)
+        version: 9.0.0(supports-color@10.2.2)
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:packages/build
@@ -1620,7 +1620,7 @@ importers:
         version: 2.1.1
       '@eslint/markdown':
         specifier: catalog:comparisons
-        version: 8.0.3(supports-color@10.2.2)
+        version: 9.0.0(supports-color@10.2.2)
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
@@ -3170,8 +3170,8 @@ packages:
     resolution: {integrity: sha512-ffVzPZALaJzxuo46ggBtJ9c8YBWKLMh/R35aFBHk/dRobmFNortJlHJfBWbHGuydoFeVZbvPy0PLX2wvCI9T9w==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@eslint/markdown@8.0.3':
-    resolution: {integrity: sha512-rBTSSShrq7e4O+PWfeE4azH4/CWPNrC+VGxBXiW00o3vYVJnznsZiDayj3KC9JztIMVRZxZHn2nrDIUau/4j7A==}
+  '@eslint/markdown@9.0.0':
+    resolution: {integrity: sha512-287jt3NwhChN7TLsWq44IB5vUAKwwNXafzLlR1CMcQK5/4mAwbwwAzqr/S7gCYRRJOSHCgGXzIV9uPCh1P810A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/object-schema@2.1.7':
@@ -9516,7 +9516,7 @@ snapshots:
       '@humanwhocodes/momoa': 3.3.13
       natural-compare: 1.4.0
 
-  '@eslint/markdown@8.0.3(supports-color@10.2.2)':
+  '@eslint/markdown@9.0.0(supports-color@10.2.2)':
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.3
