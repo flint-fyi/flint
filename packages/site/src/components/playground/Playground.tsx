@@ -1,9 +1,9 @@
-import { getPlaygroundLanguage } from "~/playground/getPlaygroundLanguage.ts";
+import { getPlaygroundParser } from "~/playground/getPlaygroundParser.ts";
 import type { PlaygroundRange } from "~/playground/types.ts";
 import { useEffect, useRef, useState, type JSX } from "react";
 
+import { getPlaygroundFileType, playgroundParserNames } from "./fileTypes.ts";
 import { initialFiles } from "./initialFiles.ts";
-import { getPlaygroundFileType, playgroundLanguageNames } from "./languages.ts";
 import styles from "./Playground.module.css";
 import { PlaygroundAst } from "./PlaygroundAst.tsx";
 import { PlaygroundEditor } from "./PlaygroundEditor.tsx";
@@ -61,7 +61,7 @@ export function Playground(): JSX.Element {
 		},
 	);
 	const activeFile = files.find((file) => file.name === activeFileName);
-	const activeLanguage = activeFile && getPlaygroundLanguage(activeFile.name);
+	const activeParser = activeFile && getPlaygroundParser(activeFile.name);
 	const activeFileType = activeFile && getPlaygroundFileType(activeFile.name);
 	const fileResults = response?.kind === "success" ? response.files : {};
 	const activeResult = fileResults[activeFileName];
@@ -86,14 +86,14 @@ export function Playground(): JSX.Element {
 			);
 		}
 
-		if (!activeResult || !activeLanguage) {
+		if (!activeResult || !activeParser) {
 			return <p className={styles.status}>Linting…</p>;
 		}
 
 		if (view === "reports") {
 			return (
 				<PlaygroundReports
-					languageName={playgroundLanguageNames[activeLanguage]}
+					parserName={playgroundParserNames[activeParser]}
 					onSelect={setSelection}
 					reports={activeResult.reports}
 				/>
@@ -174,7 +174,7 @@ export function Playground(): JSX.Element {
 					<span className={styles.fileTitle}>{activeFileName}</span>
 					<div className={styles.toolbarEnd}>
 						{activeFileType && (
-							<span className={styles.languageName}>{activeFileType.name}</span>
+							<span className={styles.fileTypeName}>{activeFileType.name}</span>
 						)}
 						<button
 							className={styles.shareButton}
@@ -203,7 +203,7 @@ export function Playground(): JSX.Element {
 						</button>
 					</div>
 				</div>
-				{activeFile && activeLanguage && activeFileType && (
+				{activeFile && activeParser && activeFileType && (
 					<div
 						className={styles.editorTransition}
 						key={`${hash.loadCount}:${activeFile.name}`}
@@ -213,7 +213,7 @@ export function Playground(): JSX.Element {
 							editorSupport={activeFileType.editorSupport}
 							fileName={activeFile.name}
 							initialCode={activeFile.code}
-							languageName={playgroundLanguageNames[activeLanguage]}
+							parserName={playgroundParserNames[activeParser]}
 							onChange={(code) => {
 								setFiles((previous) =>
 									previous.map((file) =>

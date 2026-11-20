@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
 	getFileExtension,
-	getPlaygroundLanguage,
-} from "./getPlaygroundLanguage.ts";
+	getPlaygroundParser,
+} from "./getPlaygroundParser.ts";
 
 describe(getFileExtension, () => {
 	it.each([
@@ -22,7 +22,7 @@ describe(getFileExtension, () => {
 	);
 });
 
-describe(getPlaygroundLanguage, () => {
+describe(getPlaygroundParser, () => {
 	it.each([
 		["data.json", "json"],
 		["index.cjs", "typescript"],
@@ -33,14 +33,14 @@ describe(getPlaygroundLanguage, () => {
 		["index.mts", "typescript"],
 		["index.ts", "typescript"],
 		["index.tsx", "typescript"],
-	])("returns the language of %j", (fileName, expected) => {
-		expect(getPlaygroundLanguage(fileName)).toBe(expected);
+	])("returns the parser of %j", (fileName, expected) => {
+		expect(getPlaygroundParser(fileName)).toBe(expected);
 	});
 
 	it.each(["index", "notes.txt", ".ts"])(
 		"returns undefined for %j without a supported extension",
 		(fileName) => {
-			expect(getPlaygroundLanguage(fileName)).toBeUndefined();
+			expect(getPlaygroundParser(fileName)).toBeUndefined();
 		},
 	);
 });

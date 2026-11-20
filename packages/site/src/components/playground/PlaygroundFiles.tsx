@@ -1,10 +1,10 @@
 import { getFileNameError } from "~/playground/getFileNameError.ts";
-import { playgroundExtensions } from "~/playground/getPlaygroundLanguage.ts";
+import { playgroundExtensions } from "~/playground/getPlaygroundParser.ts";
 import type { PlaygroundFile } from "~/playground/types.ts";
 import { useEffect, useId, useRef, useState, type JSX } from "react";
 import { createPortal } from "react-dom";
 
-import { getPlaygroundFileType } from "./languages.ts";
+import { getPlaygroundFileType } from "./fileTypes.ts";
 import styles from "./PlaygroundFiles.module.css";
 import { PlaygroundIcon } from "./PlaygroundIcon.tsx";
 

@@ -5,13 +5,13 @@ import { PlaygroundMessage } from "./PlaygroundMessage.tsx";
 import styles from "./PlaygroundReports.module.css";
 
 export interface PlaygroundReportsProps {
-	languageName: string;
+	parserName: string;
 	onSelect: (range: PlaygroundRange) => void;
 	reports: PlaygroundReport[];
 }
 
 export function PlaygroundReports({
-	languageName,
+	parserName,
 	onSelect,
 	reports,
 }: PlaygroundReportsProps): JSX.Element {
@@ -45,7 +45,7 @@ export function PlaygroundReports({
 					</span>
 					<span className={styles.id}>
 						<span className={styles.source}>
-							{report.source === "flint" ? "Flint" : languageName}
+							{report.source === "flint" ? "Flint" : parserName}
 						</span>{" "}
 						{report.url ? (
 							<a href={report.url} rel="noreferrer" target="_blank">

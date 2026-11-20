@@ -1,6 +1,6 @@
-import type { PlaygroundLanguage } from "./types.ts";
+import type { PlaygroundParser } from "./types.ts";
 
-const languagesByExtension = new Map<string, PlaygroundLanguage>([
+const parsersByExtension = new Map<string, PlaygroundParser>([
 	[".cjs", "typescript"],
 	[".cts", "typescript"],
 	[".js", "typescript"],
@@ -12,7 +12,7 @@ const languagesByExtension = new Map<string, PlaygroundLanguage>([
 	[".tsx", "typescript"],
 ]);
 
-export const playgroundExtensions = [...languagesByExtension.keys()];
+export const playgroundExtensions = [...parsersByExtension.keys()];
 
 export function getFileExtension(fileName: string): string | undefined {
 	const extensionIndex = fileName.lastIndexOf(".");
@@ -20,12 +20,12 @@ export function getFileExtension(fileName: string): string | undefined {
 	return extensionIndex > 0 ? fileName.slice(extensionIndex) : undefined;
 }
 
-export function getPlaygroundLanguage(
+export function getPlaygroundParser(
 	fileName: string,
-): PlaygroundLanguage | undefined {
+): PlaygroundParser | undefined {
 	const extension = getFileExtension(fileName);
 
 	return extension === undefined
 		? undefined
-		: languagesByExtension.get(extension);
+		: parsersByExtension.get(extension);
 }

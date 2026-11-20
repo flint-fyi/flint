@@ -8,7 +8,7 @@ import { json } from "@flint.fyi/json";
 import { jsx } from "@flint.fyi/jsx";
 import { ts } from "@flint.fyi/ts";
 
-import { getPlaygroundLanguage } from "./getPlaygroundLanguage.ts";
+import { getPlaygroundParser } from "./getPlaygroundParser.ts";
 import { loadTypeScriptFiles } from "./loadTypeScriptFiles.ts";
 import {
 	parsePlaygroundFile,
@@ -17,18 +17,17 @@ import {
 import type {
 	PlaygroundFile,
 	PlaygroundFileResult,
-	PlaygroundLanguage,
+	PlaygroundParser,
 	PlaygroundReport,
 } from "./types.ts";
 
 const jsxFilePattern = /\.[jt]sx$/;
 const playgroundDirectory = "/playground";
 
-const languageRules: Record<PlaygroundLanguage, ConfigUseDefinition["rules"]> =
-	{
-		json: json.presets.logical,
-		typescript: [ts.presets.logical, ts.presets.stylistic],
-	};
+const parserRules: Record<PlaygroundParser, ConfigUseDefinition["rules"]> = {
+	json: json.presets.logical,
+	typescript: [ts.presets.logical, ts.presets.stylistic],
+};
 
 /**
  * Lints files together in a virtual file system, so they can import each other.
@@ -40,30 +39,30 @@ export async function lintPlaygroundFiles(
 		caseSensitive: true,
 		cwd: playgroundDirectory,
 	});
-	const fileNamesByLanguage = new Map<PlaygroundLanguage, string[]>();
+	const fileNamesByParser = new Map<PlaygroundParser, string[]>();
 	const parsedFiles = new Map<string, PlaygroundParsedFile>();
 
 	for (const file of files) {
-		const language = getPlaygroundLanguage(file.name);
-		if (!language) {
+		const parser = getPlaygroundParser(file.name);
+		if (!parser) {
 			continue;
 		}
 
 		const filePath = `${playgroundDirectory}/${file.name}`;
-		const parsedFile = parsePlaygroundFile(file.code, filePath, language);
+		const parsedFile = parsePlaygroundFile(file.code, filePath, parser);
 
 		host.vfsUpsertFile(filePath, file.code);
 		parsedFiles.set(file.name, parsedFile);
 
 		if ("ast" in parsedFile) {
-			fileNamesByLanguage.set(language, [
-				...(fileNamesByLanguage.get(language) ?? []),
+			fileNamesByParser.set(parser, [
+				...(fileNamesByParser.get(parser) ?? []),
 				file.name,
 			]);
 		}
 	}
 
-	if (fileNamesByLanguage.has("typescript")) {
+	if (fileNamesByParser.has("typescript")) {
 		for (const [filePath, text] of await loadTypeScriptFiles(
 			playgroundDirectory,
 		)) {
@@ -71,17 +70,17 @@ export async function lintPlaygroundFiles(
 		}
 	}
 
-	const results = fileNamesByLanguage.size
+	const results = fileNamesByParser.size
 		? await runConfig(
 				{
 					filePath: `${playgroundDirectory}/flint.config.ts`,
 					use: [
-						...[...fileNamesByLanguage].map(([language, fileNames]) => ({
+						...[...fileNamesByParser].map(([parser, fileNames]) => ({
 							files: fileNames,
-							rules: languageRules[language],
+							rules: parserRules[parser],
 						})),
 						{
-							files: (fileNamesByLanguage.get("typescript") ?? []).filter(
+							files: (fileNamesByParser.get("typescript") ?? []).filter(
 								(fileName) => jsxFilePattern.test(fileName),
 							),
 							rules: [jsx.presets.logical, jsx.presets.stylistic],

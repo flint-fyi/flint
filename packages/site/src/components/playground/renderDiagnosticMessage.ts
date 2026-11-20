@@ -7,7 +7,7 @@ import { splitMessage } from "./splitMessage.ts";
  */
 export function renderDiagnosticMessage(
 	report: PlaygroundReport,
-	languageName: string,
+	parserName: string,
 ): HTMLElement {
 	const container = document.createElement("div");
 	const message = document.createElement("div");
@@ -20,7 +20,7 @@ export function renderDiagnosticMessage(
 	details.append(
 		createElement(
 			"span",
-			report.source === "flint" ? "Flint" : languageName,
+			report.source === "flint" ? "Flint" : parserName,
 			"cm-playground-diagnostic-source",
 		),
 		" ",

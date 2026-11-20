@@ -1,7 +1,7 @@
 import {
 	getFileExtension,
-	getPlaygroundLanguage,
-} from "./getPlaygroundLanguage.ts";
+	getPlaygroundParser,
+} from "./getPlaygroundParser.ts";
 
 const fileNamePattern = /^[\w.-]+$/;
 const reservedFileNames: ReadonlySet<string> = new Set([
@@ -26,7 +26,7 @@ export function getFileNameError(
 		return "Use only letters, numbers, dots, dashes, and underscores.";
 	}
 
-	if (!getPlaygroundLanguage(fileName)) {
+	if (!getPlaygroundParser(fileName)) {
 		return getExtensionError(fileName, isTyping);
 	}
 

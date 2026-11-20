@@ -24,7 +24,7 @@ describe(renderDiagnosticMessage, () => {
 		);
 	});
 
-	it("renders the language name and plain id for a language report without a url", () => {
+	it("renders the parser name and plain id for a language report without a url", () => {
 		const element = renderDiagnosticMessage(
 			{
 				...report,

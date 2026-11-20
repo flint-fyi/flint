@@ -3,9 +3,9 @@ import { json } from "@codemirror/lang-json";
 import type { LanguageSupport } from "@codemirror/language";
 import {
 	getFileExtension,
-	getPlaygroundLanguage,
-} from "~/playground/getPlaygroundLanguage.ts";
-import type { PlaygroundLanguage } from "~/playground/types.ts";
+	getPlaygroundParser,
+} from "~/playground/getPlaygroundParser.ts";
+import type { PlaygroundParser } from "~/playground/types.ts";
 
 export interface PlaygroundFileType {
 	badge: "JS" | "TS" | "{}";
@@ -16,7 +16,7 @@ export interface PlaygroundFileType {
 /**
  * Names of the parsers that create language reports, such as type errors.
  */
-export const playgroundLanguageNames: Record<PlaygroundLanguage, string> = {
+export const playgroundParserNames: Record<PlaygroundParser, string> = {
 	json: "JSON",
 	typescript: "TypeScript",
 };
@@ -24,13 +24,13 @@ export const playgroundLanguageNames: Record<PlaygroundLanguage, string> = {
 export function getPlaygroundFileType(
 	fileName: string,
 ): PlaygroundFileType | undefined {
-	const language = getPlaygroundLanguage(fileName);
+	const parser = getPlaygroundParser(fileName);
 
-	if (language === "json") {
+	if (parser === "json") {
 		return { badge: "{}", editorSupport: json, name: "JSON" };
 	}
 
-	if (!language) {
+	if (!parser) {
 		return undefined;
 	}
 

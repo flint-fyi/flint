@@ -4,7 +4,7 @@ import { parseJsonFile } from "./parseJsonFile.ts";
 import { parseTypeScriptFile } from "./parseTypeScriptFile.ts";
 import type {
 	PlaygroundAstNode,
-	PlaygroundLanguage,
+	PlaygroundParser,
 	PlaygroundReport,
 } from "./types.ts";
 
@@ -18,9 +18,9 @@ export type PlaygroundParsedFile =
 export function parsePlaygroundFile(
 	code: string,
 	filePath: string,
-	language: PlaygroundLanguage,
+	parser: PlaygroundParser,
 ): PlaygroundParsedFile {
-	return language === "json"
+	return parser === "json"
 		? parseJsonFile(code)
 		: parseTypeScriptFile(code, filePath);
 }

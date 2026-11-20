@@ -18,7 +18,7 @@ export interface PlaygroundEditorProps {
 	editorSupport: () => LanguageSupport;
 	fileName: string;
 	initialCode: string;
-	languageName: string;
+	parserName: string;
 	onChange: (code: string) => void;
 	reports: PlaygroundReport[] | undefined;
 	selection: PlaygroundRange | undefined;
@@ -160,7 +160,7 @@ export function PlaygroundEditor({
 	editorSupport,
 	fileName,
 	initialCode,
-	languageName,
+	parserName,
 	onChange,
 	reports,
 	selection,
@@ -231,13 +231,13 @@ export function PlaygroundEditor({
 				reports.map((report) => ({
 					from: Math.min(report.begin, documentLength),
 					message: report.message,
-					renderMessage: () => renderDiagnosticMessage(report, languageName),
+					renderMessage: () => renderDiagnosticMessage(report, parserName),
 					severity: report.source === "language" ? "error" : "warning",
 					to: Math.min(report.end, documentLength),
 				})),
 			),
 		);
-	}, [languageName, reports]);
+	}, [parserName, reports]);
 
 	useEffect(() => {
 		const view = viewRef.current;

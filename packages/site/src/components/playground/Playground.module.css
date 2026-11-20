@@ -102,7 +102,7 @@
 	min-inline-size: 0;
 }
 
-.languageName {
+.fileTypeName {
 	color: var(--sl-color-gray-3);
 	font-size: var(--sl-text-xs);
 	padding-inline-end: 0.25rem;

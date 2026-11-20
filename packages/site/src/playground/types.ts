@@ -16,7 +16,7 @@ export interface PlaygroundFileResult {
 	reports: PlaygroundReport[];
 }
 
-export type PlaygroundLanguage = "json" | "typescript";
+export type PlaygroundParser = "json" | "typescript";
 
 export interface PlaygroundRange {
 	begin: number;
