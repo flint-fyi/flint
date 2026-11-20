@@ -16,7 +16,7 @@ catalogs:
     "@eslint-community/eslint-plugin-eslint-comments": 4.8.1
     "@eslint/json": 2.1.1
     "@eslint/js": 10.0.1
-    "@eslint/markdown": 8.0.3
+    "@eslint/markdown": 9.0.0
     "@humanwhocodes/momoa": 3.3.13
     "@ianvs/prettier-plugin-sort-imports": 4.7.1
     "@prettier/plugin-oxc": 0.2.4
@@ -63,7 +63,7 @@ catalogs:
     "@biomejs/biome": 2.6.8
     "@eslint-community/eslint-plugin-eslint-comments": 4.8.1
     "@eslint/json": 2.1.1
-    "@eslint/markdown": 8.0.3
+    "@eslint/markdown": 9.0.0
     "@next/eslint-plugin-next": 16.4.6
     "@nuxt/eslint-plugin": 1.17.0
     "@types/eslint-plugin-jsx-a11y": 6.10.1
