@@ -588,6 +588,9 @@ catalogs:
     '@konami-emoji-blast/astro':
       specifier: 0.3.0
       version: 0.3.0
+    '@shikijs/colorized-brackets':
+      specifier: 4.6.0
+      version: 4.6.0
     '@types/react':
       specifier: 19.3.0
       version: 19.3.0
@@ -1794,6 +1797,9 @@ importers:
       '@konami-emoji-blast/astro':
         specifier: catalog:site
         version: 0.3.0(astro@7.4.12)(konami-emoji-blast@0.7.0)
+      '@shikijs/colorized-brackets':
+        specifier: catalog:site
+        version: 4.6.0
       '@types/node':
         specifier: catalog:dev
         version: 26.6.6
@@ -4274,6 +4280,10 @@ packages:
     resolution: {integrity: sha512-zas7qVanoL30c0LNeU5SHJKrYOrb/13/wXe0NLWfvc8GpnaDrUHuLG5I9wfHYdhVa+R71VH5IiwsM8aZ2akoNw==}
     engines: {node: '>=20'}
     hasBin: true
+
+  '@shikijs/colorized-brackets@4.6.0':
+    resolution: {integrity: sha512-tkvbua8MzWVMHBcc9mx8zgEqV1C2aaaOQ0BWhMUgifpJb1Qh3VLSQoYXIJcQp5ANd4wjtHvNwrAbY90t6coMZQ==}
+    engines: {node: '>=20'}
 
   '@shikijs/core@4.5.0':
     resolution: {integrity: sha512-6CIgwq+bt2JZ3OSjb/nBkkwEf/CfpHcbam+Mg5Pllco7HAGRQ2/EFhZrrJtbyNTgKwknfVS+llsXGygiDGwJWw==}
@@ -10258,6 +10268,10 @@ snapshots:
       ansis: 4.4.0
       cac: 7.1.0
       shiki: 4.5.0
+
+  '@shikijs/colorized-brackets@4.6.0':
+    dependencies:
+      shiki: 4.6.0
 
   '@shikijs/core@4.5.0':
     dependencies:
