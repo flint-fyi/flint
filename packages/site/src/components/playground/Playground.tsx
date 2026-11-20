@@ -1,9 +1,9 @@
 import { getPlaygroundParser } from "~/playground/getPlaygroundParser.ts";
+import { initialFiles } from "~/playground/initialFiles.ts";
 import type { PlaygroundRange } from "~/playground/types.ts";
 import { useEffect, useRef, useState, type JSX } from "react";
 
 import { getPlaygroundFileType, playgroundParserNames } from "./fileTypes.ts";
-import { initialFiles } from "./initialFiles.ts";
 import styles from "./Playground.module.css";
 import { PlaygroundAst } from "./PlaygroundAst.tsx";
 import { PlaygroundEditor } from "./PlaygroundEditor.tsx";
