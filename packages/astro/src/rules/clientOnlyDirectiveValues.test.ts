@@ -162,5 +162,6 @@ let renderer = "svelte"
 `,
 			files: widgetFixture,
 		},
+		`<div client:load />`,
 	],
 });
