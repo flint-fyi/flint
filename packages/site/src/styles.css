@@ -105,6 +105,11 @@ html[data-theme="dark"] .only-light {
 	display: none;
 }
 
+/* Terminal output uses a terminal's line height so box-drawing characters join up. */
+.expressive-code pre[data-language="ansi"] :is(.ec-line, .ec-line .code) {
+	line-height: 1.1;
+}
+
 /* General customizations. */
 :root {
 	--flint-button-hover-filter: brightness(1.1);
