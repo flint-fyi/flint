@@ -76,12 +76,12 @@ jobs:
         env:
           NODE_COMPILE_CACHE: ${{ runner.temp }}/node-compile-cache
         run: pnpm run test --project e2e
-      - name: Run All Tests
+      - name: Run Unit + E2E Tests
         if: ${{ !matrix.e2e-only && !matrix.coverage }}
         env:
           NODE_COMPILE_CACHE: ${{ runner.temp }}/node-compile-cache
         run: pnpm run test
-      - name: Run All Tests With Coverage
+      - name: Run Unit Tests With Coverage + E2E Tests
         if: ${{ matrix.coverage }}
         run: pnpm run test --coverage
       - name: Report Code Coverage
