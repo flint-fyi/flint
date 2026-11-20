@@ -32887,6 +32887,19 @@
 	},
 	{
 		"flint": {
+			"name": "unsafeClassInstanceAssignments",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "@typescript-eslint/no-unsafe-class-instance-assignment",
+				"url": "https://typescript-eslint.io/rules/no-unsafe-class-instance-assignment"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "unsafeDeclarationmerging",
 			"plugin": "ts",
 			"preset": "logical"
