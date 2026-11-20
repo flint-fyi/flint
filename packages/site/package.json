@@ -32,6 +32,7 @@
 		"@astrojs/markdown-remark": "catalog:site",
 		"@astrojs/react": "catalog:site",
 		"@expressive-code/core": "catalog:site",
+		"@flint.fyi/expressive-code-ansi-links": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@konami-emoji-blast/astro": "catalog:site",
 		"@types/node": "catalog:dev",

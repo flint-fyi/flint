@@ -10,6 +10,7 @@
 	"include": [".astro/types.d.ts", "*.config.*", "src"],
 	"references": [
 		{ "path": "../browser" },
+		{ "path": "../expressive-code-ansi-links" },
 		{ "path": "../node" },
 		{ "path": "../performance" },
 		{ "path": "../plugin-flint" },

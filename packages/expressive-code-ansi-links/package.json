@@ -1,0 +1,31 @@
+{
+	"name": "@flint.fyi/expressive-code-ansi-links",
+	"version": "0.0.1",
+	"private": true,
+	"description": "An Expressive Code plugin that renders terminal hyperlinks in ANSI code blocks.",
+	"homepage": "https://flint.fyi",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/expressive-code-ansi-links"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Flint Team",
+		"url": "https://flint.fyi/project/team/"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"dependencies": {
+		"@expressive-code/core": "catalog:site"
+	},
+	"devDependencies": {
+		"@flint.fyi/build": "workspace:^"
+	},
+	"engines": {
+		"node": ">=26.1.0"
+	}
+}
