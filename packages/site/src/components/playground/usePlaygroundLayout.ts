@@ -27,14 +27,15 @@ const filesSizeBounds: Record<Orientation, readonly [number, number]> = {
 };
 
 export interface PlaygroundLayout {
-	editorRef: RefObject<HTMLElement | null>;
 	editorSeparator: PlaygroundSeparatorProps;
 	filesSeparator: PlaygroundSeparatorProps;
-	outputRef: RefObject<HTMLElement | null>;
 	style: CSSProperties;
 }
 
-export function usePlaygroundLayout(): PlaygroundLayout {
+export function usePlaygroundLayout(
+	editorRef: RefObject<HTMLElement | null>,
+	outputRef: RefObject<HTMLElement | null>,
+): PlaygroundLayout {
 	const orientation: Orientation = useSyncExternalStore(
 		subscribeToWideQuery,
 		() => (matchMedia(wideQuery).matches ? "vertical" : "horizontal"),
@@ -43,8 +44,6 @@ export function usePlaygroundLayout(): PlaygroundLayout {
 	const [editorFraction, setEditorFraction] = useState(defaultEditorFraction);
 	const [filesSizes, setFilesSizes] = useState(defaultFilesSizes);
 	const keyboardInset = useKeyboardInset();
-	const editorRef = useRef<HTMLElement>(null);
-	const outputRef = useRef<HTMLElement>(null);
 	const resizeStart = useRef({ editorSize: 0, filesSize: 0, total: 0 });
 	const filesSize = filesSizes[orientation];
 	const [minimumFilesSize, maximumFilesSize] = filesSizeBounds[orientation];
@@ -59,7 +58,6 @@ export function usePlaygroundLayout(): PlaygroundLayout {
 	}
 
 	return {
-		editorRef,
 		editorSeparator: {
 			label: "Resize editor",
 			onReset: () => {
@@ -109,7 +107,6 @@ export function usePlaygroundLayout(): PlaygroundLayout {
 					(maximumFilesSize - minimumFilesSize)) *
 				100,
 		},
-		outputRef,
 		style: {
 			"--playground-editor-size": `${editorFraction}fr`,
 			"--playground-files-size": `${filesSize}px`,

@@ -1,6 +1,6 @@
 import { getPlaygroundLanguage } from "~/playground/getPlaygroundLanguage.ts";
 import type { PlaygroundRange } from "~/playground/types.ts";
-import { useEffect, useMemo, useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 
 import { initialFiles } from "./initialFiles.ts";
 import { getPlaygroundFileType, playgroundLanguageNames } from "./languages.ts";
@@ -34,7 +34,9 @@ export function Playground(): JSX.Element {
 	const [selection, setSelection] = useState<PlaygroundRange>();
 	const [view, setView] = useState<PlaygroundView>("reports");
 	const { isPending, response } = usePlaygroundResponse(files);
-	const layout = usePlaygroundLayout();
+	const editorRef = useRef<HTMLElement>(null);
+	const outputRef = useRef<HTMLElement>(null);
+	const layout = usePlaygroundLayout(editorRef, outputRef);
 
 	useEffect(() => {
 		if (!copyStatus) {
@@ -50,7 +52,7 @@ export function Playground(): JSX.Element {
 		};
 	}, [copyStatus]);
 	const hash = usePlaygroundHash(
-		useMemo(() => ({ activeFileName, files }), [activeFileName, files]),
+		{ activeFileName, files },
 		files === initialFiles && activeFileName === initialActiveFileName,
 		(state) => {
 			setFiles(state.files);
@@ -64,10 +66,56 @@ export function Playground(): JSX.Element {
 	const fileResults = response?.kind === "success" ? response.files : {};
 	const activeResult = fileResults[activeFileName];
 	const reports = activeResult?.reports;
-	const astJson = useMemo(
-		() => view === "astJson" && JSON.stringify(activeResult?.ast, undefined, 2),
-		[activeResult, view],
-	);
+
+	function selectFile(fileName: string): void {
+		setActiveFileName(fileName);
+		setHasSelectedFile(true);
+		setSelection(undefined);
+	}
+
+	function renderOutput(): JSX.Element {
+		if (!response) {
+			return <p className={styles.status}>Loading Flint…</p>;
+		}
+
+		if (response.kind === "failure") {
+			return (
+				<p className={styles.status} role="alert">
+					Flint failed to lint these files: {response.error}
+				</p>
+			);
+		}
+
+		if (!activeResult || !activeLanguage) {
+			return <p className={styles.status}>Linting…</p>;
+		}
+
+		if (view === "reports") {
+			return (
+				<PlaygroundReports
+					languageName={playgroundLanguageNames[activeLanguage]}
+					onSelect={setSelection}
+					reports={activeResult.reports}
+				/>
+			);
+		}
+
+		if (!activeResult.ast) {
+			return (
+				<p className={styles.status}>
+					Fix the syntax errors in this file to see its AST.
+				</p>
+			);
+		}
+
+		return view === "ast" ? (
+			<PlaygroundAst ast={activeResult.ast} onSelect={setSelection} />
+		) : (
+			<pre className={styles.json}>
+				{JSON.stringify(activeResult.ast, undefined, 2)}
+			</pre>
+		);
+	}
 
 	return (
 		<div className={styles.playground} style={layout.style}>
@@ -121,11 +169,7 @@ export function Playground(): JSX.Element {
 				/>
 			</nav>
 			<PlaygroundSeparator {...layout.filesSeparator} />
-			<section
-				aria-label="Editor"
-				className={styles.pane}
-				ref={layout.editorRef}
-			>
+			<section aria-label="Editor" className={styles.pane} ref={editorRef}>
 				<div className={styles.toolbar}>
 					<span className={styles.fileTitle}>{activeFileName}</span>
 					<div className={styles.toolbarEnd}>
@@ -184,11 +228,7 @@ export function Playground(): JSX.Element {
 				)}
 			</section>
 			<PlaygroundSeparator {...layout.editorSeparator} />
-			<section
-				aria-label="Output"
-				className={styles.pane}
-				ref={layout.outputRef}
-			>
+			<section aria-label="Output" className={styles.pane} ref={outputRef}>
 				<div className={styles.toolbar}>
 					<div aria-label="Output view" className={styles.views} role="group">
 						{views.map(([value, label]) => (
@@ -241,52 +281,4 @@ export function Playground(): JSX.Element {
 			</section>
 		</div>
 	);
-
-	function selectFile(fileName: string): void {
-		setActiveFileName(fileName);
-		setHasSelectedFile(true);
-		setSelection(undefined);
-	}
-
-	function renderOutput(): JSX.Element {
-		if (!response) {
-			return <p className={styles.status}>Loading Flint…</p>;
-		}
-
-		if (response.kind === "failure") {
-			return (
-				<p className={styles.status} role="alert">
-					Flint failed to lint these files: {response.error}
-				</p>
-			);
-		}
-
-		if (!activeResult || !activeLanguage) {
-			return <p className={styles.status}>Linting…</p>;
-		}
-
-		if (view === "reports") {
-			return (
-				<PlaygroundReports
-					languageName={playgroundLanguageNames[activeLanguage]}
-					onSelect={setSelection}
-					reports={activeResult.reports}
-				/>
-			);
-		}
-
-		if (!activeResult.ast) {
-			return (
-				<p className={styles.status}>
-					Fix the syntax errors in this file to see its AST.
-				</p>
-			);
-		}
-
-		return view === "ast" ? (
-			<PlaygroundAst ast={activeResult.ast} onSelect={setSelection} />
-		) : (
-			<pre className={styles.json}>{astJson}</pre>
-		);
-	}
 }

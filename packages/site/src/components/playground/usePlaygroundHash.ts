@@ -3,7 +3,7 @@ import {
 	encodePlaygroundHash,
 	type PlaygroundState,
 } from "~/playground/playgroundHash.ts";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 
 const writeDelay = 250;
 
@@ -26,16 +26,14 @@ export function usePlaygroundHash(
 	const [hasInvalidHash, setHasInvalidHash] = useState(false);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [loadCount, setLoadCount] = useState(0);
-	const onLoadRef = useRef(onLoad);
-
-	onLoadRef.current = onLoad;
+	const handleLoad = useEffectEvent(onLoad);
 
 	useEffect(() => {
 		function applyLoadedState(
 			loadedState: false | PlaygroundState | undefined,
 		): void {
 			if (loadedState) {
-				onLoadRef.current(loadedState);
+				handleLoad(loadedState);
 				setLoadCount((count) => count + 1);
 			} else if (loadedState === false) {
 				history.replaceState(history.state, "", location.pathname);

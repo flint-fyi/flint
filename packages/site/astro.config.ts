@@ -2,6 +2,8 @@ import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
+import babel from "@rolldown/plugin-babel";
+import { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig } from "astro/config";
 import { remarkAddTwoslash } from "remark-add-twoslash";
 import { remarkHeadingId } from "remark-custom-heading-id";
@@ -170,6 +172,7 @@ export default defineConfig({
 		define: {
 			__filename: "import.meta.filename",
 		},
+		plugins: [babel({ presets: [reactCompilerPreset()] })],
 		resolve: {
 			alias: {
 				// https://github.com/csstree/csstree/issues/314#issuecomment-3794237969

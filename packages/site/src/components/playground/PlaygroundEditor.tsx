@@ -8,7 +8,7 @@ import { EditorView, tooltips } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
 import type { PlaygroundRange, PlaygroundReport } from "~/playground/types.ts";
 import { basicSetup } from "codemirror";
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useEffect, useEffectEvent, useRef, useState, type JSX } from "react";
 
 import styles from "./PlaygroundEditor.module.css";
 import { renderDiagnosticMessage } from "./renderDiagnosticMessage.ts";
@@ -167,10 +167,8 @@ export function PlaygroundEditor({
 }: PlaygroundEditorProps): JSX.Element {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [isReady, setIsReady] = useState(false);
-	const onChangeRef = useRef(onChange);
+	const handleChange = useEffectEvent(onChange);
 	const viewRef = useRef<EditorView>(undefined);
-
-	onChangeRef.current = onChange;
 
 	useEffect(() => {
 		if (!containerRef.current) {
@@ -200,7 +198,7 @@ export function PlaygroundEditor({
 				}),
 				EditorView.updateListener.of((update) => {
 					if (update.docChanged) {
-						onChangeRef.current(update.state.doc.toString());
+						handleChange(update.state.doc.toString());
 					}
 				}),
 			],
