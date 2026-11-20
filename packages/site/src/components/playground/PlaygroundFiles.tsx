@@ -6,13 +6,14 @@ import { createPortal } from "react-dom";
 
 import { getPlaygroundFileType } from "./fileTypes.ts";
 import styles from "./PlaygroundFiles.module.css";
-import { PlaygroundIcon } from "./PlaygroundIcon.tsx";
+import type { PlaygroundIcons } from "./PlaygroundIcons.ts";
 
 const settleDelay = 500;
 
 export interface PlaygroundFilesProps {
 	activeFileName: string;
 	files: PlaygroundFile[];
+	icons: PlaygroundIcons;
 	onAdd: (fileName: string) => void;
 	onDelete: (fileName: string) => void;
 	onRename: (fileName: string, newFileName: string) => void;
@@ -22,6 +23,7 @@ export interface PlaygroundFilesProps {
 export function PlaygroundFiles({
 	activeFileName,
 	files,
+	icons,
 	onAdd,
 	onDelete,
 	onRename,
@@ -44,7 +46,7 @@ export function PlaygroundFiles({
 					title="New file"
 					type="button"
 				>
-					<PlaygroundIcon name="filePlus" />
+					{icons.addIcon}
 				</button>
 			</div>
 			<ul className={styles.files}>
@@ -53,6 +55,7 @@ export function PlaygroundFiles({
 						<li key={file.name}>
 							<FileNameInput
 								hintContainer={hintContainer}
+								icons={icons}
 								initialValue={file.name}
 								label={`Rename ${file.name}`}
 								onCancel={() => {
@@ -77,7 +80,7 @@ export function PlaygroundFiles({
 								}}
 								type="button"
 							>
-								<FileBadge fileName={file.name} />
+								<FileBadge fileName={file.name} icons={icons} />
 								<span className={styles.fileName}>{file.name}</span>
 							</button>
 							<span className={styles.actions}>
@@ -90,7 +93,7 @@ export function PlaygroundFiles({
 									title="Rename"
 									type="button"
 								>
-									<PlaygroundIcon name="pencil" />
+									{icons.renameIcon}
 								</button>
 								{files.length > 1 && (
 									<button
@@ -102,7 +105,7 @@ export function PlaygroundFiles({
 										title="Delete"
 										type="button"
 									>
-										<PlaygroundIcon name="trash" />
+										{icons.deleteIcon}
 									</button>
 								)}
 							</span>
@@ -113,6 +116,7 @@ export function PlaygroundFiles({
 					<li>
 						<FileNameInput
 							hintContainer={hintContainer}
+							icons={icons}
 							initialValue=""
 							label="New file name"
 							onCancel={() => {
@@ -132,18 +136,24 @@ export function PlaygroundFiles({
 	);
 }
 
-function FileBadge({ fileName }: { fileName: string }): JSX.Element {
-	const badge = getPlaygroundFileType(fileName)?.badge;
+interface FileBadgeProps {
+	fileName: string;
+	icons: PlaygroundIcons;
+}
+
+function FileBadge({ fileName, icons }: FileBadgeProps): JSX.Element {
+	const icon = getPlaygroundFileType(fileName)?.icon;
 
 	return (
-		<span aria-hidden="true" className={styles.badge} data-badge={badge}>
-			{badge ?? "?"}
+		<span aria-hidden="true" className={styles.badge} data-icon={icon}>
+			{icon ? icons[icon] : "?"}
 		</span>
 	);
 }
 
 interface FileNameInputProps {
 	hintContainer: HTMLElement | null;
+	icons: PlaygroundIcons;
 	initialValue: string;
 	label: string;
 	onCancel: () => void;
@@ -153,6 +163,7 @@ interface FileNameInputProps {
 
 function FileNameInput({
 	hintContainer,
+	icons,
 	initialValue,
 	label,
 	onCancel,
@@ -211,7 +222,7 @@ function FileNameInput({
 		>
 			<div className={styles.file} data-editing="true">
 				<span className={styles.fileButton}>
-					<FileBadge fileName={trimmedValue} />
+					<FileBadge fileName={trimmedValue} icons={icons} />
 					<input
 						aria-describedby={hintId}
 						aria-invalid={!!visibleError}

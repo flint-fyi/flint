@@ -1,4 +1,6 @@
 ---
+import { Icon } from "@astrojs/starlight/components";
+
 import { Playground } from "./Playground.tsx";
 ---
 
@@ -9,5 +11,14 @@ import { Playground } from "./Playground.tsx";
 	}
 </script>
 <div class="not-content">
-	<Playground client:idle />
+	<Playground client:idle>
+		<Icon name="add-document" slot="addIcon" />
+		<Icon name="approve-check" slot="checkIcon" />
+		<Icon name="close" slot="deleteIcon" />
+		<Icon name="seti:javascript" slot="javaScriptIcon" />
+		<Icon name="seti:json" slot="jsonIcon" />
+		<Icon name="link" slot="linkIcon" />
+		<Icon name="pencil" slot="renameIcon" />
+		<Icon name="seti:typescript" slot="typeScriptIcon" />
+	</Playground>
 </div>

@@ -7,9 +7,14 @@ import {
 } from "~/playground/getPlaygroundParser.ts";
 import type { PlaygroundParser } from "~/playground/types.ts";
 
+import type { PlaygroundIcons } from "./PlaygroundIcons.ts";
+
 export interface PlaygroundFileType {
-	badge: "JS" | "TS" | "{}";
 	editorSupport: () => LanguageSupport;
+	icon: keyof Pick<
+		PlaygroundIcons,
+		"javaScriptIcon" | "jsonIcon" | "typeScriptIcon"
+	>;
 	name: string;
 }
 
@@ -27,7 +32,7 @@ export function getPlaygroundFileType(
 	const parser = getPlaygroundParser(fileName);
 
 	if (parser === "json") {
-		return { badge: "{}", editorSupport: json, name: "JSON" };
+		return { editorSupport: json, icon: "jsonIcon", name: "JSON" };
 	}
 
 	if (!parser) {
@@ -39,8 +44,8 @@ export function getPlaygroundFileType(
 	const isJsx = extension.endsWith("x");
 
 	return {
-		badge: isJavaScript ? "JS" : "TS",
 		editorSupport: () => javascript({ jsx: isJsx, typescript: !isJavaScript }),
+		icon: isJavaScript ? "javaScriptIcon" : "typeScriptIcon",
 		name: `${isJavaScript ? "JavaScript" : "TypeScript"}${isJsx ? " (JSX)" : ""}`,
 	};
 }

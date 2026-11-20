@@ -8,7 +8,7 @@ import styles from "./Playground.module.css";
 import { PlaygroundAst } from "./PlaygroundAst.tsx";
 import { PlaygroundEditor } from "./PlaygroundEditor.tsx";
 import { PlaygroundFiles } from "./PlaygroundFiles.tsx";
-import { PlaygroundIcon } from "./PlaygroundIcon.tsx";
+import type { PlaygroundIcons } from "./PlaygroundIcons.ts";
 import { PlaygroundReports } from "./PlaygroundReports.tsx";
 import { PlaygroundSeparator } from "./PlaygroundSeparator.tsx";
 import { usePlaygroundHash } from "./usePlaygroundHash.ts";
@@ -26,7 +26,7 @@ const views: [PlaygroundView, string][] = [
 	["astJson", "AST JSON"],
 ];
 
-export function Playground(): JSX.Element {
+export function Playground(icons: PlaygroundIcons): JSX.Element {
 	const [files, setFiles] = useState(initialFiles);
 	const [activeFileName, setActiveFileName] = useState(initialActiveFileName);
 	const [copyStatus, setCopyStatus] = useState<"copied" | "failed">();
@@ -135,6 +135,7 @@ export function Playground(): JSX.Element {
 				<PlaygroundFiles
 					activeFileName={activeFileName}
 					files={files}
+					icons={icons}
 					onAdd={(fileName) => {
 						if (files.some((file) => file.name === fileName)) {
 							return;
@@ -190,9 +191,7 @@ export function Playground(): JSX.Element {
 							}}
 							type="button"
 						>
-							<PlaygroundIcon
-								name={copyStatus === "copied" ? "check" : "link"}
-							/>
+							{copyStatus === "copied" ? icons.checkIcon : icons.linkIcon}
 							<span aria-live="polite">
 								{copyStatus === "copied"
 									? "Copied"

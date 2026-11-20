@@ -106,33 +106,40 @@
 }
 
 .badge {
-	border-radius: 0.25rem;
-	color: white;
+	align-items: center;
+	display: inline-flex;
 	flex-shrink: 0;
 	font-family: var(--__sl-font-mono);
-	font-size: 0.5625rem;
+	font-size: 1rem;
 	font-weight: 700;
 	inline-size: 1.125rem;
-	line-height: 1.125rem;
-	text-align: center;
+	justify-content: center;
 }
 
-.badge[data-badge="TS"] {
-	background: #3178c6;
+.badge[data-icon="javaScriptIcon"] {
+	color: #f0db4f;
 }
 
-.badge[data-badge="JS"] {
-	background: #f0db4f;
-	color: #323330;
+.badge[data-icon="jsonIcon"] {
+	color: #cbcb41;
 }
 
-.badge[data-badge="{}"] {
-	background: #a16207;
+.badge[data-icon="typeScriptIcon"] {
+	color: #519aba;
 }
 
-.badge:not([data-badge]) {
-	background: var(--sl-color-gray-2);
-	color: var(--sl-color-black);
+.badge:not([data-icon]) {
+	color: var(--sl-color-gray-2);
+	font-size: var(--sl-text-xs);
+}
+
+:global(html[data-theme="light"]) .badge[data-icon="javaScriptIcon"],
+:global(html[data-theme="light"]) .badge[data-icon="jsonIcon"] {
+	color: #a57c00;
+}
+
+:global(html[data-theme="light"]) .badge[data-icon="typeScriptIcon"] {
+	color: #3178c6;
 }
 
 .actions {
