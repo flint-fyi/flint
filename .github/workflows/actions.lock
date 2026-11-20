@@ -8,19 +8,16 @@ workflows:
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/checkout@v7.0.1'
         - 'codecov/codecov-action@v7.1.1'
-        - 'pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e'
-        - 'pnpm/setup@v3.1.2'
+        - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
     '.github/workflows/contributors.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/checkout@v7.0.1'
         - 'joshuakgoldberg/all-contributors-auto-action@v0.7.0'
-        - 'pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e'
-        - 'pnpm/setup@v3.1.2'
+        - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
     '.github/workflows/copilot-setup-steps.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/checkout@v7.0.1'
-        - 'pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e'
-        - 'pnpm/setup@v3.1.2'
+        - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
     '.github/workflows/merge-changesets-pr.yaml':
         - 'actions/create-github-app-token@v3.3.0'
     '.github/workflows/octoguide.yaml':
@@ -31,8 +28,7 @@ workflows:
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/checkout@v7.0.1'
         - 'actions/upload-artifact@v7.0.2'
-        - 'pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e'
-        - 'pnpm/setup@v3.1.2'
+        - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
     '.github/workflows/pr-quality-closures.yaml':
         - 'actions/stale@v11.0.0'
     '.github/workflows/pr-quality.yaml':
@@ -44,13 +40,11 @@ workflows:
         - 'actions/create-github-app-token@v3.3.0'
         - 'changesets/action@v2.1.2'
         - 'marcalexiei/changesets-release-commenter@v0.3.1'
-        - 'pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e'
-        - 'pnpm/setup@v3.1.2'
+        - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
     '.github/workflows/rule-data-renovate.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/checkout@v7.0.1'
-        - 'pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e'
-        - 'pnpm/setup@v3.1.2'
+        - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
     '.github/workflows/zizmor.yaml':
         - 'actions/checkout@v7.0.1'
         - 'zizmorcore/zizmor-action@v0.8.1'
@@ -132,14 +126,9 @@ dependencies:
         commit: 'sha1-57858eead489d08b255fab2af45a506c2ca6eab2'
         owner_id: 227272980
         repo_id: 1153153658
-    'pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e':
-        ref: 'v3.1.2'
-        commit: 'sha1-fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e'
-        owner_id: 21320719
-        repo_id: 1235693694
-    'pnpm/setup@v3.1.2':
-        ref: 'v3.1.2'
-        commit: 'sha1-fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e'
+    'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1':
+        ref: 'v3.2.0'
+        commit: 'sha1-731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
         owner_id: 21320719
         repo_id: 1235693694
     'zizmorcore/zizmor-action@v0.8.1':
