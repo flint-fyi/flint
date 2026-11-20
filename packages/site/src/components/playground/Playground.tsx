@@ -74,7 +74,7 @@ export function Playground(): JSX.Element {
 			<nav aria-label="Files" className={styles.filesPane}>
 				{hash.hasInvalidHash && (
 					<div className={styles.notice} role="alert">
-						<p>This link&apos;s files couldn&apos;t be loaded.</p>
+						<p>This link's files couldn't be loaded.</p>
 						<button
 							className={styles.noticeButton}
 							onClick={hash.dismissInvalidHash}
