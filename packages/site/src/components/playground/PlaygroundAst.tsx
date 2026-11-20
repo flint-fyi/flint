@@ -35,13 +35,13 @@ function AstNode({ depth, label, node, onSelect }: AstNodeProps): JSX.Element {
 		<AstBranch
 			depth={depth}
 			childCount={properties.length}
-			name={`${label ? `${label} ` : ""}${node.kind}`}
 			summary={
 				<>
 					{label && <span className={styles.label}>{label}: </span>}
 					<button
 						className={styles.kind}
-						onClick={() => {
+						onClick={(event) => {
+							event.preventDefault();
 							onSelect({ begin: node.start, end: node.end });
 						}}
 						title="Select in editor"
@@ -65,7 +65,6 @@ function AstNode({ depth, label, node, onSelect }: AstNodeProps): JSX.Element {
 						depth={depth + 1}
 						childCount={value.length}
 						key={key}
-						name={key}
 						summary={
 							<>
 								<span className={styles.label}>{key}: </span>
@@ -101,7 +100,6 @@ interface AstBranchProps {
 	childCount: number;
 	children: ReactNode;
 	depth: number;
-	name: string;
 	summary: ReactNode;
 }
 
@@ -109,7 +107,6 @@ function AstBranch({
 	childCount,
 	children,
 	depth,
-	name,
 	summary,
 }: AstBranchProps): JSX.Element {
 	const [isOpen, setIsOpen] = useState(depth < initiallyOpenDepth);
@@ -120,17 +117,15 @@ function AstBranch({
 
 	return (
 		<li className={styles.branch}>
-			<button
-				aria-expanded={isOpen}
-				aria-label={name}
-				className={styles.toggle}
-				onClick={() => {
-					setIsOpen(!isOpen);
+			<details
+				onToggle={(event) => {
+					setIsOpen(event.currentTarget.open);
 				}}
-				type="button"
-			/>
-			{summary}
-			{isOpen && <ul className={styles.children}>{children}</ul>}
+				open={isOpen}
+			>
+				<summary className={styles.summary}>{summary}</summary>
+				{isOpen && <ul className={styles.children}>{children}</ul>}
+			</details>
 		</li>
 	);
 }

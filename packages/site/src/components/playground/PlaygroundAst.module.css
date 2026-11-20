@@ -27,30 +27,32 @@
 	padding-inline-start: 1.25rem;
 }
 
-.toggle {
-	background: none;
-	border: none;
-	border-radius: 0.25rem;
-	color: var(--sl-color-gray-2);
+.summary {
 	cursor: pointer;
-	display: inline-block;
-	inline-size: 1.25rem;
-	padding: 0;
-	text-align: center;
-	transition: color 120ms ease-out;
+	display: block;
+	list-style: none;
 }
 
-.toggle::before {
+.summary::-webkit-details-marker {
+	display: none;
+}
+
+.summary::before {
+	color: var(--sl-color-gray-2);
 	content: "▸";
 	display: inline-block;
-	transition: transform 100ms;
+	inline-size: 1.25rem;
+	text-align: center;
+	transition:
+		color 120ms ease-out,
+		transform 100ms;
 }
 
-.toggle[aria-expanded="true"]::before {
+details[open] > .summary::before {
 	transform: rotate(90deg);
 }
 
-.toggle:hover {
+.summary:hover::before {
 	color: var(--sl-color-white);
 }
 
@@ -81,8 +83,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.toggle,
-	.toggle::before {
+	.summary::before {
 		transition: none;
 	}
 }
