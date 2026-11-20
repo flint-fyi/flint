@@ -383,8 +383,8 @@ catalogs:
       specifier: 1.0.2
       version: 1.0.2
     pkg-pr-new:
-      specifier: 0.0.93
-      version: 0.0.93
+      specifier: 0.0.94
+      version: 0.0.94
     prettier:
       specifier: 3.10.1
       version: 3.10.1
@@ -768,7 +768,7 @@ importers:
         version: 1.0.2
       pkg-pr-new:
         specifier: catalog:dev
-        version: 0.0.93
+        version: 0.0.94
       prettier:
         specifier: catalog:dev
         version: 3.10.1
@@ -7103,8 +7103,8 @@ packages:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
 
-  pkg-pr-new@0.0.93:
-    resolution: {integrity: sha512-JH3HEO+m8sNFpalNAeGrNKjdwxNcXT3yuEuGMU/65dvLojPo+Ofnmc8la2v2ceisjXTOKQw/738Pj4KNFY7F+w==}
+  pkg-pr-new@0.0.94:
+    resolution: {integrity: sha512-+s3ZZl1Vt3wHfsIRH+chHG6/3wsu1N+Z5jitNYAPc0GGCYR8xmju34UShzTAMosi4WAYFCXvp80LZZc/fXSdpQ==}
     hasBin: true
 
   pluralize@8.0.0:
@@ -13955,7 +13955,7 @@ snapshots:
 
   picomatch@4.0.7: {}
 
-  pkg-pr-new@0.0.93: {}
+  pkg-pr-new@0.0.94: {}
 
   pluralize@8.0.0: {}
 
