@@ -13,7 +13,7 @@ import type { LanguageAndFile } from "./types.ts";
 const log = debugForFile(import.meta.url);
 
 export interface FinalizedFileResults {
-	dependencies: Set<string>;
+	dependencies: ReadonlySet<string>;
 	isGlobalDependency?: boolean;
 	languageReports: LanguageReport[];
 	reports: FileReport[];
