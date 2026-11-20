@@ -1,6 +1,7 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
 import type { StarlightIcon } from "@astrojs/starlight/types";
+import { Image } from "astro:assets";
 
 import InlineMarkdown from "../InlineMarkdown.astro";
 
@@ -28,7 +29,13 @@ const {
 <li class:list={["team-bio", width]}>
 	<div class="team-bio-card">
 		<div class="avatar-area">
-			<img alt="" class="avatar" src={`/team/${username}.webp`} />
+			<Image
+				alt=""
+				class="avatar"
+				height={288}
+				src={`https://avatars.githubusercontent.com/${username}`}
+				width={288}
+			/>
 		</div>
 		<div class="texts">
 			<strong class="name">{name}</strong>
@@ -86,6 +93,8 @@ const {
 	}
 
 	.avatar {
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 1px;
 		height: var(--square-size);
 		width: var(--square-size);
 	}

@@ -32,6 +32,9 @@ If a paragraph has multiple sentences, try to start each on a new line.
 
 The `description` frontmatter property in `.mdx` rule docs files should match their rule's `rule.meta.about`.
 
+In rule docs, list each option's type and default under its heading as `- Type: ...` and `- Default: ...` list items.
+Reserve blockquotes for text quoted from another source.
+
 Don't be vague in documentation.
 Be precise.
 Example: instead of saying "can cause problems", say what those problems are.

@@ -2,99 +2,67 @@
 
 /* Campfire palette shared by both themes. */
 :root {
-	--flint-bark: #4b2915;
-	--flint-cream: #fbf4e6;
-	--flint-ember: #f6722b;
-	--flint-ember-deep: #b33a0a;
-	--flint-moss: #65955a;
-	--flint-night: #0c1a32;
-	--flint-pine: #185b37;
-	--flint-pine-deep: #003821;
+	--flint-cream: oklch(96.9% 0.027 84.6);
+	--flint-night: oklch(20% 0.054 259.8);
 
-	--flint-font-display: Fraunces, ui-serif, Georgia, serif;
+	--flint-font-display: Platypi, ui-serif, Georgia, serif;
 }
 
-/* Dark mode colors. */
+/* Dark mode colors: cream on night blue, pine accent, ember secondary. */
 :root {
-	--sl-color-accent-low: #562001;
-	--sl-color-accent: #f58a3a;
-	--sl-color-accent-high: #ffc48a;
-	--sl-color-white: #fbf4e6;
-	--sl-color-gray-1: #eee7d9;
-	--sl-color-gray-2: #cec2af;
-	--sl-color-gray-3: #b0a08b;
-	--sl-color-gray-4: #515e75;
-	--sl-color-gray-5: #2c3e57;
-	--sl-color-gray-6: #182941;
-	--sl-color-black: #0b1628;
-	--flint-button-hover-surface: var(--flint-paper);
+	--sl-color-accent-low: oklch(31.2% 0.074 157.2);
+	--sl-color-accent: oklch(73.6% 0.176 156.3);
+	--sl-color-accent-high: oklch(88.1% 0.102 156.7);
+	--sl-color-white: var(--flint-cream);
+	--sl-color-gray-1: oklch(93% 0.027 84.6);
+	--sl-color-gray-2: oklch(81.9% 0.04 79.4);
+	--sl-color-gray-3: oklch(71.4% 0.047 74.7);
+	--sl-color-gray-4: oklch(48% 0.055 261.8);
+	--sl-color-gray-5: oklch(36% 0.067 256.7);
+	--sl-color-gray-6: oklch(27.9% 0.068 257.1);
+	--sl-color-black: var(--flint-night);
+	--flint-button-hover-surface: var(--sl-color-gray-6);
 
-	--flint-ember-fill: #f58a3a;
-	--flint-ember-fill-text: #0b1628;
+	--flint-accent-fill: oklch(51.6% 0.127 155.2);
+	--flint-accent-fill-text: var(--flint-cream);
 
-	--flint-paper: #16263d;
-	--flint-paper-border: #3b4d68;
-	--flint-badge-surface: #2a1a10;
-	--flint-badge-text: #ffc48a;
-	--sl-color-banner-bg: var(--flint-badge-surface);
-	--sl-color-banner-text: var(--flint-badge-text);
-	--flint-pine-mark: #79ad6c;
+	--flint-secondary: oklch(73.7% 0.167 53.6);
+	--flint-secondary-surface: oklch(27.1% 0.074 45.4);
+	--flint-secondary-text: oklch(83.2% 0.102 47.8);
 
-	--flint-tag-ember-bg: #3c1d0e;
-	--flint-tag-ember-fg: #ffb48e;
-	--flint-tag-moss-bg: #172d12;
-	--flint-tag-moss-fg: #a4dd98;
-	--flint-tag-lake-bg: #0b293f;
-	--flint-tag-lake-fg: #8bd2ff;
-	--flint-tag-berry-bg: #3b1a28;
-	--flint-tag-berry-fg: #ffacce;
-
-	--flint-band-text: var(--flint-cream);
-	--flint-band-muted: #b9c4d6;
+	--sl-color-banner-bg: var(--flint-secondary-surface);
+	--sl-color-banner-text: var(--flint-secondary-text);
 }
 
-/* Light mode colors. */
+/* Light mode colors: night blue on cream, pine accent, ember secondary. */
 :root[data-theme="light"] {
-	--sl-color-accent-low: #fdd7ac;
-	--sl-color-accent: #962900;
-	--sl-color-accent-high: #6f1200;
-	--sl-color-white: #3b1d13;
-	--sl-color-gray-1: #54301e;
-	--sl-color-gray-2: #664432;
-	--sl-color-gray-3: #6d4835;
-	--sl-color-gray-4: #bb9f84;
-	--sl-color-gray-5: #e3d2b8;
-	--sl-color-gray-6: #f1e7d2;
-	--sl-color-gray-7: #f7efe0;
-	--sl-color-black: #fbf4e6;
+	--sl-color-accent-low: oklch(90.8% 0.048 154.3);
+	--sl-color-accent: oklch(42% 0.102 155.4);
+	--sl-color-accent-high: oklch(30% 0.069 159.2);
+	--sl-color-white: var(--flint-night);
+	--sl-color-gray-1: oklch(29.7% 0.073 260.4);
+	--sl-color-gray-2: oklch(38.5% 0.069 260.6);
+	--sl-color-gray-3: oklch(46% 0.064 263.3);
+	--sl-color-gray-4: oklch(72.1% 0.027 93.7);
+	--sl-color-gray-5: oklch(88.8% 0.037 83.5);
+	--sl-color-gray-6: oklch(93.6% 0.033 85.8);
+	--sl-color-gray-7: oklch(95.9% 0.025 86.1);
+	--sl-color-black: var(--flint-cream);
 	--flint-button-hover-surface: color-mix(
 		in srgb,
 		var(--sl-color-accent-low) 35%,
 		transparent
 	);
 
-	--flint-ember-fill: #962900;
-	--flint-ember-fill-text: var(--flint-cream);
+	--flint-accent-fill: oklch(42% 0.102 155.4);
+	--flint-accent-fill-text: var(--flint-cream);
 
-	--flint-paper: #fffaf1;
-	--flint-paper-border: #c7a98a;
-	--flint-badge-surface: #f7d19c;
-	--flint-badge-text: #6f1200;
-	--sl-color-banner-bg: var(--flint-badge-surface);
-	--sl-color-banner-text: var(--flint-badge-text);
-	--flint-pine-mark: #185b37;
+	--flint-secondary: oklch(52% 0.17 38);
+	--flint-secondary-surface: oklch(89.3% 0.069 59.7);
+	--flint-secondary-text: oklch(39.2% 0.126 38.8);
 
-	--flint-tag-ember-bg: #ffcab2;
-	--flint-tag-ember-fg: #732600;
-	--flint-tag-moss-bg: #c0e3b8;
-	--flint-tag-moss-fg: #155003;
-	--flint-tag-lake-bg: #b1ddff;
-	--flint-tag-lake-fg: #00457d;
-	--flint-tag-berry-bg: #fec5da;
-	--flint-tag-berry-fg: #701f46;
-
-	--flint-band-text: #3b1d13;
-	--flint-band-muted: #664432;
+	--sl-color-banner-bg: var(--flint-secondary-surface);
+	--sl-color-banner-text: var(--flint-secondary-text);
 }
 
 html[data-theme="light"] .only-dark {
@@ -120,8 +88,23 @@ h3,
 .site-title,
 .flint-display {
 	font-family: var(--flint-font-display);
-	font-weight: 900;
+	font-weight: 800;
 	letter-spacing: -0.015em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	text-wrap: balance;
+}
+
+p,
+li,
+blockquote {
+	text-wrap: pretty;
 }
 
 table code {
@@ -129,10 +112,31 @@ table code {
 	padding: 0;
 }
 
+.flint-preset {
+	background: color-mix(in oklch, var(--flint-secondary) 16%, transparent);
+	border-radius: 1px;
+	color: var(--flint-secondary-text);
+	display: inline-block;
+	font-family: var(--sl-font-mono);
+	font-size: var(--sl-text-xs);
+	line-height: 1.5;
+	padding: 0 0.375rem;
+	text-decoration: none;
+
+	&[data-preset^="stylistic"] {
+		background: color-mix(in oklch, var(--sl-color-accent) 16%, transparent);
+		color: var(--sl-color-accent-high);
+	}
+}
+
 a.sl-link-button.primary {
-	background: var(--flint-ember-fill);
-	border-color: var(--flint-ember-fill);
-	color: var(--flint-ember-fill-text);
+	background: var(--flint-accent-fill);
+	border-color: var(--flint-accent-fill);
+	color: var(--flint-accent-fill-text);
+}
+
+.not-content .sl-link-button {
+	margin: 0;
 }
 
 a.sl-link-button {
@@ -163,9 +167,112 @@ a.sl-link-button:active {
 
 /* Starlight chrome customizations. */
 
+/* Site chrome uses ember; page content keeps the pine accent. */
+:is(header.header, #starlight__sidebar, .right-sidebar, mobile-starlight-toc) {
+	--sl-color-accent-low: var(--flint-secondary-surface);
+	--sl-color-accent: var(--flint-secondary);
+	--sl-color-accent-high: var(--flint-secondary-text);
+	--sl-color-text-accent: var(--flint-secondary);
+	--sl-color-text-invert: var(--flint-secondary-surface);
+}
+
+:root[data-theme="light"]
+	:is(
+		header.header,
+		#starlight__sidebar,
+		.right-sidebar,
+		mobile-starlight-toc
+	) {
+	--sl-color-text-invert: var(--flint-cream);
+}
+
+/* One flat background with no borders between the header, sidebars, and content, like the homepage. */
+:root {
+	--sl-color-bg-nav: var(--sl-color-bg);
+	--sl-color-bg-sidebar: var(--sl-color-bg);
+}
+
 header.header {
-	background: var(--sl-color-black);
-	border-block-end: 1px solid var(--sl-color-gray-5);
+	border-block-end: 0;
+}
+
+.sidebar-pane {
+	border-inline-end: 0;
+}
+
+.right-sidebar {
+	border-inline-start: 0;
+}
+
+mobile-starlight-toc summary {
+	border-block-end: 0;
+}
+
+.content-panel {
+	padding-block: 0.5rem;
+}
+
+.content-panel + .content-panel {
+	border-block-start: 0;
+}
+
+/* Heading anchors share the table of contents' ember. */
+.sl-markdown-content .sl-anchor-link {
+	color: var(--flint-secondary);
+}
+
+/* Mark the current page with accent text instead of a filled bar. */
+#starlight__sidebar [aria-current="page"] {
+	background-color: transparent;
+	color: var(--sl-color-text-accent);
+}
+
+/* Keep the table of contents heading small and line its links up with it. */
+.right-sidebar h2 {
+	font-family: var(--sl-font);
+	font-size: var(--sl-text-sm);
+}
+
+.right-sidebar-panel a {
+	--pad-inline: 0px;
+}
+
+mobile-starlight-toc {
+	details {
+		height: var(--sl-mobile-toc-height);
+	}
+
+	[open]::details-content {
+		min-width: min(17rem, 100%);
+		width: max-content;
+	}
+
+	[open] .toggle {
+		background-color: var(--sl-color-gray-6);
+		border-color: var(--sl-color-gray-5);
+	}
+
+	.dropdown {
+		background-color: var(--sl-color-gray-6);
+		border-color: var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		margin-block-end: -0.5rem;
+		margin-inline: 1rem;
+	}
+
+	.isMobile a {
+		--pad-inline: 0.75rem;
+		border-block-start: 0;
+		padding-block: 0.4375rem;
+	}
+
+	.isMobile > :first-child a {
+		padding-block-start: 0.625rem;
+	}
+
+	.isMobile > :last-child a {
+		padding-block-end: 0.625rem;
+	}
 }
 
 @media (min-width: 50rem) {
@@ -173,6 +280,14 @@ header.header {
 		grid-template-columns:
 			calc(var(--sl-sidebar-width) - var(--sl-nav-pad-x))
 			1fr auto;
+	}
+}
+
+/* On the homepage, line the header up with the splash content column. */
+@media (min-width: 72rem) {
+	:root[data-has-hero] header.header > .header {
+		margin-inline: auto;
+		max-width: 67.5rem;
 	}
 }
 
@@ -186,4 +301,41 @@ header.header {
 
 :root[data-theme="dark"] .only-light {
 	display: none;
+}
+
+/* Asides use the code block frame and the Flint palette. */
+.starlight-aside {
+	border: 1px solid
+		color-mix(in oklch, var(--sl-color-asides-border) 55%, transparent);
+	border-radius: 1px;
+}
+.starlight-aside--note {
+	--sl-color-asides-border: oklch(60% 0.09 255);
+	--sl-color-asides-text-accent: oklch(85% 0.07 255);
+	background-color: oklch(27.9% 0.068 257);
+}
+.starlight-aside--tip {
+	--sl-color-asides-border: var(--sl-color-accent);
+	--sl-color-asides-text-accent: var(--sl-color-accent-high);
+	background-color: var(--sl-color-accent-low);
+}
+.starlight-aside--caution {
+	--sl-color-asides-border: var(--flint-secondary);
+	--sl-color-asides-text-accent: var(--flint-secondary-text);
+	background-color: var(--flint-secondary-surface);
+}
+.starlight-aside--danger {
+	--sl-color-asides-border: oklch(62% 0.19 28);
+	--sl-color-asides-text-accent: oklch(84% 0.09 28);
+	background-color: oklch(27% 0.08 28);
+}
+:root[data-theme="light"] .starlight-aside--note {
+	--sl-color-asides-border: oklch(46% 0.064 263);
+	--sl-color-asides-text-accent: oklch(30% 0.073 260);
+	background-color: oklch(92% 0.03 255);
+}
+:root[data-theme="light"] .starlight-aside--danger {
+	--sl-color-asides-border: oklch(48% 0.18 28);
+	--sl-color-asides-text-accent: oklch(38% 0.14 28);
+	background-color: oklch(90% 0.05 25);
 }

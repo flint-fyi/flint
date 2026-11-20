@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+
 export interface SponsorData {
 	href: string;
 	image: string;
@@ -13,7 +15,13 @@ const { data } = Astro.props;
 ---
 
 <a class="sponsor" href={data.href} target="_blank" rel="noopener noreferrer">
-	<img src={data.image} alt={data.name} class="avatar" loading="lazy" />
+	<Image
+		alt={data.name}
+		class="avatar"
+		height={128}
+		src={data.image}
+		width={128}
+	/>
 	<div class="info">
 		<span class="name">{data.name}</span>
 	</div>
@@ -37,7 +45,7 @@ const { data } = Astro.props;
 	}
 
 	.sponsor:hover {
-		background: var(--flint-paper);
+		background: var(--sl-color-black);
 		border-color: var(--sl-color-accent);
 	}
 

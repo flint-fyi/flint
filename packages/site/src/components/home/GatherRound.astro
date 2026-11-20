@@ -1,4 +1,5 @@
 ---
+import { LinkButton } from "@astrojs/starlight/components";
 import logo from "~/assets/logo.svg";
 import { Image } from "astro:assets";
 ---
@@ -11,7 +12,7 @@ import { Image } from "astro:assets";
 		width={120}
 	/>
 
-	<h2 class="flint-display">Gather 'round, friend.</h2>
+	<h2 class="flint-display">Gather ’round, friend.</h2>
 
 	<p>
 		Flint is built in the open by a tiny crew who really, really like cool code
@@ -19,12 +20,17 @@ import { Image } from "astro:assets";
 	</p>
 
 	<div class="actions">
-		<a class="button pine" href="/discord/">
-			💬 Join our Discord
-		</a>
-		<a class="button" href="/blog/">
-			📰 Read our blog
-		</a>
+		<LinkButton href="/discord/" icon="discord" iconPlacement="start">
+			Join our Discord
+		</LinkButton>
+		<LinkButton
+			href="/blog/"
+			icon="rss"
+			iconPlacement="start"
+			variant="secondary"
+		>
+			Read our blog
+		</LinkButton>
 	</div>
 </section>
 
@@ -63,38 +69,5 @@ import { Image } from "astro:assets";
 		gap: 0.75rem;
 		justify-content: center;
 		margin-block-start: 1rem;
-	}
-
-	.button {
-		background: var(--flint-paper);
-		border: 1px solid var(--flint-paper-border);
-		border-radius: 0.5rem;
-		color: var(--sl-color-white);
-		font-weight: 700;
-		padding: 0.7rem 1.4rem;
-		text-decoration: none;
-		transition:
-			background-color 150ms,
-			filter 120ms ease-out;
-	}
-
-	.button.pine {
-		background: var(--flint-pine);
-		border-color: var(--flint-pine-mark);
-		color: var(--flint-cream);
-	}
-
-	.button:hover {
-		background: var(--flint-button-hover-surface);
-		filter: var(--flint-button-hover-filter);
-	}
-
-	.button.pine:hover {
-		background: var(--flint-pine);
-	}
-
-	.button:active {
-		filter: var(--flint-button-pressed-filter);
-		transition-duration: 0ms;
 	}
 </style>
