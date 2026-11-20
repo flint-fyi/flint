@@ -214,107 +214,140 @@ function reuseVirtualCodesOfUnchangedText(
 	};
 }
 
-setTSProgramCreationProxy(
-	(ts, createProgram) =>
-		new Proxy(
-			function () {
-				/* for apply */
-			} as unknown as typeof createProgram,
-			{
-				apply(_, thisArg, args: unknown[]) {
-					let volarLanguage = null as null | VolarCoreLanguage<string>;
-					const createProgramProxy = new Proxy(createProgram, {
-						apply(target, thisArg, [options]: [CreateProgramOptions]) {
-							assert(
-								options.host != null,
-								"Expected options.host to be defined",
-							);
-							const patchedGetSourceFile = options.host.getSourceFile.bind(
-								options.host,
-							);
-							options.host.getSourceFile = (...args) => {
-								try {
-									return patchedGetSourceFile(...args);
-								} catch (error) {
-									if (
-										error instanceof Error &&
-										error.message === "!!sourceScript"
-									) {
-										throwUnknownLanguageExtension(args[0]);
-									}
-									throw error;
-								}
-							};
-							return Reflect.apply(target, thisArg, args) as Program;
-						},
-					});
-					const proxied = proxyCreateProgram(
-						ts,
-						createProgramProxy,
-						(ts, options) => {
-							const languagePlugins = Array.from(
-								pluginInitializers,
-								(initializer) => initializer(ts, options),
-							).flatMap(({ createFile, languagePlugins }) =>
-								languagePlugins.map((plugin) => {
-									if (plugin.typescript == null) {
-										return plugin;
-									}
+/**
+ * Volar.js's proxied `createProgram` for each original `createProgram`.
+ * `proxyCreateProgram` keeps each project's language and parsed source files between program creations,
+ * so creating it once lets rebuilds reuse virtual code for files that didn't change.
+ * It's created again when another language registers, so its languages include every plugin.
+ */
+const volarCreatePrograms = new WeakMap<
+	typeof ts.createProgram,
+	{ createProgram: typeof ts.createProgram; initializers: number }
+>();
 
-									(plugin as VolarLanguagePluginWithCreateFile)[stateSymbol] = {
-										createFile,
-									};
+setTSProgramCreationProxy((ts, createProgram) => {
+	const existing = volarCreatePrograms.get(createProgram);
+	if (existing?.initializers === pluginInitializers.size) {
+		return existing.createProgram;
+	}
 
-									const getServiceScript =
-										plugin.typescript.getServiceScript.bind(plugin.typescript);
-									plugin.typescript.getServiceScript = (root) => {
-										const script = getServiceScript(root);
-										if (script == null) {
-											return script;
-										}
-										return {
-											...script,
-											// Leading offset is useful for LanguageService [1], but we don't use it.
-											// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
-											// have to provide it ourselves.
-											//
-											// [1] https://github.com/volarjs/volar.js/discussions/188
-											// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
-											preventLeadingOffset: true,
-										};
-									};
+	const volarCreateProgram = createVolarCreateProgram(ts, createProgram);
+	volarCreatePrograms.set(createProgram, {
+		createProgram: volarCreateProgram,
+		initializers: pluginInitializers.size,
+	});
+	return volarCreateProgram;
+});
 
-									reuseVirtualCodesOfUnchangedText(plugin);
+function createVolarCreateProgram(
+	typescript: typeof ts,
+	createProgram: typeof ts.createProgram,
+): typeof ts.createProgram {
+	// Keyed the same way as proxyCreateProgram's states, which each own one language.
+	const volarLanguages = new Map<
+		string | undefined,
+		VolarCoreLanguage<string>
+	>();
+	const getStateKey = (options: CreateProgramOptions): string | undefined =>
+		typeof options.options.configFilePath === "string"
+			? options.host?.getCanonicalFileName(options.options.configFilePath)
+			: undefined;
 
-									return plugin;
-								}),
-							);
-							return {
-								languagePlugins,
-								setup: (lang) => {
-									volarLanguage = lang;
-									activeVolarLanguage = lang;
-								},
-							};
-						},
-					);
+	const createProgramProxy = new Proxy(createProgram, {
+		apply(target, thisArg, [options]: [CreateProgramOptions]) {
+			assert(options.host != null, "Expected options.host to be defined");
+			const patchedGetSourceFile = options.host.getSourceFile.bind(
+				options.host,
+			);
+			options.host.getSourceFile = (...args) => {
+				try {
+					return patchedGetSourceFile(...args);
+				} catch (error) {
+					if (error instanceof Error && error.message === "!!sourceScript") {
+						throwUnknownLanguageExtension(args[0]);
+					}
+					throw error;
+				}
+			};
+			return Reflect.apply(target, thisArg, [options]) as Program;
+		},
+	});
 
-					let program: ProxiedTSProgram;
-					try {
-						program = Reflect.apply(proxied, thisArg, args) as ProxiedTSProgram;
-					} finally {
-						activeVolarLanguage = undefined;
+	const proxied = proxyCreateProgram(
+		typescript,
+		createProgramProxy,
+		(typescript, options) => {
+			const languagePlugins = Array.from(pluginInitializers, (initializer) =>
+				initializer(typescript, options),
+			).flatMap(({ createFile, languagePlugins }) =>
+				languagePlugins.map((plugin) => {
+					if (plugin.typescript == null) {
+						return plugin;
 					}
 
-					assert(volarLanguage != null, "Expected volarLanguage to be set");
+					(plugin as VolarLanguagePluginWithCreateFile)[stateSymbol] = {
+						createFile,
+					};
 
-					program[stateSymbol] ??= { volarLanguage };
+					const getServiceScript = plugin.typescript.getServiceScript.bind(
+						plugin.typescript,
+					);
+					plugin.typescript.getServiceScript = (root) => {
+						const script = getServiceScript(root);
+						if (script == null) {
+							return script;
+						}
+						return {
+							...script,
+							// Leading offset is useful for LanguageService [1], but we don't use it.
+							// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
+							// have to provide it ourselves.
+							//
+							// [1] https://github.com/volarjs/volar.js/discussions/188
+							// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
+							preventLeadingOffset: true,
+						};
+					};
 
-					return program;
+					reuseVirtualCodesOfUnchangedText(plugin);
+
+					return plugin;
+				}),
+			);
+			return {
+				languagePlugins,
+				setup: (language) => {
+					volarLanguages.set(getStateKey(options), language);
+					activeVolarLanguage = language;
 				},
-			},
-		),
-);
+			};
+		},
+	);
+
+	return new Proxy(proxied, {
+		apply(target, thisArg, [options]: [CreateProgramOptions]) {
+			const stateKey = getStateKey(options);
+			// proxyCreateProgram calls setup before reading any file when it creates a new language.
+			activeVolarLanguage = volarLanguages.get(stateKey);
+
+			let program: ProxiedTSProgram;
+			try {
+				program = Reflect.apply(target, thisArg, [options]) as ProxiedTSProgram;
+			} finally {
+				activeVolarLanguage = undefined;
+			}
+
+			program[stateSymbol] ??= {
+				volarLanguage: nullThrows(
+					volarLanguages.get(stateKey),
+					"Expected proxyCreateProgram to set up a Volar.js language",
+				),
+			};
+
+			return program;
+		},
+	});
+}
 
 setVolarCreateFile((data, program, sourceFile) => {
 	const volarLanguage = nullThrows(
