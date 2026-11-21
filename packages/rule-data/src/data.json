@@ -12409,6 +12409,18 @@
 	},
 	{
 		"flint": {
+			"name": "scopedNames",
+			"plugin": "package-json"
+		},
+		"eslint": [
+			{
+				"name": "package-json/prefer-scoped-name",
+				"url": "https://eslint-plugin-package-json.dev/rules/prefer-scoped-name"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "scriptsNameCasing",
 			"plugin": "package-json",
 			"preset": "stylistic",
