@@ -1,5 +1,13 @@
 # @flint/core
 
+## 0.30.3
+
+### Patch Changes
+
+- [#3926](https://github.com/flint-fyi/flint/pull/3926) [`b5ee5f8`](https://github.com/flint-fyi/flint/commit/b5ee5f8afa3d6b2cc0e2759e58a1f4d28fecea6d) - Adds `createRelayFileSystemWatcher` and uses it in `--watch` mode so TypeScript's file watchers share Flint's one recursive watcher instead of each opening a native one.
+
+- [#3927](https://github.com/flint-fyi/flint/pull/3927) [`8132b3b`](https://github.com/flint-fyi/flint/commit/8132b3b66eb2076d114be7d0cd7f61b0c42791c8) - Share one native watcher between disk host watchers of the same path, avoiding `MaxListenersExceededWarning` when many watchers target one file.
+
 ## 0.30.2
 
 ### Patch Changes

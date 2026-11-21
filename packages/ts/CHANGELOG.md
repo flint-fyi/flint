@@ -1,5 +1,13 @@
 # @flint/ts
 
+## 0.24.3
+
+### Patch Changes
+
+- [#3975](https://github.com/flint-fyi/flint/pull/3975) [`9e29332`](https://github.com/flint-fyi/flint/commit/9e29332f846227b662bca0964310ee25fa5aa726) - Links rule docs URLs to their canonical trailing-slash form so they no longer redirect.
+
+- [#4013](https://github.com/flint-fyi/flint/pull/4013) [`489f33a`](https://github.com/flint-fyi/flint/commit/489f33aceac174fbb0031e51636c11c1da001f36) - Creates the `regexGraphemeStringLiterals` grapheme segmenter on first use instead of on import, speeding up loading the plugin.
+
 ## 0.24.2
 
 ### Patch Changes
