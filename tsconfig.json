@@ -24,6 +24,7 @@
 		{ "path": "./packages/json" },
 		{ "path": "./packages/json-language" },
 		{ "path": "./packages/jsx" },
+		{ "path": "./packages/lsp" },
 		{ "path": "./packages/md" },
 		{ "path": "./packages/markdown-language" },
 		{ "path": "./packages/next" },
