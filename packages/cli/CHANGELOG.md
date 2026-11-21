@@ -1,5 +1,17 @@
 # @flint/cli
 
+## 0.23.6
+
+### Patch Changes
+
+- [#3806](https://github.com/flint-fyi/flint/pull/3806) [`5b8f63a`](https://github.com/flint-fyi/flint/commit/5b8f63ae865be2cd1bf3276bab6f96d709403cbc) - Re-lint and redraw results in `--interactive --watch` mode as soon as files change.
+
+- [#3926](https://github.com/flint-fyi/flint/pull/3926) [`b5ee5f8`](https://github.com/flint-fyi/flint/commit/b5ee5f8afa3d6b2cc0e2759e58a1f4d28fecea6d) - Adds `createRelayFileSystemWatcher` and uses it in `--watch` mode so TypeScript's file watchers share Flint's one recursive watcher instead of each opening a native one.
+
+- [#3988](https://github.com/flint-fyi/flint/pull/3988) [`89c7250`](https://github.com/flint-fyi/flint/commit/89c7250a72aafbe71642eb4927a539b0bf751463) - Render detailed CLI reports with zero, missing, or narrow terminal widths without crashing, and measure indentation by its visible width.
+
+- [#3987](https://github.com/flint-fyi/flint/pull/3987) [`d3a61e5`](https://github.com/flint-fyi/flint/commit/d3a61e5e5dcb01b7009271e4b569b0bd2c9a26e8) - Display file paths relative to the repository root, or the current directory outside a repository, across CLI presenters.
+
 ## 0.23.5
 
 ### Patch Changes

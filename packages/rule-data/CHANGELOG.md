@@ -1,5 +1,13 @@
 # @flint.fyi/rule-data
 
+## 0.5.8
+
+### Patch Changes
+
+- [#3946](https://github.com/flint-fyi/flint/pull/3946) [`fbb0d78`](https://github.com/flint-fyi/flint/commit/fbb0d787a288fdd8b1960a278b9efbce2507bac0) - Add the missing Biome rule mappings for the Biome rules added since the last rule data sync.
+
+- [#3978](https://github.com/flint-fyi/flint/pull/3978) [`935c436`](https://github.com/flint-fyi/flint/commit/935c43661b94e3fe4994b5eb3e35f10f7537ec55) - Add the missing `yml/max-len` mapping, as a skipped formatting rule.
+
 ## 0.5.7
 
 ### Patch Changes
