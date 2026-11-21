@@ -262,8 +262,8 @@ catalogs:
       specifier: 3.10.0
       version: 3.10.0
     markdownlint:
-      specifier: 0.42.1
-      version: 0.42.1
+      specifier: 0.42.2
+      version: 0.42.2
     oxlint:
       specifier: 1.94.0
       version: 1.94.0
@@ -1701,7 +1701,7 @@ importers:
         version: 3.10.0(eslint@10.15.0)
       markdownlint:
         specifier: catalog:comparisons
-        version: 0.42.1(supports-color@10.2.2)
+        version: 0.42.2(supports-color@10.2.2)
       oxlint:
         specifier: catalog:comparisons
         version: 1.94.0
@@ -6623,8 +6623,8 @@ packages:
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
 
-  markdownlint@0.42.1:
-    resolution: {integrity: sha512-Otolm9JX12iO2NG5cetlKfzGygpiLSlHuqXKxoT6HGhN5HtbxprJPicKZqqCQd88qOvUi/TEs3o1AmcYioVscA==}
+  markdownlint@0.42.2:
+    resolution: {integrity: sha512-IhlUBVT+kHBX+u3EjEsQdFB4q0Rl0Hx+JsGsvVkonNut1/n8Kv8yXzwk0pazC9uF35JlwMZ+LxV4CQ9YNAbG8w==}
     engines: {node: '>=22'}
 
   math-intrinsics@1.1.0:
@@ -13071,7 +13071,7 @@ snapshots:
 
   markdown-table@3.0.4: {}
 
-  markdownlint@0.42.1(supports-color@10.2.2):
+  markdownlint@0.42.2(supports-color@10.2.2):
     dependencies:
       micromark: 4.0.3(supports-color@10.2.2)
       micromark-core-commonmark: 2.0.4
