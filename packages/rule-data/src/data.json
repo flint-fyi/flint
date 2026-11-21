@@ -32887,7 +32887,7 @@
 	},
 	{
 		"flint": {
-			"name": "unsafeDeclarationmerging",
+			"name": "unsafeDeclarationMerging",
 			"plugin": "ts",
 			"preset": "logical"
 		},
