@@ -610,8 +610,8 @@ catalogs:
       specifier: 2.1.1
       version: 2.1.1
     expressive-code:
-      specifier: 0.44.3
-      version: 0.44.3
+      specifier: 0.44.4
+      version: 0.44.4
     expressive-code-twoslash:
       specifier: 0.6.1
       version: 0.6.1
@@ -1808,10 +1808,10 @@ importers:
         version: 19.3.0(@types/react@19.3.0)
       expressive-code:
         specifier: catalog:site
-        version: 0.44.3
+        version: 0.44.4
       expressive-code-twoslash:
         specifier: catalog:site
-        version: 0.6.1(@expressive-code/core@0.44.4)(@typescript/typescript6@6.0.2)(eslint@10.15.0)(expressive-code@0.44.3)(supports-color@10.2.2)(typescript@7.1.0-dev.20261117.1)
+        version: 0.6.1(@expressive-code/core@0.44.4)(@typescript/typescript6@6.0.2)(eslint@10.15.0)(expressive-code@0.44.4)(supports-color@10.2.2)(typescript@7.1.0-dev.20261117.1)
       react-dom:
         specifier: catalog:site
         version: 19.3.1(react@19.3.1)
@@ -3193,14 +3193,14 @@ packages:
   '@expressive-code/core@0.44.4':
     resolution: {integrity: sha512-dkn3fyIZeHaqQCnpX5ESSR7eI9FMeLFiKDCzFliFy2SPog6sf9NFmiO9wzvEMfgmL8GMWK6P25l6JYLP2wRoLA==}
 
-  '@expressive-code/plugin-frames@0.44.3':
-    resolution: {integrity: sha512-ysW4VXk9vXEliA99Ur6ApUepVtx74sPolp6o/j45BRjZQoL5O6kXKMhSP4koQLih8HbC5B3ImIvO+HKKhkv/oA==}
+  '@expressive-code/plugin-frames@0.44.4':
+    resolution: {integrity: sha512-wlfwIl62MlPiE6qj1HuqMfpDF96RyAn2YxaD9qct5d+CjmH8G3j819wPJ23NgWtEqSVIJKdZVeN8OcRHafUiyw==}
 
-  '@expressive-code/plugin-shiki@0.44.3':
-    resolution: {integrity: sha512-jAibAZPG7lDmi61EFJADZjoSZzjHiwZZdbbgR/mTlWXM4ON/Pyo/9tB2vrqQNKylsci6jqtCi6idrwqQXF53xA==}
+  '@expressive-code/plugin-shiki@0.44.4':
+    resolution: {integrity: sha512-390h3iPn6eTYzQvdv/b5YD7K96/86PLPHzaEBNLm44dmSufcTqcOC8zR8R0T5DBE+KTlT/ValIhwjUNy/9DreA==}
 
-  '@expressive-code/plugin-text-markers@0.44.3':
-    resolution: {integrity: sha512-4Ae2xRSDV5kdWPsi40xWbOtoihbzM0zLVjQKkDAnD5KzFXl+6/kd+VhuWOlTRVaJ5cqGk++vCbAaf0MR1XbZlw==}
+  '@expressive-code/plugin-text-markers@0.44.4':
+    resolution: {integrity: sha512-cfjqsNh4oYikxFeylXKhZ0BxvrwIIztu+g5JFFObYMO3YTmHwv66DrHCh91wTgTGz0q4+Tj/iTIYkngqCpX0Cg==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -5774,8 +5774,8 @@ packages:
       expressive-code: ^0.41.7
       typescript: ^5.5.0
 
-  expressive-code@0.44.3:
-    resolution: {integrity: sha512-7RGslhJTNt01pdn5I3QmVh5C8ZIiSm0A+ORQ9j9r39oOgJVKjn/7dXl9rMT/SqmFLE6pJkTYI7UjW0BxJnW7OQ==}
+  expressive-code@0.44.4:
+    resolution: {integrity: sha512-xaHx7AG7MCmxBkw9d84IQ7OGZLxzYhLYE8/eurS5JSRfY8P6/1XA6I7FueYwqOGKJH/1HPk3/Pmf+9HgVAsTcg==}
 
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
@@ -9558,16 +9558,16 @@ snapshots:
       unist-util-visit: 5.2.0
       unist-util-visit-parents: 6.1.0
 
-  '@expressive-code/plugin-frames@0.44.3':
+  '@expressive-code/plugin-frames@0.44.4':
     dependencies:
       '@expressive-code/core': 0.44.4
 
-  '@expressive-code/plugin-shiki@0.44.3':
+  '@expressive-code/plugin-shiki@0.44.4':
     dependencies:
       '@expressive-code/core': 0.44.4
       shiki: 4.6.0
 
-  '@expressive-code/plugin-text-markers@0.44.3':
+  '@expressive-code/plugin-text-markers@0.44.4':
     dependencies:
       '@expressive-code/core': 0.44.4
 
@@ -12141,14 +12141,14 @@ snapshots:
 
   expect-type@1.4.0: {}
 
-  expressive-code-twoslash@0.6.1(@expressive-code/core@0.44.4)(@typescript/typescript6@6.0.2)(eslint@10.15.0)(expressive-code@0.44.3)(supports-color@10.2.2)(typescript@7.1.0-dev.20261117.1):
+  expressive-code-twoslash@0.6.1(@expressive-code/core@0.44.4)(@typescript/typescript6@6.0.2)(eslint@10.15.0)(expressive-code@0.44.4)(supports-color@10.2.2)(typescript@7.1.0-dev.20261117.1):
     dependencies:
       '@ec-ts/twoslash': 1.0.0(@typescript/typescript6@6.0.2)
       '@ec-ts/twoslash-vue': 1.0.0(@typescript/typescript6@6.0.2)
       '@expressive-code/core': 0.44.4
       '@typescript-eslint/parser': 8.73.0(@typescript/typescript6@6.0.2)(eslint@10.15.0)(supports-color@10.2.2)(typescript@7.1.0-dev.20261117.1)
       css-js-gen: 1.1.0
-      expressive-code: 0.44.3
+      expressive-code: 0.44.4
       mdast-util-from-markdown: 2.1.0(supports-color@10.2.2)
       mdast-util-gfm: 3.1.0(supports-color@10.2.2)
       mdast-util-to-hast: 13.2.1
@@ -12159,12 +12159,12 @@ snapshots:
       - eslint
       - supports-color
 
-  expressive-code@0.44.3:
+  expressive-code@0.44.4:
     dependencies:
       '@expressive-code/core': 0.44.4
-      '@expressive-code/plugin-frames': 0.44.3
-      '@expressive-code/plugin-shiki': 0.44.3
-      '@expressive-code/plugin-text-markers': 0.44.3
+      '@expressive-code/plugin-frames': 0.44.4
+      '@expressive-code/plugin-shiki': 0.44.4
+      '@expressive-code/plugin-text-markers': 0.44.4
 
   extend@3.0.2: {}
 
@@ -14150,7 +14150,7 @@ snapshots:
 
   rehype-expressive-code@0.44.3:
     dependencies:
-      expressive-code: 0.44.3
+      expressive-code: 0.44.4
 
   rehype-raw@7.0.0:
     dependencies:
