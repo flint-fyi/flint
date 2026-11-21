@@ -1,5 +1,11 @@
 # @flint.fyi/vue
 
+## 0.4.4
+
+### Patch Changes
+
+- [#3975](https://github.com/flint-fyi/flint/pull/3975) [`9e29332`](https://github.com/flint-fyi/flint/commit/9e29332f846227b662bca0964310ee25fa5aa726) - Links rule docs URLs to their canonical trailing-slash form so they no longer redirect.
+
 ## 0.4.3
 
 ### Patch Changes
