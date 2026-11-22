@@ -14,46 +14,36 @@ concurrency:
 
 jobs:
   checks:
-    name: Checks
+    name: Quality Checks
     runs-on: ubuntu-latest
     steps:
-      - id: setup
-        uses: $/.github/actions/setup
-      - name: Dedupe Check
-        run: pnpm dedupe --check --prefer-offline
-      - name: Generate Astro Types
-        id: astro
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm run --filter=site prebuild
-      - name: Build
-        id: build
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm run build # Ensure packages pass attw and generate exports for Knip.
-      - name: Ensure rule data remains sorted
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        background: true
-        run: pnpm run --filter=rule-data sort-data --check
-      - name: Flint
-        if: ${{ !cancelled() && steps.astro.outcome == 'success' }}
-        background: true
-        run: pnpm run flint
-      - name: Lint
-        if: ${{ !cancelled() && steps.astro.outcome == 'success' }}
-        background: true
-        run: pnpm run lint
-      - name: Lint Knip
-        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        background: true
-        run: pnpm run lint:knip
-      - name: Lint Knip Production
-        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        background: true
-        run: pnpm run lint:knip:prod
-      - name: Typecheck
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        background: true
-        run: pnpm exec tsc -b
-      - wait-all: ~
+      - uses: $/.github/actions/setup
+      - parallel:
+          - name: Dedupe Check
+            run: pnpm dedupe --check --prefer-offline
+          - name: Ensure rule data remains sorted
+            run: pnpm run --filter=rule-data sort-data --check
+          - name: Generate Astro Types
+            id: astro
+            run: pnpm run --filter=site prebuild
+          - name: Build
+            id: build
+            run: pnpm run build # Ensure packages pass attw and generate exports for Knip.
+          - name: Typecheck
+            run: pnpm exec tsc -b
+      - parallel:
+          - name: Flint
+            if: ${{ !cancelled() && steps.astro.outcome == 'success' }}
+            run: pnpm run flint
+          - name: Lint
+            if: ${{ !cancelled() && steps.astro.outcome == 'success' }}
+            run: pnpm run lint
+          - name: Lint Knip
+            if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+            run: pnpm run lint:knip
+          - name: Lint Knip Production
+            if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+            run: pnpm run lint:knip:prod
 
   test:
     name: Test (Node.js ${{ case(matrix.node-version == '26.1.0', matrix.node-version, '26.x') }}, ${{ matrix.os }})
