@@ -18277,7 +18277,7 @@
 	},
 	{
 		"flint": {
-			"name": "asyncPromiseFinallys",
+			"name": "asyncPromiseFinallyCallbacks",
 			"plugin": "ts",
 			"preset": "logical"
 		},
@@ -22684,6 +22684,12 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"biome": [
+			{
+				"name": "noUnresolvedDefaultImport",
+				"url": "https://biomejs.dev/linter/rules/no-unresolved-default-import/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "import/default",
@@ -27191,7 +27197,7 @@
 	},
 	{
 		"flint": {
-			"name": "parameterPropertyAssignment",
+			"name": "parameterPropertyAssignments",
 			"plugin": "ts",
 			"preset": "logical"
 		},
@@ -33010,18 +33016,6 @@
 			{
 				"name": "unicorn/no-unreadable-object-destructuring",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-unreadable-object-destructuring.md"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "unresolvedDefaultImports",
-			"plugin": "ts"
-		},
-		"biome": [
-			{
-				"name": "noUnresolvedDefaultImport",
-				"url": "https://biomejs.dev/linter/rules/no-unresolved-default-import/javascript/"
 			}
 		]
 	},
