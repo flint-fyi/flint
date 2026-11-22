@@ -30,7 +30,7 @@ jobs:
             id: build
             run: pnpm run build # Ensure packages pass attw and generate exports for Knip.
           - name: Typecheck
-            run: pnpm exec tsc -b
+            run: pnpm run typecheck
       - parallel:
           - name: Flint
             if: ${{ !cancelled() && steps.astro.outcome == 'success' }}
