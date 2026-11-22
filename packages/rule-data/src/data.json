@@ -15190,7 +15190,7 @@
 	},
 	{
 		"flint": {
-			"name": "accessorAsProp",
+			"name": "accessorsAsProps",
 			"plugin": "solid"
 		},
 		"eslint": [
@@ -15202,7 +15202,7 @@
 	},
 	{
 		"flint": {
-			"name": "actionYieldAfterAwait",
+			"name": "actionYieldsAfterAwaits",
 			"plugin": "solid"
 		},
 		"eslint": [
@@ -15359,8 +15359,9 @@
 	},
 	{
 		"flint": {
-			"name": "jsxNesting",
-			"plugin": "solid"
+			"name": "jsxNestingValidity",
+			"plugin": "solid",
+			"preset": "logical"
 		},
 		"eslint": [
 			{
@@ -15413,18 +15414,6 @@
 			}
 		],
 		"notes": "Superseded by jsx plugin's scriptUrls rule."
-	},
-	{
-		"flint": {
-			"name": "onSettledForSideEffects",
-			"plugin": "solid"
-		},
-		"eslint": [
-			{
-				"name": "solid/prefer-onSettled-for-side-effects",
-				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/prefer-onSettled-for-side-effects.md"
-			}
-		]
 	},
 	{
 		"flint": {
@@ -15557,6 +15546,18 @@
 	},
 	{
 		"flint": {
+			"name": "sideEffectsInOnSettled",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/prefer-onSettled-for-side-effects",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/prefer-onSettled-for-side-effects.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "singleArgCreateEffects",
 			"plugin": "solid"
 		},
@@ -15582,7 +15583,7 @@
 	},
 	{
 		"flint": {
-			"name": "storeMutationsOutsideSetters",
+			"name": "storeMutationsInSetters",
 			"plugin": "solid"
 		},
 		"eslint": [
@@ -15594,7 +15595,7 @@
 	},
 	{
 		"flint": {
-			"name": "structuredClass",
+			"name": "structuredClasses",
 			"plugin": "solid"
 		},
 		"eslint": [
@@ -15614,18 +15615,6 @@
 			{
 				"name": "solid/style-prop",
 				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/style-prop.md"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "unassignedVars",
-			"plugin": "solid"
-		},
-		"eslint": [
-			{
-				"name": "solid/no-unassigned-vars",
-				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-unassigned-vars.md"
 			}
 		]
 	},
@@ -15664,6 +15653,19 @@
 			{
 				"name": "solid/valid-use-server",
 				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/valid-use-server.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "varAssignments",
+			"plugin": "solid",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-unassigned-vars",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-unassigned-vars.md"
 			}
 		]
 	},
