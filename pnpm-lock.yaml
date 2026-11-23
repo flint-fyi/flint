@@ -247,8 +247,8 @@ catalogs:
       specifier: 3.3.3
       version: 3.3.3
     eslint-plugin-solid:
-      specifier: 0.20.0
-      version: 0.20.0
+      specifier: 0.20.1
+      version: 0.20.1
     eslint-plugin-svelte:
       specifier: 3.24.1
       version: 3.24.1
@@ -1686,7 +1686,7 @@ importers:
         version: 3.3.3(eslint@10.15.0)
       eslint-plugin-solid:
         specifier: catalog:comparisons
-        version: 0.20.0(eslint@10.15.0)
+        version: 0.20.1(eslint@10.15.0)
       eslint-plugin-svelte:
         specifier: catalog:comparisons
         version: 3.24.1(eslint@10.15.0)(svelte@5.58.1)
@@ -5605,8 +5605,8 @@ packages:
     peerDependencies:
       eslint: '>=9.38.0'
 
-  eslint-plugin-solid@0.20.0:
-    resolution: {integrity: sha512-+cA9Yz+ON+Sr3sfl2RJePrPDXZmIAleS3D6W5rRuP/BKRqnt2DcSXi2YMFi52oClWGoOfBl29FdtLere7qoJUQ==}
+  eslint-plugin-solid@0.20.1:
+    resolution: {integrity: sha512-HPBVDgkGCOqXpfMQUyMP273AXo/VUwm/hqvTWWovVSJKPBzrKhq7w04Yn0PtTgj9g+7ZdlcAAJ9dwgBGeJQ4Gg==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
@@ -11879,7 +11879,7 @@ snapshots:
       regexp-ast-analysis: 0.7.1
       scslre: 0.3.0
 
-  eslint-plugin-solid@0.20.0(eslint@10.15.0):
+  eslint-plugin-solid@0.20.1(eslint@10.15.0):
     dependencies:
       eslint-visitor-keys: 3.4.3
       estraverse: 5.3.0
