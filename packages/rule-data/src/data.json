@@ -15232,6 +15232,30 @@
 	},
 	{
 		"flint": {
+			"name": "accessorsAsProps",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-accessor-as-prop",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-accessor-as-prop.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "actionYieldsAfterAwaits",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/action-yield-after-await",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/action-yield-after-await.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "arrayHandlers",
 			"plugin": "solid"
 		},
@@ -15239,6 +15263,42 @@
 			{
 				"name": "solid/no-array-handlers",
 				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-array-handlers.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "asyncServerFunctions",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/require-async-server-function",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/require-async-server-function.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "booleanEnumeratedAttributes",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-boolean-enumerated-attribute",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-boolean-enumerated-attribute.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "browserGlobalsInServerFunctions",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-browser-globals-in-server-function",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-browser-globals-in-server-function.md"
 			}
 		]
 	},
@@ -15324,6 +15384,43 @@
 			{
 				"name": "solid/no-innerhtml",
 				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-innerhtml.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "invalidServerCaptures",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-invalid-server-capture",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-invalid-server-capture.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "jsxNestingValidity",
+			"plugin": "solid",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "solid/validate-jsx-nesting",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/validate-jsx-nesting.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "moduleScopeReactivePrimitives",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-module-scope-reactive-primitive",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-module-scope-reactive-primitive.md"
 			}
 		]
 	},
@@ -15440,6 +15537,30 @@
 	},
 	{
 		"flint": {
+			"name": "removedApis",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/removed-api",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/removed-api.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "restatedDefaultOptions",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-restated-default-options",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-restated-default-options.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "selfClosingTags",
 			"plugin": "solid",
 			"status": "skipped"
@@ -15467,6 +15588,30 @@
 	},
 	{
 		"flint": {
+			"name": "sideEffectsInOnSettled",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/prefer-onSettled-for-side-effects",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/prefer-onSettled-for-side-effects.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "singleArgCreateEffects",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-single-arg-create-effect",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-single-arg-create-effect.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "solidImports",
 			"plugin": "solid",
 			"preset": "logical"
@@ -15475,6 +15620,30 @@
 			{
 				"name": "solid/imports",
 				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/imports.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "storeMutationsInSetters",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-store-mutation-outside-setter",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-store-mutation-outside-setter.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "structuredClasses",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/prefer-structured-class",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/prefer-structured-class.md"
 			}
 		]
 	},
@@ -15507,6 +15676,43 @@
 	},
 	{
 		"flint": {
+			"name": "unusedSignals",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-unused-signal",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-unused-signal.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "useServerValidity",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/valid-use-server",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/valid-use-server.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "varAssignments",
+			"plugin": "solid",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-unassigned-vars",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-unassigned-vars.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "variableUses",
 			"plugin": "solid"
 		},
@@ -15514,6 +15720,18 @@
 			{
 				"name": "solid/jsx-uses-vars",
 				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/jsx-uses-vars.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "writesInPureComputations",
+			"plugin": "solid"
+		},
+		"eslint": [
+			{
+				"name": "solid/no-write-in-pure-computation",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-write-in-pure-computation.md"
 			}
 		]
 	},
