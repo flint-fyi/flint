@@ -1,34 +1,31 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
+import HomeIcon from "~/assets/icons/home.svg";
 
 const features = [
 	{
-		body: "Sensible rules right out of the bag. No config wrangling — just unzip, light the fire, and start linting.",
+		body: "Flint ships with a sensible set of rules turned on, so you can start linting without writing a pile of config first.",
 		accent: "ember",
-		icon: "heart",
-		label: "cozy defaults",
+		icon: "approve-check",
 		title: "Toasty by default",
 	},
 	{
-		body: "Intelligent caching and CI coordination keep duplicate jobs from wandering off-trail. Your runs finish faster.",
+		body: "Change one file and Flint re-checks that file and its dependents. Everything else comes straight from the cache.",
 		accent: "moss",
 		icon: "rocket",
-		label: "fast & cached",
-		title: "Always points home",
+		title: "No wasted trips",
 	},
 	{
-		body: "Lint rules powered by the full TypeScript type checker. They catch the kind of bugs that hide under tent flaps.",
+		body: "Flint’s rules can use the full TypeScript type checker, so they catch bugs that syntax-only linters miss.",
 		accent: "lake",
-		icon: "star",
-		label: "typed power",
-		title: "Type-checked shelter",
+		icon: HomeIcon,
+		title: "Sheltered by types",
 	},
 	{
-		body: "Configs you can actually read by lantern-light. Powerful when you need it, quiet when you don't.",
+		body: "Flint configs are plain, readable TypeScript that scales with your project.",
 		accent: "berry",
 		icon: "document",
-		label: "clear config",
-		title: "Bright, readable config",
+		title: "Config you can read",
 	},
 ] as const;
 ---
@@ -44,12 +41,15 @@ const features = [
 
 	<div class="grid">
 		{features.map((feature) => (
-			<article class="flint-paper feature" data-accent={feature.accent}>
+			<article class="feature" data-accent={feature.accent}>
 				<div class="icon">
-					<Icon name={feature.icon} size="2rem" />
+					{typeof feature.icon === "string" ? (
+						<Icon name={feature.icon} size="2rem" />
+					) : (
+						<feature.icon height="2rem" width="2rem" />
+					)}
 				</div>
 				<div class="body">
-					<span class="label">{feature.label}</span>
 					<h3 class="flint-display">{feature.title}</h3>
 					<p>{feature.body}</p>
 				</div>
@@ -74,7 +74,6 @@ const features = [
 		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
 		line-height: 1.15;
 		margin: 0;
-		text-wrap: balance;
 	}
 
 	.lede {
@@ -136,18 +135,11 @@ const features = [
 		flex-direction: column;
 	}
 
-	.label {
-		color: var(--feature-fg);
-		font-size: var(--sl-text-xs);
-		font-weight: 800;
-		text-transform: uppercase;
-	}
-
 	h3 {
 		color: var(--sl-color-white);
 		font-size: var(--sl-text-2xl);
 		line-height: 1.2;
-		margin: 0.6rem 0 0;
+		margin: 0;
 	}
 
 	.feature p {

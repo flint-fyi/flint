@@ -8,7 +8,10 @@ excerpt: Flint is an experimental linter.
 title: What Flint Does Differently
 ---
 
-import { Picture } from "astro:assets";
+import { Image } from "astro:assets";
+
+import interactiveDark from "~/assets/blog/what-flint-does-differently/flint-interactive-dark.webp";
+import interactiveLight from "~/assets/blog/what-flint-does-differently/flint-interactive-light.webp";
 
 Flint is an experimental linter.
 It intentionally revisits many of the core design decisions from other popular web linters.
@@ -249,15 +252,15 @@ Those two flags can be combined as needed depending on how the user is running F
 For example, when running in CI you would likely want neither flag.
 Using both flags locally would provide a nice focused view on one lint report at a time:
 
-<img
+<Image
 	alt="Dark mode view of the Flint terminal in --interactive --watch mode, showing 1 file's ts/forInArrays violation with details out of 4 files."
 	class="light:sl-hidden"
-	src="/screenshots/flint-interactive-dark.webp"
+	src={interactiveDark}
 />
-<img
+<Image
 	alt="Light mode view of the Flint terminal in --interactive --watch mode, showing 1 file's ts/forInArrays violation with details out of 4 files."
 	class="dark:sl-hidden"
-	src="/screenshots/flint-interactive-light.webp"
+	src={interactiveLight}
 />
 
 ### Comprehensive Rule Documentation

@@ -3,6 +3,7 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig } from "astro/config";
+import { fontless } from "fontless";
 import { remarkAddTwoslash } from "remark-add-twoslash";
 import { remarkHeadingId } from "remark-custom-heading-id";
 import starlightBlog from "starlight-blog";
@@ -10,6 +11,13 @@ import starlightLinksValidator from "starlight-links-validator";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
 export default defineConfig({
+	image: {
+		domains: [
+			"ampcode.com",
+			"avatars.githubusercontent.com",
+			"www.netlify.com",
+		],
+	},
 	integrations: [
 		konamiEmojiBlast(),
 		starlight({
@@ -165,6 +173,17 @@ export default defineConfig({
 		define: {
 			__filename: "import.meta.filename",
 		},
+		plugins: [
+			fontless({
+				defaults: { styles: ["normal"] },
+				families: [
+					{ name: "JetBrains Mono", weights: [400, 600] },
+					{ name: "Nunito", weights: [400, 600, 700, 800] },
+					{ name: "Platypi", weights: [800] },
+				],
+				processCSSVariables: true,
+			}),
+		],
 		resolve: {
 			alias: {
 				// https://github.com/csstree/csstree/issues/314#issuecomment-3794237969

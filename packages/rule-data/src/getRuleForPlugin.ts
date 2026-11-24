@@ -33,8 +33,16 @@ const plugins = {
 	yaml,
 };
 
+export function getPluginName(pluginId: string): string {
+	if (!Object.hasOwn(plugins, pluginId)) {
+		throw new Error(`Unknown Flint plugin: ${pluginId}.`);
+	}
+
+	return plugins[pluginId as keyof typeof plugins].name;
+}
+
 export function getRuleForPlugin(pluginId: string, ruleId: string): AnyRule {
-	if (!(pluginId in plugins)) {
+	if (!Object.hasOwn(plugins, pluginId)) {
 		throw new Error(`Unknown Flint plugin: ${pluginId}.`);
 	}
 
@@ -52,7 +60,7 @@ export function getRuleForPluginSafe(
 	pluginId: string,
 	ruleId: string,
 ): AnyRule | undefined {
-	if (!(pluginId in plugins)) {
+	if (!Object.hasOwn(plugins, pluginId)) {
 		return undefined;
 	}
 

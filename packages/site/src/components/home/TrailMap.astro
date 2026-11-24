@@ -1,4 +1,5 @@
 ---
+import { LinkButton } from "@astrojs/starlight/components";
 import markdownIt from "markdown-it";
 
 import { getRuleForPlugin } from "@flint.fyi/rule-data";
@@ -25,21 +26,21 @@ const rules = ruleIds.map((ruleId) => {
 });
 ---
 
-<section class="trail-map flint-paper not-content" id="rules">
+<section class="trail-map not-content" id="rules">
 	<div class="copy">
 		<h2 class="flint-display">Hundreds of rules, hand-picked & happy.</h2>
 		<p class="lede">
-			Each rule comes with a friendly explanation, real-world examples, and an
-			autofix when we can manage it. No cryptic codes. No lecture from the
-			scout-master.
+			Each rule has a friendly explanation and real-world examples, and can even
+			fix the problem automatically when it’s safe. Rules are a map to better
+			code, not a stern scout-master.
 		</p>
 		<div class="actions">
-			<a class="button primary" href="/rules/">
+			<LinkButton href="/rules/" icon="right-arrow">
 				Browse rules
-			</a>
-			<a class="button" href="/about/">
+			</LinkButton>
+			<LinkButton href="/about/" icon="open-book" variant="secondary">
 				Read the docs
-			</a>
+			</LinkButton>
 		</div>
 	</div>
 
@@ -47,10 +48,16 @@ const rules = ruleIds.map((ruleId) => {
 		{rules.map((rule) => (
 			<li class="rule">
 				<div class="rule-heading">
-					<a href={`/rules/ts/${rule.id}/`}>ts/{rule.id}</a>
-					<span class="preset" data-preset={rule.preset}>
+					<a class="rule-name" href={`/rules/ts/${rule.id}/`}>
+						ts/{rule.id}
+					</a>
+					<a
+						class="flint-preset"
+						data-preset={rule.preset}
+						href={`/rules/ts/#${rule.preset.toLowerCase()}`}
+					>
 						{rule.preset}
-					</span>
+					</a>
 				</div>
 				<p set:html={rule.description} />
 			</li>
@@ -60,7 +67,7 @@ const rules = ruleIds.map((ruleId) => {
 
 <style>
 	.trail-map {
-		border-block-start: 1px solid var(--flint-paper-border);
+		border-block-start: 1px solid var(--sl-color-gray-5);
 		display: grid;
 		gap: 2rem;
 		grid-template-columns: 100%;
@@ -72,7 +79,6 @@ const rules = ruleIds.map((ruleId) => {
 		font-size: clamp(1.75rem, calc(1rem + 2vw), 2.25rem);
 		line-height: 1.15;
 		margin: 0;
-		text-wrap: balance;
 	}
 
 	.lede {
@@ -89,41 +95,6 @@ const rules = ruleIds.map((ruleId) => {
 		margin-block-start: 1.5rem;
 	}
 
-	.button {
-		border: 1px solid var(--flint-paper-border);
-		border-radius: 0.5rem;
-		color: var(--sl-color-white);
-		flex: 1 1 auto;
-		font-weight: 700;
-		padding: 0.7rem 1.4rem;
-		text-align: center;
-		text-decoration: none;
-		transition:
-			background-color 150ms,
-			color 150ms,
-			filter 120ms ease-out;
-	}
-
-	.button.primary {
-		background: var(--flint-ember-fill);
-		border-color: var(--flint-ember-fill);
-		color: var(--flint-ember-fill-text);
-	}
-
-	.button:hover {
-		background: var(--flint-button-hover-surface);
-		filter: var(--flint-button-hover-filter);
-	}
-
-	.button.primary:hover {
-		background: var(--flint-ember-fill);
-	}
-
-	.button:active {
-		filter: var(--flint-button-pressed-filter);
-		transition-duration: 0ms;
-	}
-
 	.rules {
 		display: grid;
 		gap: 0.5rem;
@@ -134,12 +105,11 @@ const rules = ruleIds.map((ruleId) => {
 	}
 
 	.rule {
-		background: var(--sl-color-black);
-		border: 1px solid var(--flint-paper-border);
+		border: 1px solid var(--sl-color-gray-5);
 		border-radius: 0.5rem;
 		display: flex;
 		flex-direction: column;
-		padding: 0.8rem 0.9rem;
+		padding: 1rem;
 	}
 
 	.rule-heading {
@@ -149,7 +119,7 @@ const rules = ruleIds.map((ruleId) => {
 		white-space: nowrap;
 	}
 
-	.rule a {
+	.rule-name {
 		color: var(--sl-color-white);
 		font-family: var(--sl-font-mono);
 		font-size: var(--sl-text-xs);
@@ -165,30 +135,9 @@ const rules = ruleIds.map((ruleId) => {
 	}
 
 	.rule p :global(code) {
-		background: var(--flint-badge-surface);
-		border-radius: 0.25rem;
-		color: var(--flint-badge-text);
-		font-size: 0.95em;
-		padding: 0.05rem 0.25rem;
-	}
-
-	.preset {
-		border-radius: 0.25rem;
-		display: inline-block;
-		font-family: var(--sl-font-mono);
-		font-size: 0.68rem;
-		font-weight: 800;
-		padding: 0.1rem 0.35rem;
-	}
-
-	.preset[data-preset="logical"] {
-		background: var(--flint-badge-surface);
-		color: var(--flint-badge-text);
-	}
-
-	.preset[data-preset="stylistic"] {
-		background: color-mix(in srgb, var(--flint-moss) 25%, transparent);
-		color: var(--sl-color-white);
+		background-color: var(--sl-color-bg-inline-code);
+		margin-block: -0.125rem;
+		padding: 0.125rem 0.375rem;
 	}
 
 	@media (width >= 50rem) {
