@@ -50,6 +50,10 @@ export function createLspFileSystemWatcher(
 	connection.onDidChangeWatchedFiles((watchedFilesParams) => {
 		for (const change of watchedFilesParams.changes) {
 			const filePath = uriToFilePath(change.uri);
+			if (!filePath) {
+				continue;
+			}
+
 			const event = FILE_CHANGE_TYPE_TO_EVENT[change.type];
 
 			for (const subscription of directorySubscriptions) {

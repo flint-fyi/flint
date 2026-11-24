@@ -108,6 +108,26 @@ describe(createLspFileSystemWatcher, () => {
 		subscription[Symbol.dispose]();
 	});
 
+	it("skips changes that are not files", () => {
+		const { emit, watcher } = createTestWatcher();
+		const rootPath = normalizePath(path.resolve("workspace"));
+		const filePath = normalizePath(path.join(rootPath, "src/file.ts"));
+		const callback = vi.fn();
+		const subscription = watcher.watchDirectorySync(rootPath, callback, {
+			ignoredPaths: [],
+			recursive: true,
+		});
+
+		emit(
+			{ type: FileChangeType.Changed, uri: "untitled:Untitled-1" },
+			{ type: FileChangeType.Changed, uri: pathToFileURL(filePath).href },
+		);
+
+		expect(callback).toHaveBeenCalledExactlyOnceWith(filePath, "changed");
+
+		subscription[Symbol.dispose]();
+	});
+
 	it("skips changes under ignored paths", () => {
 		const { emit, watcher } = createTestWatcher();
 		const rootPath = normalizePath(path.resolve("workspace"));

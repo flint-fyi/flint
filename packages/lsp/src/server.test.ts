@@ -356,6 +356,63 @@ describe(startServer, () => {
 		]);
 	});
 
+	it("skips open documents that are not files while linting the ones that are", async () => {
+		const filePath = normalizePath(path.join(workspaceRoot, "src/index.ts"));
+		const closedFilePath = normalizePath(
+			path.join(workspaceRoot, "src/closed.ts"),
+		);
+		const untitledUri = "untitled:Untitled-1";
+
+		mocks.lintPasses.push(
+			[new Map([[filePath, createFileResults("opened")]])],
+			[new Map([[closedFilePath, createFileResults("changed on disk")]])],
+			[new Map([[filePath, createFileResults("rebuilt")]])],
+		);
+
+		await startInitializedServer();
+		callback("didOpen")({
+			textDocument: {
+				languageId: "typescript",
+				text: "value",
+				uri: untitledUri,
+				version: 1,
+			},
+		});
+		openDocument(filePath);
+		await flushQueuedWork();
+		changeWatchedFile(closedFilePath);
+		await flushQueuedWork();
+		changeWatchedFile(path.join(workspaceRoot, "flint.config.mjs"));
+		await flushQueuedWork();
+
+		expect(
+			callback("codeAction")({
+				context: { diagnostics: [] },
+				textDocument: { uri: untitledUri },
+			}),
+		).toEqual([]);
+
+		callback("didClose")({ textDocument: { uri: untitledUri } });
+		await flushQueuedWork();
+
+		expect(mocks.connection.console.error).not.toHaveBeenCalled();
+		expect(
+			mocks.lintChangedFiles.mock.calls.map(([filePaths]) =>
+				Array.from(filePaths),
+			),
+		).toEqual([[filePath], [closedFilePath], [filePath]]);
+		expect(
+			mocks.connection.sendDiagnostics.mock.calls.map(
+				([{ diagnostics, uri }]) => [uri, diagnostics.length],
+			),
+		).toEqual([
+			[pathToFileURL(filePath).href, 1],
+			[pathToFileURL(closedFilePath).href, 1],
+			[pathToFileURL(filePath).href, 1],
+			[pathToFileURL(closedFilePath).href, 0],
+		]);
+	});
+
 	it("publishes changed diagnostics before dependent diagnostics", async () => {
 		const changedFilePath = normalizePath(path.join(workspaceRoot, "src/b.ts"));
 		const dependentFilePath = normalizePath(

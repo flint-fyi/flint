@@ -22,4 +22,11 @@ describe(uriToFilePath, () => {
 	])("resolves the Windows URI %s to one file path", (uri) => {
 		expect(uriToFilePath(uri)).toBe("C:/Users/me/@scope/a.ts");
 	});
+
+	it.each(["file:///missing/drive.ts", "untitled:Untitled-1"])(
+		"resolves %s to no file path",
+		(uri) => {
+			expect(uriToFilePath(uri)).toBeUndefined();
+		},
+	);
 });

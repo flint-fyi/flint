@@ -88,7 +88,7 @@ export function startServer(): void {
 			(filePath, event) => {
 				if (event !== "changed" || isConfigFile(filePath, root)) {
 					requestRebuild();
-				} else if (!isOpenDocument(filePath)) {
+				} else if (!getOpenFilePaths().includes(filePath)) {
 					requestLint(filePath);
 				}
 			},
@@ -110,10 +110,11 @@ export function startServer(): void {
 		requestRebuild();
 	});
 
-	function isOpenDocument(filePath: string) {
+	function getOpenFilePaths() {
 		return documents
 			.all()
-			.some((document) => uriToFilePath(document.uri) === filePath);
+			.map((document) => uriToFilePath(document.uri))
+			.filter((filePath) => filePath !== undefined);
 	}
 
 	function requestRebuild() {
@@ -182,8 +183,8 @@ export function startServer(): void {
 
 		connection.console.info(`Flint LSP loaded config: ${configFileName}`);
 
-		for (const document of documents.all()) {
-			pendingFilePaths.add(uriToFilePath(document.uri));
+		for (const filePath of getOpenFilePaths()) {
+			pendingFilePaths.add(filePath);
 		}
 	}
 
@@ -228,28 +229,28 @@ export function startServer(): void {
 	}
 
 	documents.onDidChangeContent((change) => {
-		if (!workspace) {
+		const filePath = uriToFilePath(change.document.uri);
+		if (!workspace || !filePath) {
 			return;
 		}
 
-		const filePath = uriToFilePath(change.document.uri);
 		workspace.vfsHost.vfsUpsertFile(filePath, change.document.getText());
 		requestLint(filePath);
 	});
 
 	documents.onDidClose((event) => {
-		if (!workspace) {
+		const filePath = uriToFilePath(event.document.uri);
+		if (!workspace || !filePath) {
 			return;
 		}
 
-		const filePath = uriToFilePath(event.document.uri);
 		workspace.vfsHost.vfsDeleteFile(filePath);
 		requestLint(filePath);
 	});
 
 	connection.onCodeAction((codeActionParams) => {
 		const filePath = uriToFilePath(codeActionParams.textDocument.uri);
-		const fileResults = storedResults.get(filePath);
+		const fileResults = filePath && storedResults.get(filePath);
 
 		if (!fileResults || !workspace) {
 			return [];
