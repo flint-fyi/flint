@@ -15,7 +15,6 @@ import {
 } from "@flint.fyi/core";
 
 export const FLINT_DIAGNOSTIC_SOURCE = "flint";
-const LANGUAGE_DIAGNOSTIC_SOURCE = "flint/language";
 
 export function createReportRange(report: FileReport): Range {
 	return Range.create(
@@ -55,7 +54,7 @@ function mapLanguageReport(
 		message: stripVTControlCharacters(report.text),
 		range,
 		severity: DiagnosticSeverity.Error,
-		source: report.source ?? LANGUAGE_DIAGNOSTIC_SOURCE,
+		source: `${FLINT_DIAGNOSTIC_SOURCE}/${report.source ?? "language"}`,
 	};
 }
 

@@ -25,7 +25,7 @@ function createFileResults(message: string) {
 		languageReports: [
 			{
 				range: { begin: 0, end: 5 },
-				source: "flint/typescript",
+				source: "typescript",
 				text: message,
 			},
 		],

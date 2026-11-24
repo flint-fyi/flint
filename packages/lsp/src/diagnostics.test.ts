@@ -6,7 +6,7 @@ import type { FileResults } from "@flint.fyi/core";
 import { mapFileResultsToDiagnostics } from "./diagnostics.ts";
 
 describe(mapFileResultsToDiagnostics, () => {
-	it("preserves language report sources separately from Flint rule reports", () => {
+	it("separates language report sources from Flint rule reports and other tools", () => {
 		const document = TextDocument.create(
 			"file:///workspace/src/file.ts",
 			"typescript",
@@ -19,9 +19,10 @@ describe(mapFileResultsToDiagnostics, () => {
 				{
 					code: "TS2322",
 					range: { begin: 22, end: 23 },
-					source: "flint/typescript",
+					source: "typescript",
 					text: "Type 'number' is not assignable to type 'string'.",
 				},
+				{ text: "Unexpected token." },
 			],
 			reports: [
 				{
@@ -54,6 +55,10 @@ describe(mapFileResultsToDiagnostics, () => {
 			{
 				code: "TS2322",
 				source: "flint/typescript",
+			},
+			{
+				code: undefined,
+				source: "flint/language",
 			},
 		]);
 	});
