@@ -306,3 +306,10 @@ header.header > .header {
 :root[data-theme="dark"] .only-light {
 	display: none;
 }
+
+/* Asides use the code block frame. */
+.starlight-aside {
+	border: 1px solid
+		color-mix(in oklch, var(--sl-color-asides-border) 55%, transparent);
+	border-radius: 1px;
+}
