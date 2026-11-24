@@ -6,18 +6,21 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import type { CodeActionContext } from "vscode-languageserver/node.js";
 
 import type { FileReport } from "@flint.fyi/core";
+import { normalizePath } from "@flint.fyi/utils";
 
 import { createCodeActions } from "./codeActions.ts";
 
 describe(createCodeActions, () => {
 	it("creates fixes and suggestion edits", () => {
 		const workspaceRoot = path.resolve("workspace");
-		const sourceUri = pathToFileURL(
+		const sourceFilePath = normalizePath(
 			path.join(workspaceRoot, "src/file.ts"),
-		).href;
-		const targetUri = pathToFileURL(
+		);
+		const targetFilePath = normalizePath(
 			path.join(workspaceRoot, "cspell.json"),
-		).href;
+		);
+		const sourceUri = pathToFileURL(sourceFilePath).href;
+		const targetUri = pathToFileURL(targetFilePath).href;
 		const sourceDocument = TextDocument.create(
 			sourceUri,
 			"typescript",
@@ -102,11 +105,11 @@ describe(createCodeActions, () => {
 		};
 
 		const documents = new Map([
-			[sourceUri, sourceDocument],
-			[targetUri, targetDocument],
+			[sourceFilePath, sourceDocument],
+			[targetFilePath, targetDocument],
 		]);
-		const actions = createCodeActions(sourceUri, context, [report], {
-			getDocument: (uri) => documents.get(uri),
+		const actions = createCodeActions(sourceFilePath, context, [report], {
+			getDocument: (filePath) => documents.get(filePath),
 			workspaceRoot,
 		});
 
@@ -144,11 +147,11 @@ describe(createCodeActions, () => {
 		expect(actions[2]?.edit).toEqual(replaceWordEdit);
 		expect(actions[2]?.title).toBe("Suggestion: replaceWord");
 
-		documents.delete(targetUri);
+		documents.delete(targetFilePath);
 
 		expect(
-			createCodeActions(sourceUri, context, [report], {
-				getDocument: (uri) => documents.get(uri),
+			createCodeActions(sourceFilePath, context, [report], {
+				getDocument: (filePath) => documents.get(filePath),
 				workspaceRoot,
 			}),
 		).toHaveLength(2);

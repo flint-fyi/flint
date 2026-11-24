@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import type { TextDocument } from "vscode-languageserver-textdocument";
 import {
 	CodeActionKind,
@@ -13,17 +15,18 @@ import {
 	type FileChange,
 	type FileReport,
 } from "@flint.fyi/core";
+import { normalizePath } from "@flint.fyi/utils";
 
 import { createReportRange, FLINT_DIAGNOSTIC_SOURCE } from "./diagnostics.ts";
 import { filePathToUri } from "./filePathToUri.ts";
 
 export interface CodeActionOptions {
-	getDocument(uri: string): TextDocument | undefined;
+	getDocument(filePath: string): TextDocument | undefined;
 	workspaceRoot: string;
 }
 
 export function createCodeActions(
-	uri: string,
+	filePath: string,
 	context: CodeActionContext,
 	reports: FileReport[],
 	options: CodeActionOptions,
@@ -52,7 +55,7 @@ export function createCodeActions(
 				createAction(
 					diagnostic,
 					`Fix: ${diagnostic.message}`,
-					[[uri, report.fix]],
+					[[filePath, report.fix]],
 					options,
 					true,
 				),
@@ -62,12 +65,14 @@ export function createCodeActions(
 					`Suggestion: ${suggestion.id}`,
 					isSuggestionForFiles(suggestion)
 						? Object.entries(suggestion.files).map(
-								([filePath, fileChanges]) => [
-									filePathToUri(filePath, options.workspaceRoot),
+								([suggestionFilePath, fileChanges]) => [
+									normalizePath(
+										path.resolve(options.workspaceRoot, suggestionFilePath),
+									),
 									fileChanges,
 								],
 							)
-						: [[uri, [suggestion]]],
+						: [[filePath, [suggestion]]],
 					options,
 				),
 			),
@@ -78,23 +83,23 @@ export function createCodeActions(
 function createAction(
 	diagnostic: Diagnostic,
 	title: string,
-	fileChangesByUri: [string, FileChange[] | undefined][],
+	fileChangesByFilePath: [string, FileChange[] | undefined][],
 	options: CodeActionOptions,
 	isPreferred?: true,
 ): CodeAction | undefined {
 	const changes: Record<string, TextEdit[]> = {};
 
-	for (const [uri, fileChanges] of fileChangesByUri) {
+	for (const [filePath, fileChanges] of fileChangesByFilePath) {
 		if (!fileChanges?.length) {
 			continue;
 		}
 
-		const document = options.getDocument(uri);
+		const document = options.getDocument(filePath);
 		if (!document) {
 			return undefined;
 		}
 
-		changes[uri] = fileChanges.map((fileChange) =>
+		changes[filePathToUri(filePath)] = fileChanges.map((fileChange) =>
 			TextEdit.replace(
 				{
 					end: document.positionAt(fileChange.range.end),

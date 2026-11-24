@@ -1,5 +1,4 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import { FileChangeType, type Connection } from "vscode-languageserver/node.js";
 
@@ -10,6 +9,8 @@ import type {
 	WatchDirectoryOptions,
 } from "@flint.fyi/core";
 import { normalizePath } from "@flint.fyi/utils";
+
+import { uriToFilePath } from "./uriToFilePath.ts";
 
 export interface LspFileSystemWatcher extends FileSystemWatcher {
 	watchDirectorySync: (
@@ -48,7 +49,7 @@ export function createLspFileSystemWatcher(
 
 	connection.onDidChangeWatchedFiles((watchedFilesParams) => {
 		for (const change of watchedFilesParams.changes) {
-			const filePath = normalizePath(fileURLToPath(change.uri));
+			const filePath = uriToFilePath(change.uri);
 			const event = FILE_CHANGE_TYPE_TO_EVENT[change.type];
 
 			for (const subscription of directorySubscriptions) {

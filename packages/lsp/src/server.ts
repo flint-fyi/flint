@@ -30,6 +30,7 @@ import { createCodeActions } from "./codeActions.ts";
 import { createLspFileSystemWatcher } from "./createLspFileSystemWatcher.ts";
 import { mapFileResultsToDiagnostics } from "./diagnostics.ts";
 import { filePathToUri } from "./filePathToUri.ts";
+import { uriToFilePath } from "./uriToFilePath.ts";
 
 const LINT_DEBOUNCE_MS = 250;
 const CONFIG_RELOAD_QUERY_PARAMETER = "flintLspCacheBust";
@@ -112,9 +113,7 @@ export function startServer(): void {
 	function isOpenDocument(filePath: string) {
 		return documents
 			.all()
-			.some(
-				(document) => normalizePath(fileURLToPath(document.uri)) === filePath,
-			);
+			.some((document) => uriToFilePath(document.uri) === filePath);
 	}
 
 	function requestRebuild() {
@@ -139,8 +138,8 @@ export function startServer(): void {
 	}
 
 	async function lintPending() {
-		const previousUris = rebuildPending && new Set(storedResults.keys());
-		if (previousUris) {
+		const previousFilePaths = rebuildPending && new Set(storedResults.keys());
+		if (previousFilePaths) {
 			rebuildPending = false;
 			await rebuildSession();
 		}
@@ -155,20 +154,9 @@ export function startServer(): void {
 					})
 				: new Map<string, FileResults>();
 
-		if (!previousUris || !workspace) {
-			return;
+		if (previousFilePaths) {
+			await clearDiagnostics(previousFilePaths.difference(results));
 		}
-
-		const { root } = workspace;
-		await clearDiagnostics(
-			previousUris.difference(
-				new Set(
-					Array.from(results.keys(), (filePath) =>
-						filePathToUri(filePath, root),
-					),
-				),
-			),
-		);
 	}
 
 	async function rebuildSession() {
@@ -195,53 +183,48 @@ export function startServer(): void {
 		connection.console.info(`Flint LSP loaded config: ${configFileName}`);
 
 		for (const document of documents.all()) {
-			pendingFilePaths.add(normalizePath(fileURLToPath(document.uri)));
+			pendingFilePaths.add(uriToFilePath(document.uri));
 		}
 	}
 
 	async function publishResults(filesResults: Map<string, FileResults>) {
-		if (!workspace) {
-			return;
-		}
-
-		const { root } = workspace;
-
 		await Promise.all(
 			Array.from(filesResults, ([filePath, fileResults]) => {
-				const uri = filePathToUri(filePath, root);
-
-				storedResults.set(uri, fileResults);
+				storedResults.set(filePath, fileResults);
 
 				return connection.sendDiagnostics({
 					diagnostics: mapFileResultsToDiagnostics(
 						fileResults,
-						getDiagnosticDocument(uri),
+						getDocument(filePath),
 					),
-					uri,
+					uri: filePathToUri(filePath),
 				});
 			}),
 		);
 	}
 
-	async function clearDiagnostics(uris: Set<string>) {
+	async function clearDiagnostics(filePaths: Set<string>) {
 		await Promise.all(
-			Array.from(uris, (uri) => {
-				storedResults.delete(uri);
-				return connection.sendDiagnostics({ diagnostics: [], uri });
+			Array.from(filePaths, (filePath) => {
+				storedResults.delete(filePath);
+				return connection.sendDiagnostics({
+					diagnostics: [],
+					uri: filePathToUri(filePath),
+				});
 			}),
 		);
 	}
 
-	function getDiagnosticDocument(uri: string) {
-		const document = documents.get(uri);
-		if (document) {
-			return document;
-		}
-
-		const sourceText = workspace?.vfsHost.readFileSync(fileURLToPath(uri));
+	function getDocument(filePath: string) {
+		const sourceText = workspace?.vfsHost.readFileSync(filePath);
 		return sourceText == null
 			? undefined
-			: TextDocument.create(uri, "plaintext", 0, sourceText);
+			: TextDocument.create(
+					filePathToUri(filePath),
+					"plaintext",
+					0,
+					sourceText,
+				);
 	}
 
 	documents.onDidChangeContent((change) => {
@@ -249,7 +232,7 @@ export function startServer(): void {
 			return;
 		}
 
-		const filePath = normalizePath(fileURLToPath(change.document.uri));
+		const filePath = uriToFilePath(change.document.uri);
 		workspace.vfsHost.vfsUpsertFile(filePath, change.document.getText());
 		requestLint(filePath);
 	});
@@ -259,25 +242,25 @@ export function startServer(): void {
 			return;
 		}
 
-		const filePath = normalizePath(fileURLToPath(event.document.uri));
+		const filePath = uriToFilePath(event.document.uri);
 		workspace.vfsHost.vfsDeleteFile(filePath);
 		requestLint(filePath);
 	});
 
 	connection.onCodeAction((codeActionParams) => {
-		const uri = codeActionParams.textDocument.uri;
-		const fileResults = storedResults.get(uri);
+		const filePath = uriToFilePath(codeActionParams.textDocument.uri);
+		const fileResults = storedResults.get(filePath);
 
 		if (!fileResults || !workspace) {
 			return [];
 		}
 
 		return createCodeActions(
-			uri,
+			filePath,
 			codeActionParams.context,
 			fileResults.reports,
 			{
-				getDocument: getDiagnosticDocument,
+				getDocument,
 				workspaceRoot: workspace.root,
 			},
 		);

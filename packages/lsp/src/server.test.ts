@@ -283,6 +283,81 @@ describe(startServer, () => {
 		).toEqual([]);
 	});
 
+	it("returns code actions when the client encodes the document URI differently", async () => {
+		const filePath = normalizePath(
+			path.join(workspaceRoot, "src/@scope/index.ts"),
+		);
+		const fileUri = pathToFileURL(filePath).href;
+		const clientUri = fileUri
+			.replace(
+				/^file:\/\/\/([A-Z]):/u,
+				(_, drive: string) => `file:///${drive.toLowerCase()}%3A`,
+			)
+			.replace("@", "%40");
+
+		mocks.lintPasses.push([
+			new Map([
+				[
+					filePath,
+					{
+						...createFileResults("language diagnostic"),
+						reports: [
+							{
+								about: { id: "renamed" },
+								fix: [{ range: { begin: 6, end: 11 }, text: "renamed" }],
+								message: {
+									primary: "Rename this.",
+									secondary: [],
+									suggestions: [],
+								},
+								range: {
+									begin: { column: 6, line: 0, raw: 6 },
+									end: { column: 11, line: 0, raw: 11 },
+								},
+							},
+						],
+					},
+				],
+			]),
+		]);
+
+		await startInitializedServer();
+		callback("didOpen")({
+			textDocument: {
+				languageId: "typescript",
+				text: "const value = 1;\n",
+				uri: clientUri,
+				version: 1,
+			},
+		});
+		await flushQueuedWork();
+
+		const range = {
+			end: { character: 11, line: 0 },
+			start: { character: 6, line: 0 },
+		};
+
+		expect(
+			callback("codeAction")({
+				context: {
+					diagnostics: [
+						{
+							code: "renamed",
+							message: "Rename this.",
+							range,
+							source: "flint",
+						},
+					],
+				},
+				textDocument: { uri: clientUri },
+			}),
+		).toEqual([
+			expect.objectContaining({
+				edit: { changes: { [fileUri]: [{ newText: "renamed", range }] } },
+			}),
+		]);
+	});
+
 	it("publishes changed diagnostics before dependent diagnostics", async () => {
 		const changedFilePath = normalizePath(path.join(workspaceRoot, "src/b.ts"));
 		const dependentFilePath = normalizePath(
