@@ -26,6 +26,7 @@ const config: ViteUserConfigExport = defineConfig({
 					isolate: [
 						"astro",
 						"cli",
+						"lsp",
 						"performance-testing",
 						"typescript-language",
 					].includes(name),
