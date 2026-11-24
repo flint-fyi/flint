@@ -2,14 +2,8 @@
 
 /* Campfire palette shared by both themes. */
 :root {
-	--flint-bark: #4b2915;
 	--flint-cream: #fbf4e6;
-	--flint-ember: #f6722b;
-	--flint-ember-deep: #b33a0a;
 	--flint-moss: #65955a;
-	--flint-night: #0c1a32;
-	--flint-pine: #185b37;
-	--flint-pine-deep: #003821;
 
 	--flint-font-display: Platypi, ui-serif, Georgia, serif;
 }
@@ -29,15 +23,16 @@
 	--sl-color-black: #0b1628;
 	--flint-button-hover-surface: var(--flint-paper);
 
-	--flint-ember-fill: #f58a3a;
-	--flint-ember-fill-text: #0b1628;
+	--flint-accent-fill: #237a4b;
+	--flint-accent-fill-text: var(--flint-cream);
+
+	--flint-secondary: #f58a3a;
 
 	--flint-paper: #16263d;
-	--flint-paper-border: #3b4d68;
-	--flint-badge-surface: #2a1a10;
-	--flint-badge-text: #ffc48a;
-	--sl-color-banner-bg: var(--flint-badge-surface);
-	--sl-color-banner-text: var(--flint-badge-text);
+	--flint-secondary-surface: #2a1a10;
+	--flint-secondary-text: #ffc48a;
+	--sl-color-banner-bg: var(--flint-secondary-surface);
+	--sl-color-banner-text: var(--flint-secondary-text);
 	--flint-pine-mark: #79ad6c;
 
 	--flint-tag-ember-bg: #3c1d0e;
@@ -48,9 +43,6 @@
 	--flint-tag-lake-fg: #8bd2ff;
 	--flint-tag-berry-bg: #3b1a28;
 	--flint-tag-berry-fg: #ffacce;
-
-	--flint-band-text: var(--flint-cream);
-	--flint-band-muted: #b9c4d6;
 }
 
 /* Light mode colors. */
@@ -73,15 +65,16 @@
 		transparent
 	);
 
-	--flint-ember-fill: #962900;
-	--flint-ember-fill-text: var(--flint-cream);
+	--flint-accent-fill: #185b37;
+	--flint-accent-fill-text: var(--flint-cream);
+
+	--flint-secondary: #962900;
 
 	--flint-paper: #fffaf1;
-	--flint-paper-border: #c7a98a;
-	--flint-badge-surface: #f7d19c;
-	--flint-badge-text: #6f1200;
-	--sl-color-banner-bg: var(--flint-badge-surface);
-	--sl-color-banner-text: var(--flint-badge-text);
+	--flint-secondary-surface: #f7d19c;
+	--flint-secondary-text: #6f1200;
+	--sl-color-banner-bg: var(--flint-secondary-surface);
+	--sl-color-banner-text: var(--flint-secondary-text);
 	--flint-pine-mark: #185b37;
 
 	--flint-tag-ember-bg: #ffcab2;
@@ -92,9 +85,6 @@
 	--flint-tag-lake-fg: #00457d;
 	--flint-tag-berry-bg: #fec5da;
 	--flint-tag-berry-fg: #701f46;
-
-	--flint-band-text: #3b1d13;
-	--flint-band-muted: #664432;
 }
 
 html[data-theme="light"] .only-dark {
@@ -129,15 +119,34 @@ h3,
 	letter-spacing: -0.015em;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	text-wrap: balance;
+}
+
+p,
+li,
+blockquote {
+	text-wrap: pretty;
+}
+
 table code {
 	background: none;
 	padding: 0;
 }
 
 a.sl-link-button.primary {
-	background: var(--flint-ember-fill);
-	border-color: var(--flint-ember-fill);
-	color: var(--flint-ember-fill-text);
+	background: var(--flint-accent-fill);
+	border-color: var(--flint-accent-fill);
+	color: var(--flint-accent-fill-text);
+}
+
+.not-content .sl-link-button {
+	margin: 0;
 }
 
 a.sl-link-button {
@@ -173,11 +182,37 @@ header.header {
 	border-block-end: 1px solid var(--sl-color-gray-5);
 }
 
+/* Center every page in one frame so the logo lines up with the sidebar and the homepage content. */
+:root {
+	--flint-frame-width: 88rem;
+	--flint-frame-offset: max(0px, (100vw - var(--flint-frame-width)) / 2);
+}
+
+header.header > .header {
+	padding-inline: var(--flint-frame-offset);
+}
+
 @media (min-width: 50rem) {
 	header.header > .header {
 		grid-template-columns:
 			calc(var(--sl-sidebar-width) - var(--sl-nav-pad-x))
 			1fr auto;
+	}
+
+	.sidebar-pane {
+		inset-inline-start: var(--flint-frame-offset);
+	}
+
+	:root:not([data-has-hero]) .main-frame {
+		padding-inline: calc(
+				var(--sl-content-inline-start, 0px) + var(--flint-frame-offset)
+			)
+			var(--flint-frame-offset);
+	}
+
+	:root[data-has-hero] .content-panel > .sl-container {
+		margin-inline: var(--flint-frame-offset) auto;
+		max-width: calc(var(--flint-frame-width) - 2 * var(--sl-content-pad-x));
 	}
 }
 

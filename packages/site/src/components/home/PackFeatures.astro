@@ -1,11 +1,12 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
+import HomeIcon from "~/assets/icons/home.svg";
 
 const features = [
 	{
 		body: "Flint ships with a sensible set of rules turned on, so you can start linting without writing a pile of config first.",
 		accent: "ember",
-		icon: "heart",
+		icon: "approve-check",
 		title: "Toasty by default",
 	},
 	{
@@ -17,7 +18,7 @@ const features = [
 	{
 		body: "Flint’s rules can use the full TypeScript type checker, so they catch bugs that syntax-only linters miss.",
 		accent: "lake",
-		icon: "star",
+		icon: HomeIcon,
 		title: "Sheltered by types",
 	},
 	{
@@ -40,9 +41,13 @@ const features = [
 
 	<div class="grid">
 		{features.map((feature) => (
-			<article class="flint-paper feature" data-accent={feature.accent}>
+			<article class="feature" data-accent={feature.accent}>
 				<div class="icon">
-					<Icon name={feature.icon} size="2rem" />
+					{typeof feature.icon === "string" ? (
+						<Icon name={feature.icon} size="2rem" />
+					) : (
+						<feature.icon height="2rem" width="2rem" />
+					)}
 				</div>
 				<div class="body">
 					<h3 class="flint-display">{feature.title}</h3>
@@ -69,7 +74,6 @@ const features = [
 		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
 		line-height: 1.15;
 		margin: 0;
-		text-wrap: balance;
 	}
 
 	.lede {

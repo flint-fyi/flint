@@ -1,5 +1,6 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
+import CopyIcon from "~/assets/icons/copy.svg";
 
 import PackageManagers from "./PackageManagers.astro";
 import { packageManagerLabels, packageManagers } from "./packageManagers.ts";
@@ -38,7 +39,7 @@ const defaultPackageManager = "npm";
 		data-copy-install
 		type="button"
 	>
-		<Icon class="copy-icon" name="document" />
+		<CopyIcon aria-hidden="true" class="copy-icon" />
 		<Icon class="check-icon" name="approve-check" />
 	</button>
 
@@ -284,8 +285,8 @@ const defaultPackageManager = "npm";
 <style>
 	.install-command {
 		align-items: stretch;
-		background: var(--flint-paper);
-		border: 1px solid var(--flint-paper-border);
+		background: var(--sl-color-black);
+		border: 1px solid var(--sl-color-gray-5);
 		border-radius: 0.5rem;
 		display: grid;
 		grid-template-columns: auto minmax(0, 1fr) 2.5rem;
@@ -300,12 +301,12 @@ const defaultPackageManager = "npm";
 	}
 
 	.package-manager {
-		background: var(--flint-badge-surface);
+		background: var(--flint-secondary-surface);
 		border-end-start-radius: calc(0.5rem - 1px);
-		border-inline-end: 1px solid var(--flint-paper-border);
+		border-inline-end: 1px solid var(--sl-color-gray-5);
 		border-start-start-radius: calc(0.5rem - 1px);
 		box-sizing: border-box;
-		color: var(--flint-badge-text);
+		color: var(--flint-secondary-text);
 		display: grid;
 		grid-template-columns: 1rem minmax(0, 1fr);
 		gap: 0.35rem;
@@ -380,8 +381,8 @@ const defaultPackageManager = "npm";
 		}
 
 		select::picker(select) {
-			background: var(--flint-paper);
-			border: 1px solid var(--flint-paper-border);
+			background: var(--sl-color-black);
+			border: 1px solid var(--sl-color-gray-5);
 			border-radius: 0.5rem;
 			color: var(--sl-color-white);
 			inline-size: anchor-size(inline);
@@ -487,7 +488,7 @@ const defaultPackageManager = "npm";
 	.copy-button {
 		background: transparent;
 		border: 0;
-		border-inline-start: 1px solid var(--flint-paper-border);
+		border-inline-start: 1px solid var(--sl-color-gray-5);
 		color: var(--sl-color-gray-2);
 		cursor: pointer;
 		justify-content: center;
@@ -501,8 +502,8 @@ const defaultPackageManager = "npm";
 
 	.copy-button:hover,
 	.copy-button[data-copied="true"] {
-		background: var(--flint-badge-surface);
-		color: var(--flint-badge-text);
+		background: var(--flint-secondary-surface);
+		color: var(--flint-secondary-text);
 	}
 
 	.copy-button:hover {
