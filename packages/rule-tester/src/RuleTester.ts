@@ -147,18 +147,20 @@ export class RuleTester {
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		{ invalid, valid }: TestCases<InferredInputObject<OptionsSchema>>,
 	): void {
+		const callSite = new Error("RuleTester call site").stack?.split("\n", 3)[2];
+
 		this.#testerOptions.describe(rule.about.id, () => {
 			this.#testerOptions.describe("invalid", () => {
 				const seenTestCases: TestCaseUniqueProperties[] = [];
 				for (const testCase of invalid) {
-					this.#itInvalidCase(rule, testCase, seenTestCases);
+					this.#itInvalidCase(rule, testCase, seenTestCases, callSite);
 				}
 			});
 
 			this.#testerOptions.describe("valid", () => {
 				const seenTestCases: TestCaseUniqueProperties[] = [];
 				for (const testCase of valid) {
-					this.#itValidCase(rule, testCase, seenTestCases);
+					this.#itValidCase(rule, testCase, seenTestCases, callSite);
 				}
 			});
 		});
@@ -168,13 +170,14 @@ export class RuleTester {
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCase: InvalidTestCase<InferredInputObject<OptionsSchema>>,
 		seenTestCases: TestCaseUniqueProperties[],
+		callSite: string | undefined,
 	) {
 		const testCaseNormalized = normalizeTestCase(
 			testCase,
 			this.#testerOptions.defaults.fileName,
 		);
 
-		this.#itTestCase(testCaseNormalized, seenTestCases, async () => {
+		this.#itTestCase(testCaseNormalized, seenTestCases, callSite, async () => {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
@@ -209,6 +212,7 @@ export class RuleTester {
 	#itTestCase(
 		testCase: TestCaseNormalized,
 		seenTestCases: TestCaseUniqueProperties[],
+		callSite: string | undefined,
 		setup: () => Promise<void>,
 	) {
 		let test = testCase.only
@@ -232,15 +236,22 @@ export class RuleTester {
 						)
 					: testCase.code),
 			() => {
-				assertNoDuplicateTestCase(testCase, seenTestCases);
-				if (testCase.files != null) {
-					assert.notEqual(
-						Object.keys(testCase.files).length,
-						0,
-						`'files' must have at least one file`,
-					);
+				try {
+					assertNoDuplicateTestCase(testCase, seenTestCases);
+					if (testCase.files != null) {
+						assert.notEqual(
+							Object.keys(testCase.files).length,
+							0,
+							`'files' must have at least one file`,
+						);
+					}
+				} catch (error) {
+					throw prependCallSite(error, callSite);
 				}
-				return setup();
+
+				return setup().catch((error: unknown) => {
+					throw prependCallSite(error, callSite);
+				});
 			},
 		);
 	}
@@ -249,6 +260,7 @@ export class RuleTester {
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		testCaseRaw: ValidTestCase<InferredInputObject<OptionsSchema>>,
 		seenTestCases: TestCaseUniqueProperties[],
+		callSite: string | undefined,
 	) {
 		const testCase =
 			typeof testCaseRaw === "string" ? { code: testCaseRaw } : testCaseRaw;
@@ -257,7 +269,7 @@ export class RuleTester {
 			this.#testerOptions.defaults.fileName,
 		);
 
-		this.#itTestCase(testCaseNormalized, seenTestCases, async () => {
+		this.#itTestCase(testCaseNormalized, seenTestCases, callSite, async () => {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
@@ -329,4 +341,21 @@ function defaultTo<TesterSetup extends TesterSetupDescribe | TesterSetupIt>(
 	}
 
 	throw new Error(`No ${scopeKey} function found`);
+}
+
+function prependCallSite(
+	error: unknown,
+	callSite: string | undefined,
+): unknown {
+	if (!(error instanceof Error) || !error.stack || !callSite) {
+		return error;
+	}
+
+	const framesStart = error.stack.search(/\n {4}at /);
+	error.stack =
+		framesStart === -1
+			? `${error.stack}\n${callSite}`
+			: `${error.stack.slice(0, framesStart)}\n${callSite}${error.stack.slice(framesStart)}`;
+
+	return error;
 }
