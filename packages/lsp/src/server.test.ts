@@ -351,10 +351,8 @@ describe(startServer, () => {
 				},
 				textDocument: { uri: clientUri },
 			}),
-		).toEqual([
-			expect.objectContaining({
-				edit: { changes: { [fileUri]: [{ newText: "renamed", range }] } },
-			}),
+		).toMatchObject([
+			{ edit: { changes: { [fileUri]: [{ newText: "renamed", range }] } } },
 		]);
 	});
 
