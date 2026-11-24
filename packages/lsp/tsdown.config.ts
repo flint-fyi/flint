@@ -7,6 +7,7 @@ const config: UserConfig = defineConfig({
 	entry: ["src/index.ts", "src/bin/index.ts"],
 	exports: {
 		...(base.exports && typeof base.exports === "object" ? base.exports : {}),
+		bin: { "flint-lsp": "./src/bin/index.ts" },
 		exclude: ["bin/index"],
 	},
 });
