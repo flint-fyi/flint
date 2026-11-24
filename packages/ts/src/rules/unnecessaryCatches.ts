@@ -1,8 +1,75 @@
-import { SyntaxKind } from "typescript";
+import { isNodeFlagSet } from "ts-api-utils";
+import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import type { Fix } from "@flint.fyi/core";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+function canUnwrapStatements(node: AST.TryStatement): boolean {
+	switch (node.parent.kind) {
+		case SyntaxKind.Block:
+		case SyntaxKind.CaseClause:
+		case SyntaxKind.DefaultClause:
+		case SyntaxKind.ModuleBlock:
+		case SyntaxKind.SourceFile:
+			return !node.tryBlock.statements.some(isScopedDeclaration);
+
+		default:
+			return false;
+	}
+}
+
+function createFix(node: AST.CatchClause, sourceFile: AST.SourceFile): Fix {
+	const tryStatement = node.parent;
+
+	if (tryStatement.finallyBlock) {
+		return {
+			range: {
+				begin: tryStatement.tryBlock.getEnd(),
+				end: node.getEnd(),
+			},
+			text: "",
+		};
+	}
+
+	const range = {
+		begin: tryStatement.getStart(sourceFile),
+		end: tryStatement.getEnd(),
+	};
+
+	if (!canUnwrapStatements(tryStatement)) {
+		return { range, text: tryStatement.tryBlock.getText(sourceFile) };
+	}
+
+	return {
+		range,
+		text: sourceFile.text
+			.slice(
+				tryStatement.tryBlock.getStart(sourceFile) + 1,
+				tryStatement.tryBlock.getEnd() - 1,
+			)
+			.trim(),
+	};
+}
+
+function isScopedDeclaration(node: AST.Statement): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.EnumDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.InterfaceDeclaration:
+		case SyntaxKind.ModuleDeclaration:
+		case SyntaxKind.TypeAliasDeclaration:
+			return true;
+
+		case SyntaxKind.VariableStatement:
+			return isNodeFlagSet(node.declarationList, ts.NodeFlags.BlockScoped);
+
+		default:
+			return false;
+	}
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -66,13 +133,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					};
 
 					context.report({
-						fix: {
-							range: {
-								begin: node.parent.tryBlock.getEnd(),
-								end: node.getEnd(),
-							},
-							text: "",
-						},
+						fix: createFix(node, sourceFile),
 						message: "unnecessaryCatch",
 						range,
 					});
