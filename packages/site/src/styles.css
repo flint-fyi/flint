@@ -32,14 +32,6 @@
 
 	--sl-color-banner-bg: var(--flint-secondary-surface);
 	--sl-color-banner-text: var(--flint-secondary-text);
-	--flint-tag-ember-bg: #3c1d0e;
-	--flint-tag-ember-fg: #ffb48e;
-	--flint-tag-moss-bg: #172d12;
-	--flint-tag-moss-fg: #a4dd98;
-	--flint-tag-lake-bg: #0b293f;
-	--flint-tag-lake-fg: #8bd2ff;
-	--flint-tag-berry-bg: #3b1a28;
-	--flint-tag-berry-fg: #ffacce;
 }
 
 /* Light mode colors: night blue on cream, pine accent, ember secondary. */
@@ -71,14 +63,6 @@
 
 	--sl-color-banner-bg: var(--flint-secondary-surface);
 	--sl-color-banner-text: var(--flint-secondary-text);
-	--flint-tag-ember-bg: #ffcab2;
-	--flint-tag-ember-fg: #732600;
-	--flint-tag-moss-bg: #c0e3b8;
-	--flint-tag-moss-fg: #155003;
-	--flint-tag-lake-bg: #b1ddff;
-	--flint-tag-lake-fg: #00457d;
-	--flint-tag-berry-bg: #fec5da;
-	--flint-tag-berry-fg: #701f46;
 }
 
 html[data-theme="light"] .only-dark {
