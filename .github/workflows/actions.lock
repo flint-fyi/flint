@@ -38,7 +38,7 @@ workflows:
         - 'changesets/action@v2.1.2'
         - 'marcalexiei/changesets-release-commenter@v0.4.0'
         - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
-    '.github/workflows/rule-data-renovate.yaml':
+    '.github/workflows/rule-data.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
     '.github/workflows/zizmor.yaml':
