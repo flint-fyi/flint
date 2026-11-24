@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer using element.dataset over getAttribute/setAttribute for data-* attributes.",
-		id: "nodeDatasetAttributes",
+		id: "nodeDatasetAccesses",
 		presets: ["logical", "logicalStrict"],
 	},
 	messages: {

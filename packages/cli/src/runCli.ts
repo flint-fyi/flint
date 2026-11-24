@@ -91,7 +91,7 @@ export async function runCli(
 				"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
 			);
 			console.error(
-				`In the meantime, why not join \u{1B}]8;;https://flint.fyi/discord\u{7}flint.fyi/discord\u{1B}]8;;\u{7} and chat with us? ❤️`,
+				`In the meantime, why not join \u{1B}]8;;https://flint.fyi/discord/\u{7}flint.fyi/discord\u{1B}]8;;\u{7} and chat with us? ❤️`,
 			);
 			return 2;
 		}
@@ -114,12 +114,18 @@ export async function runCli(
 		const { runCliOnce } = await import("./runCliOnce.ts");
 		const renderer = getRenderer();
 		try {
-			const { exitCode } = await runCliOnce(
+			const { exitCode, lintResults } = await runCliOnce(
 				createEphemeralLinterHost(host),
 				configFileName,
 				renderer,
 				values,
 			);
+
+			if (lintResults && renderer.onQuit) {
+				const quit: PromiseWithResolvers<void> = Promise.withResolvers();
+				renderer.onQuit(quit.resolve);
+				await quit.promise;
+			}
 
 			return exitCode;
 		} finally {

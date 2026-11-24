@@ -3,7 +3,16 @@ import fs from "node:fs";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
-import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	vi,
+	type Mock,
+} from "vitest";
 
 import { normalizePath } from "@flint.fyi/utils";
 
@@ -499,6 +508,19 @@ describe("createDiskBackedLinterHost", () => {
 	});
 
 	describe("watchDirectorySync", () => {
+		// macOS starts directory watchers asynchronously and drops writes made before they are ready.
+		async function waitForWatcherReady(
+			directoryPath: string,
+			onEvent: Mock,
+		): Promise<void> {
+			const readyPath = path.join(directoryPath, "watcher-ready.txt");
+			await vi.waitFor(() => {
+				fs.writeFileSync(readyPath, "");
+				expect(onEvent).toHaveBeenCalledWith(normalizePath(readyPath));
+			});
+			onEvent.mockClear();
+		}
+
 		it.skipIf(process.platform !== "linux" || process.getuid?.() === 0)(
 			"watches directories containing unreadable ignored subtrees",
 			async () => {
@@ -537,7 +559,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: false,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			const nestedFile = path.join(nestedPath, "nested.txt");
 			const directFile = path.join(directoryPath, "direct.txt");
@@ -563,7 +585,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			const nestedFile = path.join(nestedPath, "nested.txt");
 			fs.writeFileSync(nestedFile, "nested");
@@ -585,7 +607,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(baseDir, onEvent);
 
 			fs.mkdirSync(path.join(baseDir, ".git"), { recursive: true });
 			fs.writeFileSync(path.join(baseDir, ".git", "config"), "content");
@@ -611,7 +633,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(baseDir, onEvent);
 
 			fs.mkdirSync(path.join(baseDir, "node_modules", "pkg"), {
 				recursive: true,
@@ -649,6 +671,8 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
+			await waitForWatcherReady(integrationRoot, onEvent);
+
 			for (const filePath of [...ignoredFiles, ...visibleFiles]) {
 				fs.writeFileSync(filePath, "content");
 			}
@@ -674,7 +698,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: true,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(baseDir, onEvent);
 
 			const filePath = path.join(baseDir, ".gitignore");
 			fs.writeFileSync(filePath, "content");
@@ -718,7 +742,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: false,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			fs.rmSync(directoryPath, { force: true, recursive: true });
 
@@ -746,7 +770,7 @@ describe("createDiskBackedLinterHost", () => {
 				recursive: false,
 			});
 
-			await sleep(50);
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			fs.rmSync(firstFile);
 			await vi.waitFor(() => {
@@ -774,7 +798,7 @@ describe("createDiskBackedLinterHost", () => {
 					recursive,
 				});
 
-				await sleep(50);
+				await waitForWatcherReady(directoryPath, onEvent);
 
 				const firstFile = path.join(directoryPath, "first.txt");
 				fs.writeFileSync(firstFile, "first");
@@ -798,7 +822,7 @@ describe("createDiskBackedLinterHost", () => {
 				await vi.waitFor(() => {
 					expect(onEvent).toHaveBeenCalledWith(normalizedDirectory);
 				});
-				onEvent.mockClear();
+				await waitForWatcherReady(directoryPath, onEvent);
 
 				const secondFile = path.join(directoryPath, "second.txt");
 				fs.writeFileSync(secondFile, "second");
@@ -827,7 +851,7 @@ describe("createDiskBackedLinterHost", () => {
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(directoryPath);
 			});
-			onEvent.mockClear();
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			fs.mkdirSync(subdirectoryPath, { recursive: true });
 			await vi.waitFor(() => {
@@ -851,13 +875,152 @@ describe("createDiskBackedLinterHost", () => {
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(directoryPath);
 			});
-			onEvent.mockClear();
+			await waitForWatcherReady(directoryPath, onEvent);
 
 			fs.rmSync(directoryPath, { recursive: true });
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(directoryPath);
 			});
 			onEvent.mockClear();
+		});
+	});
+
+	describe("shared watchers", () => {
+		afterEach(() => {
+			vi.restoreAllMocks();
+		});
+
+		it("opens one native watcher for file watchers of the same path", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = normalizePath(path.join(integrationRoot, "shared.txt"));
+			fs.writeFileSync(filePath, "first");
+			const watch = vi.spyOn(fs, "watch");
+			const first = vi.fn();
+			const second = vi.fn();
+			using _first = host.watchFileSync(filePath, first, { ignoredPaths: [] });
+			using _second = host.watchFileSync(filePath, second, {
+				ignoredPaths: [],
+			});
+
+			await sleep(50);
+			fs.writeFileSync(filePath, "second");
+
+			await vi.waitFor(() => {
+				expect(first).toHaveBeenCalledWith("changed");
+				expect(second).toHaveBeenCalledWith("changed");
+			});
+			expect(watch).toHaveBeenCalledOnce();
+		});
+
+		it("keeps reporting to a callback registered twice after one is disposed", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = normalizePath(path.join(integrationRoot, "shared.txt"));
+			fs.writeFileSync(filePath, "first");
+			const onEvent = vi.fn();
+			using _ = host.watchFileSync(filePath, onEvent, { ignoredPaths: [] });
+			{
+				using _disposed = host.watchFileSync(filePath, onEvent, {
+					ignoredPaths: [],
+				});
+			}
+
+			await sleep(50);
+			fs.writeFileSync(filePath, "second");
+
+			await vi.waitFor(() => {
+				expect(onEvent).toHaveBeenCalledWith("changed");
+			});
+		});
+
+		it("does not warn about too many listeners when many watchers share a missing path", () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = normalizePath(path.join(integrationRoot, "missing.txt"));
+			const emitWarning = vi.spyOn(process, "emitWarning");
+
+			const subscriptions = Array.from({ length: 11 }, () =>
+				host.watchFileSync(filePath, vi.fn(), { ignoredPaths: [] }),
+			);
+			for (const subscription of subscriptions) {
+				subscription[Symbol.dispose]();
+			}
+
+			expect(emitWarning).not.toHaveBeenCalledWith(
+				expect.objectContaining({ name: "MaxListenersExceededWarning" }),
+			);
+		});
+
+		it("opens one native watcher per distinct set of directory options", () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const watch = vi.spyOn(fs, "watch");
+			const recursiveOptions = { ignoredPaths: [], recursive: true };
+
+			using _first = host.watchDirectorySync(
+				integrationRoot,
+				vi.fn(),
+				recursiveOptions,
+			);
+			using _second = host.watchDirectorySync(
+				integrationRoot,
+				vi.fn(),
+				recursiveOptions,
+			);
+			using _nonRecursive = host.watchDirectorySync(integrationRoot, vi.fn(), {
+				ignoredPaths: [],
+				recursive: false,
+			});
+
+			// On Linux, Node implements recursive fs.watch by calling fs.watch per entry.
+			const hostWatchCalls = watch.mock.calls.filter(
+				([, options]) => typeof options === "object" && "recursive" in options,
+			);
+			expect(hostWatchCalls).toHaveLength(2);
+		});
+
+		it("does not report to a watcher disposed by an earlier watcher's callback", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = normalizePath(path.join(integrationRoot, "shared.txt"));
+			fs.writeFileSync(filePath, "first");
+			const subscriptions: Disposable[] = [];
+			const first = vi.fn(() => {
+				subscriptions[1]?.[Symbol.dispose]();
+			});
+			const second = vi.fn();
+			subscriptions.push(
+				host.watchFileSync(filePath, first, { ignoredPaths: [] }),
+				host.watchFileSync(filePath, second, { ignoredPaths: [] }),
+			);
+
+			try {
+				await sleep(50);
+				fs.writeFileSync(filePath, "second");
+
+				await vi.waitFor(() => {
+					expect(first).toHaveBeenCalled();
+				});
+				expect(second).not.toHaveBeenCalled();
+			} finally {
+				subscriptions[0]?.[Symbol.dispose]();
+			}
+		});
+
+		it("closes a shared native watcher after its last watcher is disposed", () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = normalizePath(path.join(integrationRoot, "shared.txt"));
+			fs.writeFileSync(filePath, "first");
+			const watch = vi.spyOn(fs, "watch");
+			const first = host.watchFileSync(filePath, vi.fn(), {
+				ignoredPaths: [],
+			});
+			const second = host.watchFileSync(filePath, vi.fn(), {
+				ignoredPaths: [],
+			});
+			const close = vi.spyOn(watch.mock.results[0]?.value, "close");
+
+			first[Symbol.dispose]();
+			expect(close).not.toHaveBeenCalled();
+
+			second[Symbol.dispose]();
+			expect(close).toHaveBeenCalledOnce();
 		});
 	});
 

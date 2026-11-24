@@ -11,7 +11,7 @@ inputs:
   node-version:
     description: The Node.js version to use
     required: false
-    default: 26.12.1
+    default: 26.13.1
   skip-checkout:
     description: Skip the checkout step if the repo is already checked out
     default: false
@@ -23,7 +23,7 @@ runs:
       if: ${{ inputs.skip-checkout == 'false' }}
       with:
         persist-credentials: false
-    - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+    - uses: pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1 # v3.2.0
       env:
         HUSKY: 0
       with:

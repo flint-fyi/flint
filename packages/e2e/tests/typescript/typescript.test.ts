@@ -12,7 +12,7 @@ describe("typescript", () => {
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
 			"<grey>Linting with <cyan><bold>flint.config.ts</bold><grey>...</fg>
 
-			<underline><cwd>/fixtures/src/with-issues.ts</underline>
+			<underline>packages/e2e/tests/typescript/fixtures/src/with-issues.ts</underline>
 			<grey>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 			<red>✖ Found <bold>1 report</bold> across <bold>1 file</bold>.

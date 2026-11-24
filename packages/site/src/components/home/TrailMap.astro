@@ -34,10 +34,10 @@ const rules = ruleIds.map((ruleId) => {
 			scout-master.
 		</p>
 		<div class="actions">
-			<a class="button primary" href="/rules">
+			<a class="button primary" href="/rules/">
 				Browse rules
 			</a>
-			<a class="button" href="/about">
+			<a class="button" href="/about/">
 				Read the docs
 			</a>
 		</div>
@@ -47,7 +47,7 @@ const rules = ruleIds.map((ruleId) => {
 		{rules.map((rule) => (
 			<li class="rule">
 				<div class="rule-heading">
-					<a href={`/rules/ts/${rule.id}`}>ts/{rule.id}</a>
+					<a href={`/rules/ts/${rule.id}/`}>ts/{rule.id}</a>
 					<span class="preset" data-preset={rule.preset}>
 						{rule.preset}
 					</span>

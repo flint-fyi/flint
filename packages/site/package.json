@@ -34,6 +34,7 @@
 		"@expressive-code/core": "catalog:site",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@konami-emoji-blast/astro": "catalog:site",
+		"@shikijs/colorized-brackets": "catalog:site",
 		"@types/node": "catalog:dev",
 		"@types/react-dom": "catalog:site",
 		"expressive-code": "catalog:site",

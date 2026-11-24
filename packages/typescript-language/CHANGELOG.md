@@ -1,5 +1,11 @@
 # @flint.fyi/typescript-language
 
+## 0.21.4
+
+### Patch Changes
+
+- [#3972](https://github.com/flint-fyi/flint/pull/3972) [`3f80530`](https://github.com/flint-fyi/flint/commit/3f80530a4823d3c82f540e9c7e7f735232f983b1) - Records cache dependencies as absolute paths.
+
 ## 0.21.3
 
 ### Patch Changes

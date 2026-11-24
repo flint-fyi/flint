@@ -8,57 +8,42 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  build:
-    name: Build
+  checks:
+    name: Quality Checks
     runs-on: ubuntu-latest
     steps:
       - uses: $/.github/actions/setup
-      - run: pnpm run build # Ensure packages pass attw, etc.
-      - run: pnpm --filter=site check # Validate packages/site without a full Astro build.
+      - name: Generate Astro Types
+        run: pnpm run --filter=site prebuild
+      - name: Build
+        run: pnpm run build # Ensure packages pass attw and generate exports for Knip.
+      - parallel:
+          - name: Ensure rule data remains sorted
+            run: pnpm run --filter=rule-data sort-data --check
+          - name: Flint
+            run: pnpm run flint
+          - name: Lint
+            run: pnpm run lint
+          - name: Lint Knip
+            run: pnpm run lint:knip
+          - name: Lint Knip Production
+            run: pnpm run lint:knip:prod
+          - name: Typecheck
+            run: pnpm run typecheck
+      - name: Dedupe Check # Last, since it reinstalls node_modules.
+        if: ${{ !cancelled() }}
+        run: pnpm dedupe --check --prefer-offline
 
-  dedupe_check:
-    name: Dedupe Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm dedupe --check --prefer-offline
-
-  flint:
-    name: Flint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
-      - run: pnpm run flint
-
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
-      - run: pnpm run lint
-
-  lint_knip:
-    name: Lint Knip
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run build # Knip requires all exports to be generated.
-      - run: pnpm run lint:knip
-      - run: pnpm run lint:knip:prod
-
-  typecheck:
-    name: Typecheck
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm exec tsc -b
-
-  test_e2e:
-    name: Test E2E (Node.js ${{ matrix.node-version }}, ${{ matrix.os }})
+  test:
+    name: Test (Node.js ${{ case(matrix.node-version == '26.1.0', matrix.node-version, '26.x') }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    permissions:
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -66,66 +51,42 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
-        node-version: [26.1.0, 26]
+        node-version: [26.1.0, 26.13.1]
+        include:
+          - os: macos-latest
+            node-version: 26.1.0
+            e2e-only: true
+          - os: ubuntu-latest
+            node-version: 26.13.1
+            coverage: true
+          - os: windows-latest
+            node-version: 26.1.0
+            e2e-only: true
     steps:
       - uses: $/.github/actions/setup
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache Vite Cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
-      - name: Run e2e Tests
+      - name: Run Only E2E Tests
+        if: ${{ matrix.e2e-only }}
+        env:
+          NODE_COMPILE_CACHE: ${{ runner.temp }}/node-compile-cache
         run: pnpm run test --project e2e
-
-  test_node:
-    name: Test (Node.js ${{ matrix.node-version }}, ubuntu-latest)
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [26.1.0, 26]
-    steps:
-      - uses: $/.github/actions/setup
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Cache Vite Cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          key: vite-cache-ubuntu-latest-${{ hashFiles('pnpm-lock.yaml') }}
-          path: node_modules/.vite
-      - name: Run Unit Tests
-        run: pnpm run test --project='!e2e'
-
-  test_os:
-    name: Test
-    runs-on: ${{ matrix.os }}
-    permissions:
-      id-token: write
-    strategy:
-      matrix:
-        os:
-          - macos-latest
-          - windows-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - name: Cache Vite Cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          path: node_modules/.vite
-      - name: Run Unit Tests
-        run: pnpm run test --project='!e2e' --coverage
+      - name: Run Unit + E2E Tests
+        if: ${{ !matrix.e2e-only && !matrix.coverage }}
+        env:
+          NODE_COMPILE_CACHE: ${{ runner.temp }}/node-compile-cache
+        run: pnpm run test
+      - name: Run Unit Tests With Coverage + E2E Tests
+        if: ${{ matrix.coverage }}
+        run: pnpm run test --coverage
       - name: Report Code Coverage
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
-        if: ${{ !cancelled() && (matrix.os == 'macos-latest') }}
+        uses: codecov/codecov-action@v7.1.1
+        if: ${{ !cancelled() && matrix.coverage }}
         with:
           fail_ci_if_error: true
           use_oidc: true
-
-  check_rule_data_sort:
-    name: Ensure rule data remains sorted
-    runs-on: ubuntu-latest
-    steps:
-      - uses: $/.github/actions/setup
-      - run: pnpm run --filter=rule-data sort-data --check
