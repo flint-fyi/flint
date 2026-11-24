@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { cacheStorageSchema } from "../cache/cacheFormat.ts";
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
@@ -7,6 +7,7 @@ import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { Fix } from "../types/changes.ts";
 import type { LanguageReport } from "../types/languages.ts";
 import type { CharacterReportRange } from "../types/ranges.ts";
+import { runConfig } from "./runConfig.ts";
 import { runConfigFixing } from "./runConfigFixing.ts";
 
 const filePath = "/root/file.txt";
@@ -233,5 +234,75 @@ describe(runConfigFixing, () => {
 			expect.any(String),
 		);
 		expect(results.allFileResults.get(filePath)?.reports).toEqual([]);
+	});
+
+	it("does not apply fixes to a file edited after it was linted", async () => {
+		getFix.mockImplementation(() => {
+			host.vfsUpsertFile(filePath, "xyz");
+			return fixes;
+		});
+
+		const results = await runConfigFixing(config, host, options);
+
+		expect(results.changed).toEqual(new Set());
+		expect(host.readFileSync(filePath)).toBe("xyz");
+		expect(writeFile).toHaveBeenCalledExactlyOnceWith(
+			cacheLocation,
+			expect.any(String),
+		);
+	});
+
+	describe("with cached fixes", () => {
+		const cachedAt = 1000;
+
+		async function cacheFixes(): Promise<void> {
+			vi.spyOn(Date, "now").mockReturnValue(cachedAt);
+			getFix.mockReturnValue(fixes);
+			host.vfsUpsertFile(config.filePath, "");
+			host.vfsUpsertFile("package.json", "{}");
+			host.vfsUpsertFile(filePath, "abc");
+			await runConfig(config, host, { cacheLocation, ignoreCache: true });
+			visit.mockClear();
+			writeFile.mockClear();
+		}
+
+		afterEach(() => {
+			vi.restoreAllMocks();
+		});
+
+		it("applies them without re-linting when the file is untouched since caching", async () => {
+			await cacheFixes();
+			vi.spyOn(Date, "now").mockReturnValue(cachedAt + 1000);
+
+			const results = await runConfigFixing(config, host, {
+				...options,
+				ignoreCache: false,
+			});
+
+			expect(results.changed).toEqual(new Set([filePath]));
+			expect(host.readFileSync(filePath)).toBe("aBC");
+			expect(visit).toHaveBeenCalledTimes(1);
+		});
+
+		it("skips them when the file was touched after caching", async () => {
+			await cacheFixes();
+			vi.spyOn(Date, "now").mockReturnValue(cachedAt + 1);
+			const readFile = host.readFile.bind(host);
+			vi.spyOn(host, "readFile").mockImplementation(async (path) => {
+				if (path === filePath) {
+					host.vfsUpsertFile(filePath, "xyz");
+				}
+				return await readFile(path);
+			});
+
+			const results = await runConfigFixing(config, host, {
+				...options,
+				ignoreCache: false,
+			});
+
+			expect(visit).not.toHaveBeenCalled();
+			expect(results.changed).toEqual(new Set());
+			expect(host.readFileSync(filePath)).toBe("xyz");
+		});
 	});
 });
