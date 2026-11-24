@@ -1,7 +1,7 @@
-import { ruleTester } from "../ruleTester.ts";
+import { nodeRuleTester } from "../ruleTester.ts";
 import rule from "./nodeTestImports.ts";
 
-ruleTester.describe(rule, {
+nodeRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
