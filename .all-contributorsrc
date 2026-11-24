@@ -134,7 +134,8 @@
         "infra",
         "maintenance",
         "code",
-        "review"
+        "review",
+        "doc"
       ]
     },
     {
@@ -320,6 +321,43 @@
       "contributions": [
         "ideas",
         "code"
+      ]
+    },
+    {
+      "login": "dh1011",
+      "name": "Duy Hua",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1806772?v=4",
+      "profile": "https://duy.run",
+      "contributions": [
+        "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "marst313",
+      "name": "I Nyoman Karma Dharma Nalendra Wardana",
+      "avatar_url": "https://avatars.githubusercontent.com/u/50996212?v=4",
+      "profile": "https://inyomandharma.vercel.app/",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "Vamsi-2581",
+      "name": "Vamsi-2581",
+      "avatar_url": "https://avatars.githubusercontent.com/u/245859299?v=4",
+      "profile": "https://github.com/Vamsi-2581",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "daocuong11",
+      "name": "daocuong11",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29220969?v=4",
+      "profile": "https://github.com/daocuong11",
+      "contributions": [
+        "doc"
       ]
     }
   ],

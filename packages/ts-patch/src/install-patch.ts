@@ -2,10 +2,10 @@
 import fs from "node:fs";
 import { createRequire } from "node:module";
 
-import { transformTscContent } from "./shared.ts";
+import { resolveTypeScriptPath, transformTscContent } from "./shared.ts";
 
 const require = createRequire(import.meta.url);
-const typescriptPath = require.resolve("typescript");
+const typescriptPath = resolveTypeScriptPath();
 
 const originalReadFileSync = fs.readFileSync;
 // @ts-expect-error - TypeScript doesn't understand that the overloads do match up.

@@ -1,6 +1,6 @@
 ---
 description: "Prefer reading JSON files as buffers when using JSON.parse for better performance."
-title: "fileReadJSONBuffers"
+title: "jsonFileReads"
 topic: "rules"
 ---
 
@@ -9,7 +9,7 @@ import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="node" rule="fileReadJSONBuffers" />
+<RuleSummary plugin="node" rule="jsonFileReads" />
 
 `JSON.parse()` can parse buffers directly without needing to convert them to strings first.
 Reading files as buffers when parsing JSON avoids unnecessary string conversion overhead.
@@ -79,4 +79,4 @@ Additionally, if you choose to manually choose which nuanced parsing behavior yo
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="node" ruleId="fileReadJSONBuffers" />
+<RuleEquivalents pluginId="node" ruleId="jsonFileReads" />

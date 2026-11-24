@@ -1,5 +1,26 @@
 # @flint.fyi/rule-data
 
+## 0.5.8
+
+### Patch Changes
+
+- [#3946](https://github.com/flint-fyi/flint/pull/3946) [`fbb0d78`](https://github.com/flint-fyi/flint/commit/fbb0d787a288fdd8b1960a278b9efbce2507bac0) - Add the missing Biome rule mappings for the Biome rules added since the last rule data sync.
+
+- [#3978](https://github.com/flint-fyi/flint/pull/3978) [`935c436`](https://github.com/flint-fyi/flint/commit/935c43661b94e3fe4994b5eb3e35f10f7537ec55) - Add the missing `yml/max-len` mapping, as a skipped formatting rule.
+
+## 0.5.7
+
+### Patch Changes
+
+- [#3900](https://github.com/flint-fyi/flint/pull/3900) [`798bfd0`](https://github.com/flint-fyi/flint/commit/798bfd010744ff9a1bd9b255e9839e28efe051bd) - Link Biome rule mappings to language-specific documentation pages.
+  Use the Biome rule names `noUnusedInstantiation` and `useTailwindSortedClasses` without duplicate mapping entries.
+
+- [#3904](https://github.com/flint-fyi/flint/pull/3904) [`c40882a`](https://github.com/flint-fyi/flint/commit/c40882ab4f66d38390d7057e3a133c241478f4ca) - Align rule catalog mappings with active ESLint, Oxlint, and Stylelint rules and documentation.
+  Exclude deprecated Unicorn no-op rules from coverage reports.
+- Updated dependencies [[`9778414`](https://github.com/flint-fyi/flint/commit/97784141ce4d5d7d10bd6e74412b966f0ad23099), [`03b7a1a`](https://github.com/flint-fyi/flint/commit/03b7a1ac6038cdf31598998dbfef9a3cd8319500)]:
+  - @flint.fyi/browser@0.6.0
+  - @flint.fyi/node@0.6.0
+
 ## 0.5.6
 
 ### Patch Changes

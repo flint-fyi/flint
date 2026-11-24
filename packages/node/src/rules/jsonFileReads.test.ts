@@ -1,4 +1,4 @@
-import rule from "./fileReadJSONBuffers.ts";
+import rule from "./jsonFileReads.ts";
 import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {

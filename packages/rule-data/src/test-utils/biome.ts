@@ -32,6 +32,6 @@ export function getBiomeLintRules(): string[] {
 
 function collectRulesIn(key: keyof DefsWithProperties) {
 	return Object.keys(schema.$defs[key].properties).filter(
-		(ruleName) => ruleName !== "recommended",
+		(ruleName) => ruleName !== "preset" && ruleName !== "recommended",
 	);
 }

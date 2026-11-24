@@ -18,7 +18,7 @@ Those design decisions generally fall into three categories:
 - **[Developer Experience](#developer-experience)**: how rule authors will create rules that users experience
 - **[Ecosystem](#ecosystem)**: standardizing users and plugins around Flint, while still encouraging userland experimentation
 
-See [Introducing Flint](/blog/introducing-flint) for an overview of "hybrid linting" and Flint's general experimental hypotheses.
+See [Introducing Flint](/blog/introducing-flint/) for an overview of "hybrid linting" and Flint's general experimental hypotheses.
 For a detailed breakdown of how Flint differs from other popular linters, read on!
 
 ## Architecture
@@ -31,7 +31,7 @@ Flint is a _hybrid linter_: its core is written in TypeScript, but language-spec
 We believe this will allow Flint to stay approachable, while still using native speed code to remove most of the traditional slow bottlenecks of web linting.
 
 :::tip
-See more details on this point in [Introducing Flint > Hybrid Linting](/blog/introducing-flint#hybrid-linting).
+See more details on this point in [Introducing Flint > Hybrid Linting](/blog/introducing-flint/#hybrid-linting).
 :::
 
 ### TypeScript for Type Awareness
@@ -138,7 +138,7 @@ Flint embraces the Biome approach of having one tool _coordinate_ others.
 Flint will automatically run [Prettier](https://prettier.io) on linted files to format them after linting.
 
 :::tip
-See more details on this point in [Introducing Flint > Tooling Coordination](/blog/introducing-flint#tooling-coordination).
+See more details on this point in [Introducing Flint > Tooling Coordination](/blog/introducing-flint/#tooling-coordination).
 :::
 
 ### Language Reports Coordination
@@ -155,7 +155,7 @@ Flint will additionally re-use TypeScript information from typed linting to repo
 This is the equivalent of [Oxlint's `--type-check` flag](https://oxc.rs/docs/guide/usage/linter/type-aware.html#type-checking-diagnostics).
 
 :::tip
-See more details on this point in [Introducing Flint > Tooling Coordination](/blog/introducing-flint#tooling-coordination).
+See more details on this point in [Introducing Flint > Tooling Coordination](/blog/introducing-flint/#tooling-coordination).
 :::
 
 ### Embeddable by Design
@@ -578,7 +578,7 @@ Flint's configs will be fully type-safe (including lint rules and their options)
 Parsing, processing, and other edge case hazards will be handled for users behind-the-scenes.
 
 :::tip
-See more details on this point in [Introducing Flint > Streamlined Rich Configuration](/blog/introducing-flint#streamlined-rich-configuration).
+See more details on this point in [Introducing Flint > Streamlined Rich Configuration](/blog/introducing-flint/#streamlined-rich-configuration).
 :::
 
 ### Inline Snapshot Unit Tests
@@ -668,10 +668,10 @@ To support that larger effort, the Flint project:
 - Keeps a list of over 1,000 popular lint rules for reference, with rules categorized into Flint's plugins
 
 Flint's hypothesis for plugins is that by taking that comprehensive, holistic approach, users of Flint will be able to easily turn on more comprehensive, powerful linting by default - without needing to deep dive into the plugin ecosystem.
-You can find the full list of plugins and rules in [Rules](/rules).
+You can find the full list of plugins and rules in [Rules](/rules/).
 
 :::tip
-See more details on this point in [Introducing Flint > Thorough Provided Plugins](/blog/introducing-flint#thorough-provided-plugins).
+See more details on this point in [Introducing Flint > Thorough Provided Plugins](/blog/introducing-flint/#thorough-provided-plugins).
 :::
 
 ### Community Organization
@@ -772,7 +772,7 @@ As of January 2026, Flint is still an early-stage prototype.
 Many but not all of the features in this post have not yet been built.
 
 If you're interested in helping build out a new experimental linter, we'd love to have you join us.
-At the very least, see [About](/about) for how to get started using Flint as a user.
+At the very least, see [About](/about/) for how to get started using Flint as a user.
 Trying out the project and telling us about your experience on the [Flint Discord](https://flint.fyi/discord) would be immensely helpful.
 
 The [GitHub issue tracker](https://github.com/flint-fyi/flint/issues) is where you can find our list of upcoming work.

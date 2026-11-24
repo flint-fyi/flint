@@ -1,4 +1,4 @@
-import { join, relative } from "pathe";
+import { join } from "pathe";
 
 import type {
 	LanguageFile,
@@ -28,9 +28,7 @@ export function getTypeScriptFileCacheImpacts(
 				...(configFile?.extendedSourceFiles ?? []),
 				packageJsonScope &&
 					join(packageJsonScope.packageDirectory, "package.json"),
-			]
-				.filter((filePath) => filePath !== undefined)
-				.map((filePath) => relative(host.getCurrentDirectory(), filePath)),
+			].filter((filePath) => filePath !== undefined),
 			...collectReferencedFilePaths(
 				program,
 				sourceFile,

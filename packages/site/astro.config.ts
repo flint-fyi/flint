@@ -128,7 +128,7 @@ export default defineConfig({
 			],
 			social: [
 				{
-					href: "https://flint.fyi/discord",
+					href: "https://flint.fyi/discord/",
 					icon: "discord",
 					label: "Discord",
 				},
@@ -157,9 +157,10 @@ export default defineConfig({
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
-		"/team": "/project/team",
+		"/team": "/project/team/",
 	},
 	site: "https://flint.fyi",
+	trailingSlash: "always",
 	vite: {
 		define: {
 			__filename: "import.meta.filename",

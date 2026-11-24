@@ -2,7 +2,7 @@
 	"name": "@flint.fyi/solid",
 	"version": "0.4.5",
 	"description": "[Experimental] A Flint plugin for SolidJS code.",
-	"homepage": "https://flint.fyi/rules/solid",
+	"homepage": "https://flint.fyi/rules/solid/",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",

@@ -13,14 +13,14 @@ describe("directives", () => {
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
 			"<grey>Linting with <cyan><bold>flint.config.ts</bold><grey>...</fg>
 
-			<underline><cwd>/fixtures/src/empty-line-boundary.ts</underline>
+			<underline>packages/e2e/tests/directives/fixtures/src/empty-line-boundary.ts</underline>
 			<grey>  1:1</fg>  The flint-disable-next-line comment directive selecting "spelling/cspell" did not match any reports.  <yellow>commentDirectiveUnused</fg>
 			<grey>  3:4</fg>  Forbidden or unknown word: "functon".                                                                 <yellow>spelling/cspell</fg>
 
-			<underline><cwd>/fixtures/src/unsuppressed-code.ts</underline>
+			<underline>packages/e2e/tests/directives/fixtures/src/unsuppressed-code.ts</underline>
 			<grey>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
-			<underline><cwd>/fixtures/src/unsuppressed-comment.ts</underline>
+			<underline>packages/e2e/tests/directives/fixtures/src/unsuppressed-comment.ts</underline>
 			<grey>  1:4</fg>  Forbidden or unknown word: "functon".  <yellow>spelling/cspell</fg>
 
 			<red>✖ Found <bold>4 reports</bold> across <bold>3 files</bold>.

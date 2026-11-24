@@ -1,8 +1,9 @@
 import { registerHooks } from "node:module";
+import { pathToFileURL } from "node:url";
 
-import { transformTscContent } from "./shared.ts";
+import { resolveTypeScriptPath, transformTscContent } from "./shared.ts";
 
-const typescriptUrl = import.meta.resolve("typescript");
+const typescriptUrl = pathToFileURL(resolveTypeScriptPath()).href;
 
 registerHooks({
 	load(url, context, nextLoad) {
@@ -11,7 +12,7 @@ registerHooks({
 		if (
 			url !== typescriptUrl ||
 			next.source == null ||
-			!(next.source instanceof Buffer)
+			(typeof next.source !== "string" && !(next.source instanceof Buffer))
 		) {
 			return next;
 		}

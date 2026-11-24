@@ -35,9 +35,9 @@ describe(getTypeScriptFileCacheImpacts, () => {
 		});
 
 		expect(getTypeScriptFileCacheImpacts(file, host).dependencies).toEqual([
-			"tsconfig.json",
-			"tsconfig.base.json",
-			"package.json",
+			`${root}/tsconfig.json`,
+			`${root}/tsconfig.base.json`,
+			`${root}/package.json`,
 		]);
 
 		factory[Symbol.dispose]?.();
