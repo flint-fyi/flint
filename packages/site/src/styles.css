@@ -139,6 +139,23 @@ table code {
 	padding: 0;
 }
 
+.flint-preset {
+	background: color-mix(in oklch, var(--flint-secondary) 16%, transparent);
+	border-radius: 1px;
+	color: var(--flint-secondary-text);
+	display: inline-block;
+	font-family: var(--sl-font-mono);
+	font-size: var(--sl-text-xs);
+	line-height: 1.5;
+	padding: 0 0.375rem;
+	text-decoration: none;
+
+	&[data-preset^="stylistic"] {
+		background: color-mix(in oklch, var(--flint-moss) 16%, transparent);
+		color: var(--flint-pine-mark);
+	}
+}
+
 a.sl-link-button.primary {
 	background: var(--flint-accent-fill);
 	border-color: var(--flint-accent-fill);

@@ -1,7 +1,7 @@
 ---
 import markdownIt from "markdown-it";
 
-import { getRuleForPlugin } from "@flint.fyi/rule-data";
+import { getPluginName, getRuleForPlugin } from "@flint.fyi/rule-data";
 
 interface Props {
 	plugin: string;
@@ -9,28 +9,62 @@ interface Props {
 }
 
 const renderer = markdownIt();
-const rule = getRuleForPlugin(Astro.props.plugin, Astro.props.rule);
+const { plugin } = Astro.props;
+const rule = getRuleForPlugin(plugin, Astro.props.rule);
 ---
 
-<blockquote>
-	<Fragment set:html={renderer.render(rule.about.description)} />
-</blockquote>
+<p class="lede" set:html={renderer.renderInline(rule.about.description)} />
 
-<blockquote>
-	✅ This rule is included in the {Astro.props.plugin}{" "}
-	{rule.about.presets?.map((preset, i) => (
+<dl class="details">
+	<dt>Plugin</dt>
+	<dd>
+		<a href={`/rules/${plugin}/`}>{getPluginName(plugin)}</a>
+	</dd>
+	{!!rule.about.presets?.length && (
 		<>
-			{i !== 0 && " and "}
-			<a href={`/rules/${Astro.props.plugin}/#${preset}`}>
-				<code>{preset}</code>
-			</a>
+			<dt>Presets</dt>
+			<dd class="presets">
+				{rule.about.presets.map((preset) => (
+					<a
+						class="flint-preset"
+						data-preset={preset}
+						href={`/rules/${plugin}/#${preset.toLowerCase()}`}
+					>
+						{preset}
+					</a>
+				))}
+			</dd>
 		</>
-	))}{" "}
-	preset{rule.about.presets?.length ? "s" : ""}.
-</blockquote>
+	)}
+</dl>
 
 <style>
-	a {
-		display: inline-block;
+	.lede {
+		color: var(--sl-color-white);
+		font-size: var(--sl-text-lg);
+	}
+
+	.details {
+		display: grid;
+		font-size: var(--sl-text-sm);
+		gap: 0.25rem 1.25rem;
+		grid-template-columns: auto 1fr;
+
+		& dt,
+		& dd {
+			margin: 0;
+		}
+
+		& dt {
+			color: var(--sl-color-white);
+			font-weight: 600;
+		}
+	}
+
+	.presets {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.375rem;
 	}
 </style>
