@@ -228,6 +228,17 @@ export function startServer(): void {
 				);
 	}
 
+	documents.onDidOpen(({ document }) => {
+		const filePath = uriToFilePath(document.uri);
+		if (!workspace || !filePath) {
+			return;
+		}
+
+		if (workspace.vfsHost.fileTypeSync(filePath) === undefined) {
+			requestRebuild();
+		}
+	});
+
 	documents.onDidChangeContent((change) => {
 		const filePath = uriToFilePath(change.document.uri);
 		if (!workspace || !filePath) {
@@ -245,7 +256,11 @@ export function startServer(): void {
 		}
 
 		workspace.vfsHost.vfsDeleteFile(filePath);
-		requestLint(filePath);
+		if (workspace.vfsHost.fileTypeSync(filePath) === undefined) {
+			requestRebuild();
+		} else {
+			requestLint(filePath);
+		}
 	});
 
 	connection.onCodeAction((codeActionParams) => {

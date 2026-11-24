@@ -92,6 +92,7 @@ const mocks = vi.hoisted(() => {
 					(params: { diagnostics: unknown[]; uri: string }) => Promise<void>
 				>(),
 		},
+		fileTypeSync: vi.fn((): "file" | undefined => "file"),
 		lintChangedFiles,
 		lintPasses,
 		lintSessionCreate: vi.fn(() => Promise.resolve(session)),
@@ -106,6 +107,7 @@ vi.mock("@flint.fyi/core", async (importOriginal) => {
 	return {
 		...(await importOriginal<typeof Core>()),
 		createVFSLinterHost: vi.fn(() => ({
+			fileTypeSync: mocks.fileTypeSync,
 			readFileSync: vi.fn(() => "const value = 1;\n"),
 			vfsDeleteFile: vi.fn(),
 			vfsUpsertFile: vi.fn(),
@@ -554,6 +556,26 @@ describe(startServer, () => {
 		expect(Array.from(mocks.lintChangedFiles.mock.lastCall?.[0] ?? [])).toEqual(
 			[tsconfigPath],
 		);
+	});
+
+	it("rebuilds when a document that is not on disk opens or closes", async () => {
+		const filePath = path.join(workspaceRoot, "src/new.ts");
+
+		await startInitializedServer();
+		mocks.lintSessionCreate.mockClear();
+		mocks.fileTypeSync.mockReturnValueOnce(undefined);
+
+		openDocument(filePath);
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).toHaveBeenCalledTimes(1);
+
+		mocks.fileTypeSync.mockReturnValueOnce(undefined);
+
+		closeDocument(filePath);
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).toHaveBeenCalledTimes(2);
 	});
 
 	it("rebuilds when an external watched file is created", async () => {
