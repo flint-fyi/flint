@@ -1,6 +1,3 @@
-import path from "node:path";
-import process from "node:process";
-
 import { formatReport, hasFix, type FileReport } from "@flint.fyi/core";
 
 import { presentHeader } from "./shared/header.ts";
@@ -54,7 +51,7 @@ function formatAnnotation(file: PresenterVirtualFile, report: FileReport) {
 	const message = formatAnnotationMessage(file, report);
 
 	const properties = [
-		`file=${escapeProperty(relativeFilePath(file.filePath))}`,
+		`file=${escapeProperty(file.filePath)}`,
 		`line=${begin.line + 1}`,
 	];
 
@@ -75,13 +72,5 @@ function formatAnnotationMessage(
 	const ruleId = report.about.id;
 	const message = formatReport(report.data, report.message.primary);
 
-	return `${ruleId}: ${message} [${relativeFilePath(file.filePath)}:${begin.line + 1}:${begin.column + 1}]`;
-}
-
-function relativeFilePath(filePath: string) {
-	const relative = path.isAbsolute(filePath)
-		? path.relative(process.cwd(), filePath)
-		: filePath;
-
-	return relative.split(path.sep).join("/");
+	return `${ruleId}: ${message} [${file.filePath}:${begin.line + 1}:${begin.column + 1}]`;
 }

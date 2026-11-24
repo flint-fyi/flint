@@ -11,7 +11,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-const segmenter = new Intl.Segmenter();
+let segmenter: Intl.Segmenter | undefined;
 
 function buildAlternativeExample(
 	stringAlternative: RegExpAST.StringAlternative,
@@ -31,6 +31,7 @@ function isMultipleGraphemes(stringAlternative: RegExpAST.StringAlternative) {
 	const string = String.fromCodePoint(
 		...stringAlternative.elements.map((element) => element.value),
 	);
+	segmenter ??= new Intl.Segmenter();
 	const segments = [...segmenter.segment(string)];
 
 	return segments.length > 1;

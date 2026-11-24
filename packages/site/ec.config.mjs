@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { defineEcConfig } from "@astrojs/starlight/expressive-code";
+import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
 import ecTwoSlash from "expressive-code-twoslash";
 import ts from "typescript";
 
@@ -28,4 +29,25 @@ export default defineEcConfig({
 			},
 		}),
 	],
+	shiki: {
+		transformers: [
+			transformerColorizedBrackets({
+				// The package's night-owl presets, keyed by Starlight's bundled theme names.
+				themes: {
+					"Night Owl Light": [
+						"#0431FA",
+						"#319331",
+						"#7B3814",
+						"rgba(255, 18, 18, 0.8)",
+					],
+					"Night Owl No Italics": [
+						"#FFD700",
+						"#DA70D6",
+						"#179FFF",
+						"rgba(255, 18, 18, 0.8)",
+					],
+				},
+			}),
+		],
+	},
 });

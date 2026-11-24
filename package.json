@@ -24,7 +24,8 @@
 		"prepare": "simple-git-hooks",
 		"release": "pnpm build && changeset publish",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
-		"test": "vitest"
+		"test": "vitest",
+		"typecheck": "tsc -b"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "pnpm exec nano-staged"
@@ -84,7 +85,7 @@
 	"devEngines": {
 		"packageManager": {
 			"name": "pnpm",
-			"version": "12.21.0"
+			"version": "12.22.0"
 		}
 	}
 }
