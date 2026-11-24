@@ -404,8 +404,8 @@ catalogs:
       specifier: 2.14.0
       version: 2.14.0
     svelte:
-      specifier: 5.58.1
-      version: 5.58.1
+      specifier: 5.59.1
+      version: 5.59.1
     tsdown:
       specifier: 0.23.7
       version: 0.23.7
@@ -541,7 +541,7 @@ catalogs:
       version: 9.0.0
     svelte:
       specifier: ^5.0.0
-      version: 5.58.1
+      version: 5.59.1
     svelte2tsx:
       specifier: ^0.7.55
       version: 0.7.62
@@ -1689,7 +1689,7 @@ importers:
         version: 0.20.1(eslint@10.15.0)
       eslint-plugin-svelte:
         specifier: catalog:comparisons
-        version: 3.24.1(eslint@10.15.0)(svelte@5.58.1)
+        version: 3.24.1(eslint@10.15.0)(svelte@5.59.1)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
         version: 80.0.0(@typescript/typescript6@6.0.2)(eslint@10.15.0)
@@ -1916,7 +1916,7 @@ importers:
         version: link:../typescript-language
       svelte:
         specifier: catalog:dev
-        version: 5.58.1(@typescript-eslint/types@8.73.0)
+        version: 5.59.1(@typescript-eslint/types@8.73.0)
       tsdown:
         specifier: catalog:dev
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
@@ -1952,10 +1952,10 @@ importers:
         version: 2.0.3
       svelte:
         specifier: catalog:prod
-        version: 5.58.1(@typescript-eslint/types@8.73.0)
+        version: 5.59.1(@typescript-eslint/types@8.73.0)
       svelte2tsx:
         specifier: catalog:prod
-        version: 0.7.62(@typescript/typescript6@6.0.2)(svelte@5.58.1)
+        version: 0.7.62(@typescript/typescript6@6.0.2)(svelte@5.59.1)
       typescript:
         specifier: catalog:prod
         version: '@typescript/typescript6@6.0.2'
@@ -7742,8 +7742,8 @@ packages:
       svelte: ^3.55 || ^4.0.0-next.0 || ^4.0 || ^5.0.0-next.0
       typescript: ^4.9.4 || ^5.0.0 || ^6.0.0
 
-  svelte@5.58.1:
-    resolution: {integrity: sha512-t15Odvd9HvV6Hbutah2rTeXQKgD+r2mUItlKPI+douy2pb/5U+XcFkHD++YY8mKdvAwqiyECewlMyHmVQ/84QA==}
+  svelte@5.59.1:
+    resolution: {integrity: sha512-ADG20W/jYSQut/79AavRRfbXQYebFKMVWT/xAbjVVZfZA4XzIoFfcpanEfYTyN+uWQUaPP+nstFx4qVKwEVnQQ==}
     engines: {node: '>=18'}
 
   svgo@4.1.0:
@@ -11892,7 +11892,7 @@ snapshots:
     optionalDependencies:
       eslint: 10.15.0(jiti@2.7.0)(supports-color@10.2.2)
 
-  eslint-plugin-svelte@3.24.1(eslint@10.15.0)(svelte@5.58.1):
+  eslint-plugin-svelte@3.24.1(eslint@10.15.0)(svelte@5.59.1):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.15.0)
       '@jridgewell/sourcemap-codec': 1.6.0
@@ -11904,9 +11904,9 @@ snapshots:
       postcss-load-config: 3.1.4(postcss@8.5.32)
       postcss-safe-parser: 7.1.0(postcss@8.5.32)
       semver: 7.8.6
-      svelte-eslint-parser: 1.10.1(svelte@5.58.1)
+      svelte-eslint-parser: 1.10.1(svelte@5.59.1)
     optionalDependencies:
-      svelte: 5.58.1(@typescript-eslint/types@8.73.0)
+      svelte: 5.59.1(@typescript-eslint/types@8.73.0)
     transitivePeerDependencies:
       - ts-node
 
@@ -14802,7 +14802,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-eslint-parser@1.10.1(svelte@5.58.1):
+  svelte-eslint-parser@1.10.1(svelte@5.59.1):
     dependencies:
       eslint-scope: 8.4.0
       eslint-visitor-keys: 4.2.1
@@ -14812,16 +14812,16 @@ snapshots:
       postcss-selector-parser: 7.1.7
       semver: 7.8.6
     optionalDependencies:
-      svelte: 5.58.1(@typescript-eslint/types@8.73.0)
+      svelte: 5.59.1(@typescript-eslint/types@8.73.0)
 
-  svelte2tsx@0.7.62(@typescript/typescript6@6.0.2)(svelte@5.58.1):
+  svelte2tsx@0.7.62(@typescript/typescript6@6.0.2)(svelte@5.59.1):
     dependencies:
       dedent-js: 1.0.1
       scule: 1.3.0
-      svelte: 5.58.1(@typescript-eslint/types@8.73.0)
+      svelte: 5.59.1(@typescript-eslint/types@8.73.0)
       typescript: '@typescript/typescript6@6.0.2'
 
-  svelte@5.58.1(@typescript-eslint/types@8.73.0):
+  svelte@5.59.1(@typescript-eslint/types@8.73.0):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/sourcemap-codec': 1.6.0
