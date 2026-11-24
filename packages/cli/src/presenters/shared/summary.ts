@@ -56,7 +56,7 @@ export function* presentSummary(
 				[
 					"✳ Cleaned ",
 					styleText("bold", pluralize(formattingResults.dirty.size, "file")),
-					"'s formatting with Prettier (--fix):\n",
+					"'s formatting (--fix):\n",
 				].join(""),
 			);
 		} else {
@@ -65,7 +65,7 @@ export function* presentSummary(
 				[
 					"✳ Found ",
 					styleText("bold", pluralize(formattingResults.dirty.size, "file")),
-					" with Prettier formatting differences (add ",
+					" with formatting differences (add ",
 					styleText("bold", "--fix"),
 					" to rewrite):\n",
 				].join(""),
