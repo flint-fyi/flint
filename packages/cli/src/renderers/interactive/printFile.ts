@@ -1,3 +1,5 @@
+import { relative } from "pathe";
+
 import type { FileReport, LinterHost } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
@@ -13,7 +15,10 @@ export async function printFile(
 		await Array.fromAsync(
 			presenter.renderFile({
 				file: {
-					filePath,
+					filePath: relative(
+						host.getRepositoryRoot() ?? host.getCurrentDirectory(),
+						filePath,
+					),
 					text: nullThrows(
 						host.readFileSync(filePath),
 						"Expected reported file to exist.",
