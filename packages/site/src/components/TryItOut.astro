@@ -2,23 +2,127 @@
 import { Code } from "@astrojs/starlight/components";
 
 const darkCliOutput = [
-	"$ flint",
-	"\u001b[38;2;185;196;214mLinting with \u001b[39m\u001b[38;2;139;210;255m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[38;2;185;196;214m...\u001b[39m",
+	"$ flint --presenter detailed",
+	"\u001b[38;2;185;196;214mLinting with \u001b[38;2;139;210;255m\u001b[1mflint.config.ts\u001b[22m\u001b[38;2;185;196;214m...\u001b[39m",
+	"\u001b[38;2;185;196;214m╭\u001b[39m\u001b[38;2;255;119;119m./\u001b[39m\u001b[1m\u001b[38;2;255;73;73msrc/with-issues.ts\u001b[39m\u001b[22m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m\u001b[38;2;238;170;119m\u001b[38;2;204;170;170m[\u001b[38;2;238;170;119m\u001b[38;2;255;153;153m\u001b[1m\u001b]8;;https://flint.fyi/rules/ts/debuggerstatements/\u0007ts/debuggerStatements\u001b]8;;\u0007\u001b[22m\u001b[38;2;238;170;119m\u001b[38;2;204;170;170m]\u001b[38;2;238;170;119m Debugger statements should not be used\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;238;170;119min production code.\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m\u001b[38;2;187;187;187m 2:2 \u001b[39m\u001b[38;2;185;196;214m│ \u001b[39m\u001b[38;2;216;222;233m\t\u001b[39m\u001b[38;2;129;161;193mdebugger;\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m\u001b[38;2;185;196;214m     │ \u001b[39m\u001b[38;2;255;204;204m\t~~~~~~~~~\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mThe `debugger` statement causes the JavaScript runtime to\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mpause execution and start a debugger if one is available, such\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mas when browser developer tools are open.\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mThis can be useful during development, but should not be left\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3min production code.\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;187;238;255mSuggestion: \u001b[38;2;187;204;221m\u001b[38;2;187;204;221mRemove the \u001b[38;2;187;204;221m`\u001b[38;2;187;238;255mdebugger\u001b[38;2;187;204;221m`\u001b[38;2;187;204;221m statement before shipping\u001b[39m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;187;238;255m\u001b[38;2;187;204;221mthis code to users.\u001b[38;2;187;238;255m\u001b[39m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;170;204;170m\u001b[3m→ \u001b]8;;https://flint.fyi/rules/ts/debuggerstatements/\u0007flint.fyi/rules/ts/debuggerstatements/\u001b]8;;\u0007\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m╰──────────────────────────────────────────────────────────────\u001b[39m",
 	"",
-	"\u001b[4mfixtures/src/with-issues.ts\u001b[24m",
-	"\u001b[38;2;185;196;214m  2:2\u001b[39m  Debugger statements should not be used in production code.  \u001b[38;2;255;196;138mts/debuggerStatements\u001b[39m",
-	"",
-	"\u001b[3m\u001b[38;2;255;155;146m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
+	"\u001b[38;2;255;155;146m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m",
+	"\u001b[38;2;185;196;214mFinished in 2.00s on 1 file with 137 rules.\u001b[39m",
 ].join("\n");
 
 const lightCliOutput = [
-	"$ flint",
-	"\u001b[38;2;80;80;80mLinting with \u001b[39m\u001b[38;2;0;76;120m\u001b[1mflint.config.ts\u001b[22m\u001b[39m\u001b[38;2;80;80;80m...\u001b[39m",
+	"$ flint --presenter detailed",
+	"\u001b[38;2;80;80;80mLinting with \u001b[38;2;0;76;120m\u001b[1mflint.config.ts\u001b[22m\u001b[38;2;80;80;80m...\u001b[39m",
+	"\u001b[38;2;80;80;80m╭\u001b[39m\u001b[38;2;200;40;40m./\u001b[39m\u001b[1m\u001b[38;2;170;0;0msrc/with-issues.ts\u001b[39m\u001b[22m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m\u001b[38;2;190;120;60m\u001b[38;2;198;79;79m[\u001b[38;2;190;120;60m\u001b[38;2;170;0;0m\u001b[1m\u001b]8;;https://flint.fyi/rules/ts/debuggerstatements/\u0007ts/debuggerStatements\u001b]8;;\u0007\u001b[22m\u001b[38;2;190;120;60m\u001b[38;2;198;79;79m]\u001b[38;2;190;120;60m Debugger statements should not be used\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;190;120;60min production code.\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m\u001b[38;2;120;120;120m 2:2 \u001b[39m\u001b[38;2;80;80;80m│ \u001b[39m\u001b[38;2;40;40;40m\t\u001b[39m\u001b[38;2;0;92;184mdebugger;\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m\u001b[38;2;80;80;80m     │ \u001b[39m\u001b[38;2;235;140;140m\t~~~~~~~~~\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mThe `debugger` statement causes the JavaScript runtime to\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mpause execution and start a debugger if one is available, such\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mas when browser developer tools are open.\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mThis can be useful during development, but should not be left\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3min production code.\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;0;92;184mSuggestion: \u001b[38;2;60;60;60m\u001b[38;2;60;60;60mRemove the \u001b[38;2;60;60;60m`\u001b[38;2;0;92;184mdebugger\u001b[38;2;60;60;60m`\u001b[38;2;60;60;60m statement before shipping\u001b[39m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;0;92;184m\u001b[38;2;60;60;60mthis code to users.\u001b[38;2;0;92;184m\u001b[39m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;0;128;90m\u001b[3m→ \u001b]8;;https://flint.fyi/rules/ts/debuggerstatements/\u0007flint.fyi/rules/ts/debuggerstatements/\u001b]8;;\u0007\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m╰──────────────────────────────────────────────────────────────\u001b[39m",
 	"",
-	"\u001b[38;2;0;0;0m\u001b[4mfixtures/src/with-issues.ts\u001b[24m\u001b[39m",
-	"\u001b[38;2;80;80;80m  2:2\u001b[39m  \u001b[38;2;60;60;60mDebugger statements should not be used in production code.\u001b[39m  \u001b[38;2;150;41;0mts/debuggerStatements\u001b[39m",
+	"\u001b[38;2;150;41;0m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m",
+	"\u001b[38;2;80;80;80mFinished in 2.00s on 1 file with 137 rules.\u001b[39m",
+].join("\n");
+
+const darkNarrowCliOutput = [
+	"$ flint --presenter detailed",
+	"\u001b[38;2;185;196;214mLinting with \u001b[38;2;139;210;255m\u001b[1mflint.config.ts\u001b[22m\u001b[38;2;185;196;214m...\u001b[39m",
+	"\u001b[38;2;185;196;214m╭\u001b[39m\u001b[38;2;255;119;119m./\u001b[39m\u001b[1m\u001b[38;2;255;73;73msrc/with-issues.ts\u001b[39m\u001b[22m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m\u001b[38;2;238;170;119m\u001b[38;2;204;170;170m[\u001b[38;2;238;170;119m\u001b[38;2;255;153;153m\u001b[1m\u001b]8;;https://flint.fyi/rules/ts/debuggerstatements/\u0007ts/debuggerStatements\u001b]8;;\u0007\u001b[22m\u001b[38;2;238;170;119m\u001b[38;2;204;170;170m]\u001b[38;2;238;170;119m Debugger\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;238;170;119mstatements should not be used in\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;238;170;119mproduction code.\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m\u001b[38;2;187;187;187m 2:2 \u001b[39m\u001b[38;2;185;196;214m│ \u001b[39m\u001b[38;2;216;222;233m\t\u001b[39m\u001b[38;2;129;161;193mdebugger;\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m\u001b[38;2;185;196;214m     │ \u001b[39m\u001b[38;2;255;204;204m\t~~~~~~~~~\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mThe `debugger` statement causes\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mthe JavaScript runtime to pause\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mexecution and start a debugger\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mif one is available, such as\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mwhen browser developer tools are\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mopen.\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mThis can be useful during\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mdevelopment, but should not be\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;204;187;170m\u001b[3mleft in production code.\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;187;238;255mSuggestion: \u001b[38;2;187;204;221m\u001b[38;2;187;204;221mRemove the\u001b[39m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;187;238;255m\u001b[38;2;187;204;221m\u001b[38;2;187;204;221m`\u001b[38;2;187;238;255mdebugger\u001b[38;2;187;204;221m`\u001b[38;2;187;204;221m statement before\u001b[39m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;187;238;255m\u001b[38;2;187;204;221mshipping this code to users.\u001b[38;2;187;238;255m\u001b[39m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m \u001b[38;2;170;204;170m\u001b[3m→ \u001b]8;;https://flint.fyi/rules/ts/debuggerstatements/\u0007flint.fyi/rules/ts/debuggerstatements/\u001b]8;;\u0007\u001b[23m\u001b[39m",
+	"\u001b[38;2;185;196;214m│ \u001b[39m",
+	"\u001b[38;2;185;196;214m╰────────────────────────────────\u001b[39m",
 	"",
-	"\u001b[3m\u001b[38;2;150;41;0m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m\u001b[23m",
+	"\u001b[38;2;255;155;146m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m",
+	"\u001b[38;2;185;196;214mFinished in 2.00s on 1 file with 137 rules.\u001b[39m",
+].join("\n");
+
+const lightNarrowCliOutput = [
+	"$ flint --presenter detailed",
+	"\u001b[38;2;80;80;80mLinting with \u001b[38;2;0;76;120m\u001b[1mflint.config.ts\u001b[22m\u001b[38;2;80;80;80m...\u001b[39m",
+	"\u001b[38;2;80;80;80m╭\u001b[39m\u001b[38;2;200;40;40m./\u001b[39m\u001b[1m\u001b[38;2;170;0;0msrc/with-issues.ts\u001b[39m\u001b[22m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m\u001b[38;2;190;120;60m\u001b[38;2;198;79;79m[\u001b[38;2;190;120;60m\u001b[38;2;170;0;0m\u001b[1m\u001b]8;;https://flint.fyi/rules/ts/debuggerstatements/\u0007ts/debuggerStatements\u001b]8;;\u0007\u001b[22m\u001b[38;2;190;120;60m\u001b[38;2;198;79;79m]\u001b[38;2;190;120;60m Debugger\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;190;120;60mstatements should not be used in\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;190;120;60mproduction code.\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m\u001b[38;2;120;120;120m 2:2 \u001b[39m\u001b[38;2;80;80;80m│ \u001b[39m\u001b[38;2;40;40;40m\t\u001b[39m\u001b[38;2;0;92;184mdebugger;\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m\u001b[38;2;80;80;80m     │ \u001b[39m\u001b[38;2;235;140;140m\t~~~~~~~~~\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mThe `debugger` statement causes\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mthe JavaScript runtime to pause\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mexecution and start a debugger\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mif one is available, such as\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mwhen browser developer tools are\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mopen.\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mThis can be useful during\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mdevelopment, but should not be\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;150;105;60m\u001b[3mleft in production code.\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;0;92;184mSuggestion: \u001b[38;2;60;60;60m\u001b[38;2;60;60;60mRemove the\u001b[39m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;0;92;184m\u001b[38;2;60;60;60m\u001b[38;2;60;60;60m`\u001b[38;2;0;92;184mdebugger\u001b[38;2;60;60;60m`\u001b[38;2;60;60;60m statement before\u001b[39m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;0;92;184m\u001b[38;2;60;60;60mshipping this code to users.\u001b[38;2;0;92;184m\u001b[39m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m \u001b[38;2;0;128;90m\u001b[3m→ \u001b]8;;https://flint.fyi/rules/ts/debuggerstatements/\u0007flint.fyi/rules/ts/debuggerstatements/\u001b]8;;\u0007\u001b[23m\u001b[39m",
+	"\u001b[38;2;80;80;80m│ \u001b[39m",
+	"\u001b[38;2;80;80;80m╰────────────────────────────────\u001b[39m",
+	"",
+	"\u001b[38;2;150;41;0m✖ Found \u001b[1m1 report\u001b[22m across \u001b[1m1 file\u001b[22m.\u001b[39m",
+	"\u001b[38;2;80;80;80mFinished in 2.00s on 1 file with 137 rules.\u001b[39m",
 ].join("\n");
 ---
 
@@ -37,24 +141,21 @@ const lightCliOutput = [
 			class="terminal"
 			role="region"
 		>
-			<div class="only-dark">
-				<Code
-					code={darkCliOutput}
-					frame="terminal"
-					lang="ansi"
-					preserveIndent={false}
-					wrap
-				/>
-			</div>
-			<div class="only-light">
-				<Code
-					code={lightCliOutput}
-					frame="terminal"
-					lang="ansi"
-					preserveIndent={false}
-					wrap
-				/>
-			</div>
+			{[
+				["wide only-dark", darkCliOutput],
+				["wide only-light", lightCliOutput],
+				["narrow only-dark", darkNarrowCliOutput],
+				["narrow only-light", lightNarrowCliOutput],
+			].map(([className, code]) => (
+				<div class={className}>
+					<Code
+						code={code}
+						frame="terminal"
+						lang="ansi"
+						preserveIndent={false}
+					/>
+				</div>
+			))}
 		</div>
 
 		<a class="button" href="/about/">
@@ -98,9 +199,22 @@ const lightCliOutput = [
 	}
 
 	.terminal {
+		container-type: inline-size;
 		grid-area: terminal;
 		margin-block-start: 1.75rem;
 		min-inline-size: 0;
+
+		@container (width < 36.25rem) {
+			& .wide {
+				display: none;
+			}
+		}
+
+		@container (width >= 36.25rem) {
+			& .narrow {
+				display: none;
+			}
+		}
 	}
 
 	.button {
