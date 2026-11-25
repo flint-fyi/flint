@@ -27,6 +27,7 @@ export {
 export {
 	commonlyIgnoredPaths,
 	gitVcs,
+	isIgnoredRelativePath,
 	jjVcs,
 	nodeModulesCache,
 	nodeModulesDir,

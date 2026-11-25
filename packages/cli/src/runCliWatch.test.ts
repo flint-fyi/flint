@@ -187,6 +187,50 @@ describe(runCliWatch, () => {
 		expect(renderCount).toBe(2);
 	});
 
+	it("reuses the lint session after a directory of only ignored paths is created", async () => {
+		const project = createTestProject();
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		const nodeModulesPath = path.posix.join(project.root, "node_modules");
+		project.host.vfsUpsertFile(
+			path.posix.join(nodeModulesPath, ".cache/flint.json"),
+			"{}",
+		);
+		const watchDirectorySync = vi.spyOn(project.host, "watchDirectorySync");
+		let quit: (() => void) | undefined;
+		let renderCount = 0;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						renderCount += 1;
+
+						if (renderCount === 1) {
+							const cwdWatcherCall = watchDirectorySync.mock.calls.find(
+								([directoryPath, , options]) =>
+									directoryPath === project.root && options.recursive,
+							);
+							cwdWatcherCall?.[1](nodeModulesPath);
+							project.host.vfsUpsertFile(project.aPath, "a2");
+						} else {
+							quit?.();
+						}
+					},
+				}) satisfies Renderer,
+			values,
+			[],
+		);
+
+		expect(loadConfigDefinition).toHaveBeenCalledTimes(1);
+		expect(renderCount).toBe(2);
+	});
+
 	it("serves language file watchers from the cwd watcher", async () => {
 		const project = createTestProject({ watchedFilePath: "/root/b.txt" });
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
