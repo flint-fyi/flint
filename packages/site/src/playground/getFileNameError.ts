@@ -5,6 +5,7 @@ import {
 
 const fileNamePattern = /^[\w.-]+$/;
 const reservedFileNames: ReadonlySet<string> = new Set([
+	"flint.config.ts",
 	"jsx.d.ts",
 	"tsconfig.json",
 ]);

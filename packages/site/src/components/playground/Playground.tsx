@@ -8,12 +8,12 @@ import styles from "./Playground.module.css";
 import { PlaygroundAst } from "./PlaygroundAst.tsx";
 import { PlaygroundEditor } from "./PlaygroundEditor.tsx";
 import { PlaygroundFiles } from "./PlaygroundFiles.tsx";
-import type { PlaygroundIcons } from "./PlaygroundIcons.ts";
 import { PlaygroundReports } from "./PlaygroundReports.tsx";
 import { PlaygroundSeparator } from "./PlaygroundSeparator.tsx";
 import { usePlaygroundHash } from "./usePlaygroundHash.ts";
 import { usePlaygroundLayout } from "./usePlaygroundLayout.ts";
 import { usePlaygroundResponse } from "./usePlaygroundResponse.ts";
+import type { FinalizedFileResults } from "@flint.fyi/core";
 
 type PlaygroundView = "ast" | "astJson" | "reports";
 
@@ -26,7 +26,7 @@ const views: [PlaygroundView, string][] = [
 	["astJson", "AST JSON"],
 ];
 
-export function Playground(icons: PlaygroundIcons): JSX.Element {
+export function Playground(): JSX.Element {
 	const [files, setFiles] = useState(initialFiles);
 	const [activeFileName, setActiveFileName] = useState(initialActiveFileName);
 	const [copyStatus, setCopyStatus] = useState<"copied" | "failed">();
@@ -63,8 +63,8 @@ export function Playground(icons: PlaygroundIcons): JSX.Element {
 	const activeFile = files.find((file) => file.name === activeFileName);
 	const activeParser = activeFile && getPlaygroundParser(activeFile.name);
 	const activeFileType = activeFile && getPlaygroundFileType(activeFile.name);
-	const fileResults = response?.kind === "success" ? response.files : {};
-	const activeResult = fileResults[activeFileName];
+	const fileResults = response?.kind === "success" ? response.files : new Map<string, FinalizedFileResults>();
+	const activeResult = fileResults.get(activeFileName);
 	const reports = activeResult?.reports;
 
 	function selectFile(fileName: string): void {
@@ -135,7 +135,6 @@ export function Playground(icons: PlaygroundIcons): JSX.Element {
 				<PlaygroundFiles
 					activeFileName={activeFileName}
 					files={files}
-					icons={icons}
 					onAdd={(fileName) => {
 						if (files.some((file) => file.name === fileName)) {
 							return;
@@ -191,7 +190,7 @@ export function Playground(icons: PlaygroundIcons): JSX.Element {
 							}}
 							type="button"
 						>
-							{copyStatus === "copied" ? icons.checkIcon : icons.linkIcon}
+							{copyStatus === "copied" ? Icon.Check : Icon.Link}
 							<span aria-live="polite">
 								{copyStatus === "copied"
 									? "Copied"

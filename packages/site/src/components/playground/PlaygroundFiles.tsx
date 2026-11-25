@@ -23,7 +23,6 @@ export interface PlaygroundFilesProps {
 export function PlaygroundFiles({
 	activeFileName,
 	files,
-	icons,
 	onAdd,
 	onDelete,
 	onRename,

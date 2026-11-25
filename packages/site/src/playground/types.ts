@@ -1,3 +1,5 @@
+import type { FileReport, FinalizedFileResults } from "@flint.fyi/core";
+
 export interface PlaygroundAstNode {
 	end: number;
 	kind: string;
@@ -23,18 +25,7 @@ export interface PlaygroundRange {
 	end: number;
 }
 
-export interface PlaygroundReport {
-	begin: number;
-	column: number;
-	end: number;
-	id: string;
-	line: number;
-	message: string;
-	source: PlaygroundReportSource;
-	url?: string;
-}
-
-export type PlaygroundReportSource = "flint" | "language";
+export type PlaygroundReport = FileReport;
 
 export interface PlaygroundRequest {
 	files: PlaygroundFile[];
@@ -51,7 +42,7 @@ export interface PlaygroundResponseFailure {
 }
 
 export interface PlaygroundResponseSuccess {
-	files: Record<string, PlaygroundFileResult>;
+	files: Map<string, FinalizedFileResults>;
 	id: number;
 	kind: "success";
 }
