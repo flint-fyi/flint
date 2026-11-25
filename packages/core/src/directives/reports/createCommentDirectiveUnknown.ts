@@ -18,7 +18,7 @@ export function createCommentDirectiveUnknown(
 				"Unrecognized directive types are ignored and will not suppress any linting reports.",
 			],
 			suggestions: [
-				'Change the directive to one of the supported types (for example, "flint-disable-next-line").',
+				"Change the directive to one of the supported types.",
 				'If this comment is not intended as a Flint directive, change the comment so it does not begin with "flint-".',
 			],
 		},
