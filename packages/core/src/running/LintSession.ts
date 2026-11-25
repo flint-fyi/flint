@@ -1,5 +1,5 @@
 import { CachedFactory } from "cached-factory";
-import { isAbsolute, resolve } from "pathe";
+import { resolve } from "pathe";
 
 import { pathKey } from "@flint.fyi/utils";
 
@@ -11,6 +11,7 @@ import type {
 	AnyLanguage,
 	AnyLanguageFileFactory,
 } from "../types/languages.ts";
+import type { LintResults } from "../types/linting.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
@@ -36,15 +37,12 @@ export class LintSession implements Disposable {
 		return this.#rulesOptionsByFile.size;
 	}
 
+	#cached: Map<string, FileCacheStorage> | undefined;
 	readonly #caseSensitiveFS: boolean;
-
-	/**
-	 * Reverse index: dependency key -> file paths that depend on it.
-	 * Maintained as results are stored so collecting files to lint avoids
-	 * rescanning every stored result on each call.
-	 */
-	readonly #dependentsByDependencyKey = new Map<string, Set<string>>();
-	readonly #filePathByKey = new Map<string, string>();
+	readonly #cwd: string;
+	readonly #dependents = new Map<string, Set<string>>();
+	readonly #filePathsByKey = new Map<string, string>();
+	readonly #globalDependencies = new Set<string>();
 	readonly #host: LinterHost;
 	readonly #languageFileFactories: CachedFactory<
 		AnyLanguage,
@@ -59,14 +57,14 @@ export class LintSession implements Disposable {
 	) {
 		this.allFilePaths = allFilePaths;
 		this.#caseSensitiveFS = host.isCaseSensitiveFS();
+		this.#cwd = host.getCurrentDirectory();
 		this.#host = host;
 		this.#rulesOptionsByFile = rulesOptionsByFile;
 		this.#languageFileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(host),
 		);
-
 		for (const filePath of allFilePaths) {
-			this.#filePathByKey.set(this.#toPathKey(filePath), filePath);
+			this.#filePathsByKey.set(this.#key(filePath), filePath);
 		}
 	}
 
@@ -86,12 +84,21 @@ export class LintSession implements Disposable {
 		);
 	}
 
+	getResults(): LintResults {
+		return {
+			allFilePaths: new Set(this.allFilePaths),
+			allFileResults: new Map(this.storedResults),
+			cached: this.#cached && new Map(this.#cached),
+			ruleCount: this.ruleCount,
+		};
+	}
+
 	hasDependents(filePath: string): boolean {
-		return this.#dependentsByDependencyKey.has(this.#toPathKey(filePath));
+		return this.#dependents.has(this.#key(filePath));
 	}
 
 	hasFilePath(filePath: string): boolean {
-		return this.#filePathByKey.has(this.#toPathKey(filePath));
+		return this.#filePathsByKey.has(this.#key(filePath));
 	}
 
 	async lintChangedFiles(
@@ -99,41 +106,35 @@ export class LintSession implements Disposable {
 		options?: LintSessionLintOptions,
 	): Promise<Map<string, FinalizedFileResults>> {
 		const changedPaths = Array.from(filePaths);
-		const changedKeys = new Set(
-			changedPaths.map((filePath) => this.#toPathKey(filePath)),
-		);
-		const changedFilePaths = this.#resolveFilePaths(changedPaths);
+		const affected = this.#getAffectedFilePaths(changedPaths);
 		const allResults = new Map<string, FinalizedFileResults>();
-		let changedGlobalDependency = Array.from(changedFilePaths).some(
-			(filePath) => this.storedResults.get(filePath)?.isGlobalDependency,
-		);
+		const attempted = new Set<string>();
 
-		const lintPass = async (passFilePaths: Set<string>) => {
+		const lintPass = async (passFilePaths: Set<string>): Promise<void> => {
+			for (const filePath of passFilePaths) {
+				attempted.add(filePath);
+			}
 			for (const [filePath, fileResults] of await this.lintFiles(
 				passFilePaths,
 				options,
 			)) {
 				allResults.set(filePath, fileResults);
-				if (fileResults.isGlobalDependency) {
-					changedGlobalDependency = true;
-				}
 			}
 		};
 
-		await lintPass(changedFilePaths);
-
-		if (!changedGlobalDependency) {
-			await lintPass(
-				collectTransitiveDependents(
-					changedKeys,
-					(dependencyKey) => this.#dependentsByDependencyKey.get(dependencyKey),
-					(filePath) => this.#toPathKey(filePath),
-				).difference(allResults),
-			);
-		}
-
-		if (changedGlobalDependency) {
-			await lintPass(this.allFilePaths.difference(allResults));
+		await lintPass(this.#resolveFilePaths(changedPaths));
+		while (true) {
+			const remaining = affected
+				.union(
+					this.#getAffectedFilePaths([...changedPaths, ...allResults.keys()]),
+				)
+				.difference(attempted);
+			if (!remaining.size) {
+				break;
+			}
+			// Each pass can reveal additional global dependencies.
+			// flint-disable-next-line performance/loopAwaits
+			await lintPass(remaining);
 		}
 
 		return allResults;
@@ -147,6 +148,7 @@ export class LintSession implements Disposable {
 		if (!filePathsToLint.size) {
 			return new Map();
 		}
+		const timestamp = Date.now();
 
 		const languageFilesByFilePath = collectLanguageFilesByFilePath(
 			this.#rulesOptionsByFile,
@@ -178,6 +180,7 @@ export class LintSession implements Disposable {
 				this.#host,
 				options?.skipLanguageReports,
 			);
+			fileResults.timestamp = timestamp;
 
 			filesResults.set(filePath, fileResults);
 			this.#storeResults(filePath, fileResults);
@@ -187,13 +190,24 @@ export class LintSession implements Disposable {
 	}
 
 	restoreCachedResults(cached: Map<string, FileCacheStorage>): void {
-		for (const [filePath, cachedStorage] of cached) {
+		this.#cached = new Map();
+		for (const [filePath, result] of cached) {
+			if (result.isGlobalDependency) {
+				this.#globalDependencies.add(this.#key(filePath));
+			}
+			if (!this.hasFilePath(filePath)) {
+				continue;
+			}
 			this.#storeResults(filePath, {
-				dependencies: new Set(cachedStorage.dependencies),
-				isGlobalDependency: cachedStorage.isGlobalDependency ?? false,
-				languageReports: cachedStorage.languageReports ?? [],
-				reports: cachedStorage.reports ?? [],
+				dependencies: new Set(
+					result.dependencies?.map((dependency) => this.#key(dependency)),
+				),
+				isGlobalDependency: result.isGlobalDependency ?? false,
+				languageReports: result.languageReports ?? [],
+				reports: result.reports ?? [],
+				timestamp: result.timestamp,
 			});
+			this.#cached.set(filePath, result);
 		}
 	}
 
@@ -203,48 +217,69 @@ export class LintSession implements Disposable {
 		}
 	}
 
-	#resolveFilePaths(filePaths: Iterable<string>): Set<string> {
-		const resolvedFilePaths = new Set<string>();
-
-		for (const filePath of filePaths) {
-			const lintedFilePath = this.#filePathByKey.get(this.#toPathKey(filePath));
-			if (lintedFilePath != null) {
-				resolvedFilePaths.add(lintedFilePath);
-			}
+	#getAffectedFilePaths(filePaths: Iterable<string>): Set<string> {
+		const changed = Array.from(filePaths);
+		if (
+			changed.some((filePath) =>
+				this.#globalDependencies.has(this.#key(filePath)),
+			)
+		) {
+			return new Set(this.allFilePaths);
 		}
-
-		return resolvedFilePaths;
+		const affected = this.#resolveFilePaths(changed).union(
+			collectTransitiveDependents(
+				changed.map((filePath) => this.#key(filePath)),
+				(key) => this.#dependents.get(key),
+				(filePath) => this.#key(filePath),
+			),
+		);
+		if (
+			affected
+				.values()
+				.some((filePath) => this.#globalDependencies.has(this.#key(filePath)))
+		) {
+			return new Set(this.allFilePaths);
+		}
+		return affected;
 	}
 
-	#storeResults(filePath: string, fileResults: FinalizedFileResults): void {
-		const previous = this.storedResults.get(filePath);
-		if (previous) {
-			for (const dependencyKey of previous.dependencies) {
-				const dependents = this.#dependentsByDependencyKey.get(dependencyKey);
-				if (dependents?.delete(filePath) && !dependents.size) {
-					this.#dependentsByDependencyKey.delete(dependencyKey);
-				}
+	#key(filePath: string): string {
+		return pathKey(resolve(this.#cwd, filePath), this.#caseSensitiveFS);
+	}
+
+	#resolveFilePaths(filePaths: Iterable<string>): Set<string> {
+		const resolved = new Set<string>();
+		for (const filePath of filePaths) {
+			const recognized = this.#filePathsByKey.get(this.#key(filePath));
+			if (recognized !== undefined) {
+				resolved.add(recognized);
 			}
 		}
+		return resolved;
+	}
 
-		this.storedResults.set(filePath, fileResults);
-
-		for (const dependencyKey of fileResults.dependencies) {
-			let dependents = this.#dependentsByDependencyKey.get(dependencyKey);
-			if (dependents == null) {
+	#storeResults(filePath: string, result: FinalizedFileResults): void {
+		const previous = this.storedResults.get(filePath);
+		for (const dependency of previous?.dependencies ?? []) {
+			const dependents = this.#dependents.get(dependency);
+			if (dependents?.delete(filePath) && !dependents.size) {
+				this.#dependents.delete(dependency);
+			}
+		}
+		this.storedResults.set(filePath, result);
+		this.#cached?.delete(filePath);
+		if (result.isGlobalDependency) {
+			this.#globalDependencies.add(this.#key(filePath));
+		} else {
+			this.#globalDependencies.delete(this.#key(filePath));
+		}
+		for (const dependency of result.dependencies) {
+			let dependents = this.#dependents.get(dependency);
+			if (!dependents) {
 				dependents = new Set();
-				this.#dependentsByDependencyKey.set(dependencyKey, dependents);
+				this.#dependents.set(dependency, dependents);
 			}
 			dependents.add(filePath);
 		}
-	}
-
-	#toPathKey(filePath: string): string {
-		return pathKey(
-			isAbsolute(filePath)
-				? filePath
-				: resolve(this.#host.getCurrentDirectory(), filePath),
-			this.#caseSensitiveFS,
-		);
 	}
 }

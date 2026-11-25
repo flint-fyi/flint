@@ -37,13 +37,14 @@ function createHostWithCache(
 	return host;
 }
 
-function read(host: VFSLinterHost, allFilePaths: string[]) {
-	return readFromCache(
+async function read(host: VFSLinterHost, allFilePaths: string[]) {
+	const checkpoint = await readFromCache(
 		host,
 		new Set(allFilePaths),
 		configFilePath,
 		cacheFilePath,
 	);
+	return checkpoint && Array.from(checkpoint.changedFilePaths);
 }
 
 describe(readFromCache, () => {
@@ -53,7 +54,7 @@ describe(readFromCache, () => {
 		vi.useRealTimers();
 	});
 
-	it("keeps a file cached when it has no dependencies", async () => {
+	it("reports no changes when a file has no dependencies", async () => {
 		const host = createHostWithCache(
 			{
 				[configFilePath]: 1000,
@@ -67,12 +68,10 @@ describe(readFromCache, () => {
 			},
 		);
 
-		const cached = await read(host, [filePath]);
-
-		expect(cached && Array.from(cached.keys())).toEqual([filePath]);
+		expect(await read(host, [filePath])).toEqual([]);
 	});
 
-	it("keeps a file cached when a dependency outside the lint set was not touched after the cache was written", async () => {
+	it("reports no changes when a dependency outside the lint set was not touched after the cache was written", async () => {
 		const host = createHostWithCache(
 			{
 				[configFilePath]: 1000,
@@ -88,12 +87,10 @@ describe(readFromCache, () => {
 			},
 		);
 
-		const cached = await read(host, [filePath]);
-
-		expect(cached && Array.from(cached.keys())).toEqual([filePath]);
+		expect(await read(host, [filePath])).toEqual([]);
 	});
 
-	it("invalidates a file when a dependency outside the lint set was touched after the cache was written", async () => {
+	it("reports a dependency outside the lint set that was touched after the cache was written", async () => {
 		const host = createHostWithCache(
 			{
 				[configFilePath]: 1000,
@@ -109,12 +106,10 @@ describe(readFromCache, () => {
 			},
 		);
 
-		const cached = await read(host, [filePath]);
-
-		expect(cached && Array.from(cached.keys())).toEqual([]);
+		expect(await read(host, [filePath])).toEqual([dependencyPath]);
 	});
 
-	it("invalidates a file when a dependency outside the lint set no longer exists", async () => {
+	it("reports a dependency outside the lint set that no longer exists", async () => {
 		const host = createHostWithCache(
 			{
 				[configFilePath]: 1000,
@@ -129,12 +124,10 @@ describe(readFromCache, () => {
 			},
 		);
 
-		const cached = await read(host, [filePath]);
-
-		expect(cached && Array.from(cached.keys())).toEqual([]);
+		expect(await read(host, [filePath])).toEqual([dependencyPath]);
 	});
 
-	it("keeps dependents cached when a dependency inside the lint set was touched after the cache was written", async () => {
+	it("reports a file inside the lint set that was touched after the cache was written", async () => {
 		const dependentPath = "/root/src/dependent.ts";
 		const host = createHostWithCache(
 			{
@@ -156,8 +149,6 @@ describe(readFromCache, () => {
 			},
 		);
 
-		const cached = await read(host, [dependentPath, filePath]);
-
-		expect(cached && Array.from(cached.keys())).toEqual([dependentPath]);
+		expect(await read(host, [dependentPath, filePath])).toEqual([filePath]);
 	});
 });
