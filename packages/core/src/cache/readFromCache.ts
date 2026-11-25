@@ -4,7 +4,7 @@ import { nullThrows, pathKey } from "@flint.fyi/utils";
 
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
-import { cacheStorageSchema } from "./cacheSchema.ts";
+import { cacheStorageSchema } from "./cacheFormat.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
 const log = debugForFile(import.meta.url);

@@ -7,7 +7,8 @@ export interface CacheStorage {
 }
 
 export interface FileCacheImpacts {
-	dependencies?: string[];
+	dependencies?: readonly string[];
+	missingDependencies?: readonly string[];
 }
 
 export interface FileCacheStorage extends FileCacheImpacts {
