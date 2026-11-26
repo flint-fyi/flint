@@ -24,12 +24,7 @@ async function roundTrip(
 ): Promise<FileCacheStorage | undefined> {
 	const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 	const allFilePaths = new Set([filePath]);
-	for (const path of [
-		configFilePath,
-		filePath,
-		"package.json",
-		dependencyPath,
-	]) {
+	for (const path of [configFilePath, filePath, dependencyPath]) {
 		host.vfsUpsertFile(path, "content");
 	}
 

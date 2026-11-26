@@ -27,7 +27,6 @@ function createHostWithCache(
 	const storage: CacheStorage = {
 		configs: {
 			[configFilePath]: cacheWriteTime,
-			"package.json": cacheWriteTime,
 		},
 		files: cachedFiles,
 	};
@@ -59,7 +58,6 @@ describe(readFromCache, () => {
 			{
 				[configFilePath]: 1000,
 				[filePath]: 2000,
-				"package.json": 1000,
 			},
 			{
 				[filePath]: {
@@ -77,7 +75,6 @@ describe(readFromCache, () => {
 				[configFilePath]: 1000,
 				[dependencyPath]: 1000,
 				[filePath]: 2000,
-				"package.json": 1000,
 			},
 			{
 				[filePath]: {
@@ -96,7 +93,6 @@ describe(readFromCache, () => {
 				[configFilePath]: 1000,
 				[dependencyPath]: 4000,
 				[filePath]: 2000,
-				"package.json": 1000,
 			},
 			{
 				[filePath]: {
@@ -114,7 +110,6 @@ describe(readFromCache, () => {
 			{
 				[configFilePath]: 1000,
 				[filePath]: 2000,
-				"package.json": 1000,
 			},
 			{
 				[filePath]: {
@@ -127,6 +122,75 @@ describe(readFromCache, () => {
 		expect(await read(host, [filePath])).toEqual([dependencyPath]);
 	});
 
+	it("reports no changes when a missing dependency is still missing", async () => {
+		const host = createHostWithCache(
+			{ [configFilePath]: 1000, [filePath]: 2000 },
+			{
+				[filePath]: {
+					missingDependencies: [dependencyPath],
+					timestamp: cacheWriteTime,
+				},
+			},
+		);
+
+		expect(await read(host, [filePath])).toEqual([]);
+	});
+
+	it("reports a missing dependency that exists, even if touched before the cache was written", async () => {
+		const host = createHostWithCache(
+			{ [configFilePath]: 1000, [dependencyPath]: 1000, [filePath]: 2000 },
+			{
+				[filePath]: {
+					missingDependencies: [dependencyPath],
+					timestamp: cacheWriteTime,
+				},
+			},
+		);
+
+		expect(await read(host, [filePath])).toEqual([dependencyPath]);
+	});
+
+	it.each([
+		["touched after the cache was written", { [configFilePath]: 4000 }],
+		["deleted", {}],
+	])(
+		"discards the cache when the Flint config was %s",
+		async (_description, configFiles) => {
+			const host = createHostWithCache(
+				{ ...configFiles, [filePath]: 2000 },
+				{ [filePath]: { timestamp: cacheWriteTime } },
+			);
+
+			expect(await read(host, [filePath])).toBeUndefined();
+		},
+	);
+
+	it("discards the cache when it was written for a different Flint config", async () => {
+		const otherConfigFilePath = "/root/flint.config.js";
+		const host = createHostWithCache(
+			{ [filePath]: 2000, [otherConfigFilePath]: 1000 },
+			{ [filePath]: { timestamp: cacheWriteTime } },
+		);
+
+		expect(
+			await readFromCache(
+				host,
+				new Set([filePath]),
+				otherConfigFilePath,
+				cacheFilePath,
+			),
+		).toBeUndefined();
+	});
+
+	it("keeps the cache when a package.json no file depends on changes", async () => {
+		const host = createHostWithCache(
+			{ [configFilePath]: 1000, [filePath]: 2000, "package.json": 4000 },
+			{ [filePath]: { timestamp: cacheWriteTime } },
+		);
+
+		expect(await read(host, [filePath])).toEqual([]);
+	});
+
 	it("reports a file inside the lint set that was touched after the cache was written", async () => {
 		const dependentPath = "/root/src/dependent.ts";
 		const host = createHostWithCache(
@@ -135,7 +199,6 @@ describe(readFromCache, () => {
 				[dependencyPath]: 1000,
 				[dependentPath]: 2000,
 				[filePath]: 4000,
-				"package.json": 1000,
 			},
 			{
 				[dependentPath]: {

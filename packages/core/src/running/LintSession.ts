@@ -400,7 +400,11 @@ export class LintSession implements Disposable {
 				),
 				isGlobalDependency: result.isGlobalDependency ?? false,
 				languageReports: result.languageReports ?? [],
-				missingDependencies: new Set(),
+				missingDependencies: new Set(
+					result.missingDependencies?.map((dependency) =>
+						this.#key(dependency),
+					),
+				),
 				reports: result.reports ?? [],
 				timestamp: result.timestamp,
 			});

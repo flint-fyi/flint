@@ -32,18 +32,14 @@ export async function readFromCache(
 	}
 	const cache = decoded.data;
 
-	// The config file and package.json are hardcoded to always be dependencies of all files
-	for (const filePath of [configFilePath, "package.json"]) {
-		const timestamp = cache.configs[filePath];
-		// flint-disable-next-line performance/loopAwaits
-		const touchTime = await host.getFileTouchTime(filePath);
-		if (
-			timestamp === undefined ||
-			touchTime === undefined ||
-			touchTime > timestamp
-		) {
-			return undefined;
-		}
+	const configTimestamp = cache.configs[configFilePath];
+	const configTouchTime = await host.getFileTouchTime(configFilePath);
+	if (
+		configTimestamp === undefined ||
+		configTouchTime === undefined ||
+		configTouchTime > configTimestamp
+	) {
+		return undefined;
 	}
 
 	const changedFilePaths = new Set<string>();
@@ -80,6 +76,15 @@ export async function readFromCache(
 			}
 			const touched = touchTimes.get(dependency);
 			if (touched === undefined || touched > file.timestamp) {
+				changedFilePaths.add(dependency);
+			}
+		}
+		for (const dependency of file.missingDependencies ?? []) {
+			if (!touchTimes.has(dependency)) {
+				// flint-disable-next-line performance/loopAwaits
+				touchTimes.set(dependency, await host.getFileTouchTime(dependency));
+			}
+			if (touchTimes.get(dependency) !== undefined) {
 				changedFilePaths.add(dependency);
 			}
 		}

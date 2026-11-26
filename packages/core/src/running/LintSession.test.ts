@@ -593,10 +593,7 @@ async function writeCheckpoint(
 	await host.writeFile(
 		getCacheFilePath(configDefinition.cacheLocation),
 		cacheStorageSchema.encode({
-			configs: {
-				[configDefinition.filePath]: timestamp,
-				"package.json": timestamp,
-			},
+			configs: { [configDefinition.filePath]: timestamp },
 			files: Object.fromEntries(
 				Object.entries(files).map(([filePath, file]) => [
 					filePath,
