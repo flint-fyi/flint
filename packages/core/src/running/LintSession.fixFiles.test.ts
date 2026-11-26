@@ -5,10 +5,16 @@ import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { Fix } from "../types/changes.ts";
+import type { ProcessedConfigDefinition } from "../types/configs.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { LanguageReport } from "../types/languages.ts";
+import type { LintResultsWithChanges } from "../types/linting.ts";
 import type { CharacterReportRange } from "../types/ranges.ts";
-import { runConfig } from "./runConfig.ts";
-import { runConfigFixing } from "./runConfigFixing.ts";
+import {
+	LintSession,
+	type LintSessionFixOptions,
+	type LintSessionOptions,
+} from "./LintSession.ts";
 
 const filePath = "/root/file.txt";
 const cacheLocation = "/root/cache.json";
@@ -72,7 +78,7 @@ const options = {
 	skipLanguageReports: false,
 };
 
-describe(runConfigFixing, () => {
+describe("LintSession.fixFiles", () => {
 	beforeEach(() => {
 		getFix.mockReset();
 		getLanguageReports.mockReset();
@@ -81,7 +87,7 @@ describe(runConfigFixing, () => {
 	});
 
 	it("does not write or repeat fixing for explicit empty fixes", async () => {
-		const results = await runConfigFixing(config, host, options);
+		const results = await fixAndWriteCache(config, host, options);
 
 		expect(visit).toHaveBeenCalledTimes(1);
 		expect(results.changed).toEqual(new Set());
@@ -101,7 +107,7 @@ describe(runConfigFixing, () => {
 			.mockReturnValue(null)
 			.mockReturnValueOnce({ begin: 0, end: 1 });
 
-		const results = await runConfigFixing(config, host, options);
+		const results = await fixAndWriteCache(config, host, options);
 
 		expect(visit).toHaveBeenCalledTimes(1);
 		expect(results.changed).toEqual(new Set());
@@ -168,7 +174,7 @@ describe(runConfigFixing, () => {
 				}),
 			});
 
-			const results = await runConfigFixing(
+			const results = await fixAndWriteCache(
 				{
 					...config,
 					cacheLocation: limit === 10 ? cacheLocation : "/root/unused.json",
@@ -215,7 +221,7 @@ describe(runConfigFixing, () => {
 	it("writes nonempty fixes and lints the changed file again", async () => {
 		getFix.mockReturnValue(fixes);
 
-		const results = await runConfigFixing(config, host, options);
+		const results = await fixAndWriteCache(config, host, options);
 
 		expect(visit).toHaveBeenCalledTimes(2);
 		expect(results.changed).toEqual(new Set([filePath]));
@@ -236,7 +242,7 @@ describe(runConfigFixing, () => {
 			return fixes;
 		});
 
-		const results = await runConfigFixing(config, host, options);
+		const results = await fixAndWriteCache(config, host, options);
 
 		expect(results.changed).toEqual(new Set());
 		expect(host.readFileSync(filePath)).toBe("xyz");
@@ -255,7 +261,14 @@ describe(runConfigFixing, () => {
 			host.vfsUpsertFile(config.filePath, "");
 			host.vfsUpsertFile("package.json", "{}");
 			host.vfsUpsertFile(filePath, "abc");
-			await runConfig(config, host, { cacheLocation, ignoreCache: true });
+			{
+				using session = await LintSession.create(config, host, {
+					cacheLocation,
+					ignoreCache: true,
+				});
+				await session.lint();
+				await session.writeCache();
+			}
 			visit.mockClear();
 			writeFile.mockClear();
 		}
@@ -268,7 +281,7 @@ describe(runConfigFixing, () => {
 			await cacheFixes();
 			vi.spyOn(Date, "now").mockReturnValue(cachedAt + 1000);
 
-			const results = await runConfigFixing(config, host, {
+			const results = await fixAndWriteCache(config, host, {
 				...options,
 				ignoreCache: false,
 			});
@@ -289,7 +302,7 @@ describe(runConfigFixing, () => {
 				return await readFile(path);
 			});
 
-			const results = await runConfigFixing(config, host, {
+			const results = await fixAndWriteCache(config, host, {
 				...options,
 				ignoreCache: false,
 			});
@@ -300,3 +313,24 @@ describe(runConfigFixing, () => {
 		});
 	});
 });
+
+async function fixAndWriteCache(
+	configDefinition: ProcessedConfigDefinition,
+	host: LinterHost,
+	{
+		cacheLocation,
+		ignoreCache,
+		...fixOptions
+	}: LintSessionFixOptions & LintSessionOptions,
+): Promise<LintResultsWithChanges> {
+	using session = await LintSession.create(configDefinition, host, {
+		cacheLocation,
+		ignoreCache,
+	});
+	const { changed } = await session.fixFiles(
+		(await session.lint(fixOptions)).allFileResults,
+		fixOptions,
+	);
+	await session.writeCache();
+	return { ...session.getResults(), changed };
+}

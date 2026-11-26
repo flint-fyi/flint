@@ -1,8 +1,7 @@
 import { debugForFile } from "debug-for-file";
 
 import {
-	runConfig,
-	runConfigFixing,
+	LintSession,
 	type LinterHost,
 	type LintResults,
 } from "@flint.fyi/core";
@@ -39,18 +38,21 @@ export async function runCliOnce(
 
 	const skipLanguageReports = values["skip-language-reports"] ?? false;
 
-	const lintResults = await (values.fix
-		? runConfigFixing(configDefinition, host, {
-				cacheLocation: values["cache-location"],
-				ignoreCache,
-				requestedSuggestions: new Set(values["fix-suggestions"]),
-				skipLanguageReports,
-			})
-		: runConfig(configDefinition, host, {
-				cacheLocation: values["cache-location"],
-				ignoreCache,
-				skipLanguageReports,
-			}));
+	using session = await LintSession.create(configDefinition, host, {
+		cacheLocation: values["cache-location"],
+		ignoreCache,
+	});
+	const { allFileResults } = await session.lint({ skipLanguageReports });
+	const changed = values.fix
+		? (
+				await session.fixFiles(allFileResults, {
+					requestedSuggestions: new Set(values["fix-suggestions"]),
+					skipLanguageReports,
+				})
+			).changed
+		: undefined;
+	await session.writeCache();
+	const lintResults = { ...session.getResults(), ...(changed && { changed }) };
 
 	const exitCode = await renderCliResults(host, lintResults, renderer, values, {
 		ignoreCache,

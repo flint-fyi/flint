@@ -5,9 +5,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
 	createLanguage,
 	createVFSLinterHost,
+	LintSession,
 	maximumFixIterations,
 	RuleCreator,
-	runConfig,
 	type FileAboutData,
 	type LinterHost,
 	type LinterHostFileWatcherEvent,
@@ -85,7 +85,12 @@ describe(runCliWatch, () => {
 				project.configDefinition,
 			);
 			if (warm) {
-				await runConfig(project.configDefinition, project.host, {});
+				using session = await LintSession.create(
+					project.configDefinition,
+					project.host,
+				);
+				await session.lint();
+				await session.writeCache();
 				project.visitedFilePaths.length = 0;
 			}
 			let quit: (() => void) | undefined;

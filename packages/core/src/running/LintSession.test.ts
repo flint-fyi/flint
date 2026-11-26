@@ -6,9 +6,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { normalizePath } from "@flint.fyi/utils";
 
+import { cacheStorageSchema } from "../cache/cacheFormat.ts";
+import { getCacheFilePath } from "../cache/getCacheFilePath.ts";
 import { createDiskBackedLinterHost } from "../host/createDiskBackedLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
+import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { FileAboutData } from "../types/languages.ts";
@@ -76,14 +79,15 @@ describe(LintSession, () => {
 			const second = path.posix.join(root, "second.external");
 			dependenciesByFilePath.set(aPath, [first, second]);
 			dependenciesByFilePath.set(bPath, [first, second]);
+			await writeFile(first, "");
+			await writeFile(second, "");
+			await writeCheckpoint(configDefinition, host, {
+				[aPath]: { dependencies: [first, second] },
+				[bPath]: { dependencies: [first, second] },
+				[cPath]: {},
+			});
 			using session = await LintSession.create(configDefinition, host);
-			session.restoreCachedResults(
-				new Map([
-					[aPath, { dependencies: [first, second], timestamp: 1 }],
-					[bPath, { dependencies: [first, second], timestamp: 1 }],
-					[cPath, { timestamp: 1 }],
-				]),
-			);
+			expect((await session.lint()).cached?.size).toBe(3);
 			const changed = change === "add" ? cPath : aPath;
 			dependenciesByFilePath.set(changed, [change === "add" ? first : second]);
 			await session.lintFiles([changed]);
@@ -367,10 +371,10 @@ describe(LintSession, () => {
 		const aPath = path.posix.join(root, "a.txt");
 		const bPath = path.posix.join(root, "b.txt");
 		dependenciesByFilePath.set(aPath, [bPath]);
-		const cached = await lintIntoCachedResults(configDefinition, host);
+		await lintIntoCheckpoint(configDefinition, host);
 		using session = await LintSession.create(configDefinition, host);
 
-		session.restoreCachedResults(cached);
+		expect((await session.lint()).cached?.size).toBe(3);
 
 		expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
 			new Set(["a.txt", "b.txt"]),
@@ -382,10 +386,10 @@ describe(LintSession, () => {
 		const { configDefinition, host, root } = await createTestProject({
 			invalidatingFileNames,
 		});
-		const cached = await lintIntoCachedResults(configDefinition, host);
+		await lintIntoCheckpoint(configDefinition, host);
 		using session = await LintSession.create(configDefinition, host);
 
-		session.restoreCachedResults(cached);
+		expect((await session.lint()).cached?.size).toBe(3);
 		invalidatingFileNames.clear();
 
 		expect(
@@ -524,6 +528,7 @@ async function createTestProject({
 	});
 
 	const configDefinition: ProcessedConfigDefinition = {
+		cacheLocation: path.posix.join(root, "cache.json"),
 		filePath: path.posix.join(root, "flint.config.js"),
 		use: [
 			{
@@ -548,7 +553,7 @@ function lintedFileNames(results: Map<string, unknown>) {
 	);
 }
 
-async function lintIntoCachedResults(
+async function lintIntoCheckpoint(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
 ) {
@@ -556,17 +561,48 @@ async function lintIntoCachedResults(
 
 	await session.lintFiles(session.allFilePaths);
 
-	return new Map(
-		Array.from(
-			session.storedResults,
-			([filePath, { dependencies, isGlobalDependency }]) => [
-				filePath,
-				{
-					dependencies: Array.from(dependencies),
-					...(isGlobalDependency && { isGlobalDependency }),
-					timestamp: 0,
-				},
-			],
+	await writeCheckpoint(
+		configDefinition,
+		host,
+		Object.fromEntries(
+			Array.from(
+				session.storedResults,
+				([filePath, { dependencies, isGlobalDependency }]) => [
+					filePath,
+					{
+						dependencies: Array.from(dependencies),
+						...(isGlobalDependency && { isGlobalDependency }),
+					},
+				],
+			),
 		),
+	);
+}
+
+/**
+ * Writes a cache checkpoint whose files are all newer than their sources,
+ * so a session's first lint restores them without re-linting.
+ */
+async function writeCheckpoint(
+	configDefinition: ProcessedConfigDefinition,
+	host: LinterHost,
+	files: Record<string, Omit<FileCacheStorage, "timestamp">>,
+) {
+	const timestamp = Number.MAX_SAFE_INTEGER;
+	await host.writeFile(configDefinition.filePath, "");
+	await host.writeFile(
+		getCacheFilePath(configDefinition.cacheLocation),
+		cacheStorageSchema.encode({
+			configs: {
+				[configDefinition.filePath]: timestamp,
+				"package.json": timestamp,
+			},
+			files: Object.fromEntries(
+				Object.entries(files).map(([filePath, file]) => [
+					filePath,
+					{ ...file, timestamp },
+				]),
+			),
+		}),
 	);
 }

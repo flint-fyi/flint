@@ -6,13 +6,10 @@ import { debugForFile } from "debug-for-file";
 import {
 	createRelayFileSystemWatcher,
 	LintSession,
-	lintSessionWithCache,
 	nodeModulesCache,
 	vcsDirectories,
 	withFileSystemWatcher,
-	writeToCache,
 	type LinterHost,
-	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
 import { addFlintAssertionContext, pathKey } from "@flint.fyi/utils";
 
@@ -44,7 +41,6 @@ export async function runCliWatch(
 	const sessionHost = withFileSystemWatcher(host, sessionWatcher);
 
 	return new Promise<void>((resolve) => {
-		let configDefinition: ProcessedConfigDefinition | undefined;
 		let currentRenderer: Renderer | undefined;
 		let currentTask: Promise<unknown> = Promise.resolve();
 		let importVersion = 0;
@@ -86,14 +82,14 @@ export async function runCliWatch(
 			});
 		}
 
-		async function rebuildSession() {
+		async function rebuildSession(ignoreCache: boolean) {
 			currentRenderer?.dispose?.();
 			currentRenderer = undefined;
 			lintSession?.[Symbol.dispose]();
 			lintSession = undefined;
 			knownUnrelatedFilePaths.clear();
 
-			configDefinition = await loadConfigDefinition(
+			const configDefinition = await loadConfigDefinition(
 				host,
 				configFileName,
 				importVersion++,
@@ -102,7 +98,10 @@ export async function runCliWatch(
 				return;
 			}
 
-			lintSession = await LintSession.create(configDefinition, sessionHost);
+			lintSession = await LintSession.create(configDefinition, sessionHost, {
+				cacheLocation: values["cache-location"],
+				ignoreCache,
+			});
 		}
 
 		async function run({
@@ -119,9 +118,9 @@ export async function runCliWatch(
 			}
 
 			if (rebuild || lintSession == null) {
-				await rebuildSession();
+				await rebuildSession(ignoreCache);
 			}
-			if (lintSession == null || configDefinition == null) {
+			if (lintSession == null) {
 				return;
 			}
 
@@ -129,17 +128,9 @@ export async function runCliWatch(
 			renderer.announce();
 
 			const startTime = performance.now();
-			const cacheLocation =
-				values["cache-location"] || configDefinition.cacheLocation;
 			const initialResults = filePaths
 				? await lintSession.lintChangedFiles(filePaths, lintOptions)
-				: (
-						await lintSessionWithCache(lintSession, configFileName, host, {
-							cacheLocation,
-							ignoreCache,
-							...lintOptions,
-						})
-					).allFileResults;
+				: (await lintSession.lint(lintOptions)).allFileResults;
 			const { changed, lintedFilePaths: formatFilePaths } = values.fix
 				? await lintSession.fixFiles(initialResults, {
 						...lintOptions,
@@ -151,7 +142,7 @@ export async function runCliWatch(
 					};
 			const lintResults = { ...lintSession.getResults(), changed };
 
-			await writeToCache(host, configFileName, lintResults, cacheLocation);
+			await lintSession.writeCache();
 
 			if (currentRenderer !== renderer) {
 				return lintSession;
