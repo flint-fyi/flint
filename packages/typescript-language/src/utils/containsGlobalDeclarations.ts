@@ -12,10 +12,12 @@ export function containsGlobalDeclarations(
 	const isModule = ts.isExternalModule(sourceFileNode);
 
 	return sourceFileNode.statements.some((statement) => {
-		// Checks for 'declare global {}'
+		// Checks for 'declare global {}', and for 'declare module "name" {}',
+		// which declares or augments a module for every file that imports it
 		if (
 			statement.kind === SyntaxKind.ModuleDeclaration &&
-			statement.name.text === "global"
+			(statement.name.text === "global" ||
+				statement.name.kind === SyntaxKind.StringLiteral)
 		) {
 			return true;
 		}

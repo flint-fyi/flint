@@ -26,6 +26,17 @@ describe(containsGlobalDeclarations, () => {
 		expect(containsGlobalDeclarations(sourceFile)).toBe(true);
 	});
 
+	it("returns true for module files that declare or augment a module by name", () => {
+		const code = `
+      import "@sveltejs/kit";
+      declare module "$app/types" {
+        interface Routes {}
+      }
+    `;
+		const sourceFile = getSourceFile(code);
+		expect(containsGlobalDeclarations(sourceFile)).toBe(true);
+	});
+
 	it("returns false for standard module code", () => {
 		const code = `
       import axios from 'axios';
