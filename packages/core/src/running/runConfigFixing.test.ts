@@ -194,12 +194,8 @@ describe(runConfigFixing, () => {
 					?.reports.map((report) => report.data),
 			).toEqual(limit === 10 ? [] : [{ value: "10" }]);
 			expect(fixingHost.readFileSync(cachedFilePath)).toBe("5");
-			expect(
-				results.allFileResults
-					.get(cachedFilePath)
-					?.reports.map((report) => report.data),
-			).toEqual([{ value: "5" }]);
-			expect(visit).toHaveBeenCalledTimes(12);
+			expect(results.allFileResults.get(cachedFilePath)?.reports).toEqual([]);
+			expect(visit).toHaveBeenCalledTimes(11);
 			expect(
 				writeFixingFile.mock.calls.filter(
 					([writtenPath]) => writtenPath === filePath,
@@ -211,9 +207,7 @@ describe(runConfigFixing, () => {
 			expect(
 				cache.files[filePath]?.reports?.map((report) => report.data) ?? [],
 			).toEqual(limit === 10 ? [] : [{ value: "10" }]);
-			expect(
-				cache.files[cachedFilePath]?.reports?.map((report) => report.data),
-			).toEqual([{ value: "5" }]);
+			expect(cache.files[cachedFilePath]?.reports).toBeUndefined();
 			expect(fixingHost.readFileSync("/root/unused.json")).toBeUndefined();
 		},
 	);

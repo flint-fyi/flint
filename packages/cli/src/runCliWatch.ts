@@ -4,17 +4,14 @@ import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
 
 import {
-	applyChangesToFiles,
 	createRelayFileSystemWatcher,
 	LintSession,
 	lintSessionWithCache,
-	maximumFixIterations,
 	nodeModulesCache,
 	vcsDirectories,
 	withFileSystemWatcher,
 	writeToCache,
 	type LinterHost,
-	type LintResults,
 	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
 import { addFlintAssertionContext, pathKey } from "@flint.fyi/utils";
@@ -108,50 +105,6 @@ export async function runCliWatch(
 			lintSession = await LintSession.create(configDefinition, sessionHost);
 		}
 
-		async function applyFixes(
-			session: LintSession,
-			initialResults: LintResults["allFileResults"],
-		) {
-			const changed = new Set<string>();
-			const formatFilePaths = new Set<string>();
-
-			async function runIteration(
-				filesResults: LintResults["allFileResults"],
-				iteration: number,
-			): Promise<void> {
-				for (const filePath of filesResults.keys()) {
-					formatFilePaths.add(filePath);
-				}
-
-				if (!values.fix || iteration >= maximumFixIterations) {
-					return;
-				}
-
-				const fixedFilePaths = await applyChangesToFiles(
-					host,
-					filesResults,
-					new Set(values["fix-suggestions"]),
-				);
-				if (!fixedFilePaths.length) {
-					return;
-				}
-
-				for (const filePath of fixedFilePaths) {
-					changed.add(filePath);
-					formatFilePaths.add(filePath);
-				}
-
-				await runIteration(
-					await session.lintChangedFiles(new Set(fixedFilePaths), lintOptions),
-					iteration + 1,
-				);
-			}
-
-			await runIteration(initialResults, 0);
-
-			return { changed, formatFilePaths };
-		}
-
 		async function run({
 			filePaths,
 			ignoreCache = false,
@@ -178,18 +131,24 @@ export async function runCliWatch(
 			const startTime = performance.now();
 			const cacheLocation =
 				values["cache-location"] || configDefinition.cacheLocation;
-			const { changed, formatFilePaths } = await applyFixes(
-				lintSession,
-				filePaths
-					? await lintSession.lintChangedFiles(filePaths, lintOptions)
-					: (
-							await lintSessionWithCache(lintSession, configFileName, host, {
-								cacheLocation,
-								ignoreCache,
-								...lintOptions,
-							})
-						).allFileResults,
-			);
+			const initialResults = filePaths
+				? await lintSession.lintChangedFiles(filePaths, lintOptions)
+				: (
+						await lintSessionWithCache(lintSession, configFileName, host, {
+							cacheLocation,
+							ignoreCache,
+							...lintOptions,
+						})
+					).allFileResults;
+			const { changed, lintedFilePaths: formatFilePaths } = values.fix
+				? await lintSession.fixFiles(initialResults, {
+						...lintOptions,
+						requestedSuggestions: new Set(values["fix-suggestions"]),
+					})
+				: {
+						changed: new Set<string>(),
+						lintedFilePaths: new Set(initialResults.keys()),
+					};
 			const lintResults = { ...lintSession.getResults(), changed };
 
 			await writeToCache(host, configFileName, lintResults, cacheLocation);

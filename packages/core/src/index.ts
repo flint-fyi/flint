@@ -47,7 +47,10 @@ export { RuleCreator, type RuleCreatorOptions } from "./rules/RuleCreator.ts";
 export {
 	LintSession,
 	type LintSessionChangedLintOptions,
+	type LintSessionFixOptions,
+	type LintSessionFixResults,
 	type LintSessionLintOptions,
+	maximumFixIterations,
 } from "./running/LintSession.ts";
 export {
 	lintSessionWithCache,
@@ -56,10 +59,7 @@ export {
 export { parseOptions } from "./running/parseOptions.ts";
 export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";
-export {
-	maximumFixIterations,
-	runConfigFixing,
-} from "./running/runConfigFixing.ts";
+export { runConfigFixing } from "./running/runConfigFixing.ts";
 export type { BaseAbout } from "./types/about.ts";
 export type {
 	CacheStorage,
