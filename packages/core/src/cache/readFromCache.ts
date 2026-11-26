@@ -1,4 +1,3 @@
-import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
 import { nullThrows, pathKey } from "@flint.fyi/utils";
@@ -6,7 +5,6 @@ import { nullThrows, pathKey } from "@flint.fyi/utils";
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
-import { collectTransitiveDependents } from "./collectTransitiveDependents.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
 const log = debugForFile(import.meta.url);
@@ -72,7 +70,6 @@ export async function readFromCache(
 
 	const cached = new Map(Object.entries(cache.files));
 	const dependencyTouchTimes = new Map<string, number | undefined>();
-	const filePathsToLint = new Set<string>();
 
 	for (const [filePath, fileCached] of cached) {
 		if (!fileCached.isGlobalDependency) {
@@ -98,13 +95,12 @@ export async function readFromCache(
 		const fileCached = cached.get(filePath);
 		if (!fileCached) {
 			log("No cache available for: %s", filePath);
-			markAsUncached(filePath);
 			continue;
 		}
 
 		// flint-disable-next-line performance/loopAwaits
 		if (await hasOutdatedDependency(filePath, fileCached)) {
-			markAsUncached(filePath);
+			cached.delete(filePath);
 			continue;
 		}
 
@@ -118,33 +114,8 @@ export async function readFromCache(
 				timestampTouched,
 				timestampCached,
 			);
-			markAsUncached(filePath);
+			cached.delete(filePath);
 		}
-	}
-
-	// We also invalidate the cache for any dependents of changed files.
-	// But the cache stores dependencies, so we have to reverse that map now.
-	const fileDependents = new CachedFactory(() => new Set<string>());
-
-	for (const [filePath, stored] of cached) {
-		if (stored.dependencies) {
-			for (const dependency of stored.dependencies) {
-				fileDependents.get(pathKey(dependency, caseSensitiveFS)).add(filePath);
-			}
-		}
-	}
-
-	const transitiveDependents = collectTransitiveDependents(
-		Array.from(filePathsToLint, (filePath) =>
-			pathKey(filePath, caseSensitiveFS),
-		),
-		(dependencyKey) => fileDependents.get(dependencyKey),
-		(filePath) => pathKey(filePath, caseSensitiveFS),
-	);
-
-	for (const dependent of transitiveDependents) {
-		log("Transitively invalidating cache for: %s", dependent);
-		markAsUncached(dependent);
 	}
 
 	// Remove cached files that no longer exist
@@ -197,10 +168,5 @@ export async function readFromCache(
 		}
 
 		return false;
-	}
-
-	function markAsUncached(filePath: string) {
-		cached.delete(filePath);
-		filePathsToLint.add(filePath);
 	}
 }

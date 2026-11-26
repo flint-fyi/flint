@@ -133,7 +133,7 @@ describe(readFromCache, () => {
 		expect(cached && Array.from(cached.keys())).toEqual([]);
 	});
 
-	it("invalidates dependents when a dependency inside the lint set was touched after the cache was written", async () => {
+	it("keeps dependents cached when a dependency inside the lint set was touched after the cache was written", async () => {
 		const dependentPath = "/root/src/dependent.ts";
 		const host = createHostWithCache(
 			{
@@ -157,6 +157,6 @@ describe(readFromCache, () => {
 
 		const cached = await read(host, [dependentPath, filePath]);
 
-		expect(cached && Array.from(cached.keys())).toEqual([]);
+		expect(cached && Array.from(cached.keys())).toEqual([dependentPath]);
 	});
 });
