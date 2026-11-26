@@ -86,10 +86,12 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 			      "message": {
 			        "primary": "Unknown comment directive type: "invalid".",
 			        "secondary": [
-			          "TODO",
+			          "Flint supports "disable-file", "disable-lines-begin", "disable-lines-end", and "disable-next-line" directive types.",
+			          "Unrecognized directive types are ignored and will not suppress any linting reports.",
 			        ],
 			        "suggestions": [
-			          "TODO",
+			          "Change the directive to one of the supported types.",
+			          "If this comment is not intended as a Flint directive, change the comment so it does not begin with "flint-".",
 			        ],
 			      },
 			      "range": {
@@ -107,6 +109,175 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 			    },
 			  ],
 			}
+		`);
+	});
+
+	it("reports commentDirectiveNoSelection when a directive has no selections", () => {
+		const sourceFile = createSourceFile(
+			"// flint-disable-next-line\nconst x = 1;",
+		);
+
+		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
+
+		expect(actual.reports).toMatchInlineSnapshot(`
+			[
+			  {
+			    "about": {
+			      "id": "commentDirectiveNoSelection",
+			    },
+			    "message": {
+			      "primary": "Comment directive "disable-next-line" needs to select rule(s).",
+			      "secondary": [
+			        "Comment directives require at least one rule name or wildcard pattern.",
+			        "Without any specified rules, the directive cannot determine what to disable and has no effect.",
+			      ],
+			      "suggestions": [
+			        "Specify one or more rule names or patterns after the directive type, such as "flint-disable-next-line plugin/ruleName".",
+			        "If the directive is no longer needed, remove it.",
+			      ],
+			    },
+			    "range": {
+			      "begin": {
+			        "column": 0,
+			        "line": 0,
+			        "raw": 0,
+			      },
+			      "end": {
+			        "column": 26,
+			        "line": 0,
+			        "raw": 26,
+			      },
+			    },
+			  },
+			]
+		`);
+	});
+
+	it("reports commentDirectiveFileAfterContent when disable-file is after statements", () => {
+		const sourceFile = createSourceFile(
+			"const x = 1;\n// flint-disable-file ts/noExplicitAny",
+		);
+
+		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
+
+		expect(actual.reports).toMatchInlineSnapshot(`
+			[
+			  {
+			    "about": {
+			      "id": "commentDirectiveFileAfterContent",
+			    },
+			    "message": {
+			      "primary": "A "flint-disable-file" comment directive must come before any non-comment contents.",
+			      "secondary": [
+			        "File-level disable directives apply to the entire file and are meant to be placed at the top.",
+			        "Placing them after code can be confusing because it looks like a regional disable rather than a file-wide one.",
+			      ],
+			      "suggestions": [
+			        "Move the "flint-disable-file" directive to the top of the file, before any statements.",
+			        "If you only intended to disable rules for part of the file, use "flint-disable-next-line" or "flint-disable-lines-begin" instead.",
+			      ],
+			    },
+			    "range": {
+			      "begin": {
+			        "column": 0,
+			        "line": 1,
+			        "raw": 13,
+			      },
+			      "end": {
+			        "column": 38,
+			        "line": 1,
+			        "raw": 51,
+			      },
+			    },
+			  },
+			]
+		`);
+	});
+
+	it("reports commentDirectiveAlreadyDisabled when a rule is disabled redundantly", () => {
+		const sourceFile = createSourceFile(
+			[
+				"// flint-disable-file ts/noExplicitAny",
+				"// flint-disable-next-line ts/noExplicitAny",
+				"const x = 1;",
+			].join("\n"),
+		);
+
+		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
+
+		expect(actual.reports).toMatchInlineSnapshot(`
+			[
+			  {
+			    "about": {
+			      "id": "commentDirectiveAlreadyDisabled",
+			    },
+			    "message": {
+			      "primary": "The selection "ts/noExplicitAny" is already disabled by a previous flint-disable-next-line comment directive.",
+			      "secondary": [
+			        "Disabling a rule multiple times in the same scope is redundant.",
+			        "Redundant directives add noise and can make it harder to tell which directive is active.",
+			      ],
+			      "suggestions": [
+			        "Remove this redundant directive.",
+			        "If the earlier directive was unintentional, remove or adjust that directive instead.",
+			      ],
+			    },
+			    "range": {
+			      "begin": {
+			        "column": 0,
+			        "line": 1,
+			        "raw": 39,
+			      },
+			      "end": {
+			        "column": 43,
+			        "line": 1,
+			        "raw": 82,
+			      },
+			    },
+			  },
+			]
+		`);
+	});
+
+	it("reports commentDirectiveNotPreviouslyDisabled when disable-lines-end has no matching begin", () => {
+		const sourceFile = createSourceFile(
+			"// flint-disable-lines-end ts/noExplicitAny\nconst x = 1;",
+		);
+
+		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
+
+		expect(actual.reports).toMatchInlineSnapshot(`
+			[
+			  {
+			    "about": {
+			      "id": "commentDirectiveNotPreviouslyDisabled",
+			    },
+			    "message": {
+			      "primary": "The selection "ts/noExplicitAny" was not disabled in a previous comment directive.",
+			      "secondary": [
+			        "A "disable-lines-end" directive should only close rule selections previously opened by a "disable-lines-begin" directive.",
+			        "Closing a selection that was never opened has no effect and usually indicates a mismatched rule name or missing begin directive.",
+			      ],
+			      "suggestions": [
+			        "Verify that the rule name matches the one used in the preceding "flint-disable-lines-begin" directive.",
+			        "Add a preceding "flint-disable-lines-begin" directive if one is missing.",
+			        "If the directive is no longer needed, remove it.",
+			      ],
+			    },
+			    "range": {
+			      "begin": {
+			        "column": 0,
+			        "line": 0,
+			        "raw": 0,
+			      },
+			      "end": {
+			        "column": 43,
+			        "line": 0,
+			        "raw": 43,
+			      },
+			    },
+			  },
+			]
 		`);
 	});
 });

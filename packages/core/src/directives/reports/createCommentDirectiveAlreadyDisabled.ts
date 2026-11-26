@@ -11,8 +11,14 @@ export function createCommentDirectiveAlreadyDisabled(
 		},
 		message: {
 			primary: `The selection "${selection}" is already disabled by a previous flint-${directive.type} comment directive.`,
-			secondary: ["TODO"],
-			suggestions: ["TODO"],
+			secondary: [
+				"Disabling a rule multiple times in the same scope is redundant.",
+				"Redundant directives add noise and can make it harder to tell which directive is active.",
+			],
+			suggestions: [
+				"Remove this redundant directive.",
+				"If the earlier directive was unintentional, remove or adjust that directive instead.",
+			],
 		},
 		range: directive.range,
 	};
