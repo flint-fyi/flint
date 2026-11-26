@@ -1146,25 +1146,25 @@ importers:
   packages/flint:
     dependencies:
       '@flint.fyi/cli':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../cli
       '@flint.fyi/core':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../core
       '@flint.fyi/json':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../json
       '@flint.fyi/md':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../md
       '@flint.fyi/package-json':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../package-json
       '@flint.fyi/ts':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../ts
       '@flint.fyi/yaml':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../yaml
       typescript:
         specifier: catalog:prod
