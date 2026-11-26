@@ -18,8 +18,11 @@ export function collectReferencedFilePaths(
 			moduleResolutionHost,
 		);
 
-		return resolved.resolvedModule?.isExternalLibraryImport === false
-			? resolved.resolvedModule.resolvedFileName
+		const resolvedFileName = resolved.resolvedModule?.resolvedFileName;
+
+		// Workspace packages are linked through node_modules, so check where the link points.
+		return resolvedFileName && !resolvedFileName.includes("/node_modules/")
+			? resolvedFileName
 			: undefined;
 	}
 

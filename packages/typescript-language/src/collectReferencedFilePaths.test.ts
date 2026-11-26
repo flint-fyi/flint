@@ -1,4 +1,11 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import {
+	mkdir,
+	mkdtemp,
+	realpath,
+	rm,
+	symlink,
+	writeFile,
+} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -74,6 +81,64 @@ describe(collectReferencedFilePaths, () => {
 		).toEqual(
 			new Set(
 				dependencyNames.map((name) => normalize(path.join(root, `${name}.ts`))),
+			),
+		);
+	});
+
+	it("includes workspace packages linked through node_modules, but not installed packages", async () => {
+		const root = await realpath(
+			await mkdtemp(path.join(os.tmpdir(), "flint-ts-deps-")),
+		);
+		tempDirectories.push(root);
+
+		const files = {
+			"packages/app/index.ts":
+				'import { installed } from "installed";\nimport { linked } from "linked";\n',
+			"packages/app/node_modules/installed/index.d.ts":
+				"export declare const installed: number;\n",
+			"packages/app/node_modules/installed/package.json": JSON.stringify({
+				name: "installed",
+				types: "./index.d.ts",
+			}),
+			"packages/linked/package.json": JSON.stringify({
+				exports: "./src/index.ts",
+				name: "linked",
+			}),
+			"packages/linked/src/index.ts": "export const linked = 1;\n",
+		};
+		await Promise.all(
+			Object.entries(files).map(async ([filePath, content]) => {
+				await mkdir(path.dirname(path.join(root, filePath)), {
+					recursive: true,
+				});
+				await writeFile(path.join(root, filePath), content);
+			}),
+		);
+		await symlink(
+			path.join(root, "packages/linked"),
+			path.join(root, "packages/app/node_modules/linked"),
+			"dir",
+		);
+
+		const indexPath = path.join(root, "packages/app/index.ts");
+		const program = ts.createProgram([indexPath], {
+			module: ts.ModuleKind.NodeNext,
+			moduleResolution: ts.ModuleResolutionKind.NodeNext,
+			target: ts.ScriptTarget.ESNext,
+		});
+
+		const dependencies = collectReferencedFilePaths(
+			program,
+			program.getSourceFile(indexPath) as AST.SourceFile,
+			createTypeScriptServerHost(createDiskBackedLinterHost(root)),
+		);
+
+		expect(dependencies).toContain(
+			normalize(path.join(root, "packages/linked/src/index.ts")),
+		);
+		expect(dependencies).not.toContain(
+			normalize(
+				path.join(root, "packages/app/node_modules/installed/index.d.ts"),
 			),
 		);
 	});
