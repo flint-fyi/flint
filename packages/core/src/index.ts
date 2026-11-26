@@ -1,3 +1,5 @@
+export type { FinalizedFileResults } from "./running/finalizeFileResults.ts";
+
 export { getCacheFilePath } from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
 export { applyChangesToFiles } from "./changing/applyChangesToFiles.ts";

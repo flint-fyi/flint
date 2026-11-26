@@ -1,6 +1,8 @@
 import type { PlaygroundRange, PlaygroundReport } from "~/playground/types.ts";
 import type { JSX } from "react";
 
+import { formatReport } from "@flint.fyi/core";
+
 import { PlaygroundMessage } from "./PlaygroundMessage.tsx";
 import styles from "./PlaygroundReports.module.css";
 
@@ -26,34 +28,40 @@ export function PlaygroundReports({
 					<button
 						className={styles.location}
 						onClick={() => {
-							onSelect({ begin: report.begin, end: report.end });
+							onSelect({
+								begin: report.range.begin.raw,
+								end: report.range.end.raw,
+							});
 						}}
 						type="button"
 					>
-						{report.line + 1}:{report.column + 1}
+						{report.range.begin.line + 1}:{report.range.begin.column + 1}
 						<span className="sr-only">
 							{" "}
-							(line {report.line + 1}, column {report.column + 1})
+							(line {report.range.begin.line + 1}, column{" "}
+							{report.range.begin.column + 1})
 						</span>
 					</button>
 					<span className={styles.message}>
 						{report.source === "flint" ? (
-							<PlaygroundMessage message={report.message} />
+							<PlaygroundMessage
+								message={formatReport(report.data, report.message.primary)}
+							/>
 						) : (
-							report.message
+							formatReport(report.data, report.message.primary)
 						)}
 					</span>
 					<span className={styles.id}>
 						<span className={styles.source}>
 							{report.source === "flint" ? "Flint" : parserName}
 						</span>{" "}
-						{report.url ? (
-							<a href={report.url} rel="noreferrer" target="_blank">
-								{report.id}
+						{report.about.url ? (
+							<a href={report.about.url} rel="noreferrer" target="_blank">
+								{report.about.id}
 								<span className="sr-only"> (opens in a new tab)</span>
 							</a>
 						) : (
-							report.id
+							report.about.id
 						)}
 					</span>
 				</li>

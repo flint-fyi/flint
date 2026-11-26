@@ -1,5 +1,7 @@
 import type { PlaygroundReport } from "~/playground/types.ts";
 
+import { formatReport } from "@flint.fyi/core";
+
 import { splitMessage } from "./splitMessage.ts";
 
 /**
@@ -12,7 +14,9 @@ export function renderDiagnosticMessage(
 	const container = document.createElement("div");
 	const message = document.createElement("div");
 
-	for (const part of splitMessage(report.message)) {
+	for (const part of splitMessage(
+		formatReport(report.data, report.message.primary),
+	)) {
 		message.append(part.isCode ? createElement("code", part.text) : part.text);
 	}
 
@@ -26,15 +30,15 @@ export function renderDiagnosticMessage(
 		" ",
 	);
 
-	if (report.url) {
-		const link = createElement("a", report.id);
-		link.href = report.url;
+	if (report.about.url) {
+		const link = createElement("a", report.about.id);
+		link.href = report.about.url;
 		link.rel = "noreferrer";
 		link.target = "_blank";
 		link.append(createElement("span", " (opens in a new tab)", "sr-only"));
 		details.append(link);
 	} else {
-		details.append(report.id);
+		details.append(report.about.id);
 	}
 
 	container.append(message, details);

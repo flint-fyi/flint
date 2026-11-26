@@ -3,7 +3,7 @@ import {
 	syntaxHighlighting,
 	type LanguageSupport,
 } from "@codemirror/language";
-import { lintGutter, setDiagnostics } from "@codemirror/lint";
+import { lintGutter, setDiagnostics, type Diagnostic } from "@codemirror/lint";
 import { EditorView, tooltips } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
 import type { PlaygroundRange, PlaygroundReport } from "~/playground/types.ts";
@@ -12,6 +12,7 @@ import { useEffect, useEffectEvent, useRef, useState, type JSX } from "react";
 
 import styles from "./PlaygroundEditor.module.css";
 import { renderDiagnosticMessage } from "./renderDiagnosticMessage.ts";
+import { formatReport } from "@flint.fyi/core";
 
 export interface PlaygroundEditorProps {
 	autoFocus: boolean;
@@ -228,12 +229,12 @@ export function PlaygroundEditor({
 		view.dispatch(
 			setDiagnostics(
 				view.state,
-				reports.map((report) => ({
-					from: Math.min(report.begin, documentLength),
-					message: report.message,
+				reports.map((report): Diagnostic => ({
+					from: Math.min(report.range.begin.raw, documentLength),
+					message: formatReport(report.data, report.message.primary),
 					renderMessage: () => renderDiagnosticMessage(report, parserName),
 					severity: report.source === "language" ? "error" : "warning",
-					to: Math.min(report.end, documentLength),
+					to: Math.min(report.range.end.raw, documentLength),
 				})),
 			),
 		);
