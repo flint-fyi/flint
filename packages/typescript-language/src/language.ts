@@ -1,7 +1,8 @@
 import { createProjectService } from "@typescript-eslint/project-service";
+import { getParsedConfigFile } from "@typescript-eslint/tsconfig-utils";
 import { debugForFile } from "debug-for-file";
-import { extname } from "pathe";
-import { getPreEmitDiagnostics, type Program } from "typescript";
+import { extname, join } from "pathe";
+import ts, { getPreEmitDiagnostics, type Program } from "typescript";
 
 import {
 	createLanguage,
@@ -25,6 +26,7 @@ import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
 
+const defaultProjectFileName = "tsconfig.json";
 const log = debugForFile(import.meta.url);
 
 interface GlobalLanguageState {
@@ -86,6 +88,21 @@ export const typescriptLanguage: Language<
 			host: createTypeScriptServerHost(host),
 		});
 		const openClientFilePaths = new Set<string>();
+		const defaultProjectWatcher = host.watchFileSync(
+			join(process.cwd(), defaultProjectFileName),
+			(event) => {
+				// Creating or deleting it changes the file set, which rebuilds the whole session.
+				if (event !== "changed") {
+					return;
+				}
+
+				service.setCompilerOptionsForInferredProjects(
+					getParsedConfigFile(ts, defaultProjectFileName)
+						.options as ts.server.protocol.InferredProjectCompilerOptions,
+				);
+			},
+			{ ignoredPaths: [] },
+		);
 
 		function createFile(data: FileAboutData) {
 			log("Opening client file:", data.filePathAbsolute);
@@ -157,6 +174,7 @@ export const typescriptLanguage: Language<
 		return {
 			createFile,
 			[Symbol.dispose]() {
+				defaultProjectWatcher[Symbol.dispose]();
 				for (const filePathAbsolute of openClientFilePaths) {
 					service.closeClientFile(filePathAbsolute);
 				}
