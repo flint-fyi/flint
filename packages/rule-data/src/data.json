@@ -35045,6 +35045,12 @@
 			"plugin": "vitest",
 			"preset": "stylisticStrict"
 		},
+		"eslint": [
+			{
+				"name": "vitest/prefer-mock-return-shorthand",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-mock-return-shorthand.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "vitest/prefer-mock-return-shorthand",
@@ -35606,6 +35612,12 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
+		"eslint": [
+			{
+				"name": "vitest/require-test-timeout",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-test-timeout.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "vitest/require-test-timeout",
@@ -35850,6 +35862,19 @@
 			}
 		],
 		"notes": "Overly opinionated."
+	},
+	{
+		"flint": {
+			"name": "unboundMethods",
+			"plugin": "vitest",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "vitest/unbound-method",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/unbound-method.md"
+			}
+		]
 	},
 	{
 		"flint": {
