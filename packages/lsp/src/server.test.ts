@@ -195,26 +195,39 @@ describe(startServer, () => {
 		await flushQueuedWork();
 	}
 
-	it("reports a missing workspace root", async () => {
-		const filePath = "/workspace/src/file.ts";
+	it.each([
+		["no workspace", {}],
+		[
+			"a workspace that is not a folder on disk",
+			{
+				workspaceFolders: [
+					{ name: "remote", uri: "vscode-vfs://github/flint-fyi/flint" },
+				],
+			},
+		],
+	])(
+		"reports a missing workspace root for %s",
+		async (_description, params) => {
+			const filePath = "/workspace/src/file.ts";
 
-		startServer();
-		openDocument(filePath);
-		closeDocument(filePath);
-		callback("initialize")({ capabilities: {} });
-		callback("initialized")();
-		await vi.dynamicImportSettled();
+			startServer();
+			openDocument(filePath);
+			closeDocument(filePath);
+			callback("initialize")({ capabilities: {}, ...params });
+			callback("initialized")();
+			await vi.dynamicImportSettled();
 
-		expect(mocks.connection.console.error).toHaveBeenCalledWith(
-			"No workspace root provided.",
-		);
-		expect(
-			callback("codeAction")({
-				context: { diagnostics: [] },
-				textDocument: { uri: pathToFileURL(filePath).href },
-			}),
-		).toEqual([]);
-	});
+			expect(mocks.connection.console.error).toHaveBeenCalledWith(
+				"No workspace root provided.",
+			);
+			expect(
+				callback("codeAction")({
+					context: { diagnostics: [] },
+					textDocument: { uri: pathToFileURL(filePath).href },
+				}),
+			).toEqual([]);
+		},
+	);
 
 	it("stops when the workspace has no config", async () => {
 		mocks.configFileName = undefined;
@@ -223,7 +236,7 @@ describe(startServer, () => {
 
 		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
 		expect(mocks.connection.console.error).toHaveBeenCalledWith(
-			`No flint.config.* found in ${workspaceRoot}`,
+			`No flint.config.* found in ${normalizePath(workspaceRoot)}`,
 		);
 	});
 
@@ -412,6 +425,81 @@ describe(startServer, () => {
 			[pathToFileURL(closedFilePath).href, 1],
 			[pathToFileURL(filePath).href, 1],
 			[pathToFileURL(closedFilePath).href, 0],
+		]);
+	});
+
+	it("sends code action edits for the document version that was linted", async () => {
+		const filePath = normalizePath(path.join(workspaceRoot, "src/index.ts"));
+		const fileUri = pathToFileURL(filePath).href;
+		const range = {
+			end: { character: 11, line: 0 },
+			start: { character: 6, line: 0 },
+		};
+
+		mocks.lintPasses.push([
+			new Map([
+				[
+					filePath,
+					{
+						...createFileResults("language diagnostic"),
+						reports: [
+							{
+								about: { id: "renamed" },
+								fix: [{ range: { begin: 6, end: 11 }, text: "renamed" }],
+								message: {
+									primary: "Rename this.",
+									secondary: [],
+									suggestions: [],
+								},
+								range: {
+									begin: { column: 6, line: 0, raw: 6 },
+									end: { column: 11, line: 0, raw: 11 },
+								},
+							},
+						],
+					},
+				],
+			]),
+		]);
+
+		await startInitializedServer(
+			createWorkspaceInitializeParams({
+				workspace: { workspaceEdit: { documentChanges: true } },
+			}),
+		);
+		openDocument(filePath, "const value = 1;\n");
+		await flushQueuedWork();
+		callback("didChange")({
+			contentChanges: [{ text: "  const value = 1;\n" }],
+			textDocument: { uri: fileUri, version: 2 },
+		});
+		await flushQueuedWork();
+
+		expect(
+			callback("codeAction")({
+				context: {
+					diagnostics: [
+						{
+							code: "renamed",
+							message: "Rename this.",
+							range,
+							source: "flint",
+						},
+					],
+				},
+				textDocument: { uri: fileUri },
+			}),
+		).toMatchObject([
+			{
+				edit: {
+					documentChanges: [
+						{
+							edits: [{ newText: "renamed", range }],
+							textDocument: { uri: fileUri, version: 1 },
+						},
+					],
+				},
+			},
 		]);
 	});
 

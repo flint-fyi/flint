@@ -3,6 +3,7 @@ import path from "node:path";
 import type { TextDocument } from "vscode-languageserver-textdocument";
 import {
 	CodeActionKind,
+	TextDocumentEdit,
 	TextEdit,
 	type CodeAction,
 	type CodeActionContext,
@@ -21,6 +22,7 @@ import { createReportRange, FLINT_DIAGNOSTIC_SOURCE } from "./diagnostics.ts";
 import { filePathToUri } from "./filePathToUri.ts";
 
 export interface CodeActionOptions {
+	documentVersions?: ReadonlyMap<string, number>;
 	getDocument(filePath: string): TextDocument | undefined;
 	workspaceRoot: string;
 }
@@ -87,7 +89,7 @@ function createAction(
 	options: CodeActionOptions,
 	isPreferred?: true,
 ): CodeAction | undefined {
-	const changes: Record<string, TextEdit[]> = {};
+	const editsByFilePath: [string, TextEdit[]][] = [];
 
 	for (const [filePath, fileChanges] of fileChangesByFilePath) {
 		if (!fileChanges?.length) {
@@ -99,24 +101,48 @@ function createAction(
 			return undefined;
 		}
 
-		changes[filePathToUri(filePath)] = fileChanges.map((fileChange) =>
-			TextEdit.replace(
-				{
-					end: document.positionAt(fileChange.range.end),
-					start: document.positionAt(fileChange.range.begin),
-				},
-				fileChange.text,
+		editsByFilePath.push([
+			filePath,
+			fileChanges.map((fileChange) =>
+				TextEdit.replace(
+					{
+						end: document.positionAt(fileChange.range.end),
+						start: document.positionAt(fileChange.range.begin),
+					},
+					fileChange.text,
+				),
 			),
-		);
+		]);
 	}
 
-	if (!Object.keys(changes).length) {
+	if (!editsByFilePath.length) {
 		return undefined;
 	}
 
+	const { documentVersions } = options;
+
 	return {
 		diagnostics: [diagnostic],
-		edit: { changes },
+		edit: documentVersions
+			? {
+					documentChanges: editsByFilePath.map(([filePath, edits]) =>
+						TextDocumentEdit.create(
+							{
+								uri: filePathToUri(filePath),
+								version: documentVersions.get(filePath) ?? null,
+							},
+							edits,
+						),
+					),
+				}
+			: {
+					changes: Object.fromEntries(
+						editsByFilePath.map(([filePath, edits]) => [
+							filePathToUri(filePath),
+							edits,
+						]),
+					),
+				},
 		...(isPreferred && { isPreferred }),
 		kind: CodeActionKind.QuickFix,
 		title,

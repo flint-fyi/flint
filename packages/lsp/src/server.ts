@@ -1,5 +1,5 @@
 import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { pathToFileURL } from "node:url";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
@@ -39,10 +39,14 @@ export function startServer(): void {
 	const connection = createConnection(process.stdin, process.stdout);
 	const documents = new TextDocuments(TextDocument);
 	const pendingFilePaths = new Set<string>();
-	const storedResults = new Map<string, FileResults>();
+	const storedResults = new Map<
+		string,
+		{ documentVersions: ReadonlyMap<string, number>; fileResults: FileResults }
+	>();
 
 	let currentTask: Promise<void> = Promise.resolve();
 	let debounceTimer: NodeJS.Timeout | undefined;
+	let documentChangesSupported = false;
 	let lintSession: LintSession | undefined;
 	let rebuildPending = false;
 	let watchedFilesRegistrationSupported = false;
@@ -52,6 +56,9 @@ export function startServer(): void {
 
 	connection.onInitialize((initializeParams: InitializeParams) => {
 		workspaceRoot = getWorkspaceRoot(initializeParams);
+		documentChangesSupported =
+			initializeParams.capabilities.workspace?.workspaceEdit
+				?.documentChanges === true;
 		watchedFilesRegistrationSupported =
 			initializeParams.capabilities.workspace?.didChangeWatchedFiles
 				?.dynamicRegistration === true;
@@ -88,7 +95,7 @@ export function startServer(): void {
 			(filePath, event) => {
 				if (event !== "changed" || isConfigFile(filePath, root)) {
 					requestRebuild();
-				} else if (!getOpenFilePaths().includes(filePath)) {
+				} else if (!getOpenDocumentVersions().has(filePath)) {
 					requestLint(filePath);
 				}
 			},
@@ -110,11 +117,16 @@ export function startServer(): void {
 		requestRebuild();
 	});
 
-	function getOpenFilePaths() {
-		return documents
-			.all()
-			.map((document) => uriToFilePath(document.uri))
-			.filter((filePath) => filePath !== undefined);
+	function getOpenDocumentVersions() {
+		const documentVersions = new Map<string, number>();
+		for (const document of documents.all()) {
+			const filePath = uriToFilePath(document.uri);
+			if (filePath) {
+				documentVersions.set(filePath, document.version);
+			}
+		}
+
+		return documentVersions;
 	}
 
 	function requestRebuild() {
@@ -147,11 +159,13 @@ export function startServer(): void {
 
 		const filePaths = new Set(pendingFilePaths);
 		pendingFilePaths.clear();
+		const documentVersions = getOpenDocumentVersions();
 
 		const results =
 			lintSession && filePaths.size
 				? await lintSession.lintChangedFiles(filePaths, {
-						onResults: publishResults,
+						onResults: (filesResults) =>
+							publishResults(filesResults, documentVersions),
 					})
 				: new Map<string, FileResults>();
 
@@ -183,15 +197,18 @@ export function startServer(): void {
 
 		connection.console.info(`Flint LSP loaded config: ${configFileName}`);
 
-		for (const filePath of getOpenFilePaths()) {
+		for (const filePath of getOpenDocumentVersions().keys()) {
 			pendingFilePaths.add(filePath);
 		}
 	}
 
-	async function publishResults(filesResults: Map<string, FileResults>) {
+	async function publishResults(
+		filesResults: Map<string, FileResults>,
+		documentVersions: ReadonlyMap<string, number>,
+	) {
 		await Promise.all(
 			Array.from(filesResults, ([filePath, fileResults]) => {
-				storedResults.set(filePath, fileResults);
+				storedResults.set(filePath, { documentVersions, fileResults });
 
 				return connection.sendDiagnostics({
 					diagnostics: mapFileResultsToDiagnostics(
@@ -265,17 +282,20 @@ export function startServer(): void {
 
 	connection.onCodeAction((codeActionParams) => {
 		const filePath = uriToFilePath(codeActionParams.textDocument.uri);
-		const fileResults = filePath && storedResults.get(filePath);
+		const stored = filePath && storedResults.get(filePath);
 
-		if (!fileResults || !workspace) {
+		if (!stored || !workspace) {
 			return [];
 		}
 
 		return createCodeActions(
 			filePath,
 			codeActionParams.context,
-			fileResults.reports,
+			stored.fileResults.reports,
 			{
+				...(documentChangesSupported && {
+					documentVersions: stored.documentVersions,
+				}),
 				getDocument,
 				workspaceRoot: workspace.root,
 			},
@@ -302,7 +322,7 @@ function getWorkspaceRoot(initializeParams: InitializeParams) {
 		legacyInitializeParams.rootUri;
 
 	return uri
-		? fileURLToPath(uri)
+		? uriToFilePath(uri)
 		: (legacyInitializeParams.rootPath ?? undefined);
 }
 

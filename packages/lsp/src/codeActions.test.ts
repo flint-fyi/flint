@@ -11,6 +11,102 @@ import { normalizePath } from "@flint.fyi/utils";
 import { createCodeActions } from "./codeActions.ts";
 
 describe(createCodeActions, () => {
+	it("sends edits for the document versions that were linted", () => {
+		const workspaceRoot = normalizePath(path.resolve("workspace"));
+		const sourceFilePath = `${workspaceRoot}/src/file.ts`;
+		const targetFilePath = `${workspaceRoot}/cspell.json`;
+		const documents = new Map([
+			[
+				sourceFilePath,
+				TextDocument.create("file:///source", "typescript", 0, "const typo;"),
+			],
+			[targetFilePath, TextDocument.create("file:///target", "json", 0, "{}")],
+		]);
+		const range = {
+			begin: { column: 6, line: 0, raw: 6 },
+			end: { column: 10, line: 0, raw: 10 },
+		};
+
+		const actions = createCodeActions(
+			sourceFilePath,
+			{
+				diagnostics: [
+					{
+						code: "spelling/cspell",
+						message: "Unknown word.",
+						range: {
+							end: { character: 10, line: 0 },
+							start: { character: 6, line: 0 },
+						},
+						source: "flint",
+					},
+				],
+			},
+			[
+				{
+					about: { id: "spelling/cspell" },
+					fix: [{ range: { begin: 6, end: 10 }, text: "word" }],
+					message: { primary: "Unknown word.", secondary: [], suggestions: [] },
+					range,
+					suggestions: [
+						{
+							files: {
+								"cspell.json": [{ range: { begin: 0, end: 2 }, text: "[]" }],
+							},
+							id: "addWordToWords",
+						},
+					],
+				},
+			],
+			{
+				documentVersions: new Map([[sourceFilePath, 3]]),
+				getDocument: (filePath) => documents.get(filePath),
+				workspaceRoot,
+			},
+		);
+
+		expect(actions.map(({ edit }) => edit)).toEqual([
+			{
+				documentChanges: [
+					{
+						edits: [
+							{
+								newText: "word",
+								range: {
+									end: { character: 10, line: 0 },
+									start: { character: 6, line: 0 },
+								},
+							},
+						],
+						textDocument: {
+							uri: pathToFileURL(sourceFilePath).href,
+							version: 3,
+						},
+					},
+				],
+			},
+			{
+				documentChanges: [
+					{
+						edits: [
+							{
+								newText: "[]",
+								range: {
+									end: { character: 2, line: 0 },
+									start: { character: 0, line: 0 },
+								},
+							},
+						],
+						textDocument: {
+							uri: pathToFileURL(targetFilePath).href,
+							version: null,
+						},
+					},
+				],
+			},
+		]);
+	});
+
 	it("creates fixes and suggestion edits", () => {
 		const workspaceRoot = path.resolve("workspace");
 		const sourceFilePath = normalizePath(
