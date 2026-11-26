@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -23,7 +23,7 @@ describe(collectReferencedFilePaths, () => {
 		);
 	});
 
-	it("includes imports, import types, dynamic imports, and re-exports", async () => {
+	it("includes imports, import types, dynamic imports wherever they appear, and re-exports", async () => {
 		const root = await mkdtemp(path.join(os.tmpdir(), "flint-ts-deps-"));
 		tempDirectories.push(root);
 
@@ -35,6 +35,11 @@ describe(collectReferencedFilePaths, () => {
 			"typed",
 			"exported",
 			"export-all",
+			"all",
+			"stored",
+			"lazy",
+			"template",
+			"awaited-template",
 		];
 
 		await Promise.all([
@@ -47,6 +52,13 @@ describe(collectReferencedFilePaths, () => {
 					type Typed = import("./typed").Typed;
 					export { exported } from "./exported";
 					export * from "./export-all";
+					await Promise.all([import("./all")]);
+					const stored = import("./stored");
+					const lazy = (load: () => Promise<unknown>) => load;
+					lazy(() => import("./lazy"));
+					void import(\`./template\`);
+					await import(\`./awaited-template\`);
+					export { stored };
 				`,
 			),
 			...dependencyNames.map((name) =>
@@ -64,17 +76,159 @@ describe(collectReferencedFilePaths, () => {
 
 		expect(sourceFile).toBeDefined();
 		expect(
-			new Set(
-				collectReferencedFilePaths(
-					program,
-					sourceFile as AST.SourceFile,
-					createTypeScriptServerHost(createDiskBackedLinterHost(root)),
-				),
-			),
+			collectReferencedFilePaths(
+				program,
+				sourceFile as AST.SourceFile,
+				createTypeScriptServerHost(createDiskBackedLinterHost(root)),
+			).dependencies,
 		).toEqual(
 			new Set(
 				dependencyNames.map((name) => normalize(path.join(root, `${name}.ts`))),
 			),
+		);
+	});
+
+	it("reports the node_modules lookups each import checks before its result", async () => {
+		const root = await realpath(
+			await mkdtemp(path.join(os.tmpdir(), "flint-ts-deps-")),
+		);
+		tempDirectories.push(root);
+
+		const files = {
+			"node_modules/$generated/types/index.d.ts":
+				"export declare const generated: number;\n",
+			"node_modules/installed/index.d.ts":
+				"export declare const installed: number;\n",
+			"node_modules/installed/package.json": JSON.stringify({
+				name: "installed",
+				types: "./index.d.ts",
+			}),
+			"packages/app/index.ts": [
+				'import { generated } from "$generated/types";',
+				'import { installed } from "installed";',
+				'import { missing } from "missing";',
+				'import { later } from "./later.js";',
+				'import { readFile } from "node:fs";',
+				"",
+			].join("\n"),
+		};
+		await Promise.all(
+			Object.entries(files).map(async ([filePath, content]) => {
+				await mkdir(path.dirname(path.join(root, filePath)), {
+					recursive: true,
+				});
+				await writeFile(path.join(root, filePath), content);
+			}),
+		);
+
+		const indexPath = path.join(root, "packages/app/index.ts");
+		const program = ts.createProgram([indexPath], {
+			module: ts.ModuleKind.NodeNext,
+			moduleResolution: ts.ModuleResolutionKind.NodeNext,
+			target: ts.ScriptTarget.ESNext,
+		});
+
+		const { dependencies, missingDependencies } = collectReferencedFilePaths(
+			program,
+			program.getSourceFile(indexPath) as AST.SourceFile,
+			createTypeScriptServerHost(createDiskBackedLinterHost(root)),
+		);
+		const inRoot = (filePath: string): string =>
+			normalize(path.join(root, filePath));
+
+		expect(dependencies).toEqual(
+			new Set([
+				inRoot("node_modules/$generated/types/index.d.ts"),
+				inRoot("node_modules/installed/package.json"),
+			]),
+		);
+		for (const filePath of [
+			"node_modules/$generated/types.d.ts",
+			"node_modules/$generated/types/package.json",
+			"node_modules/@types/missing/package.json",
+			"node_modules/missing/package.json",
+			"packages/app/later.ts",
+			"packages/app/node_modules/@types/installed/package.json",
+			"packages/app/node_modules/installed/package.json",
+			"packages/node_modules/installed/package.json",
+		]) {
+			expect(missingDependencies).toContain(inRoot(filePath));
+		}
+		for (const filePath of [
+			"node_modules/$generated/types/index.d.ts",
+			"node_modules/@types/installed/package.json",
+			"node_modules/installed/index.d.ts",
+		]) {
+			expect(missingDependencies).not.toContain(inRoot(filePath));
+		}
+		expect(
+			Array.from(missingDependencies).filter((filePath) =>
+				filePath.includes("node:fs"),
+			),
+		).toEqual([]);
+	});
+
+	it("reports candidates under other rootDirs and with each moduleSuffixes entry", async () => {
+		const root = await realpath(
+			await mkdtemp(path.join(os.tmpdir(), "flint-ts-deps-")),
+		);
+		tempDirectories.push(root);
+
+		const files = {
+			"generated/src/view.ts": "export const view = 1;\n",
+			"src/index.ts": [
+				'import { absent } from "./absent.js";',
+				'import { styles } from "./styles.js";',
+				'import { view } from "./view.js";',
+				"",
+			].join("\n"),
+			"src/styles.ts": "export const styles = 1;\n",
+		};
+		await Promise.all(
+			Object.entries(files).map(async ([filePath, content]) => {
+				await mkdir(path.dirname(path.join(root, filePath)), {
+					recursive: true,
+				});
+				await writeFile(path.join(root, filePath), content);
+			}),
+		);
+
+		const inRoot = (filePath: string): string =>
+			normalize(path.join(root, filePath));
+		const indexPath = path.join(root, "src/index.ts");
+		const program = ts.createProgram([indexPath], {
+			module: ts.ModuleKind.NodeNext,
+			moduleResolution: ts.ModuleResolutionKind.NodeNext,
+			moduleSuffixes: [".ios", ""],
+			rootDirs: [inRoot("src"), inRoot("generated/src")],
+			target: ts.ScriptTarget.ESNext,
+		});
+
+		const { dependencies, missingDependencies } = collectReferencedFilePaths(
+			program,
+			program.getSourceFile(indexPath) as AST.SourceFile,
+			createTypeScriptServerHost(createDiskBackedLinterHost(root)),
+		);
+
+		expect(dependencies).toEqual(
+			new Set([inRoot("generated/src/view.ts"), inRoot("src/styles.ts")]),
+		);
+		for (const filePath of [
+			"generated/src/absent.ios.ts",
+			"generated/src/absent.ts",
+			"generated/src/view.ios.ts",
+			"src/absent.ios.ts",
+			"src/absent.ts",
+			"src/styles.ios.ts",
+			"src/view.ios.ts",
+			"src/view.ts",
+		]) {
+			expect(missingDependencies).toContain(inRoot(filePath));
+		}
+		expect(missingDependencies).not.toContain(inRoot("src/styles.ios.tsx"));
+		expect(missingDependencies).not.toContain(inRoot("src/styles.tsx"));
+		expect(missingDependencies).not.toContain(
+			inRoot("generated/src/absent/package.ios.json"),
 		);
 	});
 });

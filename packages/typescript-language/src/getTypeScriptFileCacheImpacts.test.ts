@@ -24,35 +24,91 @@ const rule = new RuleCreator({
 	},
 });
 
+const baseCompilerOptions = {
+	module: "nodenext",
+	paths: {
+		"virtual:mapped/*": ["./generated/*"],
+		"~generated/*": ["./generated/*"],
+	},
+	strict: false,
+};
+
 describe(getTypeScriptFileCacheImpacts, () => {
-	it("depends on the file's tsconfig, the configs it extends, and its package.json", () => {
+	it("depends on the file's configs, its package.json, and the files its imports resolve through", () => {
 		const host = createTestHost();
 		const factory = typescriptLanguage.createFileFactory(host);
 		using file = factory.createFile({
 			filePath: "src/a.ts",
 			filePathAbsolute: `${root}/src/a.ts`,
-			sourceText: "export const url = import.meta.url;",
+			sourceText: host.readFileSync(`${root}/src/a.ts`) ?? "",
 		});
 
-		expect(getTypeScriptFileCacheImpacts(file, host).dependencies).toEqual([
+		const impacts = getTypeScriptFileCacheImpacts(file, host);
+
+		expect(impacts.dependencies).toEqual([
 			`${root}/tsconfig.json`,
 			`${root}/tsconfig.base.json`,
 			`${root}/package.json`,
+			`${root}/node_modules/library/package.json`,
+			`${root}/node_modules/missing/index.d.ts`,
 		]);
+		expect(impacts.missingDependencies).toEqual(
+			expect.arrayContaining([
+				`${root}/generated/mapped.ts`,
+				`${root}/generated/scheme.ts`,
+				`${root}/node_modules/missing/package.json`,
+				`${root}/src/node_modules/library/package.json`,
+				`${root}/src/relative.ts`,
+			]),
+		);
+		expect(impacts.missingDependencies).not.toContain(
+			`${root}/node_modules/@types/library/package.json`,
+		);
 
 		factory[Symbol.dispose]?.();
 	});
 
 	it.each([
 		[
+			"an extended tsconfig changes",
 			"tsconfig.base.json",
-			{ compilerOptions: { module: "nodenext", strict: true } },
+			{ compilerOptions: { ...baseCompilerOptions, strict: true } },
 			"TS7006",
 		],
-		["package.json", {}, "TS1470"],
+		["the package.json scope changes", "package.json", {}, "TS1470"],
+		[
+			"an imported package's exports change",
+			"node_modules/library/package.json",
+			{ exports: { ".": { types: "./other.d.ts" } }, name: "library" },
+			"TS2305",
+		],
+		[
+			"a missing package is installed",
+			"node_modules/missing/package.json",
+			{ name: "missing", types: "./index.d.ts" },
+			"TS2322",
+		],
+		[
+			"a module that a paths mapping points to is created",
+			"generated/mapped.ts",
+			'export const mapped = "text";\n',
+			"TS2322",
+		],
+		[
+			"a module that a paths mapping with a scheme points to is created",
+			"generated/scheme.ts",
+			'export const schemeMapped = "text";\n',
+			"TS2322",
+		],
+		[
+			"a relatively imported module is created",
+			"src/relative.ts",
+			'export const relative = "text";\n',
+			"TS2322",
+		],
 	])(
-		"relints dependents after %s changes",
-		async (fileName, contents, code) => {
+		"relints dependents after %s",
+		async (_description, fileName, contents, code) => {
 			const host = createTestHost();
 			using session = await LintSession.create(
 				{
@@ -61,38 +117,67 @@ describe(getTypeScriptFileCacheImpacts, () => {
 				},
 				host,
 			);
-			await session.lintFiles(session.allFilePaths);
+			const initial = await session.lintFiles(session.allFilePaths);
+			expect(getLanguageReportCodes(initial)).not.toContain(code);
 
-			host.vfsUpsertFile(`${root}/${fileName}`, JSON.stringify(contents));
+			host.vfsUpsertFile(
+				`${root}/${fileName}`,
+				typeof contents === "string" ? contents : JSON.stringify(contents),
+			);
 			const results = await session.lintChangedFiles([`${root}/${fileName}`]);
 
-			expect(
-				Array.from(results.values()).flatMap((fileResults) =>
-					fileResults.languageReports.map((report) => report.code),
-				),
-			).toContain(code);
+			expect(getLanguageReportCodes(results)).toContain(code);
 		},
 	);
 });
 
 function createTestHost(): VFSLinterHost {
 	const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
-	host.vfsUpsertFile(
-		`${root}/package.json`,
-		JSON.stringify({ type: "module" }),
-	);
-	host.vfsUpsertFile(
-		`${root}/tsconfig.base.json`,
-		JSON.stringify({ compilerOptions: { module: "nodenext" } }),
-	);
-	host.vfsUpsertFile(
-		`${root}/tsconfig.json`,
-		JSON.stringify({ extends: "./tsconfig.base.json", files: ["src/a.ts"] }),
-	);
-	host.vfsUpsertFile(
-		`${root}/src/a.ts`,
-		"export const url = import.meta.url;\nexport function identity(value) {\n\treturn value;\n}\n",
-	);
+	for (const [filePath, content] of Object.entries({
+		"node_modules/library/index.d.ts": "export declare const value: number;\n",
+		"node_modules/library/other.d.ts": "export {};\n",
+		"node_modules/library/package.json": JSON.stringify({
+			exports: { ".": { types: "./index.d.ts" } },
+			name: "library",
+		}),
+		"node_modules/missing/index.d.ts":
+			"export declare const missing: string;\n",
+		"package.json": JSON.stringify({ type: "module" }),
+		"src/a.ts": [
+			'import { value } from "library";',
+			'import { missing } from "missing";',
+			'import { mapped } from "~generated/mapped.js";',
+			'import { schemeMapped } from "virtual:mapped/scheme.js";',
+			'import { relative } from "./relative.js";',
+			"export const url = import.meta.url;",
+			"export const library: number = value;",
+			"export const installed: number = missing;",
+			"export const fromPaths: number = mapped;",
+			"export const fromSchemePaths: number = schemeMapped;",
+			"export const fromRelative: number = relative;",
+			"export function identity(value) {",
+			"\treturn value;",
+			"}",
+			"",
+		].join("\n"),
+		"tsconfig.base.json": JSON.stringify({
+			compilerOptions: baseCompilerOptions,
+		}),
+		"tsconfig.json": JSON.stringify({
+			extends: "./tsconfig.base.json",
+			files: ["src/a.ts"],
+		}),
+	})) {
+		host.vfsUpsertFile(`${root}/${filePath}`, content);
+	}
 
 	return host;
+}
+
+function getLanguageReportCodes(
+	results: Map<string, { languageReports: { code?: string }[] }>,
+): (string | undefined)[] {
+	return Array.from(results.values()).flatMap((fileResults) =>
+		fileResults.languageReports.map((report) => report.code),
+	);
 }
