@@ -45,6 +45,7 @@ async function roundTrip(
 						dependencies: new Set([dependencyPath]),
 						...(isGlobalDependency !== undefined && { isGlobalDependency }),
 						languageReports,
+						missingDependencies: new Set(),
 						reports,
 					},
 				],

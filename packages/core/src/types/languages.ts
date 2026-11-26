@@ -114,6 +114,11 @@ export interface LanguageDefinition<
 export interface LanguageFileCacheImpacts {
 	dependencies: string[];
 	isGlobalDependency: boolean;
+
+	/**
+	 * Paths that don't exist, and would change the file's results if created.
+	 */
+	missingDependencies?: string[];
 }
 
 /**

@@ -318,6 +318,50 @@ describe(runCliWatch, () => {
 		]);
 	});
 
+	it.each([
+		["a changed dependency", { dependencies: ["/shared/tsconfig.base.json"] }],
+		[
+			"a created missing dependency",
+			{ missingDependencies: ["/shared/tsconfig.base.json"] },
+		],
+	])("relints dependents of %s outside cwd", async (_description, impacts) => {
+		const project = createTestProject(impacts);
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		let quit: (() => void) | undefined;
+		let renderCount = 0;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						renderCount += 1;
+
+						if (renderCount === 1) {
+							project.host.vfsUpsertFile("/shared/tsconfig.base.json", "{}");
+						} else {
+							quit?.();
+						}
+					},
+				}) satisfies Renderer,
+			values,
+			[],
+		);
+
+		expect(loadConfigDefinition).toHaveBeenCalledTimes(1);
+		expect(project.visitedFilePaths).toEqual([
+			project.aPath,
+			project.bPath,
+			project.aPath,
+			project.bPath,
+		]);
+	});
+
 	it("serves language file watchers from the cwd watcher", async () => {
 		const project = createTestProject({ watchedFilePath: "/root/b.txt" });
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
@@ -458,6 +502,7 @@ function createTestProject({
 	dependencies = [],
 	fixText,
 	global,
+	missingDependencies = [],
 	watchedFilePath,
 }: {
 	appendFixText?: string;
@@ -465,6 +510,7 @@ function createTestProject({
 	dependencies?: string[];
 	fixText?: string;
 	global?: boolean;
+	missingDependencies?: string[];
 	watchedFilePath?: string;
 } = {}) {
 	const root = "/root";
@@ -509,6 +555,7 @@ function createTestProject({
 						? [...dependencies, contentDependency]
 						: dependencies,
 				isGlobalDependency: file.about.sourceText.startsWith("global"),
+				missingDependencies,
 			};
 		},
 		runFileVisitors(file, fileVisitors) {

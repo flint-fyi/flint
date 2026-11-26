@@ -16,6 +16,7 @@ export interface FinalizedFileResults {
 	dependencies: Set<string>;
 	isGlobalDependency?: boolean;
 	languageReports: LanguageReport[];
+	missingDependencies: Set<string>;
 	reports: FileReport[];
 
 	/**
@@ -43,6 +44,7 @@ export function finalizeFileResults(
 ): FinalizedFileResults {
 	const directivesFilterer = new DirectivesFilterer();
 	const fileDependencies = new Set<string>();
+	const missingDependencies = new Set<string>();
 	const languageReports: LanguageReport[] = [];
 	let isGlobalDependency = false;
 
@@ -62,17 +64,24 @@ export function finalizeFileResults(
 			);
 		}
 
-		if (cacheImpacts?.dependencies) {
-			for (const dependency of cacheImpacts.dependencies) {
-				const normalized = pathKey(
+		for (const dependency of cacheImpacts?.dependencies ?? []) {
+			const normalized = pathKey(
+				resolve(host.getCurrentDirectory(), dependency),
+				host.isCaseSensitiveFS(),
+			);
+			if (!fileDependencies.has(normalized)) {
+				log("Adding file dependency %s for file %s", normalized, filePath);
+				fileDependencies.add(normalized);
+			}
+		}
+
+		for (const dependency of cacheImpacts?.missingDependencies ?? []) {
+			missingDependencies.add(
+				pathKey(
 					resolve(host.getCurrentDirectory(), dependency),
 					host.isCaseSensitiveFS(),
-				);
-				if (!fileDependencies.has(normalized)) {
-					log("Adding file dependency %s for file %s", normalized, filePath);
-					fileDependencies.add(normalized);
-				}
-			}
+				),
+			);
 		}
 
 		if (!skipLanguageReports && language.getLanguageReports) {
@@ -107,6 +116,7 @@ export function finalizeFileResults(
 		dependencies: fileDependencies,
 		isGlobalDependency,
 		languageReports,
+		missingDependencies,
 		reports: [
 			...filterResult.reports,
 			...directiveReportsFromCollector,

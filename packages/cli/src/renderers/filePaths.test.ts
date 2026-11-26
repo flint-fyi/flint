@@ -88,7 +88,12 @@ describe.each([
 						allFileResults: new Map([
 							[
 								filePath,
-								{ dependencies: new Set(), languageReports: [], reports },
+								{
+									dependencies: new Set(),
+									languageReports: [],
+									missingDependencies: new Set(),
+									reports,
+								},
 							],
 						]),
 						cached: undefined,
