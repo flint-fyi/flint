@@ -90,6 +90,37 @@ Another language report.`,
 		);
 	});
 
+	it("points a rejected test case at the describe call site", async () => {
+		const error: unknown = await createTestSetup({
+			testCases: {
+				invalid: [{ code: "let a;", snapshot: "let b;" }],
+				valid: [],
+			},
+		})().catch((error: unknown) => error);
+
+		assert.ok(error instanceof Error);
+		expect(error.message).toContain("Expected values to be strictly equal");
+		expect(getFirstStackFrame(error)).toMatch(
+			/^ {4}at createTestSetups \(.+RuleTester\.test\.ts:\d+:\d+\)$/,
+		);
+	});
+
+	it("points a synchronously failing test case at the describe call site", async () => {
+		const [first, second] = createTestSetups({
+			testCases: { invalid: [], valid: ["let a;", "let a;"] },
+		});
+		assert.ok(first);
+		assert.ok(second);
+		await first();
+
+		const error = getThrownError(second);
+
+		assert.ok(error instanceof Error);
+		expect(getFirstStackFrame(error)).toMatch(
+			/^ {4}at createTestSetups \(.+RuleTester\.test\.ts:\d+:\d+\)$/,
+		);
+	});
+
 	it("allows test cases with the same code and different file names", async () => {
 		const [first, second] = createTestSetups({
 			testCases: {
@@ -310,4 +341,18 @@ function createTestSetups({
 	}).describe(rule, testCases);
 
 	return testSetups;
+}
+
+function getFirstStackFrame(error: Error): string | undefined {
+	return error.stack?.split("\n").find((line) => line.startsWith("    at "));
+}
+
+function getThrownError(callback: () => unknown): unknown {
+	try {
+		callback();
+	} catch (error) {
+		return error;
+	}
+
+	return undefined;
 }
