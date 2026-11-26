@@ -54,35 +54,23 @@ const knownExtensions = [
  * Mirrors `nodeModuleNameResolverWorker` and the functions it calls:
  * https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts
  * It also lists the lookups ECMAScript module mode skips.
- * It leaves out `typeRoots`, and the `baseUrl` option and `node10` resolution that TypeScript 6 deprecates.
+ * It leaves out the `baseUrl` option and `node10` resolution that TypeScript 6 deprecates.
  */
-export function* getModuleLookups(
+export function getModuleLookups(
 	moduleName: string,
 	containingFile: string,
 	options: ts.CompilerOptions,
 	listPackageFiles: (packageDirectory: string) => boolean,
 ): Generator<ModuleLookup> {
-	const { moduleSuffixes } = options;
-
-	for (const lookup of getUnsuffixedModuleLookups(
-		moduleName,
-		containingFile,
-		options,
-		listPackageFiles,
-	)) {
-		// TypeScript reads package.json files directly, and tries every other file with each suffix in turn:
-		// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L2189-L2197
-		if (lookup.scope || !moduleSuffixes?.length) {
-			yield lookup;
-			continue;
-		}
-
-		const extension = getExtension(lookup.path) ?? "";
-		const stem = lookup.path.slice(0, lookup.path.length - extension.length);
-		for (const suffix of moduleSuffixes) {
-			yield { path: stem + suffix + extension };
-		}
-	}
+	return withModuleSuffixes(
+		getUnsuffixedModuleLookups(
+			moduleName,
+			containingFile,
+			options,
+			listPackageFiles,
+		),
+		options.moduleSuffixes,
+	);
 }
 
 function* getUnsuffixedModuleLookups(
@@ -107,13 +95,92 @@ function* getUnsuffixedModuleLookups(
 	// TypeScript resolves `#` imports only from the package.json scope, which is already a dependency,
 	// and skips node_modules for specifiers that look like URIs, such as `node:fs`:
 	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L1920-L1940
-	if (!moduleName.startsWith("#") && !moduleName.includes(":")) {
+	if (moduleName.startsWith("#") || moduleName.includes(":")) {
+		return;
+	}
+
+	// Every ancestor's node_modules is searched for TypeScript and declaration files before any for JavaScript files.
+	for (const extensions of [
+		{ ...allExtensions, javascript: false, json: false },
+		{ ...allExtensions, declaration: false, typescript: false },
+	]) {
 		yield* getNodeModulesLookups(
 			moduleName,
 			dirname(containingFile),
+			extensions,
 			listPackageFiles,
 		);
+		// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L1946-L1948
+		if (extensions.declaration) {
+			for (const typeRoot of options.typeRoots ?? []) {
+				yield* getRelativeLookups(
+					getCandidateFromTypeRoot(typeRoot, moduleName),
+					declarationExtensions,
+				);
+			}
+		}
 	}
+}
+
+/**
+ * Paths type reference resolution checks for a `types` entry, in the order it checks them.
+ * Mirrors `resolveTypeReferenceDirective`:
+ * https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L538-L724
+ * The containing file TypeScript uses for `types` is in the config's directory.
+ */
+export function getTypeReferenceLookups(
+	typeName: string,
+	configDirectory: string,
+	options: ts.CompilerOptions,
+	listPackageFiles: (packageDirectory: string) => boolean,
+): Generator<ModuleLookup> {
+	return withModuleSuffixes(
+		getUnsuffixedTypeReferenceLookups(
+			typeName,
+			configDirectory,
+			options.typeRoots,
+			listPackageFiles,
+		),
+		options.moduleSuffixes,
+	);
+}
+
+function* getUnsuffixedTypeReferenceLookups(
+	typeName: string,
+	configDirectory: string,
+	typeRoots: readonly string[] | undefined,
+	listPackageFiles: (packageDirectory: string) => boolean,
+): Generator<ModuleLookup> {
+	for (const typeRoot of typeRoots ?? getDefaultTypeRoots(configDirectory)) {
+		const candidate = getCandidateFromTypeRoot(typeRoot, typeName);
+		// Custom type roots also resolve the candidate as a file, like modules.
+		if (typeRoots) {
+			yield* getRelativeLookups(candidate, declarationExtensions);
+			continue;
+		}
+		yield { path: join(candidate, "package.json"), scope: candidate };
+		yield* addExtensions(join(candidate, "index"), "", declarationExtensions);
+	}
+
+	// TypeScript skips node_modules for `types` entries when the config sets custom type roots.
+	if (typeRoots) {
+		return;
+	}
+
+	if (ts.isExternalModuleNameRelative(typeName)) {
+		yield* getRelativeLookups(
+			resolve(configDirectory, typeName),
+			declarationExtensions,
+		);
+		return;
+	}
+
+	yield* getNodeModulesLookups(
+		typeName,
+		configDirectory,
+		declarationExtensions,
+		listPackageFiles,
+	);
 }
 
 // https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L2131-L2190
@@ -184,10 +251,20 @@ function* addExtensions(
 	}
 }
 
+// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L526-L531
+function getCandidateFromTypeRoot(typeRoot: string, typeName: string): string {
+	return join(
+		typeRoot,
+		typeRoot.endsWith("/node_modules/@types")
+			? mangleScopedPackageName(typeName)
+			: typeName,
+	);
+}
+
 /**
  * The path's TypeScript extension or extra supported extension, such as `.vue`.
  */
-function getExtension(path: string): string | undefined {
+export function getExtension(path: string): string | undefined {
 	return (
 		knownExtensions.find((extension) => path.endsWith(extension)) ??
 		Array.from(getTSExtraSupportedExtensions()).find((extension) =>
@@ -196,10 +273,22 @@ function getExtension(path: string): string | undefined {
 	);
 }
 
+// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L501-L508
+function getDefaultTypeRoots(directory: string): string[] {
+	const typeRoots: string[] = [];
+	for (; ; directory = dirname(directory)) {
+		typeRoots.push(join(directory, "node_modules/@types"));
+		if (dirname(directory) === directory) {
+			return typeRoots;
+		}
+	}
+}
+
 // https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L3006-L3089
 function* getNodeModulesLookups(
 	moduleName: string,
 	containingDirectory: string,
+	extensions: ExtensionKinds,
 	listPackageFiles: (packageDirectory: string) => boolean,
 ): Generator<ModuleLookup> {
 	const packageName = moduleName
@@ -207,48 +296,36 @@ function* getNodeModulesLookups(
 		.slice(0, moduleName.startsWith("@") ? 2 : 1)
 		.join("/");
 	const rest = moduleName.slice(packageName.length);
-	const typesPackageName = packageName.startsWith("@")
-		? packageName.slice(1).replace("/", "__")
-		: packageName;
 
-	// Every ancestor's node_modules is searched for TypeScript and declaration files before any for JavaScript files.
-	for (const walkExtensions of [
-		{ ...allExtensions, javascript: false, json: false },
-		{ ...allExtensions, declaration: false, typescript: false },
-	]) {
-		for (
-			let directory = containingDirectory;
-			;
-			directory = dirname(directory)
-		) {
-			if (basename(directory) !== "node_modules") {
-				const packages: [string, ExtensionKinds][] = [
-					[join(directory, "node_modules", packageName), walkExtensions],
-				];
-				if (walkExtensions.declaration) {
-					packages.push([
-						join(directory, "node_modules/@types", typesPackageName),
-						declarationExtensions,
-					]);
-				}
-				for (const [packageDirectory, packageExtensions] of packages) {
-					yield {
-						path: join(packageDirectory, "package.json"),
-						scope: packageDirectory,
-					};
-					// Without a package.json, TypeScript still loads files from the package directory, such as SvelteKit's generated node_modules/$app.
-					if (listPackageFiles(packageDirectory)) {
-						yield* getRelativeLookups(
-							packageDirectory + rest,
-							packageExtensions,
-						);
-					}
+	for (let directory = containingDirectory; ; directory = dirname(directory)) {
+		if (basename(directory) !== "node_modules") {
+			const packages: [string, ExtensionKinds][] = [
+				[join(directory, "node_modules", packageName), extensions],
+			];
+			if (extensions.declaration) {
+				packages.push([
+					join(
+						directory,
+						"node_modules/@types",
+						mangleScopedPackageName(packageName),
+					),
+					declarationExtensions,
+				]);
+			}
+			for (const [packageDirectory, packageExtensions] of packages) {
+				yield {
+					path: join(packageDirectory, "package.json"),
+					scope: packageDirectory,
+				};
+				// Without a package.json, TypeScript still loads files from the package directory, such as SvelteKit's generated node_modules/$app.
+				if (listPackageFiles(packageDirectory)) {
+					yield* getRelativeLookups(packageDirectory + rest, packageExtensions);
 				}
 			}
+		}
 
-			if (dirname(directory) === directory) {
-				break;
-			}
+		if (dirname(directory) === directory) {
+			return;
 		}
 	}
 }
@@ -272,6 +349,13 @@ function* getPathsLookups(
 		}
 		yield* getRelativeLookups(candidate, allExtensions);
 	}
+}
+
+// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L3216-L3224
+function mangleScopedPackageName(packageName: string): string {
+	return packageName.startsWith("@") && packageName.includes("/")
+		? packageName.slice(1).replace("/", "__")
+		: packageName;
 }
 
 /**
@@ -368,4 +452,24 @@ function getRootDirsCandidates(
 	return prefixes
 		.filter((prefix) => prefix !== matchedPrefix)
 		.map((prefix) => prefix + relativePath);
+}
+
+function* withModuleSuffixes(
+	lookups: Iterable<ModuleLookup>,
+	moduleSuffixes: readonly string[] | undefined,
+): Generator<ModuleLookup> {
+	for (const lookup of lookups) {
+		// TypeScript reads package.json files directly, and tries every other file with each suffix in turn:
+		// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L2189-L2197
+		if (lookup.scope || !moduleSuffixes?.length) {
+			yield lookup;
+			continue;
+		}
+
+		const extension = getExtension(lookup.path) ?? "";
+		const stem = lookup.path.slice(0, lookup.path.length - extension.length);
+		for (const suffix of moduleSuffixes) {
+			yield { path: stem + suffix + extension };
+		}
+	}
 }

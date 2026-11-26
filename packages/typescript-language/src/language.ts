@@ -19,7 +19,10 @@ import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScript
 import { createNodeVisitorsForFile } from "./createNodeVisitorsForFile.ts";
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
-import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
+import {
+	getProgramCacheImpacts,
+	getTypeScriptFileCacheImpacts,
+} from "./getTypeScriptFileCacheImpacts.ts";
 import type { TypeScriptNodeVisitors } from "./nodes.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
@@ -87,6 +90,7 @@ export const typescriptLanguage: Language<
 		const { service } = createProjectService({
 			host: createTypeScriptServerHost(host),
 		});
+		const missingConfigTargetWatchers = new Map<string, Disposable>();
 		const openClientFilePaths = new Set<string>();
 		const defaultProjectWatcher = host.watchFileSync(
 			join(process.cwd(), defaultProjectFileName),
@@ -129,6 +133,26 @@ export const typescriptLanguage: Language<
 				program.getSourceFile(data.filePathAbsolute),
 				`Could not retrieve source file for: ${data.filePathAbsolute}`,
 			);
+
+			// The project service doesn't watch every missing file a config names, such as generated includes and extends targets.
+			for (const filePath of getProgramCacheImpacts(program, host)
+				.missingConfigTargetPaths) {
+				if (missingConfigTargetWatchers.has(filePath)) {
+					continue;
+				}
+				missingConfigTargetWatchers.set(
+					filePath,
+					host.watchFileSync(
+						filePath,
+						(event) => {
+							if (event === "created") {
+								service.reloadProjects();
+							}
+						},
+						{ ignoredPaths: [] },
+					),
+				);
+			}
 
 			const fileExtension = extname(data.filePathAbsolute);
 			if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
@@ -175,6 +199,10 @@ export const typescriptLanguage: Language<
 			createFile,
 			[Symbol.dispose]() {
 				defaultProjectWatcher[Symbol.dispose]();
+				for (const watcher of missingConfigTargetWatchers.values()) {
+					watcher[Symbol.dispose]();
+				}
+				missingConfigTargetWatchers.clear();
 				for (const filePathAbsolute of openClientFilePaths) {
 					service.closeClientFile(filePathAbsolute);
 				}
