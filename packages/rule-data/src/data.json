@@ -33152,12 +33152,6 @@
 			"plugin": "ts",
 			"preset": "logicalStrict"
 		},
-		"eslint": [
-			{
-				"name": "@typescript-eslint/no-unsafe-class-instance-assignment",
-				"url": "https://typescript-eslint.io/rules/no-unsafe-class-instance-assignment"
-			}
-		],
 		"oxlint": [
 			{
 				"name": "typescript/no-unsafe-class-instance-assignment",

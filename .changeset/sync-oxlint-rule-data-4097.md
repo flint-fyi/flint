@@ -2,4 +2,4 @@
 "@flint.fyi/rule-data": patch
 ---
 
-Add missing `no-unsafe-class-instance-assignment` rule mappings for Oxlint and typescript-eslint to rule data.
+Add missing Oxlint `typescript/no-unsafe-class-instance-assignment` rule mapping to rule data.
