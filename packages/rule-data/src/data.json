@@ -15659,9 +15659,9 @@
 				"url": "https://biomejs.dev/linter/rules/no-svelte-legacy-const/html/"
 			}
 		],
-			"eslint": [
-				{
-					"name": "svelte/no-at-const-tags",
+		"eslint": [
+			{
+				"name": "svelte/no-at-const-tags",
 			"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-const-tags"
 			}
 	]
@@ -15802,9 +15802,9 @@
 				"url": "https://biomejs.dev/linter/rules/no-svelte-bind-value-on-checkable-inputs/html/"
 			}
 		],
-			"eslint": [
-				{
-					"name": "svelte/no-bind-value-on-checkable-inputs",
+		"eslint": [
+			{
+				"name": "svelte/no-bind-value-on-checkable-inputs",
 			"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs"
 			}
 	]
@@ -41009,3 +41009,4 @@
 		]
 	}
 ]
+	
