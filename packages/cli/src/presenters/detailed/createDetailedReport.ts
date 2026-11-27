@@ -3,10 +3,10 @@ import { styleText } from "node:util";
 import { formatReport, type FileReport } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
+import { formatUrl } from "../formatUrl.ts";
 import { ColorCodes, indenter } from "./constants.ts";
 import { formatCode } from "./formatCode.ts";
 import { formatSuggestion } from "./formatSuggestion.ts";
-import { formatUrl } from "../formatUrl.ts";
 import { wrapIfNeeded } from "./wrapIfNeeded.ts";
 
 export async function* createDetailedReport(
