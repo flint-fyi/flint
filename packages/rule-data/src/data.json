@@ -35869,19 +35869,6 @@
 	},
 	{
 		"flint": {
-			"name": "unboundMethods",
-			"plugin": "vitest",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vitest/unbound-method",
-				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/unbound-method.md"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "unnecessaryAsyncExpectFunctions",
 			"plugin": "vitest"
 		},
