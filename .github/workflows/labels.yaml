@@ -1,0 +1,32 @@
+name: Labels
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/labels.json
+      - .github/workflows/labels.yaml
+  workflow_dispatch: ~
+
+permissions: {}
+
+concurrency:
+  group: labels
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.event.repository.fork != true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: EndBug/label-sync@cursor/upgrade-github-label-sync-4-e46e # https://github.com/EndBug/label-sync/pull/342
+        with:
+          config-file: .github/labels.json
+          delete-other-labels: true
