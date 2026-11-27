@@ -4,13 +4,11 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-`,
+			code: ``,
 			fileName: "config.yml",
 			snapshot: `
 
-Use .yaml extension instead of .yml for YAML files.
-`,
+Use .yaml extension instead of .yml for YAML files.`,
 		},
 		{
 			code: `
