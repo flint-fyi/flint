@@ -31877,6 +31877,10 @@
 			{
 				"name": "@typescript-eslint/unbound-method",
 				"url": "https://typescript-eslint.io/rules/unbound-method"
+			},
+			{
+				"name": "vitest/unbound-method",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/unbound-method.md"
 			}
 		],
 		"oxlint": [
@@ -35045,6 +35049,12 @@
 			"plugin": "vitest",
 			"preset": "stylisticStrict"
 		},
+		"eslint": [
+			{
+				"name": "vitest/prefer-mock-return-shorthand",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-mock-return-shorthand.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "vitest/prefer-mock-return-shorthand",
@@ -35606,6 +35616,12 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
+		"eslint": [
+			{
+				"name": "vitest/require-test-timeout",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-test-timeout.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "vitest/require-test-timeout",
