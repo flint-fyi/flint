@@ -6,6 +6,7 @@ import { nullThrows } from "@flint.fyi/utils";
 import { ColorCodes, indenter } from "./constants.ts";
 import { formatCode } from "./formatCode.ts";
 import { formatSuggestion } from "./formatSuggestion.ts";
+import { formatUrl } from "../formatUrl.ts";
 import { wrapIfNeeded } from "./wrapIfNeeded.ts";
 
 export async function* createDetailedReport(
@@ -81,8 +82,4 @@ export async function* createDetailedReport(
 			`→ ${formatUrl(report.about.url, report.about.url.replace(/^https:\/\//, ""))}`,
 		),
 	);
-}
-
-function formatUrl(url: string, text: string) {
-	return `\u{1B}]8;;${url}\u{7}${text}\u{1B}]8;;\u{7}`;
 }
