@@ -33150,7 +33150,7 @@
 		"flint": {
 			"name": "unsafeClassInstanceAssignments",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logicalStrict"
 		},
 		"eslint": [
 			{
