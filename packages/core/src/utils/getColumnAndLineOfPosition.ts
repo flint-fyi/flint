@@ -32,20 +32,14 @@ export interface TSLineAndCharacter {
 }
 
 /**
- * Prefer passing a `source` of type `HasGetLineAndCharacterOfPosition` or `SourceFileWithLineMap`.
- * This way, the expensive computation of the `lineMap` will be cached across multiple calls.
+ * Converts a character offset in the source text to a zero-based line and column.
+ * Delegates to `source.getLineAndCharacterOfPosition` when available.
+ * Otherwise, computes and caches line start offsets in `source.lineMap` for reuse.
  */
 export function getColumnAndLineOfPosition(
-	source: HasGetLineAndCharacterOfPosition | SourceFileWithLineMap | string,
+	source: HasGetLineAndCharacterOfPosition | SourceFileWithLineMap,
 	position: number,
 ): ColumnAndLine {
-	if (typeof source === "string") {
-		return computeColumnAndLineOfPosition(
-			source,
-			computeLineStarts(source),
-			position,
-		);
-	}
 	if ("getLineAndCharacterOfPosition" in source) {
 		const { character, line } = source.getLineAndCharacterOfPosition(position);
 		return { column: character, line, raw: position };

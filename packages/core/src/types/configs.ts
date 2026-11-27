@@ -5,7 +5,7 @@ import type { AnyRule } from "./rules.ts";
 
 /**
  * Wrapper object for a config, as defined by {@link ConfigDefinition}.
- * @see {@link https://flint.fyi/configuration|flint.fyi/configuration}
+ * @see {@link https://flint.fyi/configuration/|flint.fyi/configuration}
  */
 export interface Config {
 	/**
@@ -28,7 +28,7 @@ export interface ConfigDefinition {
 	 * Location to store the flint cache file.
 	 * This can be either a direct path to a json file, or the directory where the `flint.json` cache file will be stored.
 	 * @default `node_modules/.cache/flint.json`
-	 * @see {@link https://flint.fyi/configuration#cacheLocation|flint.fyi/configuration#cacheLocation}
+	 * @see {@link https://flint.fyi/configuration/#cacheLocation|flint.fyi/configuration#cacheLocation}
 	 */
 	cacheLocation?: string;
 
@@ -41,7 +41,7 @@ export interface ConfigDefinition {
 	/**
 	 * A list of glob patterns to ignore from linting.
 	 * `ignore` by default includes all patterns defined in a `.gitignore` file, if it exists.
-	 * @see {@link https://flint.fyi/configuration#ignore|flint.fyi/configuration#ignore}
+	 * @see {@link https://flint.fyi/configuration/#ignore|flint.fyi/configuration#ignore}
 	 */
 	ignore?: string[];
 
@@ -54,7 +54,7 @@ export interface ConfigDefinition {
 
 	/**
 	 * Specifies the files to be linted alongside the rules and settings to lint with.
-	 * @see {@link https://flint.fyi/configuration#use|flint.fyi/configuration#use}
+	 * @see {@link https://flint.fyi/configuration/#use|flint.fyi/configuration#use}
 	 */
 	use: ConfigUseDefinition[];
 }
@@ -71,18 +71,18 @@ export interface ConfigRuleDefinitionObject {
 
 /**
  * An entry in the {@link ConfigDefinition} `use` array of a Flint config.
- * @see {@link https://flint.fyi/configuration#use|flint.fyi/configuration#use}
+ * @see {@link https://flint.fyi/configuration/#use|flint.fyi/configuration#use}
  */
 export interface ConfigUseDefinition {
 	/**
 	 * A list of glob patterns describing which file(s) to lint.
-	 * @see {@link https://flint.fyi/configuration#files|flint.fyi/configuration#files}
+	 * @see {@link https://flint.fyi/configuration/#files|flint.fyi/configuration#files}
 	 */
 	files: AnyLevelDeep<FilesValue>;
 
 	/**
 	 * Any number of rules and/or presets of rules to enable for those files.
-	 * @see {@link https://flint.fyi/configuration#rules|flint.fyi/configuration#rules}
+	 * @see {@link https://flint.fyi/configuration/#rules|flint.fyi/configuration#rules}
 	 */
 	rules: AnyLevelDeep<ConfigRuleDefinition>;
 }

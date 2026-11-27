@@ -8,6 +8,8 @@ import {
 	maximumFixIterations,
 	RuleCreator,
 	type FileAboutData,
+	type LinterHost,
+	type LinterHostFileWatcherEvent,
 	type ProcessedConfigDefinition,
 } from "@flint.fyi/core";
 
@@ -185,6 +187,76 @@ describe(runCliWatch, () => {
 		expect(renderCount).toBe(2);
 	});
 
+	it("serves language file watchers from the cwd watcher", async () => {
+		const project = createTestProject({ watchedFilePath: "/root/b.txt" });
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		const hostWatchFileSync = vi.spyOn(project.host, "watchFileSync");
+		let quit: (() => void) | undefined;
+		let renderCount = 0;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						renderCount += 1;
+
+						if (renderCount === 1) {
+							project.host.vfsUpsertFile(project.bPath, "b2");
+						} else {
+							quit?.();
+						}
+					},
+				}) satisfies Renderer,
+			values,
+			[],
+		);
+
+		expect(hostWatchFileSync).not.toHaveBeenCalled();
+		expect(project.watchedFileEvents).toEqual(["changed"]);
+	});
+
+	it("serves language file watchers outside cwd from the host", async () => {
+		const outsidePath = "/outside/shared.txt";
+		const project = createTestProject({ watchedFilePath: outsidePath });
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		const hostWatchFileSync = vi.spyOn(project.host, "watchFileSync");
+		let quit: (() => void) | undefined;
+		let renderCount = 0;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						renderCount += 1;
+
+						if (renderCount === 1) {
+							project.host.vfsUpsertFile(outsidePath, "shared");
+							project.host.vfsUpsertFile(project.bPath, "b2");
+						} else {
+							quit?.();
+						}
+					},
+				}) satisfies Renderer,
+			values,
+			[],
+		);
+
+		expect(hostWatchFileSync).toHaveBeenCalledOnce();
+		expect(project.watchedFileEvents).toEqual(["created"]);
+	});
+
 	it("applies fixes and re-lints changed files", async () => {
 		const project = createTestProject({ fixText: "fixed" });
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
@@ -252,7 +324,12 @@ describe(runCliWatch, () => {
 function createTestProject({
 	appendFixText,
 	fixText,
-}: { appendFixText?: string; fixText?: string } = {}) {
+	watchedFilePath,
+}: {
+	appendFixText?: string;
+	fixText?: string;
+	watchedFilePath?: string;
+} = {}) {
 	const root = "/root";
 	const aPath = path.posix.join(root, "a.txt");
 	const bPath = path.posix.join(root, "b.txt");
@@ -263,14 +340,25 @@ function createTestProject({
 	host.vfsUpsertFile("package.json", "{}");
 	const visitedFilePaths: string[] = [];
 	const visitedSourceTexts: string[] = [];
-	const createFileFactory = vi.fn(() => ({
-		createFile(data: FileAboutData) {
-			return {
-				about: data,
-				services: {},
-			};
-		},
-	}));
+	const watchedFileEvents: LinterHostFileWatcherEvent[] = [];
+	const createFileFactory = vi.fn((factoryHost: LinterHost) => {
+		if (watchedFilePath) {
+			factoryHost.watchFileSync(
+				watchedFilePath,
+				(event) => watchedFileEvents.push(event),
+				{ ignoredPaths: [] },
+			);
+		}
+
+		return {
+			createFile(data: FileAboutData) {
+				return {
+					about: data,
+					services: {},
+				};
+			},
+		};
+	});
 	const language = createLanguage<TestNodes>({
 		about: { name: "Test" },
 		createFileFactory,
@@ -353,5 +441,6 @@ function createTestProject({
 		root,
 		visitedFilePaths,
 		visitedSourceTexts,
+		watchedFileEvents,
 	};
 }

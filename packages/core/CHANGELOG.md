@@ -1,5 +1,29 @@
 # @flint/core
 
+## 0.30.3
+
+### Patch Changes
+
+- [#3926](https://github.com/flint-fyi/flint/pull/3926) [`b5ee5f8`](https://github.com/flint-fyi/flint/commit/b5ee5f8afa3d6b2cc0e2759e58a1f4d28fecea6d) - Adds `createRelayFileSystemWatcher` and uses it in `--watch` mode so TypeScript's file watchers share Flint's one recursive watcher instead of each opening a native one.
+
+- [#3927](https://github.com/flint-fyi/flint/pull/3927) [`8132b3b`](https://github.com/flint-fyi/flint/commit/8132b3b66eb2076d114be7d0cd7f61b0c42791c8) - Share one native watcher between disk host watchers of the same path, avoiding `MaxListenersExceededWarning` when many watchers target one file.
+
+## 0.30.2
+
+### Patch Changes
+
+- [#3673](https://github.com/flint-fyi/flint/pull/3673) [`70245a4`](https://github.com/flint-fyi/flint/commit/70245a4dd349ded7cd5ac38af02cdcd5802f4f3b) - Preserve Vue diagnostics on generated `__VLS_unwrap` calls without relaxing source mapping for fixes or suggestions.
+
+## 0.30.1
+
+### Patch Changes
+
+- [#3742](https://github.com/flint-fyi/flint/pull/3742) [`348a945`](https://github.com/flint-fyi/flint/commit/348a945368205fce1b7ad4cfcfafba73edd94ff1) - Evaluate `.gitignore` rules once per path during file discovery instead of once per matched file and `use` group.
+
+- [#3743](https://github.com/flint-fyi/flint/pull/3743) [`4104141`](https://github.com/flint-fyi/flint/commit/410414102219774ae672c2b07f4015c8dd16af39) - Skip ignored subtrees such as `node_modules` and `.git` when setting up recursive directory watchers.
+
+- [#3745](https://github.com/flint-fyi/flint/pull/3745) [`a2187b2`](https://github.com/flint-fyi/flint/commit/a2187b2afc98cbe65e899b53f633493543551fca) - Compute each file's line starts once when converting rule report positions instead of once per report.
+
 ## 0.30.0
 
 ### Minor Changes

@@ -2,6 +2,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
+import { normalize } from "pathe";
 import ts from "typescript";
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -68,8 +69,12 @@ describe(collectReferencedFilePaths, () => {
 					program,
 					sourceFile as AST.SourceFile,
 					createTypeScriptServerHost(createDiskBackedLinterHost(root)),
-				).map((filePath) => path.basename(filePath, ".ts")),
+				),
 			),
-		).toEqual(new Set(dependencyNames));
+		).toEqual(
+			new Set(
+				dependencyNames.map((name) => normalize(path.join(root, `${name}.ts`))),
+			),
+		);
 	});
 });

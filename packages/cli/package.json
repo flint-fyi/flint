@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.23.5",
+	"version": "0.23.6",
 	"description": "[Experimental] Command-line interface for Flint.",
-	"homepage": "https://flint.fyi/cli",
+	"homepage": "https://flint.fyi/cli/",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"author": {
 		"name": "Flint Team",
-		"url": "https://flint.fyi/team"
+		"url": "https://flint.fyi/project/team/"
 	},
 	"sideEffects": false,
 	"type": "module",
@@ -33,7 +33,9 @@
 		"cli-cursor": "catalog:prod",
 		"debounce": "catalog:prod",
 		"debug-for-file": "catalog:prod",
-		"ignore": "catalog:prod",
+		"formatly": "catalog:prod",
+		"pathe": "catalog:prod",
+		"string-width": "catalog:prod",
 		"text-table-fast": "catalog:prod",
 		"typescript": "catalog:prod",
 		"wrap-ansi": "catalog:prod"
@@ -42,9 +44,6 @@
 		"@flint.fyi/build": "workspace:^",
 		"prettier": "catalog:dev",
 		"tsdown": "catalog:dev"
-	},
-	"peerDependencies": {
-		"prettier": "catalog:peer"
 	},
 	"engines": {
 		"node": ">=26.1.0"

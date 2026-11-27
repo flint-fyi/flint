@@ -1,5 +1,20 @@
 # @flint.fyi/vitest
 
+## 0.4.7
+
+### Patch Changes
+
+- [#3975](https://github.com/flint-fyi/flint/pull/3975) [`9e29332`](https://github.com/flint-fyi/flint/commit/9e29332f846227b662bca0964310ee25fa5aa726) - Links rule docs URLs to their canonical trailing-slash form so they no longer redirect.
+
+## 0.4.6
+
+### Patch Changes
+
+- [#3752](https://github.com/flint-fyi/flint/pull/3752) [`376ae65`](https://github.com/flint-fyi/flint/commit/376ae6523bbb1810c8b5caeeeaeb2b0edc20fce0) - Report `expect.soft()`, `expect.poll()`, `expect.element()`, and `expect` utility calls such as `expect.hasAssertions()` inside conditionals in `conditionalExpects`, and report the full assertion chain instead of only the `expect(...)` call.
+
+- [#3698](https://github.com/flint-fyi/flint/pull/3698) [`28f2fdd`](https://github.com/flint-fyi/flint/commit/28f2fddec382076967a95c6cee35c61a3f0cd867) - Recognize Vitest functions in padding rules with the same parsing as other Vitest rules, so `suite`, `aroundAll`, `aroundEach`, and tagged-template tables such as ``test.each`...` `` are now padded.
+  Apply `describePaddingLines` to `suite` as well as `describe`.
+
 ## 0.4.5
 
 ### Patch Changes

@@ -65,7 +65,7 @@ const config: ConfigObject[] = defineConfig(
 			tseslint.configs.stylisticTypeChecked,
 			unicorn.configs.unopinionated,
 		],
-		files: ["**/*.{js,ts}"],
+		files: [tseslint.globs.jsts],
 		languageOptions: {
 			parserOptions: {
 				projectService: true,
@@ -106,6 +106,7 @@ const config: ConfigObject[] = defineConfig(
 				"error",
 				{ allowNumber: true },
 			],
+			curly: ["error", "all"],
 			eqeqeq: ["error", "always", { null: "ignore" }],
 			"jsdoc/check-tag-names": [
 				"error",
@@ -146,7 +147,15 @@ const config: ConfigObject[] = defineConfig(
 				},
 			],
 			// Use no-restricted-syntax to target e.g. `type Foo = typeof import('foo.js')` as well.
-			"no-restricted-syntax": ["error", ...banJsImportExtension()],
+			"no-restricted-syntax": [
+				"error",
+				...banJsImportExtension(),
+				{
+					message:
+						"Do not use 'export * from' statements. Please export individual symbols.",
+					selector: "ExportAllDeclaration[exported=null]",
+				},
+			],
 
 			// Covered by Prettier plugin
 			"perfectionist/sort-imports": "off",

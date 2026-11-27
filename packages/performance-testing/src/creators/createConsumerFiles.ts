@@ -1,9 +1,9 @@
 import path from "node:path";
 
-export function createConsumerPackageFile(
+export function createConsumerFiles(
 	artifacts: Map<string, string>,
 	testCasesPath: string,
-): object {
+): { packageFile: object; workspaceFile: object } {
 	const overrides = Object.fromEntries(
 		[...artifacts].map(([packageName, artifactPath]) => [
 			packageName,
@@ -12,10 +12,12 @@ export function createConsumerPackageFile(
 	);
 
 	return {
-		dependencies: { flint: overrides.flint },
-		name: "@flint.fyi/performance-testing-cases",
-		pnpm: { overrides },
-		private: true,
-		type: "module",
+		packageFile: {
+			dependencies: { flint: overrides.flint },
+			name: "@flint.fyi/performance-testing-cases",
+			private: true,
+			type: "module",
+		},
+		workspaceFile: { overrides },
 	};
 }

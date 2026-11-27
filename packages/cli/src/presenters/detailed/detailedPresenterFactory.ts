@@ -1,5 +1,7 @@
 import { styleText } from "node:util";
 
+import stringWidth from "string-width";
+
 import { hasFix } from "@flint.fyi/core";
 
 import { presentHeader } from "../shared/header.ts";
@@ -24,7 +26,10 @@ export const detailedPresenterFactory: PresenterFactory = {
 				counts.files += 1;
 				counts.fixable += reports.filter(hasFix).length;
 
-				const width = process.stdout.columns - indenter.length;
+				const width = Math.max(
+					1,
+					(process.stdout.columns || 80) - stringWidth(indenter),
+				);
 
 				yield styleText("gray", "╭");
 				yield styleText(ColorCodes.filePathPrefix, "./");

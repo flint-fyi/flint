@@ -10,7 +10,8 @@ const isHomepage = Astro.url.pathname === "/";
 {!isHomepage && <Default {...Astro.props} />}
 
 <div class:list={["credits", { homepage: isHomepage }]}>
-	Made with ❤️‍🔥 around the world by <a href="/team">the Flint team</a> and{" "}
+	Made with ❤️‍🔥 around the world by <a href="/project/team/">the Flint team</a>{" "}
+	and{" "}
 	<a href="http://github.com/flint-fyi/flint/contributors" target="_blank">
 		contributors
 	</a>

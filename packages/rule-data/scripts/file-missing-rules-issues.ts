@@ -17,11 +17,11 @@ interface ExistingIssue {
 
 const labels = [
 	"area: documentation",
+	"good first issue",
 	"package: rule-data",
 	"status: accepting prs",
 ];
 
-const pullRequestNumber = requireEnvironmentVariable("PULL_REQUEST_NUMBER");
 const runUrl = requireEnvironmentVariable("RUN_URL");
 
 const existingIssues = JSON.parse(
@@ -103,22 +103,22 @@ function createIssueBody(linter: string, coverage: RuleCoverage): string {
 		"",
 		"### Overview",
 		"",
-		`Renovate PR #${pullRequestNumber} updates a dependency whose ${linter} rules no longer match \`packages/rule-data/src/data.json\`.`,
-		"`packages/rule-data/src/data.test.ts` fails on that PR until the data is synced.",
+		`A scan of \`main\` detected ${linter} rules that do not match \`packages/rule-data/src/data.json\`.`,
+		"Rule coverage gaps are tracked in issues rather than enforced by tests, so dependency updates and partial data.json updates can merge independently.",
 		"",
 		formatRuleCoverage(linter, coverage),
 		"",
 		"### Additional Info",
 		"",
-		`Filed by the [Rule Data Renovate workflow](${runUrl}).`,
-		`This issue is updated in place while Renovate PRs keep reporting ${linter} gaps, so the lists above reflect the latest failing run.`,
+		`Detected by the [Rule Data workflow](${runUrl}).`,
+		`This issue is updated in place while scans of main keep reporting ${linter} gaps, so the lists above reflect the latest scan that changed the reported gaps.`,
 		"",
 		"To resolve:",
 		"",
 		"1. Add each missing rule to `packages/rule-data/src/data.json`, and remove stale references.",
 		"2. For rules that shouldn't be skipped, file a [new rule issue](https://github.com/flint-fyi/flint/issues/new?template=03-new-rule.yaml) to track the Flint equivalent.",
 		"3. Run `pnpm --filter=rule-data sort-data`.",
-		"4. Push to the Renovate branch, or open a PR that bumps the dependency and closes this issue.",
+		"4. Open a PR with the data.json updates, and close this issue only when all listed gaps are addressed.",
 	].join("\n");
 }
 
@@ -127,7 +127,7 @@ function createIssueBodyLinterComment(linter: string): string {
 }
 
 function createIssueRulesDeltaComment(coverage: RuleCoverage): string {
-	return `<!-- {missing: [${coverage.missing.map((rule) => rule.name).join(",")}], stale: [${coverage.stale.join(",")}]} -->`;
+	return `<!-- rule-coverage-v2: {missing: [${coverage.missing.map((rule) => rule.name).join(",")}], stale: [${coverage.stale.join(",")}]} -->`;
 }
 
 function gh(args: string[], input?: string): string {

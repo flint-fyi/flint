@@ -1,0 +1,49 @@
+name: Rule Data
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/rule-data.yaml
+      - packages/rule-data/**
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/rule-data.yaml
+      - packages/rule-data/**
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+
+concurrency:
+  group: rule-data-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
+
+jobs:
+  report_missing_rules:
+    name: Report Missing Rules
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: $/.github/actions/setup
+      - run: pnpm run --filter=rule-data report-missing-rules
+
+  file_missing_rules_issues:
+    name: File Missing Rules Issues
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: $/.github/actions/setup
+      - run: pnpm run --filter=rule-data file-missing-rules-issues
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

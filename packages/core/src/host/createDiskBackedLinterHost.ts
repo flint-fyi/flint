@@ -12,15 +12,30 @@ import type {
 	LinterHostFileWatcherEvent,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
+import { isIgnoredRelativePath } from "./watcher.ts";
+
+interface SharedWatcher<Args extends unknown[]> {
+	subscribers: Set<{ callback: (...args: Args) => void }>;
+	watcher: Disposable;
+}
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
-	const caseSensitiveFS = isFileSystemCaseSensitive();
+	const caseSensitiveFs = isFileSystemCaseSensitive();
 	cwd = normalizePath(cwd);
 	const foundRepositoryRoot = findRootSync(cwd);
 	const repositoryRoot =
 		foundRepositoryRoot == null
 			? undefined
 			: normalizePath(foundRepositoryRoot);
+
+	const sharedDirectoryWatchers = new Map<
+		string,
+		SharedWatcher<[filePathAbsolute: string]>
+	>();
+	const sharedFileWatchers = new Map<
+		string,
+		SharedWatcher<[event: LinterHostFileWatcherEvent]>
+	>();
 
 	function createWatcher(
 		normalizedWatchPath: string,
@@ -30,6 +45,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			normalizedChangedFilePath: null | string,
 			event: LinterHostFileWatcherEvent,
 		) => void,
+		ignore?: (relativePath: string) => boolean,
 	): Disposable {
 		const normalizedWatchBasename = normalizedWatchPath.slice(
 			normalizedWatchPath.lastIndexOf("/") + 1,
@@ -60,7 +76,18 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const watcher = fs
 				.watch(
 					normalizedWatchPath,
-					{ persistent: false, recursive },
+					{
+						ignore:
+							ignore &&
+							((filename) =>
+								// Root deletion can report a basename or Windows namespaced path.
+								// Let the callback handle it so watching resumes after recreation.
+								filename !== normalizedWatchBasename &&
+								!filename.startsWith("\\\\?\\") &&
+								ignore(filename)),
+						persistent: false,
+						recursive,
+					},
 					(_event, filename) => {
 						if (unwatched) {
 							return;
@@ -189,7 +216,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return entries.map((entry) => normalizePath(entry));
 		},
 		isCaseSensitiveFS() {
-			return caseSensitiveFS;
+			return caseSensitiveFs;
 		},
 		async readDirectory(directoryPathAbsolute) {
 			const dirents = await fs.promises.readdir(directoryPathAbsolute, {
@@ -252,52 +279,74 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
-			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFS);
-			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFS);
+			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFs);
+			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFs);
 
-			return createWatcher(
-				directoryPathAbsolute,
-				options.recursive,
-				options.pollingInterval ?? 2000,
-				(normalizedChangedFilePath) => {
-					normalizedChangedFilePath ??= directoryPathAbsolute;
-					const changedKey = pathKey(
-						normalizedChangedFilePath,
-						caseSensitiveFS,
-					);
-					if (changedKey !== dirKey) {
-						let relative = normalizedChangedFilePath;
-						if (changedKey.startsWith(dirKeySlash)) {
-							relative = relative.slice(directoryPathAbsolute.length);
-						}
-						for (const ignored of options.ignoredPaths) {
-							if (
-								relative.endsWith(ignored) ||
-								relative.includes(ignored + "/")
-							) {
-								return;
+			function isIgnoredPath(normalizedChangedFilePath: string): boolean {
+				const changedKey = pathKey(normalizedChangedFilePath, caseSensitiveFs);
+				if (changedKey === dirKey) {
+					return false;
+				}
+				let relative = normalizedChangedFilePath;
+				if (changedKey.startsWith(dirKeySlash)) {
+					relative = relative.slice(directoryPathAbsolute.length);
+				}
+				return isIgnoredRelativePath(relative, options.ignoredPaths);
+			}
+
+			const pollingInterval = options.pollingInterval ?? 2000;
+
+			return watchShared(
+				sharedDirectoryWatchers,
+				JSON.stringify([
+					dirKey,
+					options.recursive,
+					pollingInterval,
+					options.ignoredPaths,
+				]),
+				callback,
+				(notify) =>
+					createWatcher(
+						directoryPathAbsolute,
+						options.recursive,
+						pollingInterval,
+						(normalizedChangedFilePath) => {
+							normalizedChangedFilePath ??= directoryPathAbsolute;
+							if (!isIgnoredPath(normalizedChangedFilePath)) {
+								notify(normalizedChangedFilePath);
 							}
-						}
-					}
-					callback(normalizedChangedFilePath);
-				},
+						},
+						options.ignoredPaths.length
+							? (relativePath) =>
+									isIgnoredPath(
+										normalizePath(resolve(directoryPathAbsolute, relativePath)),
+									)
+							: undefined,
+					),
 			);
 		},
 		watchFileSync(filePathAbsolute, callback, options) {
-			const watchKey = pathKey(filePathAbsolute, caseSensitiveFS);
+			const watchKey = pathKey(filePathAbsolute, caseSensitiveFs);
+			const pollingInterval = options.pollingInterval ?? 2000;
 
-			return createWatcher(
-				filePathAbsolute,
-				false,
-				options.pollingInterval ?? 2000,
-				(normalizedChangedFilePath, event) => {
-					if (
-						normalizedChangedFilePath != null &&
-						pathKey(normalizedChangedFilePath, caseSensitiveFS) === watchKey
-					) {
-						callback(event);
-					}
-				},
+			return watchShared(
+				sharedFileWatchers,
+				JSON.stringify([watchKey, pollingInterval]),
+				callback,
+				(notify) =>
+					createWatcher(
+						filePathAbsolute,
+						false,
+						pollingInterval,
+						(normalizedChangedFilePath, event) => {
+							if (
+								normalizedChangedFilePath != null &&
+								pathKey(normalizedChangedFilePath, caseSensitiveFs) === watchKey
+							) {
+								notify(event);
+							}
+						},
+					),
 			);
 		},
 		async writeFile(filePathAbsolute, content) {
@@ -312,6 +361,44 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		writeFileSync(filePathAbsolute, content) {
 			fs.mkdirSync(dirname(filePathAbsolute), { recursive: true });
 			fs.writeFileSync(filePathAbsolute, content, "utf8");
+		},
+	};
+}
+
+function watchShared<Args extends unknown[]>(
+	sharedWatchers: Map<string, SharedWatcher<Args>>,
+	key: string,
+	callback: (...args: Args) => void,
+	openWatcher: (notify: (...args: Args) => void) => Disposable,
+): Disposable {
+	let sharedWatcher = sharedWatchers.get(key);
+	if (!sharedWatcher) {
+		const subscribers = new Set<{ callback: (...args: Args) => void }>();
+		sharedWatcher = {
+			subscribers,
+			watcher: openWatcher((...args) => {
+				for (const subscriber of Array.from(subscribers)) {
+					if (subscribers.has(subscriber)) {
+						subscriber.callback(...args);
+					}
+				}
+			}),
+		};
+		sharedWatchers.set(key, sharedWatcher);
+	}
+
+	const subscriber = { callback };
+	const { subscribers, watcher } = sharedWatcher;
+	subscribers.add(subscriber);
+
+	return {
+		[Symbol.dispose]() {
+			if (!subscribers.delete(subscriber) || subscribers.size) {
+				return;
+			}
+
+			sharedWatchers.delete(key);
+			watcher[Symbol.dispose]();
 		},
 	};
 }

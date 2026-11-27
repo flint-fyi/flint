@@ -5,34 +5,76 @@
 [[language]]
 name = "javascript"
 auto-format = true
-formatter = { command = "npx", args = ["prettier", "--parser", "babel"] }
+formatter = { command = "pnpm", args = [
+  "exec",
+  "prettier",
+  "--experimental-cli",
+  "--parser",
+  "babel"
+] }
 
 [[language]]
 name = "jsx"
 auto-format = true
-formatter = { command = "npx", args = ["prettier", "--parser", "babel"] }
+formatter = { command = "pnpm", args = [
+  "exec",
+  "prettier",
+  "--experimental-cli",
+  "--parser",
+  "babel"
+] }
 
 [[language]]
 name = "typescript"
 auto-format = true
-formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+formatter = { command = "pnpm", args = [
+  "exec",
+  "prettier",
+  "--experimental-cli",
+  "--parser",
+  "typescript"
+] }
 
 [[language]]
 name = "tsx"
 auto-format = true
-formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+formatter = { command = "pnpm", args = [
+  "exec",
+  "prettier",
+  "--experimental-cli",
+  "--parser",
+  "typescript"
+] }
 
 [[language]]
 name = "json"
 auto-format = true
-formatter = { command = "npx", args = ["prettier", "--parser", "json"] }
+formatter = { command = "pnpm", args = [
+  "exec",
+  "prettier",
+  "--experimental-cli",
+  "--parser",
+  "json"
+] }
 
 [[language]]
 name = "markdown"
 auto-format = true
-formatter = { command = "npx", args = ["prettier", "--parser", "markdown"] }
+formatter = { command = "pnpm", args = [
+  "exec",
+  "prettier",
+  "--experimental-cli",
+  "--parser",
+  "markdown"
+] }
 
 [[language]]
 name = "yaml"
 auto-format = true
-formatter = { command = "npx", args = ["prettier", "--parser", "yaml"] }
+formatter = { command = "pnpm", args = [
+  "exec",
+  "prettier",
+  "--experimental-cli",
+  "--parser",
+  "yaml"
+] }

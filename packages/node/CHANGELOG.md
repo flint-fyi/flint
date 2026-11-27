@@ -1,5 +1,17 @@
 # @flint.fyi/node
 
+## 0.6.1
+
+### Patch Changes
+
+- [#3975](https://github.com/flint-fyi/flint/pull/3975) [`9e29332`](https://github.com/flint-fyi/flint/commit/9e29332f846227b662bca0964310ee25fa5aa726) - Links rule docs URLs to their canonical trailing-slash form so they no longer redirect.
+
+## 0.6.0
+
+### Minor Changes
+
+- [#3907](https://github.com/flint-fyi/flint/pull/3907) [`03b7a1a`](https://github.com/flint-fyi/flint/commit/03b7a1ac6038cdf31598998dbfef9a3cd8319500) - Rename `node/fileReadJSONBuffers` to `node/jsonFileReads`.
+
 ## 0.5.5
 
 ### Patch Changes

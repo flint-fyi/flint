@@ -49,6 +49,8 @@ const config: KnipConfig = {
 				"eslint-plugin-import",
 				"eslint-plugin-regexp",
 				"eslint-plugin-unicorn",
+				// Installed from packed artifacts in the generated cases consumer.
+				"flint!",
 				"typescript-eslint",
 			],
 			project: ["src/**/*.ts!"],
@@ -73,6 +75,9 @@ const config: KnipConfig = {
 				// Needed for Twoslash
 				"@flint.fyi/typescript-language",
 				"zod",
+
+				// Knip --strict incorrectly reports it as unused; under investigation.
+				"canvaskit-wasm!",
 
 				// https://github.com/JoshuaKGoldberg/emoji-blast/issues/969
 				"konami-emoji-blast!",

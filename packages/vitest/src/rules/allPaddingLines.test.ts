@@ -1,8 +1,34 @@
-import { ruleTester } from "../ruleTester.ts";
+import { nodeRuleTester } from "../ruleTester.ts";
 import rule from "./allPaddingLines.ts";
 
-ruleTester.describe(rule, {
+nodeRuleTester.describe(rule, {
 	invalid: [
+		{
+			code: `
+const value = 1;
+expectTypeOf(value).toBeNumber();
+expectTypeOf(value).toEqualTypeOf<number>();
+console.log(value);
+`,
+			output: `
+const value = 1;
+
+expectTypeOf(value).toBeNumber();
+expectTypeOf(value).toEqualTypeOf<number>();
+
+console.log(value);
+`,
+			snapshot: `
+const value = 1;
+expectTypeOf(value).toBeNumber();
+~~~~~~~~~~~~
+This statement should be separated from a neighboring \`expect\` block by a blank line.
+expectTypeOf(value).toEqualTypeOf<number>();
+console.log(value);
+~~~~~~~
+This statement should be separated from a neighboring \`expect\` block by a blank line.
+`,
+		},
 		{
 			code: `
 const someText = 'abc';

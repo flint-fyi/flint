@@ -9,7 +9,7 @@ import eventListenerSubscriptions from "./rules/eventListenerSubscriptions.ts";
 import implicitGlobals from "./rules/implicitGlobals.ts";
 import keyboardEventKeys from "./rules/keyboardEventKeys.ts";
 import nodeAppendMethods from "./rules/nodeAppendMethods.ts";
-import nodeDatasetAttributes from "./rules/nodeDatasetAttributes.ts";
+import nodeDatasetAccesses from "./rules/nodeDatasetAccesses.ts";
 import nodeModificationMethods from "./rules/nodeModificationMethods.ts";
 import nodeQueryMethods from "./rules/nodeQueryMethods.ts";
 import nodeRemoveMethods from "./rules/nodeRemoveMethods.ts";
@@ -30,7 +30,7 @@ export const browser = createPlugin({
 		implicitGlobals,
 		keyboardEventKeys,
 		nodeAppendMethods,
-		nodeDatasetAttributes,
+		nodeDatasetAccesses,
 		nodeModificationMethods,
 		nodeQueryMethods,
 		nodeRemoveMethods,

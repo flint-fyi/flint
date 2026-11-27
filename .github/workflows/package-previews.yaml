@@ -8,6 +8,10 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   publish:
     if: github.event.repository.fork != true
@@ -18,4 +22,10 @@ jobs:
         with:
           cache: false
       - run: pnpm build
-      - run: pnpm exec pkg-pr-new publish --pnpm --packageManager=pnpm --commentWithDev --commentWithSha './packages/*'
+      - run: pnpm exec pkg-pr-new publish --pnpm --packageManager=pnpm --commentWithDev --commentWithSha --comment=off --json "$RUNNER_TEMP/package-previews.json" './packages/*' # zizmor: ignore[use-trusted-publishing] pkg-pr-new publishes previews to pkg.pr.new, not the npm registry.
+      - uses: actions/upload-artifact@v7.0.2
+        if: github.event_name == 'pull_request'
+        with:
+          name: package-previews
+          path: ${{ runner.temp }}/package-previews.json
+          if-no-files-found: error

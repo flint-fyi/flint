@@ -30,6 +30,16 @@
 			"matchStrings": [
 				"# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\n {2}node-version:\\s*\\n(?: {4}[^\\n]*\\n)*? {4}default: (?<currentValue>\\S+)"
 			]
+		},
+		{
+			"customType": "regex",
+			"datasourceTemplate": "node-version",
+			"depNameTemplate": "node",
+			"managerFilePatterns": ["/^\\.github\\/workflows\\/ci\\.yaml$/"],
+			"matchStrings": [
+				"node-version: \\[[^,\\n]+, (?<currentValue>\\d+\\.\\d+\\.\\d+)\\]"
+			],
+			"versioningTemplate": "node"
 		}
 	],
 	"extends": [
@@ -42,6 +52,12 @@
 	"postUpdateOptions": ["pnpmDedupe"],
 	"packageRules": [
 		{
+			"groupName": "node",
+			"matchDatasources": ["node-version"],
+			"matchPackageNames": ["node"],
+			"minimumReleaseAge": "0 days"
+		},
+		{
 			"extends": ["monorepo:astro"],
 			"groupName": "astro"
 		},
@@ -51,6 +67,10 @@
 				"https://github.com/withastro/starlight"
 			],
 			"groupName": "astro"
+		},
+		{
+			"matchPackageNames": ["@volar/*"],
+			"groupName": "volar"
 		},
 		{
 			"matchDepTypes": [
