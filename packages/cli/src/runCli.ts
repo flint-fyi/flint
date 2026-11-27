@@ -2,6 +2,7 @@ import { parseArgs } from "node:util";
 
 import { addFlintAssertionContext } from "@flint.fyi/utils";
 
+import { formatUrl } from "./formatUrl.ts";
 import { options } from "./options.ts";
 
 export async function runCli(
@@ -63,7 +64,7 @@ export async function runCli(
 		);
 		console.log("");
 		console.log(
-			"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
+			`See ${formatUrl("flint.fyi", "flint.fyi")} for more information.`,
 		);
 		return 0;
 	}
@@ -91,7 +92,7 @@ export async function runCli(
 				"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
 			);
 			console.error(
-				`In the meantime, why not join \u{1B}]8;;https://flint.fyi/discord/\u{7}flint.fyi/discord\u{1B}]8;;\u{7} and chat with us? ❤️`,
+				`In the meantime, why not join ${formatUrl("https://flint.fyi/discord/", "flint.fyi/discord")} and chat with us? ❤️`,
 			);
 			return 2;
 		}
