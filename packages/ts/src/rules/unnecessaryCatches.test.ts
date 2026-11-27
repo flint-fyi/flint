@@ -16,9 +16,7 @@ try {
 			output: `
 declare function doSomething(): void;
 
-try {
-    doSomething();
-}
+doSomething();
 `,
 			snapshot: `
 declare function doSomething(): void;
@@ -49,9 +47,7 @@ fetchData();
 declare function fetch(input: string): Promise<unknown>;
 
 async function fetchData() {
-    try {
-        return await fetch("/api/data");
-    }
+    return await fetch("/api/data");
 }
 fetchData();
 `,
@@ -83,9 +79,7 @@ try {
 			output: `
 declare function processData(): void;
 
-try {
-    processData();
-}
+processData();
 `,
 			snapshot: `
 declare function processData(): void;
@@ -117,7 +111,7 @@ handleRequest();
 declare function performOperation(): string;
 
 function handleRequest() {
-    try {
+    {
         const result = performOperation();
         return result;
     }
@@ -175,6 +169,65 @@ try {
     throw error;
 } finally {
     cleanup();
+}
+`,
+		},
+		{
+			code: `
+export function wrap(run: () => void): void {
+	try {
+		run();
+	} catch (error) {
+		throw error;
+	}
+}
+`,
+			output: `
+export function wrap(run: () => void): void {
+	run();
+}
+`,
+			snapshot: `
+export function wrap(run: () => void): void {
+	try {
+		run();
+	} catch (error) {
+	  ~~~~~
+	  This catch clause is unnecessary, as it only rethrows the exception without modification.
+		throw error;
+	}
+}
+`,
+		},
+		{
+			code: `
+declare const condition: boolean;
+declare function doSomething(): void;
+
+if (condition) try {
+    doSomething();
+} catch (error) {
+    throw error;
+}
+`,
+			output: `
+declare const condition: boolean;
+declare function doSomething(): void;
+
+if (condition) {
+    doSomething();
+}
+`,
+			snapshot: `
+declare const condition: boolean;
+declare function doSomething(): void;
+
+if (condition) try {
+    doSomething();
+} catch (error) {
+  ~~~~~
+  This catch clause is unnecessary, as it only rethrows the exception without modification.
+    throw error;
 }
 `,
 		},
