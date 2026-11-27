@@ -15891,19 +15891,6 @@
 	},
 	{
 		"flint": {
-			"name": "derivedOverDerivedBy",
-			"plugin": "svelte",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "svelte/prefer-derived-over-derived-by",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-derived-over-derived-by"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "destructuredStoreProps",
 			"plugin": "svelte",
 			"status": "skipped"
@@ -16772,6 +16759,12 @@
 			{
 				"name": "noSvelteUselessDerivedBy",
 				"url": "https://biomejs.dev/linter/rules/no-svelte-useless-derived-by/javascript/"
+			}
+		],
+		"eslint": [
+			{
+				"name": "svelte/prefer-derived-over-derived-by",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-derived-over-derived-by"
 			}
 		]
 	},
