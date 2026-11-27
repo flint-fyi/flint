@@ -351,8 +351,8 @@ catalogs:
       specifier: 0.2.0
       version: 0.2.0
     debug-for-file:
-      specifier: 0.5.0
-      version: 0.5.0
+      specifier: 0.5.1
+      version: 0.5.1
     eslint:
       specifier: 10.15.0
       version: 10.15.0
@@ -509,7 +509,7 @@ catalogs:
       version: 4.0.0
     debug-for-file:
       specifier: ^0.5.0
-      version: 0.5.0
+      version: 0.5.1
     detect-indent:
       specifier: ^7.0.2
       version: 7.0.2
@@ -980,7 +980,7 @@ importers:
         version: 4.0.0
       debug-for-file:
         specifier: catalog:prod
-        version: 0.5.0(supports-color@10.2.2)
+        version: 0.5.1(supports-color@10.2.2)
       formatly:
         specifier: catalog:prod
         version: 0.12.2(@clack/prompts@1.9.0)
@@ -1026,7 +1026,7 @@ importers:
         version: 0.3.0
       debug-for-file:
         specifier: catalog:prod
-        version: 0.5.0(supports-color@10.2.2)
+        version: 0.5.1(supports-color@10.2.2)
       ignore:
         specifier: catalog:prod
         version: 7.0.14
@@ -1473,7 +1473,7 @@ importers:
         version: 0.2.0
       debug-for-file:
         specifier: catalog:dev
-        version: 0.5.0(supports-color@10.2.2)
+        version: 0.5.1(supports-color@10.2.2)
       eslint:
         specifier: catalog:comparisons
         version: 10.15.0(jiti@2.7.0)(supports-color@10.2.2)
@@ -2080,7 +2080,7 @@ importers:
         version: 0.3.0
       debug-for-file:
         specifier: catalog:prod
-        version: 0.5.0(supports-color@10.2.2)
+        version: 0.5.1(supports-color@10.2.2)
       pathe:
         specifier: catalog:prod
         version: 2.0.3
@@ -5226,8 +5226,8 @@ packages:
     resolution: {integrity: sha512-o6nMNFRtqLR6mRlyt0b21cgYPSKAEMZFpROIRS9ZRH6hhSJWvGErqeSCJnWyiwVQYMSw7f/DZLilF5YRDwFz7w==}
     engines: {node: '>=22.2'}
 
-  debug-for-file@0.5.0:
-    resolution: {integrity: sha512-CbWwRGgZuG3VqXo7Z6SrfxCwgtQJ06dwqu/mZAD17OhY/TfgYpgzmYTNuqWJOgLKA0Z6iDyKT/KYYcy1nH7PSg==}
+  debug-for-file@0.5.1:
+    resolution: {integrity: sha512-+kPnTBIbqloAxR7vE83LLs5id9j8birN4De6T9oIlcki8Fg+KjzmYby3Qec1E+QnO4ainTeSgvLbrcAFqX1NkQ==}
     engines: {node: '>=22.14.0'}
 
   debug@3.2.7:
@@ -11387,7 +11387,7 @@ snapshots:
 
   debounce@4.0.0: {}
 
-  debug-for-file@0.5.0(supports-color@10.2.2):
+  debug-for-file@0.5.1(supports-color@10.2.2):
     dependencies:
       '@types/debug': 4.1.13
       debug: 4.4.3(supports-color@10.2.2)
