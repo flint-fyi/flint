@@ -16,6 +16,8 @@ workflows:
     '.github/workflows/copilot-setup-steps.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
+    '.github/workflows/issue-labels.yaml':
+        - 'github/issue-labeler@v3.5'
     '.github/workflows/labels.yaml':
         - 'actions/checkout@v7.0.1'
         - 'endbug/label-sync@cursor/upgrade-github-label-sync-4-e46e'
@@ -110,6 +112,11 @@ dependencies:
         commit: 'sha1-9b3254085494b55a0f7c4c2b3d2d52cc712ce370'
         owner_id: 9919
         repo_id: 259445878
+    'github/issue-labeler@v3.5':
+        ref: 'v3.5'
+        commit: 'sha1-ccca1e16fcb66762200e616fc29b57b940c1cb67'
+        owner_id: 9919
+        repo_id: 233953071
     'joshuakgoldberg/all-contributors-auto-action@v0.7.0':
         ref: 'v0.7.0'
         commit: 'sha1-c578423db9b2c14d3cee9c72f6c2aed31c128030'
