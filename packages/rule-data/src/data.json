@@ -15660,12 +15660,12 @@
 			}
 		],
 			"eslint": [
-					{
-							"name": "svelte/no-at-const-tags",
-						"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-const-tags"
-					}
-			]
-	},
+				{
+					"name": "svelte/no-at-const-tags",
+			"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-const-tags"
+			}
+	]
+},
 	{
 		"flint": {
 			"name": "atDebugTags",
@@ -15803,12 +15803,12 @@
 			}
 		],
 			"eslint": [
-					{
-							"name": "svelte/no-bind-value-on-checkable-inputs",
-						"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs"
-					}
-			]
-	},
+				{
+					"name": "svelte/no-bind-value-on-checkable-inputs",
+			"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs"
+			}
+	]
+},
 	{
 		"flint": {
 			"name": "classDirectives",
