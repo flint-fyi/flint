@@ -330,8 +330,8 @@ catalogs:
       specifier: 4.0.4
       version: 4.0.4
     '@types/node':
-      specifier: 26.6.6
-      version: 26.6.6
+      specifier: 26.6.7
+      version: 26.6.7
     '@types/picomatch':
       specifier: 4.0.3
       version: 4.0.3
@@ -727,7 +727,7 @@ importers:
         version: 0.2.4
       '@types/node':
         specifier: catalog:dev
-        version: 26.6.6
+        version: 26.6.7
       '@typescript/native':
         specifier: catalog:dev
         version: typescript@7.1.0-dev.20261124.1
@@ -811,7 +811,7 @@ importers:
         version: 8.74.0(@typescript/typescript6@6.0.2)(eslint@10.15.0)(supports-color@10.2.2)(typescript@7.1.0-dev.20261124.1)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
       vitest-ansi-serializer:
         specifier: catalog:dev
         version: 0.4.0(vitest@5.1.1)
@@ -854,7 +854,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/astro-language:
     dependencies:
@@ -891,7 +891,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/browser:
     dependencies:
@@ -919,7 +919,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/build:
     dependencies:
@@ -956,7 +956,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/cli:
     dependencies:
@@ -1054,7 +1054,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/css:
     dependencies:
@@ -1079,7 +1079,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/css-language:
     dependencies:
@@ -1104,7 +1104,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/e2e:
     devDependencies:
@@ -1128,7 +1128,7 @@ importers:
         version: link:../flint
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
       vitest-ansi-serializer:
         specifier: catalog:dev
         version: 0.4.0(vitest@5.1.1)
@@ -1203,7 +1203,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/json-language:
     dependencies:
@@ -1222,7 +1222,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/jsx:
     dependencies:
@@ -1256,7 +1256,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/markdown-language:
     dependencies:
@@ -1287,7 +1287,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/md:
     dependencies:
@@ -1318,7 +1318,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/next:
     dependencies:
@@ -1362,7 +1362,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/nuxt:
     dependencies:
@@ -1430,7 +1430,7 @@ importers:
         version: '@typescript/typescript6@6.0.2'
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/performance:
     dependencies:
@@ -1458,7 +1458,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/performance-testing:
     dependencies:
@@ -1507,7 +1507,7 @@ importers:
         version: 8.74.0(@typescript/typescript6@6.0.2)(eslint@10.15.0)(supports-color@10.2.2)(typescript@7.1.0-dev.20261124.1)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/plugin-flint:
     dependencies:
@@ -1538,7 +1538,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/plugin-internal:
     dependencies:
@@ -1551,7 +1551,7 @@ importers:
         version: link:../build
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/react:
     dependencies:
@@ -1730,7 +1730,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
       vue-eslint-parser:
         specifier: catalog:comparisons
         version: 10.4.2(eslint@10.15.0)(supports-color@10.2.2)
@@ -1758,7 +1758,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/site:
     dependencies:
@@ -1773,7 +1773,7 @@ importers:
         version: 19.3.0
       astro:
         specifier: catalog:site
-        version: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+        version: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       astro-og-canvas:
         specifier: catalog:site
         version: 0.13.3(astro@7.4.13)
@@ -1825,7 +1825,7 @@ importers:
         version: 4.6.0
       '@types/node':
         specifier: catalog:dev
-        version: 26.6.6
+        version: 26.6.7
       '@types/react-dom':
         specifier: catalog:site
         version: 19.3.0(@types/react@19.3.0)
@@ -1846,7 +1846,7 @@ importers:
         version: 2.0.0
       sharp:
         specifier: catalog:site
-        version: 0.35.5(@types/node@26.6.6)
+        version: 0.35.5(@types/node@26.6.7)
       starlight-blog:
         specifier: catalog:site
         version: 0.30.2(@astrojs/starlight@0.43.1)(astro@7.4.13)(supports-color@10.2.2)
@@ -1908,7 +1908,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/svelte:
     dependencies:
@@ -1945,7 +1945,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/svelte-language:
     dependencies:
@@ -1991,7 +1991,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/text-language:
     dependencies:
@@ -2050,7 +2050,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/ts-patch:
     devDependencies:
@@ -2099,7 +2099,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/utils:
     dependencies:
@@ -2115,7 +2115,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/vitest:
     dependencies:
@@ -2146,7 +2146,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/volar-language:
     dependencies:
@@ -2180,7 +2180,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.31)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/vue:
     dependencies:
@@ -2220,7 +2220,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
       vue:
         specifier: catalog:dev
         version: 3.5.46(@typescript/typescript6@6.0.2)
@@ -2263,7 +2263,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   packages/yaml:
     dependencies:
@@ -2288,7 +2288,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
       yaml-unist-parser:
         specifier: catalog:dev
         version: 3.2.1
@@ -2316,7 +2316,7 @@ importers:
         version: 0.23.7(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.30)(@vue/language-core@3.3.14)(oxc-resolver@11.24.2)
       vitest:
         specifier: catalog:dev
-        version: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+        version: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
 packages:
 
@@ -4446,8 +4446,8 @@ packages:
   '@types/node@24.19.2':
     resolution: {integrity: sha512-93d49wCWJkCyN87MxLpNN6KXPCwFw7bVUg79mGUV1OS40JGWwVCr8n61DXCSqz7CV6/VfPkb7xec7uP2M+QHWQ==}
 
-  '@types/node@26.6.6':
-    resolution: {integrity: sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog==}
+  '@types/node@26.6.7':
+    resolution: {integrity: sha512-tovuRfrUILu6v46bMG+BgXxMvsqPBx2WO2as8Rpln+JTff1dbexMtAM4KFTejmL0axsnSWViCW7MecUQpLuBRA==}
 
   '@types/picomatch@4.0.3':
     resolution: {integrity: sha512-iG0T6+nYJ9FAPmx9SsUlnwcq1ZVRuCXcVEvWnntoPlrOpwtSTKNDC9uVAxTsC3PUvJ+99n4RpAcNgBbHX3JSnQ==}
@@ -8673,7 +8673,7 @@ snapshots:
     dependencies:
       '@astrojs/internal-helpers': 0.13.0
       '@astrojs/markdown-satteri': 0.4.6
-      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       es-module-lexer: 3.0.4
     optionalDependencies:
       '@astrojs/markdown-remark': 7.3.10(supports-color@10.2.2)
@@ -8736,7 +8736,7 @@ snapshots:
       '@pagefind/default-ui': 1.5.2
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
-      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       astro-expressive-code: 0.44.3(astro@7.4.13)
       bcp-47: 2.1.2
       hast-util-format: 1.1.0
@@ -8792,7 +8792,7 @@ snapshots:
       magic-string: 1.4.5
       rolldown: 1.2.19
       smol-toml: 1.9.1
-      vite: 8.3.8(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      vite: 8.3.8(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       zod: 4.6.7
 
   '@astrojs/yaml2ts@0.2.4':
@@ -9775,7 +9775,7 @@ snapshots:
 
   '@konami-emoji-blast/astro@0.3.0(astro@7.4.13)(konami-emoji-blast@0.7.0)':
     dependencies:
-      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       konami-emoji-blast: 0.7.0
 
   '@loaderkit/resolve@1.0.6':
@@ -10466,7 +10466,7 @@ snapshots:
     dependencies:
       undici-types: 7.24.6
 
-  '@types/node@26.6.6':
+  '@types/node@26.6.7':
     dependencies:
       undici-types: 8.9.0
 
@@ -10482,7 +10482,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 26.6.6
+      '@types/node': 26.6.7
 
   '@types/unist@2.0.11': {}
 
@@ -10615,7 +10615,7 @@ snapshots:
   '@vitejs/plugin-react@6.3.0(vite@8.3.8)':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.8(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      vite: 8.3.8(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
 
   '@vitest/coverage-v8@5.1.1(vitest@5.1.1)':
     dependencies:
@@ -10627,7 +10627,7 @@ snapshots:
       obug: 3.0.0
       std-env: 4.3.0
       tinyrainbow: 3.2.0
-      vitest: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+      vitest: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
   '@vitest/eslint-plugin@1.6.28(@typescript-eslint/eslint-plugin@8.74.0)(@typescript/typescript6@6.0.2)(eslint@10.15.0)(supports-color@10.2.2)(typescript@7.1.0-dev.20261124.1)(vitest@5.1.1)':
     dependencies:
@@ -10637,7 +10637,7 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.74.0(@typescript-eslint/parser@8.74.0)(@typescript/typescript6@6.0.2)(eslint@10.15.0)(supports-color@10.2.2)(typescript@7.1.0-dev.20261124.1)
       typescript: '@typescript/typescript6@6.0.2'
-      vitest: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+      vitest: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
     transitivePeerDependencies:
       - '@typescript/native'
       - supports-color
@@ -10655,7 +10655,7 @@ snapshots:
       estree-walker: 3.0.3
       magic-string: 1.4.5
     optionalDependencies:
-      vite: 8.3.8(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      vite: 8.3.8(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
 
   '@vitest/spy@5.1.1': {}
 
@@ -10990,18 +10990,18 @@ snapshots:
 
   astro-expressive-code@0.44.3(astro@7.4.13):
     dependencies:
-      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       rehype-expressive-code: 0.44.3
       url-extras: 0.1.0
 
   astro-og-canvas@0.13.3(astro@7.4.13):
     dependencies:
-      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       canvaskit-wasm: 0.42.0
       deterministic-object-hash: 2.0.2
       entities: 9.0.0
 
-  astro@7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1):
+  astro@7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1):
     dependencies:
       '@astrojs/compiler-rs': 0.5.3
       '@astrojs/internal-helpers': 0.13.2
@@ -11051,13 +11051,13 @@ snapshots:
       unifont: 1.0.3
       unstorage: 1.17.6
       verkit: 0.5.0
-      vite: 8.3.8(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      vite: 8.3.8(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       vitefu: 1.1.3(vite@8.3.8)
       xxhash-wasm: 1.1.0
       zod: 4.6.7
     optionalDependencies:
       '@astrojs/markdown-remark': 7.3.10(supports-color@10.2.2)
-      sharp: 0.35.5(@types/node@26.6.6)
+      sharp: 0.35.5(@types/node@26.6.7)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -14530,7 +14530,7 @@ snapshots:
 
   sh-syntax@0.7.0: {}
 
-  sharp@0.35.5(@types/node@26.6.6):
+  sharp@0.35.5(@types/node@26.6.7):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -14561,7 +14561,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.5
       '@img/sharp-win32-ia32': 0.35.5
       '@img/sharp-win32-x64': 0.35.5
-      '@types/node': 26.6.6
+      '@types/node': 26.6.7
 
   shebang-command@2.0.0:
     dependencies:
@@ -14699,7 +14699,7 @@ snapshots:
     dependencies:
       '@astrojs/markdown-satteri': 0.4.10
       '@astrojs/starlight': 0.43.1(@astrojs/markdown-remark@7.3.10)(@typescript/typescript6@6.0.2)(astro@7.4.13)(supports-color@10.2.2)
-      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       github-slugger: 2.0.0
       hast-util-from-html: 2.1.0
       is-absolute-url: 5.0.0
@@ -14720,7 +14720,7 @@ snapshots:
   starlight-sidebar-topics@0.9.0(@astrojs/starlight@0.43.1)(astro@7.4.13):
     dependencies:
       '@astrojs/starlight': 0.43.1(@astrojs/markdown-remark@7.3.10)(@typescript/typescript6@6.0.2)(astro@7.4.13)(supports-color@10.2.2)
-      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.13(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       picomatch: 4.0.7
 
   std-env@4.3.0: {}
@@ -15261,7 +15261,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@8.3.8(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1):
+  vite@8.3.8(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -15269,20 +15269,20 @@ snapshots:
       rolldown: 1.2.19
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 26.6.6
+      '@types/node': 26.6.7
       fsevents: 2.3.3
       jiti: 2.7.0
       yaml: 2.9.1
 
   vitefu@1.1.3(vite@8.3.8):
     optionalDependencies:
-      vite: 8.3.8(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      vite: 8.3.8(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
 
   vitest-ansi-serializer@0.4.0(vitest@5.1.1):
     optionalDependencies:
-      vitest: 5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
+      vitest: 5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8)
 
-  vitest@5.1.1(@types/node@26.6.6)(@vitest/coverage-v8@5.1.1)(vite@8.3.8):
+  vitest@5.1.1(@types/node@26.6.7)(@vitest/coverage-v8@5.1.1)(vite@8.3.8):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/mocker': 5.1.1(vite@8.3.8)
@@ -15296,10 +15296,10 @@ snapshots:
       tinybench: 6.2.4
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
-      vite: 8.3.8(@types/node@26.6.6)(jiti@2.7.0)(yaml@2.9.1)
+      vite: 8.3.8(@types/node@26.6.7)(jiti@2.7.0)(yaml@2.9.1)
       why-is-node-running: 3.2.1
     optionalDependencies:
-      '@types/node': 26.6.6
+      '@types/node': 26.6.7
       '@vitest/coverage-v8': 5.1.1(vitest@5.1.1)
     transitivePeerDependencies:
       - msw
