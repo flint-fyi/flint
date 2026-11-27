@@ -85,7 +85,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 								filename !== normalizedWatchBasename &&
 								!filename.startsWith("\\\\?\\") &&
 								ignore(filename)),
-						persistent: false,
+						persistent: true,
 						recursive,
 					},
 					(_event, filename) => {
@@ -166,7 +166,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			};
 			fs.watchFile(
 				normalizedWatchPath,
-				{ interval: pollingInterval, persistent: false },
+				{ interval: pollingInterval, persistent: true },
 				listener,
 			);
 			let unwatched = false;
