@@ -31877,6 +31877,10 @@
 			{
 				"name": "@typescript-eslint/unbound-method",
 				"url": "https://typescript-eslint.io/rules/unbound-method"
+			},
+			{
+				"name": "vitest/unbound-method",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/unbound-method.md"
 			}
 		],
 		"oxlint": [
