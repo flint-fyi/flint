@@ -15658,7 +15658,13 @@
 				"name": "noSvelteLegacyConst",
 				"url": "https://biomejs.dev/linter/rules/no-svelte-legacy-const/html/"
 			}
-		]
+		],
+			"eslint": [
+					{
+							"name": "svelte/no-at-const-tags",
+						"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-const-tags"
+					}
+			]
 	},
 	{
 		"flint": {
@@ -15711,6 +15717,19 @@
 			}
 		],
 		"notes": "Formatting rule."
+	},
+	{
+		"flint": {
+			"name": "attributeInterpolations",
+			"plugin": "svelte",
+			"preset": "stylisticStrict"
+		},
+		"eslint": [
+			{
+				"name": "svelte/prefer-attribute-interpolation",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-attribute-interpolation"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -15782,7 +15801,13 @@
 				"name": "noSvelteBindValueOnCheckableInputs",
 				"url": "https://biomejs.dev/linter/rules/no-svelte-bind-value-on-checkable-inputs/html/"
 			}
-		]
+		],
+			"eslint": [
+					{
+							"name": "svelte/no-bind-value-on-checkable-inputs",
+						"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-bind-value-on-checkable-inputs"
+					}
+			]
 	},
 	{
 		"flint": {
@@ -15825,6 +15850,19 @@
 	},
 	{
 		"flint": {
+			"name": "conflictingModuleNames",
+			"plugin": "svelte",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "svelte/no-conflicting-module-names",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-conflicting-module-names"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "constVariables",
 			"plugin": "svelte",
 			"status": "skipped"
@@ -15850,6 +15888,19 @@
 			}
 		],
 		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"flint": {
+			"name": "derivedOverDerivedBy",
+			"plugin": "svelte",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "svelte/prefer-derived-over-derived-by",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-derived-over-derived-by"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -16339,6 +16390,19 @@
 			}
 		],
 		"notes": "Deprecated. Superseded by unresolvedNavigations."
+	},
+	{
+		"flint": {
+			"name": "nestedStyleTags",
+			"plugin": "svelte",
+			"preset": "logical"
+		},
+		"eslint": [
+			{
+				"name": "svelte/no-nested-style-tag",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-nested-style-tag"
+			}
+		]
 	},
 	{
 		"flint": {
