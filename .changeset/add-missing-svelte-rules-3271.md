@@ -1,3 +1,4 @@
+---
 "@flint.fyi/rule-data": patch
 ---
 
