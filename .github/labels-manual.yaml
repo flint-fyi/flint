@@ -1,0 +1,111 @@
+- color: f5c1dc
+  description: One team member approved; we're now waiting for a second approval or for 2 business days to pass.
+  name: 1 approval
+- color: 39abfa
+  description: A maintainer will resolve this issue with an AI agent.
+  name: ai assigned
+- color: de4659
+  description: Clearly AI-authored with low quality. This is really inconsiderate and rude of you.
+  name: ai slop
+- color: 0075ca
+  description: Improvements or additions to docs or how Flint names things 📝
+  name: "area: documentation"
+- color: 1177aa
+  description: Improving how the repository's tests are run and/or code is tested 🧪
+  name: "area: testing"
+- color: f9d0c4
+  description: Managing the repository's maintenance 🛠️
+  name: "area: tooling"
+- color: 7950c1
+  description: Used to trigger CI on release PRs
+  name: ci
+- color: ededed
+  description: ""
+  name: dependencies
+- color: "5319E7"
+  description: Good for newcomers, please hop on! 🙌
+  name: good first issue
+- color: 7a5901
+  description: This doesn't seem right
+  name: invalid
+- color: aeced2
+  description: For the initialization wizard to create a new configuration file.
+  name: "package: config initializer"
+- color: f9d0c4
+  description: Around the flint init command that bootstraps a new user configuration.
+  name: "package: create"
+- color: "3E4263"
+  description: For the docs automator that creates & enforces rules pages have the appropriate sections, etc.
+  name: "package: documentation generator"
+- color: 5f536d
+  description: Related to the Language Server Protocol (LSP) package to connect with editors.
+  name: "package: lsp"
+- color: 44977a
+  description: Related to the Model Context Protocol (MCP) package to connect with agents.
+  name: "package: mcp"
+- color: 1E78D4
+  description: The plugin for VS Code (Visual Studio Code), an open source code editor.
+  name: "package: vs-code"
+- color: fef2c0
+  description: Improving the runtime efficiency, memory, and raw speed of Flint itself.
+  name: performance
+- color: 496b6c
+  description: The on-by-default plugin for linting config files.
+  name: "plugin: config"
+- color: D65349
+  description: Plugin for Playwright, the browser web automation driver.
+  name: "plugin: playwright"
+- color: "5319e7"
+  description: 2+ team members approved; we're now waiting on the author to file followups and self-merge.
+  name: ready to merge
+- color: 0E8A16
+  description: Please, send a pull request to resolve this! 🙏
+  name: "status: accepting prs"
+- color: eeeeee
+  description: Issue is stale and/or no longer valid
+  name: "status: aged away"
+- color: ddcccc
+  description: Waiting for something else to be resolved 🙅
+  name: "status: blocked"
+- color: cfd3d7
+  description: This issue or pull request already exists
+  name: "status: duplicate"
+- color: 05104F
+  description: Not yet ready for implementation or a pull request
+  name: "status: in discussion"
+- color: D3F82D
+  description: Further research required...? 🔎
+  name: "status: needs investigation"
+- color: "182012"
+  description: This is just a tracking issue and not something directly actionable.
+  name: "status: tracking"
+- color: f9b0b0
+  description: ""
+  name: "status: upstream issue"
+- color: E4BC82
+  description: Needs an action taken by the original poster
+  name: "status: waiting for author"
+- color: ffffff
+  description: This will not be worked on
+  name: "status: wontfix"
+- color: 75063e
+  description: Suspected by our PR Quality workflow to be AI Slop.
+  name: suspected ai slop
+- color: 4a24c4
+  description: For purely administrative tasks.
+  name: "type: admin"
+- color: bf85ef
+  description: General announcement for socializing repo-wide concerns.
+  name: "type: announcement"
+- color: d73a4a
+  description: Something isn't working 🐛
+  name: "type: bug"
+- color: fde282
+  description: Tech debt or other code/repository cleanups 🧹
+  name: "type: cleanup"
+- color: a2eeef
+  description: New enhancement or request 🚀
+  name: "type: feature"
+- color: d876e3
+  description: Further information is requested
+  name: "type: question"

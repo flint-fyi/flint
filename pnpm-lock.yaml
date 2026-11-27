@@ -434,6 +434,9 @@ catalogs:
     vue:
       specifier: 3.5.46
       version: 3.5.46
+    yaml:
+      specifier: 2.9.1
+      version: 2.9.1
     yaml-unist-parser:
       specifier: 3.2.1
       version: 3.2.1
@@ -815,6 +818,9 @@ importers:
       vitest-ansi-serializer:
         specifier: catalog:dev
         version: 0.4.0(vitest@5.1.1)
+      yaml:
+        specifier: catalog:dev
+        version: 2.9.1
 
   packages/astro:
     dependencies:
