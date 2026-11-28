@@ -175,6 +175,30 @@ describe(LintSession, () => {
 		).toEqual(["c.txt", "a.txt", "b.txt"]);
 	});
 
+	it("reports changed file results before dependent results", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		const cPath = path.posix.join(root, "c.txt");
+		dependenciesByFilePath.set(aPath, [bPath]);
+		dependenciesByFilePath.set(bPath, [cPath]);
+		using session = await LintSession.create(configDefinition, host);
+		const reportedPasses: Set<string>[] = [];
+
+		await session.lintFiles(session.allFilePaths);
+		await session.lintChangedFiles([cPath], {
+			onResults(results) {
+				reportedPasses.push(lintedFileNames(results));
+			},
+		});
+
+		expect(reportedPasses).toEqual([
+			new Set(["c.txt"]),
+			new Set(["a.txt", "b.txt"]),
+		]);
+	});
+
 	it("lints dependents of files outside the session", async () => {
 		const { configDefinition, dependenciesByFilePath, host, root } =
 			await createTestProject();
@@ -231,6 +255,21 @@ describe(LintSession, () => {
 		);
 		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
 			new Set(["a.txt", "b.txt", "c.txt"]),
+		);
+	});
+
+	it("relints only previously linted files when a cache-invalidating file changes", async () => {
+		const { configDefinition, host, root } = await createTestProject({
+			invalidatingFileNames: new Set(["a.txt"]),
+		});
+		using session = await LintSession.create(configDefinition, host);
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+
+		await session.lintFiles([aPath, bPath]);
+
+		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
+			new Set(["a.txt", "b.txt"]),
 		);
 	});
 

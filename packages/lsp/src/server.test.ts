@@ -1,0 +1,712 @@
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type * as LanguageServer from "vscode-languageserver/node.js";
+import {
+	DidChangeWatchedFilesNotification,
+	FileChangeType,
+} from "vscode-languageserver/node.js";
+
+import type * as Core from "@flint.fyi/core";
+import type {
+	FileResults,
+	LintSessionChangedLintOptions,
+} from "@flint.fyi/core";
+import { normalizePath } from "@flint.fyi/utils";
+
+import { startServer } from "./server.ts";
+
+function createFileResults(message: string) {
+	return {
+		dependencies: new Set<string>(),
+		languageReports: [
+			{
+				range: { begin: 0, end: 5 },
+				source: "typescript",
+				text: message,
+			},
+		],
+		reports: [],
+	};
+}
+
+async function flushQueuedWork() {
+	await vi.runAllTimersAsync();
+	await vi.dynamicImportSettled();
+}
+
+const mocks = vi.hoisted(() => {
+	const callbacks = new Map<string, (params?: unknown) => unknown>();
+	const lintPasses: Map<string, FileResults>[][] = [];
+	const lintChangedFiles = vi.fn(
+		async (
+			_filePaths: Iterable<string>,
+			options?: LintSessionChangedLintOptions,
+		) => {
+			const allResults = new Map<string, FileResults>();
+
+			for (const passResults of lintPasses.shift() ?? []) {
+				for (const [filePath, fileResults] of passResults) {
+					allResults.set(filePath, fileResults);
+				}
+				// flint-disable-next-line performance/loopAwaits
+				await options?.onResults?.(passResults);
+			}
+
+			return allResults;
+		},
+	);
+	const session = { lintChangedFiles, [Symbol.dispose]: vi.fn() };
+
+	function on(name: string) {
+		return (callback: (params?: unknown) => unknown) => {
+			callbacks.set(name, callback);
+		};
+	}
+
+	const state = {
+		callbacks,
+		configFileName: "flint.config.mjs" as string | undefined,
+		connection: {
+			client: { register: vi.fn(() => Promise.resolve()) },
+			console: { error: vi.fn(), info: vi.fn() },
+			listen() {
+				return;
+			},
+			onCodeAction: on("codeAction"),
+			onDidChangeTextDocument: on("didChange"),
+			onDidChangeWatchedFiles: on("changeWatchedFiles"),
+			onDidCloseTextDocument: on("didClose"),
+			onDidOpenTextDocument: on("didOpen"),
+			onDidSaveTextDocument: on("didSave"),
+			onInitialize: on("initialize"),
+			onInitialized: on("initialized"),
+			onShutdown: on("shutdown"),
+			onWillSaveTextDocument: on("willSave"),
+			onWillSaveTextDocumentWaitUntil: on("willSaveWaitUntil"),
+			sendDiagnostics:
+				vi.fn<
+					(params: { diagnostics: unknown[]; uri: string }) => Promise<void>
+				>(),
+		},
+		fileTypeSync: vi.fn((): "file" | undefined => "file"),
+		lintChangedFiles,
+		lintPasses,
+		lintSessionCreate: vi.fn(() => Promise.resolve(session)),
+		session,
+		validateConfigDefinition: vi.fn<() => string | undefined>(),
+	};
+
+	return state;
+});
+
+vi.mock("@flint.fyi/core", async (importOriginal) => {
+	return {
+		...(await importOriginal<typeof Core>()),
+		createVFSLinterHost: vi.fn(() => ({
+			fileTypeSync: mocks.fileTypeSync,
+			readFileSync: vi.fn(() => "const value = 1;\n"),
+			vfsDeleteFile: vi.fn(),
+			vfsUpsertFile: vi.fn(),
+		})),
+		findConfigFileName: vi.fn(() => Promise.resolve(mocks.configFileName)),
+		isConfig: vi.fn(() => true),
+		LintSession: { create: mocks.lintSessionCreate },
+		validateConfigDefinition: mocks.validateConfigDefinition,
+	};
+});
+
+vi.mock("@flint.fyi/core/node", () => ({
+	createDiskBackedLinterHost: vi.fn(),
+}));
+
+vi.mock("vscode-languageserver/node.js", async (importOriginal) => ({
+	...(await importOriginal<typeof LanguageServer>()),
+	createConnection: () => mocks.connection,
+}));
+
+function callback(name: string) {
+	return mocks.callbacks.get(name) ?? vi.fn();
+}
+
+function changeWatchedFile(
+	filePath: string,
+	type: FileChangeType = FileChangeType.Changed,
+) {
+	callback("changeWatchedFiles")({
+		changes: [{ type, uri: pathToFileURL(filePath).href }],
+	});
+}
+
+function closeDocument(filePath: string) {
+	callback("didClose")({
+		textDocument: { uri: pathToFileURL(filePath).href },
+	});
+}
+
+function openDocument(filePath: string, text = "value") {
+	callback("didOpen")({
+		textDocument: {
+			languageId: "typescript",
+			text,
+			uri: pathToFileURL(filePath).href,
+			version: 1,
+		},
+	});
+}
+
+describe(startServer, () => {
+	let workspaceRoot: string;
+
+	beforeEach(() => {
+		vi.useFakeTimers();
+		workspaceRoot = mkdtempSync(path.join(os.tmpdir(), "flint-lsp-"));
+		writeFileSync(
+			path.join(workspaceRoot, "flint.config.mjs"),
+			"export default { definition: { use: [] } };\n",
+		);
+		mocks.lintPasses.length = 0;
+		mocks.configFileName = "flint.config.mjs";
+	});
+
+	afterEach(() => {
+		rmSync(workspaceRoot, { force: true, recursive: true });
+		vi.useRealTimers();
+	});
+
+	function createWorkspaceInitializeParams(capabilities = {}) {
+		return {
+			capabilities,
+			workspaceFolders: [
+				{ name: "workspace", uri: pathToFileURL(workspaceRoot).href },
+			],
+		};
+	}
+
+	async function startInitializedServer(
+		initializeParams: unknown = createWorkspaceInitializeParams(),
+	) {
+		startServer();
+		callback("initialize")(initializeParams);
+		callback("initialized")();
+		await flushQueuedWork();
+	}
+
+	it.each([
+		["no workspace", {}],
+		[
+			"a workspace that is not a folder on disk",
+			{
+				workspaceFolders: [
+					{ name: "remote", uri: "vscode-vfs://github/flint-fyi/flint" },
+				],
+			},
+		],
+	])(
+		"reports a missing workspace root for %s",
+		async (_description, params) => {
+			const filePath = "/workspace/src/file.ts";
+
+			startServer();
+			openDocument(filePath);
+			closeDocument(filePath);
+			callback("initialize")({ capabilities: {}, ...params });
+			callback("initialized")();
+			await vi.dynamicImportSettled();
+
+			expect(mocks.connection.console.error).toHaveBeenCalledWith(
+				"No workspace root provided.",
+			);
+			expect(
+				callback("codeAction")({
+					context: { diagnostics: [] },
+					textDocument: { uri: pathToFileURL(filePath).href },
+				}),
+			).toEqual([]);
+		},
+	);
+
+	it("stops when the workspace has no config", async () => {
+		mocks.configFileName = undefined;
+
+		await startInitializedServer();
+
+		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
+		expect(mocks.connection.console.error).toHaveBeenCalledWith(
+			`No flint.config.* found in ${normalizePath(workspaceRoot)}`,
+		);
+	});
+
+	it("reports config validation errors", async () => {
+		mocks.validateConfigDefinition.mockReturnValueOnce("Invalid config.");
+
+		await startInitializedServer();
+
+		expect(mocks.connection.console.error).toHaveBeenCalledWith(
+			"Lint error: Invalid config.",
+		);
+		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
+	});
+
+	it.each(["rootPath", "rootUri"] as const)(
+		"starts with the legacy %s parameter",
+		async (rootProperty) => {
+			await startInitializedServer(
+				rootProperty === "rootUri"
+					? { capabilities: {}, rootUri: pathToFileURL(workspaceRoot).href }
+					: { capabilities: {}, rootPath: workspaceRoot },
+			);
+
+			expect(mocks.lintSessionCreate).toHaveBeenCalled();
+
+			callback("shutdown")();
+
+			expect(mocks.session[Symbol.dispose]).toHaveBeenCalled();
+		},
+	);
+
+	it("publishes opened document diagnostics", async () => {
+		const openedFilePath = path.join(workspaceRoot, "src/index.ts");
+		const openedFileUri = pathToFileURL(openedFilePath).href;
+
+		mocks.lintPasses.push([
+			new Map([[openedFilePath, createFileResults("opened file diagnostic")]]),
+		]);
+
+		await startInitializedServer();
+		openDocument(openedFilePath);
+		await flushQueuedWork();
+
+		expect(mocks.connection.console.error).not.toHaveBeenCalled();
+		expect(mocks.connection.sendDiagnostics).toHaveBeenCalledWith({
+			diagnostics: [
+				expect.objectContaining({
+					message: "opened file diagnostic",
+					source: "flint/typescript",
+				}),
+			],
+			uri: openedFileUri,
+		});
+		expect(
+			callback("codeAction")({
+				context: { diagnostics: [] },
+				textDocument: { uri: openedFileUri },
+			}),
+		).toEqual([]);
+	});
+
+	it("returns code actions when the client encodes the document URI differently", async () => {
+		const filePath = normalizePath(
+			path.join(workspaceRoot, "src/@scope/index.ts"),
+		);
+		const fileUri = pathToFileURL(filePath).href;
+		const clientUri = fileUri
+			.replace(
+				/^file:\/\/\/([A-Z]):/u,
+				(_, drive: string) => `file:///${drive.toLowerCase()}%3A`,
+			)
+			.replace("@", "%40");
+
+		mocks.lintPasses.push([
+			new Map([
+				[
+					filePath,
+					{
+						...createFileResults("language diagnostic"),
+						reports: [
+							{
+								about: { id: "renamed" },
+								fix: [{ range: { begin: 6, end: 11 }, text: "renamed" }],
+								message: {
+									primary: "Rename this.",
+									secondary: [],
+									suggestions: [],
+								},
+								range: {
+									begin: { column: 6, line: 0, raw: 6 },
+									end: { column: 11, line: 0, raw: 11 },
+								},
+							},
+						],
+					},
+				],
+			]),
+		]);
+
+		await startInitializedServer();
+		callback("didOpen")({
+			textDocument: {
+				languageId: "typescript",
+				text: "const value = 1;\n",
+				uri: clientUri,
+				version: 1,
+			},
+		});
+		await flushQueuedWork();
+
+		const range = {
+			end: { character: 11, line: 0 },
+			start: { character: 6, line: 0 },
+		};
+
+		expect(
+			callback("codeAction")({
+				context: {
+					diagnostics: [
+						{
+							code: "renamed",
+							message: "Rename this.",
+							range,
+							source: "flint",
+						},
+					],
+				},
+				textDocument: { uri: clientUri },
+			}),
+		).toMatchObject([
+			{ edit: { changes: { [fileUri]: [{ newText: "renamed", range }] } } },
+		]);
+	});
+
+	it("skips open documents that are not files while linting the ones that are", async () => {
+		const filePath = normalizePath(path.join(workspaceRoot, "src/index.ts"));
+		const closedFilePath = normalizePath(
+			path.join(workspaceRoot, "src/closed.ts"),
+		);
+		const untitledUri = "untitled:Untitled-1";
+
+		mocks.lintPasses.push(
+			[new Map([[filePath, createFileResults("opened")]])],
+			[new Map([[closedFilePath, createFileResults("changed on disk")]])],
+			[new Map([[filePath, createFileResults("rebuilt")]])],
+		);
+
+		await startInitializedServer();
+		callback("didOpen")({
+			textDocument: {
+				languageId: "typescript",
+				text: "value",
+				uri: untitledUri,
+				version: 1,
+			},
+		});
+		openDocument(filePath);
+		await flushQueuedWork();
+		changeWatchedFile(closedFilePath);
+		await flushQueuedWork();
+		changeWatchedFile(path.join(workspaceRoot, "flint.config.mjs"));
+		await flushQueuedWork();
+
+		expect(
+			callback("codeAction")({
+				context: { diagnostics: [] },
+				textDocument: { uri: untitledUri },
+			}),
+		).toEqual([]);
+
+		callback("didClose")({ textDocument: { uri: untitledUri } });
+		await flushQueuedWork();
+
+		expect(mocks.connection.console.error).not.toHaveBeenCalled();
+		expect(
+			mocks.lintChangedFiles.mock.calls.map(([filePaths]) =>
+				Array.from(filePaths),
+			),
+		).toEqual([[filePath], [closedFilePath], [filePath]]);
+		expect(
+			mocks.connection.sendDiagnostics.mock.calls.map(
+				([{ diagnostics, uri }]) => [uri, diagnostics.length],
+			),
+		).toEqual([
+			[pathToFileURL(filePath).href, 1],
+			[pathToFileURL(closedFilePath).href, 1],
+			[pathToFileURL(filePath).href, 1],
+			[pathToFileURL(closedFilePath).href, 0],
+		]);
+	});
+
+	it("sends code action edits for the document version that was linted", async () => {
+		const filePath = normalizePath(path.join(workspaceRoot, "src/index.ts"));
+		const fileUri = pathToFileURL(filePath).href;
+		const range = {
+			end: { character: 11, line: 0 },
+			start: { character: 6, line: 0 },
+		};
+
+		mocks.lintPasses.push([
+			new Map([
+				[
+					filePath,
+					{
+						...createFileResults("language diagnostic"),
+						reports: [
+							{
+								about: { id: "renamed" },
+								fix: [{ range: { begin: 6, end: 11 }, text: "renamed" }],
+								message: {
+									primary: "Rename this.",
+									secondary: [],
+									suggestions: [],
+								},
+								range: {
+									begin: { column: 6, line: 0, raw: 6 },
+									end: { column: 11, line: 0, raw: 11 },
+								},
+							},
+						],
+					},
+				],
+			]),
+		]);
+
+		await startInitializedServer(
+			createWorkspaceInitializeParams({
+				workspace: { workspaceEdit: { documentChanges: true } },
+			}),
+		);
+		openDocument(filePath, "const value = 1;\n");
+		await flushQueuedWork();
+		callback("didChange")({
+			contentChanges: [{ text: "  const value = 1;\n" }],
+			textDocument: { uri: fileUri, version: 2 },
+		});
+		await flushQueuedWork();
+
+		expect(
+			callback("codeAction")({
+				context: {
+					diagnostics: [
+						{
+							code: "renamed",
+							message: "Rename this.",
+							range,
+							source: "flint",
+						},
+					],
+				},
+				textDocument: { uri: fileUri },
+			}),
+		).toMatchObject([
+			{
+				edit: {
+					documentChanges: [
+						{
+							edits: [{ newText: "renamed", range }],
+							textDocument: { uri: fileUri, version: 1 },
+						},
+					],
+				},
+			},
+		]);
+	});
+
+	it("publishes changed diagnostics before dependent diagnostics", async () => {
+		const changedFilePath = normalizePath(path.join(workspaceRoot, "src/b.ts"));
+		const dependentFilePath = normalizePath(
+			path.join(workspaceRoot, "src/a.ts"),
+		);
+
+		mocks.lintPasses.push([
+			new Map([[changedFilePath, createFileResults("changed")]]),
+			new Map([[dependentFilePath, createFileResults("dependent")]]),
+		]);
+
+		await startInitializedServer();
+		openDocument(changedFilePath, "changed");
+		await flushQueuedWork();
+
+		expect(mocks.lintChangedFiles).toHaveBeenCalledTimes(1);
+		expect(Array.from(mocks.lintChangedFiles.mock.calls[0]?.[0] ?? [])).toEqual(
+			[changedFilePath],
+		);
+		expect(
+			mocks.connection.sendDiagnostics.mock.calls.map(([params]) => params.uri),
+		).toEqual([
+			pathToFileURL(changedFilePath).href,
+			pathToFileURL(dependentFilePath).href,
+		]);
+	});
+
+	it("registers for watched file changes only when the client supports it", async () => {
+		await startInitializedServer();
+
+		expect(mocks.connection.client.register).not.toHaveBeenCalled();
+
+		await startInitializedServer(
+			createWorkspaceInitializeParams({
+				workspace: { didChangeWatchedFiles: { dynamicRegistration: true } },
+			}),
+		);
+
+		expect(mocks.connection.client.register).toHaveBeenCalledExactlyOnceWith(
+			DidChangeWatchedFilesNotification.type,
+			{ watchers: [{ globPattern: "**/*" }] },
+		);
+	});
+
+	it("relints an edited config file without rebuilding until it is saved", async () => {
+		const configFilePath = normalizePath(
+			path.join(workspaceRoot, "flint.config.mjs"),
+		);
+
+		await startInitializedServer();
+		mocks.lintSessionCreate.mockClear();
+
+		openDocument(configFilePath, "export default {};");
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
+		expect(Array.from(mocks.lintChangedFiles.mock.lastCall?.[0] ?? [])).toEqual(
+			[configFilePath],
+		);
+
+		changeWatchedFile(configFilePath);
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).toHaveBeenCalledOnce();
+	});
+
+	it("rediscovers the config file name during structural rebuilds", async () => {
+		const nextConfigFileName = "flint.config.cjs";
+		writeFileSync(
+			path.join(workspaceRoot, nextConfigFileName),
+			"module.exports = { definition: { use: [] } };\n",
+		);
+
+		await startInitializedServer();
+
+		expect(mocks.validateConfigDefinition).toHaveBeenCalledWith(
+			expect.anything(),
+			"flint.config.mjs",
+		);
+
+		mocks.validateConfigDefinition.mockClear();
+		mocks.configFileName = nextConfigFileName;
+		changeWatchedFile(path.join(workspaceRoot, "flint.config.mjs"));
+		await flushQueuedWork();
+
+		expect(mocks.validateConfigDefinition).toHaveBeenCalledWith(
+			expect.anything(),
+			nextConfigFileName,
+		);
+	});
+
+	it("clears diagnostics that a rebuild does not republish", async () => {
+		const filePath = path.join(workspaceRoot, "src/excluded.ts");
+
+		mocks.lintPasses.push([
+			new Map([[filePath, createFileResults("before rebuild")]]),
+		]);
+
+		await startInitializedServer();
+		openDocument(filePath);
+		await flushQueuedWork();
+		mocks.connection.sendDiagnostics.mockClear();
+
+		changeWatchedFile(path.join(workspaceRoot, "flint.config.mjs"));
+		await flushQueuedWork();
+
+		expect(mocks.connection.sendDiagnostics).toHaveBeenCalledExactlyOnceWith({
+			diagnostics: [],
+			uri: pathToFileURL(filePath).href,
+		});
+	});
+
+	it("does not relint an open document when it is saved", async () => {
+		const filePath = path.join(workspaceRoot, "src/open.ts");
+
+		await startInitializedServer();
+		openDocument(filePath);
+		await flushQueuedWork();
+		mocks.lintChangedFiles.mockClear();
+
+		changeWatchedFile(filePath);
+		await flushQueuedWork();
+
+		expect(mocks.lintChangedFiles).not.toHaveBeenCalled();
+	});
+
+	it("relints tsconfig dependents without rebuilding the session", async () => {
+		const tsconfigPath = normalizePath(
+			path.join(workspaceRoot, "tsconfig.json"),
+		);
+
+		await startInitializedServer();
+		mocks.lintSessionCreate.mockClear();
+
+		changeWatchedFile(tsconfigPath);
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
+		expect(Array.from(mocks.lintChangedFiles.mock.lastCall?.[0] ?? [])).toEqual(
+			[tsconfigPath],
+		);
+	});
+
+	it("rebuilds when a document that is not on disk opens or closes", async () => {
+		const filePath = path.join(workspaceRoot, "src/new.ts");
+
+		await startInitializedServer();
+		mocks.lintSessionCreate.mockClear();
+		mocks.fileTypeSync.mockReturnValueOnce(undefined);
+
+		openDocument(filePath);
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).toHaveBeenCalledTimes(1);
+
+		mocks.fileTypeSync.mockReturnValueOnce(undefined);
+
+		closeDocument(filePath);
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).toHaveBeenCalledTimes(2);
+	});
+
+	it("rebuilds when an external watched file is created", async () => {
+		await startInitializedServer();
+		mocks.lintSessionCreate.mockClear();
+
+		changeWatchedFile(
+			path.join(workspaceRoot, "src/new.ts"),
+			FileChangeType.Created,
+		);
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).toHaveBeenCalledOnce();
+	});
+
+	it("re-lints a closed document from disk instead of clearing diagnostics", async () => {
+		const filePath = path.join(workspaceRoot, "src/closed.ts");
+		const fileUri = pathToFileURL(filePath).href;
+
+		mocks.lintPasses.push(
+			[new Map([[filePath, createFileResults("open buffer diagnostic")]])],
+			[new Map([[filePath, createFileResults("disk diagnostic")]])],
+		);
+
+		await startInitializedServer();
+		openDocument(filePath, "open buffer");
+		await flushQueuedWork();
+		mocks.connection.sendDiagnostics.mockClear();
+
+		closeDocument(filePath);
+		await flushQueuedWork();
+
+		expect(mocks.connection.sendDiagnostics).toHaveBeenCalledWith({
+			diagnostics: [
+				expect.objectContaining({
+					message: "disk diagnostic",
+				}),
+			],
+			uri: fileUri,
+		});
+		expect(mocks.connection.sendDiagnostics).not.toHaveBeenCalledWith({
+			diagnostics: [],
+			uri: fileUri,
+		});
+	});
+});
