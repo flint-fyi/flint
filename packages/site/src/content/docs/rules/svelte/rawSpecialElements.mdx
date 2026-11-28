@@ -1,0 +1,65 @@
+---
+description: "Reports raw special Svelte elements that should use the `svelte:` prefix."
+title: "rawSpecialElements"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="svelte" rule="rawSpecialElements" />
+
+Svelte provides special elements, such as `<svelte:head>` and `<svelte:window>`, that are written with a `svelte:` prefix.
+Svelte versions before 5 also accepted `<head>`, `<body>`, `<window>`, `<document>`, `<element>`, and `<options>` without the prefix, but Svelte 5 treats them as invalid.
+
+This rule reports those elements when they are written without the `svelte:` prefix.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```svelte
+<head>
+	<title>Title</title>
+</head>
+```
+
+```svelte
+<window onresize={handleResize}></window>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```svelte
+<svelte:head>
+	<title>Title</title>
+</svelte:head>
+```
+
+```svelte
+<svelte:window onresize={handleResize} />
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project still targets a Svelte version before Svelte 5, where these elements could be written without the prefix, this rule may report code that compiles in your version.
+You might prefer to disable this rule until you upgrade.
+
+## Further Reading
+
+- [Svelte Docs: `<svelte:head>`](https://svelte.dev/docs/svelte/svelte-head)
+- [Svelte Docs: `<svelte:window>`](https://svelte.dev/docs/svelte/svelte-window)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="svelte" ruleId="rawSpecialElements" />
