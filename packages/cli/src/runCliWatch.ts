@@ -6,6 +6,7 @@ import { debugForFile } from "debug-for-file";
 import {
 	applyChangesToFiles,
 	createRelayFileSystemWatcher,
+	isIgnoredRelativePath,
 	LintSession,
 	lintSessionWithCache,
 	maximumFixIterations,
@@ -256,7 +257,8 @@ export async function runCliWatch(
 				} else if (
 					!knownUnrelatedFilePaths.has(
 						pathKey(changedFilePath, isCaseSensitiveFS),
-					)
+					) &&
+					!containsOnlyIgnoredPaths(host, changedFilePath, cwd, ignoredPaths)
 				) {
 					filesetChanged = true;
 					break;
@@ -328,5 +330,26 @@ function isStructuralFile(
 		filePath === path.resolve(cwd, configFileName) ||
 		baseName === "package.json" ||
 		/^tsconfig(?:\..+)?\.json$/u.test(baseName)
+	);
+}
+
+// A directory such as node_modules created by the cache write holds nothing the session can see.
+// Changes to files placed inside it later are reported on their own.
+function containsOnlyIgnoredPaths(
+	host: LinterHost,
+	filePath: string,
+	cwd: string,
+	ignoredPaths: string[],
+): boolean {
+	return (
+		host.fileTypeSync(filePath) === "directory" &&
+		host
+			.readDirectorySync(filePath)
+			.every((entry) =>
+				isIgnoredRelativePath(
+					`${filePath}/${entry.name}`.slice(cwd.length),
+					ignoredPaths,
+				),
+			)
 	);
 }
