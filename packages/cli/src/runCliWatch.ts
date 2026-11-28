@@ -49,6 +49,7 @@ export async function runCliWatch(
 
 		const knownUnrelatedFilePaths = new Set<string>();
 		const pendingChanges = new Map<string, string>();
+		const dependencyWatchers = new Map<string, Disposable>();
 
 		function finish() {
 			if (quitting) {
@@ -59,6 +60,9 @@ export async function runCliWatch(
 			processPendingChanges.clear();
 			pendingChanges.clear();
 			watcher[Symbol.dispose]();
+			for (const dependencyWatcher of dependencyWatchers.values()) {
+				dependencyWatcher[Symbol.dispose]();
+			}
 
 			currentTask = currentTask.finally(() => {
 				currentRenderer?.dispose?.();
@@ -141,6 +145,7 @@ export async function runCliWatch(
 						lintedFilePaths: new Set(initialResults.keys()),
 					};
 			const lintResults = { ...lintSession.getResults(), changed };
+			watchDependencies(lintSession);
 
 			await lintSession.writeCache();
 
@@ -157,13 +162,42 @@ export async function runCliWatch(
 			return lintSession;
 		}
 
+		// The cwd watcher misses dependencies outside cwd or in ignored paths, such as a shared tsconfig.
+		function watchDependencies(session: LintSession): void {
+			const dependencies = new Set(
+				session.storedResults
+					.values()
+					.flatMap((fileResults) => [
+						...fileResults.dependencies,
+						...fileResults.missingDependencies,
+					]),
+			);
+			for (const [dependency, dependencyWatcher] of dependencyWatchers) {
+				if (!dependencies.has(dependency)) {
+					dependencyWatcher[Symbol.dispose]();
+					dependencyWatchers.delete(dependency);
+				}
+			}
+			for (const dependency of dependencies) {
+				if (!dependencyWatchers.has(dependency)) {
+					dependencyWatchers.set(
+						dependency,
+						sessionWatcher.watchFileSync(
+							dependency,
+							() => {
+								pendingChanges.set(dependency, dependency);
+								processPendingChanges();
+							},
+							{ ignoredPaths: [] },
+						),
+					);
+				}
+			}
+		}
+
 		async function processChanges(changedFilePaths: string[]) {
-			if (
-				changedFilePaths.some((filePath) =>
-					isStructuralFile(filePath, configFileName, cwd),
-				)
-			) {
-				log("Rebuilding watch session after a structural file change.");
+			if (changedFilePaths.includes(path.resolve(cwd, configFileName))) {
+				log("Rebuilding watch session after a config file change.");
 				await run({ rebuild: true });
 				return;
 			}
@@ -251,18 +285,4 @@ export async function runCliWatch(
 			run({ ignoreCache: values["cache-ignore"] ?? false, rebuild: true }),
 		);
 	});
-}
-
-function isStructuralFile(
-	filePath: string,
-	configFileName: string,
-	cwd: string,
-) {
-	const baseName = path.basename(filePath);
-
-	return (
-		filePath === path.resolve(cwd, configFileName) ||
-		baseName === "package.json" ||
-		/^tsconfig(?:\..+)?\.json$/u.test(baseName)
-	);
 }

@@ -400,6 +400,7 @@ export class LintSession implements Disposable {
 				),
 				isGlobalDependency: result.isGlobalDependency ?? false,
 				languageReports: result.languageReports ?? [],
+				missingDependencies: new Set(),
 				reports: result.reports ?? [],
 				timestamp: result.timestamp,
 			});
@@ -409,7 +410,10 @@ export class LintSession implements Disposable {
 
 	#storeResults(filePath: string, result: FinalizedFileResults): void {
 		const previous = this.storedResults.get(filePath);
-		for (const dependency of previous?.dependencies ?? []) {
+		for (const dependency of [
+			...(previous?.dependencies ?? []),
+			...(previous?.missingDependencies ?? []),
+		]) {
 			const dependents = this.#dependents.get(dependency);
 			if (dependents?.delete(filePath) && !dependents.size) {
 				this.#dependents.delete(dependency);
@@ -423,7 +427,10 @@ export class LintSession implements Disposable {
 		} else {
 			this.#globalDependencies.delete(this.#key(filePath));
 		}
-		for (const dependency of result.dependencies) {
+		for (const dependency of [
+			...result.dependencies,
+			...result.missingDependencies,
+		]) {
 			let dependents = this.#dependents.get(dependency);
 			if (!dependents) {
 				dependents = new Set();

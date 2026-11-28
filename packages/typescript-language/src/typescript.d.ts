@@ -1,6 +1,22 @@
 import "typescript";
 
 declare module "typescript" {
+	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/types.ts#L7425-L7431
+	interface CompilerOptions {
+		configFile?: TsConfigSourceFile;
+		configFilePath?: string;
+	}
+
+	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L2379-L2382
+	interface PackageJsonInfo {
+		packageDirectory: string;
+	}
+
+	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/types.ts#L4390
+	interface SourceFile {
+		packageJsonScope?: PackageJsonInfo;
+	}
+
 	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/utilities.ts#L9780-L9784
 	interface FileSystemEntries {
 		readonly directories: readonly string[];
