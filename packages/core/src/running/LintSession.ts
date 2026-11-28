@@ -5,6 +5,8 @@ import { resolve } from "pathe";
 import { pathKey, type PromiseOrSync } from "@flint.fyi/utils";
 
 import { collectTransitiveDependents } from "../cache/collectTransitiveDependents.ts";
+import { readFromCache } from "../cache/readFromCache.ts";
+import { writeToCache } from "../cache/writeToCache.ts";
 import { applyChangesToFiles } from "../changing/applyChangesToFiles.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
@@ -54,6 +56,18 @@ export interface LintSessionLintOptions {
 	skipLanguageReports?: boolean;
 }
 
+export interface LintSessionOptions {
+	/**
+	 * Overrides the config's cache location.
+	 */
+	cacheLocation?: string | undefined;
+
+	/**
+	 * Skips reading the cache checkpoint; {@link LintSession.writeCache} still writes one.
+	 */
+	ignoreCache?: boolean | undefined;
+}
+
 export class LintSession implements Disposable {
 	readonly allFilePaths: Set<string>;
 	readonly storedResults: Map<string, FinalizedFileResults> = new Map<
@@ -66,7 +80,10 @@ export class LintSession implements Disposable {
 	}
 
 	#cached: Map<string, FileCacheStorage> | undefined;
+	readonly #cacheLocation: string | undefined;
+	#cacheUnread: boolean;
 	readonly #caseSensitiveFS: boolean;
+	readonly #configFilePath: string;
 	readonly #cwd: string;
 	readonly #dependents = new Map<string, Set<string>>();
 	readonly #filePathsByKey = new Map<string, string>();
@@ -82,9 +99,14 @@ export class LintSession implements Disposable {
 	private constructor(
 		allFilePaths: Set<string>,
 		rulesOptionsByFile: Map<AnyRule, Map<string, object>>,
+		configDefinition: ProcessedConfigDefinition,
 		host: LinterHost,
+		{ cacheLocation, ignoreCache }: LintSessionOptions,
 	) {
 		this.allFilePaths = allFilePaths;
+		this.#cacheLocation = cacheLocation || configDefinition.cacheLocation;
+		this.#cacheUnread = !ignoreCache;
+		this.#configFilePath = configDefinition.filePath;
 		this.#caseSensitiveFS = host.isCaseSensitiveFS();
 		this.#cwd = host.getCurrentDirectory();
 		this.#host = host;
@@ -100,6 +122,7 @@ export class LintSession implements Disposable {
 	static async create(
 		configDefinition: ProcessedConfigDefinition,
 		host: LinterHost,
+		options: LintSessionOptions = {},
 	): Promise<LintSession> {
 		const { allFilePaths, useDefinitions } = await computeUseDefinitions(
 			host,
@@ -109,7 +132,9 @@ export class LintSession implements Disposable {
 		return new LintSession(
 			allFilePaths,
 			collectRulesOptionsByFile(useDefinitions),
+			configDefinition,
 			host,
+			options,
 		);
 	}
 
@@ -178,6 +203,32 @@ export class LintSession implements Disposable {
 		return this.#filePathsByKey.has(this.#key(filePath));
 	}
 
+	/**
+	 * Lints every file.
+	 * The first call, if nothing was linted before it, restores the cache checkpoint
+	 * when it is valid and lints only the files it reports as changed.
+	 */
+	async lint(options?: LintSessionLintOptions): Promise<LintResults> {
+		const checkpoint =
+			this.#cacheUnread &&
+			(await readFromCache(
+				this.#host,
+				this.allFilePaths,
+				this.#configFilePath,
+				this.#cacheLocation,
+			));
+		this.#cacheUnread = false;
+
+		if (checkpoint) {
+			this.#restoreCachedResults(checkpoint.files);
+			await this.lintChangedFiles(checkpoint.changedFilePaths, options);
+		} else {
+			await this.lintFiles(this.allFilePaths, options);
+		}
+
+		return this.getResults();
+	}
+
 	async lintChangedFiles(
 		filePaths: Iterable<string>,
 		options?: LintSessionChangedLintOptions,
@@ -230,6 +281,7 @@ export class LintSession implements Disposable {
 		if (!filePathsToLint.size) {
 			return new Map();
 		}
+		this.#cacheUnread = false;
 		for (const filePath of filePathsToLint) {
 			this.#pendingFilePaths.add(filePath);
 		}
@@ -274,32 +326,22 @@ export class LintSession implements Disposable {
 		return filesResults;
 	}
 
-	restoreCachedResults(cached: Map<string, FileCacheStorage>): void {
-		this.#cached = new Map();
-		for (const [filePath, result] of cached) {
-			if (result.isGlobalDependency) {
-				this.#globalDependencies.add(this.#key(filePath));
-			}
-			if (!this.hasFilePath(filePath)) {
-				continue;
-			}
-			this.#storeResults(filePath, {
-				dependencies: new Set(
-					result.dependencies?.map((dependency) => this.#key(dependency)),
-				),
-				isGlobalDependency: result.isGlobalDependency ?? false,
-				languageReports: result.languageReports ?? [],
-				reports: result.reports ?? [],
-				timestamp: result.timestamp,
-			});
-			this.#cached.set(filePath, result);
-		}
-	}
-
+	/**
+	 * Writes a cache checkpoint of the session's current results.
+	 */
 	[Symbol.dispose](): void {
 		for (const [, fileFactory] of this.#languageFileFactories.entries()) {
 			fileFactory[Symbol.dispose]?.();
 		}
+	}
+
+	async writeCache(): Promise<void> {
+		await writeToCache(
+			this.#host,
+			this.#configFilePath,
+			this.getResults(),
+			this.#cacheLocation,
+		);
 	}
 
 	#getAffectedFilePaths(filePaths: Iterable<string>): Set<string> {
@@ -341,6 +383,28 @@ export class LintSession implements Disposable {
 			}
 		}
 		return resolved;
+	}
+
+	#restoreCachedResults(cached: Map<string, FileCacheStorage>): void {
+		this.#cached = new Map();
+		for (const [filePath, result] of cached) {
+			if (result.isGlobalDependency) {
+				this.#globalDependencies.add(this.#key(filePath));
+			}
+			if (!this.hasFilePath(filePath)) {
+				continue;
+			}
+			this.#storeResults(filePath, {
+				dependencies: new Set(
+					result.dependencies?.map((dependency) => this.#key(dependency)),
+				),
+				isGlobalDependency: result.isGlobalDependency ?? false,
+				languageReports: result.languageReports ?? [],
+				reports: result.reports ?? [],
+				timestamp: result.timestamp,
+			});
+			this.#cached.set(filePath, result);
+		}
 	}
 
 	#storeResults(filePath: string, result: FinalizedFileResults): void {
