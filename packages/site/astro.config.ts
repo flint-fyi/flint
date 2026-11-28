@@ -157,6 +157,7 @@ export default defineConfig({
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
+		"/rules/ts/typeassertionsstyles": "/rules/ts/typeassertionstyles/",
 		"/team": "/project/team/",
 	},
 	site: "https://flint.fyi",
