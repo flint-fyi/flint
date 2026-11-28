@@ -193,6 +193,7 @@ export class LintSession implements Disposable {
 				isGlobalDependency: cachedStorage.isGlobalDependency ?? false,
 				languageReports: cachedStorage.languageReports ?? [],
 				reports: cachedStorage.reports ?? [],
+				timestamp: cachedStorage.timestamp,
 			});
 		}
 	}
