@@ -17,6 +17,8 @@ export interface FinalizedFileResults {
 	isGlobalDependency?: boolean;
 	languageReports: LanguageReport[];
 	reports: FileReport[];
+	/** Unix milliseconds at the start of the lint pass, retained across checkpoints. */
+	timestamp?: number;
 }
 
 /**

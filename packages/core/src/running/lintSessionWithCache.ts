@@ -19,7 +19,7 @@ export async function lintSessionWithCache(
 		skipLanguageReports = false,
 	}: LintSessionWithCacheOptions,
 ): Promise<LintResults> {
-	const cached = ignoreCache
+	const checkpoint = ignoreCache
 		? undefined
 		: await readFromCache(
 				host,
@@ -28,24 +28,14 @@ export async function lintSessionWithCache(
 				cacheLocation,
 			);
 
-	if (cached) {
-		session.restoreCachedResults(cached);
-
-		const lintedResults = await session.lintChangedFiles(
-			session.allFilePaths.difference(cached),
-			{ skipLanguageReports },
-		);
-		for (const filePath of lintedResults.keys()) {
-			cached.delete(filePath);
-		}
+	if (checkpoint) {
+		session.restoreCachedResults(checkpoint.files);
+		await session.lintChangedFiles(checkpoint.changedFilePaths, {
+			skipLanguageReports,
+		});
 	} else {
 		await session.lintFiles(session.allFilePaths, { skipLanguageReports });
 	}
 
-	return {
-		allFilePaths: session.allFilePaths,
-		allFileResults: new Map(session.storedResults),
-		cached,
-		ruleCount: session.ruleCount,
-	};
+	return session.getResults();
 }

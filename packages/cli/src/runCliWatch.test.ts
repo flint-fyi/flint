@@ -7,6 +7,7 @@ import {
 	createVFSLinterHost,
 	maximumFixIterations,
 	RuleCreator,
+	runConfig,
 	type FileAboutData,
 	type LinterHost,
 	type LinterHostFileWatcherEvent,
@@ -35,6 +36,90 @@ describe(runCliWatch, () => {
 	afterEach(() => {
 		vi.mocked(loadConfigDefinition).mockReset();
 	});
+
+	it.each([
+		{
+			affected: ["a.txt"],
+			change: "/root/content.dependency",
+			global: false,
+			warm: false,
+		},
+		{
+			affected: ["a.txt"],
+			change: "/root/content.dependency",
+			global: false,
+			warm: true,
+		},
+		{
+			affected: ["a.txt", "b.txt"],
+			change: "/root/a.txt",
+			global: true,
+			warm: false,
+		},
+		{
+			affected: ["a.txt", "b.txt"],
+			change: "/root/a.txt",
+			global: true,
+			warm: true,
+		},
+		{
+			affected: [],
+			change: "/root/tsconfig.unrelated.json",
+			global: false,
+			warm: false,
+		},
+		{
+			affected: [],
+			change: "/root/tsconfig.unrelated.json",
+			global: false,
+			warm: true,
+		},
+	])(
+		"relints $affected for $change after a warm start: $warm",
+		async ({ affected, change, global, warm }) => {
+			const project = createTestProject({
+				contentDependency: "/root/content.dependency",
+				global,
+			});
+			vi.mocked(loadConfigDefinition).mockResolvedValue(
+				project.configDefinition,
+			);
+			if (warm) {
+				await runConfig(project.configDefinition, project.host, {});
+				project.visitedFilePaths.length = 0;
+			}
+			let quit: (() => void) | undefined;
+			let renderCount = 0;
+			let finalFileCount = 0;
+			await runCliWatch(
+				project.host,
+				"flint.config.ts",
+				() =>
+					({
+						announce: vi.fn(),
+						onQuit(callback) {
+							quit = callback;
+						},
+						render(context) {
+							if (++renderCount === 1) {
+								project.visitedFilePaths.length = 0;
+								project.host.vfsUpsertFile(change, "updated");
+								return;
+							}
+							finalFileCount = context.lintResults.allFileResults.size;
+							quit?.();
+						},
+					}) satisfies Renderer,
+				values,
+				[],
+			);
+			expect(renderCount).toBe(2);
+			expect(
+				project.visitedFilePaths.map((filePath) => path.basename(filePath)),
+			).toEqual(affected);
+			expect(finalFileCount).toBe(2);
+		},
+	);
 
 	it("reuses a lint session for ordinary file changes", async () => {
 		const project = createTestProject();
@@ -323,21 +408,28 @@ describe(runCliWatch, () => {
 
 function createTestProject({
 	appendFixText,
+	contentDependency,
 	fixText,
+	global,
 	watchedFilePath,
 }: {
 	appendFixText?: string;
+	contentDependency?: string;
 	fixText?: string;
+	global?: boolean;
 	watchedFilePath?: string;
 } = {}) {
 	const root = "/root";
 	const aPath = path.posix.join(root, "a.txt");
 	const bPath = path.posix.join(root, "b.txt");
 	const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
-	host.vfsUpsertFile(aPath, "a1");
+	host.vfsUpsertFile(aPath, global ? "global-a1" : "a1");
 	host.vfsUpsertFile(bPath, "b1");
 	host.vfsUpsertFile("flint.config.ts", "");
 	host.vfsUpsertFile("package.json", "{}");
+	if (contentDependency) {
+		host.vfsUpsertFile(contentDependency, "original");
+	}
 	const visitedFilePaths: string[] = [];
 	const visitedSourceTexts: string[] = [];
 	const watchedFileEvents: LinterHostFileWatcherEvent[] = [];
@@ -362,6 +454,15 @@ function createTestProject({
 	const language = createLanguage<TestNodes>({
 		about: { name: "Test" },
 		createFileFactory,
+		getFileCacheImpacts(file) {
+			return {
+				dependencies:
+					file.about.filePath === aPath && contentDependency
+						? [contentDependency]
+						: [],
+				isGlobalDependency: file.about.sourceText.startsWith("global"),
+			};
+		},
 		runFileVisitors(file, fileVisitors) {
 			for (const { services, visitors } of fileVisitors) {
 				visitors.file?.(file.about, services);
