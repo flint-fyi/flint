@@ -157,7 +157,7 @@ catalogs:
     "@expressive-code/core": 0.44.4
     "@shikijs/colorized-brackets": 4.6.0
     "@konami-emoji-blast/astro": 0.3.0
-    "@types/react": 19.3.1
+    "@types/react": 19.3.2
     "@types/react-dom": 19.3.0
     astro: 7.4.13
     astro-og-canvas: 0.13.3
