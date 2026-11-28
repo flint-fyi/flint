@@ -1,0 +1,86 @@
+---
+description: "Reports and auto-fixes message placeholders that are not formatted as `{{ placeholder }}`."
+title: "placeholderFormats"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="placeholderFormats" />
+
+Flint rule messages can include placeholders, such as `{{ name }}`, that are filled in with a report's `data`.
+Flint accepts placeholders with any amount of whitespace inside the braces, such as `{{name}}` or `{{ name}}`.
+Formatting them all the same way makes message templates easier to scan and search.
+
+This rule reports placeholders in a rule's `messages` that don't have exactly one space after `{{` and before `}}`.
+It auto-fixes them to the `{{ placeholder }}` format.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+ruleCreator.createRule(typescriptLanguage, {
+	messages: {
+		unused: {
+			primary: "'{{name}}' is never used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	// ...
+});
+```
+
+```ts
+ruleCreator.createRule(typescriptLanguage, {
+	messages: {
+		unused: {
+			primary: "'{{  name  }}' is never used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	// ...
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+ruleCreator.createRule(typescriptLanguage, {
+	messages: {
+		unused: {
+			primary: "'{{ name }}' is never used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	// ...
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your plugin already uses a different placeholder spacing convention across many rules, reformatting all of its messages may not be worth the churn.
+You might prefer to disable this rule until you're ready to migrate them.
+
+## Further Reading
+
+- [Flint Glossary: Report](https://flint.fyi/glossary/#report)
+- [Flint Glossary: Rule](https://flint.fyi/glossary/#rule)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="placeholderFormats" />
