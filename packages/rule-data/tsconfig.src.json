@@ -14,10 +14,16 @@
 		{ "path": "../changesets/tsconfig.src.json" },
 		{ "path": "../flint" },
 		{ "path": "../jsx/tsconfig.src.json" },
+		{ "path": "../next/tsconfig.src.json" },
 		{ "path": "../node/tsconfig.src.json" },
+		{ "path": "../nuxt/tsconfig.src.json" },
 		{ "path": "../performance/tsconfig.src.json" },
 		{ "path": "../plugin-flint/tsconfig.src.json" },
+		{ "path": "../react/tsconfig.src.json" },
+		{ "path": "../solid/tsconfig.src.json" },
 		{ "path": "../spelling/tsconfig.src.json" },
-		{ "path": "../vitest/tsconfig.src.json" }
+		{ "path": "../svelte/tsconfig.src.json" },
+		{ "path": "../vitest/tsconfig.src.json" },
+		{ "path": "../vue/tsconfig.src.json" }
 	]
 }

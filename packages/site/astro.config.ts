@@ -8,6 +8,7 @@ import { remarkHeadingId } from "remark-custom-heading-id";
 import starlightBlog from "starlight-blog";
 import starlightLinksValidator from "starlight-links-validator";
 import starlightSidebarTopics from "starlight-sidebar-topics";
+import Macros from "unplugin-macros/vite";
 
 export default defineConfig({
 	integrations: [
@@ -165,6 +166,7 @@ export default defineConfig({
 		define: {
 			__filename: "import.meta.filename",
 		},
+		plugins: [Macros()],
 		resolve: {
 			alias: {
 				// https://github.com/csstree/csstree/issues/314#issuecomment-3794237969

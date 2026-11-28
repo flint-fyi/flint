@@ -1,0 +1,80 @@
+---
+description: "Reports v-for directives without a valid key binding."
+title: "vForKeys"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vue" rule="vForKeys" />
+
+Vue uses each `v-for` element's `key` to track which rendered element belongs to which list item.
+Without a key, or with a key that's the same for every item, Vue may reuse or reorder elements incorrectly when the list changes.
+That can leave stale DOM content, keep component state on the wrong item, and break transitions.
+
+This rule reports elements with `v-for` that:
+
+- Have no `key` at all
+- Have a static `key` attribute, such as `key="todo"`, which is the same for every item
+- Bind `:key` to an expression that doesn't reference any of the `v-for` variables
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```vue
+<template>
+	<li v-for="todo in todos">{{ todo.text }}</li>
+</template>
+```
+
+```vue
+<template>
+	<li v-for="todo in todos" key="todo">{{ todo.text }}</li>
+</template>
+```
+
+```vue
+<template>
+	<li v-for="todo in todos" :key="listId">{{ todo.text }}</li>
+</template>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```vue
+<template>
+	<li v-for="todo in todos" :key="todo.id">{{ todo.text }}</li>
+</template>
+```
+
+```vue
+<template>
+	<li v-for="(todo, index) in todos" :key="index">{{ todo.text }}</li>
+</template>
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If a list is rendered once and never reordered, added to, or removed from, missing keys won't cause incorrect updates.
+You might prefer to disable this rule for such static lists if adding keys isn't worth it.
+
+## Further Reading
+
+- [Vue Docs: Maintaining State with `key`](https://vuejs.org/guide/essentials/list.html#maintaining-state-with-key)
+- [Vue Docs: `key` special attribute](https://vuejs.org/api/built-in-special-attributes.html#key)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vue" ruleId="vForKeys" />
