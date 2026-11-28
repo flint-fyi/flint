@@ -4301,6 +4301,14 @@
 	},
 	{
 		"flint": {
+			"name": "strictPresetSupersets",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
 			"name": "suggestionMessageIdMatches",
 			"plugin": "flint",
 			"preset": "logical"
