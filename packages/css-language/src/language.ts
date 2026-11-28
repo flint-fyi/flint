@@ -7,7 +7,7 @@ import {
 	type Language,
 } from "@flint.fyi/core";
 
-import type { CssNodeVisitors } from "./nodes.ts";
+import type { CssNodesByName, CssNodeVisitors } from "./nodes.ts";
 
 export interface CssFileServices {
 	root: CssNode;
@@ -37,25 +37,20 @@ export const cssLanguage: Language<CssNodeVisitors, CssFileServices> =
 			};
 		},
 		runFileVisitors: (file, fileVisitors) => {
-			const { enter, exit } = groupFileVisitors<CssNode, CssFileServices>(
-				fileVisitors,
-			);
+			const { enter, exit } = groupFileVisitors<
+				CssNodesByName,
+				CssFileServices
+			>(fileVisitors);
 
 			walk(file.services.root, {
 				...(enter && {
 					enter: (node: CssNode) => {
-						const entering = enter.get(node.type);
-						if (entering !== undefined) {
-							runFileVisitorSubscriptions(entering, node);
-						}
+						runFileVisitorSubscriptions(enter, node);
 					},
 				}),
 				...(exit && {
 					leave: (node: CssNode) => {
-						const exiting = exit.get(node.type);
-						if (exiting !== undefined) {
-							runFileVisitorSubscriptions(exiting, node);
-						}
+						runFileVisitorSubscriptions(exit, node);
 					},
 				}),
 			});

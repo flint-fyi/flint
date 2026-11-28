@@ -1,5 +1,5 @@
 import { visit } from "unist-util-visit";
-import { parse, type Node, type Root } from "yaml-unist-parser";
+import { parse, type Root } from "yaml-unist-parser";
 
 import {
 	createLanguage,
@@ -9,7 +9,7 @@ import {
 } from "@flint.fyi/core";
 
 import { parseDirectivesFromYamlFile } from "./directives/parseDirectivesFromYamlFile.ts";
-import type { YamlNodeVisitors } from "./nodes.ts";
+import type { YamlNodesByName, YamlNodeVisitors } from "./nodes.ts";
 
 export interface YamlFileServices {
 	filePath: string;
@@ -40,21 +40,20 @@ export const yamlLanguage: Language<YamlNodeVisitors, YamlFileServices> =
 			};
 		},
 		runFileVisitors: (file, fileVisitors) => {
-			const { enter, exit } = groupFileVisitors<Node, YamlFileServices>(
-				fileVisitors,
-			);
+			const { enter, exit } = groupFileVisitors<
+				YamlNodesByName,
+				YamlFileServices
+			>(fileVisitors);
 
 			visit(file.services.root, {
 				enter(node) {
-					const entering = enter?.get(node.type);
-					if (entering !== undefined) {
-						runFileVisitorSubscriptions(entering, node);
+					if (enter) {
+						runFileVisitorSubscriptions(enter, node);
 					}
 				},
 				exit(node) {
-					const exiting = exit?.get(node.type);
-					if (exiting !== undefined) {
-						runFileVisitorSubscriptions(exiting, node);
+					if (exit) {
+						runFileVisitorSubscriptions(exit, node);
 					}
 				},
 			});

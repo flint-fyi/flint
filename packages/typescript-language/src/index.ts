@@ -6,6 +6,7 @@ export {
 	createNodeVisitorsForFile,
 	type NodeVisitorsForFile,
 	type NodeVisitorSubscriptions,
+	runNodeVisitorSubscriptions,
 } from "./createNodeVisitorsForFile.ts";
 export {
 	extractDirectivesFromTypeScriptFile,

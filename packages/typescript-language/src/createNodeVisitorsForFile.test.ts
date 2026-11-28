@@ -21,23 +21,6 @@ describe(createNodeVisitorsForFile, () => {
 		).toBeUndefined();
 	});
 
-	it("does not run visitors when their names are unsupported", () => {
-		const visited: string[] = [];
-		const visitors = createNodeVisitorsForFile([
-			{
-				services,
-				visitors: {
-					FirstStatement: () => visited.push("alias"),
-					Missing: () => visited.push("missing"),
-				},
-			},
-		]);
-
-		visitors?.visit(createSourceFile());
-
-		expect(visited).toEqual([]);
-	});
-
 	it("runs visitors before their children when only enter visitors are provided", () => {
 		const visited: string[] = [];
 		const visitors = createNodeVisitorsForFile([

@@ -14,7 +14,7 @@ describe(groupFileVisitors, () => {
 			},
 		]);
 
-		expect(grouped.enter!.get("Node")![0]!.visitor).toBe(visitor);
+		expect(grouped.enter!.subscriptions.get("Node")![0]!.visitor).toBe(visitor);
 		expect(grouped.exit).toBeUndefined();
 	});
 
@@ -35,16 +35,17 @@ describe(groupFileVisitors, () => {
 			},
 		]);
 
-		expect(grouped.enter!.get("Node")).toEqual([
+		expect(grouped.enter!.subscriptions.get("Node")).toEqual([
 			{ services: firstServices, visitor: firstVisitor },
 			{ services: secondServices, visitor: secondVisitor },
 		]);
 	});
 
 	it("omits groups when visitors are undefined", () => {
-		const grouped = groupFileVisitors([
+		const grouped = groupFileVisitors<{ Node: unknown }, object>([
 			{
 				services: {},
+				// @ts-expect-error -- Projects without exactOptionalPropertyTypes may provide undefined visitors.
 				visitors: { Node: undefined },
 			},
 		]);
@@ -63,7 +64,7 @@ describe(groupFileVisitors, () => {
 		]);
 
 		expect(grouped.enter).toBeUndefined();
-		expect(grouped.exit!.get("Node")![0]!.visitor).toBe(visitor);
+		expect(grouped.exit!.subscriptions.get("Node")![0]!.visitor).toBe(visitor);
 	});
 
 	it("produces both enter and exit groups when both visitors are provided", () => {
@@ -80,7 +81,7 @@ describe(groupFileVisitors, () => {
 			},
 		]);
 
-		expect(grouped.enter!.get("Node")![0]!.visitor).toBe(onEnter);
-		expect(grouped.exit!.get("Node")![0]!.visitor).toBe(onExit);
+		expect(grouped.enter!.subscriptions.get("Node")![0]!.visitor).toBe(onEnter);
+		expect(grouped.exit!.subscriptions.get("Node")![0]!.visitor).toBe(onExit);
 	});
 });
