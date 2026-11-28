@@ -1,9 +1,11 @@
 import { CachedFactory } from "cached-factory";
+import { debugForFile } from "debug-for-file";
 import { resolve } from "pathe";
 
 import { pathKey, type PromiseOrSync } from "@flint.fyi/utils";
 
 import { collectTransitiveDependents } from "../cache/collectTransitiveDependents.ts";
+import { applyChangesToFiles } from "../changing/applyChangesToFiles.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -22,10 +24,30 @@ import {
 } from "./finalizeFileResults.ts";
 import { runRules } from "./runRules.ts";
 
+const log = debugForFile(import.meta.url);
+
+export const maximumFixIterations = 10;
+
 export interface LintSessionChangedLintOptions extends LintSessionLintOptions {
 	onResults?: (
 		results: Map<string, FinalizedFileResults>,
 	) => PromiseOrSync<void>;
+}
+
+export interface LintSessionFixOptions extends LintSessionLintOptions {
+	requestedSuggestions: Set<string>;
+}
+
+export interface LintSessionFixResults {
+	/**
+	 * Files written by fixes.
+	 */
+	changed: Set<string>;
+
+	/**
+	 * Files linted initially or re-linted after fixes.
+	 */
+	lintedFilePaths: Set<string>;
 }
 
 export interface LintSessionLintOptions {
@@ -89,6 +111,54 @@ export class LintSession implements Disposable {
 			collectRulesOptionsByFile(useDefinitions),
 			host,
 		);
+	}
+
+	/**
+	 * Applies fixes from results and re-lints the changed files,
+	 * for up to {@link maximumFixIterations} fixing rounds.
+	 * The re-lint after the last round verifies the stored results.
+	 */
+	async fixFiles(
+		initialResults: Map<string, FinalizedFileResults>,
+		{ requestedSuggestions, ...lintOptions }: LintSessionFixOptions,
+	): Promise<LintSessionFixResults> {
+		const changed = new Set<string>();
+		const lintedFilePaths = new Set(initialResults.keys());
+		let results = initialResults;
+
+		for (let iteration = 1; iteration <= maximumFixIterations; iteration += 1) {
+			log(
+				"Starting fix iteration %d of maximum %d",
+				iteration,
+				maximumFixIterations,
+			);
+
+			// flint-disable-next-line performance/loopAwaits
+			const fixedFilePaths = await applyChangesToFiles(
+				this.#host,
+				results,
+				requestedSuggestions,
+			);
+			if (!fixedFilePaths.length) {
+				log("No file changes found, stopping.");
+				break;
+			}
+
+			log("Applied changes to %d files.", fixedFilePaths.length);
+
+			for (const filePath of fixedFilePaths) {
+				changed.add(filePath);
+			}
+
+			// flint-disable-next-line performance/loopAwaits
+			results = await this.lintChangedFiles(fixedFilePaths, lintOptions);
+
+			for (const filePath of results.keys()) {
+				lintedFilePaths.add(filePath);
+			}
+		}
+
+		return { changed, lintedFilePaths };
 	}
 
 	getResults(): LintResults {

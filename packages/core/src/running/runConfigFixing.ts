@@ -1,15 +1,9 @@
-import { debugForFile } from "debug-for-file";
-
 import { writeToCache } from "../cache/writeToCache.ts";
-import { applyChangesToFiles } from "../changing/applyChangesToFiles.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { LintResultsWithChanges } from "../types/linting.ts";
-import { runConfig } from "./runConfig.ts";
-
-const log = debugForFile(import.meta.url);
-
-export const maximumFixIterations = 10;
+import { LintSession } from "./LintSession.ts";
+import { lintSessionWithCache } from "./lintSessionWithCache.ts";
 
 export interface RunConfigFixingOptions {
 	cacheLocation?: string | undefined;
@@ -22,71 +16,35 @@ export async function runConfigFixing(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
 	{
-		cacheLocation,
+		cacheLocation: requestedCacheLocation,
 		ignoreCache,
 		requestedSuggestions,
 		skipLanguageReports,
 	}: RunConfigFixingOptions,
 ): Promise<LintResultsWithChanges> {
-	let changed = new Set<string>();
-	let iteration = 0;
+	const cacheLocation =
+		requestedCacheLocation || configDefinition.cacheLocation;
 
-	while (true) {
-		iteration += 1;
-		log(
-			"Starting fix iteration %d of maximum %d",
-			iteration,
-			maximumFixIterations,
-		);
+	using session = await LintSession.create(configDefinition, host);
 
-		// TODO: Investigate reusing file contents from previous iterations.
-		// Why read file many times when only a few will do the trick?
-		// Or, at least it should all be virtual...
-		// https://github.com/flint-fyi/flint/issues/73
-		// flint-disable-next-line performance/loopAwaits
-		const lintResults = await runConfig(configDefinition, host, {
-			cacheLocation,
-			ignoreCache,
-			skipCacheWrite: true,
-			skipLanguageReports,
-		});
-
-		log("Applying fixes from file results.");
-
-		// flint-disable-next-line performance/loopAwaits
-		const fixedFilePaths = await applyChangesToFiles(
-			host,
-			lintResults.allFileResults,
-			requestedSuggestions,
-		);
-
-		log("Fixed %d files.", fixedFilePaths.length);
-
-		if (!fixedFilePaths.length) {
-			log("No file changes found, stopping.");
-			// flint-disable-next-line performance/loopAwaits
-			await writeToCache(
-				host,
-				configDefinition.filePath,
-				lintResults,
-				cacheLocation || configDefinition.cacheLocation,
-			);
-			return { ...lintResults, changed };
-		}
-
-		log("Applied changes to %d files.", fixedFilePaths.length);
-
-		changed = changed.union(new Set(fixedFilePaths));
-
-		if (iteration >= maximumFixIterations) {
-			log("Reached maximum iterations of %d, verifying.", maximumFixIterations);
-			// flint-disable-next-line performance/loopAwaits
-			const finalLintResults = await runConfig(configDefinition, host, {
+	const { changed } = await session.fixFiles(
+		(
+			await lintSessionWithCache(session, configDefinition.filePath, host, {
 				cacheLocation,
-				ignoreCache: true,
+				ignoreCache,
 				skipLanguageReports,
-			});
-			return { ...finalLintResults, changed };
-		}
-	}
+			})
+		).allFileResults,
+		{ requestedSuggestions, skipLanguageReports },
+	);
+	const lintResults = session.getResults();
+
+	await writeToCache(
+		host,
+		configDefinition.filePath,
+		lintResults,
+		cacheLocation,
+	);
+
+	return { ...lintResults, changed };
 }
