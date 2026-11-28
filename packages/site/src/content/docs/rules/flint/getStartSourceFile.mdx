@@ -1,0 +1,72 @@
+---
+description: "Requires passing `sourceFile` to `getStart()` for better performance."
+title: "getStartSourceFile"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="getStartSourceFile" />
+
+TypeScript AST nodes have a `getStart()` method that returns the position of the node's first token.
+When called without arguments, `getStart()` walks up the node's parents to find its source file before computing the position.
+Rules call `getStart()` often, and Flint rule visitors already receive the `sourceFile`, so passing it avoids that walk on every call.
+
+This rule reports `getStart()` calls on TypeScript nodes that don't pass an argument.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import type ts from "typescript";
+
+declare const node: ts.Node;
+
+node.getStart();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type ts from "typescript";
+
+declare const node: ts.Node;
+declare const sourceFile: ts.SourceFile;
+
+node.getStart(sourceFile);
+```
+
+```ts
+import { getTSNodeRange } from "@flint.fyi/typescript-language";
+import type ts from "typescript";
+
+declare const node: ts.Node;
+declare const sourceFile: ts.SourceFile;
+
+getTSNodeRange(node, sourceFile);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you call `getStart()` in code that has no access to the node's source file, such as a utility that only receives a node, passing the source file may require changing that utility's signature.
+You might prefer to disable this rule for those calls if the extra parent walk doesn't matter for your use case.
+
+## Further Reading
+
+- [TypeScript Compiler API: Using the Compiler API](https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="getStartSourceFile" />
