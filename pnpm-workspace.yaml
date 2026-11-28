@@ -153,7 +153,7 @@ catalogs:
     "@astrojs/check": 0.9.12
     "@astrojs/markdown-remark": 7.3.10
     "@astrojs/react": 7.1.9
-    "@astrojs/starlight": 0.43.1
+    "@astrojs/starlight": 0.43.2
     "@expressive-code/core": 0.44.4
     "@shikijs/colorized-brackets": 4.6.0
     "@konami-emoji-blast/astro": 0.3.0
@@ -172,8 +172,8 @@ catalogs:
     remark-add-twoslash: 0.0.1
     remark-custom-heading-id: 2.0.0
     sharp: 0.35.5
-    starlight-blog: 0.30.2
-    starlight-links-validator: 0.27.0
+    starlight-blog: 0.31.0
+    starlight-links-validator: 0.27.1
     starlight-package-managers: 0.13.1
     starlight-sidebar-topics: 0.9.0
     zod: 4.6.7
