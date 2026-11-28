@@ -1,6 +1,60 @@
 import { describe, expect, it } from "vitest";
 
-import { getFlintRuleId, getRuleForPluginSafe, ruleData } from "./index.ts";
+import { astro } from "@flint.fyi/astro";
+import { browser } from "@flint.fyi/browser";
+import { changesets } from "@flint.fyi/changesets";
+import type { AnyRule } from "@flint.fyi/core";
+import { css } from "@flint.fyi/css";
+import { json } from "@flint.fyi/json";
+import { jsx } from "@flint.fyi/jsx";
+import { md } from "@flint.fyi/md";
+import { next } from "@flint.fyi/next";
+import { node } from "@flint.fyi/node";
+import { nuxt } from "@flint.fyi/nuxt";
+import { packageJson } from "@flint.fyi/package-json";
+import { performance } from "@flint.fyi/performance";
+import { flint } from "@flint.fyi/plugin-flint";
+import { react } from "@flint.fyi/react";
+import { solid } from "@flint.fyi/solid";
+import { spelling } from "@flint.fyi/spelling";
+import { svelte } from "@flint.fyi/svelte";
+import { ts } from "@flint.fyi/ts";
+import { vitest } from "@flint.fyi/vitest";
+import { vue } from "@flint.fyi/vue";
+import { yaml } from "@flint.fyi/yaml";
+
+import { getFlintRuleId, ruleData } from "./index.ts";
+
+const rulesById = new Map<string, AnyRule>(
+	Object.entries({
+		astro,
+		browser,
+		changesets,
+		css,
+		flint,
+		json,
+		jsx,
+		md,
+		next,
+		node,
+		nuxt,
+		"package-json": packageJson,
+		performance,
+		react,
+		solid,
+		spelling,
+		svelte,
+		ts,
+		vitest,
+		vue,
+		yaml,
+	}).flatMap(([pluginId, plugin]) =>
+		[...plugin.rulesById].map(([ruleId, rule]) => [
+			getFlintRuleId(pluginId, ruleId),
+			rule,
+		]),
+	),
+);
 
 function isBasePreset(preset: string, presets: readonly string[]): boolean {
 	return (
@@ -33,6 +87,31 @@ describe("data.json", () => {
 		}
 	});
 
+	it("should include an entry for every rule", () => {
+		const ids = new Set(
+			ruleData.map(({ flint }) => getFlintRuleId(flint.plugin, flint.name)),
+		);
+
+		expect([...rulesById.keys()].filter((id) => !ids.has(id))).toEqual([]);
+	});
+
+	it("should mark exactly the rules that exist as implemented", () => {
+		const mismatches: string[] = [];
+
+		for (const { flint } of ruleData) {
+			const id = getFlintRuleId(flint.plugin, flint.name);
+			const exists = rulesById.has(id);
+
+			if (exists && flint.status !== "implemented") {
+				mismatches.push(`${id}: rule exists but is not marked implemented`);
+			} else if (!exists && flint.status === "implemented") {
+				mismatches.push(`${id}: marked implemented but no rule exists`);
+			}
+		}
+
+		expect(mismatches).toEqual([]);
+	});
+
 	it("should list each implemented rule's base preset", () => {
 		const mismatches: string[] = [];
 
@@ -41,7 +120,7 @@ describe("data.json", () => {
 				continue;
 			}
 
-			const rule = getRuleForPluginSafe(flint.plugin, flint.name);
+			const rule = rulesById.get(getFlintRuleId(flint.plugin, flint.name));
 			if (!rule) {
 				continue;
 			}

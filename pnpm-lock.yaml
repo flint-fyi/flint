@@ -1644,6 +1644,24 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
+      '@flint.fyi/next':
+        specifier: workspace:^
+        version: link:../next
+      '@flint.fyi/nuxt':
+        specifier: workspace:^
+        version: link:../nuxt
+      '@flint.fyi/react':
+        specifier: workspace:^
+        version: link:../react
+      '@flint.fyi/solid':
+        specifier: workspace:^
+        version: link:../solid
+      '@flint.fyi/svelte':
+        specifier: workspace:^
+        version: link:../svelte
+      '@flint.fyi/vue':
+        specifier: workspace:^
+        version: link:../vue
       '@next/eslint-plugin-next':
         specifier: catalog:comparisons
         version: 16.4.6(eslint@10.15.0)
