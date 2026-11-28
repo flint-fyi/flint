@@ -5,11 +5,26 @@ declare module "typescript" {
 	interface CompilerOptions {
 		configFile?: TsConfigSourceFile;
 		configFilePath?: string;
+		// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/types.ts#L7507-L7512
+		pathsBasePath?: string;
 	}
 
 	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/moduleNameResolver.ts#L2379-L2382
 	interface PackageJsonInfo {
 		packageDirectory: string;
+	}
+
+	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/types.ts#L4733-L4734
+	interface Program {
+		getResolvedModuleFromModuleSpecifier(
+			moduleSpecifier: StringLiteralLike,
+			sourceFile?: SourceFile,
+		): ResolvedModuleWithFailedLookupLocations | undefined;
+	}
+
+	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/types.ts#L8033-L8038
+	interface ResolvedModuleFull {
+		readonly originalPath?: string;
 	}
 
 	// https://github.com/microsoft/TypeScript/blob/v6.0.3/src/compiler/types.ts#L4390

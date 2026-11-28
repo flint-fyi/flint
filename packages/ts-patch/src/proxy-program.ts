@@ -18,6 +18,10 @@ globalTyped._flintCreateProgramProxies ??= new Set();
 globalTyped._flintExtraSupportedExtensions ??= new Set();
 /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
+export function getTSExtraSupportedExtensions(): ReadonlySet<string> {
+	return globalTyped._flintExtraSupportedExtensions;
+}
+
 export function setTSExtraSupportedExtensions(
 	extensions: string[],
 ): () => void {

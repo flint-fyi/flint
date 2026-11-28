@@ -10,6 +10,7 @@
 	"exclude": ["src/**/*.test.ts"],
 	"references": [
 		{ "path": "../core/tsconfig.src.json" },
+		{ "path": "../ts-patch" },
 		{ "path": "../utils" }
 	]
 }

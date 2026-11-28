@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@typescript-eslint/project-service": "catalog:prod",
 		"@typescript-eslint/tsconfig-utils": "catalog:prod",
