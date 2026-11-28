@@ -71,6 +71,15 @@ Both (link)[url] and !(image)[path] are wrong.
 [Flint](https://flint.fyi)
 `,
 		`
+[Flint](https://flint.fyi) is a linter.
+`,
+		`
+Updated dependencies [[\`3374e11\`](https://github.com/flint-fyi/flint/commit/3374e11)]:
+`,
+		`
+See [https://flint.fyi] for details.
+`,
+		`
 ![A beautiful sunset](sunset.png)
 `,
 		`

@@ -41,7 +41,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	},
 	setup(context) {
 		function checkNode(node: WithPosition<Heading | Paragraph>) {
-			for (let i = 0; i < node.children.length - 1; i += 1) {
+			for (let i = 1; i < node.children.length - 1; i += 1) {
 				const child = node.children[i];
 				if (child?.type !== "link") {
 					continue;
@@ -49,7 +49,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const previous = node.children[i - 1]!;
-				if (previous.type !== "text" || !previous.value.endsWith("[")) {
+				if (previous.type !== "text" || !/\([^)]+\)\[$/.test(previous.value)) {
 					continue;
 				}
 
