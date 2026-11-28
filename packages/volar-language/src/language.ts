@@ -19,7 +19,6 @@ import {
 	DirectivesCollector,
 	getColumnAndLineOfPosition,
 	isSuggestionForFiles,
-	runFileVisitorSubscriptions,
 	type CharacterReportRange,
 	type FileAboutData,
 	type FileReport,
@@ -36,6 +35,7 @@ import {
 	convertTypeScriptDiagnosticToLanguageReport,
 	createNodeVisitorsForFile,
 	extractDirectivesFromTypeScriptFile,
+	runNodeVisitorSubscriptions,
 	setVolarCreateFile,
 	throwUnknownLanguageExtension,
 	typescriptLanguage,
@@ -327,7 +327,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 
 				const sourceFileEnter = enter?.[SyntaxKind.SourceFile];
 				if (sourceFileEnter !== undefined) {
-					runFileVisitorSubscriptions(sourceFileEnter, sourceFile);
+					runNodeVisitorSubscriptions(sourceFileEnter, sourceFile);
 				}
 
 				// Visit only statements that have a mapping to the source code
@@ -365,7 +365,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 
 				const sourceFileExit = exit?.[SyntaxKind.SourceFile];
 				if (sourceFileExit !== undefined) {
-					runFileVisitorSubscriptions(sourceFileExit, sourceFile);
+					runNodeVisitorSubscriptions(sourceFileExit, sourceFile);
 				}
 			},
 			// TODO: cache

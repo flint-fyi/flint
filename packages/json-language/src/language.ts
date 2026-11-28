@@ -1,6 +1,7 @@
 import {
 	parse,
 	traverse,
+	type AnyNode,
 	type DocumentNode,
 	type Node,
 } from "@humanwhocodes/momoa";
@@ -12,7 +13,7 @@ import {
 	type Language,
 } from "@flint.fyi/core";
 
-import type { JsonNodeVisitors } from "./nodes.ts";
+import type { JsonNodesByName, JsonNodeVisitors } from "./nodes.ts";
 
 export interface JsonFileServices {
 	filePathAbsolute: string;
@@ -45,25 +46,22 @@ export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 			};
 		},
 		runFileVisitors: (file, fileVisitors) => {
-			const { enter, exit } = groupFileVisitors<Node, JsonFileServices>(
-				fileVisitors,
-			);
+			const { enter, exit } = groupFileVisitors<
+				JsonNodesByName,
+				JsonFileServices
+			>(fileVisitors);
 
 			traverse(file.services.root, {
 				...(enter && {
 					enter: (node: Node) => {
-						const entering = enter.get(node.type);
-						if (entering !== undefined) {
-							runFileVisitorSubscriptions(entering, node);
-						}
+						// momoa's traverse types nodes as its base Node, but only visits AnyNode members.
+						runFileVisitorSubscriptions(enter, node as AnyNode);
 					},
 				}),
 				...(exit && {
 					exit: (node: Node) => {
-						const exiting = exit.get(node.type);
-						if (exiting !== undefined) {
-							runFileVisitorSubscriptions(exiting, node);
-						}
+						// momoa's traverse types nodes as its base Node, but only visits AnyNode members.
+						runFileVisitorSubscriptions(exit, node as AnyNode);
 					},
 				}),
 			});

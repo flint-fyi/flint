@@ -1,6 +1,5 @@
 import type * as mdast from "mdast";
 import { markdownToMdast } from "satteri";
-import type { Node } from "unist";
 import { visit } from "unist-util-visit";
 
 import {
@@ -11,12 +10,18 @@ import {
 } from "@flint.fyi/core";
 
 import { parseDirectivesFromMarkdownFile } from "./directives/parseDirectivesFromMarkdownFile.ts";
-import type { MarkdownNodeVisitors, WithPosition } from "./nodes.ts";
+import type {
+	MarkdownNodesByName,
+	MarkdownNodeVisitors,
+	WithPosition,
+} from "./nodes.ts";
 
 export interface MarkdownFileServices {
 	root: WithPosition<mdast.Root>;
 	sourceText: string;
 }
+
+type MarkdownNode = MarkdownNodesByName[keyof MarkdownNodesByName];
 
 export const markdownLanguage: Language<
 	MarkdownNodeVisitors,
@@ -41,21 +46,22 @@ export const markdownLanguage: Language<
 		};
 	},
 	runFileVisitors: (file, fileVisitors) => {
-		const { enter, exit } = groupFileVisitors<Node, MarkdownFileServices>(
-			fileVisitors,
-		);
+		const { enter, exit } = groupFileVisitors<
+			MarkdownNodesByName,
+			MarkdownFileServices
+		>(fileVisitors);
 
 		visit(file.services.root, {
 			enter(node) {
-				const entering = enter?.get(node.type);
-				if (entering !== undefined) {
-					runFileVisitorSubscriptions(entering, node);
+				if (enter) {
+					// markdownToMdast sets positions with offsets on every node, as createFile assumes for the root.
+					runFileVisitorSubscriptions(enter, node as MarkdownNode);
 				}
 			},
 			exit(node) {
-				const exiting = exit?.get(node.type);
-				if (exiting !== undefined) {
-					runFileVisitorSubscriptions(exiting, node);
+				if (exit) {
+					// markdownToMdast sets positions with offsets on every node, as createFile assumes for the root.
+					runFileVisitorSubscriptions(exit, node as MarkdownNode);
 				}
 			},
 		});

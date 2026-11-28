@@ -39,7 +39,9 @@ export {
 	type FileVisitorSubscription,
 	type GroupedFileVisitors,
 	groupFileVisitors,
+	type NodesKeyedByType,
 	runFileVisitorSubscriptions,
+	type SubscriptionsByName,
 } from "./languages/groupFileVisitors.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";

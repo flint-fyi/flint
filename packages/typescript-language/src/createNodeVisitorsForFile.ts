@@ -2,11 +2,13 @@ import type { Node, SyntaxKind } from "typescript";
 
 import {
 	groupFileVisitors,
-	runFileVisitorSubscriptions,
 	type FileVisitors,
 	type FileVisitorSubscription,
+	type RuleVisitor,
+	type SubscriptionsByName,
 } from "@flint.fyi/core";
 
+import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 import type { TypeScriptFileServices } from "./types/services.ts";
 
@@ -23,9 +25,24 @@ export interface NodeVisitorsForFile {
  * For each node, the visitor subscriptions that will run when that node is visited.
  */
 export type NodeVisitorSubscriptions = FileVisitorSubscription<
-	Node,
+	never,
 	TypeScriptFileServices
 >[];
+
+/**
+ * Each entry's `kind` must be the SyntaxKind of the same name.
+ */
+type NodesKeyedByKind<NodesByName> = {
+	[Name in keyof NodesByName]: Name extends keyof typeof SyntaxKind
+		? { kind: (typeof SyntaxKind)[Name] }
+		: never;
+};
+
+/**
+ * Fails to compile if a node map has an entry whose `kind` doesn't match its name.
+ */
+type CheckedNodesByKind<NodesByName extends NodesKeyedByKind<NodesByName>> =
+	NodesByName;
 
 /**
  * For each node kind that has visitors registered, its associated subscriptions.
@@ -38,9 +55,15 @@ type NodeVisitorSubscriptionsByKind = Partial<
  * Given all rule visitors for a file, collects them into a single {@link NodeVisitorsForFile}.
  */
 export function createNodeVisitorsForFile(
-	fileVisitors: readonly FileVisitors<object, TypeScriptFileServices>[],
+	fileVisitors: readonly FileVisitors<
+		TypeScriptNodeVisitors,
+		TypeScriptFileServices
+	>[],
 ): NodeVisitorsForFile | undefined {
-	const grouped = groupFileVisitors<Node, TypeScriptFileServices>(fileVisitors);
+	const grouped = groupFileVisitors<
+		CheckedNodesByKind<TypeScriptNodesByName>,
+		TypeScriptFileServices
+	>(fileVisitors);
 	const enter = grouped.enter && createSubscriptionsByKind(grouped.enter);
 	const exit = grouped.exit && createSubscriptionsByKind(grouped.exit);
 
@@ -49,20 +72,20 @@ export function createNodeVisitorsForFile(
 			? (node: Node) => {
 					const entering = enter[node.kind];
 					if (entering !== undefined) {
-						runFileVisitorSubscriptions(entering, node);
+						runNodeVisitorSubscriptions(entering, node);
 					}
 
 					node.forEachChild(visit);
 
 					const exiting = exit[node.kind];
 					if (exiting !== undefined) {
-						runFileVisitorSubscriptions(exiting, node);
+						runNodeVisitorSubscriptions(exiting, node);
 					}
 				}
 			: (node: Node) => {
 					const entering = enter[node.kind];
 					if (entering !== undefined) {
-						runFileVisitorSubscriptions(entering, node);
+						runNodeVisitorSubscriptions(entering, node);
 					}
 
 					node.forEachChild(visit);
@@ -77,7 +100,7 @@ export function createNodeVisitorsForFile(
 
 			const exiting = exit[node.kind];
 			if (exiting !== undefined) {
-				runFileVisitorSubscriptions(exiting, node);
+				runNodeVisitorSubscriptions(exiting, node);
 			}
 		};
 
@@ -87,17 +110,29 @@ export function createNodeVisitorsForFile(
 	return undefined;
 }
 
+/**
+ * Runs subscriptions that were registered under `node.kind`'s name.
+ */
+export function runNodeVisitorSubscriptions(
+	subscriptions: NodeVisitorSubscriptions,
+	node: Node,
+): void {
+	// Subscriptions are looked up by node.kind, and CheckedNodesByKind ensures each name's AST type has that kind,
+	// but typescript's Node isn't a union that TypeScript can narrow by kind.
+	for (const { services, visitor } of subscriptions) {
+		(visitor as RuleVisitor<Node, TypeScriptFileServices>)(node, services);
+	}
+}
+
 function createSubscriptionsByKind(
-	group: Map<string, NodeVisitorSubscriptions>,
+	group: SubscriptionsByName<TypeScriptNodesByName, TypeScriptFileServices>,
 ): NodeVisitorSubscriptionsByKind {
 	const byKind = Object.create(null) as NodeVisitorSubscriptionsByKind;
 
-	for (const [name, subscriptions] of group) {
-		const kind = NodeSyntaxKinds[name as keyof typeof NodeSyntaxKinds];
-
-		if (typeof kind === "number" && NodeSyntaxKinds[kind] === name) {
-			byKind[kind] = subscriptions;
-		}
+	for (const [name, subscriptions] of group.subscriptions) {
+		// Names come from visitor keys typed as TypeScriptNodesByName keys, with any :exit suffix removed.
+		byKind[NodeSyntaxKinds[name as keyof TypeScriptNodesByName]] =
+			subscriptions;
 	}
 
 	return byKind;
