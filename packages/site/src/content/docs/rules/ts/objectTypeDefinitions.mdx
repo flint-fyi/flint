@@ -1,0 +1,79 @@
+---
+description: "Prefer interface declarations over type aliases for object types."
+title: "objectTypeDefinitions"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectTypeDefinitions" />
+
+TypeScript allows describing an object's shape with either an `interface` declaration or a `type` alias of an object literal type.
+Interfaces support declaration merging, can be extended with the `extends` keyword, and can be implemented by classes.
+TypeScript's error messages and hover information also tend to show an interface's name directly, where a type alias may be expanded into its full object type.
+
+This rule reports `type` aliases whose type is an object literal type, such as `type Box = { value: string }`.
+Type aliases of other types, such as unions, intersections, and mapped types, are not reported because they can't be written as interfaces.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+type Box = { value: string };
+```
+
+```ts
+type Point = {
+	x: number;
+	y: number;
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+interface Box {
+	value: string;
+}
+```
+
+```ts
+interface Point {
+	x: number;
+	y: number;
+}
+```
+
+```ts
+type Status = "error" | "success";
+```
+
+```ts
+type Named<T> = T & { name: string };
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project has a convention of declaring object types with `type` aliases, such as to prevent declaration merging from adding properties to a type in other files, this rule will report each of those declarations.
+You might prefer to disable this rule if converting them is not worth the churn in a large existing codebase.
+
+## Further Reading
+
+- [TypeScript Handbook: Differences Between Type Aliases and Interfaces](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces)
+- [TypeScript Handbook: Declaration Merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectTypeDefinitions" />
