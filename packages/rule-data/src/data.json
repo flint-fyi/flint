@@ -10305,6 +10305,18 @@
 	},
 	{
 		"flint": {
+			"name": "childProcessTimeouts",
+			"plugin": "node"
+		},
+		"eslint": [
+			{
+				"name": "n/require-child-process-timeout",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/require-child-process-timeout.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "consoleSpaces",
 			"plugin": "node",
 			"preset": "stylistic",
