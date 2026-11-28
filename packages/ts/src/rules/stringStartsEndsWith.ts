@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports regex patterns that can be replaced with `endsWith` or `startsWith`.",
 		id: "stringStartsEndsWith",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferEndsWith: {

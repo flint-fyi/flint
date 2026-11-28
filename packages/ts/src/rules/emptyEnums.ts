@@ -6,7 +6,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty enum declarations with no members.",
 		id: "emptyEnums",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyEnum: {

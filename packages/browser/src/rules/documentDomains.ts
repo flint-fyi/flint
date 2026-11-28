@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports uses of `document.domain` which relaxes same-origin protections.",
 		id: "documentDomains",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noDomain: {

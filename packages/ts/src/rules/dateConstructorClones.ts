@@ -18,7 +18,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer passing a `Date` directly to the `Date` constructor when cloning, rather than calling `getTime()`.",
 		id: "dateConstructorClones",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryGetTime: {

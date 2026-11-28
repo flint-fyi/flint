@@ -19,7 +19,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports cases for invalid code that isn't formatted across lines.",
 		id: "invalidCodeLines",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		singleLineTest: {

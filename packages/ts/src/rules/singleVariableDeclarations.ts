@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Enforces one variable per declaration statement.",
 		id: "singleVariableDeclarations",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		singleVariable: {

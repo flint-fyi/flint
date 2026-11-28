@@ -6,7 +6,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports duplicate definition identifiers (case-insensitive).",
 		id: "definitionDuplicates",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicateDefinition: {

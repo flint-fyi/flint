@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Test cases with only a code property can use string shorthand syntax instead of object literal syntax.",
 		id: "testShorthands",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		testShorthands: {

@@ -103,7 +103,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports single-character alternatives in string disjunctions.",
 		id: "regexUnnecessaryDisjunctions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessary: {

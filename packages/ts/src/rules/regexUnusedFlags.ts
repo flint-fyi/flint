@@ -96,7 +96,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports regular expression flags that have no effect on the pattern.",
 		id: "regexUnusedFlags",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unusedDotAll: {

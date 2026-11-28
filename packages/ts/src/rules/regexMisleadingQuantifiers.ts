@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports quantifiers whose minimum implies they must match but whose element can match empty.",
 		id: "regexMisleadingQuantifiers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		confusing: {

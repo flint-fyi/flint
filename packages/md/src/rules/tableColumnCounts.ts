@@ -7,7 +7,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 		description:
 			"Reports table rows with column counts that don't match the header.",
 		id: "tableColumnCounts",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		tooManyCells: {

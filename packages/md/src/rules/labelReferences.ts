@@ -10,7 +10,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports missing label references.",
 		id: "labelReferences",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingLabel: {

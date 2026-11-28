@@ -126,7 +126,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports assertions inside optional quantifiers that have no effect.",
 		id: "regexUnnecessaryOptionalAssertions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryOptionalAssertion: {

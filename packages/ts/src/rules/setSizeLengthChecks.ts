@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer `Set.size` over spreading into an array and accessing `.length`.",
 		id: "setSizeLengthChecks",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferSize: {

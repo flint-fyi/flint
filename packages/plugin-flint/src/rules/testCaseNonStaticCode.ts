@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Test case code should be a static string literal.",
 		id: "testCaseNonStaticCode",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		nonStaticTestCaseCode: {

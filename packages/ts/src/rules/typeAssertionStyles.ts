@@ -20,7 +20,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports angle-bracket type assertions.",
 		id: "typeAssertionStyles",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferAs: {

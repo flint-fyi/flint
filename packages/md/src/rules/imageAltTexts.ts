@@ -11,7 +11,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports images without alternative text.",
 		id: "imageAltTexts",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingAlt: {

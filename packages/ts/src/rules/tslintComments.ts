@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports TSLint disable/enable comments.",
 		id: "tslintComments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		tslintComment: {

@@ -52,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports lazy quantifiers at the end of regular expressions.",
 		id: "regexEmptyLazyQuantifiers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		uselessElement: {

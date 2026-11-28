@@ -20,7 +20,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports string case method calls compared against literals with mismatched casing.",
 		id: "stringCaseMismatches",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		mismatch: {

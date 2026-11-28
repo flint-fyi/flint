@@ -21,7 +21,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary operands in regular expression character class set operations.",
 		id: "regexUnnecessarySetOperands",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		intersectionDisjoint: {

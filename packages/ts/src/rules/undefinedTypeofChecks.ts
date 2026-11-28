@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports typeof undefined checks.",
 		id: "undefinedTypeofChecks",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		directComparison: {

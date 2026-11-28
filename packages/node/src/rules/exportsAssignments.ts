@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prevent assignment to the `exports` variable in CommonJS modules.",
 		id: "exportsAssignments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noExportsAssign: {

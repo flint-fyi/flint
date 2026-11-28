@@ -6,7 +6,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports links with empty URLs or only empty fragments.",
 		id: "linkContents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyLink: {

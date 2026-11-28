@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports imports that use inline type qualifiers on all specifiers when a top-level type qualifier should be used instead.",
 		id: "importTypeSideEffects",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		useTopLevelQualifier: {

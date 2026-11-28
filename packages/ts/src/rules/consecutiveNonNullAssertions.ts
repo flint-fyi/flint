@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports unnecessary extra non-null assertions.",
 		id: "consecutiveNonNullAssertions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		consecutiveNonNullAssertion: {

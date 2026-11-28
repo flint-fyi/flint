@@ -152,7 +152,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports non-capturing groups that can be removed without changing the meaning of the regex.",
 		id: "regexUnnecessaryNonCapturingGroups",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessaryGroup: {

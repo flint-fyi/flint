@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer modern Buffer allocation methods over the deprecated Buffer constructor.",
 		id: "bufferAllocators",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		useBufferAllocators: {

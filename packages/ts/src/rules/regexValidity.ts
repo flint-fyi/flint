@@ -17,7 +17,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports invalid regular expressions.",
 		id: "regexValidity",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		conflictingFlags: {

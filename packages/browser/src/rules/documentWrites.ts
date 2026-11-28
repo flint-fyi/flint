@@ -15,7 +15,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports uses of `document.write()` and `document.writeln()` which block HTML parsing.",
 		id: "documentWrites",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noWrite: {

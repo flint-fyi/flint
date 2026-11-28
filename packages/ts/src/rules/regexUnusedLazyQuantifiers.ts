@@ -16,7 +16,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports lazy quantifiers that have no effect because the quantifier is constant.",
 		id: "regexUnusedLazyQuantifiers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		uselessLazy: {

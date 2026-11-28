@@ -16,7 +16,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports quantifiers with a maximum of zero, which are useless.",
 		id: "regexZeroQuantifiers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		uselessZero: {

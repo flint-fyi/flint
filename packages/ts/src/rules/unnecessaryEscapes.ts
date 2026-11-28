@@ -127,7 +127,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary escape sequences in string literals and template strings.",
 		id: "unnecessaryEscapes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessary: {

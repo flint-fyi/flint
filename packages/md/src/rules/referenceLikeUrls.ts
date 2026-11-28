@@ -12,7 +12,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 		description:
 			"Reports resource links/images with URLs that match definition identifiers.",
 		id: "referenceLikeUrls",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		imageReferenceLike: {

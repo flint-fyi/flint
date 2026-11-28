@@ -9,7 +9,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 		description:
 			"Reports empty YAML documents that contain only document markers.",
 		id: "emptyDocuments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyDocument: {

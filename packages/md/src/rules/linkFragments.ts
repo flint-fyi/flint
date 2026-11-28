@@ -9,7 +9,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports link fragments that don't exist in the document.",
 		id: "linkFragments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingFragment: {

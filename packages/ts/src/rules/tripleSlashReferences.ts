@@ -6,7 +6,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports triple-slash reference directives.",
 		id: "tripleSlashReferences",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noTripleSlashReference: {

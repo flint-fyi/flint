@@ -8,7 +8,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports invalid label references with whitespace.",
 		id: "labelReferenceValidity",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidWhitespace: {

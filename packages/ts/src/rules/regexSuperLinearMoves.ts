@@ -162,7 +162,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports quantifiers that can cause quadratic regex matching time.",
 		id: "regexSuperLinearMoves",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		superLinear: {

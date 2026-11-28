@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer `Response.json()` over `new Response(JSON.stringify(...))` for JSON responses.",
 		id: "responseJsonMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferResponseJson: {

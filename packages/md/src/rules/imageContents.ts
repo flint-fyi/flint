@@ -6,7 +6,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports images with empty URLs or only empty fragments.",
 		id: "imageContents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyImage: {

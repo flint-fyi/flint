@@ -71,7 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports problematic TypeScript comment directives or requires descriptions after directives.",
 		id: "tsComments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		descriptionNotMatchPattern: {

@@ -15,7 +15,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports uses of the global alert/confirm/prompt dialog APIs.",
 		id: "alerts",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noAlert: {

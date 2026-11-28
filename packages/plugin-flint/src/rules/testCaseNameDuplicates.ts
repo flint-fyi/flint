@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports test cases that have the same name as a previous test case.",
 		id: "testCaseNameDuplicates",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicateTestName: {
