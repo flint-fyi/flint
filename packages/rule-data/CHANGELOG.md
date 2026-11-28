@@ -1,5 +1,19 @@
 # @flint.fyi/rule-data
 
+## 0.5.9
+
+### Patch Changes
+
+- [#4100](https://github.com/flint-fyi/flint/pull/4100) [`2cba9a1`](https://github.com/flint-fyi/flint/commit/2cba9a1ea5e185fd371cfc09e278f10bed8150c6) - Add the missing `svelte/no-at-const-tags`, `svelte/no-bind-value-on-checkable-inputs`, `svelte/no-conflicting-module-names`, `svelte/no-nested-style-tag`, `svelte/prefer-attribute-interpolation` and `svelte/prefer-derived-over-derived-by` rule mappings.
+
+- [#4092](https://github.com/flint-fyi/flint/pull/4092) [`0abe1e2`](https://github.com/flint-fyi/flint/commit/0abe1e23df5a971b622cfa82b28223b2b34456d9) - Add the missing `vitest/prefer-mock-return-shorthand`, `vitest/require-test-timeout` and `vitest/unbound-method` rule mappings.
+
+- [#3964](https://github.com/flint-fyi/flint/pull/3964) [`624eab5`](https://github.com/flint-fyi/flint/commit/624eab5d49e0c175bdaf50e481c8deec4c78bb52) - Add the missing Biome rule mappings for the Biome rules added since the last rule data sync.
+
+- [#4073](https://github.com/flint-fyi/flint/pull/4073) [`9d59f2c`](https://github.com/flint-fyi/flint/commit/9d59f2cb8e4beaf3a18edcc4e8bdcfaa3a8aa933) - Add missing Biome rule mappings for rules added since the last rule data sync.
+
+- [#4098](https://github.com/flint-fyi/flint/pull/4098) [`5fc2831`](https://github.com/flint-fyi/flint/commit/5fc283173bf6c0cf3bd708d62d0595d645edc047) - Add missing Oxlint `typescript/no-unsafe-class-instance-assignment` rule mapping to rule data.
+
 ## 0.5.8
 
 ### Patch Changes

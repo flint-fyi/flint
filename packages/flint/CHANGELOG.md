@@ -1,5 +1,19 @@
 # flint
 
+## 0.20.0
+
+### Minor Changes
+
+- [#3519](https://github.com/flint-fyi/flint/pull/3519) [`d48d77c`](https://github.com/flint-fyi/flint/commit/d48d77c525852734b3d828f065ea5dfbf253823d) - Use Formatly to detect the project's formatter instead of requiring Prettier as a peer dependency.
+  Formatting is skipped when no formatter is detected.
+
+### Patch Changes
+
+- [#4087](https://github.com/flint-fyi/flint/pull/4087) [`9a5714a`](https://github.com/flint-fyi/flint/commit/9a5714a9d87004a0814076a77bc9d101ce00ee25) - Release `flint` whenever one of its internal `@flint.fyi/*` dependencies is released, so it no longer stays pinned to older versions such as `@flint.fyi/core@0.28.0`.
+- Updated dependencies [[`08a6ce8`](https://github.com/flint-fyi/flint/commit/08a6ce87c9281a87bbc3e064afc6c9f7b82ee13f), [`d48d77c`](https://github.com/flint-fyi/flint/commit/d48d77c525852734b3d828f065ea5dfbf253823d), [`c7a13ba`](https://github.com/flint-fyi/flint/commit/c7a13ba460eaec21eee1f1d5f3c0484a572fc798)]:
+  - @flint.fyi/core@0.30.4
+  - @flint.fyi/cli@0.24.0
+
 ## 0.19.2
 
 ### Patch Changes
