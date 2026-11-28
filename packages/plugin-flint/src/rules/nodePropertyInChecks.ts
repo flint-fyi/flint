@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Disallows using the `in` operator to check properties on TypeScript nodes.",
 		id: "nodePropertyInChecks",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		nodePropertyInChecks: {

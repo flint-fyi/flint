@@ -47,7 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports `matchAll()` and `replaceAll()` calls with regex arguments missing the global flag.",
 		id: "regexAllGlobalFlags",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingGlobalFlag: {

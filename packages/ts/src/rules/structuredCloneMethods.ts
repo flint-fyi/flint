@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports JSON.parse(JSON.stringify()) patterns that can use structuredClone.",
 		id: "structuredCloneMethods",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferStructuredClone: {

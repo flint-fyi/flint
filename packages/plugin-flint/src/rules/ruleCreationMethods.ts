@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports plugin rules created directly with language instead of through RuleCreator.",
 		id: "ruleCreationMethods",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		ruleCreationMethods: {

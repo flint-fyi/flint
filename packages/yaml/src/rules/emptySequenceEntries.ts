@@ -6,7 +6,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Reports empty sequence entries.",
 		id: "emptySequenceEntries",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyEntry: {

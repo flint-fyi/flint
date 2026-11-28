@@ -16,7 +16,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports quantifiers that match exactly once, making them unnecessary.",
 		id: "regexUnusedQuantifiers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		uselessQuantifier: {

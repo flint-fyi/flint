@@ -159,7 +159,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports backreferences that may reference a capturing group that was not matched.",
 		id: "regexUnnecessaryReferentialBackreferences",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		potentiallyUselessBackref: {

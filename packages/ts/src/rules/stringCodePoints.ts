@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports usage of charCodeAt and fromCharCode instead of their codePoint equivalents.",
 		id: "stringCodePoints",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferCodePointAt: {

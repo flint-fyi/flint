@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports capturing groups in regular expressions that are never referenced.",
 		id: "regexUnusedCapturingGroups",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unusedCapture: {

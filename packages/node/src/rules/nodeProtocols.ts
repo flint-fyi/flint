@@ -72,7 +72,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer the `node:` protocol prefix for Node.js built-in modules for clarity and consistency.",
 		id: "nodeProtocols",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferNodeProtocol: {

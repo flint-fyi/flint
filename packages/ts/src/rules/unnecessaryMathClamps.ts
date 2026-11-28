@@ -68,7 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary Math.min and Math.max calls with constant arguments or incorrect clamping patterns.",
 		id: "unnecessaryMathClamps",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		constantArguments: {

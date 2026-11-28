@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports `context.report()` calls missing data for message placeholders.",
 		id: "missingPlaceholders",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingPlaceholders: {

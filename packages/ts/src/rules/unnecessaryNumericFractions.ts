@@ -10,7 +10,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports numeric literals with unnecessary zero fractions or dangling dots.",
 		id: "unnecessaryNumericFractions",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		danglingDot: {

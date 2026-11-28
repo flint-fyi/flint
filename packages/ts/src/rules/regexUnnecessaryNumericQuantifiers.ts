@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports numeric quantifiers like '{n,n}' that can be simplified to '{n}'.",
 		id: "regexUnnecessaryNumericQuantifiers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryNumericQuantifier: {

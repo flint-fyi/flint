@@ -17,7 +17,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using the Function constructor to create functions from strings.",
 		id: "functionNewCalls",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noFunctionConstructor: {

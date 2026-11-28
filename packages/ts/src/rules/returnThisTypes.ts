@@ -24,7 +24,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Enforce that `this` is used when only `this` type is returned.",
 		id: "returnThisTypes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferThis: {

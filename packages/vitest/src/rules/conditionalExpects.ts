@@ -24,7 +24,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Enforces that `expect` statements aren't conditionally executed.",
 		id: "conditionalExpects",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noConditionalExpect: {

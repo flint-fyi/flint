@@ -39,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports unnecessary boolean casts.",
 		id: "unnecessaryBooleanCasts",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessary: {

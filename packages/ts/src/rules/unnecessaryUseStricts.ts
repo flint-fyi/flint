@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			'Reports unnecessary "use strict" directives in ES modules and classes.',
 		id: "unnecessaryUseStricts",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryUseStrict: {

@@ -106,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary array length checks before `.some()` or `.every()` calls.",
 		id: "arrayUnnecessaryLengthChecks",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryLengthCheckEvery: {

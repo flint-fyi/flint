@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Disallow inline function expressions in removeEventListener calls.",
 		id: "removeEventListenerExpressions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidRemoveEventListener: {

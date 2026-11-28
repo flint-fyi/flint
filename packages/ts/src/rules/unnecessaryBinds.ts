@@ -83,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports unnecessary `.bind()` calls.",
 		id: "unnecessaryBinds",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		arrowBind: {

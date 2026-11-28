@@ -59,6 +59,16 @@ const config: Config = defineConfig({
 				ts.rules({
 					// Pending https://github.com/flint-fyi/flint/issues/2165
 					objectShorthand: false,
+					// This repository does not yet avoid reassigning parameters.
+					parameterReassignments: false,
+					// Only reports regexes run on short strings such as comments and regex sources.
+					regexSuperLinearMoves: false,
+					// These report false positives on this repository's own code.
+					regexUnnecessaryAssertions: false,
+					regexUnusedCapturingGroups: false,
+					tripleSlashReferenceValidity: false,
+					unnecessaryBooleanCasts: false,
+					unnecessaryEscapes: false,
 				}),
 			],
 		},

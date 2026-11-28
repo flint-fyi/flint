@@ -224,7 +224,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports trivially nested assertions in regular expressions that can be simplified.",
 		id: "regexUnnecessaryNestedAssertions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryNesting: {

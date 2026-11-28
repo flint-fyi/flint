@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports usage of `substring` instead of slice for string operations.",
 		id: "stringSliceMethods",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferSliceOverSubstring: {

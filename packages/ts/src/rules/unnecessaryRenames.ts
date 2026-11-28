@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Renames that don't change the identifier name are unnecessary.",
 		id: "unnecessaryRenames",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessaryRename: {

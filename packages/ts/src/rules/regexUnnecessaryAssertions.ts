@@ -306,7 +306,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports assertions in regular expressions that always reject.",
 		id: "regexUnnecessaryAssertions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		endAnchor: {

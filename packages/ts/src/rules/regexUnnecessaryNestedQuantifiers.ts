@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports trivially nested quantifiers in regular expressions that can be simplified.",
 		id: "regexUnnecessaryNestedQuantifiers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryNestedQuantifiers: {

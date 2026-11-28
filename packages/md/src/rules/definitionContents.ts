@@ -6,7 +6,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports definitions with empty URLs or only empty fragments.",
 		id: "definitionContents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyDefinition: {

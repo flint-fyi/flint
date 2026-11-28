@@ -19,7 +19,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary nested lookaround assertions in regular expressions.",
 		id: "regexUnnecessaryLookaroundAssertions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		lookahead: {

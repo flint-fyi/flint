@@ -103,7 +103,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports backreferences in regular expressions that will always match empty or fail.",
 		id: "regexUnnecessaryBackreferences",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		backward: {

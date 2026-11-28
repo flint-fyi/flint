@@ -73,7 +73,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports inconsistent Unicode property names in regular expressions.",
 		id: "regexUnicodeProperties",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferLongScript: {

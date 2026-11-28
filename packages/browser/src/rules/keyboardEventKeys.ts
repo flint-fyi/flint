@@ -18,7 +18,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer KeyboardEvent.key over deprecated properties like keyCode, charCode, and which.",
 		id: "keyboardEventKeys",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferKey: {

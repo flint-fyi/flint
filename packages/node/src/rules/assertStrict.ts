@@ -28,7 +28,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer strict assertion mode from Node.js for better error messages and behavior.",
 		id: "assertStrict",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferStrictAssert: {

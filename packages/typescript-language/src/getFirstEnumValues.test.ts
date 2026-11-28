@@ -4,6 +4,7 @@ import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 
 describe("getFirstEnumValues", () => {
 	it("returns an empty object when given an empty enum", () => {
+		// flint-disable-next-line ts/emptyEnums
 		enum Empty {}
 
 		const result = getFirstEnumValues(Empty);

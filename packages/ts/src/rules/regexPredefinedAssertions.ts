@@ -103,7 +103,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports regex lookarounds that can be replaced with predefined assertions.",
 		id: "regexPredefinedAssertions",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferPredefinedAssertion: {

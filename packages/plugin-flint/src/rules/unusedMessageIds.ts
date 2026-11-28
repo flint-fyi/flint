@@ -69,7 +69,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports message IDs defined in the messages object that are never used in recognized report calls.",
 		id: "unusedMessageIds",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unusedMessageIds: {

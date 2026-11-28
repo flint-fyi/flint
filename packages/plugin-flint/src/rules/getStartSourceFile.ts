@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Requires passing `sourceFile` to `getStart()` for better performance.",
 		id: "getStartSourceFile",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingSourceFile: {

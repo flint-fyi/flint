@@ -6,7 +6,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Reports empty mapping values.",
 		id: "emptyMappingValues",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyValue: {

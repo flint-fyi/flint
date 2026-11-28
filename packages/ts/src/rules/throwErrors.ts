@@ -52,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports throwing values that are not `Error` objects.",
 		id: "throwErrors",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		throwError: {

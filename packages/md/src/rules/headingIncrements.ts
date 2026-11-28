@@ -6,7 +6,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports heading levels incrementing by more than one.",
 		id: "headingIncrements",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		levelSkip: {

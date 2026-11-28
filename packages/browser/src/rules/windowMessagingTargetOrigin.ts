@@ -23,7 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Requires specifying the targetOrigin argument when calling window.postMessage().",
 		id: "windowMessagingTargetOrigin",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingTargetOrigin: {

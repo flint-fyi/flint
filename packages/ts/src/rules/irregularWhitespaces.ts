@@ -44,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports irregular whitespace characters that can cause issues with code parsing and display.",
 		id: "irregularWhitespaces",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		irregularWhitespace: {

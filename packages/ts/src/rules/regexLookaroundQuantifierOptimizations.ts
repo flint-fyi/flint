@@ -74,7 +74,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports non-constant quantifiers in lookaround assertions that could be simplified.",
 		id: "regexLookaroundQuantifierOptimizations",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		remove: {
