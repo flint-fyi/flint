@@ -71,6 +71,9 @@ Both (link)[url] and !(image)[path] are wrong.
 [Flint](https://flint.fyi)
 `,
 		`
+[Flint](https://flint.fyi) is a linter.
+`,
+		`
 ![A beautiful sunset](sunset.png)
 `,
 		`
