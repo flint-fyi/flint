@@ -1,4 +1,4 @@
-export { getRuleForPlugin, getRuleForPluginSafe } from "./getRuleForPlugin.ts";
+export { getRuleAbout, getRuleAboutSafe } from "./getRuleAbout.ts";
 export { getFlintRuleId, ruleData } from "./ruleData.ts";
 export {
 	type FlintRuleReference,

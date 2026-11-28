@@ -1,7 +1,7 @@
 ---
 import markdownIt from "markdown-it";
 
-import { getRuleForPlugin } from "@flint.fyi/rule-data";
+import { getRuleAbout } from "@flint.fyi/rule-data";
 
 interface Props {
 	plugin: string;
@@ -9,16 +9,16 @@ interface Props {
 }
 
 const renderer = markdownIt();
-const rule = getRuleForPlugin(Astro.props.plugin, Astro.props.rule);
+const about = getRuleAbout(Astro.props.plugin, Astro.props.rule);
 ---
 
 <blockquote>
-	<Fragment set:html={renderer.render(rule.about.description)} />
+	<Fragment set:html={renderer.render(about.description)} />
 </blockquote>
 
 <blockquote>
 	✅ This rule is included in the {Astro.props.plugin}{" "}
-	{rule.about.presets?.map((preset, i) => (
+	{about.presets?.map((preset, i) => (
 		<>
 			{i !== 0 && " and "}
 			<a href={`/rules/${Astro.props.plugin}/#${preset}`}>
@@ -26,7 +26,7 @@ const rule = getRuleForPlugin(Astro.props.plugin, Astro.props.rule);
 			</a>
 		</>
 	))}{" "}
-	preset{rule.about.presets?.length ? "s" : ""}.
+	preset{about.presets?.length ? "s" : ""}.
 </blockquote>
 
 <style>

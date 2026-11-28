@@ -1,7 +1,7 @@
 ---
 import markdownIt from "markdown-it";
 
-import { getRuleForPlugin } from "@flint.fyi/rule-data";
+import { getRuleAbout } from "@flint.fyi/rule-data";
 
 const renderer = markdownIt();
 
@@ -15,7 +15,7 @@ const ruleIds = [
 ];
 
 const rules = ruleIds.map((ruleId) => {
-	const { about } = getRuleForPlugin("ts", ruleId);
+	const about = getRuleAbout("ts", ruleId);
 
 	return {
 		description: renderer.renderInline(about.description),

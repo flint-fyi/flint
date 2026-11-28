@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { ReactElement } from "react";
 
 import {
-	getRuleForPluginSafe,
+	getRuleAboutSafe,
 	ruleData,
 	type FlintRuleReference,
 	type RuleDetails,
@@ -136,8 +136,7 @@ function renderFlintPreset(flint: FlintRuleReference) {
 }
 
 function renderFlintRuleDescription(flint: FlintRuleReference) {
-	const description = getRuleForPluginSafe(flint.plugin, flint.name)?.about
-		.description;
+	const description = getRuleAboutSafe(flint.plugin, flint.name)?.description;
 
 	return description ? <InlineMarkdown markdown={description} /> : null;
 }
