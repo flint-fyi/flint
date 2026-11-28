@@ -3,6 +3,7 @@ import { styleText } from "node:util";
 import { formatReport, type FileReport } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
+import { formatUrl } from "../../formatUrl.ts";
 import { ColorCodes, indenter } from "./constants.ts";
 import { formatCode } from "./formatCode.ts";
 import { formatSuggestion } from "./formatSuggestion.ts";
@@ -81,8 +82,4 @@ export async function* createDetailedReport(
 			`→ ${formatUrl(report.about.url, report.about.url.replace(/^https:\/\//, ""))}`,
 		),
 	);
-}
-
-function formatUrl(url: string, text: string) {
-	return `\u{1B}]8;;${url}\u{7}${text}\u{1B}]8;;\u{7}`;
 }
