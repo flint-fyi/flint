@@ -5976,20 +5976,6 @@
 	},
 	{
 		"flint": {
-			"name": "octalLiterals",
-			"plugin": "json",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "jsonc/no-octal-escape",
-				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal-escape.html"
-			}
-		],
-		"notes": "Generally handled by parsers."
-	},
-	{
-		"flint": {
 			"name": "octalNumericLiterals",
 			"plugin": "json",
 			"status": "skipped"
@@ -6659,18 +6645,6 @@
 	},
 	{
 		"flint": {
-			"name": "buttonTypePresence",
-			"plugin": "jsx"
-		},
-		"eslint": [
-			{
-				"name": "@eslint-react/dom-no-missing-button-type",
-				"url": "https://eslint-react.xyz/docs/rules/dom-no-missing-button-type"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "buttonTypes",
 			"plugin": "jsx",
 			"preset": "logical",
@@ -6692,6 +6666,10 @@
 			{
 				"name": "react/button-has-type",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/button-has-type.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-missing-button-type",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-missing-button-type"
 			}
 		],
 		"oxlint": [
@@ -7059,18 +7037,6 @@
 	},
 	{
 		"flint": {
-			"name": "dollarLeakage",
-			"plugin": "jsx"
-		},
-		"eslint": [
-			{
-				"name": "@eslint-react/jsx-no-leaked-dollar",
-				"url": "https://eslint-react.xyz/docs/rules/jsx-no-leaked-dollar"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "dollarLeaks",
 			"plugin": "jsx",
 			"preset": "logical"
@@ -7079,6 +7045,12 @@
 			{
 				"name": "noJsxLeakedDollar",
 				"url": "https://biomejs.dev/linter/rules/no-jsx-leaked-dollar/javascript/"
+			}
+		],
+		"eslint": [
+			{
+				"name": "@eslint-react/jsx-no-leaked-dollar",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-leaked-dollar"
 			}
 		]
 	},
@@ -7136,6 +7108,10 @@
 			{
 				"name": "react/void-dom-elements-no-children",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/void-dom-elements-no-children.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-void-elements-with-children",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children"
 			}
 		],
 		"oxlint": [
@@ -7353,25 +7329,16 @@
 			{
 				"name": "react/iframe-missing-sandbox",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/iframe-missing-sandbox.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-missing-iframe-sandbox",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-missing-iframe-sandbox"
 			}
 		],
 		"oxlint": [
 			{
 				"name": "react/iframe-missing-sandbox",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/iframe-missing-sandbox.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "iframeSandboxPresence",
-			"plugin": "jsx",
-			"preset": "logicalStrict"
-		},
-		"eslint": [
-			{
-				"name": "@eslint-react/dom-no-missing-iframe-sandbox",
-				"url": "https://eslint-react.xyz/docs/rules/dom-no-missing-iframe-sandbox"
 			}
 		]
 	},
@@ -7539,19 +7506,6 @@
 			{
 				"name": "jsx-a11y/interactive-supports-focus",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/interactive-supports-focus.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "iterableKeys",
-			"plugin": "jsx",
-			"status": "skipped"
-		},
-		"deno": [
-			{
-				"name": "jsx-key",
-				"url": "https://docs.deno.com/lint/rules/jsx-key"
 			}
 		]
 	},
@@ -7789,8 +7743,14 @@
 		"flint": {
 			"name": "namespaces",
 			"plugin": "jsx",
-			"status": "skipped"
+			"preset": "logical"
 		},
+		"biome": [
+			{
+				"name": "noJsxNamespace",
+				"url": "https://biomejs.dev/linter/rules/no-jsx-namespace/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-namespace",
@@ -7805,20 +7765,6 @@
 			{
 				"name": "react/no-namespace",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-namespace.html"
-			}
-		],
-		"notes": "Generally handled by parsers."
-	},
-	{
-		"flint": {
-			"name": "namespaceSyntax",
-			"plugin": "jsx",
-			"preset": "logical"
-		},
-		"biome": [
-			{
-				"name": "noJsxNamespace",
-				"url": "https://biomejs.dev/linter/rules/no-jsx-namespace/javascript/"
 			}
 		]
 	},
@@ -10630,6 +10576,10 @@
 			{
 				"name": "n/file-extension-in-import",
 				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/file-extension-in-import.md"
+			},
+			{
+				"name": "import/extensions",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/extensions.md"
 			}
 		],
 		"oxlint": [
@@ -13365,19 +13315,6 @@
 	},
 	{
 		"flint": {
-			"name": "componentDefinitions",
-			"plugin": "react",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "react/prefer-read-only-props",
-				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/prefer-read-only-props.md"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "componentDidMountSetStates",
 			"plugin": "react",
 			"preset": "logicalStrict"
@@ -13709,31 +13646,6 @@
 	},
 	{
 		"flint": {
-			"name": "dangerouslySetInnerHtmls",
-			"plugin": "react"
-		},
-		"eslint": [
-			{
-				"name": "@eslint-react/dom-no-dangerously-set-innerhtml",
-				"url": "https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "dangerouslySetInnerHtmlsWithChildren",
-			"plugin": "react",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "@eslint-react/dom-no-dangerously-set-innerhtml-with-children",
-				"url": "https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml-with-children"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "dangerouslySetInnerHTMLWithChildren",
 			"plugin": "react",
 			"preset": "logical"
@@ -13754,6 +13666,10 @@
 			{
 				"name": "react/no-danger-with-children",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-danger-with-children.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-dangerously-set-innerhtml-with-children",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml-with-children"
 			}
 		],
 		"oxlint": [
@@ -13785,6 +13701,10 @@
 			{
 				"name": "react/no-danger",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-danger.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-dangerously-set-innerhtml",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml"
 			}
 		],
 		"oxlint": [
@@ -14008,19 +13928,6 @@
 	},
 	{
 		"flint": {
-			"name": "forwardRefCalls",
-			"plugin": "react"
-		},
-		"eslint": [
-			{
-				"name": "@eslint-react/no-forward-ref",
-				"url": "https://eslint-react.xyz/docs/rules/no-forward-ref"
-			}
-		],
-		"notes": "React Versions >= 19.0.0"
-	},
-	{
-		"flint": {
 			"name": "forwardRefs",
 			"plugin": "react",
 			"preset": "stylisticStrict"
@@ -14030,7 +13937,14 @@
 				"name": "noReactForwardRef",
 				"url": "https://biomejs.dev/linter/rules/no-react-forward-ref/javascript/"
 			}
-		]
+		],
+		"eslint": [
+			{
+				"name": "@eslint-react/no-forward-ref",
+				"url": "https://eslint-react.xyz/docs/rules/no-forward-ref"
+			}
+		],
+		"notes": "React Versions >= 19.0.0"
 	},
 	{
 		"flint": {
@@ -14258,10 +14172,20 @@
 				"url": "https://biomejs.dev/linter/rules/use-jsx-key-in-iterable/javascript/"
 			}
 		],
+		"deno": [
+			{
+				"name": "jsx-key",
+				"url": "https://docs.deno.com/lint/rules/jsx-key"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/jsx-key",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-key.md"
+			},
+			{
+				"name": "@eslint-react/no-missing-key",
+				"url": "https://eslint-react.xyz/docs/rules/no-missing-key"
 			}
 		],
 		"oxlint": [
@@ -14311,18 +14235,6 @@
 			{
 				"name": "react/preserve-manual-memoization",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/preserve-manual-memoization.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "missingKeys",
-			"plugin": "react"
-		},
-		"eslint": [
-			{
-				"name": "@eslint-react/no-missing-key",
-				"url": "https://eslint-react.xyz/docs/rules/no-missing-key"
 			}
 		]
 	},
@@ -15226,19 +15138,6 @@
 	},
 	{
 		"flint": {
-			"name": "voidElementsWithChildren",
-			"plugin": "react",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "@eslint-react/dom-no-void-elements-with-children",
-				"url": "https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "deepImports",
 			"plugin": "react-native",
 			"status": "skipped"
@@ -15863,20 +15762,6 @@
 	},
 	{
 		"flint": {
-			"name": "constVariables",
-			"plugin": "svelte",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "svelte/prefer-const",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const"
-			}
-		],
-		"notes": "Superseded by js plugin's constVariables rule."
-	},
-	{
-		"flint": {
 			"name": "derivedCallbackNamingConsistency",
 			"plugin": "svelte",
 			"status": "skipped"
@@ -16224,20 +16109,6 @@
 				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles"
 			}
 		]
-	},
-	{
-		"flint": {
-			"name": "innerDeclarations",
-			"plugin": "svelte",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "svelte/no-inner-declarations",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations"
-			}
-		],
-		"notes": "Superseded by ts plugin's innerDeclarations rule."
 	},
 	{
 		"flint": {
@@ -16738,20 +16609,6 @@
 	},
 	{
 		"flint": {
-			"name": "unnecessaryConditions",
-			"plugin": "svelte",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "svelte/@typescript-eslint/no-unnecessary-condition",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition"
-			}
-		],
-		"notes": "Deprecated. No longer needed when using svelte-eslint-parser>=v0.19.0."
-	},
-	{
-		"flint": {
 			"name": "unnecessaryDerivedBy",
 			"plugin": "svelte"
 		},
@@ -17069,18 +16926,6 @@
 			{
 				"name": "import/no-amd",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-amd.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "anonymousDefaultExports",
-			"plugin": "ts"
-		},
-		"eslint": [
-			{
-				"name": "import/no-anonymous-default-export",
-				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-anonymous-default-export.md"
 			}
 		]
 	},
@@ -19123,6 +18968,18 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "useValidCharacterComparison",
+				"url": "https://biomejs.dev/linter/rules/use-valid-character-comparison/javascript/"
+			}
+		],
+		"eslint": [
+			{
+				"name": "unicorn/no-invalid-character-comparison",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-invalid-character-comparison.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "oxc/bad-char-at-comparison",
@@ -19389,6 +19246,12 @@
 			"name": "commonjsModules",
 			"plugin": "ts"
 		},
+		"biome": [
+			{
+				"name": "noCommonJs",
+				"url": "https://biomejs.dev/linter/rules/no-common-js/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "import/no-commonjs",
@@ -19520,6 +19383,10 @@
 			{
 				"name": "unicorn/no-negated-condition",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-negated-condition.md"
+			},
+			{
+				"name": "vue/no-negated-condition",
+				"url": "https://eslint.vuejs.org/rules/no-negated-condition.html"
 			}
 		],
 		"oxlint": [
@@ -19673,6 +19540,10 @@
 			{
 				"name": "no-console",
 				"url": "https://eslint.org/docs/latest/rules/no-console"
+			},
+			{
+				"name": "vue/no-console",
+				"url": "https://eslint.vuejs.org/rules/no-console.html"
 			}
 		],
 		"oxlint": [
@@ -19762,6 +19633,10 @@
 			{
 				"name": "no-constant-condition",
 				"url": "https://eslint.org/docs/latest/rules/no-constant-condition"
+			},
+			{
+				"name": "vue/no-constant-condition",
+				"url": "https://eslint.vuejs.org/rules/no-constant-condition.html"
 			}
 		],
 		"oxlint": [
@@ -19918,6 +19793,10 @@
 			{
 				"name": "prefer-const",
 				"url": "https://eslint.org/docs/latest/rules/prefer-const"
+			},
+			{
+				"name": "svelte/prefer-const",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const"
 			}
 		],
 		"oxlint": [
@@ -20172,20 +20051,16 @@
 			{
 				"name": "unicorn/no-named-default",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-named-default.md"
+			},
+			{
+				"name": "import/no-named-default",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-named-default.md"
 			}
 		],
 		"oxlint": [
 			{
 				"name": "import/no-named-default",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-named-default.html"
-			},
-			{
-				"name": "import/no-named-as-default",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-named-as-default.html"
-			},
-			{
-				"name": "import/no-named-as-default-member",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-named-as-default-member.html"
 			}
 		]
 	},
@@ -20849,6 +20724,10 @@
 			{
 				"name": "no-empty-pattern",
 				"url": "https://eslint.org/docs/latest/rules/no-empty-pattern"
+			},
+			{
+				"name": "vue/no-empty-pattern",
+				"url": "https://eslint.vuejs.org/rules/no-empty-pattern.html"
 			}
 		],
 		"oxlint": [
@@ -21283,6 +21162,10 @@
 			{
 				"name": "eqeqeq",
 				"url": "https://eslint.org/docs/latest/rules/eqeqeq"
+			},
+			{
+				"name": "vue/eqeqeq",
+				"url": "https://eslint.vuejs.org/rules/eqeqeq.html"
 			}
 		],
 		"oxlint": [
@@ -21905,12 +21788,20 @@
 			{
 				"name": "@typescript-eslint/no-floating-promises",
 				"url": "https://typescript-eslint.io/rules/no-floating-promises"
+			},
+			{
+				"name": "promise/catch-or-return",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/catch-or-return.md"
 			}
 		],
 		"oxlint": [
 			{
 				"name": "typescript/no-floating-promises",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-floating-promises.html"
+			},
+			{
+				"name": "promise/catch-or-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/catch-or-return.html"
 			}
 		]
 	},
@@ -22668,6 +22559,10 @@
 			{
 				"name": "no-implicit-coercion",
 				"url": "https://eslint.org/docs/latest/rules/no-implicit-coercion"
+			},
+			{
+				"name": "vue/no-implicit-coercion",
+				"url": "https://eslint.vuejs.org/rules/no-implicit-coercion.html"
 			}
 		],
 		"oxlint": [
@@ -22908,18 +22803,6 @@
 			{
 				"name": "import/no-empty-named-blocks",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-empty-named-blocks.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "importExtensions",
-			"plugin": "ts"
-		},
-		"eslint": [
-			{
-				"name": "import/extensions",
-				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/extensions.md"
 			}
 		]
 	},
@@ -23287,6 +23170,10 @@
 			{
 				"name": "no-inner-declarations",
 				"url": "https://eslint.org/docs/latest/rules/no-inner-declarations"
+			},
+			{
+				"name": "svelte/no-inner-declarations",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations"
 			}
 		],
 		"oxlint": [
@@ -23380,25 +23267,6 @@
 	},
 	{
 		"flint": {
-			"name": "invalidCharacterComparisons",
-			"plugin": "ts",
-			"preset": "logical"
-		},
-		"biome": [
-			{
-				"name": "useValidCharacterComparison",
-				"url": "https://biomejs.dev/linter/rules/use-valid-character-comparison/javascript/"
-			}
-		],
-		"eslint": [
-			{
-				"name": "unicorn/no-invalid-character-comparison",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-invalid-character-comparison.md"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "invalidThis",
 			"plugin": "ts",
 			"preset": "javascript"
@@ -23468,6 +23336,10 @@
 			{
 				"name": "no-irregular-whitespace",
 				"url": "https://eslint.org/docs/latest/rules/no-irregular-whitespace"
+			},
+			{
+				"name": "vue/no-irregular-whitespace",
+				"url": "https://eslint.vuejs.org/rules/no-irregular-whitespace.html"
 			}
 		],
 		"oxlint": [
@@ -23475,7 +23347,8 @@
 				"name": "eslint/no-irregular-whitespace",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-irregular-whitespace.html"
 			}
-		]
+		],
+		"notes": "vue/no-irregular-whitespace also checks Vue template text and attribute values, which this rule does not."
 	},
 	{
 		"flint": {
@@ -24995,10 +24868,22 @@
 			"plugin": "ts",
 			"preset": "stylistic"
 		},
+		"biome": [
+			{
+				"name": "noApproximativeNumericConstant",
+				"url": "https://biomejs.dev/linter/rules/no-approximative-numeric-constant/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "unicorn/prefer-math-constants",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-math-constants.md"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "oxc/approx-constant",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/approx-constant.html"
 			}
 		]
 	},
@@ -25746,6 +25631,10 @@
 			{
 				"name": "unicorn/no-anonymous-default-export",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-anonymous-default-export.md"
+			},
+			{
+				"name": "import/no-anonymous-default-export",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-anonymous-default-export.md"
 			}
 		],
 		"oxlint": [
@@ -25769,6 +25658,12 @@
 				"name": "import/no-named-as-default",
 				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-named-as-default.md"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "import/no-named-as-default",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-named-as-default.html"
+			}
 		]
 	},
 	{
@@ -25781,17 +25676,11 @@
 				"name": "import/no-named-as-default-member",
 				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-named-as-default-member.md"
 			}
-		]
-	},
-	{
-		"flint": {
-			"name": "namedDefaultSpecifiers",
-			"plugin": "ts"
-		},
-		"eslint": [
+		],
+		"oxlint": [
 			{
-				"name": "import/no-named-default",
-				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-named-default.md"
+				"name": "import/no-named-as-default-member",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-named-as-default-member.html"
 			}
 		]
 	},
@@ -25943,6 +25832,10 @@
 			{
 				"name": "@typescript-eslint/naming-convention",
 				"url": "https://typescript-eslint.io/rules/naming-convention"
+			},
+			{
+				"name": "vue/camelcase",
+				"url": "https://eslint.vuejs.org/rules/camelcase.html"
 			}
 		],
 		"notes": "Overly opinionated."
@@ -26618,25 +26511,6 @@
 	},
 	{
 		"flint": {
-			"name": "numericConstantApproximations",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"biome": [
-			{
-				"name": "noApproximativeNumericConstant",
-				"url": "https://biomejs.dev/linter/rules/no-approximative-numeric-constant/javascript/"
-			}
-		],
-		"oxlint": [
-			{
-				"name": "oxc/approx-constant",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/approx-constant.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "numericErasingOperations",
 			"plugin": "ts",
 			"preset": "logical",
@@ -26722,6 +26596,10 @@
 			{
 				"name": "@typescript-eslint/no-loss-of-precision",
 				"url": "https://typescript-eslint.io/rules/no-loss-of-precision"
+			},
+			{
+				"name": "vue/no-loss-of-precision",
+				"url": "https://eslint.vuejs.org/rules/no-loss-of-precision.html"
 			}
 		],
 		"oxlint": [
@@ -27050,6 +26928,10 @@
 			{
 				"name": "object-shorthand",
 				"url": "https://eslint.org/docs/latest/rules/object-shorthand"
+			},
+			{
+				"name": "vue/object-shorthand",
+				"url": "https://eslint.vuejs.org/rules/object-shorthand.html"
 			}
 		],
 		"oxlint": [
@@ -27086,6 +26968,10 @@
 			{
 				"name": "perfectionist/sort-objects",
 				"url": "https://perfectionist.dev/rules/sort-objects"
+			},
+			{
+				"name": "vue/sort-keys",
+				"url": "https://eslint.vuejs.org/rules/sort-keys.html"
 			}
 		],
 		"oxlint": [
@@ -27561,30 +27447,23 @@
 	},
 	{
 		"flint": {
-			"name": "promiseAlwaysReturn",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"oxlint": [
-			{
-				"name": "promise/always-return",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/always-return.html"
-			}
-		],
-		"notes": "Superseded by floatingPromises."
-	},
-	{
-		"flint": {
 			"name": "promiseArgumentCounts",
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"eslint": [
+			{
+				"name": "promise/valid-params",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/valid-params.md"
+			}
+		],
 		"oxlint": [
 			{
 				"name": "promise/valid-params",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/valid-params.html"
 			}
-		]
+		],
+		"notes": "Handled by TypeScript."
 	},
 	{
 		"flint": {
@@ -27635,6 +27514,12 @@
 				"name": "promise/no-promise-in-callback",
 				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/no-promise-in-callback.md"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "promise/no-promise-in-callback",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/no-promise-in-callback.html"
+			}
 		]
 	},
 	{
@@ -27655,46 +27540,6 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/prefer-catch.html"
 			}
 		]
-	},
-	{
-		"flint": {
-			"name": "promiseCatchOrReturn",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"oxlint": [
-			{
-				"name": "promise/catch-or-return",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/catch-or-return.html"
-			}
-		],
-		"notes": "Superseded by floatingPromises."
-	},
-	{
-		"flint": {
-			"name": "promiseCatchReturns",
-			"plugin": "ts"
-		},
-		"eslint": [
-			{
-				"name": "promise/catch-or-return",
-				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/catch-or-return.md"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "promiseErrorFirstCallbacks",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"oxlint": [
-			{
-				"name": "promise/no-promise-in-callback",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/no-promise-in-callback.html"
-			}
-		],
-		"notes": "Superseded by floatingPromises."
 	},
 	{
 		"flint": {
@@ -27858,33 +27703,6 @@
 	},
 	{
 		"flint": {
-			"name": "promiseNewStatics",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"oxlint": [
-			{
-				"name": "promise/no-new-statics",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/no-new-statics.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "promiseNonSpecMethods",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"oxlint": [
-			{
-				"name": "promise/spec-only",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/spec-only.html"
-			}
-		],
-		"notes": "Superseded by floatingPromises."
-	},
-	{
-		"flint": {
 			"name": "promiseParameterNames",
 			"plugin": "ts",
 			"status": "skipped"
@@ -27902,18 +27720,6 @@
 			}
 		],
 		"notes": "Overly opinionated."
-	},
-	{
-		"flint": {
-			"name": "promiseParameterValidity",
-			"plugin": "ts"
-		},
-		"eslint": [
-			{
-				"name": "promise/valid-params",
-				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/valid-params.md"
-			}
-		]
 	},
 	{
 		"flint": {
@@ -27958,6 +27764,12 @@
 				"name": "promise/always-return",
 				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/always-return.md"
 			}
+		],
+		"oxlint": [
+			{
+				"name": "promise/always-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/always-return.html"
+			}
 		]
 	},
 	{
@@ -27981,26 +27793,42 @@
 	{
 		"flint": {
 			"name": "promiseSpecMethods",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "skipped"
 		},
 		"eslint": [
 			{
 				"name": "promise/spec-only",
 				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/spec-only.md"
 			}
-		]
+		],
+		"oxlint": [
+			{
+				"name": "promise/spec-only",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/spec-only.html"
+			}
+		],
+		"notes": "Handled by TypeScript."
 	},
 	{
 		"flint": {
 			"name": "promiseStaticConstructors",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "skipped"
 		},
 		"eslint": [
 			{
 				"name": "promise/no-new-statics",
 				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/no-new-statics.md"
 			}
-		]
+		],
+		"oxlint": [
+			{
+				"name": "promise/no-new-statics",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/no-new-statics.html"
+			}
+		],
+		"notes": "Handled by TypeScript."
 	},
 	{
 		"flint": {
@@ -28049,6 +27877,10 @@
 			{
 				"name": "@typescript-eslint/dot-notation",
 				"url": "https://typescript-eslint.io/rules/dot-notation"
+			},
+			{
+				"name": "vue/dot-notation",
+				"url": "https://eslint.vuejs.org/rules/dot-notation.html"
 			}
 		],
 		"oxlint": [
@@ -28143,23 +27975,16 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"oxlint": [
-			{
-				"name": "oxc/only-used-in-recursion",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/only-used-in-recursion.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "recursiveParameters",
-			"plugin": "ts",
-			"preset": "logicalStrict"
-		},
 		"biome": [
 			{
 				"name": "noParametersOnlyUsedInRecursion",
 				"url": "https://biomejs.dev/linter/rules/no-parameters-only-used-in-recursion/javascript/"
+			}
+		],
+		"oxlint": [
+			{
+				"name": "oxc/only-used-in-recursion",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/only-used-in-recursion.html"
 			}
 		]
 	},
@@ -29633,32 +29458,11 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
-			{
-				"name": "noCommonJs",
-				"url": "https://biomejs.dev/linter/rules/no-common-js/javascript/"
-			}
-		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/no-require-imports",
 				"url": "https://typescript-eslint.io/rules/no-require-imports"
-			}
-		],
-		"oxlint": [
-			{
-				"name": "typescript/no-require-imports",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-require-imports.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "requireVariables",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"eslint": [
+			},
 			{
 				"name": "@typescript-eslint/no-var-requires",
 				"url": "https://typescript-eslint.io/rules/no-var-requires"
@@ -29666,11 +29470,14 @@
 		],
 		"oxlint": [
 			{
+				"name": "typescript/no-require-imports",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-require-imports.html"
+			},
+			{
 				"name": "typescript/no-var-requires",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-var-requires.html"
 			}
-		],
-		"notes": "Deprecated in favor of requireImports."
+		]
 	},
 	{
 		"flint": {
@@ -29879,6 +29686,10 @@
 			{
 				"name": "no-restricted-syntax",
 				"url": "https://eslint.org/docs/latest/rules/no-restricted-syntax"
+			},
+			{
+				"name": "vue/no-restricted-syntax",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-syntax.html"
 			}
 		]
 	},
@@ -30477,6 +30288,10 @@
 			{
 				"name": "no-sparse-arrays",
 				"url": "https://eslint.org/docs/latest/rules/no-sparse-arrays"
+			},
+			{
+				"name": "vue/no-sparse-arrays",
+				"url": "https://eslint.vuejs.org/rules/no-sparse-arrays.html"
 			}
 		],
 		"oxlint": [
@@ -30643,6 +30458,10 @@
 			{
 				"name": "prefer-template",
 				"url": "https://eslint.org/docs/latest/rules/prefer-template"
+			},
+			{
+				"name": "vue/prefer-template",
+				"url": "https://eslint.vuejs.org/rules/prefer-template.html"
 			}
 		],
 		"oxlint": [
@@ -30784,6 +30603,10 @@
 			{
 				"name": "@typescript-eslint/prefer-string-starts-ends-with",
 				"url": "https://typescript-eslint.io/rules/prefer-string-starts-ends-with"
+			},
+			{
+				"name": "unicorn/prefer-string-starts-ends-with",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-string-starts-ends-with.md"
 			}
 		],
 		"oxlint": [
@@ -30794,19 +30617,6 @@
 			{
 				"name": "unicorn/prefer-string-starts-ends-with",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-string-starts-ends-with.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "stringStartsEndsWithMethods",
-			"plugin": "ts",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "unicorn/prefer-string-starts-ends-with",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-string-starts-ends-with.md"
 			}
 		]
 	},
@@ -32419,6 +32229,10 @@
 			{
 				"name": "unicorn/no-useless-concat",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-useless-concat.md"
+			},
+			{
+				"name": "vue/no-useless-concat",
+				"url": "https://eslint.vuejs.org/rules/no-useless-concat.html"
 			}
 		],
 		"oxlint": [
@@ -32444,6 +32258,10 @@
 			{
 				"name": "@typescript-eslint/no-unnecessary-condition",
 				"url": "https://typescript-eslint.io/rules/no-unnecessary-condition"
+			},
+			{
+				"name": "svelte/@typescript-eslint/no-unnecessary-condition",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition"
 			}
 		],
 		"oxlint": [
@@ -33713,6 +33531,10 @@
 			{
 				"name": "@typescript-eslint/no-unused-vars",
 				"url": "https://typescript-eslint.io/rules/no-unused-vars"
+			},
+			{
+				"name": "vue/no-unused-vars",
+				"url": "https://eslint.vuejs.org/rules/no-unused-vars.html"
 			}
 		],
 		"oxlint": [
@@ -35036,26 +34858,6 @@
 	},
 	{
 		"flint": {
-			"name": "maximumDescribesPerFile",
-			"plugin": "vitest",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "vitest/require-top-level-describe",
-				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-top-level-describe.md"
-			}
-		],
-		"oxlint": [
-			{
-				"name": "vitest/require-top-level-describe",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-top-level-describe.html"
-			}
-		],
-		"notes": "Overly opinionated."
-	},
-	{
-		"flint": {
 			"name": "maximumExpects",
 			"plugin": "vitest",
 			"status": "skipped"
@@ -35511,7 +35313,14 @@
 				"name": "vitest/require-top-level-describe",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-top-level-describe.md"
 			}
-		]
+		],
+		"oxlint": [
+			{
+				"name": "vitest/require-top-level-describe",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-top-level-describe.html"
+			}
+		],
+		"notes": "The maxNumberOfTopLevelDescribes option is overly opinionated."
 	},
 	{
 		"flint": {
@@ -36410,19 +36219,6 @@
 	},
 	{
 		"flint": {
-			"name": "camelCaseNames",
-			"plugin": "vue",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "vue/camelcase",
-				"url": "https://eslint.vuejs.org/rules/camelcase.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "childContentOverrides",
 			"plugin": "vue",
 			"preset": "logical"
@@ -36968,32 +36764,6 @@
 			{
 				"name": "vue/no-side-effects-in-computed-properties",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-side-effects-in-computed-properties.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "consoleCalls",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-console",
-				"url": "https://eslint.vuejs.org/rules/no-console.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "constantConditions",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-constant-condition",
-				"url": "https://eslint.vuejs.org/rules/no-constant-condition.html"
 			}
 		]
 	},
@@ -37802,19 +37572,6 @@
 	},
 	{
 		"flint": {
-			"name": "dotNotation",
-			"plugin": "vue",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "vue/dot-notation",
-				"url": "https://eslint.vuejs.org/rules/dot-notation.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "duplicateAttributes",
 			"plugin": "vue",
 			"preset": "logical"
@@ -37950,19 +37707,6 @@
 			{
 				"name": "vue/no-empty-component-block",
 				"url": "https://eslint.vuejs.org/rules/no-empty-component-block.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "emptyPatterns",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-empty-pattern",
-				"url": "https://eslint.vuejs.org/rules/no-empty-pattern.html"
 			}
 		]
 	},
@@ -38207,19 +37951,6 @@
 	},
 	{
 		"flint": {
-			"name": "implicitCoercions",
-			"plugin": "vue",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-implicit-coercion",
-				"url": "https://eslint.vuejs.org/rules/no-implicit-coercion.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "indents",
 			"plugin": "vue",
 			"status": "skipped"
@@ -38242,20 +37973,6 @@
 			{
 				"name": "vue/space-infix-ops",
 				"url": "https://eslint.vuejs.org/rules/space-infix-ops.html"
-			}
-		],
-		"notes": "Formatting rule."
-	},
-	{
-		"flint": {
-			"name": "irregularWhitespace",
-			"plugin": "vue",
-			"status": "skipped"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-irregular-whitespace",
-				"url": "https://eslint.vuejs.org/rules/no-irregular-whitespace.html"
 			}
 		],
 		"notes": "Formatting rule."
@@ -38314,19 +38031,6 @@
 			{
 				"name": "vue/no-dupe-keys",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-dupe-keys.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "keysOrder",
-			"plugin": "vue",
-			"preset": "sorting"
-		},
-		"eslint": [
-			{
-				"name": "vue/sort-keys",
-				"url": "https://eslint.vuejs.org/rules/sort-keys.html"
 			}
 		]
 	},
@@ -38665,19 +38369,6 @@
 	},
 	{
 		"flint": {
-			"name": "negatedConditions",
-			"plugin": "vue",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-negated-condition",
-				"url": "https://eslint.vuejs.org/rules/no-negated-condition.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "negatedIfConditions",
 			"plugin": "vue",
 			"preset": "stylistic"
@@ -38780,19 +38471,6 @@
 			}
 		],
 		"notes": "Formatting rule."
-	},
-	{
-		"flint": {
-			"name": "objectShorthands",
-			"plugin": "vue",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "vue/object-shorthand",
-				"url": "https://eslint.vuejs.org/rules/object-shorthand.html"
-			}
-		]
 	},
 	{
 		"flint": {
@@ -38987,19 +38665,6 @@
 			}
 		],
 		"notes": "Generally handled by parsers."
-	},
-	{
-		"flint": {
-			"name": "precisionLoss",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-loss-of-precision",
-				"url": "https://eslint.vuejs.org/rules/no-loss-of-precision.html"
-			}
-		]
 	},
 	{
 		"flint": {
@@ -39442,19 +39107,6 @@
 	},
 	{
 		"flint": {
-			"name": "restrictedSyntaxes",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-restricted-syntax",
-				"url": "https://eslint.vuejs.org/rules/no-restricted-syntax.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "rootIfDirectives",
 			"plugin": "vue",
 			"preset": "logical"
@@ -39724,19 +39376,6 @@
 	},
 	{
 		"flint": {
-			"name": "sparseArrays",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-sparse-arrays",
-				"url": "https://eslint.vuejs.org/rules/no-sparse-arrays.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "staticClassNamesOrder",
 			"plugin": "vue",
 			"preset": "sorting"
@@ -39764,19 +39403,6 @@
 			{
 				"name": "vue/no-static-inline-styles",
 				"url": "https://eslint.vuejs.org/rules/no-static-inline-styles.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "strictEqualityOperators",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/eqeqeq",
-				"url": "https://eslint.vuejs.org/rules/eqeqeq.html"
 			}
 		]
 	},
@@ -39965,19 +39591,6 @@
 			{
 				"name": "vue/no-template-shadow",
 				"url": "https://eslint.vuejs.org/rules/no-template-shadow.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "templateStrings",
-			"plugin": "vue",
-			"preset": "stylistic"
-		},
-		"eslint": [
-			{
-				"name": "vue/prefer-template",
-				"url": "https://eslint.vuejs.org/rules/prefer-template.html"
 			}
 		]
 	},
@@ -40271,19 +39884,6 @@
 	},
 	{
 		"flint": {
-			"name": "unnecessaryConcatenations",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-useless-concat",
-				"url": "https://eslint.vuejs.org/rules/no-useless-concat.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "unnecessaryMustaches",
 			"plugin": "vue",
 			"preset": "logical"
@@ -40401,19 +40001,6 @@
 			{
 				"name": "vue/no-unused-refs",
 				"url": "https://eslint.vuejs.org/rules/no-unused-refs.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "unusedVariables",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "vue/no-unused-vars",
-				"url": "https://eslint.vuejs.org/rules/no-unused-vars.html"
 			}
 		]
 	},
