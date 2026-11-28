@@ -26,7 +26,7 @@ const rule = getRuleForPlugin(Astro.props.plugin, Astro.props.rule);
 			</a>
 		</>
 	))}{" "}
-	preset{rule.about.presets?.length ? "s" : ""}.
+	preset{(rule.about.presets?.length ?? 0) > 1 ? "s" : ""}.
 </blockquote>
 
 <style>
