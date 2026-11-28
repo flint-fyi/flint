@@ -7,6 +7,7 @@ import nodePropertyInChecks from "./rules/nodePropertyInChecks.ts";
 import placeholderFormats from "./rules/placeholderFormats.ts";
 import pluginRuleOrdering from "./rules/pluginRuleOrdering.ts";
 import ruleCreationMethods from "./rules/ruleCreationMethods.ts";
+import strictPresetSupersets from "./rules/strictPresetSupersets.ts";
 import testCaseDuplicates from "./rules/testCaseDuplicates.ts";
 import testCaseNameDuplicates from "./rules/testCaseNameDuplicates.ts";
 import testCaseNonStaticCode from "./rules/testCaseNonStaticCode.ts";
@@ -24,6 +25,7 @@ export const flint = createPlugin({
 		placeholderFormats,
 		pluginRuleOrdering,
 		ruleCreationMethods,
+		strictPresetSupersets,
 		testCaseDuplicates,
 		testCaseNameDuplicates,
 		testCaseNonStaticCode,

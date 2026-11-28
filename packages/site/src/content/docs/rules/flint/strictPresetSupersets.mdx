@@ -1,0 +1,110 @@
+---
+description: "Reports rules in a base preset that are missing from that preset's `Strict` variant."
+title: "strictPresetSupersets"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="strictPresetSupersets" />
+
+Flint plugins document each `*Strict` preset, such as `logicalStrict`, as a superset of its base preset, such as `logical`.
+Plugins build presets from each rule's `about.presets` list, so a rule listed in `logical` but not `logicalStrict` is silently left out of the strict preset.
+Users who enable only `logicalStrict` then do not receive that rule.
+
+This rule reports a preset in a rule's `about.presets` when the rule's `RuleCreator` declares a matching `*Strict` preset that the rule does not list.
+It provides a suggestion to add the missing `*Strict` preset.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { RuleCreator } from "@flint.fyi/core";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
+const ruleCreator = new RuleCreator({
+	docs: (ruleId) => `https://example.com/rules/${ruleId}`,
+	pluginId: "example",
+	presets: ["logical", "logicalStrict"],
+});
+
+export default ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Example rule.",
+		id: "example",
+		presets: ["logical"],
+	},
+	messages: {},
+	setup: () => undefined,
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { RuleCreator } from "@flint.fyi/core";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
+const ruleCreator = new RuleCreator({
+	docs: (ruleId) => `https://example.com/rules/${ruleId}`,
+	pluginId: "example",
+	presets: ["logical", "logicalStrict"],
+});
+
+export default ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Example rule.",
+		id: "example",
+		presets: ["logical", "logicalStrict"],
+	},
+	messages: {},
+	setup: () => undefined,
+});
+```
+
+```ts
+import { RuleCreator } from "@flint.fyi/core";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
+const ruleCreator = new RuleCreator({
+	docs: (ruleId) => `https://example.com/rules/${ruleId}`,
+	pluginId: "example",
+	presets: ["logical", "stylistic"],
+});
+
+export default ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Example rule.",
+		id: "example",
+		presets: ["logical"],
+	},
+	messages: {},
+	setup: () => undefined,
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your plugin's `*Strict` presets are intentionally not supersets of their base presets, such as a strict preset that replaces a rule with a stricter alternative, this rule will report rules you deliberately left out.
+You may prefer to disable this rule for those rules with a disable comment.
+
+## Further Reading
+
+- [Flint plugin presets](https://flint.fyi/rules/flint/#presets)
+- [Subset and superset (Wikipedia)](https://en.wikipedia.org/wiki/Subset)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="strictPresetSupersets" />

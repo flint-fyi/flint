@@ -1520,6 +1520,9 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      ts-api-utils:
+        specifier: catalog:prod
+        version: 2.5.0(@typescript/typescript6@6.0.2)
       typescript:
         specifier: catalog:prod
         version: '@typescript/typescript6@6.0.2'
