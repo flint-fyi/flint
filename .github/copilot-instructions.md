@@ -32,7 +32,7 @@ Example: if changing `packages/rule-data/src/data.json` to add `implemented: tru
 
 ### PR Description
 
-Use this repository's `.github/PULL_REQUEST_TEMPLATE.md` pull request template for the PR description, including `[x]`-checked task list items.
+Use this repository's `.github/pull_request_template.md` pull request template for the PR description, including `[x]`-checked task list items.
 
 Don't exhaustively list everything you do in the PR description > Overview.
 1-2 sentences is fine.

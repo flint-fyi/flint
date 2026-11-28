@@ -3,6 +3,9 @@
 # Docs: https://gh.io/actions-lockfile
 version: 'v0.0.3'
 workflows:
+    '.github/workflows/agentscan.yaml':
+        - 'actions/create-github-app-token@v3.4.0'
+        - 'matteogabriele/agentscan-action@v2.8.0'
     '.github/workflows/ci.yaml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
@@ -19,6 +22,7 @@ workflows:
     '.github/workflows/merge-changesets-pr.yaml':
         - 'actions/create-github-app-token@v3.4.0'
     '.github/workflows/octoguide.yaml':
+        - 'joshuakgoldberg/slop-issue-unlink-action@v0.3.0'
         - 'octoguide/bot@0.33.1'
     '.github/workflows/package-preview-comments.yaml':
         - 'actions/download-artifact@v8.0.2'
@@ -29,6 +33,7 @@ workflows:
     '.github/workflows/pr-quality-closures.yaml':
         - 'actions/stale@v11.0.0'
     '.github/workflows/pr-quality.yaml':
+        - 'actions/create-github-app-token@v3.4.0'
         - 'peakoss/anti-slop@v0.3.0'
     '.github/workflows/pr-review-requested.yaml': []
     '.github/workflows/release.yaml':
@@ -41,6 +46,8 @@ workflows:
     '.github/workflows/rule-data.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1'
+    '.github/workflows/slop-issue-unlink.yaml':
+        - 'joshuakgoldberg/slop-issue-unlink-action@v0.3.0'
     '.github/workflows/zizmor.yaml':
         - 'actions/checkout@v7.0.1'
         - 'zizmorcore/zizmor-action@v0.8.1'
@@ -107,11 +114,21 @@ dependencies:
         commit: 'sha1-c578423db9b2c14d3cee9c72f6c2aed31c128030'
         owner_id: 3335181
         repo_id: 634940144
+    'joshuakgoldberg/slop-issue-unlink-action@v0.3.0':
+        ref: 'v0.3.0'
+        commit: 'sha1-346a2ebcee0728154050e233fd908ea2550bb93c'
+        owner_id: 3335181
+        repo_id: 1463625964
     'marcalexiei/changesets-release-commenter@v0.4.0':
         ref: 'v0.4.0'
         commit: 'sha1-05af9622283286a660465ac50f552b7f4151377e'
         owner_id: 24919330
         repo_id: 1370403157
+    'matteogabriele/agentscan-action@v2.8.0':
+        ref: 'v2.8.0'
+        commit: 'sha1-7ad606f1e21df2119da8be99b763f282a670a1c5'
+        owner_id: 5337152
+        repo_id: 1183120486
     'octoguide/bot@0.33.1':
         ref: '0.33.1'
         commit: 'sha1-8d29abce6793b35c6bfab51d4db6bfa62634b871'

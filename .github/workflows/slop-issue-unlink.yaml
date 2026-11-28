@@ -1,0 +1,15 @@
+name: Slop Issue Unlink
+
+on: # zizmor: ignore[dangerous-triggers] This workflow does not check out or execute pull request code.
+  pull_request_target:
+    types: [closed, labeled]
+
+jobs:
+  slop-issue-unlink:
+    name: Slop Issue Unlink
+    if: ${{ !github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: JoshuaKGoldberg/slop-issue-unlink-action@v0.3.0

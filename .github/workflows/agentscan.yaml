@@ -1,0 +1,51 @@
+name: AgentScan
+
+on: # zizmor: ignore[dangerous-triggers] This workflow does not check out or execute pull request code.
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [opened, ready_for_review, reopened]
+
+jobs:
+  agentscan:
+    name: AgentScan
+    # Comments only matter when a PR author replies to the honeypot greeting.
+    if: >-
+      github.event_name == 'pull_request_target'
+        && !github.event.pull_request.draft
+      || github.event.issue.pull_request
+        && github.event.comment.user.login == github.event.issue.user.login
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - # Activity scores only label PRs for maintainers to review.
+        uses: MatteoGabriele/agentscan-action@v2.8.0
+        id: agentscan
+        with:
+          allowed-users: flint-tokens-bot[bot]
+          honeypot: true
+          message-honeypot: |
+            👋 Hi @{username}, thanks for sending a PR to Flint! ❤️‍🔥
+
+            A maintainer will take a look as soon as they can.
+            In the meantime, please make sure your PR follows our [Contributing Guidelines](https://flint.fyi/project/contributing) and [AI Contribution guidelines](https://flint.fyi/project/contributing-with-ai).
+          mode: labels
+
+      - # Only automated agents see the honeypot instruction, so replying with its code marks the PR as AI slop.
+        # The label comes from the app token so that it triggers OctoGuide, which comments and closes the PR.
+        if: steps.agentscan.outputs.honeypot-triggered == 'true'
+        id: create_token
+        uses: actions/create-github-app-token@v3.4.0
+        with:
+          client-id: ${{ vars.FLINT_TOKENS_BOT_CLIENT_ID }}
+          permission-pull-requests: write
+          private-key: ${{ secrets.FLINT_TOKENS_BOT_PRIVATE_KEY }}
+
+      - if: steps.agentscan.outputs.honeypot-triggered == 'true'
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ steps.create_token.outputs.token }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+        run: gh api "repos/$GH_REPO/issues/$PR_NUMBER/labels" -f "labels[]=ai slop"

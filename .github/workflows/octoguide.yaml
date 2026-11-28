@@ -27,6 +27,7 @@ on: # zizmor: ignore[dangerous-triggers] This workflow does not check out or exe
   pull_request_target:
     types:
       - edited
+      - labeled
       - opened
 
 permissions:
@@ -66,3 +67,10 @@ jobs:
                 ]
               }
             }
+
+      - # OctoGuide closes "ai slop" PRs with GITHUB_TOKEN, which doesn't trigger the Slop Issue Unlink workflow.
+        # OctoGuide fails the job whenever it reports, so this runs unless the job was cancelled.
+        if: ${{ !cancelled() && github.event_name == 'pull_request_target' }}
+        uses: JoshuaKGoldberg/slop-issue-unlink-action@v0.3.0
+        with:
+          labels: ai slop
