@@ -9,18 +9,6 @@ export type AnyLanguage = Language<object, object>;
 export type AnyLanguageFile = LanguageFile<object>;
 export type AnyLanguageFileFactory = LanguageFileFactory<object>;
 
-export type GetLanguageAstNodesByName<InputLanguage extends AnyLanguage> =
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Fixes TS inference.
-	InputLanguage extends Language<infer AstNodesByName, infer _>
-		? AstNodesByName
-		: never;
-
-export type GetLanguageFileServices<InputLanguage extends AnyLanguage> =
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Fixes TS inference.
-	InputLanguage extends Language<infer _, infer FileServices>
-		? FileServices
-		: never;
-
 export type LanguageCreateRule<AstNodesByName, FileServices extends object> = <
 	const About extends RuleAbout,
 	const MessageId extends string,
@@ -52,24 +40,19 @@ export interface FileVisitors<AstNodesByName, VisitorServices extends object> {
 	visitors: RuleVisitors<AstNodesByName, VisitorServices>;
 }
 
+/**
+ * A language, as used by the linter.
+ * Members that operate on one file are on that file, as {@link LanguageFileMembers}.
+ */
 export interface Language<
 	AstNodesByName,
 	FileServices extends object,
-> extends LanguageDefinition<AstNodesByName, FileServices> {
+> extends Pick<
+	LanguageDefinition<AstNodesByName, FileServices>,
+	"about" | "orderFilePaths"
+> {
 	createFileFactory(host: LinterHost): LanguageFileFactory<FileServices>;
 	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
-	getFileCacheImpacts?(
-		file: LanguageFile<FileServices>,
-		host: LinterHost,
-	): LanguageFileCacheImpacts;
-	getLanguageReports?(
-		file: LanguageFile<FileServices>,
-		host: LinterHost,
-	): LanguageReports;
-	runFileVisitors(
-		file: LanguageFile<FileServices>,
-		fileVisitors: readonly FileVisitors<AstNodesByName, FileServices>[],
-	): void;
 }
 
 export interface LanguageAbout {
@@ -96,19 +79,19 @@ export interface LanguageDefinition<
 	createFileFactory(
 		host: LinterHost,
 	): LanguageFileFactoryDefinition<FileServices>;
-	getFileCacheImpacts?(
+	getFileCacheImpacts?: (
 		file: LanguageFile<FileServices>,
 		host: LinterHost,
-	): LanguageFileCacheImpacts;
-	getLanguageReports?(
+	) => LanguageFileCacheImpacts;
+	getLanguageReports?: (
 		file: LanguageFile<FileServices>,
 		host: LinterHost,
-	): LanguageReports;
-	orderFilePaths?(filePaths: readonly string[], host: LinterHost): string[];
-	runFileVisitors(
+	) => LanguageReports;
+	orderFilePaths?: (filePaths: readonly string[], host: LinterHost) => string[];
+	runFileVisitors: (
 		file: LanguageFile<FileServices>,
 		fileVisitors: readonly FileVisitors<AstNodesByName, FileServices>[],
-	): void;
+	) => void;
 }
 
 export interface LanguageFileCacheImpacts {
@@ -129,7 +112,19 @@ export interface LanguageFileFactory<
  * Prepared information about a file to be linted.
  */
 export type LanguageFile<FileServices extends object> = Disposable &
-	LanguageFileBase<FileServices>;
+	LanguageFileBase<FileServices> &
+	LanguageFileMembers;
+
+/**
+ * A language's members for one file, bound by the language that created the file.
+ */
+export interface LanguageFileMembers {
+	getFileCacheImpacts?: (host: LinterHost) => LanguageFileCacheImpacts;
+	getLanguageReports?: (host: LinterHost) => LanguageReports;
+	runFileVisitors: (
+		fileVisitors: readonly FileVisitors<object, object>[],
+	) => void;
+}
 
 /**
  * Common information about a file to be linted.

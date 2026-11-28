@@ -1,9 +1,5 @@
 import type { ExactObject } from "../types/exact.ts";
-import type {
-	AnyLanguage,
-	GetLanguageAstNodesByName,
-	GetLanguageFileServices,
-} from "../types/languages.ts";
+import type { Language } from "../types/languages.ts";
 import type {
 	PluginRuleAbout,
 	Rule,
@@ -30,15 +26,16 @@ export class RuleCreator<
 
 	createRule<
 		const RuleDefinitionAbout extends About,
-		const Language extends AnyLanguage,
+		AstNodesByName,
+		FileServices extends object,
 		const MessageId extends string,
 		OptionsSchema extends AnyOptionalSchema | undefined = undefined,
 	>(
-		language: Language,
+		language: Language<AstNodesByName, FileServices>,
 		rule: RuleDefinition<
 			ExactObject<RuleDefinitionAbout, About>,
-			GetLanguageAstNodesByName<Language>,
-			GetLanguageFileServices<Language>,
+			NoInfer<AstNodesByName>,
+			NoInfer<FileServices>,
 			MessageId,
 			OptionsSchema
 		>,
