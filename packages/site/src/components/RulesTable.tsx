@@ -13,6 +13,10 @@ import { createRuleComparator } from "./createRuleComparator";
 import { InlineMarkdown } from "./InlineMarkdown";
 import styles from "./RulesTable.module.css";
 
+const ruleDocs = new Set(
+	Object.keys(import.meta.glob("../content/docs/rules/*/*.mdx")),
+);
+
 export interface RulesTableProps {
 	implementing: boolean;
 	plugin?: string;
@@ -88,12 +92,22 @@ export function RulesTable({
 }
 
 function renderFlintName(flint: FlintRuleReference) {
-	return flint.status === "implemented" ? (
+	if (flint.status !== "implemented") {
+		return flint.name;
+	}
+
+	if (
+		!ruleDocs.has(`../content/docs/rules/${flint.plugin}/${flint.name}.mdx`)
+	) {
+		throw new Error(
+			`Missing docs page for implemented Flint rule ${flint.plugin}/${flint.name}.`,
+		);
+	}
+
+	return (
 		<a href={`/rules/${flint.plugin}/${flint.name.toLowerCase()}/`}>
 			{flint.name}
 		</a>
-	) : (
-		flint.name
 	);
 }
 
