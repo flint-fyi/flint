@@ -241,7 +241,7 @@ describe(runCliWatch, () => {
 		]);
 	});
 
-	it("rebuilds the lint session after a structural file changes", async () => {
+	it("rebuilds the lint session after the config file changes", async () => {
 		const project = createTestProject();
 		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
 		let quit: (() => void) | undefined;
@@ -261,8 +261,8 @@ describe(runCliWatch, () => {
 
 						if (renderCount === 1) {
 							project.host.vfsUpsertFile(
-								path.join(project.root, "package.json"),
-								"{}",
+								path.join(project.root, "flint.config.ts"),
+								"export default {};",
 							);
 						} else {
 							quit?.();
@@ -275,6 +275,47 @@ describe(runCliWatch, () => {
 
 		expect(loadConfigDefinition).toHaveBeenCalledTimes(2);
 		expect(renderCount).toBe(2);
+	});
+
+	it("relints dependents of a changed dependency without rebuilding", async () => {
+		const project = createTestProject({ dependencies: ["tsconfig.json"] });
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		let quit: (() => void) | undefined;
+		let renderCount = 0;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						renderCount += 1;
+
+						if (renderCount === 1) {
+							project.host.vfsUpsertFile(
+								path.join(project.root, "tsconfig.json"),
+								"{}",
+							);
+						} else {
+							quit?.();
+						}
+					},
+				}) satisfies Renderer,
+			values,
+			[],
+		);
+
+		expect(loadConfigDefinition).toHaveBeenCalledTimes(1);
+		expect(project.visitedFilePaths).toEqual([
+			project.aPath,
+			project.bPath,
+			project.aPath,
+			project.bPath,
+		]);
 	});
 
 	it("serves language file watchers from the cwd watcher", async () => {
@@ -414,12 +455,14 @@ describe(runCliWatch, () => {
 function createTestProject({
 	appendFixText,
 	contentDependency,
+	dependencies = [],
 	fixText,
 	global,
 	watchedFilePath,
 }: {
 	appendFixText?: string;
 	contentDependency?: string;
+	dependencies?: string[];
 	fixText?: string;
 	global?: boolean;
 	watchedFilePath?: string;
@@ -463,8 +506,8 @@ function createTestProject({
 			return {
 				dependencies:
 					file.about.filePath === aPath && contentDependency
-						? [contentDependency]
-						: [],
+						? [...dependencies, contentDependency]
+						: dependencies,
 				isGlobalDependency: file.about.sourceText.startsWith("global"),
 			};
 		},
