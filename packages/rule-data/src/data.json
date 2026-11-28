@@ -21772,18 +21772,33 @@
 		"flint": {
 			"name": "extraneousClasses",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
+		"biome": [
+			{
+				"name": "noStaticOnlyClass",
+				"url": "https://biomejs.dev/linter/rules/no-static-only-class/javascript/"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/no-extraneous-class",
 				"url": "https://typescript-eslint.io/rules/no-extraneous-class"
+			},
+			{
+				"name": "unicorn/no-static-only-class",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-static-only-class.md"
 			}
 		],
 		"oxlint": [
 			{
 				"name": "typescript/no-extraneous-class",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-extraneous-class.html"
+			},
+			{
+				"name": "unicorn/no-static-only-class",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-static-only-class.html"
 			}
 		]
 	},
@@ -30515,31 +30530,6 @@
 			{
 				"name": "unicorn/prefer-spread",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-spread.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "staticMemberOnlyClasses",
-			"plugin": "ts",
-			"preset": "stylisticStrict"
-		},
-		"biome": [
-			{
-				"name": "noStaticOnlyClass",
-				"url": "https://biomejs.dev/linter/rules/no-static-only-class/javascript/"
-			}
-		],
-		"eslint": [
-			{
-				"name": "unicorn/no-static-only-class",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/no-static-only-class.md"
-			}
-		],
-		"oxlint": [
-			{
-				"name": "unicorn/no-static-only-class",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-static-only-class.html"
 			}
 		]
 	},

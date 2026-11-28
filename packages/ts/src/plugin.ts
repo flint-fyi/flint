@@ -259,7 +259,6 @@ import shadowedRestrictedNames from "./rules/shadowedRestrictedNames.ts";
 import singleVariableDeclarations from "./rules/singleVariableDeclarations.ts";
 import sizeComparisonOperators from "./rules/sizeComparisonOperators.ts";
 import sparseArrays from "./rules/sparseArrays.ts";
-import staticMemberOnlyClasses from "./rules/staticMemberOnlyClasses.ts";
 import stringCaseMismatches from "./rules/stringCaseMismatches.ts";
 import stringCodePoints from "./rules/stringCodePoints.ts";
 import stringSliceMethods from "./rules/stringSliceMethods.ts";
@@ -570,7 +569,6 @@ export const ts = createPlugin({
 		singleVariableDeclarations,
 		sizeComparisonOperators,
 		sparseArrays,
-		staticMemberOnlyClasses,
 		stringCaseMismatches,
 		stringCodePoints,
 		stringSliceMethods,
