@@ -236,8 +236,8 @@ catalogs:
       specifier: 6.10.2
       version: 6.10.2
     eslint-plugin-n:
-      specifier: 18.5.0
-      version: 18.5.0
+      specifier: 18.6.0
+      version: 18.6.0
     eslint-plugin-package-json:
       specifier: 1.14.0
       version: 1.14.0
@@ -363,8 +363,8 @@ catalogs:
       specifier: 3.4.2
       version: 3.4.2
     eslint-plugin-n:
-      specifier: 18.5.0
-      version: 18.5.0
+      specifier: 18.6.0
+      version: 18.6.0
     eslint-plugin-package-json:
       specifier: 1.14.0
       version: 1.14.0
@@ -751,7 +751,7 @@ importers:
         version: 3.4.2(@eslint/json@2.1.1)(eslint@10.15.0)
       eslint-plugin-n:
         specifier: catalog:dev
-        version: 18.5.0(@typescript/typescript6@6.0.2)(eslint@10.15.0)
+        version: 18.6.0(@typescript/typescript6@6.0.2)(eslint@10.15.0)
       eslint-plugin-package-json:
         specifier: catalog:dev
         version: 1.14.0(@eslint/json@2.1.1)(eslint@10.15.0)
@@ -1685,7 +1685,7 @@ importers:
         version: 6.10.2(eslint@10.15.0)
       eslint-plugin-n:
         specifier: catalog:comparisons
-        version: 18.5.0(@typescript/typescript6@6.0.2)(eslint@10.15.0)
+        version: 18.6.0(@typescript/typescript6@6.0.2)(eslint@10.15.0)
       eslint-plugin-package-json:
         specifier: catalog:comparisons
         version: 1.14.0(@eslint/json@2.1.1)(eslint@10.15.0)
@@ -5572,8 +5572,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-n@18.5.0:
-    resolution: {integrity: sha512-M7uF6MTN/An+AXqvyIbXq7npJIZOkd5eKo8iMMvWrcDVNyZVdA6TF2lw01aKQfCEidRfpnR78GhAjZorlXNHiw==}
+  eslint-plugin-n@18.6.0:
+    resolution: {integrity: sha512-/UcgYfzZhQ6E/b/j4B9gMt6PotgTrF9lT/qMYnPzXYax5UR127J60I1BoF1R1Oa0Kq7LGhY0JUEm93JucJIbWA==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=8.57.1'
@@ -11818,7 +11818,7 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-n@18.5.0(@typescript/typescript6@6.0.2)(eslint@10.15.0):
+  eslint-plugin-n@18.6.0(@typescript/typescript6@6.0.2)(eslint@10.15.0):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.15.0)
       enhanced-resolve: 5.26.0
