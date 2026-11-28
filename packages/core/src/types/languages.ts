@@ -5,10 +5,6 @@ import type { FileReport } from "./reports.ts";
 import type { Rule, RuleAbout, RuleDefinition, RuleVisitors } from "./rules.ts";
 import type { AnyOptionalSchema } from "./shapes.ts";
 
-export type AnyLanguage = Language<object, object>;
-export type AnyLanguageFile = LanguageFile<object>;
-export type AnyLanguageFileFactory = LanguageFileFactory<object>;
-
 export type LanguageCreateRule<AstNodesByName, FileServices extends object> = <
 	const About extends RuleAbout,
 	const MessageId extends string,
@@ -34,29 +30,50 @@ export interface FileAboutData {
 
 /**
  * One rule's visitors for a file, along with the services they'll be given.
+ * Each rule's services add its own options to the file's services,
+ * so they're passed together to `use` rather than exposed under one type.
  */
-export interface FileVisitors<AstNodesByName, VisitorServices extends object> {
-	services: VisitorServices;
-	visitors: RuleVisitors<AstNodesByName, VisitorServices>;
-}
+export type FileVisitors<AstNodesByName, FileServices extends object> = <
+	Result,
+>(
+	use: <VisitorServices extends FileServices>(
+		services: VisitorServices,
+		visitors: RuleVisitors<AstNodesByName, VisitorServices>,
+	) => Result,
+) => Result;
 
 /**
- * A language, as used by the linter.
- * Members that operate on one file are on that file, as {@link LanguageFileMembers}.
+ * A language, as used by the linter and its rules.
  */
 export interface Language<
 	AstNodesByName,
 	FileServices extends object,
-> extends Pick<
-	LanguageDefinition<AstNodesByName, FileServices>,
-	"about" | "orderFilePaths"
-> {
-	createFileFactory(host: LinterHost): LanguageFileFactory<FileServices>;
+> extends LanguageBase {
 	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
+
+	/**
+	 * Creates a view of this language for rules that use services only some of its files provide.
+	 * Rules created by the view run on this language's files.
+	 */
+	extendServices<Extra extends object>(): Language<
+		AstNodesByName,
+		FileServices & Partial<Extra>
+	>;
 }
 
 export interface LanguageAbout {
 	name: string;
+}
+
+/**
+ * A language's members that don't depend on its AST nodes or file services.
+ * Members that operate on one file are on that file, as {@link LanguageFileMembers}.
+ */
+export interface LanguageBase extends Pick<
+	LanguageDefinition<unknown, object>,
+	"about" | "orderFilePaths"
+> {
+	createFileFactory(host: LinterHost): LanguageFileFactory;
 }
 
 export interface LanguageReport {
@@ -80,16 +97,16 @@ export interface LanguageDefinition<
 		host: LinterHost,
 	): LanguageFileFactoryDefinition<FileServices>;
 	getFileCacheImpacts?: (
-		file: LanguageFile<FileServices>,
+		file: LanguageFileDefinition<FileServices>,
 		host: LinterHost,
 	) => LanguageFileCacheImpacts;
 	getLanguageReports?: (
-		file: LanguageFile<FileServices>,
+		file: LanguageFileDefinition<FileServices>,
 		host: LinterHost,
 	) => LanguageReports;
 	orderFilePaths?: (filePaths: readonly string[], host: LinterHost) => string[];
 	runFileVisitors: (
-		file: LanguageFile<FileServices>,
+		file: LanguageFileDefinition<FileServices>,
 		fileVisitors: readonly FileVisitors<AstNodesByName, FileServices>[],
 	) => void;
 }
@@ -102,18 +119,16 @@ export interface LanguageFileCacheImpacts {
 /**
  * Creates prepared information around files to be linted.
  */
-export interface LanguageFileFactory<
-	FileServices extends object,
-> extends Partial<Disposable> {
-	createFile(data: FileAboutData): LanguageFile<FileServices>;
+export interface LanguageFileFactory extends Partial<Disposable> {
+	createFile(data: FileAboutData): LanguageFile;
 }
 
 /**
  * Prepared information about a file to be linted.
+ * Its services are only available to its language and that language's rules.
  */
-export type LanguageFile<FileServices extends object> = Disposable &
-	LanguageFileBase<FileServices> &
-	LanguageFileMembers;
+export interface LanguageFile
+	extends Disposable, LanguageFileBase, LanguageFileMembers {}
 
 /**
  * A language's members for one file, bound by the language that created the file.
@@ -121,15 +136,17 @@ export type LanguageFile<FileServices extends object> = Disposable &
 export interface LanguageFileMembers {
 	getFileCacheImpacts?: (host: LinterHost) => LanguageFileCacheImpacts;
 	getLanguageReports?: (host: LinterHost) => LanguageReports;
-	runFileVisitors: (
-		fileVisitors: readonly FileVisitors<object, object>[],
-	) => void;
+
+	/**
+	 * Runs the visitors that rules have added for this file, then clears them.
+	 */
+	runFileVisitors: () => void;
 }
 
 /**
  * Common information about a file to be linted.
  */
-export interface LanguageFileBase<FileServices extends object> {
+export interface LanguageFileBase {
 	about: FileAboutData;
 
 	/**
@@ -146,14 +163,15 @@ export interface LanguageFileBase<FileServices extends object> {
 	) => CharacterReportRange | null;
 	directives?: CommentDirective[];
 	reports?: FileReport[];
-	services: FileServices;
 }
 
 /**
  * Internal definition of prepared information about a file to be linted.
  */
-export type LanguageFileDefinition<FileServices extends object> =
-	LanguageFileBase<FileServices> & Partial<Disposable>;
+export interface LanguageFileDefinition<FileServices extends object>
+	extends LanguageFileBase, Partial<Disposable> {
+	services: FileServices;
+}
 
 /**
  * Internal definition of how to create prepared information about files to be linted.

@@ -2,18 +2,9 @@ import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
 import type { LinterHost } from "../types/host.ts";
-import type {
-	AnyLanguage,
-	AnyLanguageFile,
-	FileVisitors,
-} from "../types/languages.ts";
+import type { LanguageBase, LanguageFile } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
-import type { AnyRule, RuleRuntime } from "../types/rules.ts";
-import type {
-	AnyOptionalSchema,
-	InferredInputObject,
-} from "../types/shapes.ts";
-import { parseOptions } from "./parseOptions.ts";
+import type { AnyRule, BoundRuleRuntime } from "../types/rules.ts";
 import { processRuleReport } from "./processRuleReport.ts";
 import type { LanguageAndFile } from "./types.ts";
 
@@ -21,14 +12,14 @@ const log = debugForFile(import.meta.url);
 
 interface RuleState {
 	optionsByFilePath: Map<string, object>;
-	parsedOptionsByOptions: Map<object, object | undefined>;
 	reportsByFilePath: CachedFactory<string, FileReport[]>;
 	rule: AnyRule;
-	runtime: RuleRuntime<object, object> | undefined;
+	runtime: BoundRuleRuntime | undefined;
 }
 
-interface VisitingRuleState extends RuleState {
-	visitors: object;
+interface VisitingRuleState {
+	addFileVisitors: NonNullable<BoundRuleRuntime["addFileVisitors"]>;
+	optionsByFilePath: Map<string, object>;
 }
 
 export async function runRules(
@@ -37,7 +28,7 @@ export async function runRules(
 	host: LinterHost,
 ): Promise<CachedFactory<string, FileReport[]>> {
 	// 1. Collect every file being linted, for reports that name their file path
-	const fileByPath = new Map<string, AnyLanguageFile>();
+	const fileByPath = new Map<string, LanguageFile>();
 
 	for (const languageAndFiles of languageFilesByFilePath.values()) {
 		for (const { file } of languageAndFiles) {
@@ -46,13 +37,12 @@ export async function runRules(
 	}
 
 	// 2. Set up each rule's runtime, which receives and processes its reports
-	let currentFile: AnyLanguageFile | undefined;
+	let currentFile: LanguageFile | undefined;
 
 	const ruleStates = Array.from(
 		rulesOptionsByFile,
 		([rule, optionsByFilePath]): RuleState => ({
 			optionsByFilePath,
-			parsedOptionsByOptions: new Map(),
 			reportsByFilePath: new CachedFactory<string, FileReport[]>(() => []),
 			rule,
 			runtime: undefined,
@@ -101,16 +91,19 @@ export async function runRules(
 	);
 
 	// 3. Index rule states with visitors by language
-	const statesByLanguage = new Map<AnyLanguage, VisitingRuleState[]>();
+	const statesByLanguage = new Map<LanguageBase, VisitingRuleState[]>();
 
 	for (const state of ruleStates) {
-		const { visitors } = state.runtime ?? {};
-		if (!visitors) {
+		const addFileVisitors = state.runtime?.addFileVisitors;
+		if (!addFileVisitors) {
 			continue;
 		}
 
 		const statesForLanguage = statesByLanguage.get(state.rule.language);
-		const visitingState: VisitingRuleState = { ...state, visitors };
+		const visitingState: VisitingRuleState = {
+			addFileVisitors,
+			optionsByFilePath: state.optionsByFilePath,
+		};
 
 		if (statesForLanguage) {
 			statesForLanguage.push(visitingState);
@@ -127,19 +120,24 @@ export async function runRules(
 				continue;
 			}
 
-			const fileVisitors = collectFileVisitors(
-				statesForLanguage,
-				file,
-				filePath,
-			);
-			if (!fileVisitors.length) {
+			let ruleCount = 0;
+
+			for (const { addFileVisitors, optionsByFilePath } of statesForLanguage) {
+				const options = optionsByFilePath.get(filePath);
+				if (options !== undefined) {
+					addFileVisitors(file, options);
+					ruleCount += 1;
+				}
+			}
+
+			if (!ruleCount) {
 				continue;
 			}
 
-			log("Running %d rules on file path %s", fileVisitors.length, filePath);
+			log("Running %d rules on file path %s", ruleCount, filePath);
 
 			currentFile = file;
-			file.runFileVisitors(fileVisitors);
+			file.runFileVisitors();
 			currentFile = undefined;
 		}
 	}
@@ -161,51 +159,4 @@ export async function runRules(
 	}
 
 	return reportsByFilePath;
-}
-
-function collectFileVisitors(
-	statesForLanguage: readonly VisitingRuleState[],
-	file: AnyLanguageFile,
-	filePath: string,
-) {
-	const fileVisitors: FileVisitors<object, object>[] = [];
-	const servicesByParsedOptions = new CachedFactory<object | undefined, object>(
-		(parsedOptions) => ({ options: parsedOptions, ...file.services }),
-	);
-
-	for (const state of statesForLanguage) {
-		const options = state.optionsByFilePath.get(filePath);
-		if (options === undefined) {
-			continue;
-		}
-
-		const parsedOptions = getParsedOptions(state, options);
-
-		fileVisitors.push({
-			services: servicesByParsedOptions.get(parsedOptions),
-			visitors: state.visitors,
-		});
-	}
-
-	return fileVisitors;
-}
-
-function getParsedOptions(state: VisitingRuleState, options: object) {
-	const { rule } = state;
-	if (rule.options === undefined) {
-		return;
-	}
-
-	let parsedOptions = state.parsedOptionsByOptions.get(options);
-
-	if (parsedOptions === undefined) {
-		parsedOptions = parseOptions(
-			rule.options,
-			// TODO: Figure out a way around the type assertion...
-			options as InferredInputObject<AnyOptionalSchema>,
-		);
-		state.parsedOptionsByOptions.set(options, parsedOptions);
-	}
-
-	return parsedOptions;
 }

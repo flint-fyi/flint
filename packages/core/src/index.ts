@@ -109,13 +109,11 @@ export type {
 	WatchOptions,
 } from "./types/host.ts";
 export type {
-	AnyLanguage,
-	AnyLanguageFile,
-	AnyLanguageFileFactory,
 	FileAboutData,
 	FileVisitors,
 	Language,
 	LanguageAbout,
+	LanguageBase,
 	LanguageCreateRule,
 	LanguageDefinition,
 	LanguageFile,
@@ -158,6 +156,7 @@ export type {
 export type {
 	AnyRule,
 	AnyRuleDefinition,
+	BoundRuleRuntime,
 	PluginRuleAbout,
 	Rule,
 	RuleAbout,

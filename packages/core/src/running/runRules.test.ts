@@ -34,7 +34,7 @@ function createFile(
 	filePath: string,
 	marker: string,
 	adjustReportRange?: () => null,
-): LanguageFile<{ marker: string }> {
+): LanguageFile {
 	const file = language.createFileFactory(host).createFile({
 		filePath,
 		filePathAbsolute: filePath,
@@ -74,8 +74,10 @@ describe(runRules, () => {
 			createFileFactory: createMarkerFileFactory,
 			runFileVisitors(file, fileVisitors) {
 				runFileVisitors(file, fileVisitors);
-				for (const { services, visitors } of fileVisitors) {
-					visitors.Node?.(file.about.sourceText, services);
+				for (const useFileVisitors of fileVisitors) {
+					useFileVisitors((services, visitors) => {
+						visitors.Node?.(file.about.sourceText, services);
+					});
 				}
 			},
 		});
@@ -195,8 +197,10 @@ describe(runRules, () => {
 			about: { name: "test" },
 			createFileFactory: createMarkerFileFactory,
 			runFileVisitors(file, fileVisitors) {
-				for (const { services, visitors } of fileVisitors) {
-					visitors.Node?.(file.about.sourceText, services);
+				for (const useFileVisitors of fileVisitors) {
+					useFileVisitors((services, visitors) => {
+						visitors.Node?.(file.about.sourceText, services);
+					});
 				}
 			},
 		});

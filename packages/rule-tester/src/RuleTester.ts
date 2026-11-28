@@ -7,13 +7,12 @@ import { resolve } from "pathe";
 import {
 	createEphemeralLinterHost,
 	createVFSLinterHost,
-	parseOptions,
 	withRepositoryRoot,
-	type AnyLanguage,
-	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
 	type InferredInputObject,
+	type LanguageBase,
+	type LanguageFileFactory,
 	type LanguageReports,
 	type RuleAbout,
 	type VFSLinterHost,
@@ -70,7 +69,7 @@ type TestCaseUniqueProperties = Pick<
 >;
 
 export class RuleTester {
-	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
+	#fileFactories: CachedFactory<LanguageBase, LanguageFileFactory>;
 	#linterHost: VFSLinterHost;
 	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
 
@@ -113,7 +112,7 @@ export class RuleTester {
 			host = createVFSLinterHost({ baseHost: host });
 		}
 		this.#linterHost = host;
-		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
+		this.#fileFactories = new CachedFactory((language: LanguageBase) =>
 			language.createFileFactory(this.#linterHost),
 		);
 
@@ -181,7 +180,7 @@ export class RuleTester {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
-				{ options: parseOptions(rule.options, testCase.options), rule },
+				{ options: testCase.options, rule },
 				testCaseNormalized,
 				{
 					collectLanguageReports: this.#testerOptions.assertNoLanguageReports,
@@ -273,7 +272,7 @@ export class RuleTester {
 			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
-				{ options: parseOptions(rule.options, testCase.options), rule },
+				{ options: testCase.options, rule },
 				testCaseNormalized,
 				{
 					collectLanguageReports: this.#testerOptions.assertNoLanguageReports,

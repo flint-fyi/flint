@@ -2,15 +2,14 @@ import * as z from "zod/v4/core";
 
 import type {
 	AnyOptionalSchema,
-	InferredInputObject,
 	InferredOutputObject,
 } from "../types/shapes.ts";
 
 export function parseOptions<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 >(
-	schema: OptionsSchema,
-	options: InferredInputObject<OptionsSchema>,
+	schema: OptionsSchema | undefined,
+	options: unknown,
 ): InferredOutputObject<OptionsSchema> {
 	if (schema === undefined) {
 		return undefined as InferredOutputObject<OptionsSchema>;

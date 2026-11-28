@@ -31,8 +31,10 @@ const language = createLanguage<{ text: string }>({
 	getLanguageReports,
 	runFileVisitors(file, fileVisitors): void {
 		visit();
-		for (const { services, visitors } of fileVisitors) {
-			visitors.text?.(file.about.sourceText, services);
+		for (const useFileVisitors of fileVisitors) {
+			useFileVisitors((services, visitors) => {
+				visitors.text?.(file.about.sourceText, services);
+			});
 		}
 	},
 });

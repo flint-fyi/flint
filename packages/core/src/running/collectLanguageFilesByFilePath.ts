@@ -5,9 +5,9 @@ import { nullThrows } from "@flint.fyi/utils";
 
 import type { LinterHost } from "../types/host.ts";
 import type {
-	AnyLanguage,
-	AnyLanguageFile,
-	AnyLanguageFileFactory,
+	LanguageBase,
+	LanguageFile,
+	LanguageFileFactory,
 } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 
@@ -15,20 +15,20 @@ export function collectLanguageFilesByFilePath(
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
 	filePaths: ReadonlySet<string>,
-	languageFileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>,
+	languageFileFactories: CachedFactory<LanguageBase, LanguageFileFactory>,
 ): Map<
 	string,
 	{
-		file: AnyLanguageFile;
-		language: AnyLanguage;
+		file: LanguageFile;
+		language: LanguageBase;
 	}[]
 > {
-	const filePathsByLanguage = new CachedFactory<AnyLanguage, Set<string>>(
+	const filePathsByLanguage = new CachedFactory<LanguageBase, Set<string>>(
 		() => new Set(),
 	);
 	const languageFilesByFilePath = new CachedFactory<
 		string,
-		Map<AnyLanguage, AnyLanguageFile>
+		Map<LanguageBase, LanguageFile>
 	>(() => new Map());
 
 	for (const [rule, optionsByFile] of rulesOptionsByFile) {

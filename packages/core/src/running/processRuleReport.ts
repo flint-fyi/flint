@@ -1,6 +1,6 @@
 import { nullThrows } from "@flint.fyi/utils";
 
-import type { AnyLanguageFile } from "../types/languages.ts";
+import type { LanguageFile } from "../types/languages.ts";
 import type { FileReport, RuleReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
 import {
@@ -8,13 +8,13 @@ import {
 	type SourceFileWithLineMap,
 } from "../utils/getColumnAndLineOfPosition.ts";
 
-const sourcesByFile = new WeakMap<AnyLanguageFile, SourceFileWithLineMap>();
+const sourcesByFile = new WeakMap<LanguageFile, SourceFileWithLineMap>();
 
 /**
  * Joins rule report data with data from the file being linted and parent rule.
  */
 export function processRuleReport(
-	currentFile: AnyLanguageFile,
+	currentFile: LanguageFile,
 	rule: AnyRule,
 	ruleReport: RuleReport,
 ): FileReport | null {

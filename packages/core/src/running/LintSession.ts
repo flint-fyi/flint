@@ -7,10 +7,7 @@ import { collectTransitiveDependents } from "../cache/collectTransitiveDependent
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
-import type {
-	AnyLanguage,
-	AnyLanguageFileFactory,
-} from "../types/languages.ts";
+import type { LanguageBase, LanguageFileFactory } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
@@ -47,8 +44,8 @@ export class LintSession implements Disposable {
 	readonly #filePathByKey = new Map<string, string>();
 	readonly #host: LinterHost;
 	readonly #languageFileFactories: CachedFactory<
-		AnyLanguage,
-		AnyLanguageFileFactory
+		LanguageBase,
+		LanguageFileFactory
 	>;
 	readonly #rulesOptionsByFile: Map<AnyRule, Map<string, object>>;
 
@@ -61,7 +58,7 @@ export class LintSession implements Disposable {
 		this.#caseSensitiveFS = host.isCaseSensitiveFS();
 		this.#host = host;
 		this.#rulesOptionsByFile = rulesOptionsByFile;
-		this.#languageFileFactories = new CachedFactory((language: AnyLanguage) =>
+		this.#languageFileFactories = new CachedFactory((language: LanguageBase) =>
 			language.createFileFactory(host),
 		);
 

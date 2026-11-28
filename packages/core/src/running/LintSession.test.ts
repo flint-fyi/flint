@@ -378,8 +378,10 @@ async function createTestProject({
 		},
 		...(orderFilePaths && { orderFilePaths }),
 		runFileVisitors(file, fileVisitors) {
-			for (const { services, visitors } of fileVisitors) {
-				visitors.Root?.({ filePath: file.about.filePath }, services);
+			for (const useFileVisitors of fileVisitors) {
+				useFileVisitors((services, visitors) => {
+					visitors.Root?.({ filePath: file.about.filePath }, services);
+				});
 			}
 		},
 	});

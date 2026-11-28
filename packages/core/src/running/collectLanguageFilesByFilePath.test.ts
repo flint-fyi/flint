@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
-import type { AnyLanguage, FileAboutData } from "../types/languages.ts";
+import type { FileAboutData, LanguageBase } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
 
@@ -66,7 +66,7 @@ describe(collectLanguageFilesByFilePath, () => {
 			rulesOptionsByFile,
 			host,
 			new Set(["/root/a.ts", "/root/b.ts"]),
-			new CachedFactory((language: AnyLanguage) =>
+			new CachedFactory((language: LanguageBase) =>
 				language.createFileFactory(host),
 			),
 		);

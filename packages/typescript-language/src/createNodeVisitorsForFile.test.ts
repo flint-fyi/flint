@@ -17,22 +17,20 @@ const services = {} as TypeScriptFileServices;
 describe(createNodeVisitorsForFile, () => {
 	it("returns undefined when no visitors are provided", () => {
 		expect(
-			createNodeVisitorsForFile([{ services, visitors: {} }]),
+			createNodeVisitorsForFile([(use) => use(services, {})]),
 		).toBeUndefined();
 	});
 
 	it("runs visitors before their children when only enter visitors are provided", () => {
 		const visited: string[] = [];
 		const visitors = createNodeVisitorsForFile([
-			{
-				services,
-				visitors: {
+			(use) =>
+				use(services, {
 					Identifier: (node: Node) =>
 						visited.push(`enter ${ts.SyntaxKind[node.kind]}`),
 					SourceFile: (node: Node) =>
 						visited.push(`enter ${ts.SyntaxKind[node.kind]}`),
-				},
-			},
+				}),
 		]);
 
 		visitors?.visit(createSourceFile());
@@ -43,15 +41,13 @@ describe(createNodeVisitorsForFile, () => {
 	it("runs visitors after their children when only exit visitors are provided", () => {
 		const visited: string[] = [];
 		const visitors = createNodeVisitorsForFile([
-			{
-				services,
-				visitors: {
+			(use) =>
+				use(services, {
 					"Identifier:exit": (node: Node) =>
 						visited.push(`exit ${ts.SyntaxKind[node.kind]}`),
 					"SourceFile:exit": (node: Node) =>
 						visited.push(`exit ${ts.SyntaxKind[node.kind]}`),
-				},
-			},
+				}),
 		]);
 
 		visitors?.visit(createSourceFile());
@@ -62,9 +58,8 @@ describe(createNodeVisitorsForFile, () => {
 	it("runs visitors around their children when enter and exit visitors are provided", () => {
 		const visited: string[] = [];
 		const visitors = createNodeVisitorsForFile([
-			{
-				services,
-				visitors: {
+			(use) =>
+				use(services, {
 					Identifier: (node: Node) =>
 						visited.push(`enter ${ts.SyntaxKind[node.kind]}`),
 					"Identifier:exit": (node: Node) =>
@@ -73,8 +68,7 @@ describe(createNodeVisitorsForFile, () => {
 						visited.push(`enter ${ts.SyntaxKind[node.kind]}`),
 					"SourceFile:exit": (node: Node) =>
 						visited.push(`exit ${ts.SyntaxKind[node.kind]}`),
-				},
-			},
+				}),
 		]);
 
 		visitors?.visit(createSourceFile());
