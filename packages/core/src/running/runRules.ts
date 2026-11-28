@@ -139,7 +139,7 @@ export async function runRules(
 			log("Running %d rules on file path %s", fileVisitors.length, filePath);
 
 			currentFile = file;
-			language.runFileVisitors(file, fileVisitors);
+			file.runFileVisitors(fileVisitors);
 			currentFile = undefined;
 		}
 	}

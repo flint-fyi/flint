@@ -83,7 +83,7 @@ export async function runTestCaseRule<
 
 	if (ruleRuntime) {
 		if (ruleRuntime.visitors) {
-			rule.language.runFileVisitors(file, [
+			file.runFileVisitors([
 				{
 					services: { options, ...file.services },
 					visitors: ruleRuntime.visitors,
@@ -96,7 +96,7 @@ export async function runTestCaseRule<
 
 	return {
 		languageReports: collectLanguageReports
-			? (rule.language.getLanguageReports?.(file, linterHost) ?? [])
+			? (file.getLanguageReports?.(linterHost) ?? [])
 			: [],
 		reports: reports.toSorted(
 			(a, b) =>

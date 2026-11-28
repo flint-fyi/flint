@@ -114,8 +114,6 @@ export type {
 	AnyLanguageFileFactory,
 	FileAboutData,
 	FileVisitors,
-	GetLanguageAstNodesByName,
-	GetLanguageFileServices,
 	Language,
 	LanguageAbout,
 	LanguageCreateRule,
@@ -126,6 +124,7 @@ export type {
 	LanguageFileDefinition,
 	LanguageFileFactory,
 	LanguageFileFactoryDefinition,
+	LanguageFileMembers,
 	LanguageReport,
 	LanguageReports,
 } from "./types/languages.ts";

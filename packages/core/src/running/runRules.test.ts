@@ -5,7 +5,11 @@ import z from "zod/v4";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import type { LinterHost } from "../types/host.ts";
-import type { LanguageFile } from "../types/languages.ts";
+import type {
+	FileAboutData,
+	Language,
+	LanguageFile,
+} from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { runRules } from "./runRules.ts";
 import type { LanguageAndFile } from "./types.ts";
@@ -22,20 +26,35 @@ const ruleCreator = new RuleCreator({
 	presets: [],
 });
 
+/**
+ * Creates file factories whose files use their source text as their marker service.
+ */
 function createFile(
+	language: Language<object, { marker: string }>,
 	filePath: string,
 	marker: string,
 	adjustReportRange?: () => null,
 ): LanguageFile<{ marker: string }> {
-	const file = {
-		about: { filePath, filePathAbsolute: filePath, sourceText: "node" },
-		services: { marker },
-		[Symbol.dispose]() {
-			return;
-		},
-	};
+	const file = language.createFileFactory(host).createFile({
+		filePath,
+		filePathAbsolute: filePath,
+		sourceText: marker,
+	});
 
-	return adjustReportRange ? { ...file, adjustReportRange } : file;
+	if (adjustReportRange) {
+		file.adjustReportRange = adjustReportRange;
+	}
+
+	return file;
+}
+
+function createMarkerFileFactory() {
+	return {
+		createFile: ({ filePath, sourceText }: FileAboutData) => ({
+			about: { filePath, filePathAbsolute: filePath, sourceText: "node" },
+			services: { marker: sourceText },
+		}),
+	};
 }
 
 function createStubLanguage() {
@@ -52,7 +71,7 @@ describe(runRules, () => {
 		const runFileVisitors = vi.fn();
 		const language = createLanguage<{ Node: string }, { marker: string }>({
 			about: { name: "test" },
-			createFileFactory: vi.fn(),
+			createFileFactory: createMarkerFileFactory,
 			runFileVisitors(file, fileVisitors) {
 				runFileVisitors(file, fileVisitors);
 				for (const { services, visitors } of fileVisitors) {
@@ -60,9 +79,14 @@ describe(runRules, () => {
 				}
 			},
 		});
-		const firstFile = createFile("/first.ts", "first");
-		const filteredFile = createFile("/filtered.ts", "filtered", () => null);
-		const disabledFile = createFile("/disabled.ts", "disabled");
+		const firstFile = createFile(language, "/first.ts", "first");
+		const filteredFile = createFile(
+			language,
+			"/filtered.ts",
+			"filtered",
+			() => null,
+		);
+		const disabledFile = createFile(language, "/disabled.ts", "disabled");
 		const firstRule = ruleCreator.createRule(language, {
 			about: { description: "", id: "first" },
 			messages,
@@ -118,7 +142,7 @@ describe(runRules, () => {
 		});
 		const otherLanguage = createLanguage({
 			about: { name: "other" },
-			createFileFactory: vi.fn(),
+			createFileFactory: createMarkerFileFactory,
 			runFileVisitors: vi.fn(),
 		});
 		const options = {};
@@ -128,7 +152,12 @@ describe(runRules, () => {
 			["/disabled.ts", [{ file: disabledFile, language }]],
 			[
 				"/other.ts",
-				[{ file: createFile("/other.ts", "other"), language: otherLanguage }],
+				[
+					{
+						file: createFile(otherLanguage, "/other.ts", "other"),
+						language: otherLanguage,
+					},
+				],
 			],
 		]);
 		const rulesOptionsByFile = new Map<AnyRule, Map<string, object>>([
@@ -164,7 +193,7 @@ describe(runRules, () => {
 	it("uses each file's current source text for report coordinates across runs", async () => {
 		const language = createLanguage<{ Node: string }, { marker: string }>({
 			about: { name: "test" },
-			createFileFactory: vi.fn(),
+			createFileFactory: createMarkerFileFactory,
 			runFileVisitors(file, fileVisitors) {
 				for (const { services, visitors } of fileVisitors) {
 					visitors.Node?.(file.about.sourceText, services);
@@ -187,8 +216,8 @@ describe(runRules, () => {
 				};
 			},
 		});
-		const file = createFile("/file.ts", "first");
-		const replacement = createFile("/file.ts", "replacement");
+		const file = createFile(language, "/file.ts", "first");
+		const replacement = createFile(language, "/file.ts", "replacement");
 		for (const [currentFile, sourceText, begin, end] of [
 			[file, "a\r\nbc\nxyz", { column: 0, line: 1 }, { column: 0, line: 2 }],
 			[file, "abcd\nef", { column: 3, line: 0 }, { column: 1, line: 1 }],

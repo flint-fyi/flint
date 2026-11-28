@@ -1,9 +1,12 @@
 import { debugForFile } from "debug-for-file";
 
+import type { LinterHost } from "../types/host.ts";
 import type {
 	FileAboutData,
+	FileVisitors,
 	Language,
 	LanguageDefinition,
+	LanguageFile,
 } from "../types/languages.ts";
 import { makeDisposable } from "./makeDisposable.ts";
 
@@ -15,8 +18,14 @@ export function createLanguage<
 >(
 	languageDefinition: LanguageDefinition<AstNodesByName, FileServices>,
 ): Language<AstNodesByName, FileServices> {
+	const { getFileCacheImpacts, getLanguageReports, runFileVisitors } =
+		languageDefinition;
+
 	const language: Language<AstNodesByName, FileServices> = {
-		...languageDefinition,
+		about: languageDefinition.about,
+		...(languageDefinition.orderFilePaths && {
+			orderFilePaths: languageDefinition.orderFilePaths,
+		}),
 
 		createFileFactory(host) {
 			log(
@@ -29,7 +38,30 @@ export function createLanguage<
 			const fileFactory = {
 				...fileFactoryDefinition,
 				createFile: (data: FileAboutData) => {
-					return makeDisposable(fileFactoryDefinition.createFile(data));
+					const file: LanguageFile<FileServices> = {
+						...makeDisposable(fileFactoryDefinition.createFile(data)),
+						...(getFileCacheImpacts && {
+							getFileCacheImpacts: (host: LinterHost) =>
+								getFileCacheImpacts(file, host),
+						}),
+						...(getLanguageReports && {
+							getLanguageReports: (host: LinterHost) =>
+								getLanguageReports(file, host),
+						}),
+						runFileVisitors: (fileVisitors) => {
+							// Visitors arrive erased from the runner, which pairs them with this file by rule.language.
+							// Removing this cast needs rules to carry their language's types (see #4126's follow-up).
+							runFileVisitors(
+								file,
+								fileVisitors as readonly FileVisitors<
+									AstNodesByName,
+									FileServices
+								>[],
+							);
+						},
+					};
+
+					return file;
 				},
 			};
 

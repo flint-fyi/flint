@@ -43,7 +43,7 @@ export function finalizeFileResults(
 			directivesFilterer.add(file.directives);
 		}
 
-		const cacheImpacts = language.getFileCacheImpacts?.(file, host);
+		const cacheImpacts = file.getFileCacheImpacts?.(host);
 
 		if (cacheImpacts?.isGlobalDependency) {
 			isGlobalDependency = true;
@@ -66,13 +66,13 @@ export function finalizeFileResults(
 			}
 		}
 
-		if (!skipLanguageReports && language.getLanguageReports) {
+		if (!skipLanguageReports && file.getLanguageReports) {
 			log(
 				"Retrieving %s language reports for file %s",
 				language.about.name,
 				filePath,
 			);
-			languageReports.push(...language.getLanguageReports(file, host));
+			languageReports.push(...file.getLanguageReports(host));
 			log(
 				"Retrieved %s language reports for file %s",
 				language.about.name,
