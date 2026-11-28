@@ -4,7 +4,6 @@ import {
 	groupFileVisitors,
 	type FileVisitors,
 	type FileVisitorSubscription,
-	type RuleVisitor,
 	type SubscriptionsByName,
 } from "@flint.fyi/core";
 
@@ -24,10 +23,7 @@ export interface NodeVisitorsForFile {
 /**
  * For each node, the visitor subscriptions that will run when that node is visited.
  */
-export type NodeVisitorSubscriptions = FileVisitorSubscription<
-	never,
-	TypeScriptFileServices
->[];
+export type NodeVisitorSubscriptions = FileVisitorSubscription<never>[];
 
 /**
  * Each entry's `kind` must be the SyntaxKind of the same name.
@@ -119,13 +115,13 @@ export function runNodeVisitorSubscriptions(
 ): void {
 	// Subscriptions are looked up by node.kind, and CheckedNodesByKind ensures each name's AST type has that kind,
 	// but typescript's Node isn't a union that TypeScript can narrow by kind.
-	for (const { services, visitor } of subscriptions) {
-		(visitor as RuleVisitor<Node, TypeScriptFileServices>)(node, services);
+	for (const subscription of subscriptions) {
+		(subscription as FileVisitorSubscription<Node>)(node);
 	}
 }
 
 function createSubscriptionsByKind(
-	group: SubscriptionsByName<TypeScriptNodesByName, TypeScriptFileServices>,
+	group: SubscriptionsByName<TypeScriptNodesByName>,
 ): NodeVisitorSubscriptionsByKind {
 	const byKind = Object.create(null) as NodeVisitorSubscriptionsByKind;
 

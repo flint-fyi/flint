@@ -15,7 +15,6 @@ import {
 import type ts from "typescript";
 
 import {
-	createLanguage,
 	DirectivesCollector,
 	getColumnAndLineOfPosition,
 	isSuggestionForFiles,
@@ -43,9 +42,9 @@ import {
 	type Checker,
 	type ExtractedDirective,
 	type TypeScriptFileServices,
-	type TypeScriptNodesByName,
+	type TypeScriptNodeVisitors,
 } from "@flint.fyi/typescript-language";
-import { assert, FlintAssertionError, nullThrows } from "@flint.fyi/utils";
+import { assert, nullThrows } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
 
@@ -427,7 +426,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 });
 
 export type VolarLanguage<FileServices extends object> = Language<
-	TypeScriptNodesByName,
+	TypeScriptNodeVisitors,
 	Partial<FileServices> & TypeScriptFileServices
 >;
 
@@ -435,32 +434,7 @@ export function createVolarBasedLanguage<FileServices extends object>(
 	initializer: VolarLanguagePluginInitializer<FileServices>,
 ): VolarLanguage<FileServices> {
 	pluginInitializers.add(initializer);
-	return {
-		...createLanguage<
-			TypeScriptNodesByName,
-			Partial<FileServices> & TypeScriptFileServices
-		>({
-			about: {
-				name: "Volar.js-based language",
-			},
-			createFileFactory() {
-				throw new FlintAssertionError(
-					"Volar.js based language should never be called directly",
-				);
-			},
-			runFileVisitors() {
-				throw new FlintAssertionError(
-					"Volar.js based language should never be called directly",
-				);
-			},
-		}),
-		createRule: (ruleDefinition) => {
-			return {
-				...ruleDefinition,
-				language: typescriptLanguage,
-			};
-		},
-	};
+	return typescriptLanguage.extendServices<FileServices>();
 }
 
 export function reportSourceCode<T extends string>(

@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
 	createLanguage,
 	RuleCreator,
-	type AnyLanguageFile,
+	type LanguageFileDefinition,
 	type LanguageReports,
 	type LinterHost,
 	type RuleReport,
@@ -192,7 +192,7 @@ Another language report.`,
 		"roots virtual files at / with defaults: %s",
 		async (withDefaults) => {
 			const getLanguageReports = vi.fn(
-				(file: AnyLanguageFile, host: LinterHost) => {
+				(file: LanguageFileDefinition<object>, host: LinterHost) => {
 					expect(host.getCurrentDirectory()).toBe("/");
 					expect(file.about.filePathAbsolute).toBe("/src/file.ts");
 					expect(host.readFileSync("/src/file.ts")).toBe("abc");
@@ -276,7 +276,7 @@ Another language report.`,
 interface TestSetupOptions {
 	assertNoLanguageReports?: boolean;
 	getLanguageReports?: (
-		file: AnyLanguageFile,
+		file: LanguageFileDefinition<object>,
 		host: LinterHost,
 	) => LanguageReports;
 	it?: TesterSetupIt;

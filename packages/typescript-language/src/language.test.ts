@@ -60,7 +60,9 @@ describe("typescriptLanguage", () => {
 		const first = factory.createFile(
 			createAboutData(aPath, "export const a = 1;"),
 		);
-		expect(first.services.sourceFile.text).toBe("export const a = 1;");
+		expect(first).toMatchObject({
+			services: { sourceFile: { text: "export const a = 1;" } },
+		});
 		first[Symbol.dispose]();
 
 		vfs.vfsUpsertFile(aPath, "export const a = 2;");
@@ -68,7 +70,9 @@ describe("typescriptLanguage", () => {
 			createAboutData(aPath, "export const a = 2;"),
 		);
 
-		expect(second.services.sourceFile.text).toBe("export const a = 2;");
+		expect(second).toMatchObject({
+			services: { sourceFile: { text: "export const a = 2;" } },
+		});
 	});
 });
 

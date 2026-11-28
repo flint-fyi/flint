@@ -75,8 +75,10 @@ function createTestProject(): {
 		}),
 		runFileVisitors(file, fileVisitors): void {
 			visited.push(file.about.filePath);
-			for (const { services, visitors } of fileVisitors) {
-				visitors.text?.(file.about.sourceText, services);
+			for (const useFileVisitors of fileVisitors) {
+				useFileVisitors((services, visitors) => {
+					visitors.text?.(file.about.sourceText, services);
+				});
 			}
 		},
 	});

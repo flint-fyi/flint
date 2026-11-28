@@ -363,8 +363,10 @@ function createTestProject({
 		about: { name: "Test" },
 		createFileFactory,
 		runFileVisitors(file, fileVisitors) {
-			for (const { services, visitors } of fileVisitors) {
-				visitors.file?.(file.about, services);
+			for (const useFileVisitors of fileVisitors) {
+				useFileVisitors((services, visitors) => {
+					visitors.file?.(file.about, services);
+				});
 			}
 		},
 	});

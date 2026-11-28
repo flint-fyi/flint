@@ -5,19 +5,16 @@ import type { RuleVisitor } from "../types/rules.ts";
 import type { WithExitKeys } from "../types/visitors.ts";
 
 /**
- * One rule's visitor for a node kind, along with the services it'll be given.
+ * One rule's visitor for a node kind, bound to the services it'll be given.
  */
-export interface FileVisitorSubscription<Node, Services extends object> {
-	services: Services;
-	visitor: RuleVisitor<Node, Services>;
-}
+export type FileVisitorSubscription<Node> = (node: Node) => void;
 
 /**
  * All rules' visitors for a file, grouped by node kind for a single AST walk.
  */
-export interface GroupedFileVisitors<NodesByName, Services extends object> {
-	enter: SubscriptionsByName<NodesByName, Services> | undefined;
-	exit: SubscriptionsByName<NodesByName, Services> | undefined;
+export interface GroupedFileVisitors<NodesByName> {
+	enter: SubscriptionsByName<NodesByName> | undefined;
+	exit: SubscriptionsByName<NodesByName> | undefined;
 }
 
 /**
@@ -31,12 +28,9 @@ export type NodesKeyedByType<NodesByName> = {
  * Subscriptions grouped by node name.
  * Read them with {@link runFileVisitorSubscriptions}, which looks them up by `node.type`.
  */
-export interface SubscriptionsByName<NodesByName, Services extends object> {
+export interface SubscriptionsByName<NodesByName> {
 	readonly nodesByName?: NodesByName;
-	readonly subscriptions: Map<
-		string,
-		FileVisitorSubscription<never, Services>[]
-	>;
+	readonly subscriptions: Map<string, FileVisitorSubscription<never>[]>;
 }
 
 interface VisitorEntry {
@@ -73,26 +67,28 @@ const visitorEntries = new WeakCachedFactory<object, readonly VisitorEntry[]>(
 
 export function groupFileVisitors<NodesByName, Services extends object>(
 	fileVisitors: readonly FileVisitors<WithExitKeys<NodesByName>, Services>[],
-): GroupedFileVisitors<NodesByName, Services> {
-	const enter = new Map<string, FileVisitorSubscription<never, Services>[]>();
-	const exit = new Map<string, FileVisitorSubscription<never, Services>[]>();
+): GroupedFileVisitors<NodesByName> {
+	const enter = new Map<string, FileVisitorSubscription<never>[]>();
+	const exit = new Map<string, FileVisitorSubscription<never>[]>();
 
-	for (const { services, visitors } of fileVisitors) {
-		for (const entry of visitorEntries.get(visitors)) {
-			const group = entry.phase === "enter" ? enter : exit;
-			const subscription = {
-				services,
-				// visitorEntries is cached per visitors object, so it can't carry the Services these visitors were typed with.
-				visitor: entry.visitor as RuleVisitor<never, Services>,
-			};
-			const subscriptions = group.get(entry.name);
+	for (const useFileVisitors of fileVisitors) {
+		useFileVisitors((services, visitors) => {
+			for (const entry of visitorEntries.get(visitors)) {
+				const group = entry.phase === "enter" ? enter : exit;
+				// visitorEntries is cached per visitors object, so it can't carry the services these visitors were typed with.
+				const visitor = entry.visitor as RuleVisitor<never, typeof services>;
+				const subscription = (node: never) => {
+					visitor(node, services);
+				};
+				const subscriptions = group.get(entry.name);
 
-			if (subscriptions) {
-				subscriptions.push(subscription);
-			} else {
-				group.set(entry.name, [subscription]);
+				if (subscriptions) {
+					subscriptions.push(subscription);
+				} else {
+					group.set(entry.name, [subscription]);
+				}
 			}
-		}
+		});
 	}
 
 	return {
@@ -103,9 +99,8 @@ export function groupFileVisitors<NodesByName, Services extends object>(
 
 export function runFileVisitorSubscriptions<
 	NodesByName extends NodesKeyedByType<NodesByName>,
-	Services extends object,
 >(
-	subscriptionsByName: SubscriptionsByName<NodesByName, Services>,
+	subscriptionsByName: SubscriptionsByName<NodesByName>,
 	node: NodesByName[keyof NodesByName],
 ): void {
 	// keyof NodesByName may include numbers and symbols, but node types are always strings.
@@ -118,10 +113,9 @@ export function runFileVisitorSubscriptions<
 
 	// Subscriptions under node.type were registered for NodesByName[node.type],
 	// and NodesKeyedByType makes that the only node type with this type key.
-	for (const { services, visitor } of subscriptions as FileVisitorSubscription<
-		typeof node,
-		Services
+	for (const subscription of subscriptions as FileVisitorSubscription<
+		typeof node
 	>[]) {
-		visitor(node, services);
+		subscription(node);
 	}
 }

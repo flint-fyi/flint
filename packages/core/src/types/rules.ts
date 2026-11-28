@@ -2,7 +2,7 @@ import type { PromiseOrSync } from "@flint.fyi/utils";
 
 import type { BaseAbout } from "./about.ts";
 import type { RuleContext } from "./context.ts";
-import type { AnyLanguage } from "./languages.ts";
+import type { LanguageBase, LanguageFile } from "./languages.ts";
 import type { ReportMessageData } from "./reports.ts";
 import type {
 	AnyOptionalSchema,
@@ -49,14 +49,35 @@ export interface PluginRuleAbout<
 }
 
 /**
+ * A rule's runtime with its visitors bound to the rule's language,
+ * so they can only be given that language's files.
+ */
+export interface BoundRuleRuntime {
+	/**
+	 * Adds this rule's visitors to a file of its language, for the file's next `runFileVisitors`.
+	 * @param file A file created by the rule's language.
+	 * @param options The rule's options for the file, before parsing.
+	 */
+	addFileVisitors?: (file: LanguageFile, options: unknown) => void;
+	dependencies?: string[];
+	teardown?: RuleTeardown;
+}
+
+/**
  * A single lint rule, as used by users in configs.
  */
 export interface Rule<
 	About extends RuleAbout,
 	MessageId extends string,
 	OptionsSchema extends AnyOptionalSchema | undefined,
-> extends RuleDefinition<About, object, object, MessageId, OptionsSchema> {
-	language: AnyLanguage;
+> {
+	about: About;
+	language: LanguageBase;
+	messages: Record<MessageId, ReportMessageData>;
+	options?: OptionalObjectSchema<OptionsSchema>;
+	setup: (
+		context: RuleContext<MessageId>,
+	) => Promise<BoundRuleRuntime | undefined>;
 }
 
 export interface RuleAbout<Preset extends string = string> extends BaseAbout {

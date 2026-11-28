@@ -5,12 +5,12 @@ import { resolve } from "pathe";
 
 import {
 	processRuleReport,
-	type AnyLanguage,
-	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
 	type FileReport,
-	type InferredOutputObject,
+	type InferredInputObject,
+	type LanguageBase,
+	type LanguageFileFactory,
 	type LanguageReport,
 	type RuleAbout,
 	type VFSLinterHost,
@@ -26,16 +26,16 @@ export interface RunTestCaseRuleOptions {
 export interface TestCaseRuleConfiguration<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 > {
-	options?: InferredOutputObject<OptionsSchema | undefined>;
+	options: InferredInputObject<OptionsSchema> | undefined;
 	rule: AnyRule<RuleAbout, OptionsSchema>;
 }
 
 export async function runTestCaseRule<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 >(
-	fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>,
+	fileFactories: CachedFactory<LanguageBase, LanguageFileFactory>,
 	linterHost: VFSLinterHost,
-	{ options, rule }: Required<TestCaseRuleConfiguration<OptionsSchema>>,
+	{ options, rule }: TestCaseRuleConfiguration<OptionsSchema>,
 	{ code, fileName, files }: TestCaseNormalized,
 	{ collectLanguageReports = false }: RunTestCaseRuleOptions = {},
 ): Promise<{ languageReports: LanguageReport[]; reports: FileReport[] }> {
@@ -82,13 +82,9 @@ export async function runTestCaseRule<
 	});
 
 	if (ruleRuntime) {
-		if (ruleRuntime.visitors) {
-			file.runFileVisitors([
-				{
-					services: { options, ...file.services },
-					visitors: ruleRuntime.visitors,
-				},
-			]);
+		if (ruleRuntime.addFileVisitors) {
+			ruleRuntime.addFileVisitors(file, options);
+			file.runFileVisitors();
 		}
 
 		await ruleRuntime.teardown?.();

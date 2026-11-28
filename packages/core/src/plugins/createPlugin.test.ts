@@ -3,7 +3,7 @@ import z from "zod/v4";
 
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
-import type { AnyLanguage } from "../types/languages.ts";
+import type { LanguageBase } from "../types/languages.ts";
 import type { RuleCreatorAbout } from "../types/rules.ts";
 import { createPlugin } from "./createPlugin.ts";
 
@@ -114,7 +114,7 @@ describe(createPlugin, () => {
 		});
 
 		it("erases language internals from public rules", () => {
-			expectTypeOf(ruleStandalone.language).toEqualTypeOf<AnyLanguage>();
+			expectTypeOf(ruleStandalone.language).toEqualTypeOf<LanguageBase>();
 		});
 	});
 });

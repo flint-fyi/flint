@@ -25,24 +25,17 @@ const numberSchema: StandardSchemaV1<string | undefined, number> = {
 };
 
 describe(parseOptions, () => {
-	it("types exact optional inputs and outputs", () => {
+	it("types exact optional outputs", () => {
 		const schema = {
 			defaulted: z.string().default("default"),
 			optional: z.string().optional(),
 		};
 
-		interface ExpectedInput {
-			defaulted?: string | undefined;
-			optional?: string | undefined;
-		}
 		interface ExpectedOutput {
 			defaulted: string;
 			optional?: string | undefined;
 		}
 
-		expectTypeOf(parseOptions<typeof schema>)
-			.parameter(1)
-			.toEqualTypeOf<ExpectedInput>();
 		const result = parseOptions(schema, {});
 		expectTypeOf(result).toExtend<ExpectedOutput>();
 		expectTypeOf<ExpectedOutput>().toExtend<typeof result>();
@@ -83,15 +76,18 @@ describe(parseOptions, () => {
 
 	it("rejects unknown options", () => {
 		expect(() =>
-			parseOptions({ value: numberSchema }, { extra: true } as never),
+			parseOptions({ value: numberSchema }, { extra: true }),
 		).toThrow(/extra/);
 	});
 
 	it("identifies the option that failed validation", () => {
 		expect(() =>
-			parseOptions({ value: numberSchema }, {
-				value: 123,
-			} as never),
+			parseOptions(
+				{ value: numberSchema },
+				{
+					value: 123,
+				},
+			),
 		).toThrow(
 			expect.objectContaining({
 				issues: [

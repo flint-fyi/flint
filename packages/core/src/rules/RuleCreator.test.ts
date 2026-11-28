@@ -3,7 +3,7 @@ import { describe, expectTypeOf, it, vi } from "vitest";
 import z from "zod/v4";
 
 import { createLanguage } from "../languages/createLanguage.ts";
-import type { AnyLanguage } from "../types/languages.ts";
+import type { LanguageBase } from "../types/languages.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { RuleCreator } from "./RuleCreator.ts";
 
@@ -79,6 +79,6 @@ describe(RuleCreator, () => {
 			setup: vi.fn(),
 		});
 
-		expectTypeOf(rule.language).toEqualTypeOf<AnyLanguage>();
+		expectTypeOf(rule.language).toEqualTypeOf<LanguageBase>();
 	});
 });

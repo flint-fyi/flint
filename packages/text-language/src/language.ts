@@ -21,16 +21,20 @@ export const textLanguage: Language<TextNodes, TextFileServices> =
 			const { sourceText } = file.services;
 			let lines: string[] | undefined;
 
-			for (const { services, visitors } of fileVisitors) {
-				visitors.file?.(sourceText, services);
+			for (const useFileVisitors of fileVisitors) {
+				useFileVisitors((services, visitors) => {
+					visitors.file?.(sourceText, services);
 
-				if (visitors.line) {
+					if (!visitors.line) {
+						return;
+					}
+
 					lines ??= sourceText.split(/\r\n|\n|\r/);
 
 					for (const line of lines) {
 						visitors.line(line, services);
 					}
-				}
+				});
 			}
 		},
 	});

@@ -1,6 +1,6 @@
 import type {
-	LanguageFile,
 	LanguageFileCacheImpacts,
+	LanguageFileDefinition,
 	LinterHost,
 } from "@flint.fyi/core";
 
@@ -10,7 +10,7 @@ import type { TypeScriptFileServices } from "./types/services.ts";
 import { containsGlobalDeclarations } from "./utils/containsGlobalDeclarations.ts";
 
 export function getTypeScriptFileCacheImpacts(
-	file: LanguageFile<TypeScriptFileServices>,
+	file: LanguageFileDefinition<TypeScriptFileServices>,
 	host: LinterHost,
 ): LanguageFileCacheImpacts {
 	return {
