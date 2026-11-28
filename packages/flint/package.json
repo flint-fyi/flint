@@ -29,13 +29,13 @@
 		"test": "vitest --project flint"
 	},
 	"dependencies": {
-		"@flint.fyi/cli": "workspace:",
-		"@flint.fyi/core": "workspace:",
-		"@flint.fyi/json": "workspace:",
-		"@flint.fyi/md": "workspace:",
-		"@flint.fyi/package-json": "workspace:",
-		"@flint.fyi/ts": "workspace:",
-		"@flint.fyi/yaml": "workspace:",
+		"@flint.fyi/cli": "workspace:*",
+		"@flint.fyi/core": "workspace:*",
+		"@flint.fyi/json": "workspace:*",
+		"@flint.fyi/md": "workspace:*",
+		"@flint.fyi/package-json": "workspace:*",
+		"@flint.fyi/ts": "workspace:*",
+		"@flint.fyi/yaml": "workspace:*",
 		"typescript": "catalog:prod"
 	},
 	"devDependencies": {

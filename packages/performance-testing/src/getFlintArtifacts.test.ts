@@ -54,7 +54,7 @@ describe("consumer preparation", () => {
 			await fs.writeFile(
 				path.join(flintPath, "package.json"),
 				JSON.stringify({
-					dependencies: { "@flint.fyi/cli": "workspace:" },
+					dependencies: { "@flint.fyi/cli": "workspace:*" },
 					name: "flint",
 					version: "1.2.3",
 				}),
