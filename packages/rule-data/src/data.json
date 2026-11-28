@@ -4145,6 +4145,14 @@
 	},
 	{
 		"flint": {
+			"name": "getStartSourceFile",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
 			"name": "invalidCodeLines",
 			"plugin": "flint",
 			"preset": "logical",
@@ -4217,6 +4225,14 @@
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-default-options.md"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "placeholderFormats",
+			"plugin": "flint",
+			"preset": "stylistic",
+			"status": "implemented"
+		}
 	},
 	{
 		"flint": {
@@ -16429,6 +16445,20 @@
 	},
 	{
 		"flint": {
+			"name": "rawSpecialElements",
+			"plugin": "svelte",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"eslint": [
+			{
+				"name": "svelte/no-raw-special-elements",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "reactiveReassignments",
 			"plugin": "svelte",
 			"preset": "logical"
@@ -16538,19 +16568,6 @@
 			}
 		],
 		"notes": "Svelte 4-exclusive rule."
-	},
-	{
-		"flint": {
-			"name": "specialElementPrefixes",
-			"plugin": "svelte",
-			"preset": "logical"
-		},
-		"eslint": [
-			{
-				"name": "svelte/no-raw-special-elements",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements"
-			}
-		]
 	},
 	{
 		"flint": {
@@ -17693,7 +17710,8 @@
 		"flint": {
 			"name": "arrayIncludesMethods",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -17730,7 +17748,8 @@
 		"flint": {
 			"name": "arrayIndexOfMethods",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -17957,7 +17976,8 @@
 		"flint": {
 			"name": "arrayReduceTypeArguments",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -18019,7 +18039,8 @@
 		"flint": {
 			"name": "arraySomeMethods",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -18456,7 +18477,8 @@
 		"flint": {
 			"name": "atAccesses",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -18811,7 +18833,8 @@
 		"flint": {
 			"name": "builtinCoercions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -19053,7 +19076,8 @@
 		"flint": {
 			"name": "caughtVariableNames",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -19270,7 +19294,8 @@
 		"flint": {
 			"name": "classMethodsThis",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -19312,7 +19337,8 @@
 		"flint": {
 			"name": "combinedPushes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -19979,7 +20005,8 @@
 		"flint": {
 			"name": "dateNowTimestamps",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -20317,7 +20344,8 @@
 		"flint": {
 			"name": "destructuringConsistency",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -20745,7 +20773,8 @@
 		"flint": {
 			"name": "elseReturns",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -20898,7 +20927,8 @@
 		"flint": {
 			"name": "emptyFiles",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -20923,7 +20953,8 @@
 		"flint": {
 			"name": "emptyFunctions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -21109,7 +21140,8 @@
 		"flint": {
 			"name": "enumMemberLiterals",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -21307,7 +21339,8 @@
 		"flint": {
 			"name": "errorMessages",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -21345,7 +21378,8 @@
 		"flint": {
 			"name": "errorSubclassProperties",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -21384,7 +21418,8 @@
 		"flint": {
 			"name": "escapeSequenceCasing",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -21770,7 +21805,8 @@
 		"flint": {
 			"name": "extraneousClasses",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -22475,7 +22511,8 @@
 		"flint": {
 			"name": "globalThisAliases",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -25005,7 +25042,8 @@
 		"flint": {
 			"name": "mathMethods",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -25739,7 +25777,8 @@
 		"flint": {
 			"name": "namedDefaultExports",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -25862,7 +25901,8 @@
 		"flint": {
 			"name": "namespaceImplicitAmbientImports",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"deno": [
 			{
@@ -26021,7 +26061,8 @@
 		"flint": {
 			"name": "negativeIndexLengthMethods",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -26280,7 +26321,8 @@
 		"flint": {
 			"name": "nonNullAssertedNullishCoalesces",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -26331,7 +26373,8 @@
 		"flint": {
 			"name": "nonNullAssertionPlacement",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -26561,7 +26604,8 @@
 		"flint": {
 			"name": "numberStaticMethods",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -26734,7 +26778,8 @@
 		"flint": {
 			"name": "numericSeparatorGroups",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -26856,7 +26901,8 @@
 		"flint": {
 			"name": "objectEntriesMethods",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -28272,7 +28318,8 @@
 		"flint": {
 			"name": "regexCharacterClasses",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -28422,7 +28469,8 @@
 		"flint": {
 			"name": "regexDigitMatchers",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -28635,7 +28683,8 @@
 		"flint": {
 			"name": "regexExecutors",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -28677,7 +28726,8 @@
 		"flint": {
 			"name": "regexGraphemeStringLiterals",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -28690,7 +28740,8 @@
 		"flint": {
 			"name": "regexHexadecimalEscapes",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -28745,7 +28796,8 @@
 		"flint": {
 			"name": "regexLetterCasing",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -28797,7 +28849,8 @@
 		"flint": {
 			"name": "regexLookaroundAssertions",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -28824,7 +28877,8 @@
 		"flint": {
 			"name": "regexMatchNotation",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -28895,7 +28949,8 @@
 		"flint": {
 			"name": "regexNamedBackreferences",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -28937,7 +28992,8 @@
 		"flint": {
 			"name": "regexNamedReplacements",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -29005,7 +29061,8 @@
 		"flint": {
 			"name": "regexPlusQuantifiers",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -29045,7 +29102,8 @@
 		"flint": {
 			"name": "regexQuestionQuantifiers",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -29072,7 +29130,8 @@
 		"flint": {
 			"name": "regexResultArrayGroups",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -29113,7 +29172,8 @@
 		"flint": {
 			"name": "regexStarQuantifiers",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -29197,7 +29257,8 @@
 		"flint": {
 			"name": "regexUnicodeCodepointEscapes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -29435,7 +29496,8 @@
 		"flint": {
 			"name": "regexUnnecessaryNonCapturingGroups",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -29590,7 +29652,8 @@
 		"flint": {
 			"name": "regexWordMatchers",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -29972,7 +30035,8 @@
 		"flint": {
 			"name": "returnThisTypes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -30113,7 +30177,8 @@
 		"flint": {
 			"name": "setSizeLengthChecks",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -30407,7 +30472,8 @@
 		"flint": {
 			"name": "sizeComparisonOperators",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -30522,7 +30588,8 @@
 		"flint": {
 			"name": "staticMemberOnlyClasses",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -30612,7 +30679,8 @@
 		"flint": {
 			"name": "stringCodePoints",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -30746,7 +30814,8 @@
 		"flint": {
 			"name": "stringSliceMethods",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -30865,7 +30934,8 @@
 		"flint": {
 			"name": "structuredCloneMethods",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -31474,7 +31544,8 @@
 		"flint": {
 			"name": "topLevelAwaits",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -31785,7 +31856,8 @@
 		"flint": {
 			"name": "typeImports",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -32021,7 +32093,8 @@
 		"flint": {
 			"name": "undefinedTypeofChecks",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -32884,7 +32957,8 @@
 		"flint": {
 			"name": "unnecessaryTernaries",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -34995,7 +35069,8 @@
 		"flint": {
 			"name": "hooksBeforeTestCases",
 			"plugin": "vitest",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"biome": [
 			{
@@ -35504,7 +35579,8 @@
 		"flint": {
 			"name": "testCasesWithinDescribes",
 			"plugin": "vitest",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -38057,25 +38133,6 @@
 	},
 	{
 		"flint": {
-			"name": "forBindKeys",
-			"plugin": "vue",
-			"preset": "logical"
-		},
-		"biome": [
-			{
-				"name": "useVueVForKey",
-				"url": "https://biomejs.dev/linter/rules/use-vue-v-for-key/html/"
-			}
-		],
-		"eslint": [
-			{
-				"name": "vue/require-v-for-key",
-				"url": "https://eslint.vuejs.org/rules/require-v-for-key.html"
-			}
-		]
-	},
-	{
-		"flint": {
 			"name": "forDelimiterStyles",
 			"plugin": "vue",
 			"preset": "stylistic"
@@ -40432,6 +40489,26 @@
 	},
 	{
 		"flint": {
+			"name": "vForKeys",
+			"plugin": "vue",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"biome": [
+			{
+				"name": "useVueVForKey",
+				"url": "https://biomejs.dev/linter/rules/use-vue-v-for-key/html/"
+			}
+		],
+		"eslint": [
+			{
+				"name": "vue/require-v-for-key",
+				"url": "https://eslint.vuejs.org/rules/require-v-for-key.html"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "vHtmlDirectives",
 			"plugin": "vue",
 			"preset": "logicalStrict"
@@ -40711,7 +40788,8 @@
 		"flint": {
 			"name": "fileExtensions",
 			"plugin": "yaml",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -40873,7 +40951,8 @@
 		"flint": {
 			"name": "numericTrailingZeros",
 			"plugin": "yaml",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
@@ -40886,7 +40965,8 @@
 		"flint": {
 			"name": "plainScalars",
 			"plugin": "yaml",
-			"preset": "stylisticStrict"
+			"preset": "stylisticStrict",
+			"status": "implemented"
 		},
 		"eslint": [
 			{
