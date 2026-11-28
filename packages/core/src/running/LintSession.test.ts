@@ -207,6 +207,57 @@ describe(LintSession, () => {
 		).toEqual(["c.txt", "a.txt", "b.txt"]);
 	});
 
+	it("reports changed file results before dependent results", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		const cPath = path.posix.join(root, "c.txt");
+		dependenciesByFilePath.set(aPath, [bPath]);
+		dependenciesByFilePath.set(bPath, [cPath]);
+		using session = await LintSession.create(configDefinition, host);
+		const reportedPasses: Set<string>[] = [];
+
+		await session.lintFiles(session.allFilePaths);
+		await session.lintChangedFiles([cPath], {
+			onResults(results) {
+				reportedPasses.push(lintedFileNames(results));
+			},
+		});
+
+		expect(reportedPasses).toEqual([
+			new Set(["c.txt"]),
+			new Set(["a.txt", "b.txt"]),
+		]);
+	});
+
+	it.each([
+		["the changed file", "c.txt", ["a.txt", "b.txt", "c.txt"]],
+		["a dependent", "a.txt", ["a.txt", "b.txt"]],
+	])(
+		"relints files left unlinted when linting %s throws",
+		async (_description, throwingFileName, expected) => {
+			const throwingFileNames = new Set<string>();
+			const { configDefinition, dependenciesByFilePath, host, root } =
+				await createTestProject({ throwingFileNames });
+			const aPath = path.posix.join(root, "a.txt");
+			const bPath = path.posix.join(root, "b.txt");
+			const cPath = path.posix.join(root, "c.txt");
+			dependenciesByFilePath.set(aPath, [cPath]);
+			dependenciesByFilePath.set(bPath, [cPath]);
+			using session = await LintSession.create(configDefinition, host);
+
+			await session.lintFiles(session.allFilePaths);
+			throwingFileNames.add(throwingFileName);
+			await expect(session.lintChangedFiles([cPath])).rejects.toThrow();
+			throwingFileNames.clear();
+
+			expect(lintedFileNames(await session.lintChangedFiles([bPath]))).toEqual(
+				new Set(expected),
+			);
+		},
+	);
+
 	it("lints dependents of files outside the session", async () => {
 		const { configDefinition, dependenciesByFilePath, host, root } =
 			await createTestProject();
@@ -263,6 +314,21 @@ describe(LintSession, () => {
 		);
 		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
 			new Set(["a.txt", "b.txt", "c.txt"]),
+		);
+	});
+
+	it("relints only previously linted files when a cache-invalidating file changes", async () => {
+		const { configDefinition, host, root } = await createTestProject({
+			invalidatingFileNames: new Set(["a.txt"]),
+		});
+		using session = await LintSession.create(configDefinition, host);
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+
+		await session.lintFiles([aPath, bPath]);
+
+		expect(lintedFileNames(await session.lintChangedFiles([aPath]))).toEqual(
+			new Set(["a.txt", "b.txt"]),
 		);
 	});
 
@@ -362,12 +428,14 @@ async function createTestProject({
 	invalidatingFileNames,
 	orderedCreatedFilePaths,
 	orderFilePaths,
+	throwingFileNames,
 }: {
 	factoryDispose?: () => void;
 	fileDispose?: () => void;
 	invalidatingFileNames?: Set<string>;
 	orderedCreatedFilePaths?: string[];
 	orderFilePaths?: (filePaths: readonly string[]) => string[];
+	throwingFileNames?: Set<string>;
 } = {}) {
 	const root = normalizePath(
 		await mkdtemp(path.join(os.tmpdir(), "flint-lint-session-")),
@@ -384,6 +452,9 @@ async function createTestProject({
 		...(factoryDispose && { [Symbol.dispose]: factoryDispose }),
 		createFile(data: FileAboutData) {
 			orderedCreatedFilePaths?.push(data.filePath);
+			if (throwingFileNames?.has(path.basename(data.filePath))) {
+				throw new Error(`Failed to create ${data.filePath}.`);
+			}
 			return {
 				...(fileDispose && { [Symbol.dispose]: fileDispose }),
 				about: data,
