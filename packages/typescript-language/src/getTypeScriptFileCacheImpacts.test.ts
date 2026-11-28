@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
 	createVFSLinterHost,
@@ -228,6 +228,109 @@ describe(getTypeScriptFileCacheImpacts, () => {
 
 		expect(synced.has(`${root}/src/a.ts`)).toBe(true);
 		expect(getLanguageReportCodes(synced)).not.toContain("TS2307");
+	});
+
+	// https://github.com/flint-fyi/flint/issues/1512
+	it("relints from the cache after a generated declaration file that the tsconfig includes is created", async () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
+		const config = {
+			filePath: `${root}/flint.config.ts`,
+			use: [{ files: ["src/*.ts"], rules: [rule] }],
+		};
+		const options = { cacheLocation: `${root}/cache.json` };
+		host.vfsUpsertFile(config.filePath, "");
+		host.vfsUpsertFile(
+			`${root}/package.json`,
+			JSON.stringify({ type: "module" }),
+		);
+		host.vfsUpsertFile(
+			`${root}/tsconfig.json`,
+			JSON.stringify({
+				compilerOptions: { module: "nodenext", strict: true },
+				include: [".astro/types.d.ts", "src"],
+			}),
+		);
+		host.vfsUpsertFile(
+			`${root}/src/a.ts`,
+			'import { content } from "astro:content";\nexport const value: number = content;\n',
+		);
+		{
+			using session = await LintSession.create(config, host, options);
+			const unsynced = await session.lint();
+			expect(getLanguageReportCodes(unsynced.allFileResults)).toContain(
+				"TS2307",
+			);
+			await session.writeCache();
+		}
+
+		host.vfsUpsertFile(
+			`${root}/.astro/types.d.ts`,
+			'declare module "astro:content" {\n\texport const content: number;\n}\n',
+		);
+		using session = await LintSession.create(config, host, options);
+		const synced = await session.lint();
+
+		expect(synced.cached?.has(`${root}/src/a.ts`)).toBe(false);
+		expect(getLanguageReportCodes(synced.allFileResults)).not.toContain(
+			"TS2307",
+		);
+	});
+
+	it("relints from the cache only the files whose package.json changed", async () => {
+		const now = vi.spyOn(Date, "now").mockReturnValue(1000);
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: root });
+		const config = {
+			filePath: `${root}/flint.config.ts`,
+			use: [{ files: ["packages/**/*.ts", "src/*.ts"], rules: [rule] }],
+		};
+		const options = { cacheLocation: `${root}/cache.json` };
+		const nestedFilePath = `${root}/packages/nested/index.ts`;
+		const rootFilePath = `${root}/src/index.ts`;
+		host.vfsUpsertFile(config.filePath, "");
+		host.vfsUpsertFile(
+			`${root}/package.json`,
+			JSON.stringify({ type: "module" }),
+		);
+		host.vfsUpsertFile(
+			`${root}/packages/nested/package.json`,
+			JSON.stringify({ type: "module" }),
+		);
+		host.vfsUpsertFile(
+			`${root}/tsconfig.json`,
+			JSON.stringify({
+				compilerOptions: { module: "nodenext" },
+				include: ["packages", "src"],
+			}),
+		);
+		host.vfsUpsertFile(nestedFilePath, "export const nested = 1;\n");
+		host.vfsUpsertFile(rootFilePath, "export const value = 1;\n");
+
+		async function lintAndWriteCache(): Promise<string[]> {
+			now.mockReturnValue(Date.now() + 1000);
+			using session = await LintSession.create(config, host, options);
+			const results = await session.lint();
+			await session.writeCache();
+			now.mockReturnValue(Date.now() + 1000);
+			return Array.from(results.allFileResults.keys()).filter(
+				(filePath) => !results.cached?.has(filePath),
+			);
+		}
+
+		await lintAndWriteCache();
+		host.vfsUpsertFile(
+			`${root}/packages/nested/package.json`,
+			JSON.stringify({ type: "commonjs" }),
+		);
+		const afterNestedChange = await lintAndWriteCache();
+		host.vfsUpsertFile(
+			`${root}/package.json`,
+			JSON.stringify({ type: "commonjs" }),
+		);
+		const afterRootChange = await lintAndWriteCache();
+		now.mockRestore();
+
+		expect(afterNestedChange).toEqual([nestedFilePath]);
+		expect(afterRootChange).toEqual([rootFilePath]);
 	});
 
 	it("relints after a package that the tsconfig's types names is installed", async () => {

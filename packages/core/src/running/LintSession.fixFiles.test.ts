@@ -134,14 +134,10 @@ describe("LintSession.fixFiles", () => {
 			fixingHost.vfsUpsertFile(filePath, "0");
 			fixingHost.vfsUpsertFile(cachedFilePath, "5");
 			fixingHost.vfsUpsertFile(config.filePath, "");
-			fixingHost.vfsUpsertFile("package.json", "{}");
 			fixingHost.vfsUpsertFile(
 				cacheLocation,
 				cacheStorageSchema.encode({
-					configs: {
-						[config.filePath]: Date.now(),
-						"package.json": Date.now(),
-					},
+					configs: { [config.filePath]: Date.now() },
 					files: { [cachedFilePath]: { timestamp: Date.now() } },
 				}),
 			);

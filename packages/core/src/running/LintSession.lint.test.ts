@@ -54,8 +54,6 @@ describe("LintSession.lint", () => {
 			],
 		};
 		host.vfsUpsertFile(config.filePath, "");
-		// Cache config validation currently looks up this relative path.
-		host.vfsUpsertFile("package.json", "{}");
 		host.vfsUpsertFile("/root/a.txt", "a1");
 		host.vfsUpsertFile("/root/b.txt", "b1");
 		using session = await LintSession.create(config, host);
@@ -187,8 +185,6 @@ describe("LintSession.lint", () => {
 			};
 			const options = { cacheLocation: "/root/cache.json" };
 			host.vfsUpsertFile(config.filePath, "");
-			// Cache config validation currently looks up this relative path.
-			host.vfsUpsertFile("package.json", "{}");
 			host.vfsUpsertFile(globalPath, initialDeclaration);
 			host.vfsUpsertFile(unrelatedPath, "value;");
 

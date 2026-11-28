@@ -22,7 +22,6 @@ export async function writeToCache(
 			// touch time: a fabricated "now" would mask later changes, whereas 0
 			// forces a safe re-validation on the next run.
 			[configFileName]: (await host.getFileTouchTime(configFileName)) ?? 0,
-			"package.json": (await host.getFileTouchTime("package.json")) ?? 0,
 		},
 		files: {
 			...Object.fromEntries(
@@ -37,6 +36,11 @@ export async function writeToCache(
 						...(fileResults.isGlobalDependency && { isGlobalDependency: true }),
 						...(fileResults.languageReports.length && {
 							languageReports: fileResults.languageReports,
+						}),
+						...(fileResults.missingDependencies.size && {
+							missingDependencies: Array.from(
+								fileResults.missingDependencies,
+							).toSorted((a, b) => a.localeCompare(b, "en-US")),
 						}),
 						...(fileResults.reports.length && {
 							reports: fileResults.reports,
