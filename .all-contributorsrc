@@ -387,6 +387,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "grvd5678",
+      "name": "GOURAV DAS",
+      "avatar_url": "https://avatars.githubusercontent.com/u/177600273?v=4",
+      "profile": "https://my-portfolio-lfou.vercel.app/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
