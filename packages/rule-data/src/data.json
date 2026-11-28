@@ -3937,6 +3937,19 @@
 	},
 	{
 		"flint": {
+			"name": "aboutLanguages",
+			"plugin": "flint",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "eslint-plugin/require-meta-languages",
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-languages.md"
+			}
+		]
+	},
+	{
+		"flint": {
 			"name": "aboutSchemaDescriptions",
 			"plugin": "flint",
 			"status": "skipped"
@@ -4140,6 +4153,32 @@
 			{
 				"name": "eslint-plugin/fixer-return",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/fixer-return.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "incompleteSchemas",
+			"plugin": "flint",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "eslint-plugin/no-incomplete-meta-schema",
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-incomplete-meta-schema.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "incorrectSchemas",
+			"plugin": "flint",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "eslint-plugin/no-incorrect-meta-schema",
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-incorrect-meta-schema.md"
 			}
 		]
 	},
@@ -4359,6 +4398,19 @@
 			{
 				"name": "eslint-plugin/no-only-tests",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-only-tests.md"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testErrorPositions",
+			"plugin": "flint",
+			"status": "skipped"
+		},
+		"eslint": [
+			{
+				"name": "eslint-plugin/require-test-error-positions",
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-test-error-positions.md"
 			}
 		]
 	},
