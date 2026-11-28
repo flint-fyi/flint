@@ -49,7 +49,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const previous = node.children[i - 1]!;
-				if (previous.type !== "text" || !previous.value.endsWith("[")) {
+				if (previous.type !== "text" || !/\([^)]+\)\[$/.test(previous.value)) {
 					continue;
 				}
 
