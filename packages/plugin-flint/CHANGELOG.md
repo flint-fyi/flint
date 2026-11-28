@@ -1,5 +1,11 @@
 # @flint.fyi/plugin-flint
 
+## 0.8.7
+
+### Patch Changes
+
+- [#3767](https://github.com/flint-fyi/flint/pull/3767) [`e948a07`](https://github.com/flint-fyi/flint/commit/e948a07a3140b9aec4a781b0f774d024ef384682) - Fixed invalidCodeLines reporting invalid test cases whose code is empty.
+
 ## 0.8.6
 
 ### Patch Changes

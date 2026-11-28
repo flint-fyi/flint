@@ -1,5 +1,13 @@
 # @flint/core
 
+## 0.30.4
+
+### Patch Changes
+
+- [#4078](https://github.com/flint-fyi/flint/pull/4078) [`08a6ce8`](https://github.com/flint-fyi/flint/commit/08a6ce87c9281a87bbc3e064afc6c9f7b82ee13f) - Added descriptive secondary messages and suggestions for comment directive reports.
+
+- [#4064](https://github.com/flint-fyi/flint/pull/4064) [`c7a13ba`](https://github.com/flint-fyi/flint/commit/c7a13ba460eaec21eee1f1d5f3c0484a572fc798) - Re-lints all cached files when a changed file becomes a global cache dependency.
+
 ## 0.30.3
 
 ### Patch Changes

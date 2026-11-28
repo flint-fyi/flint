@@ -1,5 +1,11 @@
 # @flint/rule-tester
 
+## 0.21.2
+
+### Patch Changes
+
+- [#4062](https://github.com/flint-fyi/flint/pull/4062) [`8b4eea0`](https://github.com/flint-fyi/flint/commit/8b4eea0aa4a3174596c622e1fb358e98ec94e55e) - Point test case failures at the `ruleTester.describe()` call in the test file.
+
 ## 0.21.1
 
 ### Patch Changes
