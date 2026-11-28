@@ -3,6 +3,7 @@ import type {
 	LanguagePlugin as VolarLanguagePlugin,
 	Mapper as VolarMapper,
 	SourceScript as VolarSourceScript,
+	VirtualCode as VolarVirtualCode,
 } from "@volar/language-core";
 import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
@@ -31,7 +32,10 @@ import {
 	type RuleReport,
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
-import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
+import {
+	setTSProgramCreationProxy,
+	setTSScriptKindProvider,
+} from "@flint.fyi/ts-patch";
 import {
 	convertTypeScriptDiagnosticToLanguageReport,
 	createNodeVisitorsForFile,
@@ -115,6 +119,101 @@ type VolarLanguagePluginWithCreateFile = VolarLanguagePlugin & {
 		  };
 };
 
+/**
+ * The Volar.js language of the program being created.
+ * It's set by `proxyCreateProgram`'s `setup` and cleared once that program creation returns or throws.
+ */
+let activeVolarLanguage: undefined | VolarCoreLanguage<string>;
+
+/**
+ * Gets the script kind of a file's Volar.js service script, such as TSX for `.astro` files.
+ * `proxyCreateProgram` sets that kind on the source files TypeScript's document registry caches,
+ * and the registry asserts that every later lookup of a file asks for its cached kind.
+ * Volar.js's `decorateLanguageServiceHost` overrides `getScriptKind` the same way.
+ */
+function getVolarScriptKind(
+	fileName: string,
+	host: ts.LanguageServiceHost,
+): ts.ScriptKind | undefined {
+	if (
+		!activeVolarLanguage?.plugins.some((plugin) =>
+			plugin.typescript?.extraFileExtensions.some(({ extension }) =>
+				fileName.endsWith(`.${extension}`),
+			),
+		)
+	) {
+		return;
+	}
+
+	const snapshot = host.getScriptSnapshot(fileName);
+	if (!snapshot) {
+		return;
+	}
+
+	const generated = activeVolarLanguage.scripts.set(
+		fileName,
+		snapshot,
+	)?.generated;
+
+	return generated?.languagePlugin.typescript?.getServiceScript(generated.root)
+		?.scriptKind;
+}
+
+setTSScriptKindProvider(getVolarScriptKind);
+
+/**
+ * Makes a plugin return the virtual code it already generated for a script when asked again for the same text.
+ * During each program creation, `getVolarScriptKind` and `proxyCreateProgram` both set each Volar.js script,
+ * each with its own snapshot object, and Volar.js regenerates virtual code whenever the snapshot object changes.
+ */
+function reuseVirtualCodesOfUnchangedText(
+	plugin: VolarLanguagePlugin<string>,
+): void {
+	const generated = new Map<string, { code: VolarVirtualCode; text: string }>();
+
+	function reuse(
+		scriptId: string,
+		snapshot: ts.IScriptSnapshot,
+		generate: () => undefined | VolarVirtualCode,
+	): undefined | VolarVirtualCode {
+		const text = snapshot.getText(0, snapshot.getLength());
+		const existing = generated.get(scriptId);
+		if (existing?.text === text) {
+			return existing.code;
+		}
+
+		const code = generate();
+		if (code) {
+			generated.set(scriptId, { code, text });
+		} else {
+			generated.delete(scriptId);
+		}
+		return code;
+	}
+
+	const createVirtualCode = plugin.createVirtualCode?.bind(plugin);
+	if (createVirtualCode) {
+		plugin.createVirtualCode = (scriptId, languageId, snapshot, ctx) =>
+			reuse(scriptId, snapshot, () =>
+				createVirtualCode(scriptId, languageId, snapshot, ctx),
+			);
+	}
+
+	const updateVirtualCode = plugin.updateVirtualCode?.bind(plugin);
+	if (updateVirtualCode) {
+		plugin.updateVirtualCode = (scriptId, virtualCode, snapshot, ctx) =>
+			reuse(scriptId, snapshot, () =>
+				updateVirtualCode(scriptId, virtualCode, snapshot, ctx),
+			);
+	}
+
+	const disposeVirtualCode = plugin.disposeVirtualCode?.bind(plugin);
+	plugin.disposeVirtualCode = (scriptId, virtualCode) => {
+		generated.delete(scriptId);
+		disposeVirtualCode?.(scriptId, virtualCode);
+	};
+}
+
 setTSProgramCreationProxy(
 	(ts, createProgram) =>
 		new Proxy(
@@ -185,6 +284,8 @@ setTSProgramCreationProxy(
 										};
 									};
 
+									reuseVirtualCodesOfUnchangedText(plugin);
+
 									return plugin;
 								}),
 							);
@@ -192,16 +293,18 @@ setTSProgramCreationProxy(
 								languagePlugins,
 								setup: (lang) => {
 									volarLanguage = lang;
+									activeVolarLanguage = lang;
 								},
 							};
 						},
 					);
 
-					const program = Reflect.apply(
-						proxied,
-						thisArg,
-						args,
-					) as ProxiedTSProgram;
+					let program: ProxiedTSProgram;
+					try {
+						program = Reflect.apply(proxied, thisArg, args) as ProxiedTSProgram;
+					} finally {
+						activeVolarLanguage = undefined;
+					}
 
 					assert(volarLanguage != null, "Expected volarLanguage to be set");
 
