@@ -7,5 +7,13 @@
 	},
 	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"include": ["src/**/*.test.ts"],
-	"references": [{ "path": "./tsconfig.src.json" }]
+	"references": [
+		{ "path": "../next/tsconfig.src.json" },
+		{ "path": "../nuxt/tsconfig.src.json" },
+		{ "path": "../react/tsconfig.src.json" },
+		{ "path": "../solid/tsconfig.src.json" },
+		{ "path": "../svelte/tsconfig.src.json" },
+		{ "path": "../vue/tsconfig.src.json" },
+		{ "path": "./tsconfig.src.json" }
+	]
 }
